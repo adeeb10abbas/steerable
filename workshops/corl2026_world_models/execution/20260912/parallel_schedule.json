@@ -1,0 +1,2937 @@
+{
+  "D2_selected": false,
+  "cell_count": 232,
+  "interpretation": "Dependencies are readiness requirements, not a released queue. No worker count, GPU capacity, physical coordinates or physical-time mapping is assigned.",
+  "job_count": 58,
+  "jobs": [
+    {
+      "candidate_effective_policy_seed": 2026091000,
+      "condition_order": [
+        "reflected-right",
+        "reflected-left",
+        "original-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__pilot__P00__N3",
+      "layout_pair_id": "P00",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__pilot__P00__N3__reflected__right",
+        "wmf1__pilot__P00__N3__reflected__left",
+        "wmf1__pilot__P00__N3__original__left",
+        "wmf1__pilot__P00__N3__original__right"
+      ],
+      "phase": "pilot",
+      "released": false,
+      "required_gates": [
+        "qualified_runtime_and_seed_behavior",
+        "qualified_pilot_fixture",
+        "nonbehavioral_decode_and_repeat_checks",
+        "bounded_resource_authorization"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-right",
+        "reflected-left",
+        "original-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__pilot__P00__D1",
+      "layout_pair_id": "P00",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__pilot__P00__D1__reflected__right",
+        "wmf1__pilot__P00__D1__reflected__left",
+        "wmf1__pilot__P00__D1__original__left",
+        "wmf1__pilot__P00__D1__original__right"
+      ],
+      "phase": "pilot",
+      "released": false,
+      "required_gates": [
+        "qualified_runtime_and_seed_behavior",
+        "qualified_pilot_fixture",
+        "nonbehavioral_decode_and_repeat_checks",
+        "bounded_resource_authorization"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091101,
+      "condition_order": [
+        "original-left",
+        "reflected-right",
+        "original-right",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__pilot__P00__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__development__D01__N3",
+      "layout_pair_id": "D01",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__development__D01__N3__original__left",
+        "wmf1__development__D01__N3__reflected__right",
+        "wmf1__development__D01__N3__original__right",
+        "wmf1__development__D01__N3__reflected__left"
+      ],
+      "phase": "development",
+      "released": false,
+      "required_gates": [
+        "all_four_pilot_recordings_qualified_or_documented_exact_runtime_waiver",
+        "qualified_development_fixtures",
+        "bounded_resource_authorization"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-left",
+        "reflected-right",
+        "original-right",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__pilot__P00__D1"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__development__D01__D1",
+      "layout_pair_id": "D01",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__development__D01__D1__original__left",
+        "wmf1__development__D01__D1__reflected__right",
+        "wmf1__development__D01__D1__original__right",
+        "wmf1__development__D01__D1__reflected__left"
+      ],
+      "phase": "development",
+      "released": false,
+      "required_gates": [
+        "all_four_pilot_recordings_qualified_or_documented_exact_runtime_waiver",
+        "qualified_development_fixtures",
+        "bounded_resource_authorization"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091102,
+      "condition_order": [
+        "reflected-right",
+        "original-left",
+        "reflected-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__pilot__P00__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__development__D02__N3",
+      "layout_pair_id": "D02",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__development__D02__N3__reflected__right",
+        "wmf1__development__D02__N3__original__left",
+        "wmf1__development__D02__N3__reflected__left",
+        "wmf1__development__D02__N3__original__right"
+      ],
+      "phase": "development",
+      "released": false,
+      "required_gates": [
+        "all_four_pilot_recordings_qualified_or_documented_exact_runtime_waiver",
+        "qualified_development_fixtures",
+        "bounded_resource_authorization"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-right",
+        "original-left",
+        "reflected-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__pilot__P00__D1"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__development__D02__D1",
+      "layout_pair_id": "D02",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__development__D02__D1__reflected__right",
+        "wmf1__development__D02__D1__original__left",
+        "wmf1__development__D02__D1__reflected__left",
+        "wmf1__development__D02__D1__original__right"
+      ],
+      "phase": "development",
+      "released": false,
+      "required_gates": [
+        "all_four_pilot_recordings_qualified_or_documented_exact_runtime_waiver",
+        "qualified_development_fixtures",
+        "bounded_resource_authorization"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091103,
+      "condition_order": [
+        "reflected-right",
+        "original-right",
+        "original-left",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__pilot__P00__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__development__D03__N3",
+      "layout_pair_id": "D03",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__development__D03__N3__reflected__right",
+        "wmf1__development__D03__N3__original__right",
+        "wmf1__development__D03__N3__original__left",
+        "wmf1__development__D03__N3__reflected__left"
+      ],
+      "phase": "development",
+      "released": false,
+      "required_gates": [
+        "all_four_pilot_recordings_qualified_or_documented_exact_runtime_waiver",
+        "qualified_development_fixtures",
+        "bounded_resource_authorization"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-right",
+        "original-right",
+        "original-left",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__pilot__P00__D1"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__development__D03__D1",
+      "layout_pair_id": "D03",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__development__D03__D1__reflected__right",
+        "wmf1__development__D03__D1__original__right",
+        "wmf1__development__D03__D1__original__left",
+        "wmf1__development__D03__D1__reflected__left"
+      ],
+      "phase": "development",
+      "released": false,
+      "required_gates": [
+        "all_four_pilot_recordings_qualified_or_documented_exact_runtime_waiver",
+        "qualified_development_fixtures",
+        "bounded_resource_authorization"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091104,
+      "condition_order": [
+        "original-left",
+        "reflected-left",
+        "reflected-right",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__pilot__P00__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__development__D04__N3",
+      "layout_pair_id": "D04",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__development__D04__N3__original__left",
+        "wmf1__development__D04__N3__reflected__left",
+        "wmf1__development__D04__N3__reflected__right",
+        "wmf1__development__D04__N3__original__right"
+      ],
+      "phase": "development",
+      "released": false,
+      "required_gates": [
+        "all_four_pilot_recordings_qualified_or_documented_exact_runtime_waiver",
+        "qualified_development_fixtures",
+        "bounded_resource_authorization"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-left",
+        "reflected-left",
+        "reflected-right",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__pilot__P00__D1"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__development__D04__D1",
+      "layout_pair_id": "D04",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__development__D04__D1__original__left",
+        "wmf1__development__D04__D1__reflected__left",
+        "wmf1__development__D04__D1__reflected__right",
+        "wmf1__development__D04__D1__original__right"
+      ],
+      "phase": "development",
+      "released": false,
+      "required_gates": [
+        "all_four_pilot_recordings_qualified_or_documented_exact_runtime_waiver",
+        "qualified_development_fixtures",
+        "bounded_resource_authorization"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091201,
+      "condition_order": [
+        "reflected-left",
+        "original-left",
+        "reflected-right",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C01__N3",
+      "layout_pair_id": "C01",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C01__N3__reflected__left",
+        "wmf1__confirmation__C01__N3__original__left",
+        "wmf1__confirmation__C01__N3__reflected__right",
+        "wmf1__confirmation__C01__N3__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-left",
+        "original-left",
+        "reflected-right",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C01__D1",
+      "layout_pair_id": "C01",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C01__D1__reflected__left",
+        "wmf1__confirmation__C01__D1__original__left",
+        "wmf1__confirmation__C01__D1__reflected__right",
+        "wmf1__confirmation__C01__D1__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091202,
+      "condition_order": [
+        "original-left",
+        "original-right",
+        "reflected-left",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C02__N3",
+      "layout_pair_id": "C02",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C02__N3__original__left",
+        "wmf1__confirmation__C02__N3__original__right",
+        "wmf1__confirmation__C02__N3__reflected__left",
+        "wmf1__confirmation__C02__N3__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-left",
+        "original-right",
+        "reflected-left",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C02__D1",
+      "layout_pair_id": "C02",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C02__D1__original__left",
+        "wmf1__confirmation__C02__D1__original__right",
+        "wmf1__confirmation__C02__D1__reflected__left",
+        "wmf1__confirmation__C02__D1__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091203,
+      "condition_order": [
+        "reflected-left",
+        "reflected-right",
+        "original-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C03__N3",
+      "layout_pair_id": "C03",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C03__N3__reflected__left",
+        "wmf1__confirmation__C03__N3__reflected__right",
+        "wmf1__confirmation__C03__N3__original__left",
+        "wmf1__confirmation__C03__N3__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-left",
+        "reflected-right",
+        "original-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C03__D1",
+      "layout_pair_id": "C03",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C03__D1__reflected__left",
+        "wmf1__confirmation__C03__D1__reflected__right",
+        "wmf1__confirmation__C03__D1__original__left",
+        "wmf1__confirmation__C03__D1__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091204,
+      "condition_order": [
+        "reflected-left",
+        "original-right",
+        "original-left",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C04__N3",
+      "layout_pair_id": "C04",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C04__N3__reflected__left",
+        "wmf1__confirmation__C04__N3__original__right",
+        "wmf1__confirmation__C04__N3__original__left",
+        "wmf1__confirmation__C04__N3__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-left",
+        "original-right",
+        "original-left",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C04__D1",
+      "layout_pair_id": "C04",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C04__D1__reflected__left",
+        "wmf1__confirmation__C04__D1__original__right",
+        "wmf1__confirmation__C04__D1__original__left",
+        "wmf1__confirmation__C04__D1__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091205,
+      "condition_order": [
+        "original-right",
+        "original-left",
+        "reflected-right",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C05__N3",
+      "layout_pair_id": "C05",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C05__N3__original__right",
+        "wmf1__confirmation__C05__N3__original__left",
+        "wmf1__confirmation__C05__N3__reflected__right",
+        "wmf1__confirmation__C05__N3__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-right",
+        "original-left",
+        "reflected-right",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C05__D1",
+      "layout_pair_id": "C05",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C05__D1__original__right",
+        "wmf1__confirmation__C05__D1__original__left",
+        "wmf1__confirmation__C05__D1__reflected__right",
+        "wmf1__confirmation__C05__D1__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091206,
+      "condition_order": [
+        "original-right",
+        "reflected-right",
+        "reflected-left",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C06__N3",
+      "layout_pair_id": "C06",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C06__N3__original__right",
+        "wmf1__confirmation__C06__N3__reflected__right",
+        "wmf1__confirmation__C06__N3__reflected__left",
+        "wmf1__confirmation__C06__N3__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-right",
+        "reflected-right",
+        "reflected-left",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C06__D1",
+      "layout_pair_id": "C06",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C06__D1__original__right",
+        "wmf1__confirmation__C06__D1__reflected__right",
+        "wmf1__confirmation__C06__D1__reflected__left",
+        "wmf1__confirmation__C06__D1__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091207,
+      "condition_order": [
+        "reflected-right",
+        "reflected-left",
+        "original-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C07__N3",
+      "layout_pair_id": "C07",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C07__N3__reflected__right",
+        "wmf1__confirmation__C07__N3__reflected__left",
+        "wmf1__confirmation__C07__N3__original__left",
+        "wmf1__confirmation__C07__N3__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-right",
+        "reflected-left",
+        "original-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C07__D1",
+      "layout_pair_id": "C07",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C07__D1__reflected__right",
+        "wmf1__confirmation__C07__D1__reflected__left",
+        "wmf1__confirmation__C07__D1__original__left",
+        "wmf1__confirmation__C07__D1__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091208,
+      "condition_order": [
+        "reflected-left",
+        "original-left",
+        "original-right",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C08__N3",
+      "layout_pair_id": "C08",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C08__N3__reflected__left",
+        "wmf1__confirmation__C08__N3__original__left",
+        "wmf1__confirmation__C08__N3__original__right",
+        "wmf1__confirmation__C08__N3__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-left",
+        "original-left",
+        "original-right",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C08__D1",
+      "layout_pair_id": "C08",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C08__D1__reflected__left",
+        "wmf1__confirmation__C08__D1__original__left",
+        "wmf1__confirmation__C08__D1__original__right",
+        "wmf1__confirmation__C08__D1__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091209,
+      "condition_order": [
+        "original-right",
+        "reflected-right",
+        "original-left",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C09__N3",
+      "layout_pair_id": "C09",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C09__N3__original__right",
+        "wmf1__confirmation__C09__N3__reflected__right",
+        "wmf1__confirmation__C09__N3__original__left",
+        "wmf1__confirmation__C09__N3__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-right",
+        "reflected-right",
+        "original-left",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C09__D1",
+      "layout_pair_id": "C09",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C09__D1__original__right",
+        "wmf1__confirmation__C09__D1__reflected__right",
+        "wmf1__confirmation__C09__D1__original__left",
+        "wmf1__confirmation__C09__D1__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091210,
+      "condition_order": [
+        "original-left",
+        "reflected-left",
+        "reflected-right",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C10__N3",
+      "layout_pair_id": "C10",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C10__N3__original__left",
+        "wmf1__confirmation__C10__N3__reflected__left",
+        "wmf1__confirmation__C10__N3__reflected__right",
+        "wmf1__confirmation__C10__N3__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-left",
+        "reflected-left",
+        "reflected-right",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C10__D1",
+      "layout_pair_id": "C10",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C10__D1__original__left",
+        "wmf1__confirmation__C10__D1__reflected__left",
+        "wmf1__confirmation__C10__D1__reflected__right",
+        "wmf1__confirmation__C10__D1__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091211,
+      "condition_order": [
+        "original-left",
+        "reflected-left",
+        "original-right",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C11__N3",
+      "layout_pair_id": "C11",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C11__N3__original__left",
+        "wmf1__confirmation__C11__N3__reflected__left",
+        "wmf1__confirmation__C11__N3__original__right",
+        "wmf1__confirmation__C11__N3__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-left",
+        "reflected-left",
+        "original-right",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C11__D1",
+      "layout_pair_id": "C11",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C11__D1__original__left",
+        "wmf1__confirmation__C11__D1__reflected__left",
+        "wmf1__confirmation__C11__D1__original__right",
+        "wmf1__confirmation__C11__D1__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091212,
+      "condition_order": [
+        "original-left",
+        "reflected-right",
+        "reflected-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C12__N3",
+      "layout_pair_id": "C12",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C12__N3__original__left",
+        "wmf1__confirmation__C12__N3__reflected__right",
+        "wmf1__confirmation__C12__N3__reflected__left",
+        "wmf1__confirmation__C12__N3__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-left",
+        "reflected-right",
+        "reflected-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C12__D1",
+      "layout_pair_id": "C12",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C12__D1__original__left",
+        "wmf1__confirmation__C12__D1__reflected__right",
+        "wmf1__confirmation__C12__D1__reflected__left",
+        "wmf1__confirmation__C12__D1__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091213,
+      "condition_order": [
+        "original-left",
+        "original-right",
+        "reflected-right",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C13__N3",
+      "layout_pair_id": "C13",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C13__N3__original__left",
+        "wmf1__confirmation__C13__N3__original__right",
+        "wmf1__confirmation__C13__N3__reflected__right",
+        "wmf1__confirmation__C13__N3__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-left",
+        "original-right",
+        "reflected-right",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C13__D1",
+      "layout_pair_id": "C13",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C13__D1__original__left",
+        "wmf1__confirmation__C13__D1__original__right",
+        "wmf1__confirmation__C13__D1__reflected__right",
+        "wmf1__confirmation__C13__D1__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091214,
+      "condition_order": [
+        "reflected-right",
+        "original-right",
+        "original-left",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C14__N3",
+      "layout_pair_id": "C14",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C14__N3__reflected__right",
+        "wmf1__confirmation__C14__N3__original__right",
+        "wmf1__confirmation__C14__N3__original__left",
+        "wmf1__confirmation__C14__N3__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-right",
+        "original-right",
+        "original-left",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C14__D1",
+      "layout_pair_id": "C14",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C14__D1__reflected__right",
+        "wmf1__confirmation__C14__D1__original__right",
+        "wmf1__confirmation__C14__D1__original__left",
+        "wmf1__confirmation__C14__D1__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091215,
+      "condition_order": [
+        "reflected-right",
+        "original-left",
+        "reflected-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C15__N3",
+      "layout_pair_id": "C15",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C15__N3__reflected__right",
+        "wmf1__confirmation__C15__N3__original__left",
+        "wmf1__confirmation__C15__N3__reflected__left",
+        "wmf1__confirmation__C15__N3__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-right",
+        "original-left",
+        "reflected-left",
+        "original-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C15__D1",
+      "layout_pair_id": "C15",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C15__D1__reflected__right",
+        "wmf1__confirmation__C15__D1__original__left",
+        "wmf1__confirmation__C15__D1__reflected__left",
+        "wmf1__confirmation__C15__D1__original__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091216,
+      "condition_order": [
+        "original-right",
+        "original-left",
+        "reflected-left",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C16__N3",
+      "layout_pair_id": "C16",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C16__N3__original__right",
+        "wmf1__confirmation__C16__N3__original__left",
+        "wmf1__confirmation__C16__N3__reflected__left",
+        "wmf1__confirmation__C16__N3__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-right",
+        "original-left",
+        "reflected-left",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C16__D1",
+      "layout_pair_id": "C16",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C16__D1__original__right",
+        "wmf1__confirmation__C16__D1__original__left",
+        "wmf1__confirmation__C16__D1__reflected__left",
+        "wmf1__confirmation__C16__D1__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091217,
+      "condition_order": [
+        "original-right",
+        "reflected-left",
+        "original-left",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C17__N3",
+      "layout_pair_id": "C17",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C17__N3__original__right",
+        "wmf1__confirmation__C17__N3__reflected__left",
+        "wmf1__confirmation__C17__N3__original__left",
+        "wmf1__confirmation__C17__N3__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-right",
+        "reflected-left",
+        "original-left",
+        "reflected-right"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C17__D1",
+      "layout_pair_id": "C17",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C17__D1__original__right",
+        "wmf1__confirmation__C17__D1__reflected__left",
+        "wmf1__confirmation__C17__D1__original__left",
+        "wmf1__confirmation__C17__D1__reflected__right"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091218,
+      "condition_order": [
+        "reflected-right",
+        "original-left",
+        "original-right",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C18__N3",
+      "layout_pair_id": "C18",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C18__N3__reflected__right",
+        "wmf1__confirmation__C18__N3__original__left",
+        "wmf1__confirmation__C18__N3__original__right",
+        "wmf1__confirmation__C18__N3__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-right",
+        "original-left",
+        "original-right",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C18__D1",
+      "layout_pair_id": "C18",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C18__D1__reflected__right",
+        "wmf1__confirmation__C18__D1__original__left",
+        "wmf1__confirmation__C18__D1__original__right",
+        "wmf1__confirmation__C18__D1__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091219,
+      "condition_order": [
+        "original-right",
+        "reflected-left",
+        "reflected-right",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C19__N3",
+      "layout_pair_id": "C19",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C19__N3__original__right",
+        "wmf1__confirmation__C19__N3__reflected__left",
+        "wmf1__confirmation__C19__N3__reflected__right",
+        "wmf1__confirmation__C19__N3__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-right",
+        "reflected-left",
+        "reflected-right",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C19__D1",
+      "layout_pair_id": "C19",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C19__D1__original__right",
+        "wmf1__confirmation__C19__D1__reflected__left",
+        "wmf1__confirmation__C19__D1__reflected__right",
+        "wmf1__confirmation__C19__D1__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091220,
+      "condition_order": [
+        "reflected-left",
+        "reflected-right",
+        "original-right",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C20__N3",
+      "layout_pair_id": "C20",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C20__N3__reflected__left",
+        "wmf1__confirmation__C20__N3__reflected__right",
+        "wmf1__confirmation__C20__N3__original__right",
+        "wmf1__confirmation__C20__N3__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-left",
+        "reflected-right",
+        "original-right",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C20__D1",
+      "layout_pair_id": "C20",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C20__D1__reflected__left",
+        "wmf1__confirmation__C20__D1__reflected__right",
+        "wmf1__confirmation__C20__D1__original__right",
+        "wmf1__confirmation__C20__D1__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091221,
+      "condition_order": [
+        "reflected-right",
+        "reflected-left",
+        "original-right",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C21__N3",
+      "layout_pair_id": "C21",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C21__N3__reflected__right",
+        "wmf1__confirmation__C21__N3__reflected__left",
+        "wmf1__confirmation__C21__N3__original__right",
+        "wmf1__confirmation__C21__N3__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-right",
+        "reflected-left",
+        "original-right",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C21__D1",
+      "layout_pair_id": "C21",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C21__D1__reflected__right",
+        "wmf1__confirmation__C21__D1__reflected__left",
+        "wmf1__confirmation__C21__D1__original__right",
+        "wmf1__confirmation__C21__D1__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091222,
+      "condition_order": [
+        "reflected-right",
+        "original-right",
+        "reflected-left",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C22__N3",
+      "layout_pair_id": "C22",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C22__N3__reflected__right",
+        "wmf1__confirmation__C22__N3__original__right",
+        "wmf1__confirmation__C22__N3__reflected__left",
+        "wmf1__confirmation__C22__N3__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-right",
+        "original-right",
+        "reflected-left",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C22__D1",
+      "layout_pair_id": "C22",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C22__D1__reflected__right",
+        "wmf1__confirmation__C22__D1__original__right",
+        "wmf1__confirmation__C22__D1__reflected__left",
+        "wmf1__confirmation__C22__D1__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091223,
+      "condition_order": [
+        "reflected-left",
+        "original-right",
+        "reflected-right",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C23__N3",
+      "layout_pair_id": "C23",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C23__N3__reflected__left",
+        "wmf1__confirmation__C23__N3__original__right",
+        "wmf1__confirmation__C23__N3__reflected__right",
+        "wmf1__confirmation__C23__N3__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "reflected-left",
+        "original-right",
+        "reflected-right",
+        "original-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C23__D1",
+      "layout_pair_id": "C23",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C23__D1__reflected__left",
+        "wmf1__confirmation__C23__D1__original__right",
+        "wmf1__confirmation__C23__D1__reflected__right",
+        "wmf1__confirmation__C23__D1__original__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 2026091224,
+      "condition_order": [
+        "original-left",
+        "reflected-right",
+        "original-right",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C24__N3",
+      "layout_pair_id": "C24",
+      "model_config": "N3",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C24__N3__original__left",
+        "wmf1__confirmation__C24__N3__reflected__right",
+        "wmf1__confirmation__C24__N3__original__right",
+        "wmf1__confirmation__C24__N3__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    },
+    {
+      "candidate_effective_policy_seed": 1140,
+      "condition_order": [
+        "original-left",
+        "reflected-right",
+        "original-right",
+        "reflected-left"
+      ],
+      "depends_on_jobs": [
+        "wmf_ablation_001_20260912__development__D01__D1",
+        "wmf_ablation_001_20260912__development__D01__N3",
+        "wmf_ablation_001_20260912__development__D02__D1",
+        "wmf_ablation_001_20260912__development__D02__N3",
+        "wmf_ablation_001_20260912__development__D03__D1",
+        "wmf_ablation_001_20260912__development__D03__N3",
+        "wmf_ablation_001_20260912__development__D04__D1",
+        "wmf_ablation_001_20260912__development__D04__N3"
+      ],
+      "execution_contract": {
+        "full_model_and_simulator_reset_before_each_condition": true,
+        "no_global_DreamZero_context_interleaving": true,
+        "same_isolated_worker_type_within_job": true,
+        "sequential_conditions": true
+      },
+      "indivisible": true,
+      "job_id": "wmf_ablation_001_20260912__confirmation__C24__D1",
+      "layout_pair_id": "C24",
+      "model_config": "D1",
+      "ordered_cell_ids": [
+        "wmf1__confirmation__C24__D1__original__left",
+        "wmf1__confirmation__C24__D1__reflected__right",
+        "wmf1__confirmation__C24__D1__original__right",
+        "wmf1__confirmation__C24__D1__reflected__left"
+      ],
+      "phase": "confirmation",
+      "released": false,
+      "required_gates": [
+        "original_archive_identity_or_unavailable_result",
+        "qualified_runtime_and_seed_behavior",
+        "D1_official_or_verified_equivalence",
+        "frozen_layout_pose_manifest_and_rejection_ledger",
+        "per_model_video_action_physical_time_mapping",
+        "primary_horizon_and_camera_tolerance",
+        "isolated_DreamZero_temporal_context",
+        "annotation_rubric_threshold_and_sampling_algorithm_seed",
+        "frozen_execution_order_and_seed_audit",
+        "selected_machine_and_bounded_resource_authorization",
+        "post_development_confirmation_freeze"
+      ],
+      "status": "NOT_RELEASED"
+    }
+  ],
+  "launch_ready": false,
+  "models": [
+    "N3",
+    "D1"
+  ],
+  "namespace": "wmf_ablation_001_20260912",
+  "nano_seed_audit": {
+    "bounded_audit_clear": true,
+    "path": "nano_seed_audit.json",
+    "runtime_compatibility_qualified": false,
+    "sha256": "13518803924d4590e28ea3f214ecfa78272dcb79b27b91aca6cdeb97c64a31f2"
+  },
+  "order_assignment": {
+    "assignment_uses_outcomes": false,
+    "block_sha256": {
+      "C01": "77e95976af82d17fbc4eccdc8a2a3c5844c632f81d4f6bbacc773e8f0120134b",
+      "C02": "085a966d588a424f2e9d6b1963a310306b51a8938a139e2280e9e8d3efbd05fc",
+      "C03": "a4ebc6f4e6410b835521cd6afae394d4d5400520ef5520e01a6c4fd9d27e9c94",
+      "C04": "9e05bf10b362360d08b2d93e42883c7d1d091181ad4c74be85587b94de0fa2b4",
+      "C05": "567783670a03ec3bf3f9ecc764fe80ad574a97fdfcf81aad7bea17625dafedbe",
+      "C06": "67fcf1585ba4a554c1d1a316fa330f3cec32191f700007de8def95a45f2d285b",
+      "C07": "d9eea8e47900016df0220a9576527db9744bdae595ac1f3fddfa85444aa390ba",
+      "C08": "758193887df0689da177e2816d08b97227587c98b38b4026aa69746b74989454",
+      "C09": "63809d08f1c8a216c44d8a8f750c7b6711bb1228bbe9741bd5b4091d217a8bbc",
+      "C10": "1494e281415bb40a03a53863ca5aceb5c2be8ad8dd83dc521d2ac642c4d060a0",
+      "C11": "12cc11e4c6bd17aa1697ca9842f1d59367cd678001be8d22126d8bfc17040bc0",
+      "C12": "366fb8b4b9c6da50c9216eb6d39851b2a9148f27dd632fa1acd4ec30f08c93be",
+      "C13": "0f2b8c1bed0a3e9fa0dfa69bd3852013da1f48382f557d693a05d1ad61a97c78",
+      "C14": "d97a651353c40d5d8008d5b1addc9c067280691fe20233cb2873ff9529a94818",
+      "C15": "d7ad4fbf017c61ab25c0206c9343fed9672cfaa6e41ea0de0ef65523c2154214",
+      "C16": "4925b2edfada9d41511b16088faed277306ac348a4e00c31f2e0bbbf9393e389",
+      "C17": "5c003c6c9ad3b45bbd21e6a82118b585757585ae47f4e9db5f5b5ac2f9e6b5e6",
+      "C18": "ca50c081a21ce906d9bbdd1b8261cd1a38d30ed2aaaa7a08a606913645521c9c",
+      "C19": "5ed2503ebdf20b21a6cad18902cbd63b6765c701c892b227a7cb0d7e38a35e0d",
+      "C20": "b8d51ff71273519b1caf0e2f1e7e388af630ef751859d3a8ee3247d23b6b631d",
+      "C21": "fddf273ae8101789d373f3dada42c9cca5e6793c9d68f8fc32652dca08bfb712",
+      "C22": "d989cefb53ec96651d1ceeff773439c1adee2a51f36003791e042b78554bbcce",
+      "C23": "a29afebe214219803340548fda2fca2154541760a3e92076e5f12fc4a9943a6f",
+      "C24": "29797a34a041712ef6c1d26e101423437e44bf90d48d5f3604b4a888dfd78007",
+      "D01": "0f7016f2e9c848ee9c537f33532938fcc6e5781eae3ed3ff0c5264710db4a3fc",
+      "D02": "babcbcdec057e6a0aaa2220671b5eaac23031fe7182fa90a49addc613ca54a7b",
+      "D03": "dfec392eda5d2fbd23730645fb8b0d34c6cb68554936f706e7613be728f3a13c",
+      "D04": "ed15ec1f856b0e398df8dbfe073dcc1e05684fc4edee8f2753e69b94e372e8f3",
+      "P00": "930779b62f5638d103603c8ac14fe22d466da7704967fb5cbb70bf9cb87f2dfe"
+    },
+    "condition_alphabet": [
+      "original-left",
+      "original-right",
+      "reflected-left",
+      "reflected-right"
+    ],
+    "confirmation_algorithm": "Sort C01-C24 by digest (block ID tie-break); assign the 24 lexicographic permutations in that order.",
+    "confirmation_blocks_in_hash_order": [
+      "C02",
+      "C13",
+      "C11",
+      "C10",
+      "C24",
+      "C12",
+      "C16",
+      "C05",
+      "C17",
+      "C19",
+      "C09",
+      "C06",
+      "C08",
+      "C01",
+      "C04",
+      "C23",
+      "C03",
+      "C20",
+      "C18",
+      "C15",
+      "C14",
+      "C22",
+      "C07",
+      "C21"
+    ],
+    "input": "ASCII namespace + ':' + layout_pair_id; SHA-256 hexadecimal digest",
+    "permutation_index_by_block": {
+      "C01": 13,
+      "C02": 0,
+      "C03": 16,
+      "C04": 14,
+      "C05": 7,
+      "C06": 11,
+      "C07": 22,
+      "C08": 12,
+      "C09": 10,
+      "C10": 3,
+      "C11": 2,
+      "C12": 5,
+      "C13": 1,
+      "C14": 20,
+      "C15": 19,
+      "C16": 6,
+      "C17": 8,
+      "C18": 18,
+      "C19": 9,
+      "C20": 17,
+      "C21": 23,
+      "C22": 21,
+      "C23": 15,
+      "C24": 4,
+      "D01": 4,
+      "D02": 19,
+      "D03": 20,
+      "D04": 3,
+      "P00": 22
+    },
+    "pilot_development_algorithm": "Interpret complete digest as unsigned hexadecimal integer; index modulo 24 into the same permutation list.",
+    "same_order_for_both_models": true
+  },
+  "pilot_waiver_policy": "A waiver requires a separate verified four-condition exact-runtime record; no waived cell becomes an executed episode. This prepared schedule contains no waiver.",
+  "schema_version": "wmf-unreleased-block-schedule-v1",
+  "source_sha256": {
+    "workshops/corl2026_world_models/experiments/forecast_layout/ablation_spec.json": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
+    "workshops/corl2026_world_models/experiments/forecast_layout/planned_cells.csv": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
+    "workshops/corl2026_world_models/experiments/forecast_layout/prepare_parallel_schedule.py": "51d1fb15ad9e1023af85e6a44b8aa3ae573eb27a7085e307825268f8f5225887"
+  },
+  "spec_id": "WMF-ABLATION-001",
+  "status": "ORDER_PREPARED_NOT_RELEASED",
+  "upstream_pin": "ce561e66f82e95055e39d3d7711691982f6b2086"
+}

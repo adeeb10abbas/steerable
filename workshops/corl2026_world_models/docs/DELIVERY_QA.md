@@ -1,65 +1,68 @@
-# First-sprint delivery verification
+# Rewritten paper: delivery verification
 
-Date: 2026-09-12. Status: **working research package; not submitted**.
+Date: 2026-09-12. Status: **working research paper; not submitted**.
 
-## Verified artifact
+## Manuscript and PDF
 
-`paper/main.pdf` has **four pages total including references**, compiled using
-the unchanged official CoRL 2026 style in preprint mode. The author line explicitly
-identifies it as a working draft; the final author list has not been supplied.
+The paper is now titled **Spatial Instruction Following in World–Action Models**.
+It reports the completed Nano and DreamZero position-reflection experiments.
+The previous forecast-scoring draft is preserved in commit `8657fa7`; its
+supporting analysis remains available but is not presented as the current paper.
 
-- PDF SHA256: `0fb7d780160c08b0189675abb854bc5e8d09135c650129e9d58ec60895a2d756`.
+`paper/main.pdf` has **four pages total including references**, compiled with the
+unchanged official CoRL 2026 style in preprint mode and an anonymous author line.
+
+- PDF SHA256: `8b385fb8f63e2e76f914715223f9f45e5b51673d147554990eca47002c438580`.
 - Official style SHA256: `62f38cd8df7ad718796617595c8230da136fc83ea1d7e1ba80084113409ec957`.
-- Automated checks: four pages; expected evidence text; references resolved;
-  no overfull boxes or LaTeX errors.
-- All four final pages were rendered at 120 dpi and visually inspected. The
-  table, figure labels, equation, captions, citations and body text are readable;
-  no clipping, overlap or missing glyphs was observed. The earlier stretched
-  checkpoint-name line was corrected before the final render.
+- Numerical figure input SHA256: `f4695ae37dfd6b981a133ee10ccd69a2b86988e71d6ff99462bd449189dd94d7`.
+- Automated PDF checks passed: four pages, expected result text, resolved
+  references, no overfull boxes or LaTeX errors.
+- All four final rendered pages (`paper/qa_pages/final_rewrite-1.png` through
+  `final_rewrite-4.png`) were visually inspected. Body text, equations, table,
+  figures and references are readable. No clipping, overlap or missing glyphs
+  was observed. The opening Results paragraph ends before the page break.
 
-The editable manuscript, reference database, official template provenance,
-data-derived PDF/PNG figure and build instructions are included. The numerical
-figure is generated directly from `results/audit_summary.json`.
+The result figure is generated from `results/paper_results.json`. The experimental
+design figure is explicitly labeled as a schematic, not a measured trajectory.
 
-## Verified analysis and review
+## Numerical verification and independent review
 
-The integrated build ran all **17 tests**, the complete historical replay, the
-private annotation draw, figure generation and the PDF build successfully.
-See `results/validation.log` and `results/build_report.json` for receipts.
+The integrated build passed **23 tests**, extracted the paper results, replayed
+the preserved historical analysis, regenerated the figures and compiled the PDF.
+The logs are `results/validation.log` and `results/build_report.json`.
 
-- All 752 historical chunk rows and 3,008 cached frames reconcile.
-- All 761 audited source-file Git identities match the pinned upstream evidence.
-  Current SHA256 receipts are separate from historical raw-file hashes.
-- Historical totals and the same-subset always-negative baseline match the
-  manuscript. No table is labeled corrected prediction fidelity.
-- Descriptive coverage uncertainty retains all four episodes and their chunks
-  within each of 20 shared-seed blocks, separately sampling the two seed tiers.
-- The private annotation draw contains 160 unique chunks with the intended
-  stratum sizes and weights summing to 752. Its canonical draw SHA256 is
-  `ab780ea4e1b91918ca72801ef0641b563725d0a7d935f6de15e1d135b0ed6d47`.
+The extractor verifies nine source Git blobs at upstream commit
+`ce561e66f82e95055e39d3d7711691982f6b2086`. It recomputes counts and continuous
+measurements from episode rows and reconciles them against the source summaries.
+It extracts three separate 108-episode cohorts; only the two position-reflection
+cohorts, 216 episodes total, enter the manuscript. The separate DreamZero symmetry
+experiment is not pooled with either reflection experiment.
 
-An independent scientific/code review identified and checked fixes for the
-bootstrap dependence and normalized adapter's time/reliability validation. It
-also independently reproduced the annotation sample and checked manuscript
-claim boundaries, model identity and citation fit. No blocking finding remained
-within that review's scope. This review is not independent human labeling of
-the model's predictions or a substitute for empirical validation.
+An independent reviewer checked all eight success counts, the instruction-response
+and placement-depth means, intervals and measurement definitions against the pinned
+episode rows. The final manuscript incorporates the following corrections:
 
-## Outstanding scientific work
+- Instruction response compares final cube–bowl offsets, not absolute cube endpoints.
+- The success cone extends 45 degrees on either side of the requested direction.
+- Continuous position measurements include failed trials.
+- The commands and 450-action limit are stated in the experimental setup.
+- DreamZero results are descriptive because its effective model-noise seed is fixed;
+  only Nano receives bootstrap confidence intervals in the paper and figure.
+- DreamZero's original 41 failures are described by the recorded execution checks:
+  26 pickup, 14 transport and one wrong-side placement. These are not diagnoses
+  of language understanding.
 
-Original raw evidence must be recovered and its physical time and geometry
-verified before an aligned comparison can be produced. Human annotations,
-persistence comparison, any calibrated decision rule and independent replication
-remain pending. The adapter only validates a normalized record and byte identity;
-it does not prove temporal or semantic alignment. Historical runtime patches
-remain a separate exact-reproduction requirement.
+## Remaining research and submission work
 
-The final recovery check includes an 80-episode execution-imagery readiness
-inventory. No separate execution-image/video receipts appear under the selected
-run roots; HDF5 RGB contents have not been inspected. A later conditioning image
-is a possible source only with verified physical-time alignment. None of these
-routes is presently certified, and all unknown endpoints remain explicit.
+The current results cover two checkpoints, one task and two fixed physical layouts.
+They establish neither prediction accuracy nor the causal benefit of world modeling.
+They also do not isolate visibility, reachability or grasp geometry as the mechanism.
 
-The original study files were preserved. This workshop package is a disclosed
-retrospective amendment in its own directory and local branch. No model inference,
-remote compute, new human annotation, submission or public release was performed.
+`docs/NEXT_EXPERIMENT.md` specifies an eight-trial recording check followed by a
+comparison of generated futures with actual outcomes at matching times. It has not
+been launched. New layouts, qualified model-noise sampling and independent image
+labels remain future work. No new model inference, remote compute or human labeling
+was performed during the rewrite.
+
+Final authorship, publication eligibility and the workshop's final submission rules
+remain to be confirmed before submission. No submission or public release occurred.

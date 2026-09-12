@@ -2,6 +2,12 @@
 
 Date: 2026-09-12
 
+> Historical first-sprint plan. The rewritten manuscript now reports the completed
+> Nano and DreamZero position-reflection experiments. See [README.md](../README.md)
+> for the current paper and [NEXT_EXPERIMENT.md](NEXT_EXPERIMENT.md) for the proposed
+> prediction experiment. The original forecast-validation work below is preserved
+> as supporting research, not as a description of the current manuscript.
+
 ## Accepted direction
 
 Develop a world-model-only research submission for the CoRL 2026 workshop **Do Robots Need World Models?**, primarily Theme 6 (evaluation and benchmarking), with Theme 4 (models as evaluation tools) as motivation. Aim for Best Research Paper through a defensible result, useful method, and clear presentation. An award is an aspiration, not a promised outcome.

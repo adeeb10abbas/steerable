@@ -1,4 +1,4 @@
-"""Reproduce the local audit, private draw, figures and four-page draft.
+"""Reproduce the executed-behavior paper and preserved supporting analyses.
 
 Requires requirements-build.txt and a TeX distribution providing latexmk.
 No model inference, network calls, remote jobs, or publication actions.
@@ -34,9 +34,10 @@ def main():
         print(f"Passed: {name}", flush=True)
 
     run("regression tests", [sys.executable, "-m", "unittest", "discover", "-s", str(package / "tests"), "-v"])
+    run("paper experiment results", [sys.executable, str(package / "analysis/extract_paper_results.py")])
     run("historical evidence replay", [sys.executable, str(package / "analysis/evidence_audit.py")])
     run("private annotation draw", [sys.executable, str(package / "analysis/prepare_annotation_sample.py")])
-    run("data-derived figure", [sys.executable, str(package / "analysis/make_figures.py")])
+    run("paper figures", [sys.executable, str(package / "analysis/make_paper_figures.py")])
     latexmk = shutil.which("latexmk")
     if latexmk is None:
         raise RuntimeError("latexmk is required; add your TeX distribution to PATH")
@@ -49,7 +50,7 @@ def main():
     if len(reader.pages) > 4 or not reader.pages or problems:
         raise RuntimeError(f"PDF check failed: pages={len(reader.pages)}; layout/citation flags={problems}")
     body = "\n".join(page.extract_text() for page in reader.pages)
-    for required in ["98.1", "25/97", "References", "remain pending"]:
+    for required in ["108", "13/54", "50/54", "26/27", "Results", "Conclusion", "References"]:
         if required not in body:
             raise RuntimeError(f"PDF is missing expected text: {required}")
     if "??" in body:
@@ -58,6 +59,8 @@ def main():
         return hashlib.sha256(path.read_bytes()).hexdigest()
     report = {
         "status": "working_draft_built_not_submitted",
+        "paper_scope": "Executed spatial behavior: Nano and DreamZero position-reflection experiments, reported separately",
+        "paper_cohorts": ["nano_reflection", "dreamzero_reflection"],
         "steps": steps,
         "python": platform.python_version(),
         "build_dependencies": {name: importlib.metadata.version(name) for name in ["matplotlib", "pypdf"]},
@@ -65,7 +68,7 @@ def main():
                 "sha256": digest(pdf), "undefined_references_or_overfull_boxes": False,
                 "visual_review": "separate inspection required; see docs/DELIVERY_QA.md"},
         "official_style_sha256": digest(package / "paper/template/corl_2026.sty"),
-        "figure_input_sha256": digest(results / "audit_summary.json"),
+        "figure_input_sha256": digest(results / "paper_results.json"),
         "annotation_draw_sha256": json.loads((results / "annotation_sample.json").read_text())["provenance"]["draw_sha256"],
         "corrected_fidelity_measured": False,
         "independent_human_labels_collected": False,

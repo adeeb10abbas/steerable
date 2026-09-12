@@ -1,5 +1,24 @@
 # Historical model and runtime identity
 
+## Checkpoints in the rewritten paper
+
+The current manuscript uses the V3 position-reflection cohorts, with metadata
+extracted from pinned protocol and episode files in `results/paper_results.json`:
+
+- Cosmos 3 Nano: `nvidia/Cosmos3-Nano-Policy-DROID`, revision
+  `6706d7680581c255ff61e0f3bb49d90eac55c79e`.
+- DreamZero: `GEAR-Dreams/DreamZero-DROID`, revision
+  `96ad344138c66e82536422432ad742f015784942`.
+- Both use a 450-action cap and the existing release-within-45-degrees-of-the-
+  requested-axis task rule. Nano varies sampling seeds 9400–9426; DreamZero
+  retains effective model-noise seed 1140.
+
+These are archived experiment identities, not newly downloaded or rehashed
+weights. The earlier Cosmos Edge experiment below is supporting material and
+is not the checkpoint used for the new paper's Nano results.
+
+## Earlier Cosmos Edge prediction analysis
+
 Verified from the committed V1 evidence on 2026-09-12. These are historical
 receipts, not a fresh inspection of model weights or the original execution host.
 

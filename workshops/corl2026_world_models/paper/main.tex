@@ -1,86 +1,100 @@
 \documentclass{article}
 \usepackage[preprint]{corl_2026}
 \usepackage{graphicx,booktabs,amsmath,amssymb}
-\title{When Agreement Is Not Enough:\\Auditing Robot World--Action Models}
-\author{Working research draft\\12 September 2026 --- author list to be confirmed}
+\title{Spatial Instruction Following in World--Action Models}
+\author{Anonymous Authors}
 \begin{document}
 \maketitle
 \begin{abstract}
-A robot world--action model can generate a future and an action sequence together, but agreement between their measured outcomes is only meaningful when both measurements describe the same event. We audit a historical Cosmos 3 Edge DROID corpus containing 80 simulated episodes and 752 prediction/action chunks. The historical evaluator reports 98.1\% agreement on 421 scorable chunks, yet covers only 25 of 97 executed-positive endpoints. We identify temporal and geometric differences between the forecast and execution labels, so the observed mismatches cannot be interpreted directly as world-model prediction errors. We report the measurement audit and specify an aligned, coverage-aware evaluation with independently adjudicated visual labels and simple baselines. This working draft establishes an evaluation limitation; aligned prediction fidelity and downstream control utility remain unmeasured.
+When a robot succeeds at \emph{right of the bowl} but fails at \emph{left of the bowl}, does it misunderstand the instruction, or is one placement harder in that scene? We study Cosmos 3 Nano and DreamZero in a simulated cube-placement task. For each model, 108 trials cross two commands with two object layouts while keeping the model, robot, cameras and controller fixed. Mirroring the object positions changes DreamZero's task completion from 13/54 to 50/54 trials. Most of its original-layout failures occur at pickup or transport. Nano remains highly successful, but the side on which it places the cube farther beyond the bowl reverses. Its final cube--bowl positions follow the requested LEFT/RIGHT ordering in every matched pair in both layouts. These results distinguish response to an instruction from successful execution: scene layout can change task performance substantially even when a model responds to the directional words.
 \end{abstract}
-\keywords{World--action models, robot evaluation, semantic prediction}
+\keywords{World--action models, spatial instructions, robot manipulation}
 
 \section{Introduction}
-World--action models expose an appealing source of evidence about robot behavior: a generated future accompanies the actions that the robot may execute~\citep{nvidia2026cosmos3,ye2026dreamzero}. This interface makes it possible to ask whether a forecast describes the consequences of its associated action chunk. It does not, by itself, establish that prediction is accurate or useful for choosing actions. A jointly generated sample is also different from an independently validated model queried under arbitrary counterfactual actions.
+A robot asked to place a cube on either side of a bowl must do more than recognize \emph{left} and \emph{right}. It must also grasp the cube, transport it and release it in the requested region. An instruction can redirect the robot in the correct direction while the final placement still fails. A difference in LEFT and RIGHT success rates therefore leaves an important question unanswered: did the instruction fail to influence the policy, or did the resulting motion fail to complete the task?
 
-We investigate an evaluation question: \emph{what does a high prediction--execution agreement score actually certify?} A score may reflect class imbalance, selective coverage, or different definitions of the event on its two sides. These possibilities matter if forecasts are to support monitoring, planning, or policy evaluation. A system that appears accurate mostly before anything happens has not necessarily been evaluated where the robot changes the world.
+This distinction matters for world--action models, which connect visual world modeling with robot control. DreamZero jointly models future video and actions, while the Cosmos 3 family supports both world modeling and policy generation~\citep{ye2026dreamzero,nvidia2026cosmos3}. Their ability to follow a spatial instruction must still be established through the robot's behavior. Existing world-model benchmarks assess functional utility alongside visual quality~\citep{shang2026worldarena}. We examine how to interpret performance on the executed manipulation task.
 
-Our contribution is a reproducible audit of an existing measurement pipeline and a concrete protocol for correcting it. We distinguish (i) a completed historical-label reconciliation, (ii) limitations discovered by inspecting the evaluator, and (iii) a proposed common-time, common-predicate validation. We do not infer that the world model caused successful control, that its eight historical mismatches are eight prediction errors, or that world models are necessary or unnecessary.
+Our experiment mirrors the positions of movable objects while keeping the policy and commands fixed. In each layout, we compare LEFT and RIGHT trials that begin from the same physical state. We separately measure how the command changes the final cube--bowl relation, how far the cube finishes on the requested side, and whether the placement succeeds. DreamZero's completion rate changes substantially with layout; Nano's achieved placement changes even when completion remains high. The contribution is a controlled demonstration that task success and directional response can support different conclusions about the same world--action model.
 
-This scope complements existing work. WorldArena studies the relationship between perceptual and functional quality; dWorldEval evaluates failures and success bias in learned simulators; SC3-Eval studies trajectory consistency and simulated policy evaluation~\citep{shang2026worldarena,li2026dworldeval,tseng2026sc3eval}. Our narrower object is a \emph{co-generated forecast/action pair}: the prediction and the specific action prefix actually executed must share their time, spatial relation and observation-validity definitions. We make no priority claim for the broader observation that visual quality is insufficient for control.
+\section{Experimental Setup}
+\paragraph{Task and models.}
+We evaluate Cosmos 3 Nano and DreamZero on a Rubik's-cube placement task in the DROID/RoboLab simulator. The command is \emph{Put the Rubik's cube to the [left/right] of the bowl}. It remains fixed throughout each execution, which permits at most 450 actions. The robot receives no intermediate hints.
 
-\section{Historical corpus and measurement audit}
-The historical V1 study evaluates Cosmos 3 Edge DROID in simulation, using a pinned checkpoint and a fixed instruction throughout each episode. It contains four wording conditions, two requested spatial directions and ten episodes per condition, for 80 episodes. Canonical/short and declarative/contrastive conditions used different seed tiers; they are not paired across tiers. The model emits a 33-frame future with a 32-action chunk. Frame zero is conditioning and is excluded from forecast scoring. Replanning yields 752 correlated chunks, not 752 independent robot trials.
+\paragraph{Scene intervention and repeated trials.}
+The reflected layout mirrors the centers of all movable objects across the robot's forward midline. The robot, cameras, fixed scene geometry and controller remain unchanged. LEFT continues to mean the robot's left in both layouts (Figure~\ref{fig:design}).
 
-The offline evaluator uses a prompt-blind Qwen visual localizer to identify the cube and bowl independently in two generated camera views. It projects the centroids to a calibrated plane, requires cross-camera agreement, and can abstain. Its historical human audit reviewed 24 episode sheets and authorized descriptive use with limitations; it did not establish ground-truth evaluator accuracy. The localization results, original labels and original thresholds remain immutable in our reanalysis.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/reflection_design.pdf}
+\caption{\textbf{Change the layout, repeat the commands.} Both LEFT and RIGHT instructions are tested in each arrangement. Movable objects are reflected, while the robot and cameras remain fixed. The diagram is schematic; it does not show measured coordinates or a recorded trajectory.}
+\label{fig:design}
+\end{figure}
 
+Each model has 27 matched trial blocks. A block contains four executions: both commands in the original layout and both in the reflected layout, giving 108 trials per model. The starting physical state is identical across repeats within each layout. These are two fixed layouts, not 27 different scenes. Nano uses matched policy-sampling seeds across conditions. DreamZero's inference configuration fixes its noise seed, so its repeats are not independent draws of model noise. We report the models separately.
+
+\paragraph{Measurements.}
+Let $y$ denote the final cube--bowl lateral offset, positive to the robot's left. For a matched pair of commands, the \emph{instruction response}
+\begin{equation}
+R=y_{\mathrm{LEFT}}-y_{\mathrm{RIGHT}}
+\end{equation}
+is positive when asking for LEFT places the cube farther left relative to the bowl than asking for RIGHT. Because the bowl is movable, this measures a change in their spatial relation, not the separation of two absolute cube endpoints.
+
+The \emph{placement depth} is the final offset toward the requested side: $y_{\mathrm{LEFT}}$ for LEFT and $-y_{\mathrm{RIGHT}}$ for RIGHT. A larger positive depth means the cube finishes farther past the bowl on that side. We compare the two requests using
+\begin{equation}
+G=(-y_{\mathrm{RIGHT}})-y_{\mathrm{LEFT}}.
+\end{equation}
+Positive $G$ favors rightward placement; negative $G$ favors leftward placement. We measure its change between layouts within each trial block. Depth is a final position, not distance traveled from the start.
+
+Task success requires the cube to be released within 45 degrees of the requested left/right direction from the bowl. A favorable lateral offset alone need not satisfy this rule. We use the same rule in both layouts and calculate both position measures over all trials, including failed placements. All measurements concern executed behavior recorded by the simulator. Nano's confidence intervals use 20,000 bootstrap resamples of complete trial blocks, keeping all four conditions together; DreamZero's repeated-run results are reported descriptively.
+
+\section{Results}
 \begin{table}[t]
 \centering
-\caption{Historical labels, reproduced for audit. ``Positive'' denotes the evaluator's requested spatial relation, not full task completion. Forecast and execution event definitions differ; this is not a validated prediction-error table.}
-\label{tab:historical}
-\begin{tabular}{lrr}
+\caption{\textbf{Task completion and instruction response describe different aspects of behavior.} Success counts have 27 trials each. $R$ is the mean LEFT-minus-RIGHT difference in final cube--bowl offsets. $G$ compares achieved placement depth, with positive values favoring RIGHT requests.}
+\label{tab:results}
+\begin{tabular}{llrrrr}
 \toprule
-Historical forecast label & Executed positive & Executed negative\\
+Model & Layout & \shortstack{LEFT\\success} & \shortstack{RIGHT\\success} & \shortstack{$R$\\(cm)} & \shortstack{$G$\\(cm)}\\
 \midrule
-Positive & 22 & 5\\
-Negative & 3 & 391\\
-Abstained & 72 & 259\\
+Nano & Original & 26/27 & 26/27 & 44.8 & $+14.8$\\
+ & Reflected & 27/27 & 23/27 & 45.3 & $-10.0$\\
+DreamZero & Original & 5/27 & 8/27 & 12.2 & $+2.3$\\
+ & Reflected & 25/27 & 25/27 & 37.6 & $-11.8$\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Agreement and coverage answer different questions.}
-Table~\ref{tab:historical} gives 413 agreements among 421 scored chunks: 98.1\%. Of these agreements, 391 are negative on both sides. Overall coverage is 421/752 (56.0\%), and coverage on executed-positive endpoints is 25/97 (25.8\%). A constant-negative label agrees with the execution labels on 396/421 (94.1\%) of the \emph{same scored subset}. The four-percentage-point difference is descriptive historical-label arithmetic, not evidence of validated predictive utility. Early negative chunks are not failed episodes: a multi-step placement may not reach the requested region within an early short horizon. Unscorable forecasts must not be counted as negative predictions.
+\paragraph{Layout strongly changes DreamZero's completion rate.}
+DreamZero succeeds in 5/27 LEFT trials and 8/27 RIGHT trials in the original scene, compared with 25/27 in each direction after reflection (Table~\ref{tab:results}). Combined across commands, completion rises from 13/54 to 50/54 with the same checkpoint, wording and controller. Poor performance in the original scene is therefore insufficient evidence that the direction words were ignored or misunderstood.
+
+\paragraph{High success can hide changes in achieved placement.}
+Nano completes 26/27 trials for each command in the original layout. Yet its rightward placement depth exceeds its leftward depth by 14.8\,cm. After reflection, LEFT requests place the cube 10.0\,cm farther past the bowl than RIGHT requests. The mean within-block change in $G$ is $-24.8$\,cm. DreamZero's corresponding contrast changes from $+2.3$ to $-11.8$\,cm, a change of $-14.1$\,cm. Figure~\ref{fig:placement} contrasts these shifts with completion rates.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/coverage_audit.pdf}
-\caption{Three different denominators. High agreement among scored historical labels coexists with limited overall coverage and particularly low coverage on positive execution events. These are descriptive statistics from an evaluator with unequal forecast/execution definitions; no independent-chunk confidence intervals are implied.}
-\label{fig:coverage}
+\includegraphics[width=\linewidth]{figures/reflection_results.pdf}
+\caption{\textbf{The same intervention affects the models differently.} Left: successful trials across both commands, out of 54 per layout. Right: mean RIGHT-minus-LEFT placement depth $G$. Nano has 95\% intervals over matched sampling-seed blocks; DreamZero is shown descriptively because its noise seed is fixed. The mean depth difference changes sign in both models.}
+\label{fig:placement}
 \end{figure}
 
-\paragraph{The two labels do not measure the same event.}
-The predicted label aggregates the reliable subset of frames 8, 16, 24 and 32. At least two frames must be reliable; at least 75\% must satisfy the requested relation for a positive label. The executed label instead evaluates one state at the end of the action prefix. A trajectory can reach a region late and therefore receive different labels even if its forecast is accurate. The spatial definitions also differ: projected visual centroids are compared on the prediction side, while execution uses robot-frame object poses and an additional vertical-distance requirement. Coordinate conventions and entity definitions must be reconciled before attributing their disagreements to the model.
+\paragraph{Most original-layout DreamZero failures occur before placement.}
+Of its 41 unsuccessful trials, the recorded checks classify 26 as pickup failures, 14 as transport failures and one as wrong-side placement. These categories describe execution stages, rather than what the model understood. They show why the overall failure count cannot be treated as a count of directional-language errors.
 
-\paragraph{The evaluator is part of the uncertainty.}
-The human audit documents localization failures when objects are small, occluded or overlap the arm. Two-camera agreement catches some failures but does not prove correct identity. Stricter historical cross-camera thresholds preserve high conditional agreement while sharply reducing positive-event coverage. Thus the table cannot separate model error, evaluator error and definition mismatch. It supports a measurement critique with visible limits, rather than a model-accuracy estimate.
+\paragraph{Instruction response and placement depth need not change together.}
+Nano's final cube--bowl offsets follow the command's directional ordering in all 27 pairs in each layout; DreamZero does so in 26/27 original-layout pairs and 27/27 reflected-layout pairs. Nano's mean response $R$ is 44.8\,cm before reflection and 45.3\,cm afterward. Its estimated change in response is much smaller than the 24.8\,cm change in relative placement depth. This does not establish exact invariance. DreamZero's response increases from 12.2 to 37.6\,cm: layout can affect both the response to a command and the success of its execution.
 
-\section{Aligned evaluation: a retrospective amendment}
-The following protocol is a proposed correction, not a completed new result or a preregistration of unseen historical outcomes. Its implementation must refuse to emit a validated-fidelity score when the required source evidence or alignment is absent.
+Nano's mean change in $G$ has a 95\% interval of $[-32.4,-17.3]$\,cm. This summarizes variation across sampling-seed blocks in the two tested layouts, not generalization to new scenes. We make no inference over independent model-noise samples for DreamZero.
 
-\paragraph{Define a shared event before scoring.}
-For a verified common forecast/execution time $\tau$, let $y_{e,k,\tau}$ be the independently established executed relation and $\hat y_{e,k,\tau}$ the predicted relation, with $\hat y=\bot$ when the forecast is unscorable. Both sides must use the same camera or coordinate transform, object identity, geometric convention and temporal aggregation. Image-plane relational consistency and physical task completion are distinct endpoints. A planar forecast cannot certify a height-dependent physical predicate unless the required geometry is actually observed or reconstructed and validated.
+\section{Discussion and Limitations}
+The results separate three questions: does language change the cube--bowl relation in the requested direction, how far does the achieved placement extend toward the goal, and does the full manipulation succeed? Nano shows why continuous position matters near a success ceiling. DreamZero shows how much completion can change with another object arrangement. In both cases, the scene is part of the explanation of the score.
 
-\paragraph{Validate semantics independently.}
-Two independent annotators should receive separately shuffled conditioning, forecast and execution images with opaque IDs, without counterpart images, model identity, requested direction, historical label or episode outcome. They first label a common projected relation; request polarity is joined afterward only if camera geometry supports that mapping. Otherwise the endpoint is three-class image-left/neutral/image-right. Generated-image artifacts may compromise source blinding and must be disclosed. Ambiguity remains unknown; disagreements receive independent adjudication. The prepared 160-chunk probability-sampling design covers all historical strata and requires inverse-inclusion weights; a full census is preferable. New human labels and verified endpoint images remain pending.
+For world--action model evaluation, a useful comparison is to repeat opposing commands from the same state, then repeat that comparison in a controlled alternative layout. Final object positions should accompany completion rates. A benchmark using one arrangement can otherwise turn a scene-specific execution difficulty into an apparent general limitation of spatial instruction following.
 
-\paragraph{Compare with informative baselines.}
-The primary proposed contrast is forecast versus current-observation persistence on identical, execution-resolvable rows. Define balanced correct-and-covered rate as
-\begin{equation}
-\mathrm{BCC}(M)=\tfrac12\left[\Pr(M=1\mid y=1)+\Pr(M=0\mid y=0)\right].
-\end{equation}
-An abstention earns no certificate but stays in its execution-class denominator; it is not recoded as a negative prediction. Unknown execution labels remain unknown. Both classes must exist; for the three-class endpoint use the corresponding macro-average. A constant positive or negative baseline has binary BCC 0.5. Report the paired BCC difference, class-conditional coverage, conditional agreement and transition cases where execution differs from persistence. Persistence uses only information available when the forecast is issued. Rule calibration requires separate validation labels. An episode-level failure certificate requires a separate decision rule; it cannot be inferred from chunk agreement alone.
+The study covers two checkpoints, one simulated task and two fixed layouts. Reflection changes objects' positions relative to the robot and cameras; it does not isolate reachability, visibility, grasp geometry or a model component. The commands test a familiar LEFT/RIGHT contrast rather than general language comprehension. We do not compare against policies without world modeling, so the results do not identify a causal benefit or disadvantage of world modeling. Executed outcomes also do not establish the accuracy of generated future videos. Comparing predicted and actual object positions at matching times would address that separate question.
 
-\paragraph{Keep uncertainty and scope honest.}
-Resample this corpus's 20 shared-seed blocks, preserving each block's four wording/direction episodes and all chunks. For the sampled human audit, also account for the sampling strata and weights. Report abstention, uncertain actual labels and terminal truncation explicitly. Independent-binomial intervals are inappropriate for correlated replans. This remains a single-checkpoint simulated case study. Replication on a second world--action model with decodable paired futures is a strengthening experiment, not a result supplied by action-only scores from another model.
-
-\section{Discussion and current limits}
-This audit identifies why a high agreement number cannot currently certify the semantic fidelity of a robot world model. It also supplies a practical route toward a stronger result: align the event, validate its measurement, expose selective coverage, and compare with baselines that exploit the same information. The distinction matters for evaluation tools that may otherwise mistake an unmeasured event for a safe or successful forecast.
-
-The present evidence does not yet show that corrected forecasts outperform persistence, anticipate failures, preserve policy rankings, or improve robot control. Those require the aligned data and prospective decisions specified above. Visual labels are fallible, the corpus is narrow, and full-state or full-frame recovery may be needed to score a common predicate. These limits should shape the next experiments, not be removed by changing the title or aggregating more heterogeneous models.
-
-\paragraph{Reproducibility and draft status.}
-The analysis package pins the audited evidence repository, records file hashes and cohort identities, and supplies regression tests, a recovery inventory and the retrospective amendment. Historical protocols and outcomes are preserved. The checkpoint is pinned; exact runtime reproduction also requires the original local patches. This working draft has not been submitted. Corrected fidelity, independent annotation and downstream utility remain pending.
+\section{Conclusion}
+Changing the object layout substantially changes spatial task performance without changing the evaluated models or their commands. Measuring instruction response, placement depth and completion separately shows what a success rate alone misses. This distinction is necessary when using manipulation benchmarks to assess spatial instruction following in world--action models.
 
 \bibliography{references}
 \end{document}

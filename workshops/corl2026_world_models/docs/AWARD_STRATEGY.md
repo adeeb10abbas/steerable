@@ -1,5 +1,11 @@
 # Strategy for a competitive WAM research paper
 
+> This strategy accompanied the first forecast-scoring draft. The current paper
+> instead reports completed spatial instruction-following experiments with Nano
+> and DreamZero. See [README.md](../README.md). The prediction question below
+> remains a proposed extension, with the next concrete experiment described in
+> [NEXT_EXPERIMENT.md](NEXT_EXPERIMENT.md).
+
 Prepared 2026-09-12. Research judgment and proposed gates, not an award
 prediction. The current corpus is known retrospectively; no new validation is
 claimed. The detailed measurement plan is in [ANALYSIS_PROTOCOL.md](ANALYSIS_PROTOCOL.md).

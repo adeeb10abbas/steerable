@@ -1,0 +1,82 @@
+{
+  "schema_version": "world-models-cluster-preflight-v1",
+  "recorded_at_utc": "2026-09-12T20:38:40Z",
+  "mode": "read_only_discovery",
+  "status": "blocked_cluster_connectivity",
+  "live_gpu_capacity": "unknown",
+  "live_workload_conflicts": "unknown",
+  "jobs_launched": 0,
+  "jobs_stopped": 0,
+  "cluster_resources_mutated": false,
+  "credentials_read_or_copied": false,
+  "network_configuration_changed": false,
+  "verified_access": {
+    "workstation": {
+      "ssh_alias": "workstation",
+      "hostname": "ali-MS-7D25",
+      "reachable": true,
+      "kubectl_path": "/usr/local/bin/kubectl",
+      "default_kube_context": "lam-h100",
+      "default_context_note": "Unrelated default context attempted interactive authentication; probe interrupted. Do not use this context for GM."
+    },
+    "work_mac": {
+      "ssh_alias": "work-mac",
+      "user": "SZ5VJY",
+      "verified_hostname": "ZTMACMP49KLV4LX",
+      "dns_ipv4": "10.0.0.15",
+      "reachability": "intermittent",
+      "successful_command": "ssh -4 -o BatchMode=yes -o ConnectTimeout=8 -o ConnectionAttempts=1 work-mac 'hostname; /usr/local/bin/kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get pods -o wide --request-timeout=10s'",
+      "successful_ssh_output": "ZTMACMP49KLV4LX",
+      "cluster_api": "https://10.120.200.169:6443",
+      "cluster_api_error": "Unable to connect to the server: dial tcp 10.120.200.169:6443: connect: can't assign requested address",
+      "cluster_response_received": false,
+      "vpn_status": "not verified; subsequent SSH connections timed out before route/VPN checks could execute"
+    }
+  },
+  "connection_attempt_summary": [
+    {"route": "direct work-mac, default address family", "outcome": "port 22 timeout"},
+    {"route": "workstation -> SZ5VJY@ZTMACMP49KLV4LX.local", "outcome": "port 22 timeout"},
+    {"route": "direct work-mac forced IPv4", "outcome": "one successful SSH connection; GM Kubernetes API immediately failed with network error"},
+    {"route": "subsequent direct forced IPv4, explicit 10.0.0.15, and workstation forced IPv4 relay", "outcome": "port 22 timeouts; bounded retries stopped"}
+  ],
+  "known_targets_requiring_fresh_verification": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "primary_owned_pod": "211247-ali-b200-1gpu",
+    "historical_owned_pod": "lerobot-b200-4gpu-1-ali",
+    "pvc_claim": "211247-prod-pvc",
+    "persistent_root": "/data/users/ali/vla_wam",
+    "raw_root": "/data/users/ali/vla_wam/raw",
+    "source_root": "/data/users/ali/vla_wam/src",
+    "environment_root": "/data/users/ali/vla_wam/envs",
+    "checkpoint_root": "/data/users/ali/vla_wam/checkpoints",
+    "external_root": "/data/users/ali/vla_wam/external",
+    "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
+  },
+  "historical_capacity_only": {
+    "not_current_availability": true,
+    "c6_snapshot_at_utc": "2026-09-08T13:12:27Z",
+    "c6_lane_cap": 32,
+    "c6_lane_roles": "one B200 policy GPU plus one A100-40GB simulator GPU per lane",
+    "historically_idle_a100_80gb": 95,
+    "historically_idle_a40": 40,
+    "source": "/home/ali/projects/steerable-spatial-static45-runtime/artifacts/online_correction_v4/execution/gpu_widen_20260908/c6_capacity_routing_decision.json",
+    "a40_snapshot_at_utc": "2026-09-08T14:59:37Z",
+    "a40_pool_size": 40,
+    "a40_free_estimate_then": 40,
+    "a40_source": "/home/ali/projects/steerable-spatial-static45-runtime/artifacts/online_correction_v4/execution/gpu_widen_20260908/a40_capacity_routing_decision.json"
+  },
+  "workstation_reference_material": {
+    "runtime_checkout": "/home/ali/projects/steerable-spatial-static45-runtime",
+    "base_checkout": "/home/ali/projects/steerable",
+    "base_branch": "codex/wam-language-steerability",
+    "base_commit": "8a9893e643772c35ade334d5e6f5580f7a3e3a16",
+    "base_status": "untracked research-blog/; preserved",
+    "local_raw_root": "/home/ali/projects/steerable/data/raw",
+    "local_raw_size": "228M",
+    "local_raw_children": ["bridge_orig_lerobot", "steering_features_bridge"],
+    "local_raw_note": "This is old Bridge reference material, not verified source for the requested forecast ablation. GM /data/users/ali/vla_wam is not present on workstation."
+  },
+  "next_check": "Restore reliable work Mac connectivity and its GM VPN route, then query the named ali-owned pod, inspect its PVC mounts, run nvidia-smi and process checks, and inspect only ali-owned capacity before scheduling. Do not infer current availability from historical capacity snapshots.",
+  "minimal_external_action": "Keep the work Mac awake and network-connected with its GM VPN connected."
+}

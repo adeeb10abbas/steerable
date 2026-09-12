@@ -1,0 +1,59 @@
+{
+  "namespace": "wmf_ablation_001_20260912",
+  "as_of_utc": "2026-09-12T20:47:57.395268+00:00",
+  "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
+  "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
+  "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
+  "requested_host": "GM allocated cluster",
+  "authorization": "User requested execution of attached specification on GM with aggressive parallelism. Core 232 episodes selected; optional D2 not selected. No confirmation release before qualification.",
+  "core_episodes_launched": 0,
+  "generation_requests_launched": 0,
+  "phase": "offline_preparation_cluster_blocked",
+  "cluster_status": "GM API failed on one successful IPv4 work-Mac connection; final forced-IPv4 retry timed out on SSH. Live GPU capacity remains unknown.",
+  "execution_gates": {
+    "archive_recovery": "pending_cluster_access",
+    "runtime_N3": "pending_restore_and_probes",
+    "runtime_D1": "pending_official_path_and_probes",
+    "fixed_450_recorder": "implementation_required",
+    "physical_layouts": "pending_model_blind_qualification",
+    "frame_time_camera_mapping": "pending_measured_qualification",
+    "annotation_development": "pending_development_recordings",
+    "confirmation_release": false
+  },
+  "scheduling": {
+    "unit": "one model and one complete four-condition layout block",
+    "pilot_max_workers": 2,
+    "development_max_workers": 8,
+    "confirmation_max_workers": 48,
+    "actual_parallel_limit": null,
+    "limit_rule": "min(verified available isolated workers, remaining blocks); never interleave shared temporal server state"
+  },
+  "preserve": "All historical V2/V3 evidence and registries; all valid failures; all partial attempts",
+  "workstation_source": "/home/ali/projects/steerable-forecast-layout-20260912",
+  "workstation_baseline_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
+  "verified_baseline_tests": 23,
+  "source_bundle_sha256": "a8cc6b8d393902bd4ea8561ec1236097d02c74c88c500b5477da72df576fde69",
+  "automatic_background_execution": false,
+  "verified_workshop_tests": 43,
+  "prepared_schedule": {
+    "path": "parallel_schedule.json",
+    "jobs": 58,
+    "scientific_cells": 232,
+    "launch_ready": false
+  },
+  "retrospective_stopping_analysis": {
+    "path": "../../results/stopping_controls.json",
+    "control_ordered_pairs": 27,
+    "reflected_ordered_pairs": 27,
+    "pairs_per_layout": 27,
+    "new_episodes": 0,
+    "common_time_is_outcome_dependent": true
+  },
+  "nano_seed_audit": {
+    "path": "nano_seed_audit.json",
+    "candidate_count": 29,
+    "structured_artifact_count": 1848,
+    "collisions_within_checked_scope": 0,
+    "runtime_acceptance_verified": false
+  }
+}

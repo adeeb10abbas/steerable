@@ -1,5 +1,12 @@
 # Does the predicted video show where the cube will end up?
 
+> This initial outline is superseded by the
+> [paper revision plan](superpowers/plans/2026-09-12-world-model-paper.md).
+> The revised plan first checks archived V3 recordings, distinguishes the custom
+> DreamZero configuration, addresses goal-dependent stopping, and limits each
+> forecast comparison to its actual executed horizon. The eight-trial pilot is
+> conditional on recording/configuration qualification needs.
+
 The existing paper measures what the robot does. The most useful extension is
 to test whether the model's generated future predicts those same outcomes.
 This would connect the scene-layout result directly to the model's prediction

@@ -13,6 +13,15 @@ to the command.
 
 ## Read the paper
 
+The current draft has received a weak-reject internal review. In particular,
+its DreamZero results use custom action guidance at scale 2, and its endpoint
+response measure needs a stopping-rule control. These revisions are planned,
+not yet incorporated into the manuscript.
+
+- [Research and experiment plan](docs/superpowers/plans/2026-09-12-world-model-paper.md):
+  repair existing results, qualify archived recordings, then test whether
+  generated futures anticipate executed motion across new object layouts.
+
 - [Paper PDF](paper/main.pdf) and [editable LaTeX](paper/main.tex).
 - [Verified paper results](results/paper_results.json).
 - [Next experiment](docs/NEXT_EXPERIMENT.md): compare predicted and actual

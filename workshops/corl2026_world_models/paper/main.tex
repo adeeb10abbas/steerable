@@ -1,0 +1,86 @@
+\documentclass{article}
+\usepackage[preprint]{corl_2026}
+\usepackage{graphicx,booktabs,amsmath,amssymb}
+\title{When Agreement Is Not Enough:\\Auditing Robot World--Action Models}
+\author{Working research draft\\12 September 2026 --- author list to be confirmed}
+\begin{document}
+\maketitle
+\begin{abstract}
+A robot world--action model can generate a future and an action sequence together, but agreement between their measured outcomes is only meaningful when both measurements describe the same event. We audit a historical Cosmos 3 Edge DROID corpus containing 80 simulated episodes and 752 prediction/action chunks. The historical evaluator reports 98.1\% agreement on 421 scorable chunks, yet covers only 25 of 97 executed-positive endpoints. We identify temporal and geometric differences between the forecast and execution labels, so the observed mismatches cannot be interpreted directly as world-model prediction errors. We report the measurement audit and specify an aligned, coverage-aware evaluation with independently adjudicated visual labels and simple baselines. This working draft establishes an evaluation limitation; aligned prediction fidelity and downstream control utility remain unmeasured.
+\end{abstract}
+\keywords{World--action models, robot evaluation, semantic prediction}
+
+\section{Introduction}
+World--action models expose an appealing source of evidence about robot behavior: a generated future accompanies the actions that the robot may execute~\citep{nvidia2026cosmos3,ye2026dreamzero}. This interface makes it possible to ask whether a forecast describes the consequences of its associated action chunk. It does not, by itself, establish that prediction is accurate or useful for choosing actions. A jointly generated sample is also different from an independently validated model queried under arbitrary counterfactual actions.
+
+We investigate an evaluation question: \emph{what does a high prediction--execution agreement score actually certify?} A score may reflect class imbalance, selective coverage, or different definitions of the event on its two sides. These possibilities matter if forecasts are to support monitoring, planning, or policy evaluation. A system that appears accurate mostly before anything happens has not necessarily been evaluated where the robot changes the world.
+
+Our contribution is a reproducible audit of an existing measurement pipeline and a concrete protocol for correcting it. We distinguish (i) a completed historical-label reconciliation, (ii) limitations discovered by inspecting the evaluator, and (iii) a proposed common-time, common-predicate validation. We do not infer that the world model caused successful control, that its eight historical mismatches are eight prediction errors, or that world models are necessary or unnecessary.
+
+This scope complements existing work. WorldArena studies the relationship between perceptual and functional quality; dWorldEval evaluates failures and success bias in learned simulators; SC3-Eval studies trajectory consistency and simulated policy evaluation~\citep{shang2026worldarena,li2026dworldeval,tseng2026sc3eval}. Our narrower object is a \emph{co-generated forecast/action pair}: the prediction and the specific action prefix actually executed must share their time, spatial relation and observation-validity definitions. We make no priority claim for the broader observation that visual quality is insufficient for control.
+
+\section{Historical corpus and measurement audit}
+The historical V1 study evaluates Cosmos 3 Edge DROID in simulation, using a pinned checkpoint and a fixed instruction throughout each episode. It contains four wording conditions, two requested spatial directions and ten episodes per condition, for 80 episodes. Canonical/short and declarative/contrastive conditions used different seed tiers; they are not paired across tiers. The model emits a 33-frame future with a 32-action chunk. Frame zero is conditioning and is excluded from forecast scoring. Replanning yields 752 correlated chunks, not 752 independent robot trials.
+
+The offline evaluator uses a prompt-blind Qwen visual localizer to identify the cube and bowl independently in two generated camera views. It projects the centroids to a calibrated plane, requires cross-camera agreement, and can abstain. Its historical human audit reviewed 24 episode sheets and authorized descriptive use with limitations; it did not establish ground-truth evaluator accuracy. The localization results, original labels and original thresholds remain immutable in our reanalysis.
+
+\begin{table}[t]
+\centering
+\caption{Historical labels, reproduced for audit. ``Positive'' denotes the evaluator's requested spatial relation, not full task completion. Forecast and execution event definitions differ; this is not a validated prediction-error table.}
+\label{tab:historical}
+\begin{tabular}{lrr}
+\toprule
+Historical forecast label & Executed positive & Executed negative\\
+\midrule
+Positive & 22 & 5\\
+Negative & 3 & 391\\
+Abstained & 72 & 259\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Agreement and coverage answer different questions.}
+Table~\ref{tab:historical} gives 413 agreements among 421 scored chunks: 98.1\%. Of these agreements, 391 are negative on both sides. Overall coverage is 421/752 (56.0\%), and coverage on executed-positive endpoints is 25/97 (25.8\%). A constant-negative label agrees with the execution labels on 396/421 (94.1\%) of the \emph{same scored subset}. The four-percentage-point difference is descriptive historical-label arithmetic, not evidence of validated predictive utility. Early negative chunks are not failed episodes: a multi-step placement may not reach the requested region within an early short horizon. Unscorable forecasts must not be counted as negative predictions.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/coverage_audit.pdf}
+\caption{Three different denominators. High agreement among scored historical labels coexists with limited overall coverage and particularly low coverage on positive execution events. These are descriptive statistics from an evaluator with unequal forecast/execution definitions; no independent-chunk confidence intervals are implied.}
+\label{fig:coverage}
+\end{figure}
+
+\paragraph{The two labels do not measure the same event.}
+The predicted label aggregates the reliable subset of frames 8, 16, 24 and 32. At least two frames must be reliable; at least 75\% must satisfy the requested relation for a positive label. The executed label instead evaluates one state at the end of the action prefix. A trajectory can reach a region late and therefore receive different labels even if its forecast is accurate. The spatial definitions also differ: projected visual centroids are compared on the prediction side, while execution uses robot-frame object poses and an additional vertical-distance requirement. Coordinate conventions and entity definitions must be reconciled before attributing their disagreements to the model.
+
+\paragraph{The evaluator is part of the uncertainty.}
+The human audit documents localization failures when objects are small, occluded or overlap the arm. Two-camera agreement catches some failures but does not prove correct identity. Stricter historical cross-camera thresholds preserve high conditional agreement while sharply reducing positive-event coverage. Thus the table cannot separate model error, evaluator error and definition mismatch. It supports a measurement critique with visible limits, rather than a model-accuracy estimate.
+
+\section{Aligned evaluation: a retrospective amendment}
+The following protocol is a proposed correction, not a completed new result or a preregistration of unseen historical outcomes. Its implementation must refuse to emit a validated-fidelity score when the required source evidence or alignment is absent.
+
+\paragraph{Define a shared event before scoring.}
+For a verified common forecast/execution time $\tau$, let $y_{e,k,\tau}$ be the independently established executed relation and $\hat y_{e,k,\tau}$ the predicted relation, with $\hat y=\bot$ when the forecast is unscorable. Both sides must use the same camera or coordinate transform, object identity, geometric convention and temporal aggregation. Image-plane relational consistency and physical task completion are distinct endpoints. A planar forecast cannot certify a height-dependent physical predicate unless the required geometry is actually observed or reconstructed and validated.
+
+\paragraph{Validate semantics independently.}
+Two independent annotators should receive separately shuffled conditioning, forecast and execution images with opaque IDs, without counterpart images, model identity, requested direction, historical label or episode outcome. They first label a common projected relation; request polarity is joined afterward only if camera geometry supports that mapping. Otherwise the endpoint is three-class image-left/neutral/image-right. Generated-image artifacts may compromise source blinding and must be disclosed. Ambiguity remains unknown; disagreements receive independent adjudication. The prepared 160-chunk probability-sampling design covers all historical strata and requires inverse-inclusion weights; a full census is preferable. New human labels and verified endpoint images remain pending.
+
+\paragraph{Compare with informative baselines.}
+The primary proposed contrast is forecast versus current-observation persistence on identical, execution-resolvable rows. Define balanced correct-and-covered rate as
+\begin{equation}
+\mathrm{BCC}(M)=\tfrac12\left[\Pr(M=1\mid y=1)+\Pr(M=0\mid y=0)\right].
+\end{equation}
+An abstention earns no certificate but stays in its execution-class denominator; it is not recoded as a negative prediction. Unknown execution labels remain unknown. Both classes must exist; for the three-class endpoint use the corresponding macro-average. A constant positive or negative baseline has binary BCC 0.5. Report the paired BCC difference, class-conditional coverage, conditional agreement and transition cases where execution differs from persistence. Persistence uses only information available when the forecast is issued. Rule calibration requires separate validation labels. An episode-level failure certificate requires a separate decision rule; it cannot be inferred from chunk agreement alone.
+
+\paragraph{Keep uncertainty and scope honest.}
+Resample this corpus's 20 shared-seed blocks, preserving each block's four wording/direction episodes and all chunks. For the sampled human audit, also account for the sampling strata and weights. Report abstention, uncertain actual labels and terminal truncation explicitly. Independent-binomial intervals are inappropriate for correlated replans. This remains a single-checkpoint simulated case study. Replication on a second world--action model with decodable paired futures is a strengthening experiment, not a result supplied by action-only scores from another model.
+
+\section{Discussion and current limits}
+This audit identifies why a high agreement number cannot currently certify the semantic fidelity of a robot world model. It also supplies a practical route toward a stronger result: align the event, validate its measurement, expose selective coverage, and compare with baselines that exploit the same information. The distinction matters for evaluation tools that may otherwise mistake an unmeasured event for a safe or successful forecast.
+
+The present evidence does not yet show that corrected forecasts outperform persistence, anticipate failures, preserve policy rankings, or improve robot control. Those require the aligned data and prospective decisions specified above. Visual labels are fallible, the corpus is narrow, and full-state or full-frame recovery may be needed to score a common predicate. These limits should shape the next experiments, not be removed by changing the title or aggregating more heterogeneous models.
+
+\paragraph{Reproducibility and draft status.}
+The analysis package pins the audited evidence repository, records file hashes and cohort identities, and supplies regression tests, a recovery inventory and the retrospective amendment. Historical protocols and outcomes are preserved. The checkpoint is pinned; exact runtime reproduction also requires the original local patches. This working draft has not been submitted. Corrected fidelity, independent annotation and downstream utility remain pending.
+
+\bibliography{references}
+\end{document}

@@ -1,0 +1,213 @@
+{
+  "cohort": {
+    "chunks": 752,
+    "episodes": 80,
+    "frame_rejection_reasons_overlapping": {
+      "bowl_cross_camera_disagreement": 338,
+      "camera_relation_disagreement": 1201,
+      "cube_cross_camera_disagreement": 710,
+      "missing_localization": 1
+    },
+    "frames": 3008,
+    "reliable_frames": 1460
+  },
+  "corrected_fidelity_readiness": {
+    "manifest_hashes_available": 840,
+    "missing_by_role": {
+      "camera_and_coordinate_configuration": 8,
+      "chunk_alignment_metadata": 752,
+      "execution_trajectory": 80
+    },
+    "ready": false,
+    "reason": "raw trajectories and alignment metadata absent; prediction geometry is planar visual XY",
+    "required_paths": 840
+  },
+  "endpoint_sensitivity": {
+    "coverage_uncertainty": {
+      "confidence": 0.95,
+      "episodes_per_block": 4,
+      "independent_seed_blocks": 20,
+      "intervals": {
+        "coverage": [
+          0.33288770053475936,
+          0.413447782546495
+        ],
+        "positive_execution_coverage": [
+          0.12871287128712872,
+          0.2982456140350877
+        ]
+      },
+      "limitations": "Descriptive sampling uncertainty only; does not include evaluator error or selection bias.",
+      "method": "percentile matched-seed-block bootstrap within 6100 and 7200 tiers; four episodes per block, all chunks; pooled chunk ratio",
+      "replicates": 2000,
+      "seed": 20260912,
+      "seed_blocks_by_tier": {
+        "6100": 10,
+        "7200": 10
+      },
+      "seed_identity_validation": "sampling_seed == (tier + episode_index) * 1000 + replan_index for every row; both wordings and both directions required per block"
+    },
+    "limitations": [
+      "video/action time correspondence unverified without metadata and interface evidence",
+      "visual planar world-coordinate prediction versus robot-frame root-pose plus height execution",
+      "fallible localizer and reliability selection persist"
+    ],
+    "metrics": {
+      "certain": 282,
+      "coverage": 0.375,
+      "covered_executed_positive": 21,
+      "executed_positive": 97,
+      "historical_label_arithmetic": {
+        "constant_negative_agreement": 0.925531914893617,
+        "constant_negative_agreement_numerator": 261,
+        "denominator": 282,
+        "difference_percentage_points": 3.1914893617021276,
+        "interpretation": "same covered subset only; not validated fidelity or utility",
+        "observed_agreement": 0.9574468085106383,
+        "observed_agreement_numerator": 270
+      },
+      "n": 752,
+      "positive_execution_coverage": 0.21649484536082475,
+      "quadrants": {
+        "does_not_imagine_requested_executes_requested": 3,
+        "imagines_requested_executes_not_requested": 9,
+        "imagines_requested_executes_requested": 18,
+        "neither_imagines_nor_executes_requested": 252,
+        "uncertain_future": 470
+      }
+    },
+    "status": "posthoc aggregation sensitivity, NOT corrected fidelity"
+  },
+  "legacy_coverage_uncertainty": {
+    "confidence": 0.95,
+    "episodes_per_block": 4,
+    "independent_seed_blocks": 20,
+    "intervals": {
+      "coverage": [
+        0.5361216730038023,
+        0.583011583011583
+      ],
+      "positive_execution_coverage": [
+        0.19,
+        0.3333333333333333
+      ]
+    },
+    "limitations": "Descriptive sampling uncertainty only; does not include evaluator error or selection bias.",
+    "method": "percentile matched-seed-block bootstrap within 6100 and 7200 tiers; four episodes per block, all chunks; pooled chunk ratio",
+    "replicates": 2000,
+    "seed": 20260912,
+    "seed_blocks_by_tier": {
+      "6100": 10,
+      "7200": 10
+    },
+    "seed_identity_validation": "sampling_seed == (tier + episode_index) * 1000 + replan_index for every row; both wordings and both directions required per block"
+  },
+  "legacy_replay": {
+    "certain": 421,
+    "coverage": 0.5598404255319149,
+    "covered_executed_positive": 25,
+    "executed_positive": 97,
+    "historical_label_arithmetic": {
+      "constant_negative_agreement": 0.9406175771971497,
+      "constant_negative_agreement_numerator": 396,
+      "denominator": 421,
+      "difference_percentage_points": 4.038004750593824,
+      "interpretation": "same covered subset only; not validated fidelity or utility",
+      "observed_agreement": 0.9809976247030879,
+      "observed_agreement_numerator": 413
+    },
+    "n": 752,
+    "positive_execution_coverage": 0.25773195876288657,
+    "quadrants": {
+      "does_not_imagine_requested_executes_requested": 3,
+      "imagines_requested_executes_not_requested": 5,
+      "imagines_requested_executes_requested": 22,
+      "neither_imagines_nor_executes_requested": 391,
+      "uncertain_future": 331
+    }
+  },
+  "source_validation": {
+    "cache_calibration_hash": "56b7155fdb2eee1732e7636a104b2966323fcfc947c699cf3ac58635b232ace9",
+    "cache_semantics_mismatches": 0,
+    "csv_label_mismatches": 0,
+    "historical_hash_mismatches": [],
+    "historical_receipts_verified": 0,
+    "inputs_hashed": 761,
+    "upstream_commit": "ce561e66",
+    "upstream_git_blobs_verified": 761
+  },
+  "threshold_replay": {
+    "0.1": {
+      "certain": 41,
+      "coverage": 0.05452127659574468,
+      "covered_executed_positive": 1,
+      "executed_positive": 97,
+      "historical_label_arithmetic": {
+        "constant_negative_agreement": 0.975609756097561,
+        "constant_negative_agreement_numerator": 40,
+        "denominator": 41,
+        "difference_percentage_points": 0.0,
+        "interpretation": "same covered subset only; not validated fidelity or utility",
+        "observed_agreement": 0.975609756097561,
+        "observed_agreement_numerator": 40
+      },
+      "n": 752,
+      "positive_execution_coverage": 0.010309278350515464,
+      "quadrants": {
+        "does_not_imagine_requested_executes_requested": 0,
+        "imagines_requested_executes_not_requested": 1,
+        "imagines_requested_executes_requested": 1,
+        "neither_imagines_nor_executes_requested": 39,
+        "uncertain_future": 711
+      }
+    },
+    "0.15": {
+      "certain": 262,
+      "coverage": 0.3484042553191489,
+      "covered_executed_positive": 10,
+      "executed_positive": 97,
+      "historical_label_arithmetic": {
+        "constant_negative_agreement": 0.9618320610687023,
+        "constant_negative_agreement_numerator": 252,
+        "denominator": 262,
+        "difference_percentage_points": 3.053435114503817,
+        "interpretation": "same covered subset only; not validated fidelity or utility",
+        "observed_agreement": 0.9923664122137404,
+        "observed_agreement_numerator": 260
+      },
+      "n": 752,
+      "positive_execution_coverage": 0.10309278350515463,
+      "quadrants": {
+        "does_not_imagine_requested_executes_requested": 1,
+        "imagines_requested_executes_not_requested": 1,
+        "imagines_requested_executes_requested": 9,
+        "neither_imagines_nor_executes_requested": 251,
+        "uncertain_future": 490
+      }
+    },
+    "0.2": {
+      "certain": 421,
+      "coverage": 0.5598404255319149,
+      "covered_executed_positive": 25,
+      "executed_positive": 97,
+      "historical_label_arithmetic": {
+        "constant_negative_agreement": 0.9406175771971497,
+        "constant_negative_agreement_numerator": 396,
+        "denominator": 421,
+        "difference_percentage_points": 4.038004750593824,
+        "interpretation": "same covered subset only; not validated fidelity or utility",
+        "observed_agreement": 0.9809976247030879,
+        "observed_agreement_numerator": 413
+      },
+      "n": 752,
+      "positive_execution_coverage": 0.25773195876288657,
+      "quadrants": {
+        "does_not_imagine_requested_executes_requested": 3,
+        "imagines_requested_executes_not_requested": 5,
+        "imagines_requested_executes_requested": 22,
+        "neither_imagines_nor_executes_requested": 391,
+        "uncertain_future": 331
+      }
+    }
+  }
+}

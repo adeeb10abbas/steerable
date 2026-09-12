@@ -1,0 +1,42 @@
+{
+  "status": "working_draft_built_not_submitted",
+  "steps": [
+    {
+      "step": "regression tests",
+      "exit_code": 0
+    },
+    {
+      "step": "historical evidence replay",
+      "exit_code": 0
+    },
+    {
+      "step": "private annotation draw",
+      "exit_code": 0
+    },
+    {
+      "step": "data-derived figure",
+      "exit_code": 0
+    },
+    {
+      "step": "official-template PDF",
+      "exit_code": 0
+    }
+  ],
+  "python": "3.14.6",
+  "build_dependencies": {
+    "matplotlib": "3.11.2",
+    "pypdf": "6.18.1"
+  },
+  "pdf": {
+    "path": "paper/main.pdf",
+    "pages_including_references": 4,
+    "sha256": "0fb7d780160c08b0189675abb854bc5e8d09135c650129e9d58ec60895a2d756",
+    "undefined_references_or_overfull_boxes": false,
+    "visual_review": "separate inspection required; see docs/DELIVERY_QA.md"
+  },
+  "official_style_sha256": "62f38cd8df7ad718796617595c8230da136fc83ea1d7e1ba80084113409ec957",
+  "figure_input_sha256": "3d5752446c577f7049d02bb084c87800d5c9c001394e0782e4ab42eedd6ba0a5",
+  "annotation_draw_sha256": "ab780ea4e1b91918ca72801ef0641b563725d0a7d935f6de15e1d135b0ed6d47",
+  "corrected_fidelity_measured": false,
+  "independent_human_labels_collected": false
+}

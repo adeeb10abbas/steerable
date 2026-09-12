@@ -2,6 +2,8 @@
 
 > This initial outline is superseded by the
 > [paper revision plan](superpowers/plans/2026-09-12-world-model-paper.md).
+> The [ablation specification](ABLATION_SPEC.md) now fixes the exact experiment
+> matrix, configuration choices and existing-evidence inventory.
 > The revised plan first checks archived V3 recordings, distinguishes the custom
 > DreamZero configuration, addresses goal-dependent stopping, and limits each
 > forecast comparison to its actual executed horizon. The eight-trial pilot is

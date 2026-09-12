@@ -1,0 +1,238 @@
+{
+  "spec_id": "WMF-ABLATION-001",
+  "version": "1.0",
+  "status": "DRAFT_NOT_RELEASED",
+  "launch_ready": false,
+  "created_on": "2026-09-12",
+  "scope": "world-action model forecasts of actually executed short-horizon motion",
+  "upstream_pin": "ce561e66f82e95055e39d3d7711691982f6b2086",
+  "models": {
+    "N3": {
+      "repository": "nvidia/Cosmos3-Nano-Policy-DROID",
+      "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+      "guidance": 3,
+      "denoising_steps": 4,
+      "shift": 5,
+      "history_length": 1,
+      "conditioning_fps": 15,
+      "resolution_setting": 480,
+      "use_state": true,
+      "action_dimensions": 8,
+      "returned_actions": 32,
+      "executed_prefix_cap": 32,
+      "control_space": "joint_pos",
+      "noise_seed_mode": "matched effective policy seed per layout block"
+    },
+    "D1": {
+      "repository": "GEAR-Dreams/DreamZero-DROID",
+      "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
+      "action_path": "official conditional; patched s1 only after action+latent equivalence",
+      "custom_action_scale": null,
+      "video_guidance": 5,
+      "configured_inference_steps": 16,
+      "cache_behavior": "resolve_and_record",
+      "executed_prefix_cap": 8,
+      "effective_noise_seed": 1140,
+      "temporal_session": "isolated; verified full temporal/cache reset before every episode"
+    },
+    "D2": {
+      "selected": false,
+      "parent": "D1",
+      "action_path": "custom negative-branch action guidance",
+      "custom_action_scale": 2,
+      "holds_video_fixed": false
+    }
+  },
+  "prompts": {
+    "left": "Put the Rubik's cube to the left of the bowl.",
+    "right": "Put the Rubik's cube to the right of the bowl."
+  },
+  "episode": {
+    "action_cap": 450,
+    "stop_on_success": false,
+    "record_first_success": true,
+    "safety_abort": "retain actual prefix; censor unavailable future; no frozen-state substitution"
+  },
+  "stages": {
+    "pilot": {
+      "layout_pairs": 1,
+      "models": [
+        "N3",
+        "D1"
+      ],
+      "episodes": 8,
+      "waiver": "only exact already-qualified new runtime,logger,goal-independent stopping in allfourconditions"
+    },
+    "development": {
+      "layout_pairs": 4,
+      "models": [
+        "N3",
+        "D1"
+      ],
+      "episodes": 32
+    },
+    "confirmation": {
+      "layout_pairs": 24,
+      "models": [
+        "N3",
+        "D1"
+      ],
+      "episodes": 192
+    }
+  },
+  "core_episode_ceiling": 232,
+  "optional_guidance_episode_ceiling": 116,
+  "core_plus_guidance_ceiling": 348,
+  "nonbehavioral_generation_calls": {
+    "primary_decode_and_repeat_probes": 12,
+    "patched_D1_equivalence_reference_calls_if_needed": 3,
+    "optional_D2_qualification_if_selected": 6
+  },
+  "ablations": [
+    {
+      "id": "A1",
+      "type": "runtime_intervention",
+      "comparison": "Original versus reflected object centers",
+      "required": true,
+      "additional_episode_ceiling": 0,
+      "note": "Already part of192 core confirmation episodes"
+    },
+    {
+      "id": "A2",
+      "type": "runtime_intervention",
+      "comparison": "LEFT versus RIGHT command",
+      "required": true,
+      "additional_episode_ceiling": 0,
+      "note": "Already part of192 core confirmation episodes"
+    },
+    {
+      "id": "A3",
+      "type": "offline_baseline",
+      "comparison": "Generated future versus persistence",
+      "required": true,
+      "additional_episode_ceiling": 0,
+      "note": "Reuses core traces; not an independent dataset"
+    },
+    {
+      "id": "A4",
+      "type": "offline_baseline",
+      "comparison": "Generated future versus observation-history constant velocity",
+      "required": true,
+      "additional_episode_ceiling": 0,
+      "note": "Reuses core traces; not an independent dataset"
+    },
+    {
+      "id": "A5",
+      "type": "offline_measurement_control",
+      "comparison": "Action450 versus first-success endpoint in same trace",
+      "required": true,
+      "additional_episode_ceiling": 0,
+      "note": "Reuses core traces; not an independent dataset"
+    },
+    {
+      "id": "A6",
+      "type": "offline_stratification",
+      "comparison": "Uniform primary sample versus moving/stationary prefixes",
+      "required": true,
+      "additional_episode_ceiling": 0,
+      "note": "Reuses core traces; not an independent dataset"
+    },
+    {
+      "id": "A7",
+      "type": "offline_decomposition",
+      "comparison": "Relative cube-bowl motion versus each object's motion",
+      "required": true,
+      "additional_episode_ceiling": 0,
+      "note": "Reuses core traces; not an independent dataset"
+    },
+    {
+      "id": "A8",
+      "type": "offline_missingness_sensitivity",
+      "comparison": "Observable cases versus full-layout win bounds",
+      "required": true,
+      "additional_episode_ceiling": 0,
+      "note": "Reuses core traces; not an independent dataset"
+    },
+    {
+      "id": "A9",
+      "type": "offline_horizon_sensitivity",
+      "comparison": "Primary horizon versus earliest earlier qualified horizon",
+      "required": true,
+      "additional_episode_ceiling": 0,
+      "note": "Only if earlier frame exists; adds annotation, not model episodes"
+    },
+    {
+      "id": "G1",
+      "type": "optional_runtime_intervention",
+      "comparison": "D1 conditional versus D2 custom s2 action guidance",
+      "required": false,
+      "additional_episode_ceiling": 116,
+      "note": "4pilot+16development+96confirmation; not selected"
+    }
+  ],
+  "analysis": {
+    "primary": "mean Euclidean persistence-error minus forecast-error in normalized image-plane relative coordinates",
+    "resampling_unit": "independent base-layout pair including both arms,commands,andnestedmeasurements",
+    "bootstrap_resamples": 10000,
+    "analysis_seed": 2026091301,
+    "confidence_level": 0.95,
+    "models_reported_separately": true,
+    "request_sample_cap_per_episode": 4,
+    "request_sampling_seed": 2026091302,
+    "sampling": "uniform from time/action/camera-qualified metadata before labels; unclear images never replaced",
+    "missing_condition_policy": "continuous complete-layout estimate labeledconditional; full-layout weighted win bounds",
+    "request_manifest_timing": "algorithm and seed frozen before confirmation; selection manifest generated from actual metadata after execution and before labels"
+  },
+  "annotation": {
+    "raters": 2,
+    "primary_triplet_judgments_confirmation_max": 4608,
+    "with_history_judgments_confirmation_max": 6144,
+    "with_history_judgments_core_max": 7424,
+    "early_horizon": "Earliest strictly positive qualified target below primary H; one additional predicted/executed image pair if supported",
+    "with_history_and_early_horizon_judgments_confirmation_max": 9216,
+    "with_history_and_early_horizon_judgments_core_max": 11136
+  },
+  "release_requirements": [
+    "original_archive_identity_or_unavailable_result",
+    "qualified_runtime_and_seed_behavior",
+    "D1_official_or_verified_equivalence",
+    "frozen_layout_pose_manifest_and_rejection_ledger",
+    "per_model_video_action_physical_time_mapping",
+    "primary_horizon_and_camera_tolerance",
+    "isolated_DreamZero_temporal_context",
+    "annotation_rubric_threshold_and_sampling_algorithm_seed",
+    "frozen_execution_order_and_seed_audit",
+    "selected_machine_and_bounded_resource_authorization"
+  ],
+  "unresolved_qualified_values": {
+    "layout_pose_manifest": null,
+    "physical_horizons": null,
+    "frame_action_mapping": null,
+    "camera_contract": null,
+    "movement_resolution_threshold": null,
+    "execution_host": null,
+    "runtime_storage_cost": null
+  },
+  "exclusions": [
+    "no raw historical cohort pooling",
+    "no extra phrasing sweep",
+    "no new third model",
+    "no world-model-free training",
+    "no automatic guidance extension",
+    "no scoring unexecuted future"
+  ],
+  "counts_do_not_authorize_execution": true,
+  "post_execution_pre_labeling_requirements": [
+    "actual_request_inventory",
+    "metadata_only_request_selection_manifest"
+  ],
+  "fixture_requirements": [
+    "both_requested_success_predicates_false_after_settling",
+    "candidate_acceptance_blind_to_target_model_outcomes",
+    "left_right_reset_state_and_initial_observation_match",
+    "qualified_visibility_and_no_initial_collision",
+    "frozen_positions_and_orientation_sources",
+    "candidate_rejection_ledger"
+  ],
+  "decode_probe_boundary": "Skip only latent rendering, never the joint video prediction computation. If no toggle exists, use original output and offline redecoding; record toggle as inapplicable."
+}

@@ -13,6 +13,10 @@ to the command.
 
 ## Read the paper
 
+- [Exact ablation specification](docs/ABLATION_SPEC.md), including the verified
+  existing-experiment inventory, 232 planned core cells and separately listed
+  optional guidance extension. All new cells remain unreleased.
+
 The current draft has received a weak-reject internal review. In particular,
 its DreamZero results use custom action guidance at scale 2, and its endpoint
 response measure needs a stopping-rule control. These revisions are planned,

@@ -1,5 +1,13 @@
 # World-model paper revision implementation plan
 
+> The [ablation specification](../../ABLATION_SPEC.md) now fixes the exact
+> matrix: 24 confirmation layout pairs, named N3/D1 primary configurations,
+> optional D2 guidance cells, and annotation budgets including history and
+> earlier-horizon images. It supersedes the ranges and conditional model
+> substitutions in this earlier plan. Constant velocity is explicitly an
+> observation-history baseline and has extra temporal input relative to Nano's
+> history-length-one model interface.
+
 > For agentic workers: use superpowers:subagent-driven-development or superpowers:executing-plans when implementation is requested. The current task delivers a research plan; it does not launch experiments.
 
 **Goal:** Establish whether a world–action model's generated future predicts the object motion its own actions produce when the scene layout changes.

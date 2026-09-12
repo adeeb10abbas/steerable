@@ -1,0 +1,704 @@
+{
+  "version": "1.0",
+  "checked_on": "2026-09-12",
+  "scope": "Relevant completed WAM cohorts; no pooling or sum across table entries",
+  "upstream_pin": "ce561e66f82e95055e39d3d7711691982f6b2086",
+  "entries": [
+    {
+      "id": "H01",
+      "name": "Nano g3 position reflection",
+      "study": "V3-B001",
+      "episodes": 108,
+      "design": "27 matched blocks x 2 fixed layouts x 2 commands",
+      "results": {
+        "original": {
+          "left": [
+            26,
+            27
+          ],
+          "right": [
+            26,
+            27
+          ]
+        },
+        "reflected": {
+          "left": [
+            27,
+            27
+          ],
+          "right": [
+            23,
+            27
+          ]
+        }
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_summary.json",
+        "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl"
+      ],
+      "limitation": "738 decoded-future records; full step positions in compact episode rows; raw media absent locally",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_summary.json",
+          "git_blob": "fb53071fa1985fcaa2f9f12dcc1be63433c7b34c",
+          "sha256": "f43636a03caade5f3dc65de6736808c8257c78eacb07ba4cb963bfc6a0e36578",
+          "bytes": 72705
+        },
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl",
+          "git_blob": "5c2f4a6fa4795ec054dbce2d4d68554245ceb4cb",
+          "sha256": "ce67aecb2705394e8161fa4b65df7130e62648e2f6d8b6a93408c8da685a7207",
+          "bytes": 5822218
+        }
+      ]
+    },
+    {
+      "id": "H02",
+      "name": "DreamZero custom s2 position reflection",
+      "study": "V3-B003",
+      "episodes": 108,
+      "design": "27 block labels x 2 fixed layouts x 2 commands; effective noise 1140",
+      "results": {
+        "original": {
+          "left": [
+            5,
+            27
+          ],
+          "right": [
+            8,
+            27
+          ]
+        },
+        "reflected": {
+          "left": [
+            25,
+            27
+          ],
+          "right": [
+            25,
+            27
+          ]
+        }
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_summary.json",
+        "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/post_result_dreamzero_mirror_v3b003_amendment.json"
+      ],
+      "limitation": "Full traces and original media require recovery; not default DreamZero",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_summary.json",
+          "git_blob": "879220bdd189ed874d9fc24fef83a405082d46e2",
+          "sha256": "f45ab7d11281b994592948cdc11ea5d0fe24837d75d21a8a7dd42ff63b9c5817",
+          "bytes": 124097
+        },
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/post_result_dreamzero_mirror_v3b003_amendment.json",
+          "git_blob": "5501346ae2629213ea479048c820362681b36a2b",
+          "sha256": "ba22681ae4d7f748e375617617d9e130e6f1bd5bc0af1e7a995365b145a470fc",
+          "bytes": 7807
+        }
+      ]
+    },
+    {
+      "id": "H03",
+      "name": "Nano g3 versus g1 guidance pilot",
+      "study": "V2-A015 + V2-A011 baseline",
+      "episodes": 12,
+      "design": "6 baseline + 6 intervention; matched seeds 8300-8302 x 2 commands",
+      "results": {
+        "g3": {
+          "left": [
+            3,
+            3
+          ],
+          "right": [
+            3,
+            3
+          ]
+        },
+        "g1": {
+          "left": [
+            1,
+            3
+          ],
+          "right": [
+            3,
+            3
+          ]
+        }
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json",
+        "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+        "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_v2a015_no_cfg_g1_result.json"
+      ],
+      "limitation": "Exploratory n=6/configuration; historical baseline included, do not double count",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json",
+          "git_blob": "a4e36cf70b05ecf1f01e800491b0a31356aefc8c",
+          "sha256": "0e6daadd9391b7ad38ee316371df0235e34268cc4c32597c6597578ac9f9ed1e",
+          "bytes": 96243
+        },
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+          "git_blob": "3b810746c3508d7bcc06dcac195ac0fdeaaa743e",
+          "sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93",
+          "bytes": 57097
+        },
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_v2a015_no_cfg_g1_result.json",
+          "git_blob": "f26d7c53f2e90ca94ad3171337b8e62fe1701739",
+          "sha256": "8796f4ab9ea9490ee5b78678bc689d6fd13f27a9551006f8b5d346e202d0cc5c",
+          "bytes": 104115
+        }
+      ]
+    },
+    {
+      "id": "H04",
+      "name": "DreamZero conditional s1 versus custom s2 guidance pilot",
+      "study": "V2-A015",
+      "episodes": 12,
+      "design": "6 baseline + 6 intervention; matched labels 8300-8302 x 2 commands",
+      "results": {
+        "s1": {
+          "left": [
+            2,
+            3
+          ],
+          "right": [
+            1,
+            3
+          ]
+        },
+        "s2": {
+          "left": [
+            1,
+            3
+          ],
+          "right": [
+            3,
+            3
+          ]
+        }
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json",
+        "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+        "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_v2a015_action_cfg_s2_result.json"
+      ],
+      "limitation": "Exploratory; custom negative-branch guidance is not an official action-CFG feature",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json",
+          "git_blob": "a4e36cf70b05ecf1f01e800491b0a31356aefc8c",
+          "sha256": "0e6daadd9391b7ad38ee316371df0235e34268cc4c32597c6597578ac9f9ed1e",
+          "bytes": 96243
+        },
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+          "git_blob": "beaafdafa68f1f058f7c084457cedf74e5c53c91",
+          "sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461",
+          "bytes": 254288
+        },
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_v2a015_action_cfg_s2_result.json",
+          "git_blob": "41e9d2cab51066e0aa93b8805f5849a22cd30dbc",
+          "sha256": "273b7191cde61b51bf90b2eda04b1910e214f48d34f2347f2a81325069c32444",
+          "bytes": 270309
+        }
+      ]
+    },
+    {
+      "id": "H05",
+      "name": "Nano prescribed bowl lateral-position sweep",
+      "study": "V3-B005",
+      "episodes": 210,
+      "design": "7 positions x 15 matched blocks x 2 commands",
+      "results": {
+        "left": [
+          93,
+          105
+        ],
+        "right": [
+          99,
+          105
+        ]
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_results_manifest.json",
+        "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json"
+      ],
+      "limitation": "1423 decoded futures recorded; 7 levels, not 210 scenes; do not substitute failed V3-B004",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_results_manifest.json",
+          "git_blob": "943ddad9383554df8b022268f99078d4cb9841f6",
+          "sha256": "abef596b2f4b471a6595c2983737c63f319a27de9e3b8452385f11914b8db52a",
+          "bytes": 3500
+        },
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json",
+          "git_blob": "45171ddf0707e0f66e20b10a75da5c8b6fb60dd7",
+          "sha256": "a65c659cc5eb24e03baafc8101473f63307a549764090b6403eed5d1405ba999",
+          "bytes": 16128
+        }
+      ]
+    },
+    {
+      "id": "H06",
+      "name": "Nano graded symmetry",
+      "study": "V3-E004",
+      "episodes": 2246,
+      "design": "521 command pairs each at levels0/1,27 pairs each at .25/.5/.75",
+      "results": {
+        "0": {
+          "left": [
+            485,
+            521
+          ],
+          "right": [
+            489,
+            521
+          ]
+        },
+        "1": {
+          "left": [
+            510,
+            521
+          ],
+          "right": [
+            487,
+            521
+          ]
+        },
+        "0.25": {
+          "left": [
+            27,
+            27
+          ],
+          "right": [
+            24,
+            27
+          ]
+        },
+        "0.5": {
+          "left": [
+            27,
+            27
+          ],
+          "right": [
+            25,
+            27
+          ]
+        },
+        "0.75": {
+          "left": [
+            25,
+            27
+          ],
+          "right": [
+            27,
+            27
+          ]
+        }
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json",
+        "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json"
+      ],
+      "limitation": "Inventory changes between level0 and positive levels; no equivalence claim passes",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json",
+          "git_blob": "7f65771c434d95a60e1856c4774de38608f0416f",
+          "sha256": "be8cd0c9a2458a7eefec0ed7760d1e6f6f19e4162d8c427f12f8a113d3290493",
+          "bytes": 212799
+        },
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json",
+          "git_blob": "758a77c1227b43c41c66e3ffea27882c78382f02",
+          "sha256": "3e3786510ebba933d0c7a4606afa51627ea6bf706f9e64b34cfd74b29e318db2",
+          "bytes": 16100
+        }
+      ]
+    },
+    {
+      "id": "H07",
+      "name": "DreamZero custom s2 symmetry",
+      "study": "V3-E004",
+      "episodes": 108,
+      "design": "27 blocks x 2 commands x reference/symmetric",
+      "results": {
+        "reference": {
+          "left": [
+            3,
+            27
+          ],
+          "right": [
+            17,
+            27
+          ]
+        },
+        "symmetric": {
+          "left": [
+            26,
+            27
+          ],
+          "right": [
+            25,
+            27
+          ]
+        }
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json",
+        "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json"
+      ],
+      "limitation": "Separate from V3-B003; companion-object inventory change; no equivalence",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json",
+          "git_blob": "7f65771c434d95a60e1856c4774de38608f0416f",
+          "sha256": "be8cd0c9a2458a7eefec0ed7760d1e6f6f19e4162d8c427f12f8a113d3290493",
+          "bytes": 212799
+        },
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json",
+          "git_blob": "758a77c1227b43c41c66e3ffea27882c78382f02",
+          "sha256": "3e3786510ebba933d0c7a4606afa51627ea6bf706f9e64b34cfd74b29e318db2",
+          "bytes": 16100
+        }
+      ]
+    },
+    {
+      "id": "H08",
+      "name": "Cosmos Edge symmetry",
+      "study": "V3-E004",
+      "episodes": 108,
+      "design": "27 blocks x 2 commands x reference/symmetric",
+      "results": {
+        "reference": {
+          "left": [
+            18,
+            27
+          ],
+          "right": [
+            23,
+            27
+          ]
+        },
+        "symmetric": {
+          "left": [
+            25,
+            27
+          ],
+          "right": [
+            26,
+            27
+          ]
+        }
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json",
+        "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json"
+      ],
+      "limitation": "Separate checkpoint/cohort; companion-object inventory change; no equivalence",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json",
+          "git_blob": "7f65771c434d95a60e1856c4774de38608f0416f",
+          "sha256": "be8cd0c9a2458a7eefec0ed7760d1e6f6f19e4162d8c427f12f8a113d3290493",
+          "bytes": 212799
+        },
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json",
+          "git_blob": "758a77c1227b43c41c66e3ffea27882c78382f02",
+          "sha256": "3e3786510ebba933d0c7a4606afa51627ea6bf706f9e64b34cfd74b29e318db2",
+          "bytes": 16100
+        }
+      ]
+    },
+    {
+      "id": "H09",
+      "name": "Nano four phrasings",
+      "study": "V3-C001",
+      "episodes": 160,
+      "design": "20 blocks x 4 phrasings x 2 commands",
+      "results": {
+        "direct": {
+          "left": [
+            20,
+            20
+          ],
+          "right": [
+            19,
+            20
+          ]
+        },
+        "short": {
+          "left": [
+            20,
+            20
+          ],
+          "right": [
+            19,
+            20
+          ]
+        },
+        "outcome": {
+          "left": [
+            18,
+            20
+          ],
+          "right": [
+            17,
+            20
+          ]
+        },
+        "desired_negated": {
+          "left": [
+            11,
+            20
+          ],
+          "right": [
+            10,
+            20
+          ]
+        }
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_summary.json"
+      ],
+      "limitation": "1234 requests and160 viewport videos recorded; raw availability not rechecked",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_summary.json",
+          "git_blob": "7d03486032ffe97f9d5a705b5e152d3cad6a882c",
+          "sha256": "0f134044065dc0f1501a91a69d8e9b10d0a13e9a4065a7c4d33f7854bab73ee9",
+          "bytes": 6478
+        }
+      ]
+    },
+    {
+      "id": "H10",
+      "name": "Cosmos Edge four phrasings",
+      "study": "V3-C001",
+      "episodes": 160,
+      "design": "20 blocks x 4 phrasings x 2 commands",
+      "results": {
+        "direct": {
+          "left": [
+            18,
+            20
+          ],
+          "right": [
+            20,
+            20
+          ]
+        },
+        "short": {
+          "left": [
+            5,
+            20
+          ],
+          "right": [
+            19,
+            20
+          ]
+        },
+        "outcome": {
+          "left": [
+            15,
+            20
+          ],
+          "right": [
+            18,
+            20
+          ]
+        },
+        "desired_negated": {
+          "left": [
+            10,
+            20
+          ],
+          "right": [
+            18,
+            20
+          ]
+        }
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_summary.json"
+      ],
+      "limitation": "1365 requests and160 viewport videos recorded; raw availability not rechecked",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_summary.json",
+          "git_blob": "056be8c99f5e4a7a482725373ea49c0f1d8b1a6c",
+          "sha256": "06a8fd1ff425bce10cbdbeb4b73e9a8ca5ff31da0c5e389ae85f5b64bc451861",
+          "bytes": 6531
+        }
+      ]
+    },
+    {
+      "id": "H11",
+      "name": "Nano direct commands, new V3 Phase-A slice",
+      "study": "V3-A",
+      "episodes": 54,
+      "design": "27 new blocks8303-8329 x 2commands; V2 baseline excluded",
+      "results": {
+        "total": [
+          51,
+          54
+        ]
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_summary.json"
+      ],
+      "limitation": "349 decoded futures recorded; separate from reflection and V2 pilot",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_summary.json",
+          "git_blob": "75c012124b45599c9963212f64e9735aaed7aabf",
+          "sha256": "677c62845ff72bceb35b0c5e3e5b259a5c24da407648fe50f475656fe86cbcea",
+          "bytes": 210426
+        }
+      ]
+    },
+    {
+      "id": "H12",
+      "name": "DreamZero custom s2 direct commands, new V3 Phase-A slice",
+      "study": "V3-A",
+      "episodes": 54,
+      "design": "27 new block labels8303-8329 x 2commands",
+      "results": {
+        "left": [
+          3,
+          27
+        ],
+        "right": [
+          17,
+          27
+        ]
+      },
+      "sources": [
+        "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json"
+      ],
+      "limitation": "2554 latent records and54 reset decodes; not per-request RGB frames",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_bindings": [
+        {
+          "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+          "path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json",
+          "git_blob": "54637eab1ce615cf9842c59e15ff13d19287c7bb",
+          "sha256": "50ec800009b1f128ce8fe877c186b08a47ec3021feaa7cf4f8baab984549b120",
+          "bytes": 375241
+        }
+      ]
+    },
+    {
+      "id": "H13",
+      "name": "Cosmos Edge V1 historical forecast corpus",
+      "study": "V1",
+      "episodes": 80,
+      "design": "20 matched blocks across6100/7200 tiers x 2wordings x 2commands",
+      "results": {
+        "chunks": 752,
+        "cached_frames": 3008,
+        "historical_covered_chunks": 421
+      },
+      "sources": [
+        "workshops/corl2026_world_models/results/audit_summary.json"
+      ],
+      "limitation": "Historical scorer replay only, not validated fidelity; original alignment/execution evidence unavailable locally",
+      "status": "completed_historical_evidence",
+      "confirmation_eligible": false,
+      "source_commit": "4eac280b73be3fcaf6fa4ab12697a153a485b422",
+      "source_bindings": [
+        {
+          "commit": "4eac280b73be3fcaf6fa4ab12697a153a485b422",
+          "path": "workshops/corl2026_world_models/results/audit_summary.json",
+          "git_blob": "2e8bebb27cda6ba4d14aca4983564af44700ff3b",
+          "sha256": "3d5752446c577f7049d02bb084c87800d5c9c001394e0782e4ab42eedd6ba0a5",
+          "bytes": 7913
+        }
+      ]
+    }
+  ],
+  "media_status": {
+    "H01": {
+      "referenced_absolute_raw_paths": 2341,
+      "present_locally": 0
+    },
+    "H02": {
+      "referenced_absolute_raw_paths": 540,
+      "present_locally": 0
+    },
+    "other_cohorts": "Retention metadata verified; raw availability not rechecked"
+  },
+  "review_analysis": {
+    "nano_pretermination_ordering": [
+      27,
+      27
+    ],
+    "status": "checked during review; standalone reproducible script not yet packaged"
+  }
+}

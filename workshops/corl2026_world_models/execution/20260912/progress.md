@@ -15,3 +15,5 @@ User authorizes new core study on GM, with parallel execution. New namespace: wm
 - Parent verification: 43 workshop unittest tests passed; no new model episodes or generation requests.
 - Exact source bundle restored and hash-verified on workstation in a new isolated checkout; original checkouts untouched.
 - Final forced-IPv4 work-Mac SSH retry timed out. Required external state: reliable work-Mac access and GM network/VPN route.
+
+- Independent review complete: both preparation scripts satisfy their bounded specifications; no actionable defects. Verified generated artifact counts/hash links, all shared strict-before-end stopping times, full condition ordering, and unreleased status. No model/runtime calls were made by the reviewer.

@@ -26,7 +26,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "fa6cb25deed3397fe6b622dfe0169c5993d13be3",
-    "control_generation": 885,
+    "control_generation": 886,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -1693,17 +1693,29 @@
       "worker_id": "wmf-forecast-0912-worker-05"
     },
     {
+      "child_pid": 385,
+      "child_reaped": true,
       "descriptor_sha256": "6b53063d171a29201c90884f2a8f58bb36794c51e2beea6eab069a4619ad4760",
-      "heartbeat": {
-        "at": "2026-09-13T13:25:37.834325+00:00",
-        "child_pid": 385,
-        "unix": 1789305937.834358,
-        "worker_id": "wmf-forecast-0912-worker-05",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T13:25:59.943244+00:00",
+      "error_type": null,
       "job_id": "development-evidence-compiler-formal-002",
+      "log_tails": {
+        "stderr": "{\"detail\": \"D1 D01 aggregate source commit is invalid\", \"error_type\": \"CompilerError\", \"status\": \"technical_failure\"}\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/4ac81812aa058183f4103602b11e0997722fbc5b/workshops/corl2026_world_models/experiments/forecast_layout/development_evidence_compiler_jobs.py\", line 1922, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/4ac81812aa058183f4103602b11e0997722fbc5b/workshops/corl2026_world_models/experiments/forecast_layout/development_evidence_compiler_jobs.py\", line 1915, in main\n    receipt = run_formal_job(args)\n              ^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/4ac81812aa058183f4103602b11e0997722fbc5b/workshops/corl2026_world_models/experiments/forecast_layout/development_evidence_compiler_jobs.py\", line 1708, in run_formal_job\n    returned = compiler.compile_manifest(\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/4ac81812aa058183f4103602b11e0997722fbc5b/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 3323, in compile_manifest\n    verified_descriptor, cells = _validate_aggregate(\n                                 ^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/4ac81812aa058183f4103602b11e0997722fbc5b/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 3159, in _validate_aggregate\n    require(\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/4ac81812aa058183f4103602b11e0997722fbc5b/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 209, in require\n    raise CompilerError(message)\nwmf_detached_development_compiler.CompilerError: D1 D01 aggregate source commit is invalid\n",
+        "stdout": ""
+      },
+      "returncode": 1,
       "source_commit": "4ac81812aa058183f4103602b11e0997722fbc5b",
-      "status": "claimed",
+      "started_at": "2026-09-13T13:07:54.334499+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 2005,
+        "sha256": "0759a0b0d95bf0d54e0b60c282edd120e6e2eec75a668c344fb256a7f444a2ba"
+      },
+      "stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "wall_seconds": 1085.6092902829405,
       "worker_id": "wmf-forecast-0912-worker-05"
     },
     {

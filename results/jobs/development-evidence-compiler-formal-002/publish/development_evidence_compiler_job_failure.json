@@ -1,0 +1,45 @@
+{
+  "behavioral_policy_skill_evaluated": false,
+  "claim_boundary": "Failed CPU-only evidence validation or compilation. No model, simulator, reset, request, action, episode, label, or confirmation job was started.",
+  "completed_at_utc": "2026-09-13T13:25:59.196100Z",
+  "confirmation_released": false,
+  "decision": "no_go",
+  "failure": {
+    "detail": "D1 D01 aggregate source commit is invalid",
+    "error_type": "CompilerError",
+    "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/4ac81812aa058183f4103602b11e0997722fbc5b/workshops/corl2026_world_models/experiments/forecast_layout/development_evidence_compiler_jobs.py\", line 1708, in run_formal_job\n    returned = compiler.compile_manifest(\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/4ac81812aa058183f4103602b11e0997722fbc5b/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 3323, in compile_manifest\n    verified_descriptor, cells = _validate_aggregate(\n                                 ^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/4ac81812aa058183f4103602b11e0997722fbc5b/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 3159, in _validate_aggregate\n    require(\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/4ac81812aa058183f4103602b11e0997722fbc5b/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 209, in require\n    raise CompilerError(message)\nwmf_detached_development_compiler.CompilerError: D1 D01 aggregate source commit is invalid\n"
+  },
+  "formal_cohort_complete": false,
+  "job_id": "development-evidence-compiler-formal-002",
+  "mode": "formal_full",
+  "namespace": "wmf_ablation_001_20260912",
+  "payload_sha256": "9fb144ac41cbc81ba4d7a0a1fcb466cc5f28bbdd5f8fbece40535d065f0de4ee",
+  "queue_claim": {
+    "bytes": 409,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/development-evidence-compiler-formal-002/claim/owner.json",
+    "sha256": "2dd16abf706e26af2d994fb8f09ae364b0cb03943954a5238d3621ac3d8b1de1"
+  },
+  "queue_descriptor": {
+    "bytes": 4351,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/development-evidence-compiler-formal-002/descriptor.json",
+    "sha256": "6b53063d171a29201c90884f2a8f58bb36794c51e2beea6eab069a4619ad4760"
+  },
+  "queue_role": "wmf-forecast-0912-worker-05",
+  "safe_for_timing_binding": false,
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-development-evidence-compiler-queue-job-v1",
+  "science_counts": {
+    "behavioral_actions_executed_by_job": 0,
+    "behavioral_cells_launched_by_job": 0,
+    "labels_created_by_job": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0,
+    "simulator_processes_started": 0
+  },
+  "status": "technical_invalid",
+  "study_commit": "4ac81812aa058183f4103602b11e0997722fbc5b",
+  "study_id": "WMF-ABLATION-001"
+}

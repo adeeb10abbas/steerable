@@ -1,0 +1,26 @@
+{
+  "child_pid": 8949,
+  "child_reaped": true,
+  "descriptor_sha256": "a70d617077646f6b1c6981b3f3983d9c38ad99b52d05aa8a9889c7308d79f00d",
+  "ended_at": "2026-09-13T07:21:59.974064+00:00",
+  "error_type": null,
+  "job_id": "fixed-observation-c01-001",
+  "log_tails": {
+    "stderr": "",
+    "stdout": "{\"behavioral_action_count\": 0, \"candidate_id\": \"C01__candidate_01\", \"child_exit_code\": 0, \"child_logs\": {\"stderr\": {\"bytes\": 551, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c01-001/child.stderr.log\", \"sha256\": \"8f7de3d201834d24f58b7525b88060bd0fadfcde518f7c3e0312ce667ec34ec2\"}, \"stdout\": {\"bytes\": 20175, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c01-001/child.stdout.log\", \"sha256\": \"8ac779b17e69c0a2564827cad61c65e0630e1df1e0f78cafc36fd0dc8972c5a0\"}}, \"child_started\": true, \"claim_boundary\": \"One current C01 physical observation and exact preprocessing only; no model request or behavioral episode.\", \"environment_seed\": 2026091201, \"exit_code\": 0, \"finished_at_utc\": \"2026-09-13T07:21:59.138745Z\", \"gate_receipt_sha256\": \"d52ec4b79b4fd848e3b785b52bcc7cec4d571ddd3a0dec5c1f9a9313b497731e\", \"gpu_identity\": {\"driver_version\": \"580.95.05\", \"index\": \"0\", \"name\": \"NVIDIA B200\", \"preexisting_compute_process_count\": 0, \"uuid\": \"GPU-1dd1d72a-abf0-2118-b3fb-75a3b52f0c87\"}, \"job_id\": \"fixed-observation-c01-001\", \"layout_pair_id\": \"C01\", \"model_fixtures\": {\"D1\": {\"array_keys\": [\"observation/exterior_image_0_left\", \"observation/exterior_image_1_left\", \"observation/wrist_image_left\", \"observation/joint_position\", \"observation/cartesian_position\", \"observation/gripper_position\"], \"fixture\": {\"bytes\": 520282, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c01-001/capture/d1_official_wire_observation.npz\", \"sha256\": \"09ba587f9833fba82a20dcda0797db1270c3db236449fd2f5c5dad57abe6d7d8\"}, \"interface\": \"official conditional DreamZero six-array request fixture\"}, \"N3\": {\"array_keys\": [\"observation/image\", \"observation/joint_position\", \"observation/gripper_position\"], \"fixture\": {\"bytes\": 1037692, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c01-001/capture/n3_official_wire_observation.npz\", \"sha256\": \"8f2425078b2ea388a44e7b15e60896e3767f6d46fbebae5c5a4e32621ef73df7\"}, \"interface\": \"official packed observation/image plus joint/gripper arrays\"}}, \"model_request_count\": 0, \"pose_manifest_sha256\": \"3c2fff3db2b688eeb9b951eb2b4df880a4ddec98a5607d7632ab15ca2a25f9e4\", \"raw_capture_receipt\": {\"bytes\": 80247, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c01-001/capture/capture_receipt.json\", \"sha256\": \"2dc0ee64941594e5500e56b26ddbfe6e5e380b4f9e1b6e45c5ddcfb5d024d0b3\"}, \"schema_version\": \"wmf-forecast-layout-fixed-observation-job-v1\", \"status\": \"passed\", \"study_commit\": \"148b0bad38382b32667d7cf2484773c11fa744ad\", \"study_namespace\": \"wmf_ablation_001_20260912\"}\n"
+  },
+  "returncode": 0,
+  "source_commit": "148b0bad38382b32667d7cf2484773c11fa744ad",
+  "started_at": "2026-09-13T07:20:57.395761+00:00",
+  "status": "succeeded",
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 2743,
+    "sha256": "820159947f24a6f6434664a1392fa9cc439f1f68a1da68f85efacb20d575f67d"
+  },
+  "wall_seconds": 62.57878460502252,
+  "worker_id": "wmf-forecast-0912-worker-09"
+}

@@ -980,7 +980,19 @@ class TinyEvidence:
             cell_root / "recording/payloads",
             "context-reset",
             "context_reset",
-            freeze_scalar(chain["begin"]),
+            freeze_scalar({
+                **chain["begin"],
+                "client_state_before": {
+                    "chunk_env_ids": [],
+                    "counter_env_ids": [],
+                    "session_ids": [],
+                },
+                "client_state_after": {
+                    "chunk_env_ids": [],
+                    "counter_env_ids": [],
+                    "session_ids": [],
+                },
+            }),
             {},
         )
         model_request_artifact = recorder_payload(
@@ -1575,6 +1587,61 @@ class CompilerEndToEndTests(unittest.TestCase):
         with self.assertRaisesRegex(compiler.CompilerError, "completed after its first owned action"):
             self.compile(fixture, manifest, output)
         self.assertFalse(output.exists())
+
+    def test_recorded_context_reset_binds_server_receipt_and_empty_client_state(self) -> None:
+        expected = {"passed": True, "server_context_id": "context-1"}
+
+        def validate(structure: dict) -> dict:
+            artifact = {
+                "role": "context_reset",
+                "payload_sha256": "a" * 64,
+                "array_count": 0,
+                "structure": freeze_scalar(structure),
+                "artifact": None,
+            }
+            rows = [
+                {
+                    "sequence": 0,
+                    "kind": "model_context_reset",
+                    "payload": {"artifact": artifact},
+                },
+                {"sequence": 1, "kind": "model_request_packed", "payload": {}},
+            ]
+            with mock.patch.object(
+                compiler, "_verify_payload_descriptor", return_value=artifact
+            ):
+                return compiler._validate_context_payload(
+                    rows=rows,
+                    completion={"context_reset_artifact": artifact},
+                    completion_path=self.root / "completion.json",
+                    raw_root=self.root,
+                    expected_receipt=expected,
+                    cell_id="test-cell",
+                )
+
+        empty = {
+            "chunk_env_ids": [],
+            "counter_env_ids": [],
+            "session_ids": [],
+        }
+        accepted = validate(
+            {
+                **expected,
+                "client_state_before": empty,
+                "client_state_after": empty,
+            }
+        )
+        self.assertEqual(accepted["role"], "context_reset")
+        with self.assertRaisesRegex(
+            compiler.CompilerError, "recorder client reset state changed"
+        ):
+            validate(
+                {
+                    **expected,
+                    "client_state_before": empty,
+                    "client_state_after": {**empty, "chunk_env_ids": [0]},
+                }
+            )
 
     def test_n3_source_pin_and_end_attestation_fail_closed(self) -> None:
         for mutation, expected in (

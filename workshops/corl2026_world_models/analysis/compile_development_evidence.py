@@ -2056,10 +2056,29 @@ def _validate_context_payload(
         label=f"{cell_id} context-reset payload",
         required_role="context_reset",
     )
+    recorded = _thaw_scalar(
+        descriptor["structure"], f"{cell_id} context-reset structure"
+    )
     require(
-        _thaw_scalar(descriptor["structure"], f"{cell_id} context-reset structure")
-        == dict(expected_receipt),
+        isinstance(recorded, Mapping),
+        f"{cell_id} recorder context-reset payload is not a mapping",
+    )
+    recorded = dict(recorded)
+    client_state_before = recorded.pop("client_state_before", None)
+    client_state_after = recorded.pop("client_state_after", None)
+    require(
+        recorded == dict(expected_receipt),
         f"{cell_id} recorder context-reset payload differs from server attestation",
+    )
+    empty_client_state = {
+        "chunk_env_ids": [],
+        "counter_env_ids": [],
+        "session_ids": [],
+    }
+    require(
+        client_state_before == empty_client_state
+        and client_state_after == empty_client_state,
+        f"{cell_id} recorder client reset state changed",
     )
     later = _event_rows(rows, "model_request_packed") + _event_rows(
         rows, "policy_action_returned"

@@ -1,0 +1,4143 @@
+{
+  "at_utc": "2026-09-13T10:50:28.573233+00:00",
+  "coordination": {
+    "server_lease.json": {
+      "expires_unix_ns": 1789296704108408544,
+      "generation": 74,
+      "heartbeat_unix_ns": 1789296614108408544,
+      "hostname": "wmf-forecast-0912-worker-d1-00-4lzq8",
+      "lease_token": null,
+      "owner_job_id": "d1-development-d02-server-003",
+      "pod_uid": "b54b406b-f4cd-4ee2-8bcf-7882f0e05906",
+      "run_id": "d1-development-d02-003",
+      "schema_version": "wmf-d1-behavioral-server-lease-v1",
+      "server_ready_sha256": "6c939cb72a64a4cd298e07cf0d825f067d5805ead7434d88d5ea527064faae76",
+      "simulator_claim_sha256": null,
+      "status": "live"
+    },
+    "server_ready.json": {
+      "block_id": "wmf_ablation_001_20260912__development__D02__D1",
+      "d1_qualification_receipt": {
+        "bytes": 13992,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/publish/d1_qualification_job_receipt.json",
+        "sha256": "3c856549999b9145dc07c30853a4c6d2968d09eb31c2db883f5eb1655d31627b"
+      },
+      "development_contract_sha256": "5964f153db83c4cd23522098f1646747d5a14c28d54b8d510089e70e4911529a",
+      "development_prerequisites_sha256": "20f762c8ce1ce423946406d903a405b14001cfaad18d5ace30aa718fe9392b4f",
+      "effective_model_noise_seed": 1140,
+      "environment_seed": 2026091102,
+      "executed_prefix_horizon": 8,
+      "expected_cell_ids": [
+        "wmf1__development__D02__D1__reflected__right",
+        "wmf1__development__D02__D1__original__left",
+        "wmf1__development__D02__D1__reflected__left",
+        "wmf1__development__D02__D1__original__right"
+      ],
+      "future_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future",
+      "global_state_noninterleaving": true,
+      "layout_pair_id": "D02",
+      "model_config": "D1",
+      "noise_semantics": "fixed; requests and cells are not independent draws",
+      "paired_simulator_job_id": "d1-development-d02-simulator-003",
+      "phase": "development",
+      "pilot_contract": {
+        "block_id": "wmf_ablation_001_20260912__development__D02__D1",
+        "cell_ids": [
+          "wmf1__development__D02__D1__reflected__right",
+          "wmf1__development__D02__D1__original__left",
+          "wmf1__development__D02__D1__reflected__left",
+          "wmf1__development__D02__D1__original__right"
+        ],
+        "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
+        "condition_order": [
+          "reflected-right",
+          "original-left",
+          "reflected-left",
+          "original-right"
+        ],
+        "configuration_id": "D1",
+        "configured_inference_steps": 16,
+        "custom_s2_used": false,
+        "effective_model_noise_seed": 1140,
+        "environment_seed": 2026091102,
+        "layout_pair_id": "D02",
+        "noise_semantics": "fixed at 1140; layouts, cells, and requests are not independent noise draws",
+        "official_path": "GrootSimPolicy.lazy_joint_forward_causal",
+        "patched_s1_used": false,
+        "per_cell": {
+          "actions": 450,
+          "executed_prefix": 8,
+          "final_request_executed_actions": 2,
+          "observations": 451,
+          "requests": 57,
+          "returned_action_shape": [
+            24,
+            8
+          ]
+        },
+        "phase": "development",
+        "schema_version": "wmf-d1-behavioral-development-contract-v1",
+        "server_world_size": 2,
+        "service": {
+          "host": "wmf-forecast-0912-d1",
+          "port": 18021
+        },
+        "source_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+        "source_tree": "6b7ba27f1af81e963a6507f1204c05c65a94098c",
+        "study_id": "WMF-ABLATION-001",
+        "transport": {
+          "compression": null,
+          "max_size": null,
+          "ping_interval": null,
+          "ping_timeout": null,
+          "stateful_request_replay": false
+        },
+        "video_guidance_scale": 5.0
+      },
+      "pilot_contract_sha256": "5964f153db83c4cd23522098f1646747d5a14c28d54b8d510089e70e4911529a",
+      "process": {
+        "hostname": "wmf-forecast-0912-worker-d1-00-4lzq8",
+        "linux_boot_id": "e8da7275-8b01-4700-9bdb-07f5d998fa03",
+        "pid": 88648,
+        "pod_uid": "b54b406b-f4cd-4ee2-8bcf-7882f0e05906",
+        "proc_start_ticks": 111019383,
+        "process_group_id": 88648,
+        "returncode_at_capture": null,
+        "start_new_session": true
+      },
+      "ready_at_utc": "2026-09-13T10:31:58.389243Z",
+      "returned_action_shape": [
+        24,
+        8
+      ],
+      "run_id": "d1-development-d02-003",
+      "runtime_identity": {
+        "bytes": 7584,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/identity_receipt.json",
+        "sha256": "548ce79d0851765f0a79eca34018572d512828a80617f0f98bab1b3218d3d6e2"
+      },
+      "schema_version": "wmf-d1-behavioral-server-ready-v1",
+      "server_contract": {
+        "bytes": 25200,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/server_contract.json",
+        "sha256": "191ae4b03cc76fd1b338866684648fece542a3bc7251e6eccbb653b6e934b695"
+      },
+      "server_contract_sha256": "191ae4b03cc76fd1b338866684648fece542a3bc7251e6eccbb653b6e934b695",
+      "server_instance_nonce": "e977caa0d7824883b2cd06b9fb59e9f7",
+      "server_job_id": "d1-development-d02-server-003",
+      "service_host": "wmf-forecast-0912-d1",
+      "service_port": 18021,
+      "status": "ready",
+      "study_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "study_id": "WMF-ABLATION-001",
+      "topology": {
+        "bytes": 1444,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/topology_receipt.json",
+        "sha256": "9653e15626492f76f8c7cd5bd5001f96b269b495a099c95dc56b69086121a40f"
+      }
+    },
+    "simulator_claim.json": {
+      "block_id": "wmf_ablation_001_20260912__development__D02__D1",
+      "claimed_at_utc": "2026-09-13T10:32:56.013370Z",
+      "completed_prefix_cell_ids": [],
+      "lease_token": "lease-33f02dab88224108b07ca04745b7f531",
+      "pilot_contract_sha256": "5964f153db83c4cd23522098f1646747d5a14c28d54b8d510089e70e4911529a",
+      "process": {
+        "hostname": "wmf-forecast-0912-worker-00-xmfcn",
+        "pid": 11985,
+        "pod_uid": "fe525ee9-ae8f-45ca-9b28-c6bf982f1e44"
+      },
+      "run_id": "d1-development-d02-003",
+      "schema_version": "wmf-d1-behavioral-simulator-claim-v1",
+      "server_job_id": "d1-development-d02-server-003",
+      "server_ready_sha256": "6c939cb72a64a4cd298e07cf0d825f067d5805ead7434d88d5ea527064faae76",
+      "simulator_job_id": "d1-development-d02-simulator-003",
+      "start_cell_index": 0,
+      "status": "claimed",
+      "study_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "worker_role": "wmf-forecast-0912-worker-00"
+    },
+    "simulator_lease.json": {
+      "expires_unix_ns": 1789296716784160203,
+      "generation": 71,
+      "heartbeat_unix_ns": 1789296626784160203,
+      "hostname": "wmf-forecast-0912-worker-00-xmfcn",
+      "lease_token": "lease-33f02dab88224108b07ca04745b7f531",
+      "owner_job_id": "d1-development-d02-simulator-003",
+      "pod_uid": "fe525ee9-ae8f-45ca-9b28-c6bf982f1e44",
+      "run_id": "d1-development-d02-003",
+      "schema_version": "wmf-d1-behavioral-simulator-lease-v1",
+      "server_ready_sha256": "6c939cb72a64a4cd298e07cf0d825f067d5805ead7434d88d5ea527064faae76",
+      "simulator_claim_sha256": "6b3e4516cb1f9fc9ce2c4fbb5cb20d98f6aee7ad196bb8f5894532ed401aa57d",
+      "status": "live"
+    },
+    "simulator_terminal.json": null
+  },
+  "layout_pair_id": "D02",
+  "run_id": "d1-development-d02-003",
+  "schema_version": "wmf-d1-development-readonly-snapshot-v1",
+  "science_claim_boundary": "Read-only progress snapshot; not a terminal receipt or scientific classification.",
+  "server": {
+    "d1_behavioral_server_receipt.json": null,
+    "failure.json": null,
+    "ready.json": null,
+    "request_receipt_count": 140,
+    "server_receipt.json": null
+  },
+  "simulator": {
+    "cells": {
+      "00-wmf1-development-D02-D1-reflected-right": {
+        "cell_receipt": {
+          "accepted_gate_record_sha256": "0334154a9f791aee268567412939a4d70e8c258999c74e5fcb2ac98fe802b62c",
+          "actions_executed": 450,
+          "adapter_completion": {
+            "bytes": 187129,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/00-wmf1-development-D02-D1-reflected-right/recording/completion.json",
+            "sha256": "845802d7e93535518701b5241b8701a7f51544ec0cbd149f0abecb8cae316f19"
+          },
+          "adapter_journal": {
+            "bytes": 4483526,
+            "event_count": 2036,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/00-wmf1-development-D02-D1-reflected-right/recording/events.partial.jsonl",
+            "sha256": "57dd132a020f63c78fced6b5047ab6bd86fc75df78c1f5cd98028d06839d48d8",
+            "tail_sha256": "62230c6b760e8ac8847a5810bab249207c203645feb92ee9769a96ee0eab4169"
+          },
+          "behavioral_episode_count": 1,
+          "behavioral_model_request_count": 57,
+          "block_id": "wmf_ablation_001_20260912__development__D02__D1",
+          "candidate_id": "D02__candidate_00",
+          "cell_id": "wmf1__development__D02__D1__reflected__right",
+          "checkpoint_pin": {
+            "aggregate_sha256": "b4af0ac93474c3295c1ba841a34a8f2f91a5c3ec3c6aac1431b97689a6618c56",
+            "revision": "96ad344138c66e82536422432ad742f015784942"
+          },
+          "claim_boundary": "One valid learned-policy D1 behavioral development cell: 450 actual actions, 451 original observations, and 57 official conditional action/future requests.",
+          "command": "right",
+          "completed_at_utc": "2026-09-13T10:41:48.299005Z",
+          "condition_index": 0,
+          "development_contract_sha256": "5964f153db83c4cd23522098f1646747d5a14c28d54b8d510089e70e4911529a",
+          "development_fixture": {
+            "accepted_gate_record_sha256": "0334154a9f791aee268567412939a4d70e8c258999c74e5fcb2ac98fe802b62c",
+            "candidate_id": "D02__candidate_00",
+            "candidate_payload_sha256": "ecd9a978c6805c829e45794febcb917cb3126c74597c6e159651fd1e26bcdeb7",
+            "capture_receipt": {
+              "bytes": 3099,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixed-observation-d02-001/publish/fixed_observation_job_receipt.json",
+              "sha256": "a700280562d3640349fe8ec5a2594decf4a7b2b9f30450c9e9af55420bb907ac"
+            },
+            "d1_fixed_observation": {
+              "bytes": 520282,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/d1_official_wire_observation.npz",
+              "sha256": "03d99a3eb49442aa65b4d032ae73d960d748f40018934624bf14711264d1d21f"
+            },
+            "execution_prerequisites": {
+              "bytes": 7041,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/execution_prerequisites.json",
+              "sha256": "20f762c8ce1ce423946406d903a405b14001cfaad18d5ace30aa718fe9392b4f"
+            },
+            "execution_prerequisites_sha256": "20f762c8ce1ce423946406d903a405b14001cfaad18d5ace30aa718fe9392b4f",
+            "gate_receipt": {
+              "bytes": 3934,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-d02-candidate-00/publish/fixture_gate_receipt.json",
+              "sha256": "e30a3dd1ad3d8621661a406a7c1d6c30034383f9b5ad6bed8a96c63015a477d6"
+            },
+            "pose_manifest": {
+              "bytes": 5090,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/d02_pose_manifest.json",
+              "sha256": "701c2d0acdd9ccb546673d1ae028de2838eb425ee42cd79df3cbc82829d760af"
+            },
+            "raw_capture_receipt": {
+              "bytes": 80231,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/capture_receipt.json",
+              "sha256": "7ad03352a7fbd0f5c30f425712df716733ea4d2e0306037eee14e6fe013d9c43"
+            }
+          },
+          "effective_model_noise_seed": 1140,
+          "environment_seed": 2026091102,
+          "executed_prefix_horizon": 8,
+          "final_chunk_executed_actions": 2,
+          "fresh_physical_checks": {
+            "collision": {
+              "forbidden_pairs": {
+                "banana|bowl": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "banana",
+                      "bowl"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "215f0fc57addbd3eb046619764fa8ca90879bbfc91fad10082246797224e95d1"
+                },
+                "banana|rubiks_cube": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "banana",
+                      "rubiks_cube"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "0e66ceb20fd704b9cefb7a9f9b4b5ed896b593c1c0aee1b259b7130c12141a55"
+                },
+                "bowl|rubiks_cube": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "bowl",
+                      "rubiks_cube"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "2b1f56e3cae79679eff9366682373be16611cf04b74dedd1b5a4edf085b9f774"
+                },
+                "robot_gripper|banana": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "gripper",
+                      "banana"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "784c231b333766cb48fd7cd13e342dbe21236bc78495a4494cdf5835575fb342"
+                },
+                "robot_gripper|bowl": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "gripper",
+                      "bowl"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "5d9477dbeea08e9001723f986eee1dfc692809fbb28685dd5131fe5a6f7530c5"
+                },
+                "robot_gripper|rubiks_cube": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "gripper",
+                      "rubiks_cube"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "c2fe6c799a7229da21bb61461dbfc3cc08e9758f257042485ca9fbf7b92d7076"
+                }
+              },
+              "passed": true,
+              "query_complete": true
+            },
+            "visibility": {
+              "cameras": {
+                "head_camera": {
+                  "camera_configuration": {
+                    "camera_center_robot_base_m": [
+                      1.5,
+                      0.0,
+                      1.0
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      -0.47380179166793823,
+                      1.2458879261600941e-08,
+                      0.8806315064430237,
+                      -1.714320063683772e-08
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ]
+                  },
+                  "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+                  "camera_geometry_source_sha256": "cdf95ade3f7949decd674e3619b7ca6ec8b5cafa4f22a1a7130a2e7c5457bcf9",
+                  "dtype": "uint8",
+                  "geometry": {
+                    "camera_center_robot_base_m": [
+                      1.5,
+                      0.0,
+                      1.0
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      -0.47380179166793823,
+                      1.2458879261600941e-08,
+                      0.8806315064430237,
+                      -1.714320063683772e-08
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ],
+                    "object_aabbs_robot_base_m": {
+                      "banana": {
+                        "lower": [
+                          0.4802936315536499,
+                          0.1055312231183052,
+                          0.04783250018954277
+                        ],
+                        "upper": [
+                          0.5900436639785767,
+                          0.28432726860046387,
+                          0.08853621780872345
+                        ]
+                      },
+                      "bowl": {
+                        "lower": [
+                          0.40903574228286743,
+                          -0.05029366910457611,
+                          0.04973268508911133
+                        ],
+                        "upper": [
+                          0.5706100463867188,
+                          0.11093828082084656,
+                          0.10497036576271057
+                        ]
+                      },
+                      "rubiks_cube": {
+                        "lower": [
+                          0.2914036214351654,
+                          0.04321969300508499,
+                          0.049565188586711884
+                        ],
+                        "upper": [
+                          0.35032936930656433,
+                          0.10164957493543625,
+                          0.10781589895486832
+                        ]
+                      }
+                    },
+                    "object_centers_robot_base_m": {
+                      "banana": [
+                        0.5351686477661133,
+                        0.19492924213409424,
+                        0.06818436086177826
+                      ],
+                      "bowl": [
+                        0.4898228943347931,
+                        0.030322303995490074,
+                        0.07735152542591095
+                      ],
+                      "rubiks_cube": [
+                        0.3312830328941345,
+                        0.043598320335149765,
+                        0.08110612630844116
+                      ]
+                    },
+                    "projected_object_centers_uv": {
+                      "banana": [
+                        546.7395203358196,
+                        433.9155609734893
+                      ],
+                      "bowl": [
+                        561.0775530562369,
+                        371.21899740831657
+                      ],
+                      "rubiks_cube": [
+                        598.5531226219864,
+                        374.71312242228646
+                      ]
+                    },
+                    "projected_unoccluded_by_object": {
+                      "banana": true,
+                      "bowl": true,
+                      "rubiks_cube": true
+                    },
+                    "projection_errors": {
+                      "banana": null,
+                      "bowl": null,
+                      "rubiks_cube": null
+                    }
+                  },
+                  "pixel_range": 252,
+                  "projected_object_centers_uv": {
+                    "banana": [
+                      546.7395203358196,
+                      433.9155609734893
+                    ],
+                    "bowl": [
+                      561.0775530562369,
+                      371.21899740831657
+                    ],
+                    "rubiks_cube": [
+                      598.5531226219864,
+                      374.71312242228646
+                    ]
+                  },
+                  "projected_unoccluded_by_object": {
+                    "banana": true,
+                    "bowl": true,
+                    "rubiks_cube": true
+                  },
+                  "rgb_artifact": {
+                    "bytes": 1116873,
+                    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/00-wmf1-development-D02-D1-reflected-right/fresh_physical_camera_evidence/head_camera.png",
+                    "sha256": "671675d281f8aa1c04cc54c9c42b66aa1d7cf6bc8861bf74a8659741eb0e49e5"
+                  },
+                  "rgb_sha256": "a37e64515f4724b8e132ff6d699e0c113bc564b5213fd03699f475a1f09ace87",
+                  "shape_hwc": [
+                    720,
+                    1280,
+                    3
+                  ],
+                  "visibility_method": "calibrated_projection_and_obb_occlusion",
+                  "visibility_source_sha256": "cdf95ade3f7949decd674e3619b7ca6ec8b5cafa4f22a1a7130a2e7c5457bcf9"
+                },
+                "over_shoulder_left_camera": {
+                  "camera_configuration": {
+                    "camera_center_robot_base_m": [
+                      0.05000000074505806,
+                      0.5699999928474426,
+                      0.6600000262260437
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      0.19503460824489594,
+                      -0.3929999768733978,
+                      0.8051427602767944,
+                      -0.3990708887577057
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ]
+                  },
+                  "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+                  "camera_geometry_source_sha256": "f7bc181a77607bb569adecb66e814a9304fd9853bfe86e8637f43b5e8152f781",
+                  "dtype": "uint8",
+                  "geometry": {
+                    "camera_center_robot_base_m": [
+                      0.05000000074505806,
+                      0.5699999928474426,
+                      0.6600000262260437
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      0.19503460824489594,
+                      -0.3929999768733978,
+                      0.8051427602767944,
+                      -0.3990708887577057
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ],
+                    "object_aabbs_robot_base_m": {
+                      "banana": {
+                        "lower": [
+                          0.4802936315536499,
+                          0.1055312231183052,
+                          0.04783250018954277
+                        ],
+                        "upper": [
+                          0.5900436639785767,
+                          0.28432726860046387,
+                          0.08853621780872345
+                        ]
+                      },
+                      "bowl": {
+                        "lower": [
+                          0.40903574228286743,
+                          -0.05029366910457611,
+                          0.04973268508911133
+                        ],
+                        "upper": [
+                          0.5706100463867188,
+                          0.11093828082084656,
+                          0.10497036576271057
+                        ]
+                      },
+                      "rubiks_cube": {
+                        "lower": [
+                          0.2914036214351654,
+                          0.04321969300508499,
+                          0.049565188586711884
+                        ],
+                        "upper": [
+                          0.35032936930656433,
+                          0.10164957493543625,
+                          0.10781589895486832
+                        ]
+                      }
+                    },
+                    "object_centers_robot_base_m": {
+                      "banana": [
+                        0.5351686477661133,
+                        0.19492924213409424,
+                        0.06818436086177826
+                      ],
+                      "bowl": [
+                        0.4898228943347931,
+                        0.030322303995490074,
+                        0.07735152542591095
+                      ],
+                      "rubiks_cube": [
+                        0.3312830328941345,
+                        0.043598320335149765,
+                        0.08110612630844116
+                      ]
+                    },
+                    "projected_object_centers_uv": {
+                      "banana": [
+                        638.5745498007766,
+                        418.94397103256466
+                      ],
+                      "bowl": [
+                        726.9442208821142,
+                        389.5600658469162
+                      ],
+                      "rubiks_cube": [
+                        794.4081419383954,
+                        443.09692228496215
+                      ]
+                    },
+                    "projected_unoccluded_by_object": {
+                      "banana": true,
+                      "bowl": true,
+                      "rubiks_cube": true
+                    },
+                    "projection_errors": {
+                      "banana": null,
+                      "bowl": null,
+                      "rubiks_cube": null
+                    }
+                  },
+                  "pixel_range": 255,
+                  "projected_object_centers_uv": {
+                    "banana": [
+                      638.5745498007766,
+                      418.94397103256466
+                    ],
+                    "bowl": [
+                      726.9442208821142,
+                      389.5600658469162
+                    ],
+                    "rubiks_cube": [
+                      794.4081419383954,
+                      443.09692228496215
+                    ]
+                  },
+                  "projected_unoccluded_by_object": {
+                    "banana": true,
+                    "bowl": true,
+                    "rubiks_cube": true
+                  },
+                  "rgb_artifact": {
+                    "bytes": 1175683,
+                    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/00-wmf1-development-D02-D1-reflected-right/fresh_physical_camera_evidence/over_shoulder_left_camera.png",
+                    "sha256": "abe243ede6b4876bcd86c518db20e125800e76916af3e0e6372fc7e55d78881d"
+                  },
+                  "rgb_sha256": "cc2f5646bba03fc329bc5b4b26af452ccfffaab4abc9ea0513e1dd701dd75b75",
+                  "shape_hwc": [
+                    720,
+                    1280,
+                    3
+                  ],
+                  "visibility_method": "calibrated_projection_and_obb_occlusion",
+                  "visibility_source_sha256": "f7bc181a77607bb569adecb66e814a9304fd9853bfe86e8637f43b5e8152f781"
+                },
+                "over_shoulder_right_camera": {
+                  "camera_configuration": {
+                    "camera_center_robot_base_m": [
+                      0.05000000074505806,
+                      -0.5699999928474426,
+                      0.6600000262260437
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      -0.39917007088661194,
+                      0.8050000667572021,
+                      -0.393167644739151,
+                      0.19508317112922668
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ]
+                  },
+                  "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+                  "camera_geometry_source_sha256": "f233e5ccd0a9eececac61df5997944c79f76999d1339e5e2333325a52211b9ef",
+                  "dtype": "uint8",
+                  "geometry": {
+                    "camera_center_robot_base_m": [
+                      0.05000000074505806,
+                      -0.5699999928474426,
+                      0.6600000262260437
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      -0.39917007088661194,
+                      0.8050000667572021,
+                      -0.393167644739151,
+                      0.19508317112922668
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ],
+                    "object_aabbs_robot_base_m": {
+                      "banana": {
+                        "lower": [
+                          0.4802936315536499,
+                          0.1055312231183052,
+                          0.04783250018954277
+                        ],
+                        "upper": [
+                          0.5900436639785767,
+                          0.28432726860046387,
+                          0.08853621780872345
+                        ]
+                      },
+                      "bowl": {
+                        "lower": [
+                          0.40903574228286743,
+                          -0.05029366910457611,
+                          0.04973268508911133
+                        ],
+                        "upper": [
+                          0.5706100463867188,
+                          0.11093828082084656,
+                          0.10497036576271057
+                        ]
+                      },
+                      "rubiks_cube": {
+                        "lower": [
+                          0.2914036214351654,
+                          0.04321969300508499,
+                          0.049565188586711884
+                        ],
+                        "upper": [
+                          0.35032936930656433,
+                          0.10164957493543625,
+                          0.10781589895486832
+                        ]
+                      }
+                    },
+                    "object_centers_robot_base_m": {
+                      "banana": [
+                        0.5351686477661133,
+                        0.19492924213409424,
+                        0.06818436086177826
+                      ],
+                      "bowl": [
+                        0.4898228943347931,
+                        0.030322303995490074,
+                        0.07735152542591095
+                      ],
+                      "rubiks_cube": [
+                        0.3312830328941345,
+                        0.043598320335149765,
+                        0.08110612630844116
+                      ]
+                    },
+                    "projected_object_centers_uv": {
+                      "banana": [
+                        492.8545490321068,
+                        338.25337678598345
+                      ],
+                      "bowl": [
+                        529.84251535766,
+                        376.5295994726209
+                      ],
+                      "rubiks_cube": [
+                        451.90953186659874,
+                        419.37665169721566
+                      ]
+                    },
+                    "projected_unoccluded_by_object": {
+                      "banana": true,
+                      "bowl": true,
+                      "rubiks_cube": true
+                    },
+                    "projection_errors": {
+                      "banana": null,
+                      "bowl": null,
+                      "rubiks_cube": null
+                    }
+                  },
+                  "pixel_range": 254,
+                  "projected_object_centers_uv": {
+                    "banana": [
+                      492.8545490321068,
+                      338.25337678598345
+                    ],
+                    "bowl": [
+                      529.84251535766,
+                      376.5295994726209
+                    ],
+                    "rubiks_cube": [
+                      451.90953186659874,
+                      419.37665169721566
+                    ]
+                  },
+                  "projected_unoccluded_by_object": {
+                    "banana": true,
+                    "bowl": true,
+                    "rubiks_cube": true
+                  },
+                  "rgb_artifact": {
+                    "bytes": 1226809,
+                    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/00-wmf1-development-D02-D1-reflected-right/fresh_physical_camera_evidence/over_shoulder_right_camera.png",
+                    "sha256": "30e8bea98e436a1244d2be2fc52c5ef98c11980e7bc40df106718cc0bf3fb03f"
+                  },
+                  "rgb_sha256": "905d186bc43651285d8bfb31bc2d93c65f825bf267215c302eee48f6ae6c3565",
+                  "shape_hwc": [
+                    720,
+                    1280,
+                    3
+                  ],
+                  "visibility_method": "calibrated_projection_and_obb_occlusion",
+                  "visibility_source_sha256": "f233e5ccd0a9eececac61df5997944c79f76999d1339e5e2333325a52211b9ef"
+                },
+                "wrist_cam": {
+                  "camera_configuration": {
+                    "camera_center_robot_base_m": [
+                      0.28571274876594543,
+                      -0.03101206198334694,
+                      0.46076926589012146
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      0.1138814240694046,
+                      0.7041806578636169,
+                      0.692111611366272,
+                      0.11019165068864822
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        666.6666870117188,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        666.6666870117188,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ]
+                  },
+                  "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+                  "camera_geometry_source_sha256": "bf6aa16d9b948a71afec03a1e4e170a1f842dd56187c3e425c23f92da582a690",
+                  "dtype": "uint8",
+                  "geometry": {
+                    "camera_center_robot_base_m": [
+                      0.28571274876594543,
+                      -0.03101206198334694,
+                      0.46076926589012146
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      0.1138814240694046,
+                      0.7041806578636169,
+                      0.692111611366272,
+                      0.11019165068864822
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        666.6666870117188,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        666.6666870117188,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ],
+                    "object_aabbs_robot_base_m": {
+                      "banana": {
+                        "lower": [
+                          0.4802936315536499,
+                          0.1055312231183052,
+                          0.04783250018954277
+                        ],
+                        "upper": [
+                          0.5900436639785767,
+                          0.28432726860046387,
+                          0.08853621780872345
+                        ]
+                      },
+                      "bowl": {
+                        "lower": [
+                          0.40903574228286743,
+                          -0.05029366910457611,
+                          0.04973268508911133
+                        ],
+                        "upper": [
+                          0.5706100463867188,
+                          0.11093828082084656,
+                          0.10497036576271057
+                        ]
+                      },
+                      "rubiks_cube": {
+                        "lower": [
+                          0.2914036214351654,
+                          0.04321969300508499,
+                          0.049565188586711884
+                        ],
+                        "upper": [
+                          0.35032936930656433,
+                          0.10164957493543625,
+                          0.10781589895486832
+                        ]
+                      }
+                    },
+                    "object_centers_robot_base_m": {
+                      "banana": [
+                        0.5351686477661133,
+                        0.19492924213409424,
+                        0.06818436086177826
+                      ],
+                      "bowl": [
+                        0.4898228943347931,
+                        0.030322303995490074,
+                        0.07735152542591095
+                      ],
+                      "rubiks_cube": [
+                        0.3312830328941345,
+                        0.043598320335149765,
+                        0.08110612630844116
+                      ]
+                    },
+                    "projected_object_centers_uv": {
+                      "banana": [
+                        983.2953821799799,
+                        523.9137880039627
+                      ],
+                      "bowl": [
+                        742.7161236248407,
+                        473.632117610491
+                      ],
+                      "rubiks_cube": [
+                        775.9703342971637,
+                        223.33623010983774
+                      ]
+                    },
+                    "projected_unoccluded_by_object": {
+                      "banana": true,
+                      "bowl": true,
+                      "rubiks_cube": true
+                    },
+                    "projection_errors": {
+                      "banana": null,
+                      "bowl": null,
+                      "rubiks_cube": null
+                    }
+                  },
+                  "pixel_range": 243,
+                  "projected_object_centers_uv": {
+                    "banana": [
+                      983.2953821799799,
+                      523.9137880039627
+                    ],
+                    "bowl": [
+                      742.7161236248407,
+                      473.632117610491
+                    ],
+                    "rubiks_cube": [
+                      775.9703342971637,
+                      223.33623010983774
+                    ]
+                  },
+                  "projected_unoccluded_by_object": {
+                    "banana": true,
+                    "bowl": true,
+                    "rubiks_cube": true
+                  },
+                  "rgb_artifact": {
+                    "bytes": 1358722,
+                    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/00-wmf1-development-D02-D1-reflected-right/fresh_physical_camera_evidence/wrist_cam.png",
+                    "sha256": "a19bba4c8db304e3b8e34b95c8aa4b0d5825aaaf02605e09606ee978dce7ed2f"
+                  },
+                  "rgb_sha256": "d5e9da0b9e1d4446622c0e171d27d6b78428e0b9cc826d6a24b154f21f49f130",
+                  "shape_hwc": [
+                    720,
+                    1280,
+                    3
+                  ],
+                  "visibility_method": "calibrated_projection_and_obb_occlusion",
+                  "visibility_source_sha256": "bf6aa16d9b948a71afec03a1e4e170a1f842dd56187c3e425c23f92da582a690"
+                }
+              },
+              "method": "accepted-gate calibrated projection and OBB occlusion implementation",
+              "passed": true,
+              "required_cameras": [
+                "head_camera",
+                "over_shoulder_left_camera",
+                "over_shoulder_right_camera",
+                "wrist_cam"
+              ],
+              "visibility_cameras": [
+                "over_shoulder_left_camera",
+                "over_shoulder_right_camera"
+              ]
+            }
+          },
+          "generation_qualification_request_count": 0,
+          "layout_arm": "reflected",
+          "layout_pair_id": "D02",
+          "model_config": "D1",
+          "native_timing_support": {
+            "bytes": 1148,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/00-wmf1-development-D02-D1-reflected-right/recording/timing_support.json",
+            "sha256": "8f0e5371699a47041e965128ed5bf3e2d4ad611c81aa841b80f3f959db7dc26a"
+          },
+          "noise_semantics": "fixed; this cell is not an independent noise draw",
+          "observation_count": 451,
+          "phase": "development",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "returned_action_shape": [
+            24,
+            8
+          ],
+          "runner_environment_result_repr": "[{'env_id': 0, 'success': False, 'step': 450}]",
+          "runner_subtask_sample_count": 450,
+          "runner_timing": {
+            "env_step_avg_ms": 324.2,
+            "env_step_s": 145.875,
+            "it_per_sec": 0.98,
+            "policy_inference_avg_ms": 694.0,
+            "policy_inference_s": 312.284,
+            "video_write_avg_ms": 4.8,
+            "video_write_s": 2.165,
+            "wall_total_s": 460.325
+          },
+          "runtime_identity": {
+            "cuda_device_count": 1,
+            "cuda_device_name": "NVIDIA B200",
+            "hostname": "wmf-forecast-0912-worker-00-xmfcn",
+            "nvidia_visible_devices": "GPU-1cf328cd-dacb-a06c-1688-d732529ce7a4",
+            "pid": 12027,
+            "pod_uid": "fe525ee9-ae8f-45ca-9b28-c6bf982f1e44",
+            "python": "3.11.13 (main, Aug 14 2025, 16:25:01) [Clang 20.1.4 ]",
+            "python_executable": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
+            "robolab_module": {
+              "bytes": 949,
+              "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/__init__.py",
+              "sha256": "d7912be543fa14354464740c9dd280e3530b38acbee28379b34a0ff825801d84"
+            },
+            "task_file": {
+              "bytes": 505,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/25ff299ca0d2b9964eb48286990ee2301cb207b8/workshops/corl2026_world_models/experiments/forecast_layout/task_files/reflected_right.py",
+              "sha256": "868b06deb8b14cf78d48070101f9976b048e9c34b0aa66a2fc0a433e213bc322"
+            }
+          },
+          "schema_version": "wmf-d1-behavioral-development-cell-v1",
+          "server_begin_receipt": {
+            "cache_reset_evidence": {
+              "rank_temporal_state_scan": [
+                {
+                  "after": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:33:24.302885Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 0,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 0,
+                    "video_guidance_scale": 5.0
+                  },
+                  "before": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:33:24.302776Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 0,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 0,
+                    "video_guidance_scale": 5.0
+                  },
+                  "fields_cleared": [
+                    "current_start_frame",
+                    "kv_cache1",
+                    "kv_cache_neg",
+                    "crossattn_cache",
+                    "crossattn_cache_neg",
+                    "clip_feas",
+                    "ys",
+                    "language"
+                  ],
+                  "rank": 0
+                },
+                {
+                  "after": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:33:24.308079Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 1,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 1,
+                    "video_guidance_scale": 5.0
+                  },
+                  "before": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:33:24.307990Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 1,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 1,
+                    "video_guidance_scale": 5.0
+                  },
+                  "fields_cleared": [
+                    "current_start_frame",
+                    "kv_cache1",
+                    "kv_cache_neg",
+                    "crossattn_cache",
+                    "crossattn_cache_neg",
+                    "clip_feas",
+                    "ys",
+                    "language"
+                  ],
+                  "rank": 1
+                }
+              ],
+              "reset_id": "reset-000001-96653571c6ef410abedcda103a08caa4",
+              "server_reset_receipt": {
+                "bytes": 5984,
+                "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/reset_receipt.json",
+                "sha256": "fd25620adbe070e44252ba5794bbc8828b7b954de35393fbb24f9c601d096a4a"
+              },
+              "source": "validated_official_d1_two_rank_reset_receipt",
+              "unresolved_mutable_temporal_fields": [],
+              "world_size": 2
+            },
+            "client_session_id": "bef33ab4-38a9-46e1-b987-8524ae9814ce",
+            "episode_context_id": "d1d02-c00-dcf1810bbe1640239b304531bdb5a832",
+            "passed": true,
+            "reset_scope": "full_episode_temporal_and_cache_context",
+            "server_context_id": "d1d02-c00-dcf1810bbe1640239b304531bdb5a832",
+            "server_metadata": {
+              "action_space": "joint_position",
+              "image_resolution": [
+                180,
+                320
+              ],
+              "n_external_cameras": 2,
+              "needs_session_id": true,
+              "needs_stereo_camera": false,
+              "needs_wrist_camera": true
+            },
+            "server_ready_sha256": "6c939cb72a64a4cd298e07cf0d825f067d5805ead7434d88d5ea527064faae76",
+            "server_reset_receipt": {
+              "bytes": 5984,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/reset_receipt.json",
+              "sha256": "fd25620adbe070e44252ba5794bbc8828b7b954de35393fbb24f9c601d096a4a"
+            },
+            "service_host": "wmf-forecast-0912-d1",
+            "service_port": 18021,
+            "service_route_proved_by_reset_artifact": true,
+            "simulator_claim_sha256": "6b3e4516cb1f9fc9ce2c4fbb5cb20d98f6aee7ad196bb8f5894532ed401aa57d",
+            "temporal_state_scan": {
+              "passed": true,
+              "rank_temporal_state_scan": [
+                {
+                  "after": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:33:24.302885Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 0,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 0,
+                    "video_guidance_scale": 5.0
+                  },
+                  "before": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:33:24.302776Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 0,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 0,
+                    "video_guidance_scale": 5.0
+                  },
+                  "fields_cleared": [
+                    "current_start_frame",
+                    "kv_cache1",
+                    "kv_cache_neg",
+                    "crossattn_cache",
+                    "crossattn_cache_neg",
+                    "clip_feas",
+                    "ys",
+                    "language"
+                  ],
+                  "rank": 0
+                },
+                {
+                  "after": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:33:24.308079Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 1,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 1,
+                    "video_guidance_scale": 5.0
+                  },
+                  "before": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:33:24.307990Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 1,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 1,
+                    "video_guidance_scale": 5.0
+                  },
+                  "fields_cleared": [
+                    "current_start_frame",
+                    "kv_cache1",
+                    "kv_cache_neg",
+                    "crossattn_cache",
+                    "crossattn_cache_neg",
+                    "clip_feas",
+                    "ys",
+                    "language"
+                  ],
+                  "rank": 1
+                }
+              ],
+              "reset_id": "reset-000001-96653571c6ef410abedcda103a08caa4",
+              "unresolved_mutable_temporal_fields": [],
+              "world_size": 2
+            }
+          },
+          "server_episode_manifest": {
+            "bytes": 21158454,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/episode_manifest.json",
+            "sha256": "1a87d889c77a165bda1e593c2b09ad8e9fe67d1a958a3b90287cf96f2bec61eb"
+          },
+          "server_ready": {
+            "bytes": 4954,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/coordination/d1-development-d02-003/server_ready.json",
+            "sha256": "6c939cb72a64a4cd298e07cf0d825f067d5805ead7434d88d5ea527064faae76"
+          },
+          "server_request_receipts": [
+            {
+              "bytes": 179280,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0000/request_receipt.json",
+              "sha256": "fb6ec39f714fa79723229e955f5b793ae4dd1b7ef7e00fbaadf8521877215e7e"
+            },
+            {
+              "bytes": 329027,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0001/request_receipt.json",
+              "sha256": "ce3918586432bc740eee0ef215755c00269fdd7b2f96ec26476e51c39d849538"
+            },
+            {
+              "bytes": 329181,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0002/request_receipt.json",
+              "sha256": "52d9ce34e6e23e82e5e06c7c37fb4100ee35d5e928b8c21aecf2223633c4afb0"
+            },
+            {
+              "bytes": 329182,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0003/request_receipt.json",
+              "sha256": "69fab663e08a2895268ace8172d65bb5a94c6e20e27670e6f92f0095d8c66f99"
+            },
+            {
+              "bytes": 331864,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0004/request_receipt.json",
+              "sha256": "950824111a6b59d64231678eab05546a460e9c6844703bc72b2125ee24b01239"
+            },
+            {
+              "bytes": 329010,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0005/request_receipt.json",
+              "sha256": "c679b7975ad0c7442c01123747fb8ef506cdfc7a3249b1331febce3c47dd9bfe"
+            },
+            {
+              "bytes": 329177,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0006/request_receipt.json",
+              "sha256": "937027cd87a1df71632852937789f6873698db3b4ed2fd2d2ff9134f1ca0e738"
+            },
+            {
+              "bytes": 329169,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0007/request_receipt.json",
+              "sha256": "3f3849fa88e81b37c4863b7dbec846edcbd80d9d2f6b4e618d3fb5b82f118bbc"
+            },
+            {
+              "bytes": 331862,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0008/request_receipt.json",
+              "sha256": "3ec846bf6126e4a9879dbe2e90e4aa3eb09bfbe3ef89942b123f86c991f36c66"
+            },
+            {
+              "bytes": 329027,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0009/request_receipt.json",
+              "sha256": "1aee0e5e70fe4e92805ac68a78c9af92da6a215b865ddd1fac0fcbb35993a7a8"
+            },
+            {
+              "bytes": 329183,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0010/request_receipt.json",
+              "sha256": "8da41b959ad1aa4b185d05603838ef778528bb0e3083367f459972d0cbd6d86a"
+            },
+            {
+              "bytes": 329183,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0011/request_receipt.json",
+              "sha256": "0143e8d7e63050006a064629da87a0612da8a5d10113f734dc22e339fce5d17f"
+            },
+            {
+              "bytes": 331864,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0012/request_receipt.json",
+              "sha256": "1825cd8d5cd0301644b4e00fb51578d5c385a42810994591618a6a1972f1ab6f"
+            },
+            {
+              "bytes": 329011,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0013/request_receipt.json",
+              "sha256": "9b9c3d5c2718372f87327f955133c8c8443c1848b07e1c99db15661bddd2a43f"
+            },
+            {
+              "bytes": 329177,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0014/request_receipt.json",
+              "sha256": "527b35902af8dcddab0aba9ad537406c96bdaba1898b3f88d8bb4e26014c56eb"
+            },
+            {
+              "bytes": 329171,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0015/request_receipt.json",
+              "sha256": "855ffca22f23102f6d4362d3373381cf126a272e7f79181cbf6a20944355c251"
+            },
+            {
+              "bytes": 331864,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0016/request_receipt.json",
+              "sha256": "52a2ff6cc359c339520157c68c2cd2a811dff73ffb021fd2cac73f542ee5b776"
+            },
+            {
+              "bytes": 329023,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0017/request_receipt.json",
+              "sha256": "0d0252d53f83356b57a4596501fcf0f1f4d1595a673de24874d401cf48e4d74a"
+            },
+            {
+              "bytes": 329183,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0018/request_receipt.json",
+              "sha256": "7045c4f403c7b21c5a01411a33a82c72a67c2e701e23002a95d5e5d9056b2fac"
+            },
+            {
+              "bytes": 329183,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0019/request_receipt.json",
+              "sha256": "ad41c5e97cd7441c6916ff2e732c0884ab4e3b0f0807e173ed45ae18f053d963"
+            },
+            {
+              "bytes": 331873,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0020/request_receipt.json",
+              "sha256": "01fe9abcdac9ead0fd07c216951a594b32530e0f5a15ef47a645dbb0d6e24877"
+            },
+            {
+              "bytes": 329011,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0021/request_receipt.json",
+              "sha256": "ca0cc34083743d392e317c5d7ad52e17ca8a32439e5e7c45d97ebf3eeaae3a66"
+            },
+            {
+              "bytes": 329177,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0022/request_receipt.json",
+              "sha256": "27fd0037c9c1e851361b447b1a730de94a65d2afe6b510ff6e865d5f499b2bb0"
+            },
+            {
+              "bytes": 329171,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0023/request_receipt.json",
+              "sha256": "c7789f2cbc61412a808c239a2d4069f44b498854f078e43511296a62ca710181"
+            },
+            {
+              "bytes": 331865,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0024/request_receipt.json",
+              "sha256": "55f1d5cd7a4056636334afe38cc689add91c8749b4b1f51458971bf990b8570a"
+            },
+            {
+              "bytes": 329029,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0025/request_receipt.json",
+              "sha256": "d5d1c06618c141abf16666a19e547d1e169ee0468287e58ce5074885b777ecf7"
+            },
+            {
+              "bytes": 329183,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0026/request_receipt.json",
+              "sha256": "527480b9ed0a60ddc52200231395aca6c752e7703af283da86ec75ecd2745fe8"
+            },
+            {
+              "bytes": 329182,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0027/request_receipt.json",
+              "sha256": "9d4a6e8bb6379a3ec7bc63f6ca5abcccee510700fb7520402e155a09d3163713"
+            },
+            {
+              "bytes": 331866,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0028/request_receipt.json",
+              "sha256": "59fa860345a5a57ca3c704f783176dfacc58d09b250110303ef601639293c8da"
+            },
+            {
+              "bytes": 329011,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0029/request_receipt.json",
+              "sha256": "bc661267d6d30dbdc4adc4bec4503ab2bd206945606d9284c24337b1ee518c62"
+            },
+            {
+              "bytes": 329171,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0030/request_receipt.json",
+              "sha256": "a8129a34aef65ae6fc74fcdd5f7813f4e965b597c9b72ccdda651cb92eb0ef56"
+            },
+            {
+              "bytes": 329178,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0031/request_receipt.json",
+              "sha256": "95e24309a5d50041936e25042dbd941e0531fb03e8953c9f711623145ee06d5d"
+            },
+            {
+              "bytes": 331863,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0032/request_receipt.json",
+              "sha256": "4a640096d58c983f7d0820019966a381025e4417852ccd175997cf6f5f2a28be"
+            },
+            {
+              "bytes": 329030,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0033/request_receipt.json",
+              "sha256": "56b2a9fdcd3fb1b0b62539188ef42ea38541193876c34d6da95b2d247e9cab86"
+            },
+            {
+              "bytes": 329183,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0034/request_receipt.json",
+              "sha256": "a6b4a0594c66670dcf886f680814ab53097002f9e7ca62bd70f23835a703e24a"
+            },
+            {
+              "bytes": 329183,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0035/request_receipt.json",
+              "sha256": "bbcc765627a6796661dce19a50dcea5220dbcce7c60f771b064b9f8c1d61c6eb"
+            },
+            {
+              "bytes": 331865,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0036/request_receipt.json",
+              "sha256": "f8f4f7d35068f61e8c047bc7ce95b890df7dcf765252ec7e76df6d125f094ed0"
+            },
+            {
+              "bytes": 329011,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0037/request_receipt.json",
+              "sha256": "76418d47221c31ae33921d7d8b7a6d4c8b9833ad63dfe6d44a66bc51ceb1e6bd"
+            },
+            {
+              "bytes": 329170,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0038/request_receipt.json",
+              "sha256": "a62586328b9e9c0095fd300e4c07f634c7c4d9f17d4f187897fac97277fd8fe6"
+            },
+            {
+              "bytes": 329171,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0039/request_receipt.json",
+              "sha256": "55f610821be836bbad80aef43d9ed17c4cd57595b294325ff5b86b081215c72b"
+            },
+            {
+              "bytes": 331864,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0040/request_receipt.json",
+              "sha256": "5fb36320be8297078af336e14d68f3360a77a26aa4bc59ffeced3996afe125dc"
+            },
+            {
+              "bytes": 329023,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0041/request_receipt.json",
+              "sha256": "91935e2300e02165f6d5cda6c3d4dc227a42d0745f8072fa021f3be11f4bed52"
+            },
+            {
+              "bytes": 329183,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0042/request_receipt.json",
+              "sha256": "60c735344b6cf6e1c675257a203942d016a1b1f9aaa791366490c491464676a2"
+            },
+            {
+              "bytes": 329188,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0043/request_receipt.json",
+              "sha256": "0228d4cac31b1979f59df165b162dd2e762a084291d4fb0c83b4867308e3d974"
+            },
+            {
+              "bytes": 331866,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0044/request_receipt.json",
+              "sha256": "fc73e043f8fee4b6a7d73deba6895c484b78f138c110989c8522e3d384f0550a"
+            },
+            {
+              "bytes": 329009,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0045/request_receipt.json",
+              "sha256": "9dccce11c5338ad71ec1b8d1359d575ffba72badae6c43655a66827e5f4c4eee"
+            },
+            {
+              "bytes": 329171,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0046/request_receipt.json",
+              "sha256": "91470dabc09fdf4564ec7fe3e3c57dbd5355bcbd39fa423182815c5f1da8b7dc"
+            },
+            {
+              "bytes": 329169,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0047/request_receipt.json",
+              "sha256": "bdefc1d4f2d1e124cec7d4b90b0f87c58aed51c53f53cb07a3b28a25259e3695"
+            },
+            {
+              "bytes": 331866,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0048/request_receipt.json",
+              "sha256": "d111d702510876676134e4e6752403ce39289d6db7737ff14fa2f7f619c3189e"
+            },
+            {
+              "bytes": 329021,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0049/request_receipt.json",
+              "sha256": "b1b59b48e655dd834257fb7ec56ec02413d3b405707e7718c5d156af4a494104"
+            },
+            {
+              "bytes": 329188,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0050/request_receipt.json",
+              "sha256": "8ff2fee068b955e33acb30bb24f127c5a254c6390f9c5c42b883f89c223b59a5"
+            },
+            {
+              "bytes": 329182,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0051/request_receipt.json",
+              "sha256": "58b35d4d4f81dd49538135d24a9d8f73db1b43e8e1417fbe7b6a8f611b765997"
+            },
+            {
+              "bytes": 331873,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0052/request_receipt.json",
+              "sha256": "b41cc970457b5f127384ba3abb8322b1e7199291daed2676247a728e8c75ce86"
+            },
+            {
+              "bytes": 329011,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0053/request_receipt.json",
+              "sha256": "2e771b7e5b7a2647efafebff0114f50b38bd0c04217d60ac905aadfe95b115d0"
+            },
+            {
+              "bytes": 329169,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0054/request_receipt.json",
+              "sha256": "baea4c0b4bb2197631460926a1b2d46fcf072e47d57633524759afc2eb4c6af8"
+            },
+            {
+              "bytes": 329171,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0055/request_receipt.json",
+              "sha256": "dbd0b3afaa2939541dc109ec563e082304d25d22e0d8f74b6c2faf9997a591b3"
+            },
+            {
+              "bytes": 331872,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/request_0056/request_receipt.json",
+              "sha256": "2e1bf75c970fdd161b1ff8547824464eb62f08ad0910352dc3b30ba80f7cc765"
+            }
+          ],
+          "server_reset_receipt": {
+            "bytes": 5984,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c00-dcf1810bbe1640239b304531bdb5a832/reset_receipt.json",
+            "sha256": "fd25620adbe070e44252ba5794bbc8828b7b954de35393fbb24f9c601d096a4a"
+          },
+          "server_temporal_reset_scan": {
+            "passed": true,
+            "rank_temporal_state_scan": [
+              {
+                "after": {
+                  "action_horizon": 24,
+                  "captured_at_utc": "2026-09-13T10:33:24.302885Z",
+                  "configured_inference_steps": 16,
+                  "current_start_frame": 0,
+                  "fields": {
+                    "clip_feas": {
+                      "is_none": true
+                    },
+                    "crossattn_cache": {
+                      "is_none": true
+                    },
+                    "crossattn_cache_neg": {
+                      "is_none": true
+                    },
+                    "kv_cache1": {
+                      "is_none": true
+                    },
+                    "kv_cache_neg": {
+                      "is_none": true
+                    },
+                    "language": {
+                      "is_none": true
+                    },
+                    "ys": {
+                      "is_none": true
+                    }
+                  },
+                  "fixed_seed": 1140,
+                  "ip_rank": 0,
+                  "ip_size": 2,
+                  "num_frame_per_block": 2,
+                  "rank": 0,
+                  "video_guidance_scale": 5.0
+                },
+                "before": {
+                  "action_horizon": 24,
+                  "captured_at_utc": "2026-09-13T10:33:24.302776Z",
+                  "configured_inference_steps": 16,
+                  "current_start_frame": 0,
+                  "fields": {
+                    "clip_feas": {
+                      "is_none": true
+                    },
+                    "crossattn_cache": {
+                      "is_none": true
+                    },
+                    "crossattn_cache_neg": {
+                      "is_none": true
+                    },
+                    "kv_cache1": {
+                      "is_none": true
+                    },
+                    "kv_cache_neg": {
+                      "is_none": true
+                    },
+                    "language": {
+                      "is_none": true
+                    },
+                    "ys": {
+                      "is_none": true
+                    }
+                  },
+                  "fixed_seed": 1140,
+                  "ip_rank": 0,
+                  "ip_size": 2,
+                  "num_frame_per_block": 2,
+                  "rank": 0,
+                  "video_guidance_scale": 5.0
+                },
+                "fields_cleared": [
+                  "current_start_frame",
+                  "kv_cache1",
+                  "kv_cache_neg",
+                  "crossattn_cache",
+                  "crossattn_cache_neg",
+                  "clip_feas",
+                  "ys",
+                  "language"
+                ],
+                "rank": 0
+              },
+              {
+                "after": {
+                  "action_horizon": 24,
+                  "captured_at_utc": "2026-09-13T10:33:24.308079Z",
+                  "configured_inference_steps": 16,
+                  "current_start_frame": 0,
+                  "fields": {
+                    "clip_feas": {
+                      "is_none": true
+                    },
+                    "crossattn_cache": {
+                      "is_none": true
+                    },
+                    "crossattn_cache_neg": {
+                      "is_none": true
+                    },
+                    "kv_cache1": {
+                      "is_none": true
+                    },
+                    "kv_cache_neg": {
+                      "is_none": true
+                    },
+                    "language": {
+                      "is_none": true
+                    },
+                    "ys": {
+                      "is_none": true
+                    }
+                  },
+                  "fixed_seed": 1140,
+                  "ip_rank": 1,
+                  "ip_size": 2,
+                  "num_frame_per_block": 2,
+                  "rank": 1,
+                  "video_guidance_scale": 5.0
+                },
+                "before": {
+                  "action_horizon": 24,
+                  "captured_at_utc": "2026-09-13T10:33:24.307990Z",
+                  "configured_inference_steps": 16,
+                  "current_start_frame": 0,
+                  "fields": {
+                    "clip_feas": {
+                      "is_none": true
+                    },
+                    "crossattn_cache": {
+                      "is_none": true
+                    },
+                    "crossattn_cache_neg": {
+                      "is_none": true
+                    },
+                    "kv_cache1": {
+                      "is_none": true
+                    },
+                    "kv_cache_neg": {
+                      "is_none": true
+                    },
+                    "language": {
+                      "is_none": true
+                    },
+                    "ys": {
+                      "is_none": true
+                    }
+                  },
+                  "fixed_seed": 1140,
+                  "ip_rank": 1,
+                  "ip_size": 2,
+                  "num_frame_per_block": 2,
+                  "rank": 1,
+                  "video_guidance_scale": 5.0
+                },
+                "fields_cleared": [
+                  "current_start_frame",
+                  "kv_cache1",
+                  "kv_cache_neg",
+                  "crossattn_cache",
+                  "crossattn_cache_neg",
+                  "clip_feas",
+                  "ys",
+                  "language"
+                ],
+                "rank": 1
+              }
+            ],
+            "reset_id": "reset-000001-96653571c6ef410abedcda103a08caa4",
+            "unresolved_mutable_temporal_fields": [],
+            "world_size": 2
+          },
+          "simulator_claim": {
+            "bytes": 912,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/coordination/d1-development-d02-003/simulator_claim.json",
+            "sha256": "6b3e4516cb1f9fc9ce2c4fbb5cb20d98f6aee7ad196bb8f5894532ed401aa57d"
+          },
+          "source_pins": {
+            "dreamzero_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+            "dreamzero_tree": "6b7ba27f1af81e963a6507f1204c05c65a94098c",
+            "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+            "study_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8"
+          },
+          "status": "passed",
+          "study_id": "WMF-ABLATION-001",
+          "transport_contract": {
+            "compression": null,
+            "connection_establishment_retries_only": 5,
+            "lost_response_policy": "fail_cell_without_replaying_reset_or_inference",
+            "max_size": null,
+            "outer_bound": "paired_queue_cell_timeout_and_leases",
+            "ping_interval": null,
+            "ping_timeout": null,
+            "schema_version": "wmf-d1-no-replay-websocket-v1",
+            "stateful_request_replay": false
+          },
+          "viewport_video": {
+            "bytes": 3023282,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/00-wmf1-development-D02-D1-reflected-right/native_simulator/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+            "sha256": "358262b0bff2c291a7b3b7677cd3b266e6519e1b3a8f83be79b22fbc8f70d27f"
+          }
+        },
+        "journal": {
+          "event_counts": {
+            "attempt_finalized": 1,
+            "attempt_started": 1,
+            "environment_step_completed": 450,
+            "environment_step_started": 450,
+            "first_success": 1,
+            "fixed_duration_environment_verified": 1,
+            "model_context_reset": 1,
+            "model_request_completed": 57,
+            "model_request_packed": 57,
+            "model_request_sent": 57,
+            "model_response_received": 57,
+            "observation_captured": 451,
+            "physical_reset": 1,
+            "policy_action_returned": 450,
+            "runner_reset_idempotent": 1
+          },
+          "exists": true,
+          "last_kind": "attempt_finalized",
+          "max_action_step": 450,
+          "max_request_index": 56
+        },
+        "request_receipt_count": 0,
+        "technical_failure": null
+      },
+      "01-wmf1-development-D02-D1-original-left": {
+        "cell_receipt": {
+          "accepted_gate_record_sha256": "0334154a9f791aee268567412939a4d70e8c258999c74e5fcb2ac98fe802b62c",
+          "actions_executed": 450,
+          "adapter_completion": {
+            "bytes": 187126,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/01-wmf1-development-D02-D1-original-left/recording/completion.json",
+            "sha256": "a911e21dc2824f2eaf5cc47c480c3d8a80f9b34ee32aa77968a25c30235dd285"
+          },
+          "adapter_journal": {
+            "bytes": 4483719,
+            "event_count": 2036,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/01-wmf1-development-D02-D1-original-left/recording/events.partial.jsonl",
+            "sha256": "dbf73f6a20db49db9f106020c6cb4f0f537da83a58ec395c991d3b448c3374c2",
+            "tail_sha256": "76a59e4ff86d52b17a0fca5f36ce8b5d136ddc626f808b9cafc60aec0ce8536b"
+          },
+          "behavioral_episode_count": 1,
+          "behavioral_model_request_count": 57,
+          "block_id": "wmf_ablation_001_20260912__development__D02__D1",
+          "candidate_id": "D02__candidate_00",
+          "cell_id": "wmf1__development__D02__D1__original__left",
+          "checkpoint_pin": {
+            "aggregate_sha256": "b4af0ac93474c3295c1ba841a34a8f2f91a5c3ec3c6aac1431b97689a6618c56",
+            "revision": "96ad344138c66e82536422432ad742f015784942"
+          },
+          "claim_boundary": "One valid learned-policy D1 behavioral development cell: 450 actual actions, 451 original observations, and 57 official conditional action/future requests.",
+          "command": "left",
+          "completed_at_utc": "2026-09-13T10:47:24.232474Z",
+          "condition_index": 1,
+          "development_contract_sha256": "5964f153db83c4cd23522098f1646747d5a14c28d54b8d510089e70e4911529a",
+          "development_fixture": {
+            "accepted_gate_record_sha256": "0334154a9f791aee268567412939a4d70e8c258999c74e5fcb2ac98fe802b62c",
+            "candidate_id": "D02__candidate_00",
+            "candidate_payload_sha256": "ecd9a978c6805c829e45794febcb917cb3126c74597c6e159651fd1e26bcdeb7",
+            "capture_receipt": {
+              "bytes": 3099,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixed-observation-d02-001/publish/fixed_observation_job_receipt.json",
+              "sha256": "a700280562d3640349fe8ec5a2594decf4a7b2b9f30450c9e9af55420bb907ac"
+            },
+            "d1_fixed_observation": {
+              "bytes": 520282,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/d1_official_wire_observation.npz",
+              "sha256": "03d99a3eb49442aa65b4d032ae73d960d748f40018934624bf14711264d1d21f"
+            },
+            "execution_prerequisites": {
+              "bytes": 7041,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/execution_prerequisites.json",
+              "sha256": "20f762c8ce1ce423946406d903a405b14001cfaad18d5ace30aa718fe9392b4f"
+            },
+            "execution_prerequisites_sha256": "20f762c8ce1ce423946406d903a405b14001cfaad18d5ace30aa718fe9392b4f",
+            "gate_receipt": {
+              "bytes": 3934,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-d02-candidate-00/publish/fixture_gate_receipt.json",
+              "sha256": "e30a3dd1ad3d8621661a406a7c1d6c30034383f9b5ad6bed8a96c63015a477d6"
+            },
+            "pose_manifest": {
+              "bytes": 5090,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/d02_pose_manifest.json",
+              "sha256": "701c2d0acdd9ccb546673d1ae028de2838eb425ee42cd79df3cbc82829d760af"
+            },
+            "raw_capture_receipt": {
+              "bytes": 80231,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/capture_receipt.json",
+              "sha256": "7ad03352a7fbd0f5c30f425712df716733ea4d2e0306037eee14e6fe013d9c43"
+            }
+          },
+          "effective_model_noise_seed": 1140,
+          "environment_seed": 2026091102,
+          "executed_prefix_horizon": 8,
+          "final_chunk_executed_actions": 2,
+          "fresh_physical_checks": {
+            "collision": {
+              "forbidden_pairs": {
+                "banana|bowl": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "banana",
+                      "bowl"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "215f0fc57addbd3eb046619764fa8ca90879bbfc91fad10082246797224e95d1"
+                },
+                "banana|rubiks_cube": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "banana",
+                      "rubiks_cube"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "0e66ceb20fd704b9cefb7a9f9b4b5ed896b593c1c0aee1b259b7130c12141a55"
+                },
+                "bowl|rubiks_cube": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "bowl",
+                      "rubiks_cube"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "2b1f56e3cae79679eff9366682373be16611cf04b74dedd1b5a4edf085b9f774"
+                },
+                "robot_gripper|banana": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "gripper",
+                      "banana"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "784c231b333766cb48fd7cd13e342dbe21236bc78495a4494cdf5835575fb342"
+                },
+                "robot_gripper|bowl": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "gripper",
+                      "bowl"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "5d9477dbeea08e9001723f986eee1dfc692809fbb28685dd5131fe5a6f7530c5"
+                },
+                "robot_gripper|rubiks_cube": {
+                  "clear": true,
+                  "evidence": {
+                    "bodies": [
+                      "gripper",
+                      "rubiks_cube"
+                    ],
+                    "contact": false,
+                    "net_contact_force_world_n": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  "evidence_sha256": "c2fe6c799a7229da21bb61461dbfc3cc08e9758f257042485ca9fbf7b92d7076"
+                }
+              },
+              "passed": true,
+              "query_complete": true
+            },
+            "visibility": {
+              "cameras": {
+                "head_camera": {
+                  "camera_configuration": {
+                    "camera_center_robot_base_m": [
+                      1.5,
+                      0.0,
+                      1.0
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      -0.47380179166793823,
+                      1.2458879261600941e-08,
+                      0.8806315064430237,
+                      -1.714320063683772e-08
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ]
+                  },
+                  "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+                  "camera_geometry_source_sha256": "fc50a48b71230f1f69425b82cf1f3245559a32013e2332168155ecb4e21b348d",
+                  "dtype": "uint8",
+                  "geometry": {
+                    "camera_center_robot_base_m": [
+                      1.5,
+                      0.0,
+                      1.0
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      -0.47380179166793823,
+                      1.2458879261600941e-08,
+                      0.8806315064430237,
+                      -1.714320063683772e-08
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ],
+                    "object_aabbs_robot_base_m": {
+                      "banana": {
+                        "lower": [
+                          0.4803016781806946,
+                          -0.2844729423522949,
+                          0.047827139496803284
+                        ],
+                        "upper": [
+                          0.590050995349884,
+                          -0.10566917806863785,
+                          0.08853906393051147
+                        ]
+                      },
+                      "bowl": {
+                        "lower": [
+                          0.4090861678123474,
+                          -0.11025004088878632,
+                          0.04973273724317551
+                        ],
+                        "upper": [
+                          0.5706586241722107,
+                          0.05098003149032593,
+                          0.10497016459703445
+                        ]
+                      },
+                      "rubiks_cube": {
+                        "lower": [
+                          0.2910100221633911,
+                          -0.04532035067677498,
+                          0.04956519231200218
+                        ],
+                        "upper": [
+                          0.3495788872241974,
+                          0.012748811393976212,
+                          0.10781587660312653
+                        ]
+                      }
+                    },
+                    "object_centers_robot_base_m": {
+                      "banana": [
+                        0.5351763367652893,
+                        -0.1950710564851761,
+                        0.06818310171365738
+                      ],
+                      "bowl": [
+                        0.48987239599227905,
+                        -0.029635002836585045,
+                        0.07735145092010498
+                      ],
+                      "rubiks_cube": [
+                        0.330394983291626,
+                        -0.04523428529500961,
+                        0.08110607415437698
+                      ]
+                    },
+                    "projected_object_centers_uv": {
+                      "banana": [
+                        546.7371054423495,
+                        286.03036909537605
+                      ],
+                      "bowl": [
+                        561.0650267139508,
+                        349.0349875451538
+                      ],
+                      "rubiks_cube": [
+                        598.7388816623215,
+                        344.7424423199083
+                      ]
+                    },
+                    "projected_unoccluded_by_object": {
+                      "banana": true,
+                      "bowl": true,
+                      "rubiks_cube": true
+                    },
+                    "projection_errors": {
+                      "banana": null,
+                      "bowl": null,
+                      "rubiks_cube": null
+                    }
+                  },
+                  "pixel_range": 251,
+                  "projected_object_centers_uv": {
+                    "banana": [
+                      546.7371054423495,
+                      286.03036909537605
+                    ],
+                    "bowl": [
+                      561.0650267139508,
+                      349.0349875451538
+                    ],
+                    "rubiks_cube": [
+                      598.7388816623215,
+                      344.7424423199083
+                    ]
+                  },
+                  "projected_unoccluded_by_object": {
+                    "banana": true,
+                    "bowl": true,
+                    "rubiks_cube": true
+                  },
+                  "rgb_artifact": {
+                    "bytes": 1119488,
+                    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/01-wmf1-development-D02-D1-original-left/fresh_physical_camera_evidence/head_camera.png",
+                    "sha256": "2b961506f7f9525435f6a969e1cd2598767811a43d0babbe3db9c970b21656d4"
+                  },
+                  "rgb_sha256": "d142d24b7e80789dd2c417fb2cacab4ee188021179bb60d13398017dde1614c1",
+                  "shape_hwc": [
+                    720,
+                    1280,
+                    3
+                  ],
+                  "visibility_method": "calibrated_projection_and_obb_occlusion",
+                  "visibility_source_sha256": "fc50a48b71230f1f69425b82cf1f3245559a32013e2332168155ecb4e21b348d"
+                },
+                "over_shoulder_left_camera": {
+                  "camera_configuration": {
+                    "camera_center_robot_base_m": [
+                      0.05000000074505806,
+                      0.5699999928474426,
+                      0.6600000262260437
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      0.19503460824489594,
+                      -0.3929999768733978,
+                      0.8051427602767944,
+                      -0.3990708887577057
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ]
+                  },
+                  "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+                  "camera_geometry_source_sha256": "7a1a9dd5e0f23d1ad1103a1f3bf386428bd24c2f828fab883fe0394251e00e8d",
+                  "dtype": "uint8",
+                  "geometry": {
+                    "camera_center_robot_base_m": [
+                      0.05000000074505806,
+                      0.5699999928474426,
+                      0.6600000262260437
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      0.19503460824489594,
+                      -0.3929999768733978,
+                      0.8051427602767944,
+                      -0.3990708887577057
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ],
+                    "object_aabbs_robot_base_m": {
+                      "banana": {
+                        "lower": [
+                          0.4803016781806946,
+                          -0.2844729423522949,
+                          0.047827139496803284
+                        ],
+                        "upper": [
+                          0.590050995349884,
+                          -0.10566917806863785,
+                          0.08853906393051147
+                        ]
+                      },
+                      "bowl": {
+                        "lower": [
+                          0.4090861678123474,
+                          -0.11025004088878632,
+                          0.04973273724317551
+                        ],
+                        "upper": [
+                          0.5706586241722107,
+                          0.05098003149032593,
+                          0.10497016459703445
+                        ]
+                      },
+                      "rubiks_cube": {
+                        "lower": [
+                          0.2910100221633911,
+                          -0.04532035067677498,
+                          0.04956519231200218
+                        ],
+                        "upper": [
+                          0.3495788872241974,
+                          0.012748811393976212,
+                          0.10781587660312653
+                        ]
+                      }
+                    },
+                    "object_centers_robot_base_m": {
+                      "banana": [
+                        0.5351763367652893,
+                        -0.1950710564851761,
+                        0.06818310171365738
+                      ],
+                      "bowl": [
+                        0.48987239599227905,
+                        -0.029635002836585045,
+                        0.07735145092010498
+                      ],
+                      "rubiks_cube": [
+                        0.330394983291626,
+                        -0.04523428529500961,
+                        0.08110607415437698
+                      ]
+                    },
+                    "projected_object_centers_uv": {
+                      "banana": [
+                        787.0766138142266,
+                        338.04980401754494
+                      ],
+                      "bowl": [
+                        749.7895216249872,
+                        376.4949948202176
+                      ],
+                      "rubiks_cube": [
+                        829.0535345263396,
+                        419.0460488279499
+                      ]
+                    },
+                    "projected_unoccluded_by_object": {
+                      "banana": true,
+                      "bowl": true,
+                      "rubiks_cube": true
+                    },
+                    "projection_errors": {
+                      "banana": null,
+                      "bowl": null,
+                      "rubiks_cube": null
+                    }
+                  },
+                  "pixel_range": 255,
+                  "projected_object_centers_uv": {
+                    "banana": [
+                      787.0766138142266,
+                      338.04980401754494
+                    ],
+                    "bowl": [
+                      749.7895216249872,
+                      376.4949948202176
+                    ],
+                    "rubiks_cube": [
+                      829.0535345263396,
+                      419.0460488279499
+                    ]
+                  },
+                  "projected_unoccluded_by_object": {
+                    "banana": true,
+                    "bowl": true,
+                    "rubiks_cube": true
+                  },
+                  "rgb_artifact": {
+                    "bytes": 1177649,
+                    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/01-wmf1-development-D02-D1-original-left/fresh_physical_camera_evidence/over_shoulder_left_camera.png",
+                    "sha256": "0c7a517011ec2a4cec8b3bb93ccdffcabb85959fda71389b93c8c5859fb3cac5"
+                  },
+                  "rgb_sha256": "03bdab3ef22d5d0666bfaf468c0f3277ba78603ff2afe1433fbcf9412c41e09e",
+                  "shape_hwc": [
+                    720,
+                    1280,
+                    3
+                  ],
+                  "visibility_method": "calibrated_projection_and_obb_occlusion",
+                  "visibility_source_sha256": "7a1a9dd5e0f23d1ad1103a1f3bf386428bd24c2f828fab883fe0394251e00e8d"
+                },
+                "over_shoulder_right_camera": {
+                  "camera_configuration": {
+                    "camera_center_robot_base_m": [
+                      0.05000000074505806,
+                      -0.5699999928474426,
+                      0.6600000262260437
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      -0.39917007088661194,
+                      0.8050000667572021,
+                      -0.393167644739151,
+                      0.19508317112922668
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ]
+                  },
+                  "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+                  "camera_geometry_source_sha256": "2c4fd009c4413b081f9aac9ac3a19cb3578665548fddcbaf785bdc4add679eef",
+                  "dtype": "uint8",
+                  "geometry": {
+                    "camera_center_robot_base_m": [
+                      0.05000000074505806,
+                      -0.5699999928474426,
+                      0.6600000262260437
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      -0.39917007088661194,
+                      0.8050000667572021,
+                      -0.393167644739151,
+                      0.19508317112922668
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        499.9999694824219,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        499.9999694824219,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ],
+                    "object_aabbs_robot_base_m": {
+                      "banana": {
+                        "lower": [
+                          0.4803016781806946,
+                          -0.2844729423522949,
+                          0.047827139496803284
+                        ],
+                        "upper": [
+                          0.590050995349884,
+                          -0.10566917806863785,
+                          0.08853906393051147
+                        ]
+                      },
+                      "bowl": {
+                        "lower": [
+                          0.4090861678123474,
+                          -0.11025004088878632,
+                          0.04973273724317551
+                        ],
+                        "upper": [
+                          0.5706586241722107,
+                          0.05098003149032593,
+                          0.10497016459703445
+                        ]
+                      },
+                      "rubiks_cube": {
+                        "lower": [
+                          0.2910100221633911,
+                          -0.04532035067677498,
+                          0.04956519231200218
+                        ],
+                        "upper": [
+                          0.3495788872241974,
+                          0.012748811393976212,
+                          0.10781587660312653
+                        ]
+                      }
+                    },
+                    "object_centers_robot_base_m": {
+                      "banana": [
+                        0.5351763367652893,
+                        -0.1950710564851761,
+                        0.06818310171365738
+                      ],
+                      "bowl": [
+                        0.48987239599227905,
+                        -0.029635002836585045,
+                        0.07735145092010498
+                      ],
+                      "rubiks_cube": [
+                        0.330394983291626,
+                        -0.04523428529500961,
+                        0.08110607415437698
+                      ]
+                    },
+                    "projected_object_centers_uv": {
+                      "banana": [
+                        641.4221519261615,
+                        419.1023685022203
+                      ],
+                      "bowl": [
+                        552.7174791177374,
+                        389.54930114404755
+                      ],
+                      "rubiks_cube": [
+                        485.7207894521172,
+                        444.0911365996768
+                      ]
+                    },
+                    "projected_unoccluded_by_object": {
+                      "banana": true,
+                      "bowl": true,
+                      "rubiks_cube": true
+                    },
+                    "projection_errors": {
+                      "banana": null,
+                      "bowl": null,
+                      "rubiks_cube": null
+                    }
+                  },
+                  "pixel_range": 254,
+                  "projected_object_centers_uv": {
+                    "banana": [
+                      641.4221519261615,
+                      419.1023685022203
+                    ],
+                    "bowl": [
+                      552.7174791177374,
+                      389.54930114404755
+                    ],
+                    "rubiks_cube": [
+                      485.7207894521172,
+                      444.0911365996768
+                    ]
+                  },
+                  "projected_unoccluded_by_object": {
+                    "banana": true,
+                    "bowl": true,
+                    "rubiks_cube": true
+                  },
+                  "rgb_artifact": {
+                    "bytes": 1226110,
+                    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/01-wmf1-development-D02-D1-original-left/fresh_physical_camera_evidence/over_shoulder_right_camera.png",
+                    "sha256": "aca2faf6ed004c9a1b44535344516795b0f40053f884afa3015d866d5620a54f"
+                  },
+                  "rgb_sha256": "a1084f41bbad0f1bc571f7a88c149af41bdbe124f615f611abe35a24a39bc16f",
+                  "shape_hwc": [
+                    720,
+                    1280,
+                    3
+                  ],
+                  "visibility_method": "calibrated_projection_and_obb_occlusion",
+                  "visibility_source_sha256": "2c4fd009c4413b081f9aac9ac3a19cb3578665548fddcbaf785bdc4add679eef"
+                },
+                "wrist_cam": {
+                  "camera_configuration": {
+                    "camera_center_robot_base_m": [
+                      0.28571274876594543,
+                      -0.03101206198334694,
+                      0.46076926589012146
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      0.1138814240694046,
+                      0.7041806578636169,
+                      0.692111611366272,
+                      0.11019165068864822
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        666.6666870117188,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        666.6666870117188,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ]
+                  },
+                  "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+                  "camera_geometry_source_sha256": "556c9d3d029746d648650adeb2f7ee92c87b77847ad358cad77f625c4e530beb",
+                  "dtype": "uint8",
+                  "geometry": {
+                    "camera_center_robot_base_m": [
+                      0.28571274876594543,
+                      -0.03101206198334694,
+                      0.46076926589012146
+                    ],
+                    "camera_quaternion_world_wxyz_ros": [
+                      0.1138814240694046,
+                      0.7041806578636169,
+                      0.692111611366272,
+                      0.11019165068864822
+                    ],
+                    "image_size_wh": [
+                      1280,
+                      720
+                    ],
+                    "intrinsic_matrix_3x3": [
+                      [
+                        666.6666870117188,
+                        0.0,
+                        640.0
+                      ],
+                      [
+                        0.0,
+                        666.6666870117188,
+                        360.0
+                      ],
+                      [
+                        0.0,
+                        0.0,
+                        1.0
+                      ]
+                    ],
+                    "object_aabbs_robot_base_m": {
+                      "banana": {
+                        "lower": [
+                          0.4803016781806946,
+                          -0.2844729423522949,
+                          0.047827139496803284
+                        ],
+                        "upper": [
+                          0.590050995349884,
+                          -0.10566917806863785,
+                          0.08853906393051147
+                        ]
+                      },
+                      "bowl": {
+                        "lower": [
+                          0.4090861678123474,
+                          -0.11025004088878632,
+                          0.04973273724317551
+                        ],
+                        "upper": [
+                          0.5706586241722107,
+                          0.05098003149032593,
+                          0.10497016459703445
+                        ]
+                      },
+                      "rubiks_cube": {
+                        "lower": [
+                          0.2910100221633911,
+                          -0.04532035067677498,
+                          0.04956519231200218
+                        ],
+                        "upper": [
+                          0.3495788872241974,
+                          0.012748811393976212,
+                          0.10781587660312653
+                        ]
+                      }
+                    },
+                    "object_centers_robot_base_m": {
+                      "banana": [
+                        0.5351763367652893,
+                        -0.1950710564851761,
+                        0.06818310171365738
+                      ],
+                      "bowl": [
+                        0.48987239599227905,
+                        -0.029635002836585045,
+                        0.07735145092010498
+                      ],
+                      "rubiks_cube": [
+                        0.330394983291626,
+                        -0.04523428529500961,
+                        0.08110607415437698
+                      ]
+                    },
+                    "projected_object_centers_uv": {
+                      "banana": [
+                        406.0877560781777,
+                        532.0260092123949
+                      ],
+                      "bowl": [
+                        649.2279560970832,
+                        475.0726652570944
+                      ],
+                      "rubiks_cube": [
+                        617.7577684966952,
+                        224.52181852741123
+                      ]
+                    },
+                    "projected_unoccluded_by_object": {
+                      "banana": true,
+                      "bowl": true,
+                      "rubiks_cube": true
+                    },
+                    "projection_errors": {
+                      "banana": null,
+                      "bowl": null,
+                      "rubiks_cube": null
+                    }
+                  },
+                  "pixel_range": 243,
+                  "projected_object_centers_uv": {
+                    "banana": [
+                      406.0877560781777,
+                      532.0260092123949
+                    ],
+                    "bowl": [
+                      649.2279560970832,
+                      475.0726652570944
+                    ],
+                    "rubiks_cube": [
+                      617.7577684966952,
+                      224.52181852741123
+                    ]
+                  },
+                  "projected_unoccluded_by_object": {
+                    "banana": true,
+                    "bowl": true,
+                    "rubiks_cube": true
+                  },
+                  "rgb_artifact": {
+                    "bytes": 1359001,
+                    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/01-wmf1-development-D02-D1-original-left/fresh_physical_camera_evidence/wrist_cam.png",
+                    "sha256": "1e04661abf2579d5d2c4d1d5d4209efccf07c8cb4177a1873022917434bcdd04"
+                  },
+                  "rgb_sha256": "b8b2a85124c633db08f3c6b1e0b6e3bde6b0c1a8415755d8fc63701d7dab71fe",
+                  "shape_hwc": [
+                    720,
+                    1280,
+                    3
+                  ],
+                  "visibility_method": "calibrated_projection_and_obb_occlusion",
+                  "visibility_source_sha256": "556c9d3d029746d648650adeb2f7ee92c87b77847ad358cad77f625c4e530beb"
+                }
+              },
+              "method": "accepted-gate calibrated projection and OBB occlusion implementation",
+              "passed": true,
+              "required_cameras": [
+                "head_camera",
+                "over_shoulder_left_camera",
+                "over_shoulder_right_camera",
+                "wrist_cam"
+              ],
+              "visibility_cameras": [
+                "over_shoulder_left_camera",
+                "over_shoulder_right_camera"
+              ]
+            }
+          },
+          "generation_qualification_request_count": 0,
+          "layout_arm": "original",
+          "layout_pair_id": "D02",
+          "model_config": "D1",
+          "native_timing_support": {
+            "bytes": 1148,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/01-wmf1-development-D02-D1-original-left/recording/timing_support.json",
+            "sha256": "aebe20d3c2640e189253c7f392179301005da6d18a5d068bf8c25147ee9c8105"
+          },
+          "noise_semantics": "fixed; this cell is not an independent noise draw",
+          "observation_count": 451,
+          "phase": "development",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "returned_action_shape": [
+            24,
+            8
+          ],
+          "runner_environment_result_repr": "[{'env_id': 0, 'success': False, 'step': 450}]",
+          "runner_subtask_sample_count": 450,
+          "runner_timing": {
+            "env_step_avg_ms": 345.2,
+            "env_step_s": 155.323,
+            "it_per_sec": 1.7,
+            "policy_inference_avg_ms": 238.9,
+            "policy_inference_s": 107.513,
+            "video_write_avg_ms": 4.6,
+            "video_write_s": 2.086,
+            "wall_total_s": 264.922
+          },
+          "runtime_identity": {
+            "cuda_device_count": 1,
+            "cuda_device_name": "NVIDIA B200",
+            "hostname": "wmf-forecast-0912-worker-00-xmfcn",
+            "nvidia_visible_devices": "GPU-1cf328cd-dacb-a06c-1688-d732529ce7a4",
+            "pid": 12891,
+            "pod_uid": "fe525ee9-ae8f-45ca-9b28-c6bf982f1e44",
+            "python": "3.11.13 (main, Aug 14 2025, 16:25:01) [Clang 20.1.4 ]",
+            "python_executable": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
+            "robolab_module": {
+              "bytes": 949,
+              "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/__init__.py",
+              "sha256": "d7912be543fa14354464740c9dd280e3530b38acbee28379b34a0ff825801d84"
+            },
+            "task_file": {
+              "bytes": 497,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/25ff299ca0d2b9964eb48286990ee2301cb207b8/workshops/corl2026_world_models/experiments/forecast_layout/task_files/original_left.py",
+              "sha256": "0a808af8a0e51a38689cd70db7154fa5b752a4c717170ded0a8c14a6bcb97c55"
+            }
+          },
+          "schema_version": "wmf-d1-behavioral-development-cell-v1",
+          "server_begin_receipt": {
+            "cache_reset_evidence": {
+              "rank_temporal_state_scan": [
+                {
+                  "after": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:42:24.734919Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 0,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 0,
+                    "video_guidance_scale": 5.0
+                  },
+                  "before": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:42:24.734857Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 0,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 0,
+                    "video_guidance_scale": 5.0
+                  },
+                  "fields_cleared": [
+                    "current_start_frame",
+                    "kv_cache1",
+                    "kv_cache_neg",
+                    "crossattn_cache",
+                    "crossattn_cache_neg",
+                    "clip_feas",
+                    "ys",
+                    "language"
+                  ],
+                  "rank": 0
+                },
+                {
+                  "after": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:42:24.735214Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 1,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 1,
+                    "video_guidance_scale": 5.0
+                  },
+                  "before": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:42:24.735140Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 1,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 1,
+                    "video_guidance_scale": 5.0
+                  },
+                  "fields_cleared": [
+                    "current_start_frame",
+                    "kv_cache1",
+                    "kv_cache_neg",
+                    "crossattn_cache",
+                    "crossattn_cache_neg",
+                    "clip_feas",
+                    "ys",
+                    "language"
+                  ],
+                  "rank": 1
+                }
+              ],
+              "reset_id": "reset-000003-bb4e2071633f48b6b99499f57d3f22df",
+              "server_reset_receipt": {
+                "bytes": 5980,
+                "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/reset_receipt.json",
+                "sha256": "979860bd52b0787c5ec404975c3a0682f9f25455b6ae650f58524f191d9d6cac"
+              },
+              "source": "validated_official_d1_two_rank_reset_receipt",
+              "unresolved_mutable_temporal_fields": [],
+              "world_size": 2
+            },
+            "client_session_id": "45ebbb4c-055f-4fbe-93c4-de0570afdcb4",
+            "episode_context_id": "d1d02-c01-5ff9de73dc22446a903edf99e6452c32",
+            "passed": true,
+            "reset_scope": "full_episode_temporal_and_cache_context",
+            "server_context_id": "d1d02-c01-5ff9de73dc22446a903edf99e6452c32",
+            "server_metadata": {
+              "action_space": "joint_position",
+              "image_resolution": [
+                180,
+                320
+              ],
+              "n_external_cameras": 2,
+              "needs_session_id": true,
+              "needs_stereo_camera": false,
+              "needs_wrist_camera": true
+            },
+            "server_ready_sha256": "6c939cb72a64a4cd298e07cf0d825f067d5805ead7434d88d5ea527064faae76",
+            "server_reset_receipt": {
+              "bytes": 5980,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/reset_receipt.json",
+              "sha256": "979860bd52b0787c5ec404975c3a0682f9f25455b6ae650f58524f191d9d6cac"
+            },
+            "service_host": "wmf-forecast-0912-d1",
+            "service_port": 18021,
+            "service_route_proved_by_reset_artifact": true,
+            "simulator_claim_sha256": "6b3e4516cb1f9fc9ce2c4fbb5cb20d98f6aee7ad196bb8f5894532ed401aa57d",
+            "temporal_state_scan": {
+              "passed": true,
+              "rank_temporal_state_scan": [
+                {
+                  "after": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:42:24.734919Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 0,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 0,
+                    "video_guidance_scale": 5.0
+                  },
+                  "before": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:42:24.734857Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 0,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 0,
+                    "video_guidance_scale": 5.0
+                  },
+                  "fields_cleared": [
+                    "current_start_frame",
+                    "kv_cache1",
+                    "kv_cache_neg",
+                    "crossattn_cache",
+                    "crossattn_cache_neg",
+                    "clip_feas",
+                    "ys",
+                    "language"
+                  ],
+                  "rank": 0
+                },
+                {
+                  "after": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:42:24.735214Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 1,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 1,
+                    "video_guidance_scale": 5.0
+                  },
+                  "before": {
+                    "action_horizon": 24,
+                    "captured_at_utc": "2026-09-13T10:42:24.735140Z",
+                    "configured_inference_steps": 16,
+                    "current_start_frame": 0,
+                    "fields": {
+                      "clip_feas": {
+                        "is_none": true
+                      },
+                      "crossattn_cache": {
+                        "is_none": true
+                      },
+                      "crossattn_cache_neg": {
+                        "is_none": true
+                      },
+                      "kv_cache1": {
+                        "is_none": true
+                      },
+                      "kv_cache_neg": {
+                        "is_none": true
+                      },
+                      "language": {
+                        "is_none": true
+                      },
+                      "ys": {
+                        "is_none": true
+                      }
+                    },
+                    "fixed_seed": 1140,
+                    "ip_rank": 1,
+                    "ip_size": 2,
+                    "num_frame_per_block": 2,
+                    "rank": 1,
+                    "video_guidance_scale": 5.0
+                  },
+                  "fields_cleared": [
+                    "current_start_frame",
+                    "kv_cache1",
+                    "kv_cache_neg",
+                    "crossattn_cache",
+                    "crossattn_cache_neg",
+                    "clip_feas",
+                    "ys",
+                    "language"
+                  ],
+                  "rank": 1
+                }
+              ],
+              "reset_id": "reset-000003-bb4e2071633f48b6b99499f57d3f22df",
+              "unresolved_mutable_temporal_fields": [],
+              "world_size": 2
+            }
+          },
+          "server_episode_manifest": {
+            "bytes": 21158412,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/episode_manifest.json",
+            "sha256": "c59c94df210246738a7068d0eca120ce4be80e5ba6c1e916cb8508493126baad"
+          },
+          "server_ready": {
+            "bytes": 4954,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/coordination/d1-development-d02-003/server_ready.json",
+            "sha256": "6c939cb72a64a4cd298e07cf0d825f067d5805ead7434d88d5ea527064faae76"
+          },
+          "server_request_receipts": [
+            {
+              "bytes": 179277,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0000/request_receipt.json",
+              "sha256": "9c3463b775ee02a53dd303406f517ccd6b728bc5b3c5410602f5325d3ecf22b4"
+            },
+            {
+              "bytes": 329027,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0001/request_receipt.json",
+              "sha256": "751e06709f01175def2a4444615ac8298ad1a2fca63dbc9e5864bb5663c00e6c"
+            },
+            {
+              "bytes": 329186,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0002/request_receipt.json",
+              "sha256": "837517ad1a66e4a7358b876bdcb4b82976a433227d511897d2ea4e11c6b9ec6a"
+            },
+            {
+              "bytes": 329178,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0003/request_receipt.json",
+              "sha256": "450749983525a56e02a4c57ce0bbf8c2787e9b263658d37a9cb27529ae194a8f"
+            },
+            {
+              "bytes": 331864,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0004/request_receipt.json",
+              "sha256": "fc526bd45568af1c20b6d89387c2ae0bf18a8eb9c32af84d6fada3e7746e6e9d"
+            },
+            {
+              "bytes": 329008,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0005/request_receipt.json",
+              "sha256": "5694bd1a2e7cc941d972210e1cb61c1264c71aec5c8a9d9121ea3e2639a5f725"
+            },
+            {
+              "bytes": 329168,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0006/request_receipt.json",
+              "sha256": "80f14e7cdf3874bfd4bd9b1f5dacfb7d7427bd70a6c2d23960e7dfcfbb8b3c73"
+            },
+            {
+              "bytes": 329169,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0007/request_receipt.json",
+              "sha256": "f9138ad0a1c14053b53cd9078a19330bb7a980e58ad279220800d8d0560805e8"
+            },
+            {
+              "bytes": 331862,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0008/request_receipt.json",
+              "sha256": "eeee12dfcbc8d89cc635b1a584aa2e70d6da0ec828ee005b2055db2dcc50c46a"
+            },
+            {
+              "bytes": 329021,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0009/request_receipt.json",
+              "sha256": "d9385bb8fd59faddb5fed1642ae0020a4fa1cac010a5e9667dac3e5ab98f31f8"
+            },
+            {
+              "bytes": 329181,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0010/request_receipt.json",
+              "sha256": "623642ef4434da0138a986e0eae724b2091f7e8ee5f0de765034cae5af546c95"
+            },
+            {
+              "bytes": 329182,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0011/request_receipt.json",
+              "sha256": "1df071537baa00eb78f60dbca1b2cf2cd773c8788aea0927152584bffd57aa04"
+            },
+            {
+              "bytes": 331863,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0012/request_receipt.json",
+              "sha256": "45a1a571942d4f952932ea2cbfac5b2a2f0ce0bc9492bab46ed888bfaee48b59"
+            },
+            {
+              "bytes": 329016,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0013/request_receipt.json",
+              "sha256": "251f14765b6506ab0a8b8b4a6785e9d14a893ef264ced1d3aada1142d3fba380"
+            },
+            {
+              "bytes": 329177,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0014/request_receipt.json",
+              "sha256": "6ea6bd3e3223257da71a6a5be068b8fa61649a95d5e7d0f3d1293dd6788130f4"
+            },
+            {
+              "bytes": 329169,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0015/request_receipt.json",
+              "sha256": "0e94b2f4ac87ea89ea8b873dacfb30742e4406a495928ecb56fafb2d49140faa"
+            },
+            {
+              "bytes": 331863,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0016/request_receipt.json",
+              "sha256": "4800fc907fc448a0d4de1392f979b473249dbd6ddbfc6ce9fe1e9a4772cdef6c"
+            },
+            {
+              "bytes": 329028,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0017/request_receipt.json",
+              "sha256": "ed3d5a1f212e3db049be7332800e21cffbe7d261d30a2433306750b0a0c9854d"
+            },
+            {
+              "bytes": 329180,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0018/request_receipt.json",
+              "sha256": "a1362c4d02ba371266d566913f02b7aee180ac8864ba870dc559ef6555cf72a9"
+            },
+            {
+              "bytes": 329182,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0019/request_receipt.json",
+              "sha256": "ff2ea7192e73218afa5b3a3495cf5be51c408769e058043b1427f0cb6937ef71"
+            },
+            {
+              "bytes": 331870,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0020/request_receipt.json",
+              "sha256": "98eadbd31eed0d66be39d6406153e0248fe1d57eb161ea277d1a18d20d021808"
+            },
+            {
+              "bytes": 329010,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0021/request_receipt.json",
+              "sha256": "8a137c90d0943fda4571684d5a01946faa2fb2bc78782d2b6f15a498ef82b9be"
+            },
+            {
+              "bytes": 329170,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0022/request_receipt.json",
+              "sha256": "ffe3cf65347a0a3eea886839e8e3480fd51590a24098e822a5af5a8a95fc34fd"
+            },
+            {
+              "bytes": 329170,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0023/request_receipt.json",
+              "sha256": "543edb8e9217e491534c04178f7c10327176fcac062555150d99185a47142136"
+            },
+            {
+              "bytes": 331872,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0024/request_receipt.json",
+              "sha256": "a8f01d61133ad1c218782e5370888ec6bb609abc66f07bd0ab4796b41e70c899"
+            },
+            {
+              "bytes": 329022,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0025/request_receipt.json",
+              "sha256": "560c80c602fb2c9b6e02088cfae5b32817057a8a6032e3aef2638347784b519b"
+            },
+            {
+              "bytes": 329182,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0026/request_receipt.json",
+              "sha256": "56026e2be99d20a885918634aa62bfd82528409486a49ce14ae52a1676844c23"
+            },
+            {
+              "bytes": 329189,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0027/request_receipt.json",
+              "sha256": "a4b688044a6f339f257993a6300acd5c125d76cbdd4eca8b42d7a1080a466458"
+            },
+            {
+              "bytes": 331872,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0028/request_receipt.json",
+              "sha256": "beee2870938fe363e47a2c9d02c719d703ab64727011a1dcb4ebffc592201847"
+            },
+            {
+              "bytes": 329010,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0029/request_receipt.json",
+              "sha256": "cf358e96c64c437af5a9f80316cbf097ef84a4a1fd0be2fcb59f3ddaf00bf4f4"
+            },
+            {
+              "bytes": 329170,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0030/request_receipt.json",
+              "sha256": "897b46f0532c7ee37ecbf2f93297a3d774f81d5436a9019c8dff6df175b594a0"
+            },
+            {
+              "bytes": 329170,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0031/request_receipt.json",
+              "sha256": "4bcc9b068a47faf36d70806bbdfe2b187e742979643ec684b9eed75dba8e2866"
+            },
+            {
+              "bytes": 331864,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0032/request_receipt.json",
+              "sha256": "c3d03428e1819dd88b2a6f5d9961d0a4c791ba0087cc00ba02101ff4e2104008"
+            },
+            {
+              "bytes": 329019,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0033/request_receipt.json",
+              "sha256": "908725148c5aeb0b171ff12baba07fee08e9f3bc3fd104be1639b7ee31d6fce7"
+            },
+            {
+              "bytes": 329180,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0034/request_receipt.json",
+              "sha256": "c4b3da681929b8ad62ca8f10ea09f830ad2aab30434d453fda1d68be88572761"
+            },
+            {
+              "bytes": 329182,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0035/request_receipt.json",
+              "sha256": "6774f77bc5a771c36a8bb020b798e0b72086c8d170c0a24daf75bd2d1de78dfc"
+            },
+            {
+              "bytes": 331870,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0036/request_receipt.json",
+              "sha256": "73b971f2f625ce31b13a8e257bd161183287332eeca4fd315ccab96dc71d2cd1"
+            },
+            {
+              "bytes": 329017,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0037/request_receipt.json",
+              "sha256": "c629c78a8ac8ffe4786d36173419efb01fab41b27b6a9b0d9b20bd2313d0440c"
+            },
+            {
+              "bytes": 329169,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0038/request_receipt.json",
+              "sha256": "0414f3f9542eb56f583d506029e0807894d87601349290da8ab2d2a466f988cc"
+            },
+            {
+              "bytes": 329169,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0039/request_receipt.json",
+              "sha256": "a50c95668125a72d4a0d0d77ccd4f0a4f1aafe188e3c808f0befff499ea56ba8"
+            },
+            {
+              "bytes": 331865,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0040/request_receipt.json",
+              "sha256": "355983bc2b36ed4b60fdd71631b629d35863df2d93a4bdd3d6193c6e5986de5b"
+            },
+            {
+              "bytes": 329022,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0041/request_receipt.json",
+              "sha256": "71c115d846750fae32d805641be046e11b1dc137bafff31949311cf09ca4e4a5"
+            },
+            {
+              "bytes": 329182,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0042/request_receipt.json",
+              "sha256": "c45b254f728bcfc3e686f20f073e994e57682c5ec0b102082aefb1ff41126089"
+            },
+            {
+              "bytes": 329189,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0043/request_receipt.json",
+              "sha256": "9e52c9d85ea679359ff7d5a935dd007b4c063f9d027117bed9eb466780398c97"
+            },
+            {
+              "bytes": 331865,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0044/request_receipt.json",
+              "sha256": "b91c6a3716ad44bab62b9b8f60bc0b3f3e49953065a00c633e32b110b707e0c9"
+            },
+            {
+              "bytes": 329010,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0045/request_receipt.json",
+              "sha256": "86f82d06f033abd0eaf742fd5bacb073267683911ac5a2b1ceef18473769dd75"
+            },
+            {
+              "bytes": 329170,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0046/request_receipt.json",
+              "sha256": "3979028bc63fa28c79168eef5bf6399522c50c842b775a74c6b69587ff01b8c4"
+            },
+            {
+              "bytes": 329169,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0047/request_receipt.json",
+              "sha256": "33e0bd7d95564ac7c3fe4a577bc2a3801107840f81b772bf2937c978320b89f2"
+            },
+            {
+              "bytes": 331872,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0048/request_receipt.json",
+              "sha256": "14127647bfe31c79a304bf6eb1ad7637c14fd56197cd9ce557a9765e66efa8b6"
+            },
+            {
+              "bytes": 329029,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0049/request_receipt.json",
+              "sha256": "7a1791da822d7c50a3fdbce78341aac5b2e7754c88161ec73cc5020fce23cc42"
+            },
+            {
+              "bytes": 329181,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0050/request_receipt.json",
+              "sha256": "0988a5d3378f70783794e4958e44684388ebf6094c4dfe989838cef916be1b66"
+            },
+            {
+              "bytes": 329182,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0051/request_receipt.json",
+              "sha256": "b0ab29c40182804100ee51901eb8bb29c84402714d01713806a8b6ee916950d2"
+            },
+            {
+              "bytes": 331868,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0052/request_receipt.json",
+              "sha256": "7703f3e7d6c805aa310d208bfe4f8f86393d580f1c96ac0af9ae88844fecbaeb"
+            },
+            {
+              "bytes": 329017,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0053/request_receipt.json",
+              "sha256": "d80e0470764dc0651595d29a670e3893ecb42790af5cd5c10ff1643a3fa26bba"
+            },
+            {
+              "bytes": 329168,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0054/request_receipt.json",
+              "sha256": "092475d474b553285c8ed45e45383d36016d57b895bc10a41994cf0b11245071"
+            },
+            {
+              "bytes": 329170,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0055/request_receipt.json",
+              "sha256": "57e1b2632a2e81614b81a1b87aac7433edb84086686662a73808363699204e42"
+            },
+            {
+              "bytes": 331865,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/request_0056/request_receipt.json",
+              "sha256": "8878a73d3ab6fe92c9e89e2453069576d7cd3492c853e41dff8a9f11e0b05e57"
+            }
+          ],
+          "server_reset_receipt": {
+            "bytes": 5980,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/server_attempts/d1-development-d02-server-003/future/episodes/d1d02-c01-5ff9de73dc22446a903edf99e6452c32/reset_receipt.json",
+            "sha256": "979860bd52b0787c5ec404975c3a0682f9f25455b6ae650f58524f191d9d6cac"
+          },
+          "server_temporal_reset_scan": {
+            "passed": true,
+            "rank_temporal_state_scan": [
+              {
+                "after": {
+                  "action_horizon": 24,
+                  "captured_at_utc": "2026-09-13T10:42:24.734919Z",
+                  "configured_inference_steps": 16,
+                  "current_start_frame": 0,
+                  "fields": {
+                    "clip_feas": {
+                      "is_none": true
+                    },
+                    "crossattn_cache": {
+                      "is_none": true
+                    },
+                    "crossattn_cache_neg": {
+                      "is_none": true
+                    },
+                    "kv_cache1": {
+                      "is_none": true
+                    },
+                    "kv_cache_neg": {
+                      "is_none": true
+                    },
+                    "language": {
+                      "is_none": true
+                    },
+                    "ys": {
+                      "is_none": true
+                    }
+                  },
+                  "fixed_seed": 1140,
+                  "ip_rank": 0,
+                  "ip_size": 2,
+                  "num_frame_per_block": 2,
+                  "rank": 0,
+                  "video_guidance_scale": 5.0
+                },
+                "before": {
+                  "action_horizon": 24,
+                  "captured_at_utc": "2026-09-13T10:42:24.734857Z",
+                  "configured_inference_steps": 16,
+                  "current_start_frame": 0,
+                  "fields": {
+                    "clip_feas": {
+                      "is_none": true
+                    },
+                    "crossattn_cache": {
+                      "is_none": true
+                    },
+                    "crossattn_cache_neg": {
+                      "is_none": true
+                    },
+                    "kv_cache1": {
+                      "is_none": true
+                    },
+                    "kv_cache_neg": {
+                      "is_none": true
+                    },
+                    "language": {
+                      "is_none": true
+                    },
+                    "ys": {
+                      "is_none": true
+                    }
+                  },
+                  "fixed_seed": 1140,
+                  "ip_rank": 0,
+                  "ip_size": 2,
+                  "num_frame_per_block": 2,
+                  "rank": 0,
+                  "video_guidance_scale": 5.0
+                },
+                "fields_cleared": [
+                  "current_start_frame",
+                  "kv_cache1",
+                  "kv_cache_neg",
+                  "crossattn_cache",
+                  "crossattn_cache_neg",
+                  "clip_feas",
+                  "ys",
+                  "language"
+                ],
+                "rank": 0
+              },
+              {
+                "after": {
+                  "action_horizon": 24,
+                  "captured_at_utc": "2026-09-13T10:42:24.735214Z",
+                  "configured_inference_steps": 16,
+                  "current_start_frame": 0,
+                  "fields": {
+                    "clip_feas": {
+                      "is_none": true
+                    },
+                    "crossattn_cache": {
+                      "is_none": true
+                    },
+                    "crossattn_cache_neg": {
+                      "is_none": true
+                    },
+                    "kv_cache1": {
+                      "is_none": true
+                    },
+                    "kv_cache_neg": {
+                      "is_none": true
+                    },
+                    "language": {
+                      "is_none": true
+                    },
+                    "ys": {
+                      "is_none": true
+                    }
+                  },
+                  "fixed_seed": 1140,
+                  "ip_rank": 1,
+                  "ip_size": 2,
+                  "num_frame_per_block": 2,
+                  "rank": 1,
+                  "video_guidance_scale": 5.0
+                },
+                "before": {
+                  "action_horizon": 24,
+                  "captured_at_utc": "2026-09-13T10:42:24.735140Z",
+                  "configured_inference_steps": 16,
+                  "current_start_frame": 0,
+                  "fields": {
+                    "clip_feas": {
+                      "is_none": true
+                    },
+                    "crossattn_cache": {
+                      "is_none": true
+                    },
+                    "crossattn_cache_neg": {
+                      "is_none": true
+                    },
+                    "kv_cache1": {
+                      "is_none": true
+                    },
+                    "kv_cache_neg": {
+                      "is_none": true
+                    },
+                    "language": {
+                      "is_none": true
+                    },
+                    "ys": {
+                      "is_none": true
+                    }
+                  },
+                  "fixed_seed": 1140,
+                  "ip_rank": 1,
+                  "ip_size": 2,
+                  "num_frame_per_block": 2,
+                  "rank": 1,
+                  "video_guidance_scale": 5.0
+                },
+                "fields_cleared": [
+                  "current_start_frame",
+                  "kv_cache1",
+                  "kv_cache_neg",
+                  "crossattn_cache",
+                  "crossattn_cache_neg",
+                  "clip_feas",
+                  "ys",
+                  "language"
+                ],
+                "rank": 1
+              }
+            ],
+            "reset_id": "reset-000003-bb4e2071633f48b6b99499f57d3f22df",
+            "unresolved_mutable_temporal_fields": [],
+            "world_size": 2
+          },
+          "simulator_claim": {
+            "bytes": 912,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/coordination/d1-development-d02-003/simulator_claim.json",
+            "sha256": "6b3e4516cb1f9fc9ce2c4fbb5cb20d98f6aee7ad196bb8f5894532ed401aa57d"
+          },
+          "source_pins": {
+            "dreamzero_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+            "dreamzero_tree": "6b7ba27f1af81e963a6507f1204c05c65a94098c",
+            "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+            "study_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8"
+          },
+          "status": "passed",
+          "study_id": "WMF-ABLATION-001",
+          "transport_contract": {
+            "compression": null,
+            "connection_establishment_retries_only": 5,
+            "lost_response_policy": "fail_cell_without_replaying_reset_or_inference",
+            "max_size": null,
+            "outer_bound": "paired_queue_cell_timeout_and_leases",
+            "ping_interval": null,
+            "ping_timeout": null,
+            "schema_version": "wmf-d1-no-replay-websocket-v1",
+            "stateful_request_replay": false
+          },
+          "viewport_video": {
+            "bytes": 2851284,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/01-wmf1-development-D02-D1-original-left/native_simulator/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+            "sha256": "5b7622674151bcfc1620b96dfd57a2a07cf934f6c83b0f78457cb18186f31bbd"
+          }
+        },
+        "journal": {
+          "event_counts": {
+            "attempt_finalized": 1,
+            "attempt_started": 1,
+            "environment_step_completed": 450,
+            "environment_step_started": 450,
+            "first_success": 1,
+            "fixed_duration_environment_verified": 1,
+            "model_context_reset": 1,
+            "model_request_completed": 57,
+            "model_request_packed": 57,
+            "model_request_sent": 57,
+            "model_response_received": 57,
+            "observation_captured": 451,
+            "physical_reset": 1,
+            "policy_action_returned": 450,
+            "runner_reset_idempotent": 1
+          },
+          "exists": true,
+          "last_kind": "attempt_finalized",
+          "max_action_step": 450,
+          "max_request_index": 56
+        },
+        "request_receipt_count": 0,
+        "technical_failure": null
+      },
+      "02-wmf1-development-D02-D1-reflected-left": {
+        "cell_receipt": null,
+        "journal": {
+          "event_counts": {
+            "attempt_started": 1,
+            "environment_step_completed": 208,
+            "environment_step_started": 208,
+            "fixed_duration_environment_verified": 1,
+            "model_context_reset": 1,
+            "model_request_completed": 26,
+            "model_request_packed": 27,
+            "model_request_sent": 27,
+            "model_response_received": 26,
+            "observation_captured": 209,
+            "physical_reset": 1,
+            "policy_action_returned": 208,
+            "runner_reset_idempotent": 1
+          },
+          "exists": true,
+          "last_kind": "model_request_sent",
+          "max_action_step": 208,
+          "max_request_index": 26
+        },
+        "request_receipt_count": 0,
+        "technical_failure": null
+      }
+    },
+    "d1_behavioral_development_receipt.json": null,
+    "execution_prerequisites.json": {
+      "block_id": "wmf_ablation_001_20260912__development__D02__D1",
+      "development_contract_sha256": "5964f153db83c4cd23522098f1646747d5a14c28d54b8d510089e70e4911529a",
+      "layout_pair_id": "D02",
+      "phase": "development",
+      "prerequisites": {
+        "accepted_gate_record_sha256": "0334154a9f791aee268567412939a4d70e8c258999c74e5fcb2ac98fe802b62c",
+        "candidate_id": "D02__candidate_00",
+        "candidate_payload_sha256": "ecd9a978c6805c829e45794febcb917cb3126c74597c6e159651fd1e26bcdeb7",
+        "capture_receipt": {
+          "bytes": 3099,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixed-observation-d02-001/publish/fixed_observation_job_receipt.json",
+          "sha256": "a700280562d3640349fe8ec5a2594decf4a7b2b9f30450c9e9af55420bb907ac"
+        },
+        "d1_fixed_observation": {
+          "bytes": 520282,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/d1_official_wire_observation.npz",
+          "sha256": "03d99a3eb49442aa65b4d032ae73d960d748f40018934624bf14711264d1d21f"
+        },
+        "d1_qualification_receipt": {
+          "bytes": 13992,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/publish/d1_qualification_job_receipt.json",
+          "sha256": "3c856549999b9145dc07c30853a4c6d2968d09eb31c2db883f5eb1655d31627b"
+        },
+        "development_gate_attempt_receipt": {
+          "bytes": 271730,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/D02/attempts/D02/D02__candidate_00/attempt_000/gate_attempt_receipt.json",
+          "sha256": "1e26ce5d70684d2f3867e1444486e87256b403fb11d34d90df8c92bdd855b3ad"
+        },
+        "development_gate_ledger": {
+          "bytes": 1076,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/D02/gate_ledger.jsonl",
+          "sha256": "7d904fff4266dd1d712ae1385689bc8f4a6ed2e1c7d1e00a61ed2a5c77b6fd36"
+        },
+        "development_gate_receipt": {
+          "bytes": 3934,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-d02-candidate-00/publish/fixture_gate_receipt.json",
+          "sha256": "e30a3dd1ad3d8621661a406a7c1d6c30034383f9b5ad6bed8a96c63015a477d6"
+        },
+        "development_pose_manifest": {
+          "bytes": 5090,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/d02_pose_manifest.json",
+          "sha256": "701c2d0acdd9ccb546673d1ae028de2838eb425ee42cd79df3cbc82829d760af"
+        },
+        "generation_qualification_requests_reused_not_rerun": 6,
+        "mapping_qualification": "The passed P00 D1 pilot authenticates all four physical forecast/action/camera mappings. This development layout additionally requires its own fixed observation.",
+        "native_timing_support": {
+          "bytes": 1148,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-003/adapter_attempt/timing_support.json",
+          "sha256": "7703f4171a3f2bb482b7b818f36ae51ad959ed4705c537d897cd59613466118a"
+        },
+        "p00_paired_pilot": {
+          "behavioral_actions": 1800,
+          "behavioral_cells": 4,
+          "behavioral_model_requests": 228,
+          "cell_receipts": [
+            {
+              "bytes": 66889,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-002/cells/00-wmf1-pilot-P00-D1-reflected-right/cell_receipt.json",
+              "sha256": "26cbd67d0087ed555177af6ac78fcf57c9acfcf1adccf148a61b6b8d8cefcb56"
+            },
+            {
+              "bytes": 66878,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-003/cells/01-wmf1-pilot-P00-D1-reflected-left/cell_receipt.json",
+              "sha256": "1776aff65b7a7a05fe5e80d47b8bbdfb420b30c9cbeb2fcc8990be7d1949bbf6"
+            },
+            {
+              "bytes": 66873,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-003/cells/02-wmf1-pilot-P00-D1-original-left/cell_receipt.json",
+              "sha256": "eaab2e5c7a45770cc8a4649cf254f70ebb9acbfcb9c25b5a37dbbe627087f003"
+            },
+            {
+              "bytes": 66886,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-003/cells/03-wmf1-pilot-P00-D1-original-right/cell_receipt.json",
+              "sha256": "c7b0169a79d1bd630fca880aeeb83ffe550b15d752b94db15950bc365a38128c"
+            }
+          ],
+          "generation_qualification_requests_rerun": 0,
+          "server_ready": {
+            "bytes": 4375,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-003/server_ready.json",
+            "sha256": "a260f47dd6f99f2846ef21fdf670304f3ef7ec638bf44a9dd2aa1cac021fb91d"
+          },
+          "server_receipt": {
+            "bytes": 2382,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-server-003/publish/d1_behavioral_server_receipt.json",
+            "sha256": "95ef4351ffa494194ae6d9c4525acd8191b2d35438680f9284cad798d71f3201"
+          },
+          "simulator_claim": {
+            "bytes": 917,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-003/simulator_claim.json",
+            "sha256": "a7f4e2d28a78f0fd293b8390b2baa48247c1a941cd9677d874821c15ae3ae30e"
+          },
+          "simulator_receipt": {
+            "bytes": 8596,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-simulator-003/publish/d1_behavioral_pilot_receipt.json",
+            "sha256": "20b4068ee9748daad7ae5e8350e8b7cf36d62c686af51a0d4b9653f9cecb2ab0"
+          },
+          "simulator_terminal": {
+            "bytes": 960,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-003/simulator_terminal.json",
+            "sha256": "97b759626fd9b86486063942c429e52c5f13e803078d74ad0fe1f1c77f4586a6"
+          }
+        },
+        "raw_capture_receipt": {
+          "bytes": 80231,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/capture_receipt.json",
+          "sha256": "7ad03352a7fbd0f5c30f425712df716733ea4d2e0306037eee14e6fe013d9c43"
+        },
+        "recorder_child_receipt": {
+          "bytes": 29276,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-003/child_qualification_receipt.json",
+          "sha256": "b25617f8d7a52bfc3d4df161d6c947ef6b73788986581f107b1c6b638c1a296e"
+        },
+        "recorder_receipt": {
+          "bytes": 4232,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/recorder-qualification-p00-003/publish/recorder_qualification_receipt.json",
+          "sha256": "0e3f02f37a2548e36ae3a45a38a1fac63c56cd8798732056f24b03d103991fde"
+        }
+      },
+      "schema_version": "wmf-d1-development-execution-prerequisites-v1",
+      "status": "passed",
+      "study_id": "WMF-ABLATION-001"
+    },
+    "resume.json": {
+      "block_id": "wmf_ablation_001_20260912__development__D02__D1",
+      "completed_prefix_cell_ids": [],
+      "development_contract_sha256": "5964f153db83c4cd23522098f1646747d5a14c28d54b8d510089e70e4911529a",
+      "layout_pair_id": "D02",
+      "prior_attempt_roots": [],
+      "prior_cell_receipts": [],
+      "prior_study_commits": [],
+      "scan_completed_at_utc": "2026-09-13T10:30:25.524270Z",
+      "schema_version": "wmf-d1-behavioral-development-resume-v1",
+      "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "start_cell_index": 0,
+      "status": "passed"
+    },
+    "technical_failure.json": null
+  }
+}

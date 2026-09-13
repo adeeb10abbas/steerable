@@ -3587,6 +3587,47 @@
       ],
       "max_wall_seconds": 600,
       "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "n3-development-d02-002",
+      "released": true,
+      "source_commit": "c5b5368d852ecc9356b9df90cc5e6f62bfaecde8",
+      "role": "n3",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/experiments/forecast_layout/n3_development_block_job.py",
+        "queue",
+        "--layout-pair-id",
+        "D02",
+        "--source-root",
+        "{source_root}",
+        "--study-commit",
+        "c5b5368d852ecc9356b9df90cc5e6f62bfaecde8",
+        "--job-dir",
+        "{job_dir}",
+        "--job-id",
+        "n3-development-d02-002",
+        "--gate-receipt",
+        "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-d02-candidate-00/publish/fixture_gate_receipt.json",
+        "--gate-receipt-sha256",
+        "e30a3dd1ad3d8621661a406a7c1d6c30034383f9b5ad6bed8a96c63015a477d6",
+        "--pose-manifest",
+        "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/d02_pose_manifest.json",
+        "--pose-manifest-sha256",
+        "701c2d0acdd9ccb546673d1ae028de2838eb425ee42cd79df3cbc82829d760af",
+        "--pilot-receipt",
+        "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-p00-pilot-004/publish/n3_behavioral_pilot_receipt.json",
+        "--pilot-receipt-sha256",
+        "5a7a861acc82615b4eb7aa92308f40f7a0c965e65b6edaf12f776cb64b18b0e0",
+        "--port",
+        "18011",
+        "--server-ready-timeout",
+        "7200",
+        "--cell-timeout",
+        "10800"
+      ],
+      "max_wall_seconds": 60000,
+      "publish_log_tail_bytes": 8192
     }
   ]
 }

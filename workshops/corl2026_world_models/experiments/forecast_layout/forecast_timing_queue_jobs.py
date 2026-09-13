@@ -302,8 +302,9 @@ INITIAL_JOBS: tuple[InitialJob, ...] = (
 )
 INITIAL_BY_MODE = {job.mode: job for job in INITIAL_JOBS}
 
-N3_GENERATION_JOB_ID = "timing-n3-live-generation-p00-001"
+N3_GENERATION_JOB_ID = "timing-n3-live-generation-p00-002"
 N3_GENERATION_ROLE = "n3"
+N3_GENERATION_WORKER_ID = "wmf-forecast-0912-worker-n3-00"
 PREPARATION_JOB = INITIAL_BY_MODE["n3-live-input"]
 PREPARATION_CLUSTER_JOB_DIR = CONTROL_ROOT / "jobs" / PREPARATION_JOB.job_id
 PREPARATION_CLUSTER_JOB_RECEIPT = (
@@ -413,6 +414,7 @@ def _n3_generation_shell_argv(
             "--job-dir '{job_dir}'",
             f"--job-id {N3_GENERATION_JOB_ID}",
             f"--expected-role {N3_GENERATION_ROLE}",
+            f"--expected-worker-id {N3_GENERATION_WORKER_ID}",
             f"--contract-sha256 {CONTRACT_SHA256}",
             f"--preparation-job-receipt {PREPARATION_CLUSTER_JOB_RECEIPT}",
             f"--preparation-job-receipt-sha256 {preparation_job_receipt_sha256}",
@@ -598,10 +600,15 @@ def validate_queue_context(
     job_id: str,
     expected_role: str,
     expected_descriptor: Mapping[str, Any],
+    expected_worker_id: str | None = None,
 ) -> QueueContext:
     commit = _verified_commit(study_commit)
     _verified_safe_id(job_id, "job ID")
     _verified_safe_id(expected_role, "queue role")
+    worker_id = _verified_safe_id(
+        expected_role if expected_worker_id is None else expected_worker_id,
+        "worker ID",
+    )
     require(not Path(source_root).is_symlink(), "queue source root is a symlink")
     require(not Path(job_dir).is_symlink(), "queue job directory is a symlink")
     try:
@@ -624,7 +631,7 @@ def validate_queue_context(
 
     claim_path = job / "claim" / "owner.json"
     claim = load_json(claim_path, "queue claim owner")
-    require(claim.get("worker_id") == expected_role, "queue claim worker role changed")
+    require(claim.get("worker_id") == worker_id, "queue claim worker identity changed")
     require(
         claim.get("descriptor_sha256") == descriptor_identity["sha256"],
         "queue claim does not bind the exact descriptor",
@@ -643,7 +650,7 @@ def validate_queue_context(
 
     hostname = socket.gethostname()
     pod_uid = os.environ.get("POD_UID", "")
-    require(hostname.startswith(expected_role + "-"), "runtime hostname does not match queue role")
+    require(hostname.startswith(worker_id + "-"), "runtime hostname does not match worker identity")
     require(bool(pod_uid), "runtime POD_UID is missing")
     require(_run_git(source, "rev-parse", "HEAD").strip() == commit,
             "staged source checkout commit changed")
@@ -1001,6 +1008,8 @@ def _n3_prerequisite_from_runtime(args: argparse.Namespace) -> dict[str, Any]:
 def _runtime_n3_descriptor(args: argparse.Namespace) -> dict[str, Any]:
     require(args.job_id == N3_GENERATION_JOB_ID, "runtime N3 generation job ID changed")
     require(args.expected_role == N3_GENERATION_ROLE, "runtime N3 generation role changed")
+    require(args.expected_worker_id == N3_GENERATION_WORKER_ID,
+            "runtime N3 generation worker identity changed")
     require(args.contract_sha256 == CONTRACT_SHA256, "runtime timing contract hash changed")
     preparation = {
         "path": str(Path(args.preparation_receipt)),
@@ -1038,6 +1047,7 @@ def run_n3_generation_job(args: argparse.Namespace) -> dict[str, Any]:
             job_id=args.job_id,
             expected_role=args.expected_role,
             expected_descriptor=expected_descriptor,
+            expected_worker_id=args.expected_worker_id,
         )
         implementation = _validate_staged_implementation(
             context.source_root, include_n3_runner=True
@@ -1243,6 +1253,7 @@ def _parser() -> argparse.ArgumentParser:
 
     generation = commands.add_parser("n3-generate")
     _add_runtime_base(generation)
+    generation.add_argument("--expected-worker-id", required=True)
     generation.add_argument("--preparation-job-receipt", type=Path, required=True)
     generation.add_argument("--preparation-job-receipt-sha256", required=True)
     generation.add_argument("--preparation-receipt", type=Path, required=True)

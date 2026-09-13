@@ -159,11 +159,17 @@ class ForecastTimingDescriptorTests(unittest.TestCase):
                 preparation_job_receipt_sha256=digest,
             )
         self.assertEqual(descriptor["job_id"], queue_jobs.N3_GENERATION_JOB_ID)
+        self.assertEqual(
+            descriptor["job_id"], "timing-n3-live-generation-p00-002"
+        )
         self.assertEqual(descriptor["role"], "n3")
         self.assertIs(descriptor["released"], True)
         command = " ".join(descriptor["argv"])
         self.assertIn("CUDA_VISIBLE_DEVICES=0", command)
         self.assertIn("n3-generate", command)
+        self.assertIn(
+            f"--expected-worker-id {queue_jobs.N3_GENERATION_WORKER_ID}", command
+        )
         self.assertIn(str(queue_jobs.PREPARATION_CLUSTER_JOB_RECEIPT), command)
         self.assertIn("1" * 64, command)
         self.assertIn("2" * 64, command)
@@ -219,6 +225,7 @@ class ForecastTimingDescriptorTests(unittest.TestCase):
         args = argparse.Namespace(
             job_id=queue_jobs.N3_GENERATION_JOB_ID,
             expected_role="n3",
+            expected_worker_id=queue_jobs.N3_GENERATION_WORKER_ID,
             contract_sha256=queue_jobs.CONTRACT_SHA256,
             study_commit="d" * 40,
             preparation_job_receipt=queue_jobs.PREPARATION_CLUSTER_JOB_RECEIPT,
@@ -299,6 +306,51 @@ class QueueContextTests(unittest.TestCase):
                 expected_descriptor=descriptor,
             )
 
+    def _n3_args(self) -> argparse.Namespace:
+        prepared = (
+            queue_jobs.PREPARATION_CLUSTER_JOB_DIR / "raw" / "n3_live_input"
+        )
+        return argparse.Namespace(
+            command="n3-generate",
+            source_root=self.source,
+            study_commit=self.commit,
+            job_dir=self.state / "jobs" / queue_jobs.N3_GENERATION_JOB_ID,
+            job_id=queue_jobs.N3_GENERATION_JOB_ID,
+            expected_role=queue_jobs.N3_GENERATION_ROLE,
+            expected_worker_id=queue_jobs.N3_GENERATION_WORKER_ID,
+            contract_sha256=queue_jobs.CONTRACT_SHA256,
+            preparation_job_receipt=queue_jobs.PREPARATION_CLUSTER_JOB_RECEIPT,
+            preparation_job_receipt_sha256="0" * 64,
+            preparation_receipt=prepared / "preparation_receipt.json",
+            preparation_receipt_sha256="1" * 64,
+            observation_manifest=prepared / "observation_manifest.json",
+            observation_manifest_sha256="2" * 64,
+        )
+
+    def _stage_n3(self, *, claim_worker: str) -> tuple[argparse.Namespace, dict]:
+        args = self._n3_args()
+        args.job_dir.mkdir(parents=True)
+        descriptor = queue_jobs._runtime_n3_descriptor(args)
+        descriptor_path = args.job_dir / "descriptor.json"
+        descriptor_path.write_bytes(
+            queue_jobs.canonical_bytes(queue_jobs._normalized_descriptor(descriptor))
+        )
+        claim = args.job_dir / "claim"
+        claim.mkdir()
+        (claim / "owner.json").write_bytes(
+            queue_jobs.canonical_bytes(
+                {
+                    "worker_id": claim_worker,
+                    "worker_pid": 42,
+                    "control_commit": "f" * 40,
+                    "control_generation": 10,
+                    "descriptor_sha256": queue_jobs.sha256_file(descriptor_path),
+                    "release_boundary": "claim_committed_under_shared_release_lock",
+                }
+            )
+        )
+        return args, descriptor
+
     def test_exact_descriptor_claim_role_and_commit_pass(self) -> None:
         descriptor = self._stage()
         context = self._validate(descriptor)
@@ -316,8 +368,79 @@ class QueueContextTests(unittest.TestCase):
 
     def test_claim_role_substitution_fails_before_work(self) -> None:
         descriptor = self._stage(claim_role="wmf-forecast-0912-worker-06")
-        with self.assertRaisesRegex(queue_jobs.TimingQueueError, "claim worker role"):
+        with self.assertRaisesRegex(queue_jobs.TimingQueueError, "claim worker identity"):
             self._validate(descriptor)
+
+    def test_dedicated_n3_role_is_distinct_from_exact_claim_worker(self) -> None:
+        args, descriptor = self._stage_n3(
+            claim_worker=queue_jobs.N3_GENERATION_WORKER_ID
+        )
+        self.assertEqual(descriptor["role"], "n3")
+        with mock.patch.object(
+            queue_jobs.socket,
+            "gethostname",
+            return_value=queue_jobs.N3_GENERATION_WORKER_ID + "-pod",
+        ), mock.patch.dict(os.environ, {"POD_UID": "n3-pod-uid"}, clear=False):
+            context = queue_jobs.validate_queue_context(
+                source_root=self.source,
+                job_dir=args.job_dir,
+                study_commit=self.commit,
+                job_id=args.job_id,
+                expected_role=args.expected_role,
+                expected_worker_id=args.expected_worker_id,
+                expected_descriptor=descriptor,
+            )
+        self.assertEqual(context.role, "n3")
+        self.assertEqual(context.worker_id, queue_jobs.N3_GENERATION_WORKER_ID)
+
+    def test_dedicated_n3_rejects_role_name_as_claim_worker(self) -> None:
+        args, descriptor = self._stage_n3(claim_worker="n3")
+        with mock.patch.object(
+            queue_jobs.socket,
+            "gethostname",
+            return_value=queue_jobs.N3_GENERATION_WORKER_ID + "-pod",
+        ), mock.patch.dict(os.environ, {"POD_UID": "n3-pod-uid"}, clear=False):
+            with self.assertRaisesRegex(
+                queue_jobs.TimingQueueError, "claim worker identity"
+            ):
+                queue_jobs.validate_queue_context(
+                    source_root=self.source,
+                    job_dir=args.job_dir,
+                    study_commit=self.commit,
+                    job_id=args.job_id,
+                    expected_role=args.expected_role,
+                    expected_worker_id=args.expected_worker_id,
+                    expected_descriptor=descriptor,
+                )
+
+    def test_pre_model_n3_identity_failure_records_zero_science(self) -> None:
+        args, _ = self._stage_n3(claim_worker="n3")
+        with mock.patch.object(
+            queue_jobs.socket,
+            "gethostname",
+            return_value=queue_jobs.N3_GENERATION_WORKER_ID + "-pod",
+        ), mock.patch.dict(os.environ, {"POD_UID": "n3-pod-uid"}, clear=False):
+            with self.assertRaisesRegex(
+                queue_jobs.TimingQueueError, "claim worker identity"
+            ):
+                queue_jobs.run_n3_generation_job(args)
+        failure = queue_jobs.load_json(
+            args.job_dir / "publish" / "timing_job_failure.json",
+            "N3 timing failure",
+        )
+        self.assertEqual(failure["status"], "technical_invalid")
+        self.assertIs(failure["science_counts"]["n3_generation_child_started"], False)
+        for field in (
+            "model_runtime_loads",
+            "model_servers_started",
+            "model_requests_issued_by_job",
+            "model_requests_completed_before_failure",
+            "physical_resets",
+            "robot_episodes",
+            "behavioral_actions",
+            "behavioral_cells",
+        ):
+            self.assertEqual(failure["science_counts"][field], 0, field)
 
     def test_dirty_staged_source_fails_before_work(self) -> None:
         descriptor = self._stage()

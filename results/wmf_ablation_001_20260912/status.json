@@ -75,7 +75,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "148b0bad38382b32667d7cf2484773c11fa744ad",
-    "control_generation": 311,
+    "control_generation": 312,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -1728,17 +1728,29 @@
       "worker_id": "wmf-forecast-0912-worker-05"
     },
     {
+      "child_pid": 102,
+      "child_reaped": true,
       "descriptor_sha256": "f9941f5d0ffa453ab1a822181723a1b666b1a1e5169e27c7a31f4b40827793f9",
-      "heartbeat": {
-        "at": "2026-09-13T06:26:54.427292+00:00",
-        "child_pid": 102,
-        "unix": 1789280814.4273102,
-        "worker_id": "wmf-forecast-0912-worker-05",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T06:26:56.442825+00:00",
+      "error_type": null,
       "job_id": "worker05-isolation-diagnostic-003",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"diagnostic_published\": true, \"gpu_count\": 1, \"diagnostic_passed\": true, \"scientific_qualification\": false}\n"
+      },
+      "returncode": 0,
       "source_commit": "471f28ff31e312f86df33c7c9e79d61f010e96cd",
-      "status": "claimed",
+      "started_at": "2026-09-13T06:26:53.818033+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 109,
+        "sha256": "7d9cffb007dfd0a7a828683d27d983c6e64dbd684ac0ea3ccc36a16129ba2e59"
+      },
+      "wall_seconds": 2.6249012970365584,
       "worker_id": "wmf-forecast-0912-worker-05"
     },
     {
@@ -1768,10 +1780,30 @@
       "worker_id": "wmf-forecast-0912-worker-06"
     },
     {
+      "child_pid": 63,
+      "child_reaped": true,
       "descriptor_sha256": "bbb37f9e234eea6d67268685e2e23107a1c1c5fbad8674ece0e2f627477fe7c6",
+      "ended_at": "2026-09-13T06:27:23.311513+00:00",
+      "error_type": null,
       "job_id": "worker06-isolation-diagnostic-003",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"diagnostic_published\": true, \"gpu_count\": 1, \"diagnostic_passed\": true, \"scientific_qualification\": false}\n"
+      },
+      "returncode": 0,
       "source_commit": "471f28ff31e312f86df33c7c9e79d61f010e96cd",
-      "status": "staged"
+      "started_at": "2026-09-13T06:27:19.927810+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 109,
+        "sha256": "7d9cffb007dfd0a7a828683d27d983c6e64dbd684ac0ea3ccc36a16129ba2e59"
+      },
+      "wall_seconds": 3.3838405290152878,
+      "worker_id": "wmf-forecast-0912-worker-06"
     },
     {
       "child_pid": 214,

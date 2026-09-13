@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -441,7 +443,8 @@ class CommandsAndPairingTests(unittest.TestCase):
     def test_queue_descriptor_pairing_is_fail_closed(self) -> None:
         block = development.load_development_block(SOURCE_ROOT, "D01")
         with tempfile.TemporaryDirectory() as temporary:
-            job = Path(temporary) / "server-1"
+            identity = development.attempt003_pair_identity(block)
+            job = Path(temporary) / identity["server_job_id"]
             job.mkdir()
             argv = [
                 "/usr/bin/python3",
@@ -449,11 +452,15 @@ class CommandsAndPairingTests(unittest.TestCase):
                 + development.RUNNER_FILENAME,
                 "server-job",
                 "--layout-pair-id", "D01",
-                "--simulator-worker-role", "wmf-forecast-0912-worker-05",
+                "--simulator-worker-role", development.ATTEMPT003_SIMULATOR_WORKER_ROLE,
+                "--source-root", "{source_root}",
                 "--study-commit", STUDY_COMMIT,
-                "--job-id", "server-1",
-                "--run-id", "run-1",
-                "--simulator-job-id", "sim-1",
+                "--job-dir", "{job_dir}",
+                "--job-id", identity["server_job_id"],
+                "--run-id", identity["run_id"],
+                "--simulator-job-id", identity["simulator_job_id"],
+                "--port", str(pilot.SERVICE_PORT),
+                "--pair-admission-timeout-seconds", "900",
             ]
             (job / "descriptor.json").write_text(json.dumps({"argv": argv}))
             with mock.patch.object(
@@ -462,22 +469,23 @@ class CommandsAndPairingTests(unittest.TestCase):
                 return_value={
                     **pilot.file_identity(job / "descriptor.json"),
                     "role": pilot.SERVER_QUEUE_ROLE,
-                    "job_id": "server-1",
+                    "job_id": identity["server_job_id"],
                 },
             ):
                 development.validate_queue_invocation(
                     source_root=SOURCE_ROOT,
                     job_dir=job,
                     study_commit=STUDY_COMMIT,
-                    job_id="server-1",
+                    job_id=identity["server_job_id"],
                     expected_role=pilot.SERVER_QUEUE_ROLE,
                     expected_mode="server-job",
-                    paired_job_id="sim-1",
-                    run_id="run-1",
+                    paired_job_id=identity["simulator_job_id"],
+                    run_id=identity["run_id"],
                     block=block,
-                    simulator_worker_role="wmf-forecast-0912-worker-05",
+                    simulator_worker_role=development.ATTEMPT003_SIMULATOR_WORKER_ROLE,
+                    pair_admission_timeout_seconds=900,
                 )
-                argv[-1] = "other-simulator"
+                argv[argv.index("--simulator-job-id") + 1] = "other-simulator"
                 (job / "descriptor.json").write_text(json.dumps({"argv": argv}))
                 with self.assertRaisesRegex(
                     pilot.D1BehavioralPilotError, "development_queue_pairing_changed"
@@ -486,19 +494,21 @@ class CommandsAndPairingTests(unittest.TestCase):
                         source_root=SOURCE_ROOT,
                         job_dir=job,
                         study_commit=STUDY_COMMIT,
-                        job_id="server-1",
+                        job_id=identity["server_job_id"],
                         expected_role=pilot.SERVER_QUEUE_ROLE,
                         expected_mode="server-job",
-                        paired_job_id="sim-1",
-                        run_id="run-1",
+                        paired_job_id=identity["simulator_job_id"],
+                        run_id=identity["run_id"],
                         block=block,
-                        simulator_worker_role="wmf-forecast-0912-worker-05",
+                        simulator_worker_role=development.ATTEMPT003_SIMULATOR_WORKER_ROLE,
+                        pair_admission_timeout_seconds=900,
                     )
 
     def test_queue_descriptor_is_rehashed_after_extended_validation(self) -> None:
         block = development.load_development_block(SOURCE_ROOT, "D01")
         with tempfile.TemporaryDirectory() as temporary:
-            job = Path(temporary) / "server-1"
+            identity = development.attempt003_pair_identity(block)
+            job = Path(temporary) / identity["server_job_id"]
             job.mkdir()
             argv = [
                 "/usr/bin/python3",
@@ -506,11 +516,15 @@ class CommandsAndPairingTests(unittest.TestCase):
                 + development.RUNNER_FILENAME,
                 "server-job",
                 "--layout-pair-id", "D01",
-                "--simulator-worker-role", "wmf-forecast-0912-worker-05",
+                "--simulator-worker-role", development.ATTEMPT003_SIMULATOR_WORKER_ROLE,
+                "--source-root", "{source_root}",
                 "--study-commit", STUDY_COMMIT,
-                "--job-id", "server-1",
-                "--run-id", "run-1",
-                "--simulator-job-id", "sim-1",
+                "--job-dir", "{job_dir}",
+                "--job-id", identity["server_job_id"],
+                "--run-id", identity["run_id"],
+                "--simulator-job-id", identity["simulator_job_id"],
+                "--port", str(pilot.SERVICE_PORT),
+                "--pair-admission-timeout-seconds", "900",
             ]
             (job / "descriptor.json").write_text(json.dumps({"argv": argv}))
             stale = {**pilot.file_identity(job / "descriptor.json"), "role": "d1"}
@@ -527,13 +541,14 @@ class CommandsAndPairingTests(unittest.TestCase):
                     source_root=SOURCE_ROOT,
                     job_dir=job,
                     study_commit=STUDY_COMMIT,
-                    job_id="server-1",
+                    job_id=identity["server_job_id"],
                     expected_role=pilot.SERVER_QUEUE_ROLE,
                     expected_mode="server-job",
-                    paired_job_id="sim-1",
-                    run_id="run-1",
+                    paired_job_id=identity["simulator_job_id"],
+                    run_id=identity["run_id"],
                     block=block,
-                    simulator_worker_role="wmf-forecast-0912-worker-05",
+                    simulator_worker_role=development.ATTEMPT003_SIMULATOR_WORKER_ROLE,
+                    pair_admission_timeout_seconds=900,
                 )
 
     def test_server_cli_and_launch_are_gated_by_all_layout_prerequisites(self) -> None:
@@ -547,19 +562,22 @@ class CommandsAndPairingTests(unittest.TestCase):
                 "capture_receipt_sha256", "recorder_receipt",
                 "recorder_receipt_sha256", "d1_qualification_receipt",
                 "d1_qualification_receipt_sha256", "pilot_simulator_receipt",
-                "pilot_server_receipt",
+                "pilot_server_receipt", "pair_admission_timeout_seconds",
             }.issubset(server_dests)
         )
         block = development.load_development_block(SOURCE_ROOT, "D01")
+        identity = development.attempt003_pair_identity(block)
         args = development.argparse.Namespace(
             raw_root=block.raw_root,
             source_root=SOURCE_ROOT,
-            job_dir=Path("/queue/jobs/server-1"),
+            job_dir=Path("/queue/jobs") / identity["server_job_id"],
             study_commit=STUDY_COMMIT,
-            job_id="server-1",
-            simulator_job_id="sim-1",
-            run_id="run-1",
-            simulator_worker_role="wmf-forecast-0912-worker-05",
+            job_id=identity["server_job_id"],
+            simulator_job_id=identity["simulator_job_id"],
+            run_id=identity["run_id"],
+            simulator_worker_role=development.ATTEMPT003_SIMULATOR_WORKER_ROLE,
+            pair_admission_timeout_seconds=900,
+            mode="server-job",
         )
         with mock.patch.object(
             development, "validate_queue_invocation", return_value={"sha256": "a" * 64}
@@ -574,6 +592,1143 @@ class CommandsAndPairingTests(unittest.TestCase):
                 development.run_server_job(args, block)
         prerequisites.assert_called_once_with(args, block)
         launch.assert_not_called()
+
+
+class PairAdmissionTests(unittest.TestCase):
+    SIMULATOR_ROLE = "wmf-forecast-0912-worker-00"
+    TIMEOUT = 900
+
+    def _descriptor(
+        self, jobs_root: Path, layout_pair_id: str, mode: str
+    ) -> tuple[Path, dict[str, str], dict]:
+        block = development.load_development_block(SOURCE_ROOT, layout_pair_id)
+        identity = development.attempt003_pair_identity(block)
+        if mode == "server-job":
+            job_id = identity["server_job_id"]
+            paired_option = "--simulator-job-id"
+            paired_id = identity["simulator_job_id"]
+            endpoint = ["--port", str(pilot.SERVICE_PORT)]
+        else:
+            job_id = identity["simulator_job_id"]
+            paired_option = "--server-job-id"
+            paired_id = identity["server_job_id"]
+            endpoint = [
+                "--remote-host", pilot.SERVICE_HOST,
+                "--remote-port", str(pilot.SERVICE_PORT),
+            ]
+        job_dir = jobs_root / job_id
+        job_dir.mkdir(parents=True)
+        argv = [
+            "/usr/bin/python3",
+            "{source_root}/workshops/corl2026_world_models/experiments/forecast_layout/"
+            + development.RUNNER_FILENAME,
+            mode,
+            "--layout-pair-id", layout_pair_id,
+            "--simulator-worker-role", self.SIMULATOR_ROLE,
+            "--source-root", "{source_root}",
+            "--study-commit", STUDY_COMMIT,
+            "--job-dir", "{job_dir}",
+            "--job-id", job_id,
+            paired_option, paired_id,
+            "--run-id", identity["run_id"],
+            *endpoint,
+            "--pair-admission-timeout-seconds", str(self.TIMEOUT),
+        ]
+        descriptor_path = job_dir / "descriptor.json"
+        descriptor_path.write_text(json.dumps({"argv": argv}))
+        return job_dir, identity, pilot.file_identity(descriptor_path)
+
+    def _claim(
+        self, job_dir: Path, descriptor: dict, worker_id: str
+    ) -> None:
+        claim = job_dir / "claim"
+        claim.mkdir()
+        (claim / "owner.json").write_text(
+            json.dumps(
+                {
+                    "worker_id": worker_id,
+                    "claimed_at": "2026-09-13T09:00:00+00:00",
+                    "claimed_unix": 1789290000.0,
+                    "worker_pid": 123,
+                    "control_commit": "b" * 40,
+                    "control_generation": 3,
+                    "descriptor_sha256": descriptor["sha256"],
+                    "release_boundary": "claim_committed_under_shared_release_lock",
+                }
+            )
+        )
+
+    def _heartbeat(
+        self, job_dir: Path, worker_id: str, *, child_pid: int | None = None
+    ) -> None:
+        (job_dir / "heartbeat.json").write_text(
+            json.dumps(
+                {
+                    "worker_id": worker_id,
+                    "worker_pid": 123,
+                    "child_pid": os.getpid() if child_pid is None else child_pid,
+                    "at": "2026-09-13T09:00:01+00:00",
+                    "unix": development.time.time(),
+                }
+            )
+        )
+
+    def _result(
+        self, job_dir: Path, descriptor: dict, worker_id: str,
+        *, status: str = "succeeded", returncode: int = 0,
+        source_commit: str = STUDY_COMMIT,
+    ) -> None:
+        (job_dir / "result.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": development.QUEUE_RESULT_SCHEMA,
+                    "namespace": pilot.NAMESPACE,
+                    "job_id": job_dir.name,
+                    "worker_id": worker_id,
+                    "source_commit": source_commit,
+                    "descriptor_sha256": descriptor["sha256"],
+                    "job_dir": str(job_dir.resolve()),
+                    "status": status,
+                    "returncode": returncode,
+                    "started_at": "2026-09-13T09:00:00+00:00",
+                    "ended_at": "2026-09-13T09:01:00+00:00",
+                    "child_reaped": True,
+                }
+            )
+        )
+
+    def _external_descriptors(
+        self, jobs_root: Path
+    ) -> tuple[Path, dict, Path, dict, dict[str, dict]]:
+        external = development.ATTEMPT003_EXTERNAL_PREDECESSOR
+        server_dir = jobs_root / external["server_job_id"]
+        simulator_dir = jobs_root / external["simulator_job_id"]
+        server_dir.mkdir(parents=True)
+        simulator_dir.mkdir(parents=True)
+        server_descriptor = {
+            "path": str(server_dir / "descriptor.json"),
+            "bytes": 1,
+            "sha256": external["server_descriptor_sha256"],
+            "role": pilot.SERVER_QUEUE_ROLE,
+            "job_id": external["server_job_id"],
+        }
+        simulator_descriptor = {
+            "path": str(simulator_dir / "descriptor.json"),
+            "bytes": 1,
+            "sha256": external["simulator_descriptor_sha256"],
+            "role": self.SIMULATOR_ROLE,
+            "job_id": external["simulator_job_id"],
+        }
+        return (
+            server_dir,
+            server_descriptor,
+            simulator_dir,
+            simulator_descriptor,
+            {
+                external["server_job_id"]: server_descriptor,
+                external["simulator_job_id"]: simulator_descriptor,
+            },
+        )
+
+    @staticmethod
+    def _temporary_block(root: Path, layout_pair_id: str) -> development.DevelopmentBlock:
+        return replace(
+            development.load_development_block(SOURCE_ROOT, layout_pair_id),
+            raw_root=root / "behavioral" / "development" / "D1" / layout_pair_id,
+        )
+
+    def _server_deep_receipt(
+        self, job_dir: Path, descriptor: dict, block: development.DevelopmentBlock,
+        *, job_id: str, simulator_job_id: str, run_id: str,
+        study_commit: str = STUDY_COMMIT, reaped: bool = True,
+    ) -> Path:
+        attempt = block.raw_root / "server_attempts" / job_id
+        attempt.mkdir(parents=True)
+        _write(attempt / "server_process.json", {"pid": 123})
+        payload = {
+            "schema_version": development.SERVER_RECEIPT_SCHEMA,
+            "status": "technical_failure",
+            "exit_code": 1,
+            "run_id": run_id,
+            "server_job_id": job_id,
+            "paired_simulator_job_id": simulator_job_id,
+            "study_commit": study_commit,
+            "block_id": block.block_id,
+            "queue_descriptor": descriptor,
+            "server_process_exit": {
+                "status": "reaped",
+                "returncode": -11,
+                "reaped": reaped,
+            },
+            "all_server_children_reaped": reaped,
+            "raw_attempt_root": str(attempt.resolve()),
+        }
+        path = job_dir / "publish" / "d1_behavioral_server_receipt.json"
+        _write(path, payload)
+        return path
+
+    def _simulator_deep_receipt(
+        self, job_dir: Path, descriptor: dict, block: development.DevelopmentBlock,
+        *, job_id: str, server_job_id: str, run_id: str,
+        study_commit: str = STUDY_COMMIT, safe: bool = True,
+    ) -> tuple[Path, Path]:
+        attempt = block.raw_root / "simulator_attempts" / job_id
+        raw_publish = attempt / "publish" / development.SIMULATOR_RECEIPT_FILENAME
+        payload = {
+            "schema_version": development.SIMULATOR_RECEIPT_SCHEMA,
+            "status": "technical_failure",
+            "exit_code": 1,
+            "run_id": run_id,
+            "server_job_id": server_job_id,
+            "simulator_job_id": job_id,
+            "study_commit": study_commit,
+            "block_id": block.block_id,
+            "queue_descriptor": descriptor,
+            "all_simulator_children_reaped": safe,
+            "raw_attempt_root": str(attempt.resolve()),
+        }
+        raw_identity = _write(raw_publish, payload)
+        queue_path = job_dir / "publish" / development.SIMULATOR_RECEIPT_FILENAME
+        _write(queue_path, payload)
+        terminal_path = block.raw_root / "coordination" / run_id / "simulator_terminal.json"
+        _write(
+            terminal_path,
+            {
+                "schema_version": pilot.SIMULATOR_TERMINAL_SCHEMA,
+                "status": "technical_failure",
+                "run_id": run_id,
+                "simulator_job_id": job_id,
+                "server_job_id": server_job_id,
+                "block_id": block.block_id,
+                "simulator_receipt": raw_identity,
+                "all_simulator_children_reaped": safe,
+                "safe_for_server_shutdown": safe,
+            },
+        )
+        return queue_path, terminal_path
+
+    def _args(
+        self, job_dir: Path, identity: dict[str, str], mode: str
+    ) -> development.argparse.Namespace:
+        values = {
+            "mode": mode,
+            "source_root": SOURCE_ROOT,
+            "study_commit": STUDY_COMMIT,
+            "job_dir": job_dir,
+            "run_id": identity["run_id"],
+            "simulator_worker_role": self.SIMULATOR_ROLE,
+            "pair_admission_timeout_seconds": self.TIMEOUT,
+        }
+        if mode == "server-job":
+            values.update(
+                job_id=identity["server_job_id"],
+                simulator_job_id=identity["simulator_job_id"],
+            )
+        else:
+            values.update(
+                job_id=identity["simulator_job_id"],
+                server_job_id=identity["server_job_id"],
+            )
+        return development.argparse.Namespace(**values)
+
+    @staticmethod
+    def _base_queue_validator(**kwargs) -> dict:
+        descriptor = Path(kwargs["job_dir"]) / "descriptor.json"
+        return {
+            **pilot.file_identity(descriptor),
+            "role": kwargs["expected_role"],
+            "job_id": kwargs["job_id"],
+        }
+
+    def test_attempt003_ids_are_exact_and_attempt002_is_rejected(self) -> None:
+        block = development.load_development_block(SOURCE_ROOT, "D04")
+        identity = development.attempt003_pair_identity(block)
+        self.assertEqual(identity["server_job_id"], "d1-development-d04-server-003")
+        self.assertEqual(identity["simulator_job_id"], "d1-development-d04-simulator-003")
+        self.assertEqual(identity["run_id"], "d1-development-d04-003")
+        self.assertEqual(
+            identity["predecessor"]["server_job_id"],
+            "d1-development-d02-server-003",
+        )
+        with self.assertRaisesRegex(
+            pilot.D1BehavioralPilotError,
+            "development_attempt003_layout_not_released",
+        ):
+            development.attempt003_pair_identity(
+                development.load_development_block(SOURCE_ROOT, "D03")
+            )
+        with self.assertRaisesRegex(
+            pilot.D1BehavioralPilotError,
+            "development_attempt003_identity_changed",
+        ):
+            development.validate_attempt003_pair_identity(
+                expected_mode="server-job",
+                job_id="d1-development-d04-server-002",
+                paired_job_id="d1-development-d04-simulator-002",
+                run_id="d1-development-d04-002",
+                block=block,
+            )
+
+    def test_claim_without_fresh_bound_heartbeat_is_not_live(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            job_dir = Path(temporary) / "job"
+            job_dir.mkdir()
+            descriptor = _artifact(job_dir / "descriptor.json", b"descriptor")
+            self._claim(job_dir, descriptor, development.D1_SERVER_WORKER_ID)
+            claim = development._validate_queue_claim(
+                job_dir=job_dir,
+                descriptor=descriptor,
+                expected_job_id="job",
+                expected_worker_id=development.D1_SERVER_WORKER_ID,
+            )
+            self.assertIsNone(
+                development._validate_live_queue_heartbeat(
+                    job_dir=job_dir,
+                    claim=claim,
+                    expected_job_id="job",
+                    expected_worker_id=development.D1_SERVER_WORKER_ID,
+                    own_wrapper=True,
+                )
+            )
+            self._heartbeat(job_dir, development.D1_SERVER_WORKER_ID)
+            heartbeat = development._validate_live_queue_heartbeat(
+                job_dir=job_dir,
+                claim=claim,
+                expected_job_id="job",
+                expected_worker_id=development.D1_SERVER_WORKER_ID,
+                own_wrapper=True,
+            )
+            self.assertEqual(heartbeat["child_pid"], os.getpid())
+            stale = json.loads((job_dir / "heartbeat.json").read_text())
+            stale["child_pid"] = os.getpid() + 1000
+            (job_dir / "heartbeat.json").write_text(json.dumps(stale))
+            with self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError,
+                "development_pair_heartbeat_not_own_wrapper",
+            ):
+                development._validate_live_queue_heartbeat(
+                    job_dir=job_dir,
+                    claim=claim,
+                    expected_job_id="job",
+                    expected_worker_id=development.D1_SERVER_WORKER_ID,
+                    own_wrapper=True,
+                )
+            stale["child_pid"] = os.getpid()
+            stale["unix"] = development.time.time() - 60
+            (job_dir / "heartbeat.json").write_text(json.dumps(stale))
+            self.assertIsNone(
+                development._validate_live_queue_heartbeat(
+                    job_dir=job_dir,
+                    claim=claim,
+                    expected_job_id="job",
+                    expected_worker_id=development.D1_SERVER_WORKER_ID,
+                    own_wrapper=True,
+                )
+            )
+
+    def test_queue_child_reaped_alone_is_not_deep_terminal_proof(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            block = self._temporary_block(root, "D01")
+            job_id = "d1-development-d01-server-003"
+            job_dir = root / "control" / "jobs" / job_id
+            job_dir.mkdir(parents=True)
+            descriptor = _artifact(job_dir / "descriptor.json", b"descriptor")
+            with self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError,
+                "development_deep_terminal_proof_missing",
+            ):
+                development._validate_deep_terminal_proof(
+                    job_dir=job_dir,
+                    descriptor=descriptor,
+                    expected_job_id=job_id,
+                    paired_job_id="d1-development-d01-simulator-003",
+                    expected_mode="server-job",
+                    run_id="d1-development-d01-003",
+                    study_commit=STUDY_COMMIT,
+                    block=block,
+                )
+
+    def test_only_absent_deep_terminal_files_are_treated_as_pending(self) -> None:
+        missing = pilot.D1BehavioralPilotError(
+            "development_deep_terminal_proof_missing"
+        )
+        invalid = pilot.D1BehavioralPilotError(
+            "development_server_deep_terminal_binding_changed"
+        )
+        with mock.patch.object(
+            development, "_validate_deep_terminal_proof", side_effect=missing
+        ):
+            self.assertIsNone(development._deep_terminal_proof_if_visible())
+        with mock.patch.object(
+            development, "_validate_deep_terminal_proof", side_effect=invalid
+        ), self.assertRaisesRegex(
+            pilot.D1BehavioralPilotError,
+            "development_server_deep_terminal_binding_changed",
+        ):
+            development._deep_terminal_proof_if_visible()
+
+    def test_deep_server_proof_requires_reaped_scientific_process(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            block = self._temporary_block(root, "D01")
+            job_id = "d1-development-d01-server-003"
+            simulator_id = "d1-development-d01-simulator-003"
+            job_dir = root / "control" / "jobs" / job_id
+            job_dir.mkdir(parents=True)
+            descriptor = _artifact(job_dir / "descriptor.json", b"descriptor")
+            self._server_deep_receipt(
+                job_dir,
+                descriptor,
+                block,
+                job_id=job_id,
+                simulator_job_id=simulator_id,
+                run_id="d1-development-d01-003",
+            )
+            proof = development._validate_deep_terminal_proof(
+                job_dir=job_dir,
+                descriptor=descriptor,
+                expected_job_id=job_id,
+                paired_job_id=simulator_id,
+                expected_mode="server-job",
+                run_id="d1-development-d01-003",
+                study_commit=STUDY_COMMIT,
+                block=block,
+            )
+            self.assertTrue(proof["all_scientific_children_reaped"])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            block = self._temporary_block(root, "D01")
+            job_id = "d1-development-d01-server-003"
+            simulator_id = "d1-development-d01-simulator-003"
+            job_dir = root / "control" / "jobs" / job_id
+            job_dir.mkdir(parents=True)
+            descriptor = _artifact(job_dir / "descriptor.json", b"descriptor")
+            self._server_deep_receipt(
+                job_dir,
+                descriptor,
+                block,
+                job_id=job_id,
+                simulator_job_id=simulator_id,
+                run_id="d1-development-d01-003",
+                reaped=False,
+            )
+            with self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError,
+                "development_server_deep_terminal_binding_changed",
+            ):
+                development._validate_deep_terminal_proof(
+                    job_dir=job_dir,
+                    descriptor=descriptor,
+                    expected_job_id=job_id,
+                    paired_job_id=simulator_id,
+                    expected_mode="server-job",
+                    run_id="d1-development-d01-003",
+                    study_commit=STUDY_COMMIT,
+                    block=block,
+                )
+
+    def test_deep_simulator_proof_requires_safe_protocol_terminal(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            block = self._temporary_block(root, "D01")
+            job_id = "d1-development-d01-simulator-003"
+            server_id = "d1-development-d01-server-003"
+            job_dir = root / "control" / "jobs" / job_id
+            job_dir.mkdir(parents=True)
+            descriptor = _artifact(job_dir / "descriptor.json", b"descriptor")
+            self._simulator_deep_receipt(
+                job_dir,
+                descriptor,
+                block,
+                job_id=job_id,
+                server_job_id=server_id,
+                run_id="d1-development-d01-003",
+            )
+            proof = development._validate_deep_terminal_proof(
+                job_dir=job_dir,
+                descriptor=descriptor,
+                expected_job_id=job_id,
+                paired_job_id=server_id,
+                expected_mode="simulator-job",
+                run_id="d1-development-d01-003",
+                study_commit=STUDY_COMMIT,
+                block=block,
+            )
+            self.assertTrue(proof["safe_for_server_shutdown"])
+
+    def test_d01_pair_requires_both_role_claims_before_go(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            control = Path(temporary) / "control"
+            jobs = control / "jobs"
+            server_dir, identity, server_descriptor = self._descriptor(
+                jobs, "D01", "server-job"
+            )
+            simulator_dir, _identity, simulator_descriptor = self._descriptor(
+                jobs, "D01", "simulator-job"
+            )
+            (
+                external_server,
+                external_server_descriptor,
+                external_simulator,
+                external_simulator_descriptor,
+                external_descriptors,
+            ) = self._external_descriptors(jobs)
+            self._claim(
+                server_dir, server_descriptor, development.D1_SERVER_WORKER_ID
+            )
+            self._claim(simulator_dir, simulator_descriptor, self.SIMULATOR_ROLE)
+            self._heartbeat(server_dir, development.D1_SERVER_WORKER_ID)
+            self._heartbeat(simulator_dir, self.SIMULATOR_ROLE)
+            external = development.ATTEMPT003_EXTERNAL_PREDECESSOR
+            self._result(
+                external_server,
+                external_server_descriptor,
+                development.D1_SERVER_WORKER_ID,
+                source_commit=external["source_commit"],
+            )
+            self._result(
+                external_simulator,
+                external_simulator_descriptor,
+                self.SIMULATOR_ROLE,
+                source_commit=external["source_commit"],
+            )
+            args = self._args(server_dir, identity, "server-job")
+            with mock.patch.object(
+                development, "CONTROL_ROOT", control
+            ), mock.patch.object(
+                development,
+                "_PILOT_VALIDATE_QUEUE_INVOCATION",
+                side_effect=self._base_queue_validator,
+            ), mock.patch.object(
+                development,
+                "_validate_pinned_external_descriptor",
+                side_effect=lambda **kwargs: external_descriptors[kwargs["job_id"]],
+            ), mock.patch.object(
+                development,
+                "_validate_deep_terminal_proof",
+                return_value={"all_scientific_children_reaped": True},
+            ):
+                receipt = development.wait_for_pair_admission(
+                    args, development.load_development_block(SOURCE_ROOT, "D01"),
+                    own_descriptor=server_descriptor,
+                )
+            self.assertEqual(receipt["decision"], "go")
+            self.assertTrue(receipt["safe_to_start_scientific_child"])
+            self.assertEqual(len(receipt["predecessor_terminal_results"]), 2)
+            self.assertTrue(
+                all(
+                    value == 0
+                    for value in receipt["science_counts_before_admission"].values()
+                )
+            )
+
+    def test_d02_waits_for_both_child_reaped_d01_terminals(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            control = Path(temporary) / "control"
+            jobs = control / "jobs"
+            d01_server, _d01, d01_server_descriptor = self._descriptor(
+                jobs, "D01", "server-job"
+            )
+            d01_simulator, _d01, d01_simulator_descriptor = self._descriptor(
+                jobs, "D01", "simulator-job"
+            )
+            d02_server, identity, d02_server_descriptor = self._descriptor(
+                jobs, "D02", "server-job"
+            )
+            d02_simulator, _d02, d02_simulator_descriptor = self._descriptor(
+                jobs, "D02", "simulator-job"
+            )
+            (
+                external_server,
+                external_server_descriptor,
+                external_simulator,
+                external_simulator_descriptor,
+                external_descriptors,
+            ) = self._external_descriptors(jobs)
+            self._claim(
+                d02_server, d02_server_descriptor, development.D1_SERVER_WORKER_ID
+            )
+            self._claim(d02_simulator, d02_simulator_descriptor, self.SIMULATOR_ROLE)
+            self._heartbeat(d02_server, development.D1_SERVER_WORKER_ID)
+            self._heartbeat(d02_simulator, self.SIMULATOR_ROLE)
+            self._result(
+                d01_server,
+                d01_server_descriptor,
+                development.D1_SERVER_WORKER_ID,
+                status="failed",
+                returncode=1,
+            )
+            self._result(
+                d01_simulator,
+                d01_simulator_descriptor,
+                self.SIMULATOR_ROLE,
+                status="failed",
+                returncode=1,
+            )
+            external = development.ATTEMPT003_EXTERNAL_PREDECESSOR
+            self._result(
+                external_server,
+                external_server_descriptor,
+                development.D1_SERVER_WORKER_ID,
+                source_commit=external["source_commit"],
+            )
+            self._result(
+                external_simulator,
+                external_simulator_descriptor,
+                self.SIMULATOR_ROLE,
+                source_commit=external["source_commit"],
+            )
+            args = self._args(d02_server, identity, "server-job")
+            with mock.patch.object(
+                development, "CONTROL_ROOT", control
+            ), mock.patch.object(
+                development,
+                "_PILOT_VALIDATE_QUEUE_INVOCATION",
+                side_effect=self._base_queue_validator,
+            ), mock.patch.object(
+                development,
+                "_validate_pinned_external_descriptor",
+                side_effect=lambda **kwargs: external_descriptors[kwargs["job_id"]],
+            ), mock.patch.object(
+                development,
+                "_validate_deep_terminal_proof",
+                return_value={"all_scientific_children_reaped": True},
+            ):
+                receipt = development.wait_for_pair_admission(
+                    args, development.load_development_block(SOURCE_ROOT, "D02"),
+                    own_descriptor=d02_server_descriptor,
+                )
+            self.assertEqual(receipt["decision"], "go")
+            self.assertEqual(len(receipt["predecessor_terminal_results"]), 4)
+            self.assertTrue(
+                all(row["child_reaped"] for row in receipt["predecessor_terminal_results"])
+            )
+
+    def test_d02_missing_predecessor_terminals_times_out_before_science(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            control = Path(temporary) / "control"
+            jobs = control / "jobs"
+            self._descriptor(jobs, "D01", "server-job")
+            self._descriptor(jobs, "D01", "simulator-job")
+            d02_server, identity, d02_server_descriptor = self._descriptor(
+                jobs, "D02", "server-job"
+            )
+            d02_simulator, _d02, d02_simulator_descriptor = self._descriptor(
+                jobs, "D02", "simulator-job"
+            )
+            (
+                external_server,
+                external_server_descriptor,
+                external_simulator,
+                external_simulator_descriptor,
+                external_descriptors,
+            ) = self._external_descriptors(jobs)
+            self._claim(
+                d02_server, d02_server_descriptor, development.D1_SERVER_WORKER_ID
+            )
+            self._claim(d02_simulator, d02_simulator_descriptor, self.SIMULATOR_ROLE)
+            self._heartbeat(d02_server, development.D1_SERVER_WORKER_ID)
+            self._heartbeat(d02_simulator, self.SIMULATOR_ROLE)
+            external = development.ATTEMPT003_EXTERNAL_PREDECESSOR
+            self._result(
+                external_server,
+                external_server_descriptor,
+                development.D1_SERVER_WORKER_ID,
+                source_commit=external["source_commit"],
+            )
+            self._result(
+                external_simulator,
+                external_simulator_descriptor,
+                self.SIMULATOR_ROLE,
+                source_commit=external["source_commit"],
+            )
+            args = self._args(d02_server, identity, "server-job")
+            clock = iter((0.0, 1.0, 901.0, 901.0))
+            with mock.patch.object(
+                development, "CONTROL_ROOT", control
+            ), mock.patch.object(
+                development,
+                "_PILOT_VALIDATE_QUEUE_INVOCATION",
+                side_effect=self._base_queue_validator,
+            ), mock.patch.object(
+                development,
+                "_validate_pinned_external_descriptor",
+                side_effect=lambda **kwargs: external_descriptors[kwargs["job_id"]],
+            ), mock.patch.object(
+                development,
+                "_validate_deep_terminal_proof",
+                return_value={"all_scientific_children_reaped": True},
+            ), mock.patch.object(
+                development.time, "monotonic", side_effect=lambda: next(clock)
+            ), mock.patch.object(
+                development.time, "sleep"
+            ), self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError,
+                "development_pair_admission_timeout",
+            ):
+                development.wait_for_pair_admission(
+                    args, development.load_development_block(SOURCE_ROOT, "D02"),
+                    own_descriptor=d02_server_descriptor,
+                )
+            receipt = json.loads(
+                (
+                    d02_server
+                    / "publish"
+                    / development.PAIR_ADMISSION_RECEIPT_FILENAME
+                ).read_text()
+            )
+            self.assertEqual(receipt["decision"], "no_go")
+            self.assertIn(
+                "predecessor_terminal:d1-development-d01-server-003",
+                receipt["failure"]["detail"],
+            )
+            self.assertTrue(
+                all(
+                    value == 0
+                    for value in receipt["science_counts_before_admission"].values()
+                )
+            )
+
+    def test_d04_revalidates_d01_d02_and_external_d03_terminals(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            control = Path(temporary) / "control"
+            jobs = control / "jobs"
+            completed: list[tuple[Path, dict, str]] = []
+            for layout in ("D01", "D02"):
+                server, _identity, server_descriptor = self._descriptor(
+                    jobs, layout, "server-job"
+                )
+                simulator, _identity, simulator_descriptor = self._descriptor(
+                    jobs, layout, "simulator-job"
+                )
+                completed.extend(
+                    [
+                        (server, server_descriptor, development.D1_SERVER_WORKER_ID),
+                        (simulator, simulator_descriptor, self.SIMULATOR_ROLE),
+                    ]
+                )
+            d04_server, identity, d04_server_descriptor = self._descriptor(
+                jobs, "D04", "server-job"
+            )
+            d04_simulator, _d04, d04_simulator_descriptor = self._descriptor(
+                jobs, "D04", "simulator-job"
+            )
+            (
+                external_server,
+                external_server_descriptor,
+                external_simulator,
+                external_simulator_descriptor,
+                external_descriptors,
+            ) = self._external_descriptors(jobs)
+            completed.extend(
+                [
+                    (
+                        external_server,
+                        external_server_descriptor,
+                        development.D1_SERVER_WORKER_ID,
+                    ),
+                    (external_simulator, external_simulator_descriptor, self.SIMULATOR_ROLE),
+                ]
+            )
+            for job_dir, descriptor, worker_id in completed:
+                self._result(
+                    job_dir,
+                    descriptor,
+                    worker_id,
+                    source_commit=(
+                        development.ATTEMPT003_EXTERNAL_PREDECESSOR["source_commit"]
+                        if job_dir.name.endswith("-002")
+                        else STUDY_COMMIT
+                    ),
+                )
+            self._claim(
+                d04_server, d04_server_descriptor, development.D1_SERVER_WORKER_ID
+            )
+            self._claim(d04_simulator, d04_simulator_descriptor, self.SIMULATOR_ROLE)
+            self._heartbeat(d04_server, development.D1_SERVER_WORKER_ID)
+            self._heartbeat(d04_simulator, self.SIMULATOR_ROLE)
+            args = self._args(d04_server, identity, "server-job")
+            with mock.patch.object(
+                development, "CONTROL_ROOT", control
+            ), mock.patch.object(
+                development,
+                "_PILOT_VALIDATE_QUEUE_INVOCATION",
+                side_effect=self._base_queue_validator,
+            ), mock.patch.object(
+                development,
+                "_validate_pinned_external_descriptor",
+                side_effect=lambda **kwargs: external_descriptors[kwargs["job_id"]],
+            ), mock.patch.object(
+                development,
+                "_validate_deep_terminal_proof",
+                return_value={"all_scientific_children_reaped": True},
+            ) as deep:
+                receipt = development.wait_for_pair_admission(
+                    args,
+                    development.load_development_block(SOURCE_ROOT, "D04"),
+                    own_descriptor=d04_server_descriptor,
+                )
+            observed_ids = {
+                row["identity"]["path"].split("/")[-2]
+                for row in receipt["predecessor_terminal_results"]
+            }
+            self.assertEqual(
+                observed_ids,
+                {
+                    "d1-development-d01-server-003",
+                    "d1-development-d01-simulator-003",
+                    "d1-development-d02-server-003",
+                    "d1-development-d02-simulator-003",
+                    "d1-development-d03-server-002",
+                    "d1-development-d03-simulator-002",
+                },
+            )
+            self.assertEqual(deep.call_count, 6)
+
+    def test_peer_queue_terminal_aborts_admission_with_zero_science(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            control = Path(temporary) / "control"
+            jobs = control / "jobs"
+            simulator_dir, identity, simulator_descriptor = self._descriptor(
+                jobs, "D01", "simulator-job"
+            )
+            server_dir, _identity, server_descriptor = self._descriptor(
+                jobs, "D01", "server-job"
+            )
+            (
+                _external_server,
+                _external_server_descriptor,
+                _external_simulator,
+                _external_simulator_descriptor,
+                external_descriptors,
+            ) = self._external_descriptors(jobs)
+            self._claim(simulator_dir, simulator_descriptor, self.SIMULATOR_ROLE)
+            self._result(
+                server_dir,
+                server_descriptor,
+                development.D1_SERVER_WORKER_ID,
+                status="failed",
+                returncode=1,
+            )
+            args = self._args(simulator_dir, identity, "simulator-job")
+            with mock.patch.object(
+                development, "CONTROL_ROOT", control
+            ), mock.patch.object(
+                development,
+                "_PILOT_VALIDATE_QUEUE_INVOCATION",
+                side_effect=self._base_queue_validator,
+            ), mock.patch.object(
+                development,
+                "_validate_pinned_external_descriptor",
+                side_effect=lambda **kwargs: external_descriptors[kwargs["job_id"]],
+            ), mock.patch.object(
+                development,
+                "_validate_deep_terminal_proof",
+                return_value={"all_scientific_children_reaped": True},
+            ), self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError,
+                "paired_queue_terminal_before_admission",
+            ):
+                development.wait_for_pair_admission(
+                    args, development.load_development_block(SOURCE_ROOT, "D01"),
+                    own_descriptor=simulator_descriptor,
+                )
+            receipt = json.loads(
+                (
+                    simulator_dir
+                    / "publish"
+                    / development.PAIR_ADMISSION_RECEIPT_FILENAME
+                ).read_text()
+            )
+            self.assertEqual(receipt["decision"], "no_go")
+            self.assertFalse(receipt["safe_to_start_scientific_child"])
+            self.assertTrue(
+                all(
+                    value == 0
+                    for value in receipt["science_counts_before_admission"].values()
+                )
+            )
+
+    def test_stale_ready_is_rejected_after_paired_server_terminal(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            control = Path(temporary) / "control"
+            jobs = control / "jobs"
+            simulator_dir, identity, _simulator_descriptor = self._descriptor(
+                jobs, "D01", "simulator-job"
+            )
+            server_dir, _identity, server_descriptor = self._descriptor(
+                jobs, "D01", "server-job"
+            )
+            self._result(
+                server_dir,
+                server_descriptor,
+                development.D1_SERVER_WORKER_ID,
+                status="failed",
+                returncode=1,
+            )
+            ready = Path(temporary) / "stale-server-ready.json"
+            ready.write_text("{}")
+            args = self._args(simulator_dir, identity, "simulator-job")
+            with mock.patch.object(
+                development, "CONTROL_ROOT", control
+            ), mock.patch.object(
+                development,
+                "_validate_deep_terminal_proof",
+                return_value={"all_scientific_children_reaped": True},
+            ), self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError,
+                "paired_server_queue_terminal_before_ready",
+            ):
+                development._wait_for_server_ready_or_queue_terminal(
+                    ready,
+                    timeout=5,
+                    args=args,
+                    server_descriptor=server_descriptor,
+                    block=development.load_development_block(SOURCE_ROOT, "D01"),
+                )
+
+    def test_terminal_result_waits_for_deep_receipt_before_rejecting_ready(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            control = Path(temporary) / "control"
+            jobs = control / "jobs"
+            simulator_dir, identity, _simulator_descriptor = self._descriptor(
+                jobs, "D01", "simulator-job"
+            )
+            server_dir, _identity, server_descriptor = self._descriptor(
+                jobs, "D01", "server-job"
+            )
+            self._result(
+                server_dir,
+                server_descriptor,
+                development.D1_SERVER_WORKER_ID,
+                status="failed",
+                returncode=1,
+            )
+            ready = Path(temporary) / "stale-server-ready.json"
+            ready.write_text("{}")
+            args = self._args(simulator_dir, identity, "simulator-job")
+            with mock.patch.object(
+                development, "CONTROL_ROOT", control
+            ), mock.patch.object(
+                development,
+                "_deep_terminal_proof_if_visible",
+                side_effect=[None, {"all_scientific_children_reaped": True}],
+            ) as deep_proof, mock.patch.object(
+                development.time, "sleep", return_value=None
+            ), self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError,
+                "paired_server_queue_terminal_before_ready",
+            ):
+                development._wait_for_server_ready_or_queue_terminal(
+                    ready,
+                    timeout=5,
+                    args=args,
+                    server_descriptor=server_descriptor,
+                    block=development.load_development_block(SOURCE_ROOT, "D01"),
+                )
+            self.assertEqual(deep_proof.call_count, 2)
+
+    def test_missing_deep_server_receipt_releases_simulator_after_grace(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            control = Path(temporary) / "control"
+            jobs = control / "jobs"
+            simulator_dir, identity, _simulator_descriptor = self._descriptor(
+                jobs, "D01", "simulator-job"
+            )
+            server_dir, _identity, server_descriptor = self._descriptor(
+                jobs, "D01", "server-job"
+            )
+            self._result(
+                server_dir,
+                server_descriptor,
+                development.D1_SERVER_WORKER_ID,
+                status="failed",
+                returncode=1,
+            )
+            ready = Path(temporary) / "stale-server-ready.json"
+            ready.write_text("{}")
+            args = self._args(simulator_dir, identity, "simulator-job")
+            with mock.patch.object(
+                development, "CONTROL_ROOT", control
+            ), mock.patch.object(
+                development,
+                "_deep_terminal_proof_if_visible",
+                return_value=None,
+            ), mock.patch.object(
+                development, "DEEP_TERMINAL_PROPAGATION_GRACE_SECONDS", 0.0
+            ), self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError,
+                "development_deep_terminal_propagation_timeout",
+            ):
+                development._wait_for_server_ready_or_queue_terminal(
+                    ready,
+                    timeout=5,
+                    args=args,
+                    server_descriptor=server_descriptor,
+                    block=development.load_development_block(SOURCE_ROOT, "D01"),
+                )
+
+    def test_server_rejects_terminal_simulator_before_protocol_claim(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            control = Path(temporary) / "control"
+            jobs = control / "jobs"
+            server_dir, identity, _server_descriptor = self._descriptor(
+                jobs, "D01", "server-job"
+            )
+            simulator_dir, _identity, simulator_descriptor = self._descriptor(
+                jobs, "D01", "simulator-job"
+            )
+            self._result(
+                simulator_dir,
+                simulator_descriptor,
+                self.SIMULATOR_ROLE,
+                status="failed",
+                returncode=1,
+            )
+            coordination = Path(temporary) / "coordination"
+            paths = {
+                "simulator_claim": coordination / "simulator_claim.json",
+                "simulator_terminal": coordination / "simulator_terminal.json",
+            }
+            coordination.mkdir()
+            paths["simulator_claim"].write_text("{}")
+            args = self._args(server_dir, identity, "server-job")
+            process = mock.Mock()
+            process.poll.return_value = None
+            with mock.patch.object(
+                development, "CONTROL_ROOT", control
+            ), mock.patch.object(
+                development,
+                "_validate_deep_terminal_proof",
+                return_value={"all_scientific_children_reaped": True},
+            ), self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError,
+                "paired_simulator_queue_terminal_before_protocol_claim",
+            ):
+                development._wait_for_protocol_claim_or_queue_terminal(
+                    paths=paths,
+                    process=process,
+                    run_id=identity["run_id"],
+                    simulator_job_id=identity["simulator_job_id"],
+                    server_job_id=identity["server_job_id"],
+                    study_commit=STUDY_COMMIT,
+                    server_ready_sha256="e" * 64,
+                    timeout=5,
+                    args=args,
+                    simulator_descriptor=simulator_descriptor,
+                    block=development.load_development_block(SOURCE_ROOT, "D01"),
+                )
+
+    def test_missing_deep_simulator_receipt_releases_server_after_grace(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            control = Path(temporary) / "control"
+            jobs = control / "jobs"
+            server_dir, identity, _server_descriptor = self._descriptor(
+                jobs, "D01", "server-job"
+            )
+            simulator_dir, _identity, simulator_descriptor = self._descriptor(
+                jobs, "D01", "simulator-job"
+            )
+            self._result(
+                simulator_dir,
+                simulator_descriptor,
+                self.SIMULATOR_ROLE,
+                status="failed",
+                returncode=1,
+            )
+            coordination = Path(temporary) / "coordination"
+            paths = {
+                "simulator_claim": coordination / "simulator_claim.json",
+                "simulator_terminal": coordination / "simulator_terminal.json",
+            }
+            coordination.mkdir()
+            paths["simulator_claim"].write_text("{}")
+            args = self._args(server_dir, identity, "server-job")
+            process = mock.Mock()
+            process.poll.return_value = None
+            with mock.patch.object(
+                development, "CONTROL_ROOT", control
+            ), mock.patch.object(
+                development,
+                "_deep_terminal_proof_if_visible",
+                return_value=None,
+            ), mock.patch.object(
+                development, "DEEP_TERMINAL_PROPAGATION_GRACE_SECONDS", 0.0
+            ), mock.patch.object(
+                pilot,
+                "validate_simulator_claim",
+                side_effect=AssertionError("claim must not win without deep proof"),
+            ) as validate_claim, self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError,
+                "development_deep_terminal_propagation_timeout",
+            ):
+                development._wait_for_protocol_claim_or_queue_terminal(
+                    paths=paths,
+                    process=process,
+                    run_id=identity["run_id"],
+                    simulator_job_id=identity["simulator_job_id"],
+                    server_job_id=identity["server_job_id"],
+                    study_commit=STUDY_COMMIT,
+                    server_ready_sha256="e" * 64,
+                    timeout=5,
+                    args=args,
+                    simulator_descriptor=simulator_descriptor,
+                    block=development.load_development_block(SOURCE_ROOT, "D01"),
+                )
+            validate_claim.assert_not_called()
+
+    def test_protocol_terminal_wins_when_stale_claim_also_exists(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            control = Path(temporary) / "control"
+            jobs = control / "jobs"
+            server_dir, identity, _server_descriptor = self._descriptor(
+                jobs, "D01", "server-job"
+            )
+            _simulator_dir, _identity, simulator_descriptor = self._descriptor(
+                jobs, "D01", "simulator-job"
+            )
+            coordination = Path(temporary) / "coordination"
+            paths = {
+                "simulator_claim": coordination / "simulator_claim.json",
+                "simulator_terminal": coordination / "simulator_terminal.json",
+            }
+            coordination.mkdir()
+            paths["simulator_claim"].write_text("{}")
+            paths["simulator_terminal"].write_text("{}")
+            args = self._args(server_dir, identity, "server-job")
+            process = mock.Mock()
+            process.poll.return_value = None
+            expected_terminal = {"status": "technical_failure"}
+            with mock.patch.object(
+                development, "CONTROL_ROOT", control
+            ), mock.patch.object(
+                pilot,
+                "validate_simulator_terminal",
+                return_value=expected_terminal,
+            ) as validate_terminal, mock.patch.object(
+                pilot,
+                "validate_simulator_claim",
+                side_effect=AssertionError("stale claim must not be consumed"),
+            ) as validate_claim:
+                claim, terminal = development._wait_for_protocol_claim_or_queue_terminal(
+                    paths=paths,
+                    process=process,
+                    run_id=identity["run_id"],
+                    simulator_job_id=identity["simulator_job_id"],
+                    server_job_id=identity["server_job_id"],
+                    study_commit=STUDY_COMMIT,
+                    server_ready_sha256="e" * 64,
+                    timeout=5,
+                    args=args,
+                    simulator_descriptor=simulator_descriptor,
+                    block=development.load_development_block(SOURCE_ROOT, "D01"),
+                )
+            self.assertIsNone(claim)
+            self.assertIs(terminal, expected_terminal)
+            validate_terminal.assert_called_once()
+            validate_claim.assert_not_called()
 
 
 class PrerequisiteTests(unittest.TestCase):

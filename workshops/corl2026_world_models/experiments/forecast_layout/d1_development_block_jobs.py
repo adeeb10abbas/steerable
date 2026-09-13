@@ -13,6 +13,12 @@ Every cell receives 451 original observations, executes 450 actions, and makes
 actions per request, and two actions from the final request).  Stateful reset
 or inference requests are never replayed after an ambiguous transport failure.
 Only a deeply validated contiguous prefix may be reused across attempts.
+
+Attempt003 additionally admits both queue roles as an intact pair and serializes
+each layout behind child-reaped queue terminals for its predecessor.  This is
+the fail-closed isolation boundary for the deployment's single exposed D1
+Service port: a stale ready file or a pre-ready server failure cannot attach a
+lagging simulator to the next layout's server.
 """
 
 from __future__ import annotations
@@ -25,6 +31,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import time
 from typing import Any, Iterator, Mapping, Sequence
 
 
@@ -88,6 +95,8 @@ RESUME_SCHEMA = "wmf-d1-behavioral-development-resume-v1"
 DEVELOPMENT_CONTRACT_SCHEMA = "wmf-d1-behavioral-development-contract-v1"
 EXECUTION_PREREQUISITES_SCHEMA = "wmf-d1-development-execution-prerequisites-v1"
 PREREQUISITE_PREFLIGHT_SCHEMA = "wmf-d1-development-prerequisite-preflight-v1"
+PAIR_ADMISSION_SCHEMA = "wmf-d1-development-pair-admission-v1"
+PAIR_ADMISSION_RECEIPT_FILENAME = "d1_development_pair_admission_receipt.json"
 FIXED_CAPTURE_QUEUE_SCHEMA = "wmf-forecast-layout-fixed-observation-job-v1"
 FIXED_CAPTURE_SCHEMA = "wmf-forecast-layout-fixed-observation-capture-v1"
 CONTROL_ROOT = Path(
@@ -112,6 +121,34 @@ DEVELOPMENT_CAPTURE_WRAPPER_RELEASES: dict[str, dict[str, str]] = {
     },
 }
 PREFLIGHT_QUEUE_ROLES = ("any", pilot.SERVER_QUEUE_ROLE, *ALLOWED_SIMULATOR_ROLES)
+ATTEMPT003 = "003"
+ATTEMPT003_LAYOUT_IDS = ("D01", "D02", "D04")
+D1_SERVER_WORKER_ID = "wmf-forecast-0912-worker-d1-00"
+ATTEMPT003_SIMULATOR_WORKER_ROLE = "wmf-forecast-0912-worker-00"
+ATTEMPT003_EXTERNAL_PREDECESSOR = {
+    "layout_pair_id": "D03",
+    "source_commit": "64e84d1f7634e2a7fbaaf0e1ffd05bf021614517",
+    "run_id": "d1-development-d03-002",
+    "server_job_id": "d1-development-d03-server-002",
+    "server_descriptor_sha256": (
+        "851e139ab3002fd7ee386e13179c4f4384155693f8b4e26890f7dbc351d368d7"
+    ),
+    "server_receipt_sha256": (
+        "6ffd934c4d05f815ebc06dfe788f8fbbbd12d755c691654cd05aa64da2346ec0"
+    ),
+    "simulator_job_id": "d1-development-d03-simulator-002",
+    "simulator_descriptor_sha256": (
+        "deeacda4c09b490b0d9aad8d1bff71825308e6e0c0aa316f6da7208959c64d66"
+    ),
+    "simulator_receipt_sha256": (
+        "eb7f4f894b1e56c1b8971ee1155d77e7aeb1b62c9c6cfc41de0483e3baf2dd4f"
+    ),
+}
+PAIR_ADMISSION_MAX_TIMEOUT_SECONDS = 7200
+PAIR_ADMISSION_POLL_SECONDS = 0.2
+PAIR_QUEUE_HEARTBEAT_MAX_AGE_SECONDS = 45.0
+DEEP_TERMINAL_PROPAGATION_GRACE_SECONDS = 60.0
+QUEUE_RESULT_SCHEMA = "wmf-cluster-result-v1"
 NO_REPLAY_TRANSPORT_CONTRACT = {
     "schema_version": "wmf-d1-no-replay-websocket-v1",
     "compression": None,
@@ -1276,11 +1313,84 @@ def _descriptor_option(argv: Sequence[Any], option: str) -> str:
     return value
 
 
+def attempt003_pair_identity(block: DevelopmentBlock) -> dict[str, Any]:
+    """Return the only executable identities accepted by this hardened release."""
+
+    layout = block.layout_pair_id.lower()
+    pilot.require(
+        block.layout_pair_id in ATTEMPT003_LAYOUT_IDS,
+        "development_attempt003_layout_not_released",
+    )
+    index = ATTEMPT003_LAYOUT_IDS.index(block.layout_pair_id)
+    identity: dict[str, Any] = {
+        "attempt": ATTEMPT003,
+        "server_job_id": f"d1-development-{layout}-server-{ATTEMPT003}",
+        "simulator_job_id": f"d1-development-{layout}-simulator-{ATTEMPT003}",
+        "run_id": f"d1-development-{layout}-{ATTEMPT003}",
+        "sequence_index": index,
+    }
+    if index:
+        previous_layout = ATTEMPT003_LAYOUT_IDS[index - 1]
+        previous = previous_layout.lower()
+        identity["predecessor"] = {
+            "layout_pair_id": previous_layout,
+            "server_job_id": f"d1-development-{previous}-server-{ATTEMPT003}",
+            "simulator_job_id": f"d1-development-{previous}-simulator-{ATTEMPT003}",
+            "run_id": f"d1-development-{previous}-{ATTEMPT003}",
+        }
+    else:
+        identity["predecessor"] = None
+    return identity
+
+
+def validate_attempt003_pair_identity(
+    *, expected_mode: str, job_id: str, paired_job_id: str,
+    run_id: str, block: DevelopmentBlock,
+) -> dict[str, Any]:
+    """Reject stale attempt IDs before any model or simulator child can start."""
+
+    pilot.require(
+        expected_mode in {"server-job", "simulator-job"},
+        "development_pair_mode_invalid",
+    )
+    identity = attempt003_pair_identity(block)
+    if expected_mode == "server-job":
+        expected_job_id = identity["server_job_id"]
+        expected_peer_id = identity["simulator_job_id"]
+    else:
+        expected_job_id = identity["simulator_job_id"]
+        expected_peer_id = identity["server_job_id"]
+    pilot.require(
+        job_id == expected_job_id
+        and paired_job_id == expected_peer_id
+        and run_id == identity["run_id"],
+        "development_attempt003_identity_changed",
+    )
+    return identity
+
+
 def validate_queue_invocation(
     *, source_root: Path, job_dir: Path, study_commit: str, job_id: str,
     expected_role: str, expected_mode: str, paired_job_id: str,
     run_id: str, block: DevelopmentBlock, simulator_worker_role: str,
+    pair_admission_timeout_seconds: int,
 ) -> dict[str, Any]:
+    pilot.require(
+        type(pair_admission_timeout_seconds) is int
+        and 0 < pair_admission_timeout_seconds <= PAIR_ADMISSION_MAX_TIMEOUT_SECONDS,
+        "invalid_pair_admission_timeout",
+    )
+    pilot.require(
+        simulator_worker_role == ATTEMPT003_SIMULATOR_WORKER_ROLE,
+        "development_attempt003_simulator_role_changed",
+    )
+    validate_attempt003_pair_identity(
+        expected_mode=expected_mode,
+        job_id=job_id,
+        paired_job_id=paired_job_id,
+        run_id=run_id,
+        block=block,
+    )
     identity = _PILOT_VALIDATE_QUEUE_INVOCATION(
         source_root=source_root,
         job_dir=job_dir,
@@ -1304,15 +1414,27 @@ def validate_queue_invocation(
     expected_options = {
         "--layout-pair-id": block.layout_pair_id,
         "--simulator-worker-role": simulator_worker_role,
+        "--source-root": "{source_root}",
         "--study-commit": study_commit,
+        "--job-dir": "{job_dir}",
         "--job-id": job_id,
         "--run-id": run_id,
+        "--pair-admission-timeout-seconds": str(pair_admission_timeout_seconds),
         (
             "--simulator-job-id"
             if expected_mode == "server-job"
             else "--server-job-id"
         ): paired_job_id,
     }
+    if expected_mode == "server-job":
+        expected_options["--port"] = str(pilot.SERVICE_PORT)
+    else:
+        expected_options.update(
+            {
+                "--remote-host": pilot.SERVICE_HOST,
+                "--remote-port": str(pilot.SERVICE_PORT),
+            }
+        )
     for option, wanted in expected_options.items():
         pilot.require(
             _descriptor_option(argv, option) == wanted,
@@ -1325,6 +1447,953 @@ def validate_queue_invocation(
         "development_queue_descriptor_changed_during_validation",
     )
     return {**observed, "role": expected_role, "job_id": job_id}
+
+
+def _queue_jobs_root(job_dir: Path) -> Path:
+    root = Path(job_dir).resolve().parent
+    pilot.require(
+        root == (CONTROL_ROOT / "jobs").resolve(),
+        "development_queue_jobs_root_changed",
+    )
+    return root
+
+
+def _validate_attempt003_descriptor(
+    *, jobs_root: Path, source_root: Path, study_commit: str,
+    job_id: str, paired_job_id: str, run_id: str,
+    expected_mode: str, block: DevelopmentBlock,
+    simulator_worker_role: str, pair_admission_timeout_seconds: int,
+) -> dict[str, Any]:
+    return validate_queue_invocation(
+        source_root=source_root,
+        job_dir=jobs_root / job_id,
+        study_commit=study_commit,
+        job_id=job_id,
+        expected_role=(
+            pilot.SERVER_QUEUE_ROLE
+            if expected_mode == "server-job"
+            else simulator_worker_role
+        ),
+        expected_mode=expected_mode,
+        paired_job_id=paired_job_id,
+        run_id=run_id,
+        block=block,
+        simulator_worker_role=simulator_worker_role,
+        pair_admission_timeout_seconds=pair_admission_timeout_seconds,
+    )
+
+
+def _validate_pinned_external_descriptor(
+    *, jobs_root: Path, job_id: str, expected_role: str,
+    source_commit: str, expected_sha256: str,
+) -> dict[str, Any]:
+    path = Path(jobs_root).resolve() / job_id / "descriptor.json"
+    identity = pilot.verify_exact_file(
+        path, expected_sha256, "development_external_predecessor_descriptor"
+    )
+    descriptor = pilot.load_json(path, "queue_descriptor_unreadable")
+    expected = {
+        "schema_version": "wmf-cluster-job-v1",
+        "namespace": pilot.NAMESPACE,
+        "job_id": job_id,
+        "source_commit": source_commit,
+        "role": expected_role,
+        "released": True,
+    }
+    for key, wanted in expected.items():
+        pilot.require(
+            descriptor.get(key) == wanted,
+            "development_external_predecessor_descriptor_changed",
+            f"{job_id}:{key}",
+        )
+    return {**identity, "role": expected_role, "job_id": job_id}
+
+
+def _validate_queue_claim(
+    *, job_dir: Path, descriptor: Mapping[str, Any],
+    expected_job_id: str, expected_worker_id: str,
+) -> dict[str, Any]:
+    path = Path(job_dir).resolve() / "claim" / "owner.json"
+    pilot.require(path.is_file(), "development_pair_claim_missing", expected_job_id)
+    pilot.require(not path.is_symlink(), "development_pair_claim_is_symlink")
+    owner = pilot.load_json(path, "development_pair_claim_unreadable")
+    exact = {
+        "worker_id": expected_worker_id,
+        "descriptor_sha256": descriptor.get("sha256"),
+        "release_boundary": "claim_committed_under_shared_release_lock",
+    }
+    for key, wanted in exact.items():
+        pilot.require(
+            owner.get(key) == wanted,
+            "development_pair_claim_binding_changed",
+            f"{expected_job_id}:{key}",
+        )
+    pilot.require(
+        isinstance(owner.get("claimed_at"), str) and bool(owner["claimed_at"]),
+        "development_pair_claim_time_invalid",
+    )
+    claimed_unix = owner.get("claimed_unix")
+    pilot.require(
+        not isinstance(claimed_unix, bool)
+        and isinstance(claimed_unix, (int, float))
+        and claimed_unix > 0,
+        "development_pair_claim_time_invalid",
+    )
+    pilot.require(
+        type(owner.get("worker_pid")) is int and owner["worker_pid"] > 0,
+        "development_pair_claim_process_invalid",
+    )
+    pilot.require(
+        isinstance(owner.get("control_commit"), str)
+        and pilot.COMMIT_RE.fullmatch(owner["control_commit"]) is not None,
+        "development_pair_claim_control_invalid",
+    )
+    pilot.require(
+        type(owner.get("control_generation")) is int
+        and owner["control_generation"] >= 1,
+        "development_pair_claim_control_invalid",
+    )
+    return {
+        "identity": pilot.file_identity(path),
+        "worker_id": owner["worker_id"],
+        "worker_pid": owner["worker_pid"],
+        "claimed_unix": claimed_unix,
+        "claimed_at": owner["claimed_at"],
+        "control_commit": owner["control_commit"],
+        "control_generation": owner["control_generation"],
+        "descriptor_sha256": owner["descriptor_sha256"],
+    }
+
+
+def _validate_live_queue_heartbeat(
+    *, job_dir: Path, claim: Mapping[str, Any],
+    expected_job_id: str, expected_worker_id: str,
+    own_wrapper: bool,
+) -> dict[str, Any] | None:
+    path = Path(job_dir).resolve() / "heartbeat.json"
+    if not path.is_file():
+        return None
+    pilot.require(not path.is_symlink(), "development_pair_heartbeat_is_symlink")
+    heartbeat = pilot.load_json(path, "development_pair_heartbeat_unreadable")
+    exact = {
+        "worker_id": expected_worker_id,
+        "worker_pid": claim.get("worker_pid"),
+    }
+    for key, wanted in exact.items():
+        pilot.require(
+            heartbeat.get(key) == wanted,
+            "development_pair_heartbeat_binding_changed",
+            f"{expected_job_id}:{key}",
+        )
+    child_pid = heartbeat.get("child_pid")
+    pilot.require(
+        type(child_pid) is int and child_pid > 0,
+        "development_pair_heartbeat_child_invalid",
+        expected_job_id,
+    )
+    if own_wrapper:
+        pilot.require(
+            child_pid == os.getpid(),
+            "development_pair_heartbeat_not_own_wrapper",
+            expected_job_id,
+        )
+    heartbeat_unix = heartbeat.get("unix")
+    pilot.require(
+        not isinstance(heartbeat_unix, bool)
+        and isinstance(heartbeat_unix, (int, float))
+        and heartbeat_unix > 0,
+        "development_pair_heartbeat_time_invalid",
+    )
+    age_seconds = time.time() - heartbeat_unix
+    if not -5.0 <= age_seconds <= PAIR_QUEUE_HEARTBEAT_MAX_AGE_SECONDS:
+        return None
+    pilot.require(
+        isinstance(heartbeat.get("at"), str) and bool(heartbeat["at"]),
+        "development_pair_heartbeat_time_invalid",
+    )
+    return {
+        "identity": pilot.file_identity(path),
+        "worker_id": heartbeat["worker_id"],
+        "worker_pid": heartbeat["worker_pid"],
+        "child_pid": child_pid,
+        "at": heartbeat["at"],
+        "unix": heartbeat_unix,
+        "age_seconds_at_validation": age_seconds,
+        "maximum_age_seconds": PAIR_QUEUE_HEARTBEAT_MAX_AGE_SECONDS,
+    }
+
+
+def _validate_queue_terminal_result(
+    *, job_dir: Path, descriptor: Mapping[str, Any],
+    expected_job_id: str, expected_worker_id: str,
+    study_commit: str,
+) -> dict[str, Any]:
+    path = Path(job_dir).resolve() / "result.json"
+    pilot.require(path.is_file(), "development_pair_terminal_missing", expected_job_id)
+    pilot.require(not path.is_symlink(), "development_pair_terminal_is_symlink")
+    result = pilot.load_json(path, "development_pair_terminal_unreadable")
+    exact = {
+        "schema_version": QUEUE_RESULT_SCHEMA,
+        "namespace": pilot.NAMESPACE,
+        "job_id": expected_job_id,
+        "worker_id": expected_worker_id,
+        "source_commit": study_commit,
+        "descriptor_sha256": descriptor.get("sha256"),
+        "job_dir": str(Path(job_dir).resolve()),
+        "child_reaped": True,
+    }
+    for key, wanted in exact.items():
+        pilot.require(
+            result.get(key) == wanted,
+            "development_pair_terminal_binding_changed",
+            f"{expected_job_id}:{key}",
+        )
+    status = result.get("status")
+    pilot.require(
+        status in {"succeeded", "failed", "timed_out", "interrupted"},
+        "development_pair_terminal_status_invalid",
+        expected_job_id,
+    )
+    if status == "succeeded":
+        pilot.require(
+            result.get("returncode") == 0,
+            "development_pair_terminal_returncode_invalid",
+            expected_job_id,
+        )
+    return {
+        "identity": pilot.file_identity(path),
+        "status": status,
+        "returncode": result.get("returncode"),
+        "worker_id": result["worker_id"],
+        "started_at": result.get("started_at"),
+        "ended_at": result.get("ended_at"),
+        "child_reaped": True,
+        "descriptor_sha256": result["descriptor_sha256"],
+    }
+
+
+def _validate_admission_no_go_terminal(
+    *, job_dir: Path, descriptor: Mapping[str, Any],
+    expected_job_id: str, paired_job_id: str, expected_mode: str,
+    run_id: str, study_commit: str, block: DevelopmentBlock,
+) -> dict[str, Any]:
+    path = Path(job_dir).resolve() / "publish" / PAIR_ADMISSION_RECEIPT_FILENAME
+    pilot.require(
+        path.is_file(), "development_deep_terminal_proof_missing", expected_job_id
+    )
+    pilot.require(not path.is_symlink(), "development_pair_admission_is_symlink")
+    receipt = pilot.load_json(path, "development_pair_admission_unreadable")
+    exact = {
+        "schema_version": PAIR_ADMISSION_SCHEMA,
+        "status": "technical_invalid",
+        "decision": "no_go",
+        "safe_to_start_scientific_child": False,
+        "source_commit": study_commit,
+        "layout_pair_id": block.layout_pair_id,
+        "block_id": block.block_id,
+        "mode": expected_mode,
+        "job_id": expected_job_id,
+        "paired_job_id": paired_job_id,
+        "run_id": run_id,
+        "attempt": ATTEMPT003,
+    }
+    for key, wanted in exact.items():
+        pilot.require(
+            receipt.get(key) == wanted,
+            "development_pair_admission_terminal_binding_changed",
+            f"{expected_job_id}:{key}",
+        )
+    own_descriptor = receipt.get("own_queue_descriptor")
+    pilot.require(
+        isinstance(own_descriptor, Mapping)
+        and own_descriptor.get("sha256") == descriptor.get("sha256"),
+        "development_pair_admission_terminal_descriptor_changed",
+    )
+    pilot.require(
+        receipt.get("science_counts_before_admission")
+        == _pair_admission_science_counts(),
+        "development_pair_admission_terminal_claims_science",
+    )
+    raw_attempt = block.raw_root / (
+        "server_attempts" if expected_mode == "server-job" else "simulator_attempts"
+    ) / expected_job_id
+    pilot.require(
+        not raw_attempt.exists(),
+        "development_pair_admission_no_go_has_scientific_attempt",
+    )
+    return {
+        "kind": "pair_admission_no_go_zero_science",
+        "identity": pilot.file_identity(path),
+        "all_scientific_children_reaped": True,
+    }
+
+
+def _validate_server_deep_terminal(
+    *, job_dir: Path, descriptor: Mapping[str, Any],
+    expected_job_id: str, paired_job_id: str, run_id: str,
+    study_commit: str, block: DevelopmentBlock,
+    expected_receipt_sha256: str | None = None,
+) -> dict[str, Any]:
+    path = Path(job_dir).resolve() / "publish" / "d1_behavioral_server_receipt.json"
+    pilot.require(path.is_file(), "development_deep_terminal_proof_missing", expected_job_id)
+    pilot.require(not path.is_symlink(), "development_server_terminal_is_symlink")
+    if expected_receipt_sha256 is not None:
+        pilot.verify_exact_file(
+            path, expected_receipt_sha256,
+            "development_pinned_server_terminal_receipt",
+        )
+    receipt = pilot.load_json(path, "development_server_terminal_unreadable")
+    exact = {
+        "schema_version": SERVER_RECEIPT_SCHEMA,
+        "run_id": run_id,
+        "server_job_id": expected_job_id,
+        "paired_simulator_job_id": paired_job_id,
+        "study_commit": study_commit,
+        "block_id": block.block_id,
+        "all_server_children_reaped": True,
+    }
+    for key, wanted in exact.items():
+        pilot.require(
+            receipt.get(key) == wanted,
+            "development_server_deep_terminal_binding_changed",
+            f"{expected_job_id}:{key}",
+        )
+    pilot.require(
+        receipt.get("status") in {"passed", "technical_failure"},
+        "development_server_deep_terminal_status_invalid",
+    )
+    embedded_descriptor = receipt.get("queue_descriptor")
+    pilot.require(
+        isinstance(embedded_descriptor, Mapping)
+        and embedded_descriptor.get("sha256") == descriptor.get("sha256"),
+        "development_server_deep_terminal_descriptor_changed",
+    )
+    expected_attempt = (block.raw_root / "server_attempts" / expected_job_id).resolve()
+    pilot.require(
+        Path(str(receipt.get("raw_attempt_root", ""))).resolve() == expected_attempt,
+        "development_server_deep_terminal_attempt_changed",
+    )
+    process_marker = expected_attempt / "server_process.json"
+    process_exit = receipt.get("server_process_exit")
+    if process_marker.is_file():
+        pilot.require(
+            isinstance(process_exit, Mapping)
+            and process_exit.get("status") == "reaped"
+            and process_exit.get("reaped") is True,
+            "development_server_scientific_child_not_reaped",
+        )
+    else:
+        pilot.require(
+            process_exit is None,
+            "development_server_process_exit_without_process",
+        )
+    return {
+        "kind": "d1_server_aggregate",
+        "identity": pilot.file_identity(path),
+        "status": receipt["status"],
+        "server_process_started": process_marker.is_file(),
+        "server_process_exit": process_exit,
+        "all_scientific_children_reaped": True,
+    }
+
+
+def _validate_simulator_deep_terminal(
+    *, job_dir: Path, descriptor: Mapping[str, Any],
+    expected_job_id: str, paired_job_id: str, run_id: str,
+    study_commit: str, block: DevelopmentBlock,
+    expected_receipt_sha256: str | None = None,
+) -> dict[str, Any]:
+    path = Path(job_dir).resolve() / "publish" / SIMULATOR_RECEIPT_FILENAME
+    pilot.require(path.is_file(), "development_deep_terminal_proof_missing", expected_job_id)
+    pilot.require(not path.is_symlink(), "development_simulator_terminal_is_symlink")
+    if expected_receipt_sha256 is not None:
+        pilot.verify_exact_file(
+            path, expected_receipt_sha256,
+            "development_pinned_simulator_terminal_receipt",
+        )
+    receipt = pilot.load_json(path, "development_simulator_terminal_unreadable")
+    exact = {
+        "schema_version": SIMULATOR_RECEIPT_SCHEMA,
+        "run_id": run_id,
+        "server_job_id": paired_job_id,
+        "simulator_job_id": expected_job_id,
+        "study_commit": study_commit,
+        "block_id": block.block_id,
+        "all_simulator_children_reaped": True,
+    }
+    for key, wanted in exact.items():
+        pilot.require(
+            receipt.get(key) == wanted,
+            "development_simulator_deep_terminal_binding_changed",
+            f"{expected_job_id}:{key}",
+        )
+    pilot.require(
+        receipt.get("status") in {"passed", "technical_failure"},
+        "development_simulator_deep_terminal_status_invalid",
+    )
+    embedded_descriptor = receipt.get("queue_descriptor")
+    pilot.require(
+        isinstance(embedded_descriptor, Mapping)
+        and embedded_descriptor.get("sha256") == descriptor.get("sha256"),
+        "development_simulator_deep_terminal_descriptor_changed",
+    )
+    expected_attempt = (block.raw_root / "simulator_attempts" / expected_job_id).resolve()
+    pilot.require(
+        Path(str(receipt.get("raw_attempt_root", ""))).resolve() == expected_attempt,
+        "development_simulator_deep_terminal_attempt_changed",
+    )
+    terminal_path = block.raw_root / "coordination" / run_id / "simulator_terminal.json"
+    pilot.require(
+        terminal_path.is_file(),
+        "development_simulator_protocol_terminal_missing",
+    )
+    pilot.require(
+        not terminal_path.is_symlink(),
+        "development_simulator_protocol_terminal_is_symlink",
+    )
+    terminal = pilot.load_json(
+        terminal_path, "development_simulator_protocol_terminal_unreadable"
+    )
+    terminal_exact = {
+        "schema_version": pilot.SIMULATOR_TERMINAL_SCHEMA,
+        "run_id": run_id,
+        "simulator_job_id": expected_job_id,
+        "server_job_id": paired_job_id,
+        "block_id": block.block_id,
+        "all_simulator_children_reaped": True,
+        "safe_for_server_shutdown": True,
+    }
+    for key, wanted in terminal_exact.items():
+        pilot.require(
+            terminal.get(key) == wanted,
+            "development_simulator_protocol_terminal_binding_changed",
+            f"{expected_job_id}:{key}",
+        )
+    terminal_receipt = terminal.get("simulator_receipt")
+    pilot.require(
+        isinstance(terminal_receipt, Mapping)
+        and terminal_receipt.get("sha256") == pilot.sha256_file(path),
+        "development_simulator_protocol_terminal_receipt_changed",
+    )
+    return {
+        "kind": "d1_simulator_aggregate_and_protocol_terminal",
+        "identity": pilot.file_identity(path),
+        "protocol_terminal": pilot.file_identity(terminal_path),
+        "status": receipt["status"],
+        "all_scientific_children_reaped": True,
+        "safe_for_server_shutdown": True,
+    }
+
+
+def _validate_deep_terminal_proof(
+    *, job_dir: Path, descriptor: Mapping[str, Any],
+    expected_job_id: str, paired_job_id: str, expected_mode: str,
+    run_id: str, study_commit: str, block: DevelopmentBlock,
+    expected_receipt_sha256: str | None = None,
+) -> dict[str, Any]:
+    aggregate = Path(job_dir).resolve() / "publish" / (
+        "d1_behavioral_server_receipt.json"
+        if expected_mode == "server-job"
+        else SIMULATOR_RECEIPT_FILENAME
+    )
+    if aggregate.is_file():
+        if expected_mode == "server-job":
+            return _validate_server_deep_terminal(
+                job_dir=job_dir,
+                descriptor=descriptor,
+                expected_job_id=expected_job_id,
+                paired_job_id=paired_job_id,
+                run_id=run_id,
+                study_commit=study_commit,
+                block=block,
+                expected_receipt_sha256=expected_receipt_sha256,
+            )
+        return _validate_simulator_deep_terminal(
+            job_dir=job_dir,
+            descriptor=descriptor,
+            expected_job_id=expected_job_id,
+            paired_job_id=paired_job_id,
+            run_id=run_id,
+            study_commit=study_commit,
+            block=block,
+            expected_receipt_sha256=expected_receipt_sha256,
+        )
+    return _validate_admission_no_go_terminal(
+        job_dir=job_dir,
+        descriptor=descriptor,
+        expected_job_id=expected_job_id,
+        paired_job_id=paired_job_id,
+        expected_mode=expected_mode,
+        run_id=run_id,
+        study_commit=study_commit,
+        block=block,
+    )
+
+
+def _deep_terminal_proof_if_visible(**kwargs: Any) -> dict[str, Any] | None:
+    """Return a complete deep terminal proof, or ``None`` while it propagates.
+
+    Queue ``result.json`` and the scientific aggregate/protocol receipts are
+    independently renamed on the shared PVC.  A reader can therefore observe
+    the queue terminal first even though the child published its deep receipts
+    before exiting.  Only file absence is treated as transient; a present but
+    invalid receipt remains an immediate fail-closed contract error.
+    """
+
+    try:
+        return _validate_deep_terminal_proof(**kwargs)
+    except pilot.D1BehavioralPilotError as error:
+        if error.reason in {
+            "development_deep_terminal_proof_missing",
+            "development_simulator_protocol_terminal_missing",
+        }:
+            return None
+        raise
+
+
+def _deep_terminal_proof_with_grace(
+    *, first_seen_monotonic: dict[str, float], **kwargs: Any
+) -> dict[str, Any] | None:
+    """Bound receipt propagation without treating queue reaping as science-safe."""
+
+    proof = _deep_terminal_proof_if_visible(**kwargs)
+    if proof is not None:
+        return proof
+    job_id = str(kwargs["expected_job_id"])
+    observed = time.monotonic()
+    first_seen = first_seen_monotonic.setdefault(job_id, observed)
+    if observed - first_seen >= DEEP_TERMINAL_PROPAGATION_GRACE_SECONDS:
+        raise pilot.D1BehavioralPilotError(
+            "development_deep_terminal_propagation_timeout", job_id
+        )
+    return None
+
+
+def _pair_admission_science_counts() -> dict[str, int]:
+    return {
+        "model_server_process_starts": 0,
+        "simulator_child_process_starts": 0,
+        "physical_resets": 0,
+        "model_requests": 0,
+        "behavioral_actions": 0,
+        "behavioral_cells": 0,
+    }
+
+
+def _pair_admission_receipt(
+    *, args: argparse.Namespace, block: DevelopmentBlock,
+    decision: str, own_descriptor: Mapping[str, Any],
+    paired_descriptor: Mapping[str, Any] | None,
+    own_claim: Mapping[str, Any] | None,
+    paired_claim: Mapping[str, Any] | None,
+    own_heartbeat: Mapping[str, Any] | None,
+    paired_heartbeat: Mapping[str, Any] | None,
+    predecessor_results: Sequence[Mapping[str, Any]],
+    failure: BaseException | None,
+) -> dict[str, Any]:
+    identity = attempt003_pair_identity(block)
+    return {
+        "schema_version": PAIR_ADMISSION_SCHEMA,
+        "status": "passed" if decision == "go" else "technical_invalid",
+        "decision": decision,
+        "safe_to_start_scientific_child": decision == "go",
+        "study_id": pilot.STUDY_ID,
+        "namespace": pilot.NAMESPACE,
+        "source_commit": args.study_commit,
+        "layout_pair_id": block.layout_pair_id,
+        "block_id": block.block_id,
+        "mode": args.mode,
+        "job_id": args.job_id,
+        "paired_job_id": (
+            args.simulator_job_id if args.mode == "server-job" else args.server_job_id
+        ),
+        "run_id": args.run_id,
+        "attempt": ATTEMPT003,
+        "sequence_index": identity["sequence_index"],
+        "pair_admission_timeout_seconds": args.pair_admission_timeout_seconds,
+        "own_queue_descriptor": dict(own_descriptor),
+        "paired_queue_descriptor": (
+            None if paired_descriptor is None else dict(paired_descriptor)
+        ),
+        "own_queue_claim": None if own_claim is None else dict(own_claim),
+        "paired_queue_claim": None if paired_claim is None else dict(paired_claim),
+        "own_queue_heartbeat": (
+            None if own_heartbeat is None else dict(own_heartbeat)
+        ),
+        "paired_queue_heartbeat": (
+            None if paired_heartbeat is None else dict(paired_heartbeat)
+        ),
+        "predecessor_terminal_results": [dict(row) for row in predecessor_results],
+        "shared_service_endpoint": {
+            "host": pilot.SERVICE_HOST,
+            "port": pilot.SERVICE_PORT,
+            "unique_layout_ports_available": False,
+            "isolation": (
+                "one admitted pair at a time; the next pair requires both child-reaped "
+                "predecessor queue terminals"
+            ),
+        },
+        "failure": (
+            None
+            if failure is None
+            else {
+                "error_type": type(failure).__name__,
+                "reason": getattr(failure, "reason", None),
+                "detail": str(failure)[:2000],
+            }
+        ),
+        "science_counts_before_admission": _pair_admission_science_counts(),
+        "completed_at_utc": pilot.utc_now(),
+    }
+
+
+def wait_for_pair_admission(
+    args: argparse.Namespace, block: DevelopmentBlock,
+    *, own_descriptor: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Fence attempt003 pairs before either scientific child may start.
+
+    Both queue wrappers must already be claimed.  D02--D04 additionally wait
+    for child-reaped queue terminals from both wrappers of their predecessor.
+    A peer terminal before admission aborts the pair instead of letting the
+    other role wait on a protocol file that can never be produced.
+    """
+
+    jobs_root = _queue_jobs_root(Path(args.job_dir))
+    pair = validate_attempt003_pair_identity(
+        expected_mode=args.mode,
+        job_id=args.job_id,
+        paired_job_id=(
+            args.simulator_job_id if args.mode == "server-job" else args.server_job_id
+        ),
+        run_id=args.run_id,
+        block=block,
+    )
+    peer_mode = "simulator-job" if args.mode == "server-job" else "server-job"
+    peer_id = (
+        pair["simulator_job_id"] if args.mode == "server-job" else pair["server_job_id"]
+    )
+    peer_paired_id = args.job_id
+    peer_descriptor: dict[str, Any] | None = None
+    own_claim: dict[str, Any] | None = None
+    peer_claim: dict[str, Any] | None = None
+    own_heartbeat: dict[str, Any] | None = None
+    peer_heartbeat: dict[str, Any] | None = None
+    predecessor_results: list[dict[str, Any]] = []
+    destination = (
+        Path(args.job_dir).resolve() / "publish" / PAIR_ADMISSION_RECEIPT_FILENAME
+    )
+    try:
+        peer_descriptor = _validate_attempt003_descriptor(
+            jobs_root=jobs_root,
+            source_root=Path(args.source_root),
+            study_commit=args.study_commit,
+            job_id=peer_id,
+            paired_job_id=peer_paired_id,
+            run_id=args.run_id,
+            expected_mode=peer_mode,
+            block=block,
+            simulator_worker_role=args.simulator_worker_role,
+            pair_admission_timeout_seconds=args.pair_admission_timeout_seconds,
+        )
+        predecessor_descriptors: list[
+            tuple[
+                str, str, dict[str, Any], DevelopmentBlock,
+                str, str, str, str, str | None,
+            ]
+        ] = []
+        for previous_layout in ATTEMPT003_LAYOUT_IDS[: pair["sequence_index"]]:
+            previous_block = load_development_block(
+                Path(args.source_root), previous_layout
+            )
+            previous = attempt003_pair_identity(previous_block)
+            previous_server = _validate_attempt003_descriptor(
+                jobs_root=jobs_root,
+                source_root=Path(args.source_root),
+                study_commit=args.study_commit,
+                job_id=previous["server_job_id"],
+                paired_job_id=previous["simulator_job_id"],
+                run_id=previous["run_id"],
+                expected_mode="server-job",
+                block=previous_block,
+                simulator_worker_role=args.simulator_worker_role,
+                pair_admission_timeout_seconds=args.pair_admission_timeout_seconds,
+            )
+            previous_simulator = _validate_attempt003_descriptor(
+                jobs_root=jobs_root,
+                source_root=Path(args.source_root),
+                study_commit=args.study_commit,
+                job_id=previous["simulator_job_id"],
+                paired_job_id=previous["server_job_id"],
+                run_id=previous["run_id"],
+                expected_mode="simulator-job",
+                block=previous_block,
+                simulator_worker_role=args.simulator_worker_role,
+                pair_admission_timeout_seconds=args.pair_admission_timeout_seconds,
+            )
+            predecessor_descriptors.extend(
+                [
+                (
+                    previous["server_job_id"],
+                    D1_SERVER_WORKER_ID,
+                    previous_server,
+                    previous_block,
+                    "server-job",
+                    previous["simulator_job_id"],
+                    previous["run_id"],
+                    args.study_commit,
+                    None,
+                ),
+                (
+                    previous["simulator_job_id"],
+                    args.simulator_worker_role,
+                    previous_simulator,
+                    previous_block,
+                    "simulator-job",
+                    previous["server_job_id"],
+                    previous["run_id"],
+                    args.study_commit,
+                    None,
+                ),
+                ]
+            )
+
+        # D03 attempt002 is already detached and using the only exposed D1
+        # endpoint.  Every attempt003 pair independently proves that both of
+        # its exact wrappers and all scientific children are terminal.  This
+        # makes the fence transitive even when an earlier attempt003 pair exits
+        # with a zero-science no-go.
+        external = ATTEMPT003_EXTERNAL_PREDECESSOR
+        external_block = load_development_block(
+            Path(args.source_root), external["layout_pair_id"]
+        )
+        external_server = _validate_pinned_external_descriptor(
+            jobs_root=jobs_root,
+            job_id=external["server_job_id"],
+            expected_role=pilot.SERVER_QUEUE_ROLE,
+            source_commit=external["source_commit"],
+            expected_sha256=external["server_descriptor_sha256"],
+        )
+        external_simulator = _validate_pinned_external_descriptor(
+            jobs_root=jobs_root,
+            job_id=external["simulator_job_id"],
+            expected_role=args.simulator_worker_role,
+            source_commit=external["source_commit"],
+            expected_sha256=external["simulator_descriptor_sha256"],
+        )
+        predecessor_descriptors.extend(
+            [
+                (
+                    external["server_job_id"],
+                    D1_SERVER_WORKER_ID,
+                    external_server,
+                    external_block,
+                    "server-job",
+                    external["simulator_job_id"],
+                    external["run_id"],
+                    external["source_commit"],
+                    external["server_receipt_sha256"],
+                ),
+                (
+                    external["simulator_job_id"],
+                    args.simulator_worker_role,
+                    external_simulator,
+                    external_block,
+                    "simulator-job",
+                    external["server_job_id"],
+                    external["run_id"],
+                    external["source_commit"],
+                    external["simulator_receipt_sha256"],
+                ),
+            ]
+        )
+
+        own_worker_id = (
+            D1_SERVER_WORKER_ID
+            if args.mode == "server-job"
+            else args.simulator_worker_role
+        )
+        peer_worker_id = (
+            args.simulator_worker_role
+            if args.mode == "server-job"
+            else D1_SERVER_WORKER_ID
+        )
+        deadline = time.monotonic() + args.pair_admission_timeout_seconds
+        deep_terminal_first_seen: dict[str, float] = {}
+        last_missing: list[str] = []
+        while time.monotonic() < deadline:
+            last_missing = []
+            if own_claim is None:
+                own_path = jobs_root / args.job_id / "claim" / "owner.json"
+                if own_path.is_file():
+                    own_claim = _validate_queue_claim(
+                        job_dir=jobs_root / args.job_id,
+                        descriptor=own_descriptor,
+                        expected_job_id=args.job_id,
+                        expected_worker_id=own_worker_id,
+                    )
+                else:
+                    last_missing.append(f"own_claim:{args.job_id}")
+            peer_result_path = jobs_root / peer_id / "result.json"
+            if peer_result_path.is_file():
+                peer_terminal = _validate_queue_terminal_result(
+                    job_dir=jobs_root / peer_id,
+                    descriptor=peer_descriptor,
+                    expected_job_id=peer_id,
+                    expected_worker_id=peer_worker_id,
+                    study_commit=args.study_commit,
+                )
+                peer_deep_terminal = _deep_terminal_proof_with_grace(
+                    first_seen_monotonic=deep_terminal_first_seen,
+                    job_dir=jobs_root / peer_id,
+                    descriptor=peer_descriptor,
+                    expected_job_id=peer_id,
+                    paired_job_id=args.job_id,
+                    expected_mode=peer_mode,
+                    run_id=args.run_id,
+                    study_commit=args.study_commit,
+                    block=block,
+                )
+                if peer_deep_terminal is None:
+                    last_missing.append(f"paired_deep_terminal:{peer_id}")
+                    time.sleep(
+                        min(
+                            PAIR_ADMISSION_POLL_SECONDS,
+                            max(0.001, deadline - time.monotonic()),
+                        )
+                    )
+                    continue
+                raise pilot.D1BehavioralPilotError(
+                    "paired_queue_terminal_before_admission",
+                    f"{peer_id}:{peer_terminal['status']}",
+                )
+            if peer_claim is None:
+                peer_claim_path = jobs_root / peer_id / "claim" / "owner.json"
+                if peer_claim_path.is_file():
+                    peer_claim = _validate_queue_claim(
+                        job_dir=jobs_root / peer_id,
+                        descriptor=peer_descriptor,
+                        expected_job_id=peer_id,
+                        expected_worker_id=peer_worker_id,
+                    )
+                else:
+                    last_missing.append(f"paired_claim:{peer_id}")
+            own_heartbeat = (
+                None
+                if own_claim is None
+                else _validate_live_queue_heartbeat(
+                    job_dir=jobs_root / args.job_id,
+                    claim=own_claim,
+                    expected_job_id=args.job_id,
+                    expected_worker_id=own_worker_id,
+                    own_wrapper=True,
+                )
+            )
+            if own_heartbeat is None:
+                last_missing.append(f"own_live_heartbeat:{args.job_id}")
+            peer_heartbeat = (
+                None
+                if peer_claim is None
+                else _validate_live_queue_heartbeat(
+                    job_dir=jobs_root / peer_id,
+                    claim=peer_claim,
+                    expected_job_id=peer_id,
+                    expected_worker_id=peer_worker_id,
+                    own_wrapper=False,
+                )
+            )
+            if peer_heartbeat is None:
+                last_missing.append(f"paired_live_heartbeat:{peer_id}")
+            predecessor_results = []
+            for (
+                previous_id,
+                previous_worker,
+                descriptor,
+                previous_block,
+                previous_mode,
+                previous_peer_id,
+                previous_run_id,
+                previous_study_commit,
+                previous_receipt_sha256,
+            ) in predecessor_descriptors:
+                result_path = jobs_root / previous_id / "result.json"
+                if not result_path.is_file():
+                    last_missing.append(f"predecessor_terminal:{previous_id}")
+                    continue
+                queue_terminal = _validate_queue_terminal_result(
+                    job_dir=jobs_root / previous_id,
+                    descriptor=descriptor,
+                    expected_job_id=previous_id,
+                    expected_worker_id=previous_worker,
+                    study_commit=previous_study_commit,
+                )
+                deep_terminal = _deep_terminal_proof_with_grace(
+                    first_seen_monotonic=deep_terminal_first_seen,
+                    job_dir=jobs_root / previous_id,
+                    descriptor=descriptor,
+                    expected_job_id=previous_id,
+                    paired_job_id=previous_peer_id,
+                    expected_mode=previous_mode,
+                    run_id=previous_run_id,
+                    study_commit=previous_study_commit,
+                    block=previous_block,
+                    expected_receipt_sha256=previous_receipt_sha256,
+                )
+                if deep_terminal is None:
+                    last_missing.append(f"predecessor_deep_terminal:{previous_id}")
+                    continue
+                queue_terminal["deep_terminal"] = deep_terminal
+                predecessor_results.append(queue_terminal)
+            if (
+                own_claim is not None
+                and peer_claim is not None
+                and own_heartbeat is not None
+                and peer_heartbeat is not None
+                and len(predecessor_results) == len(predecessor_descriptors)
+            ):
+                receipt = _pair_admission_receipt(
+                    args=args,
+                    block=block,
+                    decision="go",
+                    own_descriptor=own_descriptor,
+                    paired_descriptor=peer_descriptor,
+                    own_claim=own_claim,
+                    paired_claim=peer_claim,
+                    own_heartbeat=own_heartbeat,
+                    paired_heartbeat=peer_heartbeat,
+                    predecessor_results=predecessor_results,
+                    failure=None,
+                )
+                _PILOT_IMMUTABLE_JSON(destination, receipt, publish=True)
+                return receipt
+            time.sleep(
+                min(
+                    PAIR_ADMISSION_POLL_SECONDS,
+                    max(0.001, deadline - time.monotonic()),
+                )
+            )
+        raise pilot.D1BehavioralPilotError(
+            "development_pair_admission_timeout", ",".join(last_missing)
+        )
+    except BaseException as error:
+        receipt = _pair_admission_receipt(
+            args=args,
+            block=block,
+            decision="no_go",
+            own_descriptor=own_descriptor,
+            paired_descriptor=peer_descriptor,
+            own_claim=own_claim,
+            paired_claim=peer_claim,
+            own_heartbeat=own_heartbeat,
+            paired_heartbeat=peer_heartbeat,
+            predecessor_results=predecessor_results,
+            failure=error,
+        )
+        try:
+            _PILOT_IMMUTABLE_JSON(destination, receipt, publish=True)
+        except BaseException:
+            pass
+        raise
 
 
 def validate_preflight_queue_invocation(
@@ -1898,6 +2967,137 @@ def run_prerequisite_preflight(
     return 0
 
 
+def _wait_for_server_ready_or_queue_terminal(
+    path: Path, *, timeout: float, args: argparse.Namespace,
+    server_descriptor: Mapping[str, Any], block: DevelopmentBlock,
+) -> str:
+    """Wait for this pair's ready file while rejecting a terminal server job."""
+
+    jobs_root = _queue_jobs_root(Path(args.job_dir))
+    server_dir = jobs_root / args.server_job_id
+    deadline = time.monotonic() + timeout
+    deep_terminal_first_seen: dict[str, float] = {}
+    while time.monotonic() < deadline:
+        result_path = server_dir / "result.json"
+        if result_path.is_file():
+            terminal = _validate_queue_terminal_result(
+                job_dir=server_dir,
+                descriptor=server_descriptor,
+                expected_job_id=args.server_job_id,
+                expected_worker_id=D1_SERVER_WORKER_ID,
+                study_commit=args.study_commit,
+            )
+            deep_terminal = _deep_terminal_proof_with_grace(
+                first_seen_monotonic=deep_terminal_first_seen,
+                job_dir=server_dir,
+                descriptor=server_descriptor,
+                expected_job_id=args.server_job_id,
+                paired_job_id=args.job_id,
+                expected_mode="server-job",
+                run_id=args.run_id,
+                study_commit=args.study_commit,
+                block=block,
+            )
+            if deep_terminal is None:
+                time.sleep(
+                    min(
+                        PAIR_ADMISSION_POLL_SECONDS,
+                        max(0.001, deadline - time.monotonic()),
+                    )
+                )
+                continue
+            raise pilot.D1BehavioralPilotError(
+                "paired_server_queue_terminal_before_ready",
+                f"{args.server_job_id}:{terminal['status']}:{terminal['returncode']}",
+            )
+        if Path(path).is_file():
+            pilot.require(
+                not Path(path).is_symlink(), "server_ready_is_symlink"
+            )
+            return pilot.sha256_file(path)
+        time.sleep(
+            min(
+                PAIR_ADMISSION_POLL_SECONDS,
+                max(0.001, deadline - time.monotonic()),
+            )
+        )
+    raise pilot.D1BehavioralPilotError("evidence_wait_timeout", str(path))
+
+
+def _wait_for_protocol_claim_or_queue_terminal(
+    *, paths: Mapping[str, Path], process: Any,
+    run_id: str, simulator_job_id: str, server_job_id: str,
+    study_commit: str, server_ready_sha256: str, timeout: float,
+    args: argparse.Namespace, simulator_descriptor: Mapping[str, Any],
+    block: DevelopmentBlock,
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    """Reject a terminal simulator wrapper while the server awaits its claim."""
+
+    jobs_root = _queue_jobs_root(Path(args.job_dir))
+    simulator_dir = jobs_root / simulator_job_id
+    deadline = time.monotonic() + timeout
+    deep_terminal_first_seen: dict[str, float] = {}
+    while time.monotonic() < deadline:
+        pilot.require(
+            process.poll() is None,
+            "d1_server_exited_before_simulator_claim",
+            str(process.poll()),
+        )
+        result_path = simulator_dir / "result.json"
+        if result_path.is_file():
+            terminal = _validate_queue_terminal_result(
+                job_dir=simulator_dir,
+                descriptor=simulator_descriptor,
+                expected_job_id=simulator_job_id,
+                expected_worker_id=args.simulator_worker_role,
+                study_commit=study_commit,
+            )
+            deep_terminal = _deep_terminal_proof_with_grace(
+                first_seen_monotonic=deep_terminal_first_seen,
+                job_dir=simulator_dir,
+                descriptor=simulator_descriptor,
+                expected_job_id=simulator_job_id,
+                paired_job_id=server_job_id,
+                expected_mode="simulator-job",
+                run_id=run_id,
+                study_commit=study_commit,
+                block=block,
+            )
+            if deep_terminal is None:
+                time.sleep(
+                    min(
+                        pilot.LEASE_POLL_SECONDS,
+                        max(0.001, deadline - time.monotonic()),
+                    )
+                )
+                continue
+            raise pilot.D1BehavioralPilotError(
+                "paired_simulator_queue_terminal_before_protocol_claim",
+                f"{simulator_job_id}:{terminal['status']}:{terminal['returncode']}",
+            )
+        if paths["simulator_terminal"].is_file():
+            terminal = pilot.validate_simulator_terminal(
+                paths["simulator_terminal"],
+                run_id=run_id,
+                simulator_job_id=simulator_job_id,
+                server_job_id=server_job_id,
+                server_ready_sha256=server_ready_sha256,
+            )
+            return None, terminal
+        if paths["simulator_claim"].is_file():
+            claim, identity = pilot.validate_simulator_claim(
+                paths["simulator_claim"],
+                run_id=run_id,
+                simulator_job_id=simulator_job_id,
+                server_job_id=server_job_id,
+                server_ready_sha256=server_ready_sha256,
+                study_commit=study_commit,
+            )
+            return claim, identity
+        time.sleep(pilot.LEASE_POLL_SECONDS)
+    raise pilot.D1BehavioralPilotError("simulator_claim_timeout")
+
+
 def run_server_job(args: argparse.Namespace, block: DevelopmentBlock) -> int:
     _resolve_raw_root(args, block)
     queue_identity = validate_queue_invocation(
@@ -1906,14 +3106,34 @@ def run_server_job(args: argparse.Namespace, block: DevelopmentBlock) -> int:
         expected_role=pilot.SERVER_QUEUE_ROLE, expected_mode="server-job",
         paired_job_id=args.simulator_job_id, run_id=args.run_id,
         block=block, simulator_worker_role=args.simulator_worker_role,
+        pair_admission_timeout_seconds=args.pair_admission_timeout_seconds,
     )
     prerequisites = validate_prerequisites(args, block)
+    admission = wait_for_pair_admission(args, block, own_descriptor=queue_identity)
+    simulator_descriptor = admission["paired_queue_descriptor"]
+    pilot.require(
+        isinstance(simulator_descriptor, Mapping),
+        "development_pair_admission_peer_descriptor_missing",
+    )
     p00 = prerequisites["p00_paired_pilot"]
 
     def queue_verifier(**_kwargs: Any) -> dict[str, Any]:
         return dict(queue_identity)
 
-    with _patched_pilot({"validate_queue_invocation": queue_verifier}):
+    def claim_waiter(**kwargs: Any) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+        return _wait_for_protocol_claim_or_queue_terminal(
+            **kwargs,
+            args=args,
+            simulator_descriptor=simulator_descriptor,
+            block=block,
+        )
+
+    with _patched_pilot(
+        {
+            "validate_queue_invocation": queue_verifier,
+            "_wait_for_claim_or_terminal": claim_waiter,
+        }
+    ):
         with installed_receipt_metadata(
             block, p00=p00, prerequisites=prerequisites
         ):
@@ -1928,8 +3148,15 @@ def run_simulator_job(args: argparse.Namespace, block: DevelopmentBlock) -> int:
         expected_role=args.simulator_worker_role, expected_mode="simulator-job",
         paired_job_id=args.server_job_id, run_id=args.run_id,
         block=block, simulator_worker_role=args.simulator_worker_role,
+        pair_admission_timeout_seconds=args.pair_admission_timeout_seconds,
     )
     prerequisites = validate_prerequisites(args, block)
+    admission = wait_for_pair_admission(args, block, own_descriptor=queue_identity)
+    server_descriptor = admission["paired_queue_descriptor"]
+    pilot.require(
+        isinstance(server_descriptor, Mapping),
+        "development_pair_admission_peer_descriptor_missing",
+    )
     prerequisites_sha256 = execution_prerequisites_sha256(block, prerequisites)
 
     def queue_verifier(**_kwargs: Any) -> dict[str, Any]:
@@ -1943,6 +3170,15 @@ def run_simulator_job(args: argparse.Namespace, block: DevelopmentBlock) -> int:
             *ready_args,
             expected_prerequisites_sha256=prerequisites_sha256,
             **ready_kwargs,
+        )
+
+    def ready_waiter(path: Path, *, timeout: float) -> str:
+        return _wait_for_server_ready_or_queue_terminal(
+            path,
+            timeout=timeout,
+            args=args,
+            server_descriptor=server_descriptor,
+            block=block,
         )
 
     def cell_builder(**kwargs: Any) -> list[str]:
@@ -1985,6 +3221,7 @@ def run_simulator_job(args: argparse.Namespace, block: DevelopmentBlock) -> int:
         "validate_schedule": lambda _source_root: _schedule_identity(block),
         "validate_prerequisites": prerequisite_verifier,
         "validate_server_ready": ready_verifier,
+        "_wait_for_server_ready_file": ready_waiter,
         "build_cell_command": cell_builder,
         "validate_passed_cell_receipt": cell_validator,
         "discover_completed_prefix": prefix_discoverer,
@@ -2068,6 +3305,7 @@ def build_parser() -> argparse.ArgumentParser:
     server.add_argument("--d1-qualification-receipt-sha256", required=True)
     _add_pairing_prerequisites(server)
     server.add_argument("--port", type=int, default=pilot.SERVICE_PORT)
+    server.add_argument("--pair-admission-timeout-seconds", type=int, required=True)
     server.add_argument("--server-ready-timeout", type=float, default=7200.0)
     server.add_argument("--simulator-claim-timeout", type=float, default=7200.0)
     server.add_argument("--server-group-timeout-seconds", type=int, default=100000)
@@ -2092,6 +3330,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_pairing_prerequisites(simulator)
     simulator.add_argument("--remote-host", default=pilot.SERVICE_HOST)
     simulator.add_argument("--remote-port", type=int, default=pilot.SERVICE_PORT)
+    simulator.add_argument("--pair-admission-timeout-seconds", type=int, required=True)
     simulator.add_argument("--cell-timeout", type=float, default=43200.0)
 
     cell = subparsers.add_parser("cell", help="run one fresh ordered development cell")
@@ -2166,6 +3405,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.mode == "server-job":
             pilot.require(
                 args.port == pilot.SERVICE_PORT
+                and 0 < args.pair_admission_timeout_seconds
+                <= PAIR_ADMISSION_MAX_TIMEOUT_SECONDS
                 and args.server_ready_timeout > 0
                 and args.simulator_claim_timeout > 0
                 and args.server_group_timeout_seconds > 0
@@ -2182,6 +3423,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             pilot.require(
                 args.server_ready_timeout > 0 and args.cell_timeout > 0,
                 "invalid_timeout",
+            )
+            pilot.require(
+                0 < args.pair_admission_timeout_seconds
+                <= PAIR_ADMISSION_MAX_TIMEOUT_SECONDS,
+                "invalid_pair_admission_timeout",
             )
             return run_simulator_job(args, block)
         if args.mode == "cell":

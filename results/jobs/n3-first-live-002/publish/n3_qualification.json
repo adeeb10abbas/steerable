@@ -1,0 +1,90 @@
+{
+  "checkpoint_aggregate_sha256": "55895125805b12635ece5dd2e88453a1aca6a684bac556f114337ae448ffdd83",
+  "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+  "claim_boundary": "Six generation requests on one saved observation; zero robot episodes. Passing proves this pinned runtime's seed/reset/decode invariants and prompt sensitivity on that observation, not policy skill or generated-frame physical-time alignment.",
+  "decode_no_decode_pairs": [
+    {
+      "checks": {
+        "action_equal": true,
+        "decoded_only_in_decode_request": true,
+        "effective_seed_equal": true,
+        "latent_equal": true,
+        "model_input_equal": true,
+        "wire_observation_equal": true
+      },
+      "decode_index": 3,
+      "no_decode_index": 0
+    },
+    {
+      "checks": {
+        "action_equal": true,
+        "decoded_only_in_decode_request": true,
+        "effective_seed_equal": true,
+        "latent_equal": true,
+        "model_input_equal": true,
+        "wire_observation_equal": true
+      },
+      "decode_index": 4,
+      "no_decode_index": 1
+    },
+    {
+      "checks": {
+        "action_equal": true,
+        "decoded_only_in_decode_request": true,
+        "effective_seed_equal": true,
+        "latent_equal": true,
+        "model_input_equal": true,
+        "wire_observation_equal": true
+      },
+      "decode_index": 5,
+      "no_decode_index": 2
+    }
+  ],
+  "effective_seed": 2026091000,
+  "fixed_input_repeat_checks": [
+    {
+      "checks": {
+        "action_equal": true,
+        "latent_equal": true,
+        "model_input_equal": true,
+        "wire_observation_equal": true
+      },
+      "first_index": 0,
+      "second_index": 1
+    },
+    {
+      "checks": {
+        "action_equal": true,
+        "decoded_future_equal": true,
+        "latent_equal": true,
+        "model_input_equal": true,
+        "wire_observation_equal": true
+      },
+      "first_index": 3,
+      "second_index": 4
+    }
+  ],
+  "fixed_observation_sha256": "af9c03ffa66df52875d7cac58dec60678b853b520941dbf6e90e26f7d0703ad5",
+  "generation_request_count": 6,
+  "model_config": "N3",
+  "prompt_sensitivity": {
+    "action_differs": true,
+    "different_exact_prompt": true,
+    "different_transformed_model_input": true,
+    "latent_differs": true,
+    "same_saved_observation": true
+  },
+  "qualified": true,
+  "raw_receipt": {
+    "bytes": 39813,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-first-live-002/raw/n3_qualification.json",
+    "sha256": "6dc6519f45e4974e88851137e30f4199c0d96e374216694c72a8924334d91a96"
+  },
+  "robot_episode_count": 0,
+  "schema_version": "wmf-n3-runtime-qualification-v1",
+  "server_sha256": "024a6d19048a6ac732ca0b23e741b5da6d38424223783b944bf539b2b6bd9a24",
+  "source_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+  "source_tree": "1e77852f2240d6e00312342ab29164745042b1ae",
+  "status": "passed",
+  "study_id": "WMF-ABLATION-001"
+}

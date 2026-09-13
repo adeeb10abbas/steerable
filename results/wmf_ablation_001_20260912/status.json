@@ -64,11 +64,14 @@
       "fixture-c01-candidate-00",
       "fixture-c02-candidate-00",
       "detached-attempt-snapshot-002",
-      "detached-attempt-snapshot-003"
+      "detached-attempt-snapshot-003",
+      "worker05-isolation-diagnostic-001",
+      "worker06-isolation-diagnostic-001",
+      "worker09-isolation-diagnostic-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "d9c941d12ccc849dbd697de8151a68e808170a75",
-    "control_generation": 238,
+    "control_commit": "ea433c7e8cc09db94119009e9e242f971d28749a",
+    "control_generation": 239,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -1563,6 +1566,24 @@
       },
       "wall_seconds": 209.7974138588179,
       "worker_id": "wmf-forecast-0912-worker-00"
+    },
+    {
+      "descriptor_sha256": "1108c442dd4f79efac877af9114e1d9226ebced97f9f04af68130e11e7602314",
+      "job_id": "worker05-isolation-diagnostic-001",
+      "source_commit": "d9c941d12ccc849dbd697de8151a68e808170a75",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "3ebb2d3fea292b9103459d497847c681e3055010f87f1c808eea2c4b758fa23c",
+      "job_id": "worker06-isolation-diagnostic-001",
+      "source_commit": "d9c941d12ccc849dbd697de8151a68e808170a75",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "d6dad97031247f28f963490026ab8c9201e4d7fd808aeae43840f4d0ed696e83",
+      "job_id": "worker09-isolation-diagnostic-001",
+      "source_commit": "d9c941d12ccc849dbd697de8151a68e808170a75",
+      "status": "staged"
     }
   ],
   "maximum_combined_log_tail_bytes_per_job": 8192,

@@ -224,6 +224,14 @@ class QueueHarness:
 
 
 class FixtureJobTests(unittest.TestCase):
+    def test_child_python_path_preserves_venv_symlink(self):
+        with tempfile.TemporaryDirectory() as directory:
+            venv_python = Path(directory) / "venv/bin/python"
+            venv_python.parent.mkdir(parents=True)
+            venv_python.symlink_to(Path(sys.executable).resolve())
+            self.assertEqual(fixture_job._lexical_absolute(venv_python), venv_python.absolute())
+            self.assertNotEqual(fixture_job._lexical_absolute(venv_python), venv_python.resolve())
+
     def test_success_publishes_only_bounded_identities_and_is_idempotent(self):
         with tempfile.TemporaryDirectory() as directory:
             harness = QueueHarness(directory)

@@ -626,7 +626,9 @@ def build_child_command(
 ) -> list[str]:
     script = Path(source_root) / "workshops/corl2026_world_models/experiments/forecast_layout/fixed_observation_job.py"
     return [
-        str(Path(robolab_python).resolve()),
+        # Invoke the lexical venv entrypoint.  ``resolve()`` follows its
+        # Python symlink to the base interpreter and loses venv site-packages.
+        str(Path(os.path.abspath(robolab_python))),
         str(script.resolve()),
         "capture",
         "--source-root",

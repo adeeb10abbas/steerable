@@ -377,6 +377,26 @@ class FixedObservationTests(unittest.TestCase):
         self.assertIn("--pose-manifest-sha256", command)
         self.assertNotIn("infer", command)
 
+    def test_queue_command_does_not_resolve_venv_python_symlink(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            venv_python = root / "venv/bin/python"
+            venv_python.parent.mkdir(parents=True)
+            venv_python.symlink_to(Path(sys.executable).resolve())
+            command = fixed.build_child_command(
+                source_root=Path("/queue/sources") / ("a" * 40),
+                output_dir=Path("/raw/capture"),
+                pose_manifest_path=Path("/raw/p00.json"),
+                pose_manifest_sha256="2" * 64,
+                gate_receipt_path=Path("/queue/gate.json"),
+                gate_receipt_sha256="3" * 64,
+                study_commit="a" * 40,
+                environment_seed=2026091000,
+                robolab_python=venv_python,
+            )
+            self.assertEqual(command[0], str(venv_python.absolute()))
+            self.assertNotEqual(command[0], str(venv_python.resolve()))
+
 
 if __name__ == "__main__":
     unittest.main()

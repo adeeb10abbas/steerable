@@ -80,6 +80,12 @@ def require(condition: bool, reason: str) -> None:
         raise FixtureJobError(reason)
 
 
+def _lexical_absolute(path: Path) -> Path:
+    """Return an absolute path without following a venv entrypoint symlink."""
+
+    return Path(os.path.abspath(path))
+
+
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
@@ -730,7 +736,10 @@ def execute_job(
                 immutable_json(adapter_path, adapter_config)
                 forecast_root = source / "workshops/corl2026_world_models/experiments/forecast_layout"
                 command = [
-                    str(Path(robolab_python).resolve()),
+                    # Preserve the lexical venv entrypoint.  Resolving this
+                    # symlink executes the base CPython and drops the venv's
+                    # site-packages (including IsaacLab's ``toml`` dependency).
+                    str(_lexical_absolute(robolab_python)),
                     str(forecast_root / "model_blind_fixture_gate.py"),
                     "qualify",
                     "--source-contract",

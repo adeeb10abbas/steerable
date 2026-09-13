@@ -240,14 +240,22 @@ def validate_queue_context(source_root: Path, job_dir: Path) -> QueueContext:
 
 
 def validate_runtime_paths(paths: RuntimePaths, *, enforce_pinned_locations: bool = True) -> None:
+    # Keep the lexical venv Python path for execution.  Following its symlink
+    # selects the base interpreter and silently drops the pinned environment.
     resolved = RuntimePaths(
-        python=paths.python.resolve(),
+        python=Path(os.path.abspath(paths.python)),
         source=paths.source.resolve(),
         checkpoint=paths.checkpoint.resolve(),
         tokenizer=paths.tokenizer.resolve(),
     )
     if enforce_pinned_locations:
-        require(resolved == RuntimePaths(), "d1_runtime_location_changed")
+        pinned = RuntimePaths(
+            python=Path(os.path.abspath(D1_PYTHON)),
+            source=D1_SOURCE.resolve(),
+            checkpoint=D1_CHECKPOINT.resolve(),
+            tokenizer=D1_TOKENIZER.resolve(),
+        )
+        require(resolved == pinned, "d1_runtime_location_changed")
     require(resolved.python.is_file(), "d1_python_missing")
     require(os.access(resolved.python, os.X_OK), "d1_python_not_executable")
     require(resolved.source.is_dir(), "d1_source_missing")

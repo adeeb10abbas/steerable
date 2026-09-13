@@ -319,6 +319,29 @@ class D1QualificationJobTests(unittest.TestCase):
         self.assertIn("d1_probe.py", " ".join(probe))
         self.assertEqual(probe[probe.index("--fixture-sha256") + 1], "a" * 64)
 
+    def test_runtime_validation_preserves_venv_python_symlink(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            python = root / "venv/bin/python"
+            python.parent.mkdir(parents=True)
+            python.symlink_to(Path(sys.executable).resolve())
+            source = root / "source"
+            checkpoint = root / "checkpoint"
+            tokenizer = root / "tokenizer"
+            for directory in (source, checkpoint, tokenizer):
+                directory.mkdir()
+            runtime = JOB.RuntimePaths(python, source, checkpoint, tokenizer)
+            JOB.validate_runtime_paths(runtime, enforce_pinned_locations=False)
+            command = JOB.build_server_command(
+                runtime=runtime,
+                source_root=root / "study",
+                future_root=root / "future",
+                port=18021,
+                timeout_seconds=50000,
+            )
+            self.assertEqual(command[0], str(python))
+            self.assertNotEqual(command[0], str(python.resolve()))
+
     def test_server_contract_reconciles_runtime_identity_and_both_gpu_uuids(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

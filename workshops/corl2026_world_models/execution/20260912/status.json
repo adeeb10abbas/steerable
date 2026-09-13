@@ -1,23 +1,29 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T04:22:00Z",
+  "as_of_utc": "2026-09-13T04:41:00Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
   "requested_host": "GM allocated cluster",
   "authorization": "User requested execution of attached specification on GM with aggressive parallelism. Core 232 episodes selected; optional D2 not selected. No confirmation release before qualification.",
-  "core_episodes_launched": 1,
-  "generation_requests_launched": 12,
-  "generation_requests_completed": 12,
-  "phase": "both_primary_models_generation_qualified_and_N3_behavioral_pilot_live",
-  "cluster_status": "Independent Git/PVC queue is active without the work Mac. Two isolated one-B200 workers, one isolated two-B200 N3 worker and one isolated two-B200 D1 worker are Running; device-plugin identities and accessible device nodes were verified for all six allocated B200s.",
+  "core_episodes_launched": 5,
+  "generation_requests_launched": 73,
+  "generation_requests_completed": 73,
+  "request_breakdown": {
+    "nonbehavioral_generation_qualification": 12,
+    "valid_N3_behavioral": 60,
+    "technical_invalid_N3_behavioral": 1,
+    "D1_behavioral": 0
+  },
+  "phase": "N3_behavioral_pilot_passed_D1_behavioral_pilot_pending",
+  "cluster_status": "Independent Git/PVC queue is active without the work Mac. Four one-B200 queue workers, one isolated two-B200 N3 worker and one isolated two-B200 D1 worker are Running. Worker00 and both model workers have prior exact identity receipts; newly admitted workers05, 06 and 09 require fresh hash-bound dynamic diagnostics before scientific work.",
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_physical_time_still_unqualified",
     "runtime_D1": "passed_six_official_conditional_generation_requests_on_exact_two_B200_worker_after_four_preserved_pre_request_technical_invalid_attempts",
     "fixed_450_recorder": "passed_recorder_only_original_left_with_450_actions_451_observations_zero_model_requests",
     "physical_layouts": "P00_candidate_01_and_D01_through_D04_candidate_00_accepted_model_blind; P00_pose_and_current_capture_frozen",
-    "frame_time_camera_mapping": "N3_P00_attempt_003_preserved_transport_invalid_after_one_generated_request_and_zero_actions; attempt_004_claimed_with_no_replay_transport_fix",
+    "frame_time_camera_mapping": "N3_P00_attempt_004_passed_four_450_action_cells_with_60_joint_action_future_requests_and_native_camera_physics_control_receipts",
     "annotation_development": "pending_development_recordings",
     "confirmation_release": false
   },
@@ -75,8 +81,8 @@
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "05761356030901be2877e46ac15740d48354fb2c",
-    "latest_results_commit_fetched": "315dc7d5c590e93644e986d872054ef77c14afff"
+    "latest_control_commit": "c46bb8b3dcfbc95bbf14684e5d87db2730fd077a",
+    "latest_results_commit_fetched": "06b8ab02b4a382a23372dfef327915121f1b2069"
   },
   "archive_source_recovery": {
     "path": "archive_source_recovery.json",
@@ -201,29 +207,29 @@
     "behavioral_actions": 0,
     "results_commit": "e1675b05b64a17157c0a575d06b652c7390861bc"
   },
-  "active_owned_jobs": [
-    {
-      "job_id": "n3-p00-pilot-004",
-      "role": "n3",
-      "source_commit": "b8914413f6293c165dd3a57c737f4b977e7e84be",
-      "state": "claimed_counts_unreported"
-    }
-  ],
+  "active_owned_jobs": [],
   "behavioral_execution": {
     "pilot": {
       "planned_cells": 8,
-      "completed_valid_cells": 0,
+      "completed_valid_cells": 4,
       "N3": {
         "attempts": 4,
         "preserved_zero_valid_cell_technical_failures": 3,
-        "active_attempt": "n3-p00-pilot-004",
-        "launched_behavioral_cells_across_terminal_attempts": 1,
+        "active_attempt": null,
+        "passed_attempt": "n3-p00-pilot-004",
+        "launched_behavioral_cells_across_terminal_attempts": 5,
         "technically_invalid_behavioral_cells_across_terminal_attempts": 1,
-        "published_valid_cells": 0,
-        "published_behavioral_actions": 0,
-        "published_behavioral_model_requests": 1,
+        "published_valid_cells": 4,
+        "published_behavioral_actions": 1800,
+        "published_behavioral_observations": 1804,
+        "published_behavioral_model_requests": 61,
+        "valid_behavioral_model_requests": 60,
+        "technical_invalid_behavioral_model_requests": 1,
         "attempt_003_failure": "client_ping_timeout_after_true_request_0_generation_caused_replay_guard_rejection",
-        "attempt_003_receipt_path": "results/jobs/n3-p00-pilot-003/publish/n3_behavioral_pilot_receipt.json"
+        "attempt_003_receipt_path": "results/jobs/n3-p00-pilot-003/publish/n3_behavioral_pilot_receipt.json",
+        "passed_receipt_path": "results/jobs/n3-p00-pilot-004/publish/n3_behavioral_pilot_receipt.json",
+        "passed_receipt_sha256": "5a7a861acc82615b4eb7aa92308f40f7a0c965e65b6edaf12f776cb64b18b0e0",
+        "results_commit": "06b8ab02b4a382a23372dfef327915121f1b2069"
       },
       "D1": {
         "attempts": 0,
@@ -238,7 +244,13 @@
     "confirmation": {
       "planned_cells": 192,
       "completed_valid_cells": 0,
-      "released": false
+      "released": false,
+      "fixture_attempts_only": {
+        "technical_invalid_zero_action_zero_request": 7,
+        "unrun": 17,
+        "reason": "new_worker_hostname_absent_from_static_deployment_receipt",
+        "retry_gate": "fresh_hash_bound_dynamic_worker_diagnostic"
+      }
     }
   },
   "independent_preparation_review": "reviewed_runtime_findings_are_fixed_or_tracked_before_release"

@@ -59,11 +59,12 @@
       "n3-p00-pilot-002",
       "d1-first-live-005",
       "n3-p00-pilot-003",
-      "n3-p00-pilot-004"
+      "n3-p00-pilot-004",
+      "detached-attempt-snapshot-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "b15f70fa364338e2c26e486f433e9da3d4c0d539",
-    "control_generation": 209,
+    "control_commit": "05761356030901be2877e46ac15740d48354fb2c",
+    "control_generation": 210,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -652,6 +653,12 @@
       "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
+      "descriptor_sha256": "a5ad5e9bdd9bddfb9842dd252f4357d20bc4a12a556c7e794d06cb7fed9b2075",
+      "job_id": "detached-attempt-snapshot-001",
+      "source_commit": "b15f70fa364338e2c26e486f433e9da3d4c0d539",
+      "status": "staged"
+    },
+    {
       "child_pid": 3507,
       "child_reaped": true,
       "descriptor_sha256": "0340da03131f298d7d6ec59133dcf208646569de2eee621f8424fdd0e08f23a5",
@@ -1096,9 +1103,9 @@
     {
       "descriptor_sha256": "b18a692774d731da3f60b77e4d97f3388a8c21a4bd4fe077560182d6924c2384",
       "heartbeat": {
-        "at": "2026-09-13T04:22:55.328191+00:00",
+        "at": "2026-09-13T04:23:51.565048+00:00",
         "child_pid": 1967,
-        "unix": 1789273375.328215,
+        "unix": 1789273431.5650606,
         "worker_id": "wmf-forecast-0912-worker-n3-00",
         "worker_pid": 1
       },

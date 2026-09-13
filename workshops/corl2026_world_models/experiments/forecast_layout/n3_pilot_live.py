@@ -1337,6 +1337,8 @@ def run_cell(args: argparse.Namespace) -> int:
         import numpy as np
         import robolab
         import robolab.constants
+        import websockets.sync.client
+        from openpi_client import msgpack_numpy, websocket_client_policy
         from policies.cosmos3.client import Cosmos3Client
         from robolab.constants import set_output_dir
         from robolab.core.environments.runtime import create_env
@@ -1383,7 +1385,28 @@ def run_cell(args: argparse.Namespace) -> int:
         }
         recorder = ForecastRecordingAdapter(cell_root / "recording", identity)
 
+        class RecordedTransport(websocket_client_policy.WebsocketClientPolicy):
+            def _wait_for_server(self):
+                # Official inference blocks the server event loop longer than
+                # the default ping timeout. The queue bounds the entire cell.
+                connection = websockets.sync.client.connect(
+                    self._uri, compression=None, max_size=None,
+                    ping_interval=None, ping_timeout=None,
+                )
+                try:
+                    return connection, msgpack_numpy.unpackb(connection.recv())
+                except BaseException:
+                    connection.close()
+                    raise
+
         class BoundN3Client(Cosmos3Client):
+            def _connect(self):
+                return RecordedTransport(self._remote_host, self._remote_port)
+
+            def _query_server(self, request: dict) -> dict:
+                # A lost response must never silently replay a model request.
+                return self.client.infer(request)
+
             def __init__(self, **kwargs: Any) -> None:
                 super().__init__(**kwargs)
                 self.wmf_request_index = 0

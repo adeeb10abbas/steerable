@@ -370,9 +370,110 @@ def temporal_snapshot(policy: Any, *, rank: int) -> dict[str, Any]:
     }
 
 
-def validate_official_head(policy: Any, *, rank: int) -> dict[str, Any]:
+def pinned_frame_block_contract(
+    checkpoint_root: Path,
+    identity_receipt: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Read the frame-block size from the already identity-verified checkpoint.
+
+    The official action-head source copies ``config.num_frame_per_block`` onto
+    the runtime head.  The pinned DROID checkpoint carries that value both on
+    the action-head config and its nested diffusion-model config.  Binding the
+    gate to those exact config bytes avoids imposing a configuration from a
+    different DreamZero backbone.
+    """
+
+    if identity_receipt.get("status") != "passed":
+        raise ValueError("D1 frame-block authority requires a passed identity receipt")
+
+    source = identity_receipt.get("source")
+    if not isinstance(source, Mapping):
+        raise ValueError("D1 identity receipt is missing source evidence")
+    required_files = source.get("required_files")
+    if not isinstance(required_files, list):
+        raise ValueError("D1 identity receipt is missing required source files")
+    action_head_records = [
+        record
+        for record in required_files
+        if isinstance(record, Mapping)
+        and record.get("path")
+        == "groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.py"
+    ]
+    if len(action_head_records) != 1:
+        raise ValueError("D1 identity receipt does not identify the official action-head source")
+    action_head_record = action_head_records[0]
+    if action_head_record.get("sha256") != OFFICIAL_ACTION_HEAD_SHA256:
+        raise ValueError("D1 official action-head source identity changed")
+
+    checkpoint = identity_receipt.get("checkpoint")
+    if not isinstance(checkpoint, Mapping):
+        raise ValueError("D1 identity receipt is missing checkpoint evidence")
+    root = Path(checkpoint_root).resolve()
+    if root != Path(str(checkpoint.get("path", ""))).resolve():
+        raise ValueError("D1 frame-block checkpoint path changed")
+    files = checkpoint.get("files")
+    if not isinstance(files, list):
+        raise ValueError("D1 identity receipt is missing checkpoint file evidence")
+    config_records = [
+        record
+        for record in files
+        if isinstance(record, Mapping) and record.get("path") == "config.json"
+    ]
+    if len(config_records) != 1:
+        raise ValueError("D1 identity receipt does not identify checkpoint config.json")
+    config_record = config_records[0]
+    config_path = root / "config.json"
+    if not config_path.is_file():
+        raise ValueError("D1 checkpoint config.json is missing")
+    if config_path.stat().st_size != config_record.get("bytes"):
+        raise ValueError("D1 checkpoint config.json byte count changed")
+    config_sha256 = sha256_file(config_path)
+    if config_sha256 != config_record.get("sha256"):
+        raise ValueError("D1 checkpoint config.json identity changed")
+
+    try:
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        action_head_config = config["action_head_cfg"]["config"]
+        action_head_value = action_head_config["num_frame_per_block"]
+        diffusion_value = action_head_config["diffusion_model_cfg"]["num_frame_per_block"]
+    except (KeyError, TypeError, json.JSONDecodeError) as error:
+        raise ValueError("D1 checkpoint frame-block config is unreadable") from error
+    values = (action_head_value, diffusion_value)
+    if any(type(value) is not int or value <= 0 for value in values):
+        raise ValueError("D1 checkpoint frame-block config is not a positive integer")
+    if action_head_value != diffusion_value:
+        raise ValueError("D1 checkpoint action-head and diffusion frame-block configs disagree")
+
+    return {
+        "schema_version": "wmf-d1-frame-block-contract-v1",
+        "status": "passed",
+        "num_frame_per_block": action_head_value,
+        "checkpoint_config": {
+            "path": str(config_path),
+            "bytes": config_path.stat().st_size,
+            "sha256": config_sha256,
+            "fields": {
+                "action_head_cfg.config.num_frame_per_block": action_head_value,
+                "action_head_cfg.config.diffusion_model_cfg.num_frame_per_block": diffusion_value,
+            },
+        },
+        "official_action_head_source": dict(action_head_record),
+    }
+
+
+def validate_official_head(
+    policy: Any,
+    *,
+    rank: int,
+    frame_block_contract: Mapping[str, Any],
+) -> dict[str, Any]:
     head = action_head(policy)
     failures: list[str] = []
+    if frame_block_contract.get("status") != "passed":
+        raise ValueError("D1 frame-block contract did not pass")
+    expected_num_frame_per_block = frame_block_contract.get("num_frame_per_block")
+    if type(expected_num_frame_per_block) is not int or expected_num_frame_per_block <= 0:
+        raise ValueError("D1 frame-block contract has an invalid expected value")
     expected = {
         "seed": OFFICIAL_NOISE_SEED,
         "cfg_scale": VIDEO_GUIDANCE_SCALE,
@@ -380,7 +481,7 @@ def validate_official_head(policy: Any, *, rank: int) -> dict[str, Any]:
         "action_horizon": EXPECTED_ACTION_SHAPE[0],
         "ip_rank": rank,
         "ip_size": EXPECTED_WORLD_SIZE,
-        "num_frame_per_block": 4,
+        "num_frame_per_block": expected_num_frame_per_block,
         "dynamic_cache_schedule": False,
     }
     observed = {name: getattr(head, name, None) for name in expected}
@@ -403,6 +504,7 @@ def validate_official_head(policy: Any, *, rank: int) -> dict[str, Any]:
         "dit_step_mask": mask,
         "evaluated_dit_step_count": int(sum(bool(value) for value in mask)),
         "tensorrt_engine_active": getattr(head, "trt_engine", None) is not None,
+        "frame_block_contract": dict(frame_block_contract),
         "failures": failures,
     }
     if failures:
@@ -1325,7 +1427,12 @@ def main(argv: list[str] | None = None) -> None:
         tokenizer_path_override=str(args.tokenizer_root),
         model_config_overrides=[],
     )
-    local_head = validate_official_head(policy, rank=rank)
+    frame_block_contract = pinned_frame_block_contract(args.checkpoint_root, identity)
+    local_head = validate_official_head(
+        policy,
+        rank=rank,
+        frame_block_contract=frame_block_contract,
+    )
     head_receipts = _all_gather_object(local_head, group=signal_group)
     dist.barrier()
 

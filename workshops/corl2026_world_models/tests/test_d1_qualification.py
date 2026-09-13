@@ -42,7 +42,7 @@ class FakeHead:
         self.seed = 1140
         self.cfg_scale = 5.0
         self.num_inference_steps = 16
-        self.num_frame_per_block = 4
+        self.num_frame_per_block = 2
         self.action_horizon = 24
         self.ip_rank = 0
         self.ip_size = 2
@@ -148,6 +148,16 @@ class FakeOfficialPolicy:
 
 
 class D1ContractTests(unittest.TestCase):
+    @staticmethod
+    def frame_block_contract(value: int = 2) -> dict[str, object]:
+        return {
+            "schema_version": "wmf-d1-frame-block-contract-v1",
+            "status": "passed",
+            "num_frame_per_block": value,
+            "checkpoint_config": {"fields": {}},
+            "official_action_head_source": {},
+        }
+
     def test_frozen_identity_and_probe_plan(self) -> None:
         identity = json.loads((LAYOUT / "d1_identity_contract.json").read_text())
         plan = json.loads((LAYOUT / "d1_probe_plan.json").read_text())
@@ -184,11 +194,101 @@ class D1ContractTests(unittest.TestCase):
         self.assertEqual(receipt["after"]["current_start_frame"], 0)
         for field in SERVER.RESET_FIELDS_TO_NONE:
             self.assertTrue(receipt["after"]["fields"][field]["is_none"])
-        head_receipt = SERVER.validate_official_head(policy, rank=0)
+        head_receipt = SERVER.validate_official_head(
+            policy,
+            rank=0,
+            frame_block_contract=self.frame_block_contract(),
+        )
         self.assertEqual(head_receipt["status"], "passed")
+        self.assertEqual(head_receipt["observed"]["num_frame_per_block"], 2)
+        policy.trained_model.action_head.num_frame_per_block = 4
+        with self.assertRaisesRegex(RuntimeError, "num_frame_per_block=4, expected 2"):
+            SERVER.validate_official_head(
+                policy,
+                rank=0,
+                frame_block_contract=self.frame_block_contract(),
+            )
+        policy.trained_model.action_head.num_frame_per_block = 2
         policy.trained_model.action_head.action_cfg_scale = 2.0
         with self.assertRaisesRegex(RuntimeError, "action_cfg_scale"):
-            SERVER.validate_official_head(policy, rank=0)
+            SERVER.validate_official_head(
+                policy,
+                rank=0,
+                frame_block_contract=self.frame_block_contract(),
+            )
+
+    def test_frame_block_gate_is_bound_to_verified_checkpoint_config(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            checkpoint_root = Path(temporary)
+            config_path = checkpoint_root / "config.json"
+            config_path.write_text(
+                json.dumps(
+                    {
+                        "action_head_cfg": {
+                            "config": {
+                                "num_frame_per_block": 2,
+                                "diffusion_model_cfg": {"num_frame_per_block": 2},
+                            }
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            identity_receipt = {
+                "status": "passed",
+                "source": {
+                    "required_files": [
+                        {
+                            "path": "groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.py",
+                            "sha256": SERVER.OFFICIAL_ACTION_HEAD_SHA256,
+                        }
+                    ]
+                },
+                "checkpoint": {
+                    "path": str(checkpoint_root),
+                    "files": [
+                        {
+                            "path": "config.json",
+                            "bytes": config_path.stat().st_size,
+                            "sha256": SERVER.sha256_file(config_path),
+                        }
+                    ],
+                },
+            }
+            contract = SERVER.pinned_frame_block_contract(
+                checkpoint_root,
+                identity_receipt,
+            )
+            self.assertEqual(contract["status"], "passed")
+            self.assertEqual(contract["num_frame_per_block"], 2)
+            self.assertEqual(
+                contract["checkpoint_config"]["fields"],
+                {
+                    "action_head_cfg.config.num_frame_per_block": 2,
+                    "action_head_cfg.config.diffusion_model_cfg.num_frame_per_block": 2,
+                },
+            )
+
+            config_path.write_text(
+                json.dumps(
+                    {
+                        "action_head_cfg": {
+                            "config": {
+                                "num_frame_per_block": 2,
+                                "diffusion_model_cfg": {"num_frame_per_block": 4},
+                            }
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            identity_receipt["checkpoint"]["files"][0] = {
+                "path": "config.json",
+                "bytes": config_path.stat().st_size,
+                "sha256": SERVER.sha256_file(config_path),
+            }
+            with self.assertRaisesRegex(ValueError, "frame-block configs disagree"):
+                SERVER.pinned_frame_block_contract(checkpoint_root, identity_receipt)
 
     def test_cache_reinitialization_evidence_requires_both_ranks(self) -> None:
         metrics = []

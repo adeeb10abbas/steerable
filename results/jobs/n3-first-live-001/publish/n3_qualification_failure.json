@@ -1,0 +1,29 @@
+{
+  "claim_boundary": "Failed qualification evidence only; not policy skill or a robot episode.",
+  "effective_seed": 2026091000,
+  "error": "unsupported exact payload value in exact_transformed_model_input_sequence_plan_0: <class 'cosmos_framework.data.vfm.sequence_packing.SequencePlan'>",
+  "error_type": "N3QualificationError",
+  "generation_requests_completed_before_failure": 0,
+  "journal": {
+    "event_count": 10,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-first-live-001/raw/events.partial.jsonl",
+    "tail_sha256": "10e146f81c094f35db3bbfba13b0d2e4809ab7e14a448d38588d3e4fa4394b38"
+  },
+  "live_model_process_continues": false,
+  "model_config": "N3",
+  "process": {
+    "hostname": "wmf-forecast-0912-worker-00-5cq8j",
+    "pid": 105,
+    "python": "3.13.6 (main, Aug 14 2025, 16:23:12) [Clang 20.1.4 ]",
+    "started_monotonic_ns": 1066664114191590,
+    "started_wall_time_ns": 1789266795096560397
+  },
+  "qualified": false,
+  "raw_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-first-live-001/raw",
+  "robot_episode_count": 0,
+  "schema_version": "wmf-n3-runtime-qualification-failure-v1",
+  "status": "failed",
+  "study_id": "WMF-ABLATION-001",
+  "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/a601b6f6823c2dd4bc74f2a486bdae87190626f8/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live.py\", line 1353, in run_qualification\n    records, evaluation = execute_six_request_protocol(\n                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        runtime,\n        ^^^^^^^^\n    ...<4 lines>...\n        journal=journal,\n        ^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/a601b6f6823c2dd4bc74f2a486bdae87190626f8/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live.py\", line 1259, in execute_six_request_protocol\n    record = runtime.run_request(\n        observation=observation,\n    ...<5 lines>...\n        request_root=requests_root / f\"{row['request_index']:02d}_{row['request_id']}\",\n    )\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/a601b6f6823c2dd4bc74f2a486bdae87190626f8/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live.py\", line 1045, in run_request\n    response = self.service.infer(wire)\n  File \"/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b/cosmos_framework/scripts/action_policy_server_robolab.py\", line 565, in infer\n    samples = self.model.generate_samples_from_batch(\n        data_batch,\n    ...<3 lines>...\n        shift=self.cfg.shift,\n    )\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/a601b6f6823c2dd4bc74f2a486bdae87190626f8/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live.py\", line 913, in generate_samples_from_batch\n    capture.model_input_artifact = capture.writer.write(\"exact_transformed_model_input\", data_batch)\n                                   ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/a601b6f6823c2dd4bc74f2a486bdae87190626f8/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live.py\", line 326, in write\n    structure = self._freeze(value, role)\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/a601b6f6823c2dd4bc74f2a486bdae87190626f8/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live.py\", line 289, in _freeze\n    items[encoded] = self._freeze(child, f\"{role}_{encoded}\")\n                     ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/a601b6f6823c2dd4bc74f2a486bdae87190626f8/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live.py\", line 299, in _freeze\n    \"items\": [self._freeze(child, f\"{role}_{index}\") for index, child in enumerate(value)],\n              ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/a601b6f6823c2dd4bc74f2a486bdae87190626f8/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live.py\", line 313, in _freeze\n    raise N3QualificationError(f\"unsupported exact payload value in {role}: {type(value)}\")\nN3QualificationError: unsupported exact payload value in exact_transformed_model_input_sequence_plan_0: <class 'cosmos_framework.data.vfm.sequence_packing.SequencePlan'>\n",
+  "wall_seconds_before_failure": 111.857821188
+}

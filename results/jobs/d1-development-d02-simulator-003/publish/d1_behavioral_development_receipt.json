@@ -1,0 +1,297 @@
+{
+  "all_simulator_children_reaped": true,
+  "block_id": "wmf_ablation_001_20260912__development__D02__D1",
+  "cell_ids": [
+    "wmf1__development__D02__D1__reflected__right",
+    "wmf1__development__D02__D1__original__left",
+    "wmf1__development__D02__D1__reflected__left",
+    "wmf1__development__D02__D1__original__right"
+  ],
+  "cell_receipts": [
+    {
+      "bytes": 70892,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/00-wmf1-development-D02-D1-reflected-right/cell_receipt.json",
+      "sha256": "225fd27f2411d0e21ceb8ef8eee8d47891f586fd5190f015550270d071b4de78"
+    },
+    {
+      "bytes": 70873,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/01-wmf1-development-D02-D1-original-left/cell_receipt.json",
+      "sha256": "0b2dfa0e7d163c9b89539289291a2eb9c959bfa5f9724d64e5df8b3377993d4c"
+    },
+    {
+      "bytes": 70878,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/02-wmf1-development-D02-D1-reflected-left/cell_receipt.json",
+      "sha256": "dc72aa1a6a08d50393f81a65e6fd7a777877b28e1448a3341abc77aa7c4c7a32"
+    },
+    {
+      "bytes": 70887,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/03-wmf1-development-D02-D1-original-right/cell_receipt.json",
+      "sha256": "2b7b7fa8fc9e2dd2cbe040727a0994f364ba75f23ad6ca63c714e6e6d1d1f15f"
+    }
+  ],
+  "claim_boundary": "This receipt counts only valid 450-action D1 development cells. The passed P00 behavioral pilot, six-request generation qualification, recorder-only qualification, and fixed observation are prerequisites and are not recounted.",
+  "completed_at_utc": "2026-09-13T11:00:12.846886Z",
+  "condition_order": [
+    "reflected-right",
+    "original-left",
+    "reflected-left",
+    "original-right"
+  ],
+  "counts": {
+    "actual_behavioral_actions": 1800,
+    "actual_behavioral_model_requests": 228,
+    "completed_valid_behavioral_cells": 4,
+    "launched_behavioral_cells": 4,
+    "new_generation_qualification_requests": 0,
+    "newly_launched_behavioral_cells": 4,
+    "planned_behavioral_cells": 4,
+    "recorder_only_episodes_counted_as_behavioral": 0,
+    "resumed_valid_behavioral_cells": 0,
+    "reused_prerequisite_generation_qualification_requests": 6,
+    "right_censored_behavioral_cells": 0,
+    "technically_invalid_behavioral_cells": 0,
+    "unrun_behavioral_cells": 0
+  },
+  "development_contract_sha256": "5964f153db83c4cd23522098f1646747d5a14c28d54b8d510089e70e4911529a",
+  "effective_model_noise_seed": 1140,
+  "environment_seed": 2026091102,
+  "exit_code": 0,
+  "failure": null,
+  "layout_pair_id": "D02",
+  "model_config": "D1",
+  "namespace": "wmf_ablation_001_20260912",
+  "new_cell_receipts": [
+    {
+      "bytes": 70892,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/00-wmf1-development-D02-D1-reflected-right/cell_receipt.json",
+      "sha256": "225fd27f2411d0e21ceb8ef8eee8d47891f586fd5190f015550270d071b4de78"
+    },
+    {
+      "bytes": 70873,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/01-wmf1-development-D02-D1-original-left/cell_receipt.json",
+      "sha256": "0b2dfa0e7d163c9b89539289291a2eb9c959bfa5f9724d64e5df8b3377993d4c"
+    },
+    {
+      "bytes": 70878,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/02-wmf1-development-D02-D1-reflected-left/cell_receipt.json",
+      "sha256": "dc72aa1a6a08d50393f81a65e6fd7a777877b28e1448a3341abc77aa7c4c7a32"
+    },
+    {
+      "bytes": 70887,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/cells/03-wmf1-development-D02-D1-original-right/cell_receipt.json",
+      "sha256": "2b7b7fa8fc9e2dd2cbe040727a0994f364ba75f23ad6ca63c714e6e6d1d1f15f"
+    }
+  ],
+  "noise_semantics": "fixed; cells and requests are not independent noise draws",
+  "p00_paired_pilot": {
+    "behavioral_actions": 1800,
+    "behavioral_cells": 4,
+    "behavioral_model_requests": 228,
+    "cell_receipts": [
+      {
+        "bytes": 66889,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-002/cells/00-wmf1-pilot-P00-D1-reflected-right/cell_receipt.json",
+        "sha256": "26cbd67d0087ed555177af6ac78fcf57c9acfcf1adccf148a61b6b8d8cefcb56"
+      },
+      {
+        "bytes": 66878,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-003/cells/01-wmf1-pilot-P00-D1-reflected-left/cell_receipt.json",
+        "sha256": "1776aff65b7a7a05fe5e80d47b8bbdfb420b30c9cbeb2fcc8990be7d1949bbf6"
+      },
+      {
+        "bytes": 66873,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-003/cells/02-wmf1-pilot-P00-D1-original-left/cell_receipt.json",
+        "sha256": "eaab2e5c7a45770cc8a4649cf254f70ebb9acbfcb9c25b5a37dbbe627087f003"
+      },
+      {
+        "bytes": 66886,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-003/cells/03-wmf1-pilot-P00-D1-original-right/cell_receipt.json",
+        "sha256": "c7b0169a79d1bd630fca880aeeb83ffe550b15d752b94db15950bc365a38128c"
+      }
+    ],
+    "generation_qualification_requests_rerun": 0,
+    "server_ready": {
+      "bytes": 4375,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-003/server_ready.json",
+      "sha256": "a260f47dd6f99f2846ef21fdf670304f3ef7ec638bf44a9dd2aa1cac021fb91d"
+    },
+    "server_receipt": {
+      "bytes": 2382,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-server-003/publish/d1_behavioral_server_receipt.json",
+      "sha256": "95ef4351ffa494194ae6d9c4525acd8191b2d35438680f9284cad798d71f3201"
+    },
+    "simulator_claim": {
+      "bytes": 917,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-003/simulator_claim.json",
+      "sha256": "a7f4e2d28a78f0fd293b8390b2baa48247c1a941cd9677d874821c15ae3ae30e"
+    },
+    "simulator_receipt": {
+      "bytes": 8596,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-simulator-003/publish/d1_behavioral_pilot_receipt.json",
+      "sha256": "20b4068ee9748daad7ae5e8350e8b7cf36d62c686af51a0d4b9653f9cecb2ab0"
+    },
+    "simulator_terminal": {
+      "bytes": 960,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-003/simulator_terminal.json",
+      "sha256": "97b759626fd9b86486063942c429e52c5f13e803078d74ad0fe1f1c77f4586a6"
+    }
+  },
+  "phase": "development",
+  "prerequisites": {
+    "accepted_gate_record_sha256": "0334154a9f791aee268567412939a4d70e8c258999c74e5fcb2ac98fe802b62c",
+    "candidate_id": "D02__candidate_00",
+    "candidate_payload_sha256": "ecd9a978c6805c829e45794febcb917cb3126c74597c6e159651fd1e26bcdeb7",
+    "capture_receipt": {
+      "bytes": 3099,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixed-observation-d02-001/publish/fixed_observation_job_receipt.json",
+      "sha256": "a700280562d3640349fe8ec5a2594decf4a7b2b9f30450c9e9af55420bb907ac"
+    },
+    "d1_fixed_observation": {
+      "bytes": 520282,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/d1_official_wire_observation.npz",
+      "sha256": "03d99a3eb49442aa65b4d032ae73d960d748f40018934624bf14711264d1d21f"
+    },
+    "d1_qualification_receipt": {
+      "bytes": 13992,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/publish/d1_qualification_job_receipt.json",
+      "sha256": "3c856549999b9145dc07c30853a4c6d2968d09eb31c2db883f5eb1655d31627b"
+    },
+    "development_gate_attempt_receipt": {
+      "bytes": 271730,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/D02/attempts/D02/D02__candidate_00/attempt_000/gate_attempt_receipt.json",
+      "sha256": "1e26ce5d70684d2f3867e1444486e87256b403fb11d34d90df8c92bdd855b3ad"
+    },
+    "development_gate_ledger": {
+      "bytes": 1076,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/D02/gate_ledger.jsonl",
+      "sha256": "7d904fff4266dd1d712ae1385689bc8f4a6ed2e1c7d1e00a61ed2a5c77b6fd36"
+    },
+    "development_gate_receipt": {
+      "bytes": 3934,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-d02-candidate-00/publish/fixture_gate_receipt.json",
+      "sha256": "e30a3dd1ad3d8621661a406a7c1d6c30034383f9b5ad6bed8a96c63015a477d6"
+    },
+    "development_pose_manifest": {
+      "bytes": 5090,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/d02_pose_manifest.json",
+      "sha256": "701c2d0acdd9ccb546673d1ae028de2838eb425ee42cd79df3cbc82829d760af"
+    },
+    "generation_qualification_requests_reused_not_rerun": 6,
+    "mapping_qualification": "The passed P00 D1 pilot authenticates all four physical forecast/action/camera mappings. This development layout additionally requires its own fixed observation.",
+    "native_timing_support": {
+      "bytes": 1148,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-003/adapter_attempt/timing_support.json",
+      "sha256": "7703f4171a3f2bb482b7b818f36ae51ad959ed4705c537d897cd59613466118a"
+    },
+    "p00_paired_pilot": {
+      "behavioral_actions": 1800,
+      "behavioral_cells": 4,
+      "behavioral_model_requests": 228,
+      "cell_receipts": [
+        {
+          "bytes": 66889,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-002/cells/00-wmf1-pilot-P00-D1-reflected-right/cell_receipt.json",
+          "sha256": "26cbd67d0087ed555177af6ac78fcf57c9acfcf1adccf148a61b6b8d8cefcb56"
+        },
+        {
+          "bytes": 66878,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-003/cells/01-wmf1-pilot-P00-D1-reflected-left/cell_receipt.json",
+          "sha256": "1776aff65b7a7a05fe5e80d47b8bbdfb420b30c9cbeb2fcc8990be7d1949bbf6"
+        },
+        {
+          "bytes": 66873,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-003/cells/02-wmf1-pilot-P00-D1-original-left/cell_receipt.json",
+          "sha256": "eaab2e5c7a45770cc8a4649cf254f70ebb9acbfcb9c25b5a37dbbe627087f003"
+        },
+        {
+          "bytes": 66886,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-003/cells/03-wmf1-pilot-P00-D1-original-right/cell_receipt.json",
+          "sha256": "c7b0169a79d1bd630fca880aeeb83ffe550b15d752b94db15950bc365a38128c"
+        }
+      ],
+      "generation_qualification_requests_rerun": 0,
+      "server_ready": {
+        "bytes": 4375,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-003/server_ready.json",
+        "sha256": "a260f47dd6f99f2846ef21fdf670304f3ef7ec638bf44a9dd2aa1cac021fb91d"
+      },
+      "server_receipt": {
+        "bytes": 2382,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-server-003/publish/d1_behavioral_server_receipt.json",
+        "sha256": "95ef4351ffa494194ae6d9c4525acd8191b2d35438680f9284cad798d71f3201"
+      },
+      "simulator_claim": {
+        "bytes": 917,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-003/simulator_claim.json",
+        "sha256": "a7f4e2d28a78f0fd293b8390b2baa48247c1a941cd9677d874821c15ae3ae30e"
+      },
+      "simulator_receipt": {
+        "bytes": 8596,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-simulator-003/publish/d1_behavioral_pilot_receipt.json",
+        "sha256": "20b4068ee9748daad7ae5e8350e8b7cf36d62c686af51a0d4b9653f9cecb2ab0"
+      },
+      "simulator_terminal": {
+        "bytes": 960,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-003/simulator_terminal.json",
+        "sha256": "97b759626fd9b86486063942c429e52c5f13e803078d74ad0fe1f1c77f4586a6"
+      }
+    },
+    "raw_capture_receipt": {
+      "bytes": 80231,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/capture_receipt.json",
+      "sha256": "7ad03352a7fbd0f5c30f425712df716733ea4d2e0306037eee14e6fe013d9c43"
+    },
+    "recorder_child_receipt": {
+      "bytes": 29276,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-003/child_qualification_receipt.json",
+      "sha256": "b25617f8d7a52bfc3d4df161d6c947ef6b73788986581f107b1c6b638c1a296e"
+    },
+    "recorder_receipt": {
+      "bytes": 4232,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/recorder-qualification-p00-003/publish/recorder_qualification_receipt.json",
+      "sha256": "0e3f02f37a2548e36ae3a45a38a1fac63c56cd8798732056f24b03d103991fde"
+    }
+  },
+  "queue_descriptor": {
+    "bytes": 2956,
+    "job_id": "d1-development-d02-simulator-003",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d02-simulator-003/descriptor.json",
+    "role": "wmf-forecast-0912-worker-00",
+    "sha256": "b1f0272a7f3baa3940d125d129e4c2732dbb127e14b4b8bf19db3ec22071835f"
+  },
+  "raw_attempt_recoverable_on_gm_pvc": true,
+  "raw_attempt_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003",
+  "resume": {
+    "bytes": 549,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/resume.json",
+    "sha256": "805e0a0a2b11b669fa8b4931a14383b06dcfa0285de72622c3391305ac57f852"
+  },
+  "resumed_cell_receipts": [],
+  "run_id": "d1-development-d02-003",
+  "schedule": {
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/25ff299ca0d2b9964eb48286990ee2301cb207b8/workshops/corl2026_world_models/execution/20260912/parallel_schedule.json",
+    "sha256": "9a4a1cce1e980a624ec4161cf4438bfa01a6681dcd8fcb6e2b01150b62409a58"
+  },
+  "schema_version": "wmf-d1-behavioral-development-simulator-job-v1",
+  "server_job_id": "d1-development-d02-server-003",
+  "server_ready": {
+    "bytes": 4954,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/coordination/d1-development-d02-003/server_ready.json",
+    "sha256": "6c939cb72a64a4cd298e07cf0d825f067d5805ead7434d88d5ea527064faae76"
+  },
+  "simulator_claim": {
+    "bytes": 912,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/coordination/d1-development-d02-003/simulator_claim.json",
+    "sha256": "6b3e4516cb1f9fc9ce2c4fbb5cb20d98f6aee7ad196bb8f5894532ed401aa57d"
+  },
+  "simulator_job_id": "d1-development-d02-simulator-003",
+  "simulator_receipt_filename": "d1_behavioral_development_receipt.json",
+  "status": "passed",
+  "study_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+  "study_id": "WMF-ABLATION-001",
+  "topology": {
+    "bytes": 438,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D02/simulator_attempts/d1-development-d02-simulator-003/topology.json",
+    "sha256": "3de213a3c087c508ae03aec04d14b1158154e9021c3f496770a5a4f263b44b1b"
+  }
+}

@@ -301,6 +301,7 @@ TECHNICAL_INVALID_REASON_CODES = {
     "request_transport_failure",
     "response_contract_invalid",
     "decoded_future_contract_missing",
+    "forecast_timing_unavailable",
     "recording_integrity_failure",
     "alignment_receipt_invalid",
     "camera_record_missing",
@@ -572,7 +573,11 @@ def _eligibility_reasons(row: Mapping[str, Any]) -> list[str]:
         reasons.append("camera_identity_mismatch")
     if not row["target_within_executed_prefix"]:
         reasons.append("target_outside_executed_prefix")
-    if row["timestamp_error_s"] > row["timestamp_tolerance_s"]:
+    if (
+        row["technical_valid"]
+        and row["target_within_executed_prefix"]
+        and row["timestamp_error_s"] > row["timestamp_tolerance_s"]
+    ):
         reasons.append("timestamp_outside_tolerance")
     return reasons
 
@@ -836,7 +841,15 @@ def _validate_request(row: Mapping[str, Any], stage: str) -> None:
             row["technical_invalid_reason"] in TECHNICAL_INVALID_REASON_CODES,
             "technical_invalid_reason is not an objective frozen reason code",
         )
-    error = require_finite(row["timestamp_error_s"], "timestamp_error_s", minimum=0)
+    timing_available = row["technical_valid"] and within_prefix
+    if timing_available:
+        error = require_finite(row["timestamp_error_s"], "timestamp_error_s", minimum=0)
+    else:
+        require(
+            row["timestamp_error_s"] is None,
+            "timestamp_error_s must be null when forecast timing is unavailable",
+        )
+        error = None
     tolerance = require_finite(row["timestamp_tolerance_s"], "timestamp_tolerance_s", minimum=0)
     require(tolerance > 0, "timestamp_tolerance_s must be positive")
     require(row["history_mode"] in {"preceding_observation", "persistence_at_initial_request"}, "history_mode is invalid")
@@ -845,7 +858,8 @@ def _validate_request(row: Mapping[str, Any], stage: str) -> None:
     else:
         require(row["request_index"] > 0, "request zero must use the persistence history fallback")
     # Evaluate once here so a malformed numeric comparison cannot be hidden.
-    _ = error <= tolerance
+    if error is not None:
+        _ = error <= tolerance
 
 
 def select_requests(

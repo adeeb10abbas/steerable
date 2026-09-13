@@ -243,7 +243,7 @@ class AnnotationWorkflowTests(unittest.TestCase):
                         "target_executed_action_offset": 8,
                         "generated_frame_index": 3,
                         "target_physical_time_s": 8 / 15,
-                        "timestamp_error_s": 0.001,
+                        "timestamp_error_s": 0.001 if request_index < 14 else None,
                         "timestamp_tolerance_s": self.alignment_contract["timestamp_tolerance_s"],
                         "history_mode": "persistence_at_initial_request" if request_index == 0 else "preceding_observation",
                         "early_horizon_supported": False,
@@ -636,6 +636,7 @@ class AnnotationWorkflowTests(unittest.TestCase):
                     "action_manifest_sha256": valid_row["action_manifest_sha256"],
                     "target_within_executed_prefix": request_index < 14,
                     "executed_prefix_actions": 32 if request_index < 14 else 2,
+                    "timestamp_error_s": 0.001 if request_index < 14 else None,
                     "history_mode": (
                         "persistence_at_initial_request"
                         if request_index == 0
@@ -674,6 +675,71 @@ class AnnotationWorkflowTests(unittest.TestCase):
         self.assertEqual(result["counts"]["zero_eligible_episodes"], 12)
         first = next(row for row in result["episodes"] if row["episode_id"] == "recording-0")
         self.assertIsNone(first["eligible_request_inclusion_probability"])
+
+    def test_timestamp_residual_exists_exactly_when_forecast_timing_is_available(self):
+        selection = workflow.select_requests(self.inventory)
+        terminal = next(
+            row for row in selection["requests"]
+            if row["source"]["request_index"] == 14
+        )
+        self.assertIsNone(terminal["source"]["timestamp_error_s"])
+        self.assertEqual(terminal["eligibility_reasons"], ["target_outside_executed_prefix"])
+        self.assertFalse(terminal["timing_camera_action_eligible"])
+        self.assertSchemaValid(self.inventory, "null residual outside executed prefix")
+
+        invented = copy.deepcopy(self.inventory)
+        outside = next(
+            row for row in invented["requests"] if row["request_index"] == 14
+        )
+        outside["timestamp_error_s"] = 0.001
+        with self.assertRaisesRegex(
+            workflow.ContractError, "must be null when forecast timing is unavailable"
+        ):
+            workflow.select_requests(invented)
+        self.assertFalse(self.schema_validator.is_valid(invented))
+
+        missing = copy.deepcopy(self.inventory)
+        within = next(
+            row for row in missing["requests"] if row["request_index"] == 0
+        )
+        within["timestamp_error_s"] = None
+        with self.assertRaisesRegex(workflow.ContractError, "timestamp_error_s must be finite"):
+            workflow.select_requests(missing)
+        self.assertFalse(self.schema_validator.is_valid(missing))
+
+        timing_unavailable = copy.deepcopy(self.inventory)
+        invalid_within = next(
+            row for row in timing_unavailable["requests"] if row["request_index"] == 1
+        )
+        invalid_within.update(
+            technical_valid=False,
+            technical_invalid_reason="forecast_timing_unavailable",
+            timestamp_error_s=None,
+        )
+        unavailable_selection = workflow.select_requests(timing_unavailable)
+        unavailable = next(
+            row for row in unavailable_selection["requests"]
+            if row["source"]["source_request_id"] == invalid_within["source_request_id"]
+        )
+        self.assertTrue(unavailable["source"]["target_within_executed_prefix"])
+        self.assertEqual(unavailable["eligibility_reasons"], ["technical_invalid"])
+        self.assertFalse(unavailable["timing_camera_action_eligible"])
+        self.assertSchemaValid(
+            timing_unavailable,
+            "null residual for a within-prefix timing-unavailable request",
+        )
+
+        invented_unavailable = copy.deepcopy(timing_unavailable)
+        invalid_within_invented = next(
+            row for row in invented_unavailable["requests"]
+            if row["source_request_id"] == invalid_within["source_request_id"]
+        )
+        invalid_within_invented["timestamp_error_s"] = 0.001
+        with self.assertRaisesRegex(
+            workflow.ContractError, "must be null when forecast timing is unavailable"
+        ):
+            workflow.select_requests(invented_unavailable)
+        self.assertFalse(self.schema_validator.is_valid(invented_unavailable))
 
     def test_selection_rejects_quality_or_visibility_fields_and_wrong_seed(self):
         inventory = copy.deepcopy(self.inventory)
@@ -717,6 +783,9 @@ class AnnotationWorkflowTests(unittest.TestCase):
             row["request_start_action_index"] = sum((32, 32, 1)[:index])
             row["action_manifest_sha256"] = roster_row["action_manifest_sha256"]
             row["target_within_executed_prefix"] = prefix >= row["target_executed_action_offset"]
+            row["timestamp_error_s"] = (
+                0.001 if row["target_within_executed_prefix"] else None
+            )
             replacement.append(row)
         censored["requests"] = [row for row in censored["requests"] if row["cell_id"] != cell_id] + replacement
         workflow.select_requests(censored)
@@ -846,6 +915,11 @@ class AnnotationWorkflowTests(unittest.TestCase):
                         "alignment_contract_sha256": contract["contract_sha256"],
                         "executed_prefix_actions": prefix,
                         "target_within_executed_prefix": prefix >= contract["target_executed_action_offset"],
+                        "timestamp_error_s": (
+                            0.001
+                            if prefix >= contract["target_executed_action_offset"]
+                            else None
+                        ),
                         "history_mode": "persistence_at_initial_request" if index == 0 else "preceding_observation",
                     }
                 )

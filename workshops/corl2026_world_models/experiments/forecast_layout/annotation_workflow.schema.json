@@ -95,7 +95,7 @@
         "alignment_contract_sha256": {"$ref": "#/$defs/sha256"},
         "technical_valid": {"type": "boolean"},
         "technical_invalid_reason": {
-          "enum": [null, "request_transport_failure", "response_contract_invalid", "decoded_future_contract_missing", "recording_integrity_failure", "alignment_receipt_invalid", "camera_record_missing", "executed_prefix_missing", "safety_abort_before_target"]
+          "enum": [null, "request_transport_failure", "response_contract_invalid", "decoded_future_contract_missing", "forecast_timing_unavailable", "recording_integrity_failure", "alignment_receipt_invalid", "camera_record_missing", "executed_prefix_missing", "safety_abort_before_target"]
         },
         "camera_identity_match": {"type": "boolean"},
         "target_within_executed_prefix": {"type": "boolean"},
@@ -103,7 +103,7 @@
         "target_executed_action_offset": {"type": "integer", "minimum": 1},
         "generated_frame_index": {"type": "integer", "minimum": 0},
         "target_physical_time_s": {"type": "number", "exclusiveMinimum": 0},
-        "timestamp_error_s": {"type": "number", "minimum": 0},
+        "timestamp_error_s": {"type": ["number", "null"], "minimum": 0},
         "timestamp_tolerance_s": {"type": "number", "exclusiveMinimum": 0},
         "history_mode": {"enum": ["preceding_observation", "persistence_at_initial_request"]},
         "early_horizon_supported": {"type": "boolean"},
@@ -120,6 +120,17 @@
           "if": {"properties": {"request_index": {"const": 0}}, "required": ["request_index"]},
           "then": {"properties": {"history_mode": {"const": "persistence_at_initial_request"}}},
           "else": {"properties": {"history_mode": {"const": "preceding_observation"}}}
+        },
+        {
+          "if": {
+            "properties": {
+              "technical_valid": {"const": true},
+              "target_within_executed_prefix": {"const": true}
+            },
+            "required": ["technical_valid", "target_within_executed_prefix"]
+          },
+          "then": {"properties": {"timestamp_error_s": {"type": "number", "minimum": 0}}},
+          "else": {"properties": {"timestamp_error_s": {"type": "null"}}}
         }
       ]
     },

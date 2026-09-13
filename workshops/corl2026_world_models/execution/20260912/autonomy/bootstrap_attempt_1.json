@@ -1,0 +1,272 @@
+{
+  "observed_at_utc": "2026-09-13T01:51:46.998348+00:00",
+  "attempt": 1,
+  "scientific_jobs_released": 0,
+  "cause": "OCI runtime could not create/chdir /data/users before container startup; same image/UID/PVC bootcheck passed with workingDir /home/ali and can read bootstrap and use git.",
+  "resolution": "Retain this failed attempt. Recreate only task-owned empty Jobs using cluster_bootstrap_v2.json with workingDir /home/ali.",
+  "pods": [
+    {
+      "pod": "wmf-forecast-0912-bootcheck",
+      "uid": "66890b74-22ff-46bc-936e-1dca61272546",
+      "node": "dcwipphhgc199.edc.nam.gm.com",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "coordinator",
+          "restart_count": 0,
+          "state": {
+            "running": {
+              "startedAt": "2026-09-13T01:50:34Z"
+            }
+          },
+          "last_state": {}
+        }
+      ]
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-09-r7zh6",
+      "uid": "33670e2f-2f6e-4f6c-849a-779c11977de3",
+      "node": "dcwipphhgc226.edc.nam.gm.com",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "worker",
+          "restart_count": 2,
+          "state": {
+            "waiting": {
+              "message": "back-off 20s restarting failed container=worker pod=wmf-forecast-0912-worker-09-r7zh6_211247-prod(33670e2f-2f6e-4f6c-849a-779c11977de3)",
+              "reason": "CrashLoopBackOff"
+            }
+          },
+          "last_state": {
+            "terminated": {
+              "containerID": "containerd://5b0955d75978a792716d065dd2cc80b9d4aea89637666bd91fd3de683c1deffb",
+              "exitCode": 128,
+              "finishedAt": "2026-09-13T01:51:06Z",
+              "message": "failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: mkdir /data/users: permission denied: unknown",
+              "reason": "StartError",
+              "startedAt": "1970-01-01T00:00:00Z"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-10-mjkrv",
+      "uid": "ebf8e436-b92f-4070-b4d5-0a0b25e005da",
+      "node": "dcwipphhgc226.edc.nam.gm.com",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "worker",
+          "restart_count": 2,
+          "state": {
+            "waiting": {
+              "message": "back-off 20s restarting failed container=worker pod=wmf-forecast-0912-worker-10-mjkrv_211247-prod(ebf8e436-b92f-4070-b4d5-0a0b25e005da)",
+              "reason": "CrashLoopBackOff"
+            }
+          },
+          "last_state": {
+            "terminated": {
+              "containerID": "containerd://bd3b13fc573fffc31f266db7815998377c28e74493b52d5d2f67e692367979e3",
+              "exitCode": 128,
+              "finishedAt": "2026-09-13T01:51:08Z",
+              "message": "failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: mkdir /data/users: permission denied: unknown",
+              "reason": "StartError",
+              "startedAt": "1970-01-01T00:00:00Z"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-11-ltl6l",
+      "uid": "e0c983fa-8726-4e0d-be06-ce15c16f0d65",
+      "node": "dcwipphhgc226.edc.nam.gm.com",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "worker",
+          "restart_count": 2,
+          "state": {
+            "waiting": {
+              "message": "back-off 20s restarting failed container=worker pod=wmf-forecast-0912-worker-11-ltl6l_211247-prod(e0c983fa-8726-4e0d-be06-ce15c16f0d65)",
+              "reason": "CrashLoopBackOff"
+            }
+          },
+          "last_state": {
+            "terminated": {
+              "containerID": "containerd://3227c6c6d58ecd8814010aec065c96fa73523cb12cb5cbace248361fa67c3c95",
+              "exitCode": 128,
+              "finishedAt": "2026-09-13T01:51:08Z",
+              "message": "failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: mkdir /data/users: permission denied: unknown",
+              "reason": "StartError",
+              "startedAt": "1970-01-01T00:00:00Z"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-12-rnjhb",
+      "uid": "e2435335-829c-419e-890a-4bb7bfdec754",
+      "node": "dcwipphhgc226.edc.nam.gm.com",
+      "phase": "Running",
+      "containers": [
+        {
+          "name": "worker",
+          "restart_count": 1,
+          "state": {
+            "waiting": {
+              "message": "back-off 10s restarting failed container=worker pod=wmf-forecast-0912-worker-12-rnjhb_211247-prod(e2435335-829c-419e-890a-4bb7bfdec754)",
+              "reason": "CrashLoopBackOff"
+            }
+          },
+          "last_state": {
+            "terminated": {
+              "containerID": "containerd://25d539960a0f4a95740722c956e4fe07e34b8980886f8710b3c305f6dd4f3e18",
+              "exitCode": 128,
+              "finishedAt": "2026-09-13T01:51:28Z",
+              "message": "failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: mkdir /data/users: permission denied: unknown",
+              "reason": "StartError",
+              "startedAt": "1970-01-01T00:00:00Z"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-13-4zdnb",
+      "uid": "5888caf3-b226-4e46-a9d1-dab3cf16084d",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-14-wsnpp",
+      "uid": "e5aabf6e-acc8-49b1-bf68-7b0f09f6fb0e",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-15-h9xmx",
+      "uid": "1964a3ad-609b-4391-86e9-742f7c5518d7",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-16-5hckw",
+      "uid": "856f3f77-3e14-4033-ad8e-e3a827574ceb",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-17-6phpg",
+      "uid": "9c46e07a-e5b9-407b-85a6-1255ed30b704",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-18-z9g4l",
+      "uid": "417218f0-5766-4f90-9482-acf6ffa9c7ba",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-19-9db6f",
+      "uid": "ecfb3f28-2a2b-4939-b5fa-7e65ef57906e",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-20-z7dfx",
+      "uid": "12257d5e-b0c2-4140-88fa-73cc63ad1c8c",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-21-jl66h",
+      "uid": "eb7fc2c6-e762-4466-b383-b1d4ca31ded5",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-22-8b5nr",
+      "uid": "709a4f3b-c0ba-41ea-840a-624f3d9d7f8f",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-23-8lw54",
+      "uid": "c92fb421-713c-4a3a-a8f8-34d427083ae9",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-24-n927r",
+      "uid": "3b6294c6-8b49-4b63-8c7c-5b9f5872ba93",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-25-dscfv",
+      "uid": "97d74243-4b92-482e-b926-0413c5c24546",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-26-4fggm",
+      "uid": "7292fa79-621f-472f-a825-6be9b16fa30a",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-27-jkcw9",
+      "uid": "8e19c29a-4ffe-41ab-ba27-8d36ad8a1329",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-28-t7mz8",
+      "uid": "35e9821c-247a-4575-9b8b-34fc2e6678f9",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-29-gqld4",
+      "uid": "48391f8b-d0b4-4a13-959a-862393d247cd",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-30-h2fnc",
+      "uid": "f55c932f-911f-4fd0-8340-ce53ca232f31",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-31-9nj74",
+      "uid": "0928bd55-7c27-4b53-a0a7-0d7822111c4d",
+      "node": null,
+      "phase": "Pending",
+      "containers": []
+    }
+  ]
+}

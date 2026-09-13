@@ -77,7 +77,7 @@ def build_manifest(bootstrap_sha256, worker_count=32, admission_deadline_unix=No
                                 'seccompProfile':{'type':'RuntimeDefault'}},
              'imagePullSecrets':[{'name':'artifactory-ci-pull-secret'}],
              'containers':[{'name':role,'image':IMAGE,'imagePullPolicy':'IfNotPresent',
-                'command':['/usr/bin/python3','-c',HASH_CHECK],'args':args,'workingDir':SOURCE,
+                'command':['/usr/bin/python3','-c',HASH_CHECK],'args':args,'workingDir':'/home/ali',
                 'resources':resources,'env':[{'name':key,'value':value} for key,value in environment.items()],
                 'securityContext':{'allowPrivilegeEscalation':False,'capabilities':{'drop':['ALL']},
                     'readOnlyRootFilesystem':False,'runAsGroup':2518800,'runAsUser':816149040,'runAsNonRoot':True},

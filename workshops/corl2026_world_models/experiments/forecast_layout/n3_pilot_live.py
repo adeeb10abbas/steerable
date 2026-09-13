@@ -2081,6 +2081,7 @@ def build_parser() -> argparse.ArgumentParser:
     queue.add_argument("--cell-timeout", type=float, default=10800.0)
 
     server = subparsers.add_parser("server", help="run the official instrumented N3 server")
+    server.set_defaults(start_cell_index=0)
     server.add_argument("--source-root", type=Path, required=True)
     server.add_argument("--study-commit", required=True)
     server.add_argument("--attempt-root", type=Path, required=True)

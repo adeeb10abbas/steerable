@@ -1,0 +1,123 @@
+{
+  "schema_version": "wmf-development-resource-qualification-contract-v1",
+  "study_id": "WMF-ABLATION-001",
+  "status": "implemented_pending_detached_runtime",
+  "purpose": "Measure a conservative GM machine-resource envelope without rerunning or relabeling any behavioral cell.",
+  "probe_scope": {
+    "models": [
+      "N3",
+      "D1"
+    ],
+    "fixed_input_layout_pair_id": "P00",
+    "new_nonbehavioral_generation_requests_per_model": 6,
+    "new_nonbehavioral_generation_requests_total": 12,
+    "new_zero_behavioral_action_simulator_resets_per_model": 1,
+    "robot_episodes": 0,
+    "behavioral_cells": 0,
+    "behavioral_actions": 0,
+    "labels": 0,
+    "retained_behavioral_cells_rerun": 0,
+    "retained_behavioral_cells_relabelled": 0
+  },
+  "runtime": {
+    "nvidia_smi_sample_interval_seconds": 0.5,
+    "maximum_accepted_sample_gap_seconds": 2.5,
+    "minimum_inference_phase_samples": 2,
+    "minimum_simultaneous_phase_samples": 2,
+    "simulator_hold_timeout_seconds": 21600,
+    "peer_start_timeout_seconds": 7200,
+    "peer_failure_poll_interval_seconds": 0.25,
+    "child_termination_grace_seconds": 15,
+    "required_gpu_name": "NVIDIA B200",
+    "headroom_multiplier": 1.1,
+    "n3_effective_seed": 2026091000,
+    "d1_effective_noise_semantics": "fixed official value 1140; requests are not independent noise draws"
+  },
+  "measured_fields": {
+    "whole_device_peak": "maximum nvidia-smi memory.used on each assigned GPU, including all task-owned compute processes and driver-visible device overhead",
+    "whole_process_peak": "maximum sum of nvidia-smi compute-app used_gpu_memory on each assigned GPU",
+    "model_load_peak": "whole-device and whole-process peaks during the exact model-load interval",
+    "model_inference_peak": "whole-device and whole-process peaks while the exact six-request fixed-input protocol runs",
+    "simulator_peak": "whole-device and whole-process peaks from simulator launch through a settled zero-behavioral-action hold",
+    "simultaneous_topology_peak": "per-device peaks while model runtime and settled simulator are both live; N3 also reports the co-sampled sum across its two visible devices",
+    "allocator_peaks": "retained exact-runtime PyTorch allocator peaks, kept distinct from nvidia-smi measurements",
+    "topology": "GPU UUID, name, total bytes, logical assignment, worker identity, pod UID, process ancestry, and verified overlap interval"
+  },
+  "failure_accounting": {
+    "child_launch_count_authority": "immutable signed and fsynced launch-attempt/outcome receipts around each process-spawn call; only an authenticated successful outcome counts one, an authenticated failed outcome counts zero, and an attempt without an outcome is null",
+    "simulator_count_authority": "fsynced hash-chained before/after events around the physical reset and every settling/stability hold; unmatched starts are reported as null with lower and upper bounds",
+    "d1_peer_failure_monitor": "the D1 probe is a directly owned child in the queue wrapper process group, polled against the signed simulator-failed receipt every 0.25 seconds and terminated then reaped on failure",
+    "partial_request_count_authority": "authenticated N3 event-journal starts/completions or validated D1 server request directories/completion receipts after owned children are stopped; invalid evidence yields null",
+    "behavioral_effect": "none; lifecycle accounting creates no model request, robot episode, behavioral action, or label"
+  },
+  "topology_freeze_policy": {
+    "global_max_parallel_blocks": 1,
+    "cross_model_simultaneous_blocks_allowed": false,
+    "max_parallel_blocks_by_model": {
+      "N3": 1,
+      "D1": 1
+    },
+    "N3": {
+      "model_worker_role": "n3",
+      "model_worker_id": "wmf-forecast-0912-worker-n3-00",
+      "gpu_count": 2,
+      "logical_gpu_0": "N3 exact fixed-input model runtime",
+      "logical_gpu_1": "RoboLab settled zero-behavioral-action simulator"
+    },
+    "D1": {
+      "model_worker_role": "d1",
+      "model_worker_id": "wmf-forecast-0912-worker-d1-00",
+      "model_gpu_count": 2,
+      "simulator_worker_role": "wmf-forecast-0912-worker-00",
+      "simulator_worker_id": "wmf-forecast-0912-worker-00",
+      "simulator_gpu_count": 1,
+      "coordination": "hash-bound shared-PVC readiness, completion, and fail-closed peer-lifecycle receipts",
+      "peer_failure_markers": "simulator_failed, or technical-invalid model_started plus model_done; failure markers have no pass or release authority"
+    }
+  },
+  "prerequisites": {
+    "development_resource_audit": {
+      "job_id": "development-resource-compiler-formal-001",
+      "schema_version": "wmf-development-resource-queue-job-v1",
+      "required_status": "passed_with_declared_missingness",
+      "required_decision": "no_go_resource_gate_incomplete"
+    },
+    "n3_fixed_observation": {
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/raw/n3_live_input/observation_manifest.json",
+      "sha256": "ab4dc15aa64722f37cf42b0f9ef813e0eb4279245ce7aba1698f96f3f2e096a9"
+    },
+    "n3_prior_generation_job": {
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/publish/timing_job_receipt.json",
+      "sha256": "1ead7d0c58b8abd7c27361ef37c42a4e131354212c490cd019f45918f150ea2a"
+    },
+    "d1_fixed_capture": {
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/capture_receipt.json",
+      "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+    },
+    "d1_prior_generation_job": {
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/publish/d1_qualification_job_receipt.json",
+      "sha256": "3c856549999b9145dc07c30853a4c6d2968d09eb31c2db883f5eb1655d31627b"
+    }
+  },
+  "pinned_workshop_dependencies": {
+    "fixed_observation_job.py": "0ddc019a811ae0379a2078ade168cf61844aa45f6c4a1f52aa25ee1f7b146b75",
+    "n3_first_live.py": "9655047f322e7488d3bbf27839cf5ae6bf0ea91c351bbfe4ec45950883c42f8d",
+    "n3_first_live_contract.json": "a9503011b8f7236dd3e8eb9c2e4328f2ab95021b4f72e5900c01b51cee743e61",
+    "d1_qualification_job.py": "8151557e7e17c58695b0e48aaa3fbe1c6a127d3929620fb39695749cb89b544c",
+    "d1_instrumented_server.py": "c3f4dfbaa61d92f69c20e22d3fba6a6b583718a1fd2bc3d094123d4bdc3c0664",
+    "d1_probe.py": "7d01b1e0a457a607ebac1ae453210fab6f0da4f0e1bdc87ba5d49e3733fe42b1",
+    "d1_probe_plan.json": "bdd561ada0408fb1068c227385f4fdb68063f2a8ab338be45b95245a962b20ff",
+    "d1_identity_contract.json": "6c11a3158c944f0deb50116b071511c6bee267e890619746f993a8e8d043cc0b",
+    "fixture_tasks.py": "e3891120e73bd0cd313097b0c6c6d0385cdfa4f240709a3320bbbf2716f8e5ba",
+    "robolab_fixture_gate_adapter.py": "28cd6105010892dcabe2f4bfd61277f1e7cf41d0a42086f4879087f4d3268b23",
+    "task_files/original_left.py": "0a808af8a0e51a38689cd70db7154fa5b752a4c717170ded0a8c14a6bcb97c55"
+  },
+  "release_boundary": {
+    "machine_resource_gate_may_complete": true,
+    "safe_to_release_confirmation": false,
+    "annotation_time_required_from_completed_human_workflow": true,
+    "annotation_time_may_be_synthesized": false,
+    "confirmation_jobs_emitted": false,
+    "claim": "A passing probe can freeze only the conservative serial GM machine envelope. It is not a behavioral cell, forecast-accuracy result, annotation result, or evidence for higher concurrency."
+  }
+}

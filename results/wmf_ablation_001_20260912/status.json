@@ -79,7 +79,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "593c68bdb290eb598a98fdd8f6ef3a1ea6c143f4",
-    "control_generation": 320,
+    "control_generation": 321,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -826,9 +826,9 @@
     {
       "descriptor_sha256": "4c2ed3166b4b92e77d8b7578c166226e6114dec6977b0993707213786924fd19",
       "heartbeat": {
-        "at": "2026-09-13T06:33:37.738125+00:00",
+        "at": "2026-09-13T06:34:19.904935+00:00",
         "child_pid": 213,
-        "unix": 1789281217.73817,
+        "unix": 1789281259.904965,
         "worker_id": "wmf-forecast-0912-worker-05",
         "worker_pid": 1
       },
@@ -838,17 +838,29 @@
       "worker_id": "wmf-forecast-0912-worker-05"
     },
     {
+      "child_pid": 78,
+      "child_reaped": true,
       "descriptor_sha256": "3808996a654ad70c13de6e15dd91f56cb4cf3c9467e27e9899355a74740220d7",
-      "heartbeat": {
-        "at": "2026-09-13T06:33:37.572087+00:00",
-        "child_pid": 78,
-        "unix": 1789281217.5721047,
-        "worker_id": "wmf-forecast-0912-worker-06",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T06:34:17.759853+00:00",
+      "error_type": null,
       "job_id": "fixed-observation-d02-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"behavioral_action_count\": 0, \"candidate_id\": \"D02__candidate_00\", \"child_exit_code\": 0, \"child_logs\": {\"stderr\": {\"bytes\": 551, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/child.stderr.log\", \"sha256\": \"a202adacfd05a9416988d2bef669539069cfd55c27f07636c5bc3a33c81596ad\"}, \"stdout\": {\"bytes\": 20185, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/child.stdout.log\", \"sha256\": \"2c564d07b7b0e22bc4e85fec8b95a8243c92dae2ffd927a29f9775ae34de486d\"}}, \"child_started\": true, \"claim_boundary\": \"One current D02 physical observation and exact preprocessing only; no model request or behavioral episode.\", \"environment_seed\": 2026091102, \"exit_code\": 0, \"finished_at_utc\": \"2026-09-13T06:34:16.805956Z\", \"gate_receipt_sha256\": \"e30a3dd1ad3d8621661a406a7c1d6c30034383f9b5ad6bed8a96c63015a477d6\", \"gpu_identity\": {\"driver_version\": \"580.95.05\", \"index\": \"0\", \"name\": \"NVIDIA B200\", \"preexisting_compute_process_count\": 0, \"uuid\": \"GPU-1bb3e2e7-6bf0-2e3c-7489-8a03b2438515\"}, \"job_id\": \"fixed-observation-d02-001\", \"layout_pair_id\": \"D02\", \"model_fixtures\": {\"D1\": {\"array_keys\": [\"observation/exterior_image_0_left\", \"observation/exterior_image_1_left\", \"observation/wrist_image_left\", \"observation/joint_position\", \"observation/cartesian_position\", \"observation/gripper_position\"], \"fixture\": {\"bytes\": 520282, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/d1_official_wire_observation.npz\", \"sha256\": \"03d99a3eb49442aa65b4d032ae73d960d748f40018934624bf14711264d1d21f\"}, \"interface\": \"official conditional DreamZero six-array request fixture\"}, \"N3\": {\"array_keys\": [\"observation/image\", \"observation/joint_position\", \"observation/gripper_position\"], \"fixture\": {\"bytes\": 1037692, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/n3_official_wire_observation.npz\", \"sha256\": \"3bef17d2840102b2e9a9aad65d6af6e660a98798248ebdd7c7a81feddf29f7ce\"}, \"interface\": \"official packed observation/image plus joint/gripper arrays\"}}, \"model_request_count\": 0, \"pose_manifest_sha256\": \"701c2d0acdd9ccb546673d1ae028de2838eb425ee42cd79df3cbc82829d760af\", \"raw_capture_receipt\": {\"bytes\": 80231, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/capture_receipt.json\", \"sha256\": \"7ad03352a7fbd0f5c30f425712df716733ea4d2e0306037eee14e6fe013d9c43\"}, \"schema_version\": \"wmf-forecast-layout-fixed-observation-job-v1\", \"status\": \"passed\", \"study_commit\": \"148b0bad38382b32667d7cf2484773c11fa744ad\", \"study_namespace\": \"wmf_ablation_001_20260912\"}\n"
+      },
+      "returncode": 0,
       "source_commit": "148b0bad38382b32667d7cf2484773c11fa744ad",
-      "status": "claimed",
+      "started_at": "2026-09-13T06:31:54.133435+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 2743,
+        "sha256": "accc6831889695babf96c46ee97712069fc804a7d1c91a75831acf0996013aca"
+      },
+      "wall_seconds": 143.62662794697098,
       "worker_id": "wmf-forecast-0912-worker-06"
     },
     {

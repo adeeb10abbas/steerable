@@ -1,0 +1,890 @@
+{
+  "at_utc": "2026-09-13T04:24:08.150955+00:00",
+  "jobs": {
+    "n3-p00-pilot-003": {
+      "heartbeat.json": {
+        "at": "2026-09-13T04:18:03.506672+00:00",
+        "child_pid": 243,
+        "unix": 1789273083.5066898,
+        "worker_id": "wmf-forecast-0912-worker-n3-00",
+        "worker_pid": 1
+      },
+      "result.json": {
+        "argv": [
+          "/usr/bin/python3",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/experiments/forecast_layout/n3_pilot_live.py",
+          "queue",
+          "--source-root",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51",
+          "--study-commit",
+          "95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51",
+          "--job-dir",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-p00-pilot-003",
+          "--job-id",
+          "n3-p00-pilot-003",
+          "--gate-receipt",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-p00-candidate-01-r2/publish/fixture_gate_receipt.json",
+          "--gate-receipt-sha256",
+          "9611b5bd1fee98ebc7f480e7044a871e54894bbb63ce2e91966ca46d96a6adbf",
+          "--pose-manifest",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/p00_pose_manifest.json",
+          "--pose-manifest-sha256",
+          "c597bbafdaab3155b35945f8e6130e599fa3c8dc1c9d83f247611aee2bbd0954",
+          "--capture-receipt",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/capture_receipt.json",
+          "--capture-receipt-sha256",
+          "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663",
+          "--recorder-receipt",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/recorder-qualification-p00-003/publish/recorder_qualification_receipt.json",
+          "--recorder-receipt-sha256",
+          "0e3f02f37a2548e36ae3a45a38a1fac63c56cd8798732056f24b03d103991fde",
+          "--n3-qualification-receipt",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-first-live-002/raw/n3_qualification.json",
+          "--n3-qualification-receipt-sha256",
+          "6dc6519f45e4974e88851137e30f4199c0d96e374216694c72a8924334d91a96",
+          "--port",
+          "18011"
+        ],
+        "child_pid": 243,
+        "child_reaped": true,
+        "descriptor_sha256": "ca630a3943b82b4798c9d2cb225d1bf7c5ae624fa194ee29408838955a08c304",
+        "ended_at": "2026-09-13T04:18:03.515103+00:00",
+        "error_type": null,
+        "job_dir": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-p00-pilot-003",
+        "job_id": "n3-p00-pilot-003",
+        "namespace": "wmf_ablation_001_20260912",
+        "returncode": 1,
+        "schema_version": "wmf-cluster-result-v1",
+        "source_commit": "95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51",
+        "started_at": "2026-09-13T04:14:32.675868+00:00",
+        "status": "failed",
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 600,
+          "sha256": "5912d86a00cab81e1aa6728f8aab2a4a605d18225fedc04f2886a3c970dbf8d0"
+        },
+        "wall_seconds": 210.83951056498336,
+        "worker_id": "wmf-forecast-0912-worker-n3-00"
+      },
+      "receipts": {
+        "n3_behavioral_pilot_receipt.json": {
+          "block_id": "wmf_ablation_001_20260912__pilot__P00__N3",
+          "cell_ids": [
+            "wmf1__pilot__P00__N3__reflected__right",
+            "wmf1__pilot__P00__N3__reflected__left",
+            "wmf1__pilot__P00__N3__original__left",
+            "wmf1__pilot__P00__N3__original__right"
+          ],
+          "cell_receipts": [],
+          "claim_boundary": "This receipt counts only valid 450-action N3 behavioral cells. The reused six-request generation qualification and recorder-only qualification are explicitly nonbehavioral.",
+          "completed_at_utc": "2026-09-13T04:18:02.276318Z",
+          "condition_order": [
+            "reflected-right",
+            "reflected-left",
+            "original-left",
+            "original-right"
+          ],
+          "counts": {
+            "actual_behavioral_actions": 0,
+            "actual_behavioral_model_requests": 1,
+            "completed_valid_behavioral_cells": 0,
+            "launched_behavioral_cells": 1,
+            "new_generation_qualification_requests": 0,
+            "planned_behavioral_cells": 4,
+            "recorder_only_episodes_counted_as_behavioral": 0,
+            "reused_prerequisite_generation_qualification_requests": 6,
+            "right_censored_behavioral_cells": 0,
+            "technically_invalid_behavioral_cells": 1,
+            "unrun_behavioral_cells": 3
+          },
+          "effective_seed": 2026091000,
+          "exit_code": 1,
+          "failure": {
+            "detail": "cell_receipt_unreadable: /data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/N3/P00/n3-p00-pilot-003/cells/00-wmf1-pilot-P00-N3-reflected-right/cell_receipt.json",
+            "error_type": "N3BehavioralPilotError",
+            "reason": "cell_receipt_unreadable"
+          },
+          "layout_pair_id": "P00",
+          "model_config": "N3",
+          "namespace": "wmf_ablation_001_20260912",
+          "phase": "pilot",
+          "prerequisites": {
+            "accepted_gate_record_sha256": "9e96cf0ecbdfe79c05d37fd1f89c75b8aa851068163153b3909e7888956f0683",
+            "candidate_id": "P00__candidate_01",
+            "candidate_payload_sha256": "4814457b47f5e703fc49faff10660cbf1f5143f8e6a59299c3c0c7d5a9de24a0",
+            "capture_receipt": {
+              "bytes": 80178,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/capture_receipt.json",
+              "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+            },
+            "gate_receipt": {
+              "bytes": 3944,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-p00-candidate-01-r2/publish/fixture_gate_receipt.json",
+              "sha256": "9611b5bd1fee98ebc7f480e7044a871e54894bbb63ce2e91966ca46d96a6adbf"
+            },
+            "generation_qualification_requests_reused_not_rerun": 6,
+            "n3_qualification_receipt": {
+              "bytes": 39813,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-first-live-002/raw/n3_qualification.json",
+              "sha256": "6dc6519f45e4974e88851137e30f4199c0d96e374216694c72a8924334d91a96"
+            },
+            "native_timing_support": {
+              "bytes": 1148,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-003/adapter_attempt/timing_support.json",
+              "sha256": "7703f4171a3f2bb482b7b818f36ae51ad959ed4705c537d897cd59613466118a"
+            },
+            "pose_manifest": {
+              "bytes": 5150,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/p00_pose_manifest.json",
+              "sha256": "c597bbafdaab3155b35945f8e6130e599fa3c8dc1c9d83f247611aee2bbd0954"
+            },
+            "recorder_child_receipt": {
+              "bytes": 29276,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-003/child_qualification_receipt.json",
+              "sha256": "b25617f8d7a52bfc3d4df161d6c947ef6b73788986581f107b1c6b638c1a296e"
+            },
+            "recorder_receipt": {
+              "bytes": 4232,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/recorder-qualification-p00-003/publish/recorder_qualification_receipt.json",
+              "sha256": "0e3f02f37a2548e36ae3a45a38a1fac63c56cd8798732056f24b03d103991fde"
+            }
+          },
+          "queue_descriptor": {
+            "bytes": 1943,
+            "job_id": "n3-p00-pilot-003",
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-p00-pilot-003/descriptor.json",
+            "role": "n3",
+            "sha256": "ca630a3943b82b4798c9d2cb225d1bf7c5ae624fa194ee29408838955a08c304"
+          },
+          "raw_attempt_recoverable_on_gm_pvc": true,
+          "raw_attempt_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/N3/P00/n3-p00-pilot-003",
+          "schedule": {
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/execution/20260912/parallel_schedule.json",
+            "sha256": "9a4a1cce1e980a624ec4161cf4438bfa01a6681dcd8fcb6e2b01150b62409a58"
+          },
+          "schema_version": "wmf-n3-behavioral-pilot-job-v1",
+          "server_exit": {
+            "child_reaped": true,
+            "ended_at_utc": "2026-09-13T04:18:02.161319Z",
+            "returncode": -15,
+            "schema_version": "wmf-n3-behavioral-server-exit-v1",
+            "terminated_by_queue_supervisor": true
+          },
+          "server_ready": {
+            "bytes": 3671,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/N3/P00/n3-p00-pilot-003/server/ready.json",
+            "sha256": "99f0590f42ed29f1a564fb0343050aef5ac76dd06f85de27a3be997979bc47da"
+          },
+          "source_commit": "95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51",
+          "status": "technical_failure",
+          "study_id": "WMF-ABLATION-001",
+          "topology": {
+            "bytes": 1223,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/N3/P00/n3-p00-pilot-003/topology.json",
+            "sha256": "ffd3e4ec5159610649ca1c19655919db136b22a6c1c83a874998bbd5be56b737"
+          }
+        }
+      }
+    },
+    "n3-p00-pilot-004": {
+      "heartbeat.json": {
+        "at": "2026-09-13T04:24:07.639895+00:00",
+        "child_pid": 1967,
+        "unix": 1789273447.6399317,
+        "worker_id": "wmf-forecast-0912-worker-n3-00",
+        "worker_pid": 1
+      },
+      "result.json": null,
+      "receipts": {}
+    },
+    "d1-first-live-005": {
+      "heartbeat.json": {
+        "at": "2026-09-13T04:18:11.588576+00:00",
+        "child_pid": 2845,
+        "unix": 1789273091.5886064,
+        "worker_id": "wmf-forecast-0912-worker-d1-00",
+        "worker_pid": 1
+      },
+      "result.json": {
+        "argv": [
+          "/usr/bin/python3",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/031b8c4dcddac7d80e1d056db5a370c3aa872ab1/workshops/corl2026_world_models/experiments/forecast_layout/d1_qualification_job.py",
+          "--source-root",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/031b8c4dcddac7d80e1d056db5a370c3aa872ab1",
+          "--job-dir",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005",
+          "--fixture",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/d1_official_wire_observation.npz",
+          "--fixture-sha256",
+          "4545fdf3b335e10b35f9eb4bc038db07480518c9f1672b6ab76231d37367d735",
+          "--capture-manifest",
+          "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/capture_receipt.json",
+          "--capture-manifest-sha256",
+          "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663",
+          "--port",
+          "18021",
+          "--readiness-timeout-seconds",
+          "7200",
+          "--probe-timeout-seconds",
+          "43200",
+          "--server-group-timeout-seconds",
+          "50000",
+          "--terminate-grace-seconds",
+          "5"
+        ],
+        "child_pid": 2845,
+        "child_reaped": true,
+        "descriptor_sha256": "7716dab6102cab60f09a9dbc0846f52ec052d9ef31c0ea99ba971fdf59346eaf",
+        "ended_at": "2026-09-13T04:18:11.597884+00:00",
+        "error_type": null,
+        "job_dir": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005",
+        "job_id": "d1-first-live-005",
+        "namespace": "wmf_ablation_001_20260912",
+        "returncode": 0,
+        "schema_version": "wmf-cluster-result-v1",
+        "source_commit": "031b8c4dcddac7d80e1d056db5a370c3aa872ab1",
+        "started_at": "2026-09-13T04:13:07.406172+00:00",
+        "status": "succeeded",
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 154,
+          "sha256": "78a4f4a6be5851a0a646e3ad7d8722c279a343c27b43fdac52e84699bd030623"
+        },
+        "wall_seconds": 304.19194700801745,
+        "worker_id": "wmf-forecast-0912-worker-d1-00"
+      },
+      "receipts": {
+        "d1_qualification_job_receipt.json": {
+          "behavioral_episode_count": 0,
+          "capture_manifest": {
+            "accepted_gate_record_sha256": "9e96cf0ecbdfe79c05d37fd1f89c75b8aa851068163153b3909e7888956f0683",
+            "artifact_identities": {
+              "D1": {
+                "bytes": 520282,
+                "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/d1_official_wire_observation.npz",
+                "sha256": "4545fdf3b335e10b35f9eb4bc038db07480518c9f1672b6ab76231d37367d735"
+              },
+              "N3": {
+                "bytes": 1037692,
+                "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/n3_official_wire_observation.npz",
+                "sha256": "32ced616cb872d69abf7f69705b09e5529b346b7664b32cec51b250be3bffd94"
+              },
+              "preprocessing_intermediates": {
+                "bytes": 10371122,
+                "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/preprocessing_intermediates.npz",
+                "sha256": "cafbff70da83bd72765f2e88ede758eb43b8887f7c97479b440046fdd5d9dd2e"
+              },
+              "raw_settled_observation": {
+                "bytes": 11062100,
+                "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/raw_settled_observation.npz",
+                "sha256": "2f1c457d418ef8d23d35ef688ac9835f9af133979543cb42b04dce5e25f8165f"
+              },
+              "simulator_state": {
+                "bytes": 4094,
+                "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/simulator_state.npz",
+                "sha256": "8db6bbe778738febfdc85c9f08047b9bbf8acacb961999fa9595304db230db4f"
+              }
+            },
+            "camera_capture_time_ns": {
+              "head_camera": 5000009537,
+              "over_shoulder_left_camera": 5000009537,
+              "over_shoulder_right_camera": 5000009537,
+              "wrist_cam": 5000009537
+            },
+            "camera_frame_ids": {
+              "head_camera": "rgb-sha256:20806aa77c5cffcb0eff9c7d76e17362794ecd5a49c9e5f70772a933f749ee9c",
+              "over_shoulder_left_camera": "rgb-sha256:0fa39afc963ac36cbcd45225a1d728c6b746fe125bc30e1146dc22d9570570dc",
+              "over_shoulder_right_camera": "rgb-sha256:9898fc622ba082c3e23fc9f39935cf0185179459a0cced7eba79a7c519af2cce",
+              "wrist_cam": "rgb-sha256:5fc4ebb0bd42f5e14d82e3285a62448c426b727e72888adb81bbbf91e456002e"
+            },
+            "candidate_id": "P00__candidate_01",
+            "candidate_payload_sha256": "4814457b47f5e703fc49faff10660cbf1f5143f8e6a59299c3c0c7d5a9de24a0",
+            "capture_id": "P00-2026091000-bcdd49da3920dbdf",
+            "control_step_since_physical_reset": 75,
+            "d1_preprocessing": {
+              "client_class": "wmf_fixed_observation_d1_overlay.V2DreamZeroDroidClient",
+              "configuration": {
+                "cam2_source": "right",
+                "image_height": 180,
+                "image_width": 320,
+                "resize": "pad"
+              },
+              "extraction_method": "_extract_observation",
+              "official_client_source": {
+                "bytes": 16786,
+                "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/policies/dreamzero/client.py",
+                "sha256": "96de16927536f2b48427a6a2dcc3111d03204e1832e50e159cadf67b3fe956ac"
+              },
+              "overlay_source": {
+                "bytes": 8228,
+                "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/ce5ad4282d2392245f843d5270a9656d4e99f842/experiments/dreamzero_droid/v2_robolab_client.py",
+                "sha256": "3f3fe50f4b7747c52a995efb1e07bf00af8a5e38620829d8b0c991b43fd9a7ec"
+              },
+              "packing_method": "_pack_request",
+              "wire_array_keys": [
+                "observation/exterior_image_0_left",
+                "observation/exterior_image_1_left",
+                "observation/wrist_image_left",
+                "observation/joint_position",
+                "observation/cartesian_position",
+                "observation/gripper_position"
+              ]
+            },
+            "manifest": {
+              "bytes": 80178,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/fixed_observation/capture_receipt.json",
+              "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+            },
+            "physics_step": 602,
+            "pose_manifest_sha256": "c597bbafdaab3155b35945f8e6130e599fa3c8dc1c9d83f247611aee2bbd0954",
+            "schema_version": "wmf-d1-capture-manifest-validation-v1",
+            "settled_reset_identity": "fixed-observation:ce5ad4282d2392245f843d5270a9656d4e99f842:P00:2026091000",
+            "snapshot_manifest": {
+              "bytes": 80178,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/fixed_observation/capture_receipt.json",
+              "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+            },
+            "source_manifest": {
+              "bytes": 80178,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/capture_receipt.json",
+              "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+            },
+            "status": "passed"
+          },
+          "claim_boundary": "This is a six-request fixed-observation D1 generation qualification. It contains zero robot episodes and is not physical forecast/action/camera alignment evidence.",
+          "configuration_id": "D1",
+          "decision": "qualified",
+          "exit_code": 0,
+          "finished_at_utc": "2026-09-13T04:18:09.704181Z",
+          "fixture": {
+            "snapshot": {
+              "bytes": 520282,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/fixed_observation/d1_fixed_observation.npz",
+              "sha256": "4545fdf3b335e10b35f9eb4bc038db07480518c9f1672b6ab76231d37367d735"
+            },
+            "source": {
+              "bytes": 520282,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/d1_official_wire_observation.npz",
+              "sha256": "4545fdf3b335e10b35f9eb4bc038db07480518c9f1672b6ab76231d37367d735"
+            },
+            "validation": {
+              "array_count": 6,
+              "arrays": [
+                {
+                  "data_sha256": "de0ee41e9c8d4677d1de877dc029089b32350948fdcd089cfacdc55af1275654",
+                  "dtype": "uint8",
+                  "key": "observation/exterior_image_0_left",
+                  "shape": [
+                    180,
+                    320,
+                    3
+                  ]
+                },
+                {
+                  "data_sha256": "81aec4298e543f2d63b49816e0cd5eca1aa38c16ccc93a9687fd6c61c283c0e2",
+                  "dtype": "uint8",
+                  "key": "observation/exterior_image_1_left",
+                  "shape": [
+                    180,
+                    320,
+                    3
+                  ]
+                },
+                {
+                  "data_sha256": "a108bdca68ca3cdb6125f2eed3497825f21a52bfba2c0022a8a143e2ce774abc",
+                  "dtype": "uint8",
+                  "key": "observation/wrist_image_left",
+                  "shape": [
+                    180,
+                    320,
+                    3
+                  ]
+                },
+                {
+                  "data_sha256": "f8ad0b8c216e405710c63278b9ed39469dc7b785b52d96e904c7060fb649a7eb",
+                  "dtype": "float64",
+                  "key": "observation/joint_position",
+                  "shape": [
+                    7
+                  ]
+                },
+                {
+                  "data_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+                  "dtype": "float64",
+                  "key": "observation/cartesian_position",
+                  "shape": [
+                    6
+                  ]
+                },
+                {
+                  "data_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+                  "dtype": "float64",
+                  "key": "observation/gripper_position",
+                  "shape": [
+                    1
+                  ]
+                }
+              ],
+              "artifact": {
+                "bytes": 1777,
+                "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/fixture_validation.json",
+                "sha256": "68505f0b731bced396c789142c43a0914ae69d4d931baccd77461e1e374421e5"
+              }
+            }
+          },
+          "generation_request_count": 6,
+          "job_id": "d1-first-live-005",
+          "probe": {
+            "artifact": {
+              "bytes": 15710,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/d1_probe/d1_probe_qualification.json",
+              "sha256": "b87fc87f9b8323c38daa7d531766249a6d2a7e1b407796eb7a37cb991370eae1"
+            },
+            "behavioral_episode_count": 0,
+            "comparisons": {
+              "decode_toggle__left_no_decode__left_decode": {
+                "action_array_equal": true,
+                "action_rms": 0.0,
+                "latent_rms": 0.0,
+                "latent_tensor_equal": true
+              },
+              "decode_toggle__left_repeat_no_decode__left_repeat_decode": {
+                "action_array_equal": true,
+                "action_rms": 0.0,
+                "latent_rms": 0.0,
+                "latent_tensor_equal": true
+              },
+              "decode_toggle__right_no_decode__right_decode": {
+                "action_array_equal": true,
+                "action_rms": 0.0,
+                "latent_rms": 0.0,
+                "latent_tensor_equal": true
+              },
+              "repeat__left_decode__left_repeat_decode": {
+                "action_array_equal": true,
+                "action_rms": 0.0,
+                "latent_rms": 0.0,
+                "latent_tensor_equal": true
+              },
+              "repeat__left_no_decode__left_repeat_no_decode": {
+                "action_array_equal": true,
+                "action_rms": 0.0,
+                "latent_rms": 0.0,
+                "latent_tensor_equal": true
+              }
+            },
+            "failed_checks": [],
+            "generation_request_count": 6,
+            "passed": true,
+            "sensitivity_measurements": {
+              "prompt_sensitivity__decode": {
+                "action_array_equal": false,
+                "action_difference_observed": true,
+                "action_rms": 0.012752044629000972,
+                "latent_difference_observed": true,
+                "latent_rms": 0.1450234055519104,
+                "latent_tensor_equal": false,
+                "qualification_gate": false
+              },
+              "prompt_sensitivity__no_decode": {
+                "action_array_equal": false,
+                "action_difference_observed": true,
+                "action_rms": 0.012752044629000972,
+                "latent_difference_observed": true,
+                "latent_rms": 0.1450234055519104,
+                "latent_tensor_equal": false,
+                "qualification_gate": false
+              }
+            },
+            "status": "passed"
+          },
+          "probe_exit_code": 0,
+          "raw_attempt_directory": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw",
+          "raw_failure": null,
+          "reason": null,
+          "schema_version": "wmf-d1-qualification-job-receipt-v1",
+          "server_contract": {
+            "artifact": {
+              "bytes": 25049,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/d1_future/server_contract.json",
+              "sha256": "48979e95e0b1e74017eb0a6b2ac844cedf45baa6693ad41257614c3bc9b6af22"
+            },
+            "checkpoint_aggregate_sha256": "b4af0ac93474c3295c1ba841a34a8f2f91a5c3ec3c6aac1431b97689a6618c56",
+            "custom_s2_used": false,
+            "official_action_path": "GrootSimPolicy.lazy_joint_forward_causal",
+            "official_repository_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+            "official_repository_tree": "6b7ba27f1af81e963a6507f1204c05c65a94098c",
+            "patched_s1_used": false,
+            "source_aggregate_sha256": "a39e1ef8b7d8668caf15914637446fe58acb512e6672413d3af8b4b6442eca7f",
+            "tokenizer_aggregate_sha256": "00f9b974f8f0b33c5e284849a0507c308893d01d915377ba88c2f7084ea92434",
+            "world_size": 2
+          },
+          "server_exit": {
+            "initial_returncode": null,
+            "parent_death_signal": "SIGTERM",
+            "reaped": true,
+            "returncode": 1,
+            "schema_version": "wmf-d1-server-exit-v1",
+            "sigkill_required": false,
+            "signal_handler_reap": null,
+            "signal_sent": "SIGTERM",
+            "status": "reaped",
+            "stderr": {
+              "bytes": 8728,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/server.stderr.log",
+              "sha256": "68317f2b569a45430b7464fe163c69d498d81fae76c3a6e8287a9990fc43ee5e"
+            },
+            "stdout": {
+              "bytes": 5809,
+              "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/server.stdout.log",
+              "sha256": "fcad43b789ace815aa14d2301933c769f9034f911dcf2d3ec1033761ee7cc019"
+            },
+            "terminated_at_utc": "2026-09-13T04:18:09.691968Z",
+            "termination_started_at_utc": "2026-09-13T04:18:08.224768Z"
+          },
+          "server_process_receipt": {
+            "bytes": 1882,
+            "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/server_process.json",
+            "sha256": "4823618040bcc20b840bbd1c5ba597e13c1b68fcc987eefff954de0729237c8d"
+          },
+          "started_at_utc": "2026-09-13T04:13:08.957196Z",
+          "status": "finished",
+          "study_commit": "031b8c4dcddac7d80e1d056db5a370c3aa872ab1",
+          "study_namespace": "wmf_ablation_001_20260912",
+          "topology": {
+            "hostname": "wmf-forecast-0912-worker-d1-00-9j698",
+            "normalized_gpu_uuids": {
+              "nvidia_smi": [
+                "GPU-5d1ef479-5dee-6e80-10dc-9174e5a71a0c",
+                "GPU-4bcd0e45-3713-5bff-f268-32124291bd93"
+              ],
+              "torch": [
+                "GPU-5d1ef479-5dee-6e80-10dc-9174e5a71a0c",
+                "GPU-4bcd0e45-3713-5bff-f268-32124291bd93"
+              ]
+            },
+            "nvidia_smi_devices": [
+              {
+                "driver_version": "580.95.05",
+                "index": "0",
+                "memory.total": "183359",
+                "name": "NVIDIA B200",
+                "uuid": "GPU-5d1ef479-5dee-6e80-10dc-9174e5a71a0c"
+              },
+              {
+                "driver_version": "580.95.05",
+                "index": "1",
+                "memory.total": "183359",
+                "name": "NVIDIA B200",
+                "uuid": "GPU-4bcd0e45-3713-5bff-f268-32124291bd93"
+              }
+            ],
+            "nvidia_visible_devices": [
+              "GPU-5d1ef479-5dee-6e80-10dc-9174e5a71a0c",
+              "GPU-4bcd0e45-3713-5bff-f268-32124291bd93"
+            ],
+            "pod_uid": null,
+            "preexisting_compute_process_count": 0,
+            "schema_version": "wmf-d1-two-b200-topology-v1",
+            "status": "passed",
+            "torch_devices": [
+              {
+                "logical_index": 0,
+                "name": "NVIDIA B200",
+                "total_memory_bytes": 191503138816,
+                "uuid": "5d1ef479-5dee-6e80-10dc-9174e5a71a0c"
+              },
+              {
+                "logical_index": 1,
+                "name": "NVIDIA B200",
+                "total_memory_bytes": 191503138816,
+                "uuid": "4bcd0e45-3713-5bff-f268-32124291bd93"
+              }
+            ],
+            "validated_at_utc": "2026-09-13T04:13:15.870611Z"
+          }
+        }
+      }
+    }
+  },
+  "n3_attempts": {
+    "n3-p00-pilot-003": {
+      "server_ready": {
+        "block_id": "wmf_ablation_001_20260912__pilot__P00__N3",
+        "checkpoint": {
+          "aggregate_definition": "SHA-256 of sorted lines '<payload SHA-256><two spaces><relative path><newline>'; .cache is excluded",
+          "full_payload_rehash_performed": true,
+          "path": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+          "payload_aggregate_sha256": "55895125805b12635ece5dd2e88453a1aca6a684bac556f114337ae448ffdd83",
+          "payload_bytes": 32937432846,
+          "payload_file_count": 43,
+          "repository": "nvidia/Cosmos3-Nano-Policy-DROID",
+          "revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e"
+        },
+        "completed_prefix_cell_ids": [],
+        "cosmos_source": {
+          "commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+          "git_tree": "1e77852f2240d6e00312342ab29164745042b1ae",
+          "path": "/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b",
+          "server_file": {
+            "ast_contract": {
+              "class": "RobolabPolicyService",
+              "decode_calls": 1,
+              "decode_guarded_by_cfg_decode_video": true,
+              "generate_samples_from_batch_calls": 1,
+              "sample_keys": [
+                "action",
+                "vision"
+              ]
+            },
+            "bytes": 28935,
+            "path": "cosmos_framework/scripts/action_policy_server_robolab.py",
+            "sha256": "024a6d19048a6ac732ca0b23e741b5da6d38424223783b944bf539b2b6bd9a24"
+          },
+          "tracked_aggregate_sha256": "f6f61b3689b6cd6a7e20a8e46c9557e53b6d99cfd340380db262e6834dd04ff7",
+          "tracked_bytes": 14445894,
+          "tracked_file_count": 729,
+          "tracked_status_clean_before_import": true,
+          "untracked_import_shadowing_path_count": 0,
+          "untracked_path_count": 0
+        },
+        "expected_behavioral_request_count": 60,
+        "expected_cell_order": [
+          "wmf1__pilot__P00__N3__reflected__right",
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__original__left",
+          "wmf1__pilot__P00__N3__original__right"
+        ],
+        "generation_qualification_requests_rerun": 0,
+        "gpu": {
+          "cuda_available": true,
+          "cuda_visible_devices": "0",
+          "current_device": 0,
+          "devices": [
+            {
+              "major": 10,
+              "minor": 0,
+              "name": "NVIDIA B200",
+              "total_memory_bytes": 191503138816,
+              "uuid": "1bb3e2e7-6bf0-2e3c-7489-8a03b2438515",
+              "visible_index": 0
+            }
+          ],
+          "nvidia_smi_rows": [
+            "0, GPU-1bb3e2e7-6bf0-2e3c-7489-8a03b2438515, NVIDIA B200, 183359, 580.95.05",
+            "1, GPU-5dca9afb-2127-6d73-10e8-59ed2024b8e6, NVIDIA B200, 183359, 580.95.05"
+          ],
+          "required_current_device_name_substring": "NVIDIA B200",
+          "requirement_satisfied": true,
+          "torch_cuda_version": "12.8",
+          "torch_version": "2.10.0+cu128",
+          "visible_device_count": 1
+        },
+        "host": "0.0.0.0",
+        "model_config": "N3",
+        "port": 18011,
+        "process": {
+          "hostname": "wmf-forecast-0912-worker-n3-00-hwtnd",
+          "pid": 257
+        },
+        "ready_at_utc": "2026-09-13T04:15:52.388326Z",
+        "runtime": {
+          "action_chunk_size": 32,
+          "action_dimensions": 8,
+          "action_space": "joint_pos",
+          "checkpoint_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+          "conditioning_fps": 15.0,
+          "decode_video": true,
+          "denoising_steps": 4,
+          "deterministic_seed": true,
+          "domain_name": "droid_lerobot",
+          "guidance": 3.0,
+          "history_length": 1,
+          "resolution_setting": "480",
+          "shift": 5.0,
+          "use_state": true
+        },
+        "schema_version": "wmf-n3-behavioral-server-ready-v1",
+        "server_process_context_id": "n3-behavioral:wmf-forecast-0912-worker-n3-00-hwtnd:257:45aea20e6ede4bcfa902ba67eaa0862c",
+        "source_commit": "95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51",
+        "start_cell_index": 0,
+        "status": "ready",
+        "study_id": "WMF-ABLATION-001"
+      },
+      "server_failure": null,
+      "server_stderr": "[W913 04:15:31.674587898 socket.cpp:764] [c10d] The client socket cannot be initialized to connect to [localhost]:32929 (errno: 97 - Address family not supported by protocol).\n\rFetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]\rFetching 12 files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 12/12 [00:00<00:00, 14270.39it/s]\nINFO:websockets.server:server listening on 0.0.0.0:18011\nERROR:websockets.server:opening handshake failed\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/http11.py\", line 138, in parse\n    request_line = yield from parse_line(read_line)\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/http11.py\", line 320, in parse_line\n    line = yield from read_line(MAX_LINE_LENGTH)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/streams.py\", line 46, in read_line\n    raise EOFError(f\"stream ends after {p} bytes, before end of line\")\nEOFError: stream ends after 0 bytes, before end of line\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/server.py\", line 547, in parse\n    request = yield from Request.parse(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n        self.reader.read_line,\n        ^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/http11.py\", line 140, in parse\n    raise EOFError(\"connection closed while reading HTTP request line\") from exc\nEOFError: connection closed while reading HTTP request line\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/asyncio/server.py\", line 356, in conn_handler\n    await connection.handshake(\n    ...<3 lines>...\n    )\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/asyncio/server.py\", line 207, in handshake\n    raise self.protocol.handshake_exc\nwebsockets.exceptions.InvalidMessage: did not receive a valid HTTP request\nINFO:websockets.server:connection open\n\rSampling:   0%|          | 0/4 [00:00<?, ?it/s]\rSampling:  25%|\u2588\u2588\u258c       | 1/4 [00:26<01:19, 26.45s/it]\rSampling:  50%|\u2588\u2588\u2588\u2588\u2588     | 2/4 [00:26<00:21, 10.97s/it]\rSampling:  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 3/4 [00:26<00:06,  6.10s/it]\rSampling: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 4/4 [00:27<00:00,  3.74s/it]\rSampling: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 4/4 [00:27<00:00,  6.75s/it]\nINFO:websockets.server:connection open\nERROR:websockets.server:connection handler failed\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/asyncio/server.py\", line 376, in conn_handler\n    await self.handler(connection)\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/openpi_server/websocket_policy_server.py\", line 61, in _handler\n    action = self._policy.infer(obs)\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/experiments/forecast_layout/n3_pilot_live.py\", line 1127, in infer\n    expected = protocol.validate_behavioral(observation)\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/experiments/forecast_layout/n3_pilot_live.py\", line 346, in validate_behavioral\n    require(request.get(key) == wanted, \"server_behavioral_request_mismatch\", key)\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/experiments/forecast_layout/n3_pilot_live.py\", line 135, in require\n    raise N3BehavioralPilotError(reason, detail)\nN3BehavioralPilotError: server_behavioral_request_mismatch: request_index\n",
+      "cells": {
+        "00-wmf1-pilot-P00-N3-reflected-right": {
+          "cell_receipt.json": null,
+          "technical_failure.json": {
+            "actions_executed": 0,
+            "behavioral_episode_count": 0,
+            "cell_id": "wmf1__pilot__P00__N3__reflected__right",
+            "condition_index": 0,
+            "error_type": "RuntimeError",
+            "reason": null,
+            "recorded_at_utc": "2026-09-13T04:17:56.653658Z",
+            "request_count": 1,
+            "schema_version": "wmf-n3-behavioral-pilot-cell-v1",
+            "status": "technical_failure",
+            "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/experiments/forecast_layout/n3_pilot_live.py\", line 1568, in run_cell\n    env_results, subtask_status, timing = run_episode(\n                                          ^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/eval/episode.py\", line 143, in run_episode\n    rets = client.infer_batch(\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/eval/base_client.py\", line 79, in infer_batch\n    return {\n           ^\n  File \"/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/eval/base_client.py\", line 80, in <dictcomp>\n    env_id: self.infer(obs, instruction, env_id=env_id)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/experiments/forecast_layout/recording_adapter.py\", line 1272, in infer\n    result = super().infer(obs, instruction, env_id=env_id)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/eval/base_client.py\", line 58, in infer\n    response = self._query_server(request)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/experiments/forecast_layout/recording_adapter.py\", line 1247, in _query_server\n    response = super()._query_server(request)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/policies/cosmos3/client.py\", line 111, in _query_server\n    return self._infer_with_retry(request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/policies/cosmos3/client.py\", line 49, in _infer_with_retry\n    return self.client.infer(request)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/openpi/packages/openpi-client/src/openpi_client/websocket_client_policy.py\", line 53, in infer\n    raise RuntimeError(f\"Error in inference server:\\n{response}\")\nRuntimeError: Error in inference server:\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/openpi_server/websocket_policy_server.py\", line 61, in _handler\n    action = self._policy.infer(obs)\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/experiments/forecast_layout/n3_pilot_live.py\", line 1127, in infer\n    expected = protocol.validate_behavioral(observation)\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/experiments/forecast_layout/n3_pilot_live.py\", line 346, in validate_behavioral\n    require(request.get(key) == wanted, \"server_behavioral_request_mismatch\", key)\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/experiments/forecast_layout/n3_pilot_live.py\", line 135, in require\n    raise N3BehavioralPilotError(reason, detail)\nN3BehavioralPilotError: server_behavioral_request_mismatch: request_index\n\n"
+          },
+          "event_counts": {
+            "attempt_started": 1,
+            "model_context_reset": 1,
+            "fixed_duration_environment_verified": 1,
+            "physical_reset": 1,
+            "observation_captured": 1,
+            "runner_reset_idempotent": 1,
+            "model_request_packed": 1,
+            "model_request_sent": 1,
+            "attempt_finalized": 1
+          },
+          "actions_observed": 0,
+          "last_event_kind": "attempt_finalized",
+          "stdout_tail": "---------+\n|   0    | egocentric_mirrored_camera  | (480, 864, 3)  |\n+--------+-----------------------------+----------------+\n\n[INFO] Termination Manager:  <TerminationManager> contains 1 active terms.\n+-----------------------------+\n|   Active Termination Terms  |\n+-------+----------+----------+\n| Index | Name     | Time Out |\n+-------+----------+----------+\n|   0   | time_out |   True   |\n+-------+----------+----------+\n\n[INFO] Reward Manager:  <RewardManager> contains 0 active terms.\n+-----------------------+\n|  Active Reward Terms  |\n+-------+------+--------+\n| Index | Name | Weight |\n+-------+------+--------+\n+-------+------+--------+\n\n[INFO] Curriculum Manager:  <CurriculumManager> contains 0 active terms.\n+----------------------+\n| Active Curriculum Terms |\n+-----------+----------+\n|   Index   | Name     |\n+-----------+----------+\n+-----------+----------+\n\n[INFO]: Completed setting up the environment...\n\u001b[96m\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502  Environment : WMFForecastReflectedRightTask                 \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502  Instruction : Put the Rubik's cube to the right of the bowl. \u2502\n\u2502  Instr. Type : default                                       \u2502\n\u2502  Seed        : 2026091000                                    \u2502\n\u2502  Policy      : wmf_n3_behavioral_pilot                       \u2502\n\u2502  Scene       : WMFForecastReflectedRightTaskSceneEnvCfg      \u2502\n\u2502  Attributes  : spatial, wmf_ablation_001_20260912, forecast_layout, reflected, timeout_only_450_actions, simple \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001b[0m\n2026-09-13T04:17:13Z [76,396ms] [Warning] [carb] Client gpu.foundation.plugin has acquired [gpu::unstable::IMemoryBudgetManagerFactory v0.1] 100 times. Consider accessing this interface with carb::getCachedInterface() (Performance warning)\n2026-09-13T04:17:56Z [119,616ms] [Warning] [policies.cosmos3.client] [RecordedN3Client] Connection lost (sent 1011 (internal error) keepalive ping timeout; no close frame received), reconnecting (attempt 1/3)...\n",
+          "stderr_tail": "2026-09-13T04:16:01Z [4,370ms] [Error] [carb.glinterop.plugin] GLInteropContext::init: carb::windowing is not available\nWarp CUDA error: Failed to get driver entry point 'cuDeviceGetUuid' (CUDA error 1)\nWarp CUDA error: Function cuDeviceGetUuid_f: a suitable driver entry point was not found\nWarp CUDA error 36: API call is not supported in the installed CUDA driver (in function cuda_init, /builds/omniverse/warp/warp/native/warp.cu:277)\n2026-09-13T04:16:41Z [44,279ms] [Error] [carb.graphics-vulkan.plugin] Could not get NGX parameters block because NGX isn't enabled.\n2026-09-13T04:16:41Z [44,279ms] [Error] [carb.graphics-vulkan.plugin] Failed to create NGX context.\n\r  0%|          | 0/450 [00:00<?, ?it/s]\r  0%|          | 0/450 [00:31<?, ?it/s]\n2026-09-13T04:17:56Z [119,768ms] [Error] [robolab.eval.episode] Failed to reset client after episode\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/eval/episode.py\", line 194, in run_episode\n    client.reset()\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/95cdd0cbe6d306d5a1c63a3160632e2ea9d31e51/workshops/corl2026_world_models/experiments/forecast_layout/n3_pilot_live.py\", line 1488, in reset\n    response = self.client.infer(request)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/openpi/packages/openpi-client/src/openpi_client/websocket_client_policy.py\", line 49, in infer\n    self._ws.send(data)\n  File \"/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/websockets/sync/connection.py\", line 484, in send\n    with self.send_context():\n  File \"/data/users/ali/vla_wam/envs/python-builds-robolab/cpython-3.11.13-linux-x86_64-gnu/lib/python3.11/contextlib.py\", line 137, in __enter__\n    return next(self.gen)\n           ^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/websockets/sync/connection.py\", line 1038, in send_context\n    raise self.protocol.close_exc from original_exc\nwebsockets.exceptions.ConnectionClosedError: received 1011 (internal error) Internal server error. Traceback included in previous frame.; then sent 1011 (internal error) Internal server error. Traceback included in previous frame.\n"
+        }
+      },
+      "generated_request_receipts": 1
+    },
+    "n3-p00-pilot-004": {
+      "server_ready": {
+        "block_id": "wmf_ablation_001_20260912__pilot__P00__N3",
+        "checkpoint": {
+          "aggregate_definition": "SHA-256 of sorted lines '<payload SHA-256><two spaces><relative path><newline>'; .cache is excluded",
+          "full_payload_rehash_performed": true,
+          "path": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+          "payload_aggregate_sha256": "55895125805b12635ece5dd2e88453a1aca6a684bac556f114337ae448ffdd83",
+          "payload_bytes": 32937432846,
+          "payload_file_count": 43,
+          "repository": "nvidia/Cosmos3-Nano-Policy-DROID",
+          "revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e"
+        },
+        "completed_prefix_cell_ids": [],
+        "cosmos_source": {
+          "commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+          "git_tree": "1e77852f2240d6e00312342ab29164745042b1ae",
+          "path": "/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b",
+          "server_file": {
+            "ast_contract": {
+              "class": "RobolabPolicyService",
+              "decode_calls": 1,
+              "decode_guarded_by_cfg_decode_video": true,
+              "generate_samples_from_batch_calls": 1,
+              "sample_keys": [
+                "action",
+                "vision"
+              ]
+            },
+            "bytes": 28935,
+            "path": "cosmos_framework/scripts/action_policy_server_robolab.py",
+            "sha256": "024a6d19048a6ac732ca0b23e741b5da6d38424223783b944bf539b2b6bd9a24"
+          },
+          "tracked_aggregate_sha256": "f6f61b3689b6cd6a7e20a8e46c9557e53b6d99cfd340380db262e6834dd04ff7",
+          "tracked_bytes": 14445894,
+          "tracked_file_count": 729,
+          "tracked_status_clean_before_import": true,
+          "untracked_import_shadowing_path_count": 0,
+          "untracked_path_count": 0
+        },
+        "expected_behavioral_request_count": 60,
+        "expected_cell_order": [
+          "wmf1__pilot__P00__N3__reflected__right",
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__original__left",
+          "wmf1__pilot__P00__N3__original__right"
+        ],
+        "generation_qualification_requests_rerun": 0,
+        "gpu": {
+          "cuda_available": true,
+          "cuda_visible_devices": "0",
+          "current_device": 0,
+          "devices": [
+            {
+              "major": 10,
+              "minor": 0,
+              "name": "NVIDIA B200",
+              "total_memory_bytes": 191503138816,
+              "uuid": "1bb3e2e7-6bf0-2e3c-7489-8a03b2438515",
+              "visible_index": 0
+            }
+          ],
+          "nvidia_smi_rows": [
+            "0, GPU-1bb3e2e7-6bf0-2e3c-7489-8a03b2438515, NVIDIA B200, 183359, 580.95.05",
+            "1, GPU-5dca9afb-2127-6d73-10e8-59ed2024b8e6, NVIDIA B200, 183359, 580.95.05"
+          ],
+          "required_current_device_name_substring": "NVIDIA B200",
+          "requirement_satisfied": true,
+          "torch_cuda_version": "12.8",
+          "torch_version": "2.10.0+cu128",
+          "visible_device_count": 1
+        },
+        "host": "0.0.0.0",
+        "model_config": "N3",
+        "port": 18011,
+        "process": {
+          "hostname": "wmf-forecast-0912-worker-n3-00-hwtnd",
+          "pid": 1981
+        },
+        "ready_at_utc": "2026-09-13T04:22:11.000967Z",
+        "runtime": {
+          "action_chunk_size": 32,
+          "action_dimensions": 8,
+          "action_space": "joint_pos",
+          "checkpoint_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+          "conditioning_fps": 15.0,
+          "decode_video": true,
+          "denoising_steps": 4,
+          "deterministic_seed": true,
+          "domain_name": "droid_lerobot",
+          "guidance": 3.0,
+          "history_length": 1,
+          "resolution_setting": "480",
+          "shift": 5.0,
+          "use_state": true
+        },
+        "schema_version": "wmf-n3-behavioral-server-ready-v1",
+        "server_process_context_id": "n3-behavioral:wmf-forecast-0912-worker-n3-00-hwtnd:1981:6e7b062362624742861f5422c401900a",
+        "source_commit": "b8914413f6293c165dd3a57c737f4b977e7e84be",
+        "start_cell_index": 0,
+        "status": "ready",
+        "study_id": "WMF-ABLATION-001"
+      },
+      "server_failure": null,
+      "server_stderr": "[W913 04:21:59.624922196 socket.cpp:764] [c10d] The client socket cannot be initialized to connect to [localhost]:41573 (errno: 97 - Address family not supported by protocol).\n\rFetching 12 files:   0%|          | 0/12 [00:00<?, ?it/s]\rFetching 12 files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 12/12 [00:00<00:00, 16314.96it/s]\nINFO:websockets.server:server listening on 0.0.0.0:18011\nERROR:websockets.server:opening handshake failed\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/http11.py\", line 138, in parse\n    request_line = yield from parse_line(read_line)\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/http11.py\", line 320, in parse_line\n    line = yield from read_line(MAX_LINE_LENGTH)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/streams.py\", line 46, in read_line\n    raise EOFError(f\"stream ends after {p} bytes, before end of line\")\nEOFError: stream ends after 0 bytes, before end of line\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/server.py\", line 547, in parse\n    request = yield from Request.parse(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n        self.reader.read_line,\n        ^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/http11.py\", line 140, in parse\n    raise EOFError(\"connection closed while reading HTTP request line\") from exc\nEOFError: connection closed while reading HTTP request line\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/asyncio/server.py\", line 356, in conn_handler\n    await connection.handshake(\n    ...<3 lines>...\n    )\n  File \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/websockets/asyncio/server.py\", line 207, in handshake\n    raise self.protocol.handshake_exc\nwebsockets.exceptions.InvalidMessage: did not receive a valid HTTP request\nINFO:websockets.server:connection open\n\rSampling:   0%|          | 0/4 [00:00<?, ?it/s]\rSampling:  25%|\u2588\u2588\u258c       | 1/4 [00:21<01:03, 21.03s/it]\rSampling:  50%|\u2588\u2588\u2588\u2588\u2588     | 2/4 [00:21<00:17,  8.72s/it]\rSampling:  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 3/4 [00:21<00:04,  4.80s/it]\rSampling: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 4/4 [00:21<00:00,  2.94s/it]\rSampling: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 4/4 [00:21<00:00,  5.34s/it]\n\rSampling:   0%|          | 0/4 [00:00<?, ?it/s]\rSampling:  25%|\u2588\u2588\u258c       | 1/4 [00:00<00:00,  9.95it/s]\rSampling:  50%|\u2588\u2588\u2588\u2588\u2588     | 2/4 [00:00<00:00,  9.75it/s]\rSampling:  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 3/4 [00:00<00:00,  9.74it/s]\rSampling: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 4/4 [00:00<00:00,  9.77it/s]\rSampling: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 4/4 [00:00<00:00,  9.77it/s]\n\rSampling:   0%|          | 0/4 [00:00<?, ?it/s]\rSampling:  25%|\u2588\u2588\u258c       | 1/4 [00:00<00:00,  9.63it/s]\rSampling:  50%|\u2588\u2588\u2588\u2588\u2588     | 2/4 [00:00<00:00,  9.54it/s]\rSampling:  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 3/4 [00:00<00:00,  9.55it/s]\rSampling: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 4/4 [00:00<00:00,  9.65it/s]\rSampling: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 4/4 [00:00<00:00,  9.61it/s]\n",
+      "cells": {
+        "00-wmf1-pilot-P00-N3-reflected-right": {
+          "cell_receipt.json": null,
+          "technical_failure.json": null,
+          "event_counts": {
+            "attempt_started": 1,
+            "model_context_reset": 1,
+            "fixed_duration_environment_verified": 1,
+            "physical_reset": 1,
+            "observation_captured": 69,
+            "runner_reset_idempotent": 1,
+            "model_request_packed": 3,
+            "model_request_sent": 3,
+            "model_response_received": 3,
+            "model_request_completed": 3,
+            "policy_action_returned": 69,
+            "environment_step_started": 69,
+            "environment_step_completed": 68
+          },
+          "actions_observed": 69,
+          "last_event_kind": "environment_step_started",
+          "stdout_tail": "e Observation Terms in Group: 'viewport_cam'   |\n+--------+-----------------------------+----------------+\n| Index  | Name                        |     Shape      |\n+--------+-----------------------------+----------------+\n|   0    | egocentric_mirrored_camera  | (480, 864, 3)  |\n+--------+-----------------------------+----------------+\n\n[INFO] Termination Manager:  <TerminationManager> contains 1 active terms.\n+-----------------------------+\n|   Active Termination Terms  |\n+-------+----------+----------+\n| Index | Name     | Time Out |\n+-------+----------+----------+\n|   0   | time_out |   True   |\n+-------+----------+----------+\n\n[INFO] Reward Manager:  <RewardManager> contains 0 active terms.\n+-----------------------+\n|  Active Reward Terms  |\n+-------+------+--------+\n| Index | Name | Weight |\n+-------+------+--------+\n+-------+------+--------+\n\n[INFO] Curriculum Manager:  <CurriculumManager> contains 0 active terms.\n+----------------------+\n| Active Curriculum Terms |\n+-----------+----------+\n|   Index   | Name     |\n+-----------+----------+\n+-----------+----------+\n\n[INFO]: Completed setting up the environment...\n\u001b[96m\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502  Environment : WMFForecastReflectedRightTask                 \u2502\n\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502  Instruction : Put the Rubik's cube to the right of the bowl. \u2502\n\u2502  Instr. Type : default                                       \u2502\n\u2502  Seed        : 2026091000                                    \u2502\n\u2502  Policy      : wmf_n3_behavioral_pilot                       \u2502\n\u2502  Scene       : WMFForecastReflectedRightTaskSceneEnvCfg      \u2502\n\u2502  Attributes  : spatial, wmf_ablation_001_20260912, forecast_layout, reflected, timeout_only_450_actions, simple \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001b[0m\n2026-09-13T04:23:03Z [49,720ms] [Warning] [carb] Client gpu.foundation.plugin has acquired [gpu::unstable::IMemoryBudgetManagerFactory v0.1] 100 times. Consider accessing this interface with carb::getCachedInterface() (Performance warning)\n",
+          "stderr_tail": "2026-09-13T04:22:16Z [2,815ms] [Error] [carb.glinterop.plugin] GLInteropContext::init: carb::windowing is not available\nWarp CUDA error: Failed to get driver entry point 'cuDeviceGetUuid' (CUDA error 1)\nWarp CUDA error: Function cuDeviceGetUuid_f: a suitable driver entry point was not found\nWarp CUDA error 36: API call is not supported in the installed CUDA driver (in function cuda_init, /builds/omniverse/warp/warp/native/warp.cu:277)\n2026-09-13T04:22:34Z [20,705ms] [Error] [carb.graphics-vulkan.plugin] Could not get NGX parameters block because NGX isn't enabled.\n2026-09-13T04:22:34Z [20,705ms] [Error] [carb.graphics-vulkan.plugin] Failed to create NGX context.\n\r  0%|          | 0/450 [00:00<?, ?it/s]\r  0%|          | 1/450 [00:25<3:07:37, 25.07s/it]\r  0%|          | 2/450 [00:25<1:19:27, 10.64s/it]\r  1%|          | 3/450 [00:26<44:32,  5.98s/it]  \r  1%|          | 4/450 [00:26<27:57,  3.76s/it]\r  1%|          | 5/450 [00:26<19:00,  2.56s/it]\r  1%|\u258f         | 6/450 [00:27<13:36,  1.84s/it]\r  2%|\u258f         | 7/450 [00:27<10:14,  1.39s/it]\r  2%|\u258f         | 8/450 [00:28<08:00,  1.09s/it]\r  2%|\u258f         | 9/450 [00:28<06:22,  1.15it/s]\r  2%|\u258f         | 10/450 [00:28<05:16,  1.39it/s]\r  2%|\u258f         | 11/450 [00:29<04:39,  1.57it/s]\r  3%|\u258e         | 12/450 [00:29<04:05,  1.78it/s]\r  3%|\u258e         | 13/450 [00:30<03:49,  1.91it/s]\r  3%|\u258e         | 14/450 [00:30<03:39,  1.99it/s]\r  3%|\u258e         | 15/450 [00:31<03:32,  2.05it/s]\r  4%|\u258e         | 16/450 [00:31<03:24,  2.12it/s]\r  4%|\u258d         | 17/450 [00:32<03:18,  2.18it/s]\r  4%|\u258d         | 18/450 [00:32<03:03,  2.35it/s]\r  4%|\u258d         | 19/450 [00:32<02:46,  2.58it/s]\r  4%|\u258d         | 20/450 [00:32<02:38,  2.72it/s]\r  5%|\u258d         | 21/450 [00:33<02:27,  2.90it/s]\r  5%|\u258d         | 22/450 [00:33<02:21,  3.03it/s]\r  5%|\u258c         | 23/450 [00:33<02:15,  3.14it/s]\r  5%|\u258c         | 24/450 [00:34<02:11,  3.23it/s]\r  6%|\u258c         | 25/450 [00:34<02:08,  3.30it/s]\r  6%|\u258c         | 26/450 [00:34<02:07,  3.33it/s]\r  6%|\u258c         | 27/450 [00:35<02:05,  3.36it/s]\r  6%|\u258c         | 28/450 [00:35<02:05,  3.37it/s]\r  6%|\u258b         | 29/450 [00:35<02:03,  3.41it/s]\r  7%|\u258b         | 30/450 [00:35<02:02,  3.43it/s]\r  7%|\u258b         | 31/450 [00:36<02:01,  3.44it/s]\r  7%|\u258b         | 32/450 [00:36<02:01,  3.43it/s]\r  7%|\u258b         | 33/450 [00:39<07:42,  1.11s/it]\r  8%|\u258a         | 34/450 [00:39<06:03,  1.14it/s]\r  8%|\u258a         | 35/450 [00:40<04:49,  1.43it/s]\r  8%|\u258a         | 36/450 [00:40<03:58,  1.73it/s]\r  8%|\u258a         | 37/450 [00:40<03:22,  2.04it/s]\r  8%|\u258a         | 38/450 [00:40<02:58,  2.31it/s]\r  9%|\u258a         | 39/450 [00:41<02:51,  2.40it/s]\r  9%|\u2589         | 40/450 [00:41<02:35,  2.63it/s]\r  9%|\u2589         | 41/450 [00:41<02:24,  2.83it/s]\r  9%|\u2589         | 42/450 [00:42<02:16,  2.99it/s]"
+        }
+      },
+      "generated_request_receipts": 3
+    }
+  }
+}

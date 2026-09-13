@@ -1,0 +1,167 @@
+{
+  "attempt": "003",
+  "block_id": "wmf_ablation_001_20260912__development__D01__D1",
+  "completed_at_utc": "2026-09-13T09:59:01.239454Z",
+  "decision": "go",
+  "failure": null,
+  "job_id": "d1-development-d01-server-003",
+  "layout_pair_id": "D01",
+  "mode": "server-job",
+  "namespace": "wmf_ablation_001_20260912",
+  "own_queue_claim": {
+    "claimed_at": "2026-09-13T09:58:49.827645+00:00",
+    "claimed_unix": 1789293529.8276749,
+    "control_commit": "e5abbafd2a44becd628ccd0b6d1e669d914b6847",
+    "control_generation": 565,
+    "descriptor_sha256": "1082e92d6bc78c947ae144950fbc77e3293e967711b06b0f09121c7c45df1406",
+    "identity": {
+      "bytes": 412,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d01-server-003/claim/owner.json",
+      "sha256": "2fe07c1b10d36fd914b81472d7da793028428468b18ff74ee7e46ba7bb04ba60"
+    },
+    "worker_id": "wmf-forecast-0912-worker-d1-00",
+    "worker_pid": 1
+  },
+  "own_queue_descriptor": {
+    "bytes": 2872,
+    "job_id": "d1-development-d01-server-003",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d01-server-003/descriptor.json",
+    "role": "d1",
+    "sha256": "1082e92d6bc78c947ae144950fbc77e3293e967711b06b0f09121c7c45df1406"
+  },
+  "own_queue_heartbeat": {
+    "age_seconds_at_validation": 0.9865415096282959,
+    "at": "2026-09-13T09:59:00.225224+00:00",
+    "child_pid": 66884,
+    "identity": {
+      "bytes": 167,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d01-server-003/heartbeat.json",
+      "sha256": "1482a36f317bbb874d3dcd39b36c52c5988076da20573e492633b95bc3000e3c"
+    },
+    "maximum_age_seconds": 45.0,
+    "unix": 1789293540.2252448,
+    "worker_id": "wmf-forecast-0912-worker-d1-00",
+    "worker_pid": 1
+  },
+  "pair_admission_timeout_seconds": 900,
+  "paired_job_id": "d1-development-d01-simulator-003",
+  "paired_queue_claim": {
+    "claimed_at": "2026-09-13T09:58:37.231888+00:00",
+    "claimed_unix": 1789293517.23191,
+    "control_commit": "e5abbafd2a44becd628ccd0b6d1e669d914b6847",
+    "control_generation": 565,
+    "descriptor_sha256": "d0d7c0fd5b0e74a91927766f749a27939c2c912778efbbee3b93b3e350392b3c",
+    "identity": {
+      "bytes": 407,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d01-simulator-003/claim/owner.json",
+      "sha256": "5a0e6cc89221185f3373d8a52740953fd015b1289f8e33192cf17236b16673cf"
+    },
+    "worker_id": "wmf-forecast-0912-worker-00",
+    "worker_pid": 1
+  },
+  "paired_queue_descriptor": {
+    "bytes": 2956,
+    "job_id": "d1-development-d01-simulator-003",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d01-simulator-003/descriptor.json",
+    "role": "wmf-forecast-0912-worker-00",
+    "sha256": "d0d7c0fd5b0e74a91927766f749a27939c2c912778efbbee3b93b3e350392b3c"
+  },
+  "paired_queue_heartbeat": {
+    "age_seconds_at_validation": 1.5433096885681152,
+    "at": "2026-09-13T09:58:59.671606+00:00",
+    "child_pid": 8723,
+    "identity": {
+      "bytes": 162,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d01-simulator-003/heartbeat.json",
+      "sha256": "80a4bb733ba44e4cbf70ed7f9bbc60666beb2a82adf65d3e39c7bdc9a8a10bac"
+    },
+    "maximum_age_seconds": 45.0,
+    "unix": 1789293539.671627,
+    "worker_id": "wmf-forecast-0912-worker-00",
+    "worker_pid": 1
+  },
+  "predecessor_terminal_results": [
+    {
+      "child_reaped": true,
+      "deep_terminal": {
+        "all_scientific_children_reaped": true,
+        "identity": {
+          "bytes": 12362,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d03-server-002/publish/d1_behavioral_server_receipt.json",
+          "sha256": "6ffd934c4d05f815ebc06dfe788f8fbbbd12d755c691654cd05aa64da2346ec0"
+        },
+        "kind": "d1_server_aggregate",
+        "server_process_exit": {
+          "ended_at_utc": "2026-09-13T09:23:46.265039Z",
+          "reaped": true,
+          "returncode": 1,
+          "status": "reaped"
+        },
+        "server_process_started": true,
+        "status": "passed"
+      },
+      "descriptor_sha256": "851e139ab3002fd7ee386e13179c4f4384155693f8b4e26890f7dbc351d368d7",
+      "ended_at": "2026-09-13T09:23:46.334275+00:00",
+      "identity": {
+        "bytes": 3745,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d03-server-002/result.json",
+        "sha256": "8ddd75e97b5046c7de80d3323165ac66038602b3d64552ac015aba23ce38d5be"
+      },
+      "returncode": 0,
+      "started_at": "2026-09-13T08:54:10.795273+00:00",
+      "status": "succeeded",
+      "worker_id": "wmf-forecast-0912-worker-d1-00"
+    },
+    {
+      "child_reaped": true,
+      "deep_terminal": {
+        "all_scientific_children_reaped": true,
+        "identity": {
+          "bytes": 16510,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d03-simulator-002/publish/d1_behavioral_development_receipt.json",
+          "sha256": "eb7f4f894b1e56c1b8971ee1155d77e7aeb1b62c9c6cfc41de0483e3baf2dd4f"
+        },
+        "kind": "d1_simulator_aggregate_and_protocol_terminal",
+        "protocol_terminal": {
+          "bytes": 1027,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D03/coordination/d1-development-d03-002/simulator_terminal.json",
+          "sha256": "faad951b73b4f6fbe1729f0f88f81058856fa3c1443afb94fecb390a5f0bd968"
+        },
+        "safe_for_server_shutdown": true,
+        "status": "passed"
+      },
+      "descriptor_sha256": "deeacda4c09b490b0d9aad8d1bff71825308e6e0c0aa316f6da7208959c64d66",
+      "ended_at": "2026-09-13T09:23:32.813656+00:00",
+      "identity": {
+        "bytes": 3805,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d03-simulator-002/result.json",
+        "sha256": "902d022f0074e415845acbe71e48e7ee3ac3c8a0d18d29d70d374aeaa990729f"
+      },
+      "returncode": 0,
+      "started_at": "2026-09-13T08:55:41.782183+00:00",
+      "status": "succeeded",
+      "worker_id": "wmf-forecast-0912-worker-00"
+    }
+  ],
+  "run_id": "d1-development-d01-003",
+  "safe_to_start_scientific_child": true,
+  "schema_version": "wmf-d1-development-pair-admission-v1",
+  "science_counts_before_admission": {
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "model_requests": 0,
+    "model_server_process_starts": 0,
+    "physical_resets": 0,
+    "simulator_child_process_starts": 0
+  },
+  "sequence_index": 0,
+  "shared_service_endpoint": {
+    "host": "wmf-forecast-0912-d1",
+    "isolation": "one admitted pair at a time; the next pair requires both child-reaped predecessor queue terminals",
+    "port": 18021,
+    "unique_layout_ports_available": false
+  },
+  "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+  "status": "passed",
+  "study_id": "WMF-ABLATION-001"
+}

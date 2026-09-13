@@ -51,6 +51,7 @@ REQUIRED_IDENTITY_FIELDS = (
     "checkpoint_identity",
 )
 CONTEXT_RESET_SCOPE = "full_episode_temporal_and_cache_context"
+RECORDER_ONLY_MODEL_CONFIG = "RECORDER_ONLY"
 
 
 class RecordingContractError(RuntimeError):
@@ -347,7 +348,11 @@ def _validate_identity(identity: Mapping[str, Any], contract: Mapping[str, Any])
     if missing:
         raise RecordingContractError(f"attempt identity missing fields: {missing}")
     value = copy.deepcopy(dict(identity))
-    if value.get("model_config") not in contract["models"]:
+    recorder_only = (
+        value.get("model_config") == RECORDER_ONLY_MODEL_CONFIG
+        and value.get("stage") == "recording_qualification"
+    )
+    if value.get("model_config") not in contract["models"] and not recorder_only:
         raise RecordingContractError("attempt model is outside the primary recording contract")
     if value.get("layout_arm") not in {"original", "reflected"}:
         raise RecordingContractError("layout arm must be original or reflected")
@@ -471,9 +476,15 @@ class ForecastRecordingAdapter:
             raise RecordingContractError("model reset lacks a server context identity")
         if not isinstance(receipt.get("cache_reset_evidence"), Mapping) or not receipt["cache_reset_evidence"]:
             raise RecordingContractError("model reset lacks cache reset evidence")
+        recorder_only = self.identity["model_config"] == RECORDER_ONLY_MODEL_CONFIG
+        if recorder_only and receipt["cache_reset_evidence"].get("no_model_attached") is not True:
+            raise RecordingContractError("recorder-only context must attest that no model is attached")
         artifact = self.payloads.write("context_reset", dict(receipt))
         self.context_reset = {"receipt": copy.deepcopy(dict(receipt)), "artifact": artifact}
-        self._append_event("model_context_reset", {"artifact": artifact})
+        self._append_event(
+            "recording_context_initialized" if recorder_only else "model_context_reset",
+            {"artifact": artifact, "model_attached": not recorder_only},
+        )
 
     def record_environment_contract(self, receipt: Mapping[str, Any]) -> None:
         if self.environment_contract is not None:
@@ -623,6 +634,8 @@ class ForecastRecordingAdapter:
     def begin_request(self, model_input: Any, wire_request: Any) -> int:
         if self.finalized:
             raise RecordingContractError("cannot start a request on a finalized attempt")
+        if self.identity["model_config"] == RECORDER_ONLY_MODEL_CONFIG:
+            raise RecordingContractError("recorder-only qualification cannot issue a model request")
         if self._pending_request is not None:
             raise RecordingContractError("model requests overlap within one isolated context")
         if self.current_observation is None:
@@ -807,6 +820,46 @@ class ForecastRecordingAdapter:
         )
         return proposal
 
+    def record_scripted_action(
+        self,
+        action: Any,
+        *,
+        action_source: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        """Propose one non-policy action for recorder qualification only.
+
+        These actions exercise the exact environment/observation journal path,
+        but never become model requests or behavioral-policy evidence.
+        """
+
+        if self.identity["model_config"] != RECORDER_ONLY_MODEL_CONFIG:
+            raise RecordingContractError("scripted recorder actions are prohibited for model attempts")
+        if self.finalized:
+            raise RecordingContractError("scripted action followed finalized attempt")
+        if self._pending_request is not None or self._proposed_action is not None:
+            raise RecordingContractError("scripted action overlaps another request or action")
+        if self.requests:
+            raise RecordingContractError("recorder-only qualification unexpectedly contains model requests")
+        if not isinstance(action_source, Mapping) or not action_source:
+            raise RecordingContractError("scripted action source receipt is required")
+        array = np.ascontiguousarray(_as_numpy(action)).copy()
+        if array.ndim != 1 or not np.issubdtype(array.dtype, np.number) or not np.isfinite(array).all():
+            raise RecordingContractError("scripted action must be one finite numeric vector")
+        proposal = {
+            "action_step": self.actions_executed + 1,
+            "request_index": None,
+            "chunk_offset": None,
+            "action_identity": _array_identity(array),
+            "action_source": copy.deepcopy(dict(action_source)),
+            "array": array,
+        }
+        self._proposed_action = proposal
+        self._append_event(
+            "recording_qualification_action_proposed",
+            {key: value for key, value in proposal.items() if key != "array"},
+        )
+        return proposal
+
     def begin_environment_step(self, executed_action: Any) -> tuple[int, int]:
         proposal = self._proposed_action
         if proposal is None:
@@ -850,8 +903,10 @@ class ForecastRecordingAdapter:
             raise RecordingContractError("environment action steps are not contiguous")
         success = _validated_success_snapshot(success)
         self.actions_executed = action_step
-        request = self.requests[proposal["request_index"]]
-        request["executed_offsets"].append(proposal["chunk_offset"])
+        request_index = proposal["request_index"]
+        if request_index is not None:
+            request = self.requests[request_index]
+            request["executed_offsets"].append(proposal["chunk_offset"])
         target = self.identity["command"]
         if success[target] and self.first_success is None:
             self.first_success = {
@@ -930,7 +985,8 @@ class ForecastRecordingAdapter:
             request_receipts = []
         if stop_reason == "action_cap" and self.actions_executed != self.action_cap:
             validation_errors.append("normal completion did not execute exactly 450 actions")
-        if stop_reason == "action_cap":
+        recorder_only = self.identity["model_config"] == RECORDER_ONLY_MODEL_CONFIG
+        if stop_reason == "action_cap" and not recorder_only:
             expected_requests = math.ceil(
                 self.action_cap
                 / int(self.contract["models"][self.identity["model_config"]]["executed_prefix_horizon"])
@@ -939,6 +995,8 @@ class ForecastRecordingAdapter:
                 validation_errors.append("request count does not cover the exact 450-action schedule")
             if not request_receipts or request_receipts[-1]["executed_actions"] != 2:
                 validation_errors.append("final two-action chunk truncation was not observed")
+        if stop_reason == "action_cap" and recorder_only and self.requests:
+            validation_errors.append("recorder-only qualification issued model requests")
         if stop_reason == "action_cap" and validation_errors:
             stop_reason = "technical_failure"
             detail = {
@@ -947,7 +1005,10 @@ class ForecastRecordingAdapter:
                 "original_stop_reason": "action_cap",
                 **dict(detail or {}),
             }
-        behavioral_valid = stop_reason == "action_cap" and not validation_errors
+        behavioral_valid = stop_reason == "action_cap" and not validation_errors and not recorder_only
+        recording_qualification_valid = (
+            stop_reason == "action_cap" and not validation_errors and recorder_only
+        )
         final_chunk = request_receipts[-1] if request_receipts else None
         receipt = {
             "schema_version": "wmf-forecast-recording-attempt-v1",
@@ -956,6 +1017,8 @@ class ForecastRecordingAdapter:
             "process_identity": self.process_identity,
             "stop_reason": stop_reason,
             "behavioral_result_valid": behavioral_valid,
+            "recording_qualification_valid": recording_qualification_valid,
+            "model_attached": not recorder_only,
             "right_censored": stop_reason == "safety_abort",
             "technical_invalid": stop_reason == "technical_failure",
             "actions_executed": self.actions_executed,

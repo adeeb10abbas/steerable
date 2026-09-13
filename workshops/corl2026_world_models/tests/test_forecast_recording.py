@@ -323,6 +323,63 @@ class ForecastRecordingTests(unittest.TestCase):
             self.assertEqual(verified["event_count"], receipt["event_count"])
             self.assertEqual(verified["tail_sha256"], receipt["journal_tail_sha256"])
 
+    def test_recorder_only_runs_450_actions_without_creating_model_evidence(self):
+        with tempfile.TemporaryDirectory() as root:
+            attempt_identity = identity(model="N3", attempt="recorder-only-01")
+            attempt_identity.update(
+                cell_id="wmf1__recording_qualification__P00__original__left",
+                stage="recording_qualification",
+                model_config=recording.RECORDER_ONLY_MODEL_CONFIG,
+                source_identity="scripted_joint_hold_no_policy",
+                checkpoint_identity="none_no_model_loaded",
+            )
+            recorder = recording.ForecastRecordingAdapter(
+                Path(root) / "attempt", attempt_identity
+            )
+            recorder.record_context_reset(
+                {
+                    "passed": True,
+                    "reset_scope": recording.CONTEXT_RESET_SCOPE,
+                    "server_context_id": "not-applicable-recorder-only",
+                    "cache_reset_evidence": {"no_model_attached": True},
+                }
+            )
+            proxy = recording.FixedDurationEnvProxy(
+                FakeEnv(),
+                FakeEnvCfg(),
+                recorder,
+                state_sampler=state_sampler,
+                clock_sampler=clock_sampler,
+                success_sampler=success_sampler,
+                reset_attestor=reset_attestor,
+            )
+            observation, _ = proxy.reset()
+            proxy.reset()
+            while not proxy.all_terminated:
+                action = np.concatenate(
+                    (
+                        observation["proprio_obs"]["arm_joint_pos"][0],
+                        observation["proprio_obs"]["gripper_pos"][0],
+                    )
+                ).astype(np.float32)
+                recorder.record_scripted_action(
+                    action,
+                    action_source={
+                        "kind": "joint_position_hold",
+                        "policy_model": None,
+                        "scientific_claim": "recorder_qualification_only",
+                    },
+                )
+                observation, *_ = proxy.step(np.expand_dims(action, axis=0))
+            receipt = recorder._final_receipt
+            self.assertEqual(receipt["actions_executed"], 450)
+            self.assertEqual(receipt["observation_count"], 451)
+            self.assertEqual(receipt["request_count"], 0)
+            self.assertTrue(receipt["recording_qualification_valid"])
+            self.assertFalse(receipt["behavioral_result_valid"])
+            self.assertFalse(receipt["model_attached"])
+            self.assertFalse(receipt["technical_invalid"])
+
     def test_request_binds_current_and_preceding_original_observations(self):
         with tempfile.TemporaryDirectory() as root:
             recorder, client, proxy, obs = self.make_runtime(root)

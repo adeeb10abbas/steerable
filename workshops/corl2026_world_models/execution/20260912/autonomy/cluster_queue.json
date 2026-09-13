@@ -2,5 +2,582 @@
   "schema_version": "wmf-cluster-queue-v1",
   "namespace": "wmf_ablation_001_20260912",
   "shutdown": false,
-  "jobs": []
+  "jobs": [
+    {
+      "job_id": "bootstrap-diagnostic-worker-00",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-00",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-01",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-01",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-02",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-02",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-03",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-03",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-04",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-04",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-05",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-05",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-06",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-06",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-07",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-07",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-08",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-08",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-09",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-09",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-10",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-10",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-11",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-11",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-12",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-12",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-13",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-13",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-14",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-14",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-15",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-15",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-16",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-16",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-17",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-17",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-18",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-18",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-19",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-19",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-20",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-20",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-21",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-21",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-22",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-22",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-23",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-23",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-24",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-24",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-25",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-25",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-26",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-26",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-27",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-27",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-28",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-28",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-29",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-29",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-30",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-30",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-31",
+      "released": true,
+      "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "role": "wmf-forecast-0912-worker-31",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1"
+      ],
+      "max_wall_seconds": 120,
+      "publish_log_tail_bytes": 2048
+    }
+  ]
 }

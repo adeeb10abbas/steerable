@@ -1,0 +1,65 @@
+{
+  "schema_version": "wmf-development-release-contract-v1",
+  "study_id": "WMF-ABLATION-001",
+  "status": "implemented_fail_closed_pending_real_development_evidence",
+  "input_schema": "wmf-development-release-evidence-v1",
+  "outputs": {
+    "alignment_contract": "wmf-forecast-alignment-contract-v1",
+    "mapping_receipt": "wmf-forecast-physical-alignment-receipt-v1",
+    "confirmation_release": "wmf-development-confirmation-release-freeze-v1"
+  },
+  "development_completeness": {
+    "required_layout_pairs": ["D01", "D02", "D03", "D04"],
+    "conditions_per_layout_model": 4,
+    "required_cells_per_qualified_model": 16,
+    "required_actions_per_complete_cell": 450,
+    "required_observations_per_complete_cell": 451,
+    "required_requests": {"N3": 15, "D1": 57}
+  },
+  "alignment": {
+    "accepted_generated_time_source": "native_runtime_exposed_target_offsets",
+    "native_field_binding": "Every official development request receipt must expose the named field with the exact explicit generated_frame_index and target_physical_time_s rows",
+    "clock_bridge": "elapsed physical seconds from request current original-camera capture",
+    "prohibited_inferences": [
+      "generated frame number as action number",
+      "conditioning FPS as target timing",
+      "presentation video FPS as target timing",
+      "concatenated presentation video frame position as physical time"
+    ],
+    "primary_horizon_rule": "longest strictly positive native-time-qualified target inside the unchanged executed prefix",
+    "early_horizon_rule": "earliest strictly positive native-time-qualified target below the primary horizon",
+    "timestamp_tolerance_rule": "min(half minimum positive native control interval, half minimum positive original-camera capture interval)",
+    "models": {
+      "N3": {"returned_action_horizon": 32, "unchanged_executed_prefix_horizon": 32},
+      "D1": {"returned_action_horizon": 24, "unchanged_executed_prefix_horizon": 8}
+    }
+  },
+  "sampling": {
+    "seed": 2026091302,
+    "cap_per_episode": 4,
+    "algorithm": "Within each episode, sort eligible source_request_id values by SHA256(UTF8(seed) || NUL || UTF8(episode_id) || NUL || UTF8(source_request_id)), breaking digest ties by source_request_id; select the first min(4, eligible_count).",
+    "selection_timing": "after complete request inventory and before labels",
+    "unclear_selected_image_replacement": false
+  },
+  "analysis": {
+    "seed": 2026091301,
+    "paired_layout_bootstrap_resamples": 10000
+  },
+  "annotation_release_gate": {
+    "frozen_rubric_required": true,
+    "independent_rater_count": 2,
+    "final_consensus_required": true,
+    "explicit_measurement_usability_decision_required": true,
+    "movement_resolution_source": "95th percentile of duplicate development label disagreement in relative image coordinates",
+    "fabricated_or_placeholder_threshold_allowed": false
+  },
+  "resource_release_gate": {
+    "per_cell_measured_wall_time_required": true,
+    "per_cell_measured_inference_time_required": true,
+    "per_cell_measured_raw_bytes_required": true,
+    "per_cell_measured_peak_gpu_memory_required": true,
+    "selected_host_and_bounded_parallelism_required": true,
+    "retain_confirmation_cells_per_qualified_model": 96
+  },
+  "claim_boundary": "A passed release receipt authorizes only the frozen confirmation cohort; it is not a model episode, annotation result, forecast-accuracy result, or evidence that an unresolved model qualified."
+}

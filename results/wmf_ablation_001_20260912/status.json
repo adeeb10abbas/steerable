@@ -20,7 +20,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "a065b5bdf26ed76417b62bffe4caab407e4f7855",
-    "control_generation": 678,
+    "control_generation": 679,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -1137,9 +1137,9 @@
     {
       "descriptor_sha256": "ef0f8d9296903765f3d1ba84f0471597655f0cc31a84c9fea32e8b951e642c83",
       "heartbeat": {
-        "at": "2026-09-13T11:09:38.702292+00:00",
+        "at": "2026-09-13T11:10:14.864429+00:00",
         "child_pid": 110223,
-        "unix": 1789297778.7023184,
+        "unix": 1789297814.8644555,
         "worker_id": "wmf-forecast-0912-worker-d1-00",
         "worker_pid": 1
       },
@@ -1183,9 +1183,9 @@
     {
       "descriptor_sha256": "574b376a27f630c5f710e014c89f2217d0a353ab6794305731b33368cba52291",
       "heartbeat": {
-        "at": "2026-09-13T11:09:37.664469+00:00",
+        "at": "2026-09-13T11:10:13.854405+00:00",
         "child_pid": 15260,
-        "unix": 1789297777.6644905,
+        "unix": 1789297813.854426,
         "worker_id": "wmf-forecast-0912-worker-00",
         "worker_pid": 1
       },
@@ -1195,10 +1195,30 @@
       "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
+      "child_pid": 15642,
+      "child_reaped": true,
       "descriptor_sha256": "4a1fe3ffea07d59e6fd6559717bc90b6d8baeb7bcd6c3e9aee4d5b1fe9d653c8",
+      "ended_at": "2026-09-13T11:10:04.566384+00:00",
+      "error_type": null,
       "job_id": "d1-development-d04-snapshot-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"at_utc\": \"2026-09-13T11:10:02.566757+00:00\", \"status\": \"snapshot_written\"}\n"
+      },
+      "returncode": 0,
       "source_commit": "271bb0bd55159fca4f1168d094d9d6774ce5ad30",
-      "status": "staged"
+      "started_at": "2026-09-13T11:10:02.113883+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 77,
+        "sha256": "ec6a959897c9cc00378ea1a86fb66554b1db5237a19055e84c08aa387c0a2881"
+      },
+      "wall_seconds": 2.452977381995879,
+      "worker_id": "wmf-forecast-0912-worker-06"
     },
     {
       "child_pid": 890,

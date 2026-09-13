@@ -1,0 +1,99 @@
+{
+  "exact_output_counts": {
+    "d1_forecast_timing_unavailable_requests": 672,
+    "early_horizon_required_for_both_models": true,
+    "eligible_requests_per_episode": 14,
+    "episodes": 32,
+    "request_inclusion_probability_exact": "4/14",
+    "requests": 1152,
+    "requests_by_model": {
+      "D1": 912,
+      "N3": 240
+    },
+    "selected_requests": 128,
+    "selected_requests_by_model": {
+      "D1": 64,
+      "N3": 64
+    },
+    "source_timing_capable_requests": 480,
+    "timing_camera_action_eligible_requests": 448
+  },
+  "input_policy": {
+    "alignment_contracts": 2,
+    "compiler_job_receipts": 1,
+    "compiler_receipts": 1,
+    "join_key": [
+      "model_id",
+      "cell_id",
+      "request_index"
+    ],
+    "model_request_provenance_files": 2,
+    "passed_timing_job_receipts": 2,
+    "passed_timing_sidecars": 2,
+    "physical_alignment_rederived_from_validated_sources": true,
+    "signed_camera_crop_contracts": 2,
+    "signed_physical_alignment_receipts": 2
+  },
+  "job": {
+    "id": "development-annotation-media-bridge-001",
+    "input_manifest_relative": "raw/annotation_media_input_manifest.json",
+    "max_wall_seconds": 21600,
+    "mode": "formal_full_development",
+    "output_relative": "raw/annotation_media_preparation",
+    "publish_log_tail_bytes": 8192,
+    "raw_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912",
+    "role": "wmf-forecast-0912-worker-05"
+  },
+  "namespace": "wmf_ablation_001_20260912",
+  "output_policy": {
+    "deduplicate_assets_by": "annotation_media_sha256",
+    "failure_publish_files": [
+      "development_annotation_media_job_failure.json"
+    ],
+    "human_pixel_blindness_review_required": true,
+    "pixel_review_checklist_emitted": true,
+    "mutually_exclusive_terminal_receipts": true,
+    "publish_tranche_asset_budget_bytes": 50331648,
+    "publisher_file_limit_bytes": 16777216,
+    "publisher_job_limit_bytes": 67108864,
+    "rater_packets_created_by_job": false,
+    "restricted_media_remains_on_pvc": true,
+    "tranche_index_bound_to_preparation_receipt_output_descriptor": true,
+    "tranche_release_requires_exact_terminal_preparation_receipt": true,
+    "success_publish_files": [
+      "development_annotation_media_job_receipt.json",
+      "publish_tranche_index.json"
+    ],
+    "tranche_worker_roles": [
+      "wmf-forecast-0912-worker-00",
+      "wmf-forecast-0912-worker-05",
+      "wmf-forecast-0912-worker-06",
+      "wmf-forecast-0912-worker-09"
+    ]
+  },
+  "runtime_replay_policy": {
+    "cuda_visible_devices": "",
+    "generated_crop_api": "extract_generated_crop",
+    "generated_crop_execution": "in_process_exact_uint8_half_open_slice",
+    "interpreter_authority": "camera_crop_contract.runtime_dependencies.python",
+    "ipc_schema": "wmf-camera-replay-exact-runtime-ipc-v1",
+    "original_camera_api": "replay_original_camera_frame",
+    "original_camera_execution": "one_persistent_isolated_subprocess_per_model",
+    "runtime_session_receipts": 2
+  },
+  "safe_for_rater_distribution": false,
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-development-annotation-media-bridge-contract-v1",
+  "science_counts": {
+    "behavioral_actions_executed_by_job": 0,
+    "behavioral_cells_launched_by_job": 0,
+    "labels_created_by_job": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0,
+    "simulator_processes_started": 0
+  },
+  "study_id": "WMF-ABLATION-001"
+}

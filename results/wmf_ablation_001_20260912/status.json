@@ -28,8 +28,8 @@
       "camera-crop-replay-witness-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "a839b74172625e1c4c845acee0165da066795c77",
-    "control_generation": 931,
+    "control_commit": "d8e30b9ca830edf8641df7aa7835b4488879320a",
+    "control_generation": 932,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -489,9 +489,17 @@
     },
     {
       "descriptor_sha256": "08dc8ffbd25924eaee64ac11971390c7fad3edbb46041fe58b7ceb384a0f783a",
+      "heartbeat": {
+        "at": "2026-09-13T13:57:48.246568+00:00",
+        "child_pid": 15662,
+        "unix": 1789307868.2465866,
+        "worker_id": "wmf-forecast-0912-worker-06",
+        "worker_pid": 1
+      },
       "job_id": "camera-crop-replay-witness-001",
       "source_commit": "9f4e0f127b55f96792cc04a33f4d13bc85171c11",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-06"
     },
     {
       "child_pid": 15644,
@@ -1756,9 +1764,9 @@
     {
       "descriptor_sha256": "2c8864a0a2ca1d6fd8082d2d75fde251bb3a45793afa71a5f4331ef69557fa51",
       "heartbeat": {
-        "at": "2026-09-13T13:57:10.973237+00:00",
+        "at": "2026-09-13T13:57:49.121910+00:00",
         "child_pid": 423,
-        "unix": 1789307830.9732628,
+        "unix": 1789307869.121933,
         "worker_id": "wmf-forecast-0912-worker-05",
         "worker_pid": 1
       },

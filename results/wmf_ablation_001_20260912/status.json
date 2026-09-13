@@ -1,10 +1,15 @@
 {
   "automatic_claim_recovery": false,
   "control": {
-    "active_job_ids": [],
+    "active_job_ids": [
+      "worker00-isolation-diagnostic-002",
+      "worker09-isolation-diagnostic-002",
+      "n3-isolation-diagnostic-002",
+      "d1-isolation-diagnostic-002"
+    ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "e95f0ba19e8526663c70a8b8460eb563b2c6f573",
-    "control_generation": 291,
+    "control_commit": "213b270fd4dd67175a1c080299a0da5b549abeac",
+    "control_generation": 292,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -591,6 +596,12 @@
       },
       "wall_seconds": 304.19194700801745,
       "worker_id": "wmf-forecast-0912-worker-d1-00"
+    },
+    {
+      "descriptor_sha256": "0dc38de18f15d55212705f23a864eb7ae8611bd04f6a9449aaa151e10c7c6a27",
+      "job_id": "d1-isolation-diagnostic-002",
+      "source_commit": "e95f0ba19e8526663c70a8b8460eb563b2c6f573",
+      "status": "staged"
     },
     {
       "descriptor_sha256": "3a5c142e7a9ca4db570abe08a07fc522d75a52d4fd9198c6e7fb2a2186bb5f50",
@@ -1331,6 +1342,14 @@
       "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
+      "descriptor_sha256": "ea3edced73f2201c505039c3d979e8d1c719c70e0157209d565eea9b6cc93343",
+      "heartbeat": {},
+      "job_id": "n3-isolation-diagnostic-002",
+      "source_commit": "e95f0ba19e8526663c70a8b8460eb563b2c6f573",
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-n3-00"
+    },
+    {
       "child_pid": 32,
       "child_reaped": true,
       "descriptor_sha256": "fde3900232560dd8b0b0c088dd2dd35b57dfbaf17a1f309c5a5c541a798ac777",
@@ -1513,6 +1532,12 @@
       "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
+      "descriptor_sha256": "fcf4515e61bf8ac51ebbfc91f9c96f08789b2bd574da695c15fd40147474e4f7",
+      "job_id": "worker00-isolation-diagnostic-002",
+      "source_commit": "e95f0ba19e8526663c70a8b8460eb563b2c6f573",
+      "status": "staged"
+    },
+    {
       "child_pid": 34,
       "child_reaped": true,
       "descriptor_sha256": "1108c442dd4f79efac877af9114e1d9226ebced97f9f04af68130e11e7602314",
@@ -1589,6 +1614,12 @@
       },
       "wall_seconds": 2.6888797178398818,
       "worker_id": "wmf-forecast-0912-worker-09"
+    },
+    {
+      "descriptor_sha256": "4443e2ca9580dd59e0951308414d279e00857976232e45ca09c231d4a40cb11a",
+      "job_id": "worker09-isolation-diagnostic-002",
+      "source_commit": "e95f0ba19e8526663c70a8b8460eb563b2c6f573",
+      "status": "staged"
     }
   ],
   "maximum_combined_log_tail_bytes_per_job": 8192,

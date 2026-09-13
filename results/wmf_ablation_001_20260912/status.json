@@ -2,11 +2,17 @@
   "automatic_claim_recovery": false,
   "control": {
     "active_job_ids": [
-      "timing-n3-live-generation-p00-002"
+      "timing-n3-live-generation-p00-002",
+      "d1-development-d01-server-003",
+      "d1-development-d01-simulator-003",
+      "d1-development-d02-server-003",
+      "d1-development-d02-simulator-003",
+      "d1-development-d04-server-003",
+      "d1-development-d04-simulator-003"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "30ed0ffc420f579e8bcffbd3cae59fe9e43867ee",
-    "control_generation": 564,
+    "control_commit": "e5abbafd2a44becd628ccd0b6d1e669d914b6847",
+    "control_generation": 565,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -595,6 +601,12 @@
       "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
+      "descriptor_sha256": "1082e92d6bc78c947ae144950fbc77e3293e967711b06b0f09121c7c45df1406",
+      "job_id": "d1-development-d01-server-003",
+      "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "status": "staged"
+    },
+    {
       "child_pid": 4541,
       "child_reaped": true,
       "descriptor_sha256": "4db54e85f606e748564ebb1eefb9e697a89c7d3e078b61fe8828659884f30918",
@@ -645,6 +657,12 @@
       },
       "wall_seconds": 411.79287612996995,
       "worker_id": "wmf-forecast-0912-worker-00"
+    },
+    {
+      "descriptor_sha256": "d0d7c0fd5b0e74a91927766f749a27939c2c912778efbbee3b93b3e350392b3c",
+      "job_id": "d1-development-d01-simulator-003",
+      "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "status": "staged"
     },
     {
       "child_pid": 15445,
@@ -725,6 +743,12 @@
       "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
+      "descriptor_sha256": "987048a602744d25be79dbf41c88f37e1298af9c749a6dcf89c6e4abda808c31",
+      "job_id": "d1-development-d02-server-003",
+      "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "status": "staged"
+    },
+    {
       "child_pid": 4573,
       "child_reaped": true,
       "descriptor_sha256": "49e2ec227377233b2e4802185de7d37d690010fa79f82ea8296f03fb9dde556a",
@@ -775,6 +799,12 @@
       },
       "wall_seconds": 62.51487407810055,
       "worker_id": "wmf-forecast-0912-worker-00"
+    },
+    {
+      "descriptor_sha256": "b1f0272a7f3baa3940d125d129e4c2732dbb127e14b4b8bf19db3ec22071835f",
+      "job_id": "d1-development-d02-simulator-003",
+      "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "status": "staged"
     },
     {
       "child_pid": 23,
@@ -965,6 +995,12 @@
       "status": "staged"
     },
     {
+      "descriptor_sha256": "ef0f8d9296903765f3d1ba84f0471597655f0cc31a84c9fea32e8b951e642c83",
+      "job_id": "d1-development-d04-server-003",
+      "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "status": "staged"
+    },
+    {
       "child_pid": 4648,
       "child_reaped": true,
       "descriptor_sha256": "2ab5016b7e878e63160002a3469d3a92216ba16fc9461ab469cc5d33d84bab21",
@@ -994,6 +1030,12 @@
       "descriptor_sha256": "2bb3160b6a7ad684ade23d1c8a6861a17c449b03c5c7b598c4b34e1a05f06e5d",
       "job_id": "d1-development-d04-simulator-002",
       "source_commit": "64e84d1f7634e2a7fbaaf0e1ffd05bf021614517",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "574b376a27f630c5f710e014c89f2217d0a353ab6794305731b33368cba52291",
+      "job_id": "d1-development-d04-simulator-003",
+      "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
       "status": "staged"
     },
     {
@@ -4023,17 +4065,29 @@
       "worker_id": "wmf-forecast-0912-worker-n3-00"
     },
     {
+      "child_pid": 20798,
+      "child_reaped": true,
       "descriptor_sha256": "27617cadb38f5b7badff48d982e14b1b12347c970236748a90230efa2dd5ba12",
-      "heartbeat": {
-        "at": "2026-09-13T09:57:56.438166+00:00",
-        "child_pid": 20798,
-        "unix": 1789293476.438202,
-        "worker_id": "wmf-forecast-0912-worker-n3-00",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T09:58:18.547029+00:00",
+      "error_type": null,
       "job_id": "timing-n3-live-generation-p00-002",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"job_id\": \"timing-n3-live-generation-p00-002\", \"mode\": \"n3-generate\", \"science_counts\": {\"behavioral_actions\": 0, \"behavioral_cells\": 0, \"model_requests_issued_by_job\": 6, \"model_runtime_loads\": 1, \"model_servers_started\": 0, \"physical_resets\": 0, \"referenced_generation_requests\": 0, \"robot_episodes\": 0}, \"status\": \"passed\"}\n"
+      },
+      "returncode": 0,
       "source_commit": "35e969b7fae02592a9ac45025bd0c64c5432e3ac",
-      "status": "claimed",
+      "started_at": "2026-09-13T09:56:30.979841+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 328,
+        "sha256": "3b70f8668bb4e2741a0334d50a1bd6305f15a6c22429c76fce09734bd061497a"
+      },
+      "wall_seconds": 107.56734482600586,
       "worker_id": "wmf-forecast-0912-worker-n3-00"
     },
     {

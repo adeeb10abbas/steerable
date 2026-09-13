@@ -1,0 +1,105 @@
+{
+  "checkpoint": {
+    "full_payload_rehash_performed": true,
+    "payload_aggregate_sha256": "55895125805b12635ece5dd2e88453a1aca6a684bac556f114337ae448ffdd83",
+    "revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e"
+  },
+  "claim_boundary": "One live generation request and its exact tensor/decode identities; no model action was executed and no physical-time mapping is yet claimed.",
+  "contract": {
+    "bytes": 11765,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/35e969b7fae02592a9ac45025bd0c64c5432e3ac/workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_lineage_contract.json",
+    "sha256": "7a9cca8b2d3c0057ab6022b8ce0612fba0e84e4ccacaa4258f6cad266e48490e"
+  },
+  "inference_tensor_witness_expected": {
+    "conditioning_action_rows": 1,
+    "decoded_frame_count": 33,
+    "pre_transform_action_rows_including_state": 33,
+    "pre_transform_video_frames": 33,
+    "raw_generated_action_rows": 33,
+    "returned_action_rows_after_conditioning_strip": 32,
+    "sequence_plan_action_start_frame_offset": 0
+  },
+  "live_capture": {
+    "camera_capture_time_ns": {
+      "over_shoulder_left_camera": 5000009537,
+      "over_shoulder_right_camera": 5000009537,
+      "wrist_cam": 5000009537
+    },
+    "camera_frame_ids": {
+      "over_shoulder_left_camera": "rgb-sha256:0fa39afc963ac36cbcd45225a1d728c6b746fe125bc30e1146dc22d9570570dc",
+      "over_shoulder_right_camera": "rgb-sha256:9898fc622ba082c3e23fc9f39935cf0185179459a0cced7eba79a7c519af2cce",
+      "wrist_cam": "rgb-sha256:5fc4ebb0bd42f5e14d82e3285a62448c426b727e72888adb81bbbf91e456002e"
+    },
+    "camera_timestamp_source": {
+      "over_shoulder_left_camera": "_timestamp_last_update",
+      "over_shoulder_right_camera": "_timestamp_last_update",
+      "wrist_cam": "_timestamp_last_update"
+    },
+    "capture": {
+      "bytes": 80178,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/capture_receipt.json",
+      "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+    },
+    "capture_id": "P00-2026091000-bcdd49da3920dbdf",
+    "model_fixture": {
+      "bytes": 1037692,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/n3_official_wire_observation.npz",
+      "sha256": "32ced616cb872d69abf7f69705b09e5529b346b7664b32cec51b250be3bffd94"
+    },
+    "model_fixture_wire_sha256": "2d21102872d28a5ef502fe57129a1d15fd5f3368d93d306aae89be93534c2e07",
+    "selected_camera_id": "over_shoulder_left_camera",
+    "settled_reset_identity": "fixed-observation:ce5ad4282d2392245f843d5270a9656d4e99f842:P00:2026091000"
+  },
+  "model_id": "N3",
+  "model_output_or_action_modified": false,
+  "model_returned_action_executed": false,
+  "normalized_at_utc": "2026-09-13T09:58:17.665751Z",
+  "payload_sha256": "39a277823d69caa9c7457df72a52e58ff19d9295e8668328c1fc091cc70a3477",
+  "physical_time_qualified": false,
+  "prohibited_inferences_used": [],
+  "qualification": {
+    "bytes": 2975,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/raw/n3_generation_publish/n3_qualification.json",
+    "sha256": "8be9c7a07f6156eecd5a4bf6a1750e6f28de1c92738d4777c91d28ad593b783f"
+  },
+  "raw_qualification": {
+    "bytes": 41305,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/raw/n3_generation_raw/n3_qualification.json",
+    "sha256": "4a46f1efbbac37debc1779077837ba2d4e803c49639334fba1804b993c02298a"
+  },
+  "schema_version": "wmf-forecast-zero-policy-generation-probe-v1",
+  "selected_request": {
+    "decoded_rgb_shape": [
+      33,
+      528,
+      640,
+      3
+    ],
+    "decoded_value_sha256": "a47778175a83bfe1435a93379163946f54c26065a0a5b4bce24e6b17223ddc63",
+    "generation_robot_episode_count": 0,
+    "latent_shape": [
+      1,
+      48,
+      9,
+      33,
+      40
+    ],
+    "latent_value_sha256": "afbf25d20ed921e1b5139f12a04a8d459a394a48677cff1e8621bec50a784d47",
+    "raw_generated_action_rows": 33,
+    "record_sha256": "84e1dfedfe02b0a6efccba6592ddb8e1ab61a3422d0a2c05082de95673056b10",
+    "request_id": "left_decode",
+    "request_index": 3,
+    "returned_action_executed": false,
+    "returned_action_shape": [
+      32,
+      8
+    ],
+    "returned_action_value_sha256": "70611f1ffb3c0ebf53f2af2f1f0eefe739807498b83915db15622020821baa3d"
+  },
+  "source": {
+    "commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+    "git_tree": "1e77852f2240d6e00312342ab29164745042b1ae"
+  },
+  "status": "live_generation_shape_passed_physical_clock_probe_required",
+  "study_id": "WMF-ABLATION-001"
+}

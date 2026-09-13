@@ -1,0 +1,140 @@
+{
+  "behavioral_policy_skill_evaluated": false,
+  "child": {
+    "argv": [
+      "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python",
+      "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/35e969b7fae02592a9ac45025bd0c64c5432e3ac/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live.py",
+      "--source-root",
+      "/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b",
+      "--checkpoint-root",
+      "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+      "--observation-manifest",
+      "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/raw/n3_live_input/observation_manifest.json",
+      "--output-dir",
+      "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/raw/n3_generation_raw",
+      "--publish-dir",
+      "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/raw/n3_generation_publish",
+      "--effective-seed",
+      "2026091000"
+    ],
+    "reaped": true,
+    "returncode": 0
+  },
+  "claim_boundary": "Six N3 generation requests against one live P00 fixed input, with retained actions/latents/decodes and zero executed robot actions or behavioral episodes.",
+  "completed_at_utc": "2026-09-13T09:58:17.763863Z",
+  "decision": "go",
+  "implementation": {
+    "n3_generation_runner": {
+      "bytes": 68421,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/35e969b7fae02592a9ac45025bd0c64c5432e3ac/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live.py",
+      "sha256": "9655047f322e7488d3bbf27839cf5ae6bf0ea91c351bbfe4ec45950883c42f8d"
+    },
+    "n3_runtime_contract": {
+      "bytes": 3265,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/35e969b7fae02592a9ac45025bd0c64c5432e3ac/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live_contract.json",
+      "sha256": "a9503011b8f7236dd3e8eb9c2e4328f2ab95021b4f72e5900c01b51cee743e61"
+    },
+    "timing_contract": {
+      "bytes": 11765,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/35e969b7fae02592a9ac45025bd0c64c5432e3ac/workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_lineage_contract.json",
+      "sha256": "7a9cca8b2d3c0057ab6022b8ce0612fba0e84e4ccacaa4258f6cad266e48490e"
+    },
+    "timing_validator": {
+      "bytes": 115077,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/35e969b7fae02592a9ac45025bd0c64c5432e3ac/workshops/corl2026_world_models/analysis/qualify_forecast_timing.py",
+      "sha256": "805fc1bc5d6eeeb174ac880ba034cc9eb7198292ffacce8fc350ea5bc7ffc262"
+    }
+  },
+  "inputs": {
+    "observation_manifest": {
+      "bytes": 2128,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/raw/n3_live_input/observation_manifest.json",
+      "sha256": "ab4dc15aa64722f37cf42b0f9ef813e0eb4279245ce7aba1698f96f3f2e096a9"
+    },
+    "observation_payload": {
+      "bytes": 1037592,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/raw/n3_live_input/observation.npz",
+      "sha256": "a6cf00507e5a2fff6837f9d3a55846830c9ca7306b4bfe580ebd2b78d31a827f"
+    },
+    "preparation_job_receipt": {
+      "bytes": 4125,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/publish/timing_job_receipt.json",
+      "sha256": "e1119ea9bc30cb27ec54736569e71d02f692ed5ba2b37f9fde25404729114d07"
+    },
+    "preparation_receipt": {
+      "bytes": 1787,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/raw/n3_live_input/preparation_receipt.json",
+      "sha256": "b4c8a220dd3c936875b6112bbd8fbb0afb32b687fbb4ab2e7262b7695f328dca"
+    }
+  },
+  "job_dir": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002",
+  "job_id": "timing-n3-live-generation-p00-002",
+  "mode": "n3-generate",
+  "namespace": "wmf_ablation_001_20260912",
+  "outputs": {
+    "child_stderr": {
+      "bytes": 3000,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/raw/n3_generation.stderr.log",
+      "sha256": "db25c9927b82536a1bd7195c99a9644b029eae2cf915481ebe3ee53cb9ae9773"
+    },
+    "child_stdout": {
+      "bytes": 15919,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/raw/n3_generation.stdout.log",
+      "sha256": "31fc0bcd641aaee6100367ec98e303d3550da0333920a1c62cba722f93c960c5"
+    },
+    "normalized_generation_probe": {
+      "bytes": 4729,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/raw/n3_generation_probe.json",
+      "sha256": "4282abc44a7cbfec53ad2d6dd04cd6d2c7eade4859c4d6efd2631aac30a472c3"
+    },
+    "published_generation_probe": {
+      "bytes": 4729,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/publish/n3_generation_probe.json",
+      "sha256": "4282abc44a7cbfec53ad2d6dd04cd6d2c7eade4859c4d6efd2631aac30a472c3"
+    },
+    "published_qualification": {
+      "bytes": 2975,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/publish/n3_qualification.json",
+      "sha256": "8be9c7a07f6156eecd5a4bf6a1750e6f28de1c92738d4777c91d28ad593b783f"
+    },
+    "qualification": {
+      "bytes": 2975,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/raw/n3_generation_publish/n3_qualification.json",
+      "sha256": "8be9c7a07f6156eecd5a4bf6a1750e6f28de1c92738d4777c91d28ad593b783f"
+    }
+  },
+  "payload_sha256": "f70f1d38b3fb34a0533567619f326b8e2f8d3e95acda4ac153fd4b724fcfdc89",
+  "physical_time_qualified": false,
+  "queue_claim": {
+    "bytes": 412,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/claim/owner.json",
+    "sha256": "ba7f073e01b665e5bef5d9c49e5bcd7c5e0af8db719e344a88f5622ec9b97c66"
+  },
+  "queue_descriptor": {
+    "bytes": 2468,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/descriptor.json",
+    "sha256": "27617cadb38f5b7badff48d982e14b1b12347c970236748a90230efa2dd5ba12"
+  },
+  "queue_role": "n3",
+  "runtime_identity": {
+    "hostname": "wmf-forecast-0912-worker-n3-00-z8kzd",
+    "pid": 20798,
+    "pod_uid": "0b44b751-91c9-4e35-8088-7c6192c26fb3"
+  },
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-forecast-timing-queue-job-v1",
+  "science_counts": {
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "model_requests_issued_by_job": 6,
+    "model_runtime_loads": 1,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "referenced_generation_requests": 0,
+    "robot_episodes": 0
+  },
+  "status": "passed",
+  "study_commit": "35e969b7fae02592a9ac45025bd0c64c5432e3ac",
+  "study_id": "WMF-ABLATION-001",
+  "worker_id": "wmf-forecast-0912-worker-n3-00"
+}

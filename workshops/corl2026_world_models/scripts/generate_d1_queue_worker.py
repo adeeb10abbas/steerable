@@ -60,7 +60,6 @@ def build_manifest(bootstrap_sha256: str, admission_deadline_unix: int) -> dict:
         "PYTHONUNBUFFERED": "1",
         "GIT_TERMINAL_PROMPT": "0",
         "GCM_INTERACTIVE": "never",
-        "NVIDIA_VISIBLE_DEVICES": "all",
         "NVIDIA_DRIVER_CAPABILITIES": "compute,utility,graphics,display,video",
         "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
         "VK_ICD_FILENAMES": "/etc/vulkan/icd.d/nvidia_icd.json",

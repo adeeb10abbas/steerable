@@ -6,7 +6,9 @@ primary pod's verified 24 CPU/128Gi request and 48 CPU/256Gi limit. Keeping this
 headroom avoids an unmeasured reduction in simulator/model capacity. Scheduler
 admission, cross-pod NFS flock and an empty initial queue must be verified before
 any job is released. Controllers admit work for seven days and retain up to
-48 additional hours for an already-started job to drain. A generated manifest
+48 additional hours for an already-started job to drain. The coordinator also
+retains ten minutes to publish final receipts. Every pod receives the same
+absolute admission cutoff so delayed starts cannot extend it. A generated manifest
 is not scientific qualification.
 """
 from __future__ import annotations
@@ -14,6 +16,7 @@ import argparse
 import json
 from pathlib import Path
 import re
+import time
 
 NAMESPACE='211247-prod'
 STUDY='wmf_ablation_001_20260912'
@@ -22,6 +25,7 @@ STATE='/data/users/ali/vla_wam/raw/'+STUDY+'/control'
 BOOTSTRAP=STATE+'/bootstrap/cluster_queue.py'
 IMAGE='artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c'
 CONTROLLER_WALL_SECONDS=604800
+COORDINATOR_WALL_SECONDS=778200
 HASH_CHECK='''import hashlib, os, sys
 path, expected = sys.argv[1:3]
 with open(path, "rb") as stream:
@@ -32,19 +36,25 @@ os.execv(sys.executable, [sys.executable, path, *sys.argv[3:]])
 '''
 
 
-def build_manifest(bootstrap_sha256, worker_count=32):
+def build_manifest(bootstrap_sha256, worker_count=32, admission_deadline_unix=None):
     if not isinstance(bootstrap_sha256,str) or not re.fullmatch('[0-9a-f]{64}',bootstrap_sha256):
         raise ValueError('a verified lowercase SHA-256 for the final bootstrap code is required')
     if type(worker_count) is not int or not 0<=worker_count<=32:
         raise ValueError('worker_count must be an integer from zero through 32')
+    if admission_deadline_unix is None:
+        admission_deadline_unix=int(time.time())+CONTROLLER_WALL_SECONDS
+    if type(admission_deadline_unix) is not int or admission_deadline_unix<=0:
+        raise ValueError('admission_deadline_unix must be a positive integer timestamp')
     items=[]
     for role,index in [('coordinator',None)]+[('worker',i) for i in range(worker_count)]:
         name='wmf-forecast-0912-'+('coordinator' if index is None else f'worker-{index:02d}')
         labels={'app.kubernetes.io/name':'wmf-forecast-queue','app.kubernetes.io/part-of':STUDY,
                 'user':'ali','wmf-role':role}
+        wall=COORDINATOR_WALL_SECONDS if role=='coordinator' else CONTROLLER_WALL_SECONDS
         args=[BOOTSTRAP,bootstrap_sha256,role,'--repo',SOURCE,'--state-dir',STATE,
-              '--max-wall-seconds',str(CONTROLLER_WALL_SECONDS),'--poll-seconds','30']
-        if role=='worker':args+=['--worker-id',name,'--role','any']
+              '--max-wall-seconds',str(wall),'--poll-seconds','30',
+              '--admission-deadline-unix',str(admission_deadline_unix)]
+        if role=='worker':args+=['--worker-id',name,'--role',name]
         else:args+=['--control-ref','refs/remotes/origin/codex/forecast-layout-gm-20260912',
                     '--queue-path','workshops/corl2026_world_models/execution/20260912/autonomy/cluster_queue.json',
                     '--results-branch','codex/forecast-layout-gm-20260912-results']
@@ -87,7 +97,7 @@ def build_manifest(bootstrap_sha256, worker_count=32):
             'metadata':{'name':name,'namespace':NAMESPACE,'labels':labels,
                         'annotations':{'wmf-bootstrap-sha256':bootstrap_sha256}},
             'spec':{'completions':1,'parallelism':1,'backoffLimit':3,
-                    'activeDeadlineSeconds':CONTROLLER_WALL_SECONDS+172800+300,
+                    'activeDeadlineSeconds':(COORDINATOR_WALL_SECONDS+300 if role=='coordinator' else CONTROLLER_WALL_SECONDS+172800+300),
                     'template':{'metadata':{'labels':labels,'annotations':{'wmf-bootstrap-sha256':bootstrap_sha256}},'spec':pod}}})
     return {'apiVersion':'v1','kind':'List','items':items}
 
@@ -96,9 +106,10 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--bootstrap-sha256',required=True)
     parser.add_argument('--worker-count',type=int,default=32)
+    parser.add_argument('--admission-deadline-unix',type=int,help='Shared absolute cutoff; default is generation time plus seven days. Supply explicitly to reproduce a manifest.')
     parser.add_argument('--output',type=Path,required=True)
     args=parser.parse_args()
-    manifest=build_manifest(args.bootstrap_sha256,args.worker_count)
+    manifest=build_manifest(args.bootstrap_sha256,args.worker_count,args.admission_deadline_unix)
     data=json.dumps(manifest,indent=2,sort_keys=True)+'\n'
     if args.output.exists() and args.output.read_text()!=data:
         raise FileExistsError('refusing to overwrite a different bootstrap manifest')

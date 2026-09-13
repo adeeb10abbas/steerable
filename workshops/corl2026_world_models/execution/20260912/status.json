@@ -1,28 +1,29 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T04:41:00Z",
+  "as_of_utc": "2026-09-13T07:13:00Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
   "requested_host": "GM allocated cluster",
   "authorization": "User requested execution of attached specification on GM with aggressive parallelism. Core 232 episodes selected; optional D2 not selected. No confirmation release before qualification.",
-  "core_episodes_launched": 5,
-  "generation_requests_launched": 73,
-  "generation_requests_completed": 73,
+  "core_episodes_launched": 8,
+  "generation_requests_launched": 136,
+  "generation_requests_completed": 136,
   "request_breakdown": {
     "nonbehavioral_generation_qualification": 12,
     "valid_N3_behavioral": 60,
     "technical_invalid_N3_behavioral": 1,
-    "D1_behavioral": 0
+    "valid_D1_behavioral": 57,
+    "partial_N3_development": 6
   },
-  "phase": "N3_behavioral_pilot_passed_D1_behavioral_pilot_pending",
-  "cluster_status": "Independent Git/PVC queue is active without the work Mac. Four one-B200 queue workers, one isolated two-B200 N3 worker and one isolated two-B200 D1 worker are Running. Worker00 and both model workers have prior exact identity receipts; newly admitted workers05, 06 and 09 require fresh hash-bound dynamic diagnostics before scientific work.",
+  "phase": "N3_D01_development_active_D1_P00_valid_prefix_resume_fix_in_review_confirmation_fixtures_active",
+  "cluster_status": "Independent Git/PVC queue is active without the work Mac after the fully fenced release-lock inode recovery. Worker00, workers05/06/09, the isolated two-B200 N3 worker and the isolated two-B200 D1 worker all have current hash-bound identity/GPU diagnostics. N3 D01 is executing actual actions, D02-D04 are durably queued on the same isolated role, three model-blind fixture gates are active, and the terminated D1 pair is idle while its valid condition-00 prefix validator is repaired.",
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_physical_time_still_unqualified",
     "runtime_D1": "passed_six_official_conditional_generation_requests_on_exact_two_B200_worker_after_four_preserved_pre_request_technical_invalid_attempts",
     "fixed_450_recorder": "passed_recorder_only_original_left_with_450_actions_451_observations_zero_model_requests",
-    "physical_layouts": "P00_candidate_01_and_D01_through_D04_candidate_00_accepted_model_blind; P00_pose_and_current_capture_frozen",
+    "physical_layouts": "P00_candidate_01_and_D01_through_D04_candidate_00_accepted_model_blind_with pose_and_current_capture_frozen; C01_candidate_01, C02_through_C16_candidate_00, and C18_candidate_00 accepted model_blind_at_snapshot; C17_candidate_00 physically_rejected_and_candidate_01_queued",
     "frame_time_camera_mapping": "N3_P00_attempt_004_passed_four_450_action_cells_with_60_joint_action_future_requests_and_native_camera_physics_control_receipts",
     "annotation_development": "pending_development_recordings",
     "confirmation_release": false
@@ -32,7 +33,7 @@
     "pilot_max_workers": 2,
     "development_max_workers": 8,
     "confirmation_max_workers": 48,
-    "actual_parallel_limit": 4,
+    "actual_parallel_limit": 5,
     "limit_rule": "min(verified available isolated workers, remaining blocks); never interleave shared temporal server state"
   },
   "preserve": "All historical V2/V3 evidence and registries; all valid failures; all partial attempts",
@@ -41,7 +42,7 @@
   "verified_baseline_tests": 23,
   "source_bundle_sha256": "a8cc6b8d393902bd4ea8561ec1236097d02c74c88c500b5477da72df576fde69",
   "automatic_background_execution": true,
-  "verified_workshop_tests": 175,
+  "verified_workshop_tests": 258,
   "prepared_schedule": {
     "path": "parallel_schedule.json",
     "jobs": 58,
@@ -81,8 +82,11 @@
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "c46bb8b3dcfbc95bbf14684e5d87db2730fd077a",
-    "latest_results_commit_fetched": "06b8ab02b4a382a23372dfef327915121f1b2069"
+    "latest_control_commit": "467db3dcdeda9f7d1955b3e2ae534cf66e98cb9d",
+    "latest_results_commit_fetched": "95b2424db5a4ab563b71db79d65af55b152d3213",
+    "release_lock_recovery_receipt_sha256": "f985f78cc9a7955d9d038eea7a4da492e7d5f6ed49dfbde8d021806579bf0e8a",
+    "release_lock_current_inode": 44796676,
+    "post_recovery_detached_diagnostics_passed": 6
   },
   "archive_source_recovery": {
     "path": "archive_source_recovery.json",
@@ -176,19 +180,19 @@
     "development": {
       "D01": {
         "accepted_candidate": "D01__candidate_00",
-        "receipt_sha256": "ae001a2f7377909e4e42852a69b6583c1ed178fb10ac9d62f7f5e66051dc8f9c"
+        "receipt_sha256": "ae001a2ff7c945ebb6f0fa20aec656257cdefff2195745e150d6c1b6a4a5bad9"
       },
       "D02": {
         "accepted_candidate": "D02__candidate_00",
-        "receipt_sha256": "e30a3ddc96c5f0b693e7c5666d04e6d820b49ad668fb9964185f702616459bbc"
+        "receipt_sha256": "e30a3dd1ad3d8621661a406a7c1d6c30034383f9b5ad6bed8a96c63015a477d6"
       },
       "D03": {
         "accepted_candidate": "D03__candidate_00",
-        "receipt_sha256": "fbef54885878a3e4c20e16cb96e394f0d7d4db1ba1a7c82977633521f7d9c9c4"
+        "receipt_sha256": "fbef548872e752b8392d6c09c39b56ae91bb0e5e75dc5481c0e57cf8f6e4e289"
       },
       "D04": {
         "accepted_candidate": "D04__candidate_00",
-        "receipt_sha256": "c700f4ab9e46893065f4eff6ad36b41870dc283817522bf6af8cff1d33b43994"
+        "receipt_sha256": "c700f4ab196d5aee19476ca9eb1f144651353f3767cb2524c0a210d77a225d6b"
       },
       "model_requests": 0,
       "behavioral_actions": 0,
@@ -205,13 +209,39 @@
     "n3_fixture_sha256": "32ced616cb872d69abf7f69705b09e5529b346b7664b32cec51b250be3bffd94",
     "model_requests": 0,
     "behavioral_actions": 0,
-    "results_commit": "e1675b05b64a17157c0a575d06b652c7390861bc"
+    "results_commit": "e1675b05b64a17157c0a575d06b652c7390861bc",
+    "development": {
+      "D01": {
+        "pose_manifest_sha256": "4b6a69592c0053d5117ef88a56c4e9e1f9037714d212c37f4b27c1fbf98f04fc",
+        "capture_receipt_sha256": "414eb129ab714345d49748370d7bbb6553980d5ecd0ea20a9b44324a164061ab"
+      },
+      "D02": {
+        "pose_manifest_sha256": "701c2d0acdd9ccb546673d1ae028de2838eb425ee42cd79df3cbc82829d760af",
+        "capture_receipt_sha256": "7ad03352a7fbd0f5c30f425712df716733ea4d2e0306037eee14e6fe013d9c43"
+      },
+      "D03": {
+        "pose_manifest_sha256": "67ab2f44e649ee8d0b47347a459a8b216845aad31b45af2dc85dd3dd54f5f171",
+        "capture_receipt_sha256": "5ea8fde74fcc5ea74c0161902e8f9158fc2fc4eabe21fc65a371b0355c9a67fc"
+      },
+      "D04": {
+        "pose_manifest_sha256": "e0b9d2eb2f9ff374b7828a51941ff11b22f190b381919e802740906f92b8f15e",
+        "capture_receipt_sha256": "768dc7e85740b70d673357cb4ee312d49da48dfe1a50ed67e49b6f1d5f2b3c4f"
+      },
+      "model_requests": 0,
+      "behavioral_actions": 0,
+      "results_commit": "ebfa748b8ba845c23b60c30c37805349a0c53fac"
+    }
   },
-  "active_owned_jobs": [],
+  "active_owned_jobs": [
+    "n3-development-d01-002",
+    "fixture-c19-candidate-00-r2",
+    "fixture-c20-candidate-00-r2",
+    "fixture-c21-candidate-00-r2"
+  ],
   "behavioral_execution": {
     "pilot": {
       "planned_cells": 8,
-      "completed_valid_cells": 4,
+      "completed_valid_cells": 5,
       "N3": {
         "attempts": 4,
         "preserved_zero_valid_cell_technical_failures": 3,
@@ -232,14 +262,51 @@
         "results_commit": "06b8ab02b4a382a23372dfef327915121f1b2069"
       },
       "D1": {
-        "attempts": 0,
+        "attempts": 2,
+        "terminal_aggregate_technical_failures": 2,
+        "active_attempt": null,
+        "launched_behavioral_cells_across_attempts": 2,
+        "technically_invalid_behavioral_cells": 1,
+        "scientifically_valid_raw_cells": 1,
         "published_valid_cells": 0,
-        "unrun_cells": 4
+        "valid_behavioral_model_requests": 57,
+        "valid_executed_actions": 450,
+        "valid_observations": 451,
+        "unrun_cells": 3,
+        "attempt_001_failure": "validated_server_reset_was_not_mapped_into_required_generic_recorder_attestation_fields",
+        "attempt_001_server_receipt_sha256": "0dce9e7489b55d20e88cdbf3fea3b4113919b2beec689ce4d10c5ba0e5244c0d",
+        "attempt_001_simulator_receipt_sha256": "c494022a1f03e21e8774f98978d2e65d9e46effc875ee7ced2a7c01415ca47ef",
+        "attempt_002_valid_cell_receipt_path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-002/cells/00-wmf1-pilot-P00-D1-reflected-right/cell_receipt.json",
+        "attempt_002_valid_cell_receipt_sha256": "26cbd67d0087ed555177af6ac78fcf57c9acfcf1adccf148a61b6b8d8cefcb56",
+        "attempt_002_parent_failure": "system_python_missing_numpy_while_deeply_revalidating_completed_npy_request_artifacts_after_valid_child_exit",
+        "resume_status": "dependency_free_npy_validator_under_independent_review_then_fresh_attempt_003_must_reuse_condition_00"
       }
     },
     "development": {
       "planned_cells": 32,
-      "completed_valid_cells": 0
+      "completed_valid_cells": 0,
+      "N3": {
+        "attempts": 2,
+        "active_attempt": "n3-development-d01-002",
+        "launched_behavioral_cells": 1,
+        "completed_valid_cells": 0,
+        "partial_behavioral_model_requests_at_snapshot": 6,
+        "partial_behavioral_actions_at_snapshot": 166,
+        "unrun_cells": 15,
+        "attempt_001_receipt_sha256": "47081b115a70f707e492429cb50182274d22ea042bdd1612882f7f66834da035",
+        "attempt_001_failure": "system_python_missing_numpy_during_zero_array_legacy_reset_descriptor_validation",
+        "retry_status": "executing_condition_00_under_source_91aaf8f5337bbf3a03e7cb65062ae1df77b6bb12",
+        "remaining_blocks_released": [
+          "n3-development-d02-001",
+          "n3-development-d03-001",
+          "n3-development-d04-001"
+        ]
+      },
+      "D1": {
+        "attempts": 0,
+        "unrun_cells": 16,
+        "release_gate": "complete_D1_P00_pilot_receipt"
+      }
     },
     "confirmation": {
       "planned_cells": 192,
@@ -247,9 +314,32 @@
       "released": false,
       "fixture_attempts_only": {
         "technical_invalid_zero_action_zero_request": 7,
-        "unrun": 17,
-        "reason": "new_worker_hostname_absent_from_static_deployment_receipt",
-        "retry_gate": "fresh_hash_bound_dynamic_worker_diagnostic"
+        "physical_rejections": 2,
+        "accepted_layouts": 17,
+        "accepted_layout_ids": [
+          "C01",
+          "C02",
+          "C03",
+          "C04",
+          "C05",
+          "C06",
+          "C07",
+          "C08",
+          "C09",
+          "C10",
+          "C11",
+          "C12",
+          "C13",
+          "C14",
+          "C15",
+          "C16",
+          "C18"
+        ],
+        "remaining_layouts_in_model_blind_queue": 7,
+        "model_requests": 0,
+        "behavioral_actions": 0,
+        "reason_for_preserved_technical_invalid_attempts": "new_worker_hostname_absent_from_static_deployment_receipt",
+        "current_retry_gate": "passed_fresh_hash_bound_dynamic_worker_diagnostics"
       }
     }
   },

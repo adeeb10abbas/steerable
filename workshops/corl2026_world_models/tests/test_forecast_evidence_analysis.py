@@ -53,6 +53,54 @@ def valid_gate():
     }
 
 
+def install_annotation_quality(context, decisions):
+    decisions = sorted(copy.deepcopy(decisions), key=lambda row: row["restricted_asset_id"])
+    counts = {
+        "images": len(decisions),
+        "first_pass_exact_agreements": sum(
+            row["decision_source"] == "first_pass_exact_agreement"
+            for row in decisions
+        ),
+        "independently_adjudicated": sum(
+            row["decision_source"] == "independent_adjudicator"
+            for row in decisions
+        ),
+    }
+    has_adjudication = counts["independently_adjudicated"] > 0
+    consensus = analysis.sign_document(
+        {
+            "counts": counts,
+            "labels": decisions,
+            "first_pass_response_sha256_by_slot": {
+                "rater_a": digest("response-a"),
+                "rater_b": digest("response-b"),
+            },
+            "rater_code_sha256_by_slot": {
+                "rater_a": digest("rater-a"),
+                "rater_b": digest("rater-b"),
+                "adjudicator": digest("adjudicator") if has_adjudication else None,
+            },
+            "adjudicator_response_sha256": (
+                digest("adjudicator-response") if has_adjudication else None
+            ),
+            "source_restricted_map_sha256": context["sources"]["restricted_map"]["sha256"],
+            "adjudication_map_sha256": digest("adjudication-map"),
+        }
+    )
+    consensus_bytes = analysis.canonical_bytes(consensus) + b"\n"
+    consensus_sha = hashlib.sha256(consensus_bytes).hexdigest()
+    context["sources"]["final_consensus"] = {
+        "path": "/final-consensus.json",
+        "sha256": consensus_sha,
+    }
+    context["annotation_quality"] = analysis.annotation_quality_summary(
+        consensus,
+        final_consensus_sha256=consensus_sha,
+    )
+    context["annotation_quality_decisions"] = decisions
+    context["annotation_quality_consensus_bytes"] = consensus_bytes
+
+
 def make_context(*, branch="reduced_n3", predicted_x=51.8):
     planned = analysis.load_annotation_module()._planned_cells("confirmation", branch)
     roster = []
@@ -119,6 +167,8 @@ def make_context(*, branch="reduced_n3", predicted_x=51.8):
             "predicted": consensus_label((predicted_x, 50.0)),
             "executed": consensus_label((52.0, 50.0)),
         }
+        for role, label in labels[request_id].items():
+            label["restricted_asset_id"] = f"asset_{cell_index:03d}_{role}"
         endpoints[cell_id] = {
             "cell_id": cell_id,
             "action_zero": endpoint(0, 0.0),
@@ -129,7 +179,17 @@ def make_context(*, branch="reduced_n3", predicted_x=51.8):
             ),
             "first_success_action_index": 100 if condition.endswith("left") else None,
         }
-    return {
+    quality_decisions = [
+        {
+            "restricted_asset_id": label["restricted_asset_id"],
+            "decision_source": "first_pass_exact_agreement",
+        }
+        for role_rows in labels.values()
+        for label in role_rows.values()
+    ]
+    quality_decisions.sort(key=lambda row: row["restricted_asset_id"])
+    restricted_map_sha = digest("restricted-map")
+    context = {
         "evidence_gate": valid_gate(),
         "branch": branch,
         "selection": {
@@ -157,12 +217,129 @@ def make_context(*, branch="reduced_n3", predicted_x=51.8):
             "N3": {"checkpoint_revision": "n3-revision", "executed_prefix_cap": 32},
             "D1": {"checkpoint_revision": "d1-revision", "executed_prefix_cap": 8},
         },
-        "sources": {},
+        "sources": {
+            "restricted_map": {"path": "/restricted-map.json", "sha256": restricted_map_sha},
+        },
         "manifest": {"path": "/evidence.json", "sha256": "a" * 64},
     }
+    install_annotation_quality(context, quality_decisions)
+    return context
 
 
 class ForecastEvidenceAnalysisTests(unittest.TestCase):
+    def test_annotation_quality_is_rederived_from_consensus_decisions(self):
+        consensus = {
+            "counts": {
+                "images": 2,
+                "first_pass_exact_agreements": 1,
+                "independently_adjudicated": 1,
+            },
+            "labels": [
+                {"restricted_asset_id": "asset_a", "decision_source": "first_pass_exact_agreement"},
+                {"restricted_asset_id": "asset_b", "decision_source": "independent_adjudicator"},
+            ],
+            "first_pass_response_sha256_by_slot": {
+                "rater_a": digest("response-a"),
+                "rater_b": digest("response-b"),
+            },
+            "rater_code_sha256_by_slot": {
+                "rater_a": digest("rater-a"),
+                "rater_b": digest("rater-b"),
+                "adjudicator": digest("adjudicator"),
+            },
+            "adjudicator_response_sha256": digest("adjudicator-response"),
+            "source_restricted_map_sha256": digest("restricted-map"),
+            "adjudication_map_sha256": digest("adjudication-map"),
+        }
+        result = analysis.annotation_quality_summary(
+            consensus,
+            final_consensus_sha256=digest("final-consensus"),
+        )
+        self.assertEqual(result["first_pass_exact_agreement_rate"], 0.5)
+        self.assertEqual(result["independent_adjudication_rate"], 0.5)
+        tampered = copy.deepcopy(consensus)
+        tampered["counts"]["independently_adjudicated"] = 0
+        with self.assertRaisesRegex(
+            analysis.AnalysisContractError,
+            "counts are inconsistent",
+        ):
+            analysis.annotation_quality_summary(
+                tampered,
+                final_consensus_sha256=digest("final-consensus"),
+            )
+
+    def test_report_carries_verified_inter_rater_agreement_and_adjudication(self):
+        context = make_context()
+        decisions = context["annotation_quality_decisions"]
+        for row in decisions[:3]:
+            row["decision_source"] = "independent_adjudicator"
+        install_annotation_quality(context, decisions)
+        quality = context["annotation_quality"]
+        image_count = len(decisions)
+        report = analysis.build_report(context)
+        self.assertEqual(report["annotation_quality"], quality)
+        self.assertEqual(report["annotation_quality"]["independently_adjudicated"], 3)
+        self.assertEqual(
+            report["annotation_quality"]["independent_adjudication_rate"],
+            3 / image_count,
+        )
+
+    def test_adjudicated_consensus_requires_hashed_independent_evidence(self):
+        context = make_context()
+        decisions = context["annotation_quality_decisions"]
+        decisions[0]["decision_source"] = "independent_adjudicator"
+        install_annotation_quality(context, decisions)
+        quality = context["annotation_quality"]
+        quality["rater_code_sha256_by_slot"]["adjudicator"] = None
+        quality["adjudicator_response_sha256"] = None
+        with self.assertRaisesRegex(
+            analysis.AnalysisContractError,
+            "adjudicator code sha256",
+        ):
+            analysis.build_report(context)
+
+    def test_annotation_quality_rejects_detached_or_inconsistent_context(self):
+        detached = make_context()
+        detached["sources"]["final_consensus"]["sha256"] = digest("another-consensus")
+        with self.assertRaisesRegex(
+            analysis.AnalysisContractError,
+            "detached from final consensus",
+        ):
+            analysis.build_report(detached)
+
+        empty = make_context()
+        install_annotation_quality(empty, [])
+        with self.assertRaisesRegex(
+            analysis.AnalysisContractError,
+            "assets differ from validated request labels",
+        ):
+            analysis.build_report(empty)
+
+        changed = make_context()
+        changed["annotation_quality_decisions"][0]["decision_source"] = (
+            "independent_adjudicator"
+        )
+        with self.assertRaisesRegex(
+            analysis.AnalysisContractError,
+            "differs from final consensus",
+        ):
+            analysis.build_report(changed)
+
+    def test_annotation_quality_rejects_reused_adjudicator_identity(self):
+        context = make_context()
+        decisions = context["annotation_quality_decisions"]
+        decisions[0]["decision_source"] = "independent_adjudicator"
+        install_annotation_quality(context, decisions)
+        quality = context["annotation_quality"]
+        quality["rater_code_sha256_by_slot"]["adjudicator"] = (
+            quality["rater_code_sha256_by_slot"]["rater_a"]
+        )
+        with self.assertRaisesRegex(
+            analysis.AnalysisContractError,
+            "adjudicator is not independent",
+        ):
+            analysis.build_report(context)
+
     def test_reduced_branch_reports_positive_skill_without_substitution(self):
         report = analysis.build_report(make_context())
         n3 = report["models"]["N3"]
@@ -212,6 +389,17 @@ class ForecastEvidenceAnalysisTests(unittest.TestCase):
                 }
             else:
                 context["endpoints"].pop(row["cell_id"])
+        retained_assets = {
+            label["restricted_asset_id"]
+            for role_rows in context["labels"].values()
+            for label in role_rows.values()
+        }
+        decisions = [
+            row
+            for row in context["annotation_quality_decisions"]
+            if row["restricted_asset_id"] in retained_assets
+        ]
+        install_annotation_quality(context, decisions)
         report = analysis.build_report(context)
         table = next(row for row in report["model_sample_size_table"] if row["model_id"] == "N3")
         self.assertEqual(table["technical_invalid"], 1)

@@ -61,5 +61,6 @@
   "coverage": "per condition: complete request inventory, timing/camera/action eligibility, ineligibility reasons, zero-eligible episodes, recording status/censor reasons, selected localization and ambiguity coverage",
   "earlier_horizon": "use only the exact frozen early_horizon object; distinguish no qualified target from qualified but human-consensus-unobservable evidence",
   "model_sample_size_table": "include the full hash-bound model configuration, frozen alignment fields, and separate planned/valid-complete/valid-censored/technical-invalid/unrun counts",
+  "annotation_quality": "report exact first-pass agreement and independent-adjudication image counts and rates, bound to the final consensus, restricted map, adjudication map, anonymous rater-code hashes, and response artifact hashes",
   "example_selection": "For each included model and condition, choose the valid-complete cell minimizing SHA256(analysis_seed NUL model NUL condition NUL cell_id); do not use labels, errors, success, or visual outcomes."
 }

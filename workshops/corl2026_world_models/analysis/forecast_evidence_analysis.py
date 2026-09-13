@@ -109,6 +109,21 @@ HISTORY_KEYS = {
     "source_adapter_journal",
     "payload_sha256",
 }
+ANNOTATION_QUALITY_KEYS = {
+    "unit",
+    "images",
+    "first_pass_exact_agreements",
+    "independently_adjudicated",
+    "first_pass_exact_agreement_rate",
+    "independent_adjudication_rate",
+    "decision_inventory_sha256",
+    "final_consensus_sha256",
+    "source_restricted_map_sha256",
+    "adjudication_map_sha256",
+    "first_pass_response_sha256_by_slot",
+    "rater_code_sha256_by_slot",
+    "adjudicator_response_sha256",
+}
 _ANNOTATION_VALIDATOR: Any | None = None
 _RELEASE_FREEZE_VALIDATOR: Any | None = None
 _RECORDING_VALIDATOR: Any | None = None
@@ -749,6 +764,308 @@ def validate_release_annotation_binding(
     )
 
 
+def annotation_quality_summary(
+    consensus: Mapping[str, Any], *, final_consensus_sha256: str
+) -> dict[str, Any]:
+    """Normalize independently verified rater agreement and adjudication evidence."""
+
+    final_sha = require_sha256(final_consensus_sha256, "final consensus sha256")
+    counts = consensus.get("counts")
+    require(isinstance(counts, Mapping), "final consensus lacks annotation counts")
+    exact_keys(
+        counts,
+        {"images", "first_pass_exact_agreements", "independently_adjudicated"},
+        "final consensus counts",
+    )
+    images = counts.get("images")
+    agreements = counts.get("first_pass_exact_agreements")
+    adjudicated = counts.get("independently_adjudicated")
+    require(
+        type(images) is int
+        and type(agreements) is int
+        and type(adjudicated) is int
+        and images >= 0
+        and agreements >= 0
+        and adjudicated >= 0
+        and agreements + adjudicated == images,
+        "final consensus annotation counts are inconsistent",
+    )
+    labels = consensus.get("labels")
+    require(isinstance(labels, list) and len(labels) == images, "final consensus label count differs")
+    decision_rows = []
+    seen_assets = set()
+    for row in labels:
+        require(isinstance(row, Mapping), "final consensus label is invalid")
+        asset_id = row.get("restricted_asset_id")
+        decision = row.get("decision_source")
+        require(isinstance(asset_id, str) and asset_id, "final consensus label lacks an asset identity")
+        require(asset_id not in seen_assets, "final consensus duplicates an asset identity")
+        require(
+            decision in {"first_pass_exact_agreement", "independent_adjudicator"},
+            "final consensus label has an invalid decision source",
+        )
+        seen_assets.add(asset_id)
+        decision_rows.append(
+            {"restricted_asset_id": asset_id, "decision_source": decision}
+        )
+    decision_rows.sort(key=lambda row: row["restricted_asset_id"])
+    decisions = Counter(row["decision_source"] for row in decision_rows)
+    require(
+        len(decisions) <= 2
+        and decisions["first_pass_exact_agreement"] == agreements
+        and decisions["independent_adjudicator"] == adjudicated,
+        "final consensus decision sources differ from annotation counts",
+    )
+    response_hashes = consensus.get("first_pass_response_sha256_by_slot")
+    require(
+        isinstance(response_hashes, Mapping) and set(response_hashes) == {"rater_a", "rater_b"},
+        "final consensus first-pass response hashes are incomplete",
+    )
+    response_hashes = {
+        slot: require_sha256(response_hashes[slot], f"{slot} response sha256")
+        for slot in ("rater_a", "rater_b")
+    }
+    rater_hashes = consensus.get("rater_code_sha256_by_slot")
+    require(
+        isinstance(rater_hashes, Mapping)
+        and set(rater_hashes) == {"rater_a", "rater_b", "adjudicator"},
+        "final consensus rater-code hashes are incomplete",
+    )
+    normalized_rater_hashes = {
+        "rater_a": require_sha256(rater_hashes["rater_a"], "rater_a code sha256"),
+        "rater_b": require_sha256(rater_hashes["rater_b"], "rater_b code sha256"),
+        "adjudicator": rater_hashes["adjudicator"],
+    }
+    require(
+        normalized_rater_hashes["rater_a"] != normalized_rater_hashes["rater_b"],
+        "first-pass rater identities are not independent",
+    )
+    adjudicator_response_sha = consensus.get("adjudicator_response_sha256")
+    if adjudicated:
+        normalized_rater_hashes["adjudicator"] = require_sha256(
+            normalized_rater_hashes["adjudicator"], "adjudicator code sha256"
+        )
+        require(
+            normalized_rater_hashes["adjudicator"]
+            not in {
+                normalized_rater_hashes["rater_a"],
+                normalized_rater_hashes["rater_b"],
+            },
+            "adjudicator identity is not independent",
+        )
+        adjudicator_response_sha = require_sha256(
+            adjudicator_response_sha, "adjudicator response sha256"
+        )
+    else:
+        require(
+            normalized_rater_hashes["adjudicator"] is None
+            and adjudicator_response_sha is None,
+            "agreement-only consensus introduces adjudicator evidence",
+        )
+    denominator = float(images)
+    return {
+        "unit": "distinct_blinded_annotation_images",
+        "images": images,
+        "first_pass_exact_agreements": agreements,
+        "independently_adjudicated": adjudicated,
+        "first_pass_exact_agreement_rate": agreements / denominator if images else None,
+        "independent_adjudication_rate": adjudicated / denominator if images else None,
+        "decision_inventory_sha256": hashlib.sha256(
+            canonical_bytes(decision_rows)
+        ).hexdigest(),
+        "final_consensus_sha256": final_sha,
+        "source_restricted_map_sha256": require_sha256(
+            consensus.get("source_restricted_map_sha256"),
+            "consensus restricted-map sha256",
+        ),
+        "adjudication_map_sha256": require_sha256(
+            consensus.get("adjudication_map_sha256"),
+            "consensus adjudication-map sha256",
+        ),
+        "first_pass_response_sha256_by_slot": response_hashes,
+        "rater_code_sha256_by_slot": normalized_rater_hashes,
+        "adjudicator_response_sha256": adjudicator_response_sha,
+    }
+
+
+def validate_annotation_quality_summary(value: Any) -> dict[str, Any]:
+    require(isinstance(value, Mapping), "analysis context lacks annotation quality evidence")
+    exact_keys(value, ANNOTATION_QUALITY_KEYS, "annotation quality summary")
+    images = value.get("images")
+    agreements = value.get("first_pass_exact_agreements")
+    adjudicated = value.get("independently_adjudicated")
+    require(
+        type(images) is int
+        and type(agreements) is int
+        and type(adjudicated) is int
+        and images >= 0
+        and agreements >= 0
+        and adjudicated >= 0
+        and agreements + adjudicated == images,
+        "annotation quality counts are inconsistent",
+    )
+    require(value.get("unit") == "distinct_blinded_annotation_images", "annotation quality unit changed")
+    expected_agreement_rate = agreements / float(images) if images else None
+    expected_adjudication_rate = adjudicated / float(images) if images else None
+    require(
+        value.get("first_pass_exact_agreement_rate") == expected_agreement_rate
+        and value.get("independent_adjudication_rate") == expected_adjudication_rate,
+        "annotation quality rates differ from counts",
+    )
+    for key in (
+        "final_consensus_sha256",
+        "source_restricted_map_sha256",
+        "adjudication_map_sha256",
+        "decision_inventory_sha256",
+    ):
+        require_sha256(value.get(key), f"annotation quality {key}")
+    response_hashes = value.get("first_pass_response_sha256_by_slot")
+    require(
+        isinstance(response_hashes, Mapping) and set(response_hashes) == {"rater_a", "rater_b"},
+        "annotation quality response hashes are incomplete",
+    )
+    for slot in ("rater_a", "rater_b"):
+        require_sha256(response_hashes[slot], f"annotation quality {slot} response sha256")
+    rater_hashes = value.get("rater_code_sha256_by_slot")
+    require(
+        isinstance(rater_hashes, Mapping)
+        and set(rater_hashes) == {"rater_a", "rater_b", "adjudicator"},
+        "annotation quality rater hashes are incomplete",
+    )
+    first_pass_codes = {
+        require_sha256(rater_hashes[slot], f"annotation quality {slot} code sha256")
+        for slot in ("rater_a", "rater_b")
+    }
+    require(len(first_pass_codes) == 2, "annotation quality first-pass raters are not independent")
+    if adjudicated:
+        adjudicator = require_sha256(
+            rater_hashes["adjudicator"], "annotation quality adjudicator code sha256"
+        )
+        require(adjudicator not in first_pass_codes, "annotation quality adjudicator is not independent")
+        require_sha256(
+            value.get("adjudicator_response_sha256"),
+            "annotation quality adjudicator response sha256",
+        )
+    else:
+        require(
+            rater_hashes["adjudicator"] is None
+            and value.get("adjudicator_response_sha256") is None,
+            "agreement-only annotation quality introduces adjudicator evidence",
+        )
+    return dict(value)
+
+
+def annotation_quality_decisions(consensus: Mapping[str, Any]) -> list[dict[str, str]]:
+    labels = consensus.get("labels")
+    require(isinstance(labels, list), "final consensus labels are missing")
+    rows = []
+    for label in labels:
+        require(isinstance(label, Mapping), "final consensus label is invalid")
+        rows.append(
+            {
+                "restricted_asset_id": str(label.get("restricted_asset_id", "")),
+                "decision_source": str(label.get("decision_source", "")),
+            }
+        )
+    return sorted(rows, key=lambda row: row["restricted_asset_id"])
+
+
+def validate_annotation_quality_context(
+    value: Any,
+    *,
+    decisions: Any,
+    labels: Mapping[str, Any],
+    sources: Any,
+    consensus_bytes: Any,
+) -> dict[str, Any]:
+    quality = validate_annotation_quality_summary(value)
+    require(isinstance(sources, Mapping), "analysis context lacks source evidence")
+    final_source = sources.get("final_consensus")
+    restricted_source = sources.get("restricted_map")
+    require(
+        isinstance(final_source, Mapping)
+        and final_source.get("sha256") == quality["final_consensus_sha256"],
+        "annotation quality is detached from final consensus evidence",
+    )
+    require(
+        isinstance(restricted_source, Mapping)
+        and restricted_source.get("sha256") == quality["source_restricted_map_sha256"],
+        "annotation quality is detached from restricted-map evidence",
+    )
+    require(
+        isinstance(consensus_bytes, bytes),
+        "analysis context lacks exact final-consensus source bytes",
+    )
+    require(
+        hashlib.sha256(consensus_bytes).hexdigest() == final_source["sha256"],
+        "annotation quality final-consensus bytes differ from source evidence",
+    )
+    try:
+        consensus = json.loads(consensus_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise AnalysisContractError("annotation quality final-consensus bytes are invalid JSON") from error
+    require(isinstance(consensus, dict), "annotation quality final consensus is not an object")
+    load_annotation_module().verify_signed(consensus, "annotation quality final consensus")
+    expected_quality = annotation_quality_summary(
+        consensus,
+        final_consensus_sha256=final_source["sha256"],
+    )
+    require(quality == expected_quality, "annotation quality differs from final consensus")
+    require(isinstance(decisions, list), "analysis context lacks annotation decision evidence")
+    observed_decisions: list[dict[str, str]] = []
+    seen_assets = set()
+    for row in decisions:
+        require(isinstance(row, Mapping), "annotation decision row is invalid")
+        exact_keys(row, {"restricted_asset_id", "decision_source"}, "annotation decision row")
+        asset_id = row.get("restricted_asset_id")
+        decision = row.get("decision_source")
+        require(isinstance(asset_id, str) and asset_id, "annotation decision lacks an asset identity")
+        require(asset_id not in seen_assets, "annotation decision inventory duplicates an asset")
+        require(
+            decision in {"first_pass_exact_agreement", "independent_adjudicator"},
+            "annotation decision source is invalid",
+        )
+        seen_assets.add(asset_id)
+        observed_decisions.append(
+            {"restricted_asset_id": asset_id, "decision_source": decision}
+        )
+    observed_decisions.sort(key=lambda row: row["restricted_asset_id"])
+    require(
+        observed_decisions == annotation_quality_decisions(consensus),
+        "annotation decision inventory differs from final consensus",
+    )
+    require(
+        hashlib.sha256(canonical_bytes(observed_decisions)).hexdigest()
+        == quality["decision_inventory_sha256"],
+        "annotation decision inventory differs from its commitment",
+    )
+    decision_counts = Counter(row["decision_source"] for row in observed_decisions)
+    require(
+        len(observed_decisions) == quality["images"]
+        and decision_counts["first_pass_exact_agreement"]
+        == quality["first_pass_exact_agreements"]
+        and decision_counts["independent_adjudicator"]
+        == quality["independently_adjudicated"],
+        "annotation decision inventory differs from quality counts",
+    )
+    label_asset_ids = set()
+    for request_id, role_rows in labels.items():
+        require(isinstance(role_rows, Mapping), f"label roles are invalid for {request_id}")
+        for role, label in role_rows.items():
+            require(isinstance(label, Mapping), f"label {request_id}:{role} is invalid")
+            asset_id = label.get("restricted_asset_id")
+            require(
+                isinstance(asset_id, str) and asset_id,
+                f"label {request_id}:{role} lacks a restricted asset identity",
+            )
+            label_asset_ids.add(asset_id)
+    require(
+        label_asset_ids == seen_assets,
+        "annotation quality assets differ from validated request labels",
+    )
+    return quality
+
+
 def _artifact_ref_rows(
     manifest_path: Path,
     references: Any,
@@ -1002,6 +1319,19 @@ def load_evidence(manifest_path: Path) -> dict[str, Any]:
         )
     require(sha256_file(manifest_path) == manifest_sha256, "analysis evidence manifest changed during validation")
 
+    try:
+        annotation_quality_consensus_bytes = paths["final_consensus"].read_bytes()
+    except OSError as error:
+        raise AnalysisContractError("final consensus became unreadable") from error
+    require(
+        hashlib.sha256(annotation_quality_consensus_bytes).hexdigest()
+        == sources["final_consensus"]["sha256"],
+        "final consensus changed before annotation-quality handoff",
+    )
+    annotation_quality = annotation_quality_summary(
+        consensus,
+        final_consensus_sha256=sources["final_consensus"]["sha256"],
+    )
     return {
         "evidence_gate": {
             "recording_and_action_chain": "VALIDATED",
@@ -1014,6 +1344,9 @@ def load_evidence(manifest_path: Path) -> dict[str, Any]:
         "selection": selection,
         "selected": selected,
         "labels": dict(label_records),
+        "annotation_quality": annotation_quality,
+        "annotation_quality_decisions": annotation_quality_decisions(consensus),
+        "annotation_quality_consensus_bytes": annotation_quality_consensus_bytes,
         "endpoints": endpoints,
         "histories": histories,
         "movement_threshold": freeze["movement_resolution"]["threshold_relative_image_diagonal"],
@@ -1588,6 +1921,13 @@ def build_report(context: Mapping[str, Any]) -> dict[str, Any]:
     selected = context["selected"]
     labels = context["labels"]
     require(set(labels) == set(selected), "validated human consensus must cover every selected request exactly")
+    annotation_quality = validate_annotation_quality_context(
+        context.get("annotation_quality"),
+        decisions=context.get("annotation_quality_decisions"),
+        labels=labels,
+        sources=context.get("sources"),
+        consensus_bytes=context.get("annotation_quality_consensus_bytes"),
+    )
     histories = context["histories"]
     request_rows = [
         request_metrics(request, labels[request_id], histories.get(request_id), threshold)
@@ -1749,6 +2089,7 @@ def build_report(context: Mapping[str, Any]) -> dict[str, Any]:
         },
         "model_sample_size_table": sample_table,
         "frozen_resource_budget": context.get("frozen_resource_budget"),
+        "annotation_quality": annotation_quality,
         "models": models,
         "claim_boundaries": {
             "forecast_accuracy_claim_gate": "PASSED_HASH_BOUND_RECORDINGS_VALIDATED_DEVELOPMENT_RELEASE_VALIDATED_ANNOTATION_FREEZE_AND_REPRODUCED_HUMAN_CONSENSUS",

@@ -19,7 +19,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "4eb44adb444f57a0d0a29892484c19c855992cf9",
-    "control_generation": 663,
+    "control_generation": 664,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -1135,9 +1135,17 @@
     },
     {
       "descriptor_sha256": "ef0f8d9296903765f3d1ba84f0471597655f0cc31a84c9fea32e8b951e642c83",
+      "heartbeat": {
+        "at": "2026-09-13T11:01:14.518760+00:00",
+        "child_pid": 110223,
+        "unix": 1789297274.5187824,
+        "worker_id": "wmf-forecast-0912-worker-d1-00",
+        "worker_pid": 1
+      },
       "job_id": "d1-development-d04-server-003",
       "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
       "child_pid": 4648,
@@ -1173,9 +1181,17 @@
     },
     {
       "descriptor_sha256": "574b376a27f630c5f710e014c89f2217d0a353ab6794305731b33368cba52291",
+      "heartbeat": {
+        "at": "2026-09-13T11:01:15.397470+00:00",
+        "child_pid": 15260,
+        "unix": 1789297275.3975112,
+        "worker_id": "wmf-forecast-0912-worker-00",
+        "worker_pid": 1
+      },
       "job_id": "d1-development-d04-simulator-003",
       "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
       "child_pid": 890,

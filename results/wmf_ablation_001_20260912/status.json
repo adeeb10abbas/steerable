@@ -8,11 +8,13 @@
       "d1-development-d02-server-003",
       "d1-development-d02-simulator-003",
       "d1-development-d04-server-003",
-      "d1-development-d04-simulator-003"
+      "d1-development-d04-simulator-003",
+      "timing-n3-native-authority-001",
+      "timing-d1-native-authority-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "0fd0886a57e017e4d9f063f42c1750b4025f35c0",
-    "control_generation": 590,
+    "control_commit": "271bb0bd55159fca4f1168d094d9d6774ce5ad30",
+    "control_generation": 591,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -603,9 +605,9 @@
     {
       "descriptor_sha256": "1082e92d6bc78c947ae144950fbc77e3293e967711b06b0f09121c7c45df1406",
       "heartbeat": {
-        "at": "2026-09-13T10:13:07.863797+00:00",
+        "at": "2026-09-13T10:13:58.086952+00:00",
         "child_pid": 66884,
-        "unix": 1789294387.863816,
+        "unix": 1789294438.0869741,
         "worker_id": "wmf-forecast-0912-worker-d1-00",
         "worker_pid": 1
       },
@@ -669,9 +671,9 @@
     {
       "descriptor_sha256": "d0d7c0fd5b0e74a91927766f749a27939c2c912778efbbee3b93b3e350392b3c",
       "heartbeat": {
-        "at": "2026-09-13T10:13:07.495222+00:00",
+        "at": "2026-09-13T10:13:57.694128+00:00",
         "child_pid": 8723,
-        "unix": 1789294387.4952505,
+        "unix": 1789294437.694147,
         "worker_id": "wmf-forecast-0912-worker-00",
         "worker_pid": 1
       },
@@ -3997,6 +3999,12 @@
       "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
+      "descriptor_sha256": "a041b34d2fec971e3734bc3adf5b3f46f5f658d3d194845d63f8ede6d3d942fd",
+      "job_id": "timing-d1-native-authority-001",
+      "source_commit": "0fd0886a57e017e4d9f063f42c1750b4025f35c0",
+      "status": "staged"
+    },
+    {
       "child_pid": 15757,
       "child_reaped": true,
       "descriptor_sha256": "b13c39eb9109c75e6afafc39c40341fac9332016af4724f353380b561a43dcb8",
@@ -4131,6 +4139,12 @@
       },
       "wall_seconds": 2.498476411914453,
       "worker_id": "wmf-forecast-0912-worker-09"
+    },
+    {
+      "descriptor_sha256": "da1d5237748b8004f58fa9e3b8e060a73218c19a1ebbba3135649982e01bf7b3",
+      "job_id": "timing-n3-native-authority-001",
+      "source_commit": "0fd0886a57e017e4d9f063f42c1750b4025f35c0",
+      "status": "staged"
     },
     {
       "child_pid": 20757,

@@ -1,0 +1,350 @@
+{
+  "behavioral_episode_count": 0,
+  "capture_manifest": {
+    "accepted_gate_record_sha256": "9e96cf0ecbdfe79c05d37fd1f89c75b8aa851068163153b3909e7888956f0683",
+    "artifact_identities": {
+      "D1": {
+        "bytes": 520282,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/d1_official_wire_observation.npz",
+        "sha256": "4545fdf3b335e10b35f9eb4bc038db07480518c9f1672b6ab76231d37367d735"
+      },
+      "N3": {
+        "bytes": 1037692,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/n3_official_wire_observation.npz",
+        "sha256": "32ced616cb872d69abf7f69705b09e5529b346b7664b32cec51b250be3bffd94"
+      },
+      "preprocessing_intermediates": {
+        "bytes": 10371122,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/preprocessing_intermediates.npz",
+        "sha256": "cafbff70da83bd72765f2e88ede758eb43b8887f7c97479b440046fdd5d9dd2e"
+      },
+      "raw_settled_observation": {
+        "bytes": 11062100,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/raw_settled_observation.npz",
+        "sha256": "2f1c457d418ef8d23d35ef688ac9835f9af133979543cb42b04dce5e25f8165f"
+      },
+      "simulator_state": {
+        "bytes": 4094,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/simulator_state.npz",
+        "sha256": "8db6bbe778738febfdc85c9f08047b9bbf8acacb961999fa9595304db230db4f"
+      }
+    },
+    "camera_capture_time_ns": {
+      "head_camera": 5000009537,
+      "over_shoulder_left_camera": 5000009537,
+      "over_shoulder_right_camera": 5000009537,
+      "wrist_cam": 5000009537
+    },
+    "camera_frame_ids": {
+      "head_camera": "rgb-sha256:20806aa77c5cffcb0eff9c7d76e17362794ecd5a49c9e5f70772a933f749ee9c",
+      "over_shoulder_left_camera": "rgb-sha256:0fa39afc963ac36cbcd45225a1d728c6b746fe125bc30e1146dc22d9570570dc",
+      "over_shoulder_right_camera": "rgb-sha256:9898fc622ba082c3e23fc9f39935cf0185179459a0cced7eba79a7c519af2cce",
+      "wrist_cam": "rgb-sha256:5fc4ebb0bd42f5e14d82e3285a62448c426b727e72888adb81bbbf91e456002e"
+    },
+    "candidate_id": "P00__candidate_01",
+    "candidate_payload_sha256": "4814457b47f5e703fc49faff10660cbf1f5143f8e6a59299c3c0c7d5a9de24a0",
+    "capture_id": "P00-2026091000-bcdd49da3920dbdf",
+    "control_step_since_physical_reset": 75,
+    "d1_preprocessing": {
+      "client_class": "wmf_fixed_observation_d1_overlay.V2DreamZeroDroidClient",
+      "configuration": {
+        "cam2_source": "right",
+        "image_height": 180,
+        "image_width": 320,
+        "resize": "pad"
+      },
+      "extraction_method": "_extract_observation",
+      "official_client_source": {
+        "bytes": 16786,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/policies/dreamzero/client.py",
+        "sha256": "96de16927536f2b48427a6a2dcc3111d03204e1832e50e159cadf67b3fe956ac"
+      },
+      "overlay_source": {
+        "bytes": 8228,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/ce5ad4282d2392245f843d5270a9656d4e99f842/experiments/dreamzero_droid/v2_robolab_client.py",
+        "sha256": "3f3fe50f4b7747c52a995efb1e07bf00af8a5e38620829d8b0c991b43fd9a7ec"
+      },
+      "packing_method": "_pack_request",
+      "wire_array_keys": [
+        "observation/exterior_image_0_left",
+        "observation/exterior_image_1_left",
+        "observation/wrist_image_left",
+        "observation/joint_position",
+        "observation/cartesian_position",
+        "observation/gripper_position"
+      ]
+    },
+    "manifest": {
+      "bytes": 80178,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/fixed_observation/capture_receipt.json",
+      "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+    },
+    "physics_step": 602,
+    "pose_manifest_sha256": "c597bbafdaab3155b35945f8e6130e599fa3c8dc1c9d83f247611aee2bbd0954",
+    "schema_version": "wmf-d1-capture-manifest-validation-v1",
+    "settled_reset_identity": "fixed-observation:ce5ad4282d2392245f843d5270a9656d4e99f842:P00:2026091000",
+    "snapshot_manifest": {
+      "bytes": 80178,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/fixed_observation/capture_receipt.json",
+      "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+    },
+    "source_manifest": {
+      "bytes": 80178,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/capture_receipt.json",
+      "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+    },
+    "status": "passed"
+  },
+  "claim_boundary": "This is a six-request fixed-observation D1 generation qualification. It contains zero robot episodes and is not physical forecast/action/camera alignment evidence.",
+  "configuration_id": "D1",
+  "decision": "qualified",
+  "exit_code": 0,
+  "finished_at_utc": "2026-09-13T04:18:09.704181Z",
+  "fixture": {
+    "snapshot": {
+      "bytes": 520282,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/fixed_observation/d1_fixed_observation.npz",
+      "sha256": "4545fdf3b335e10b35f9eb4bc038db07480518c9f1672b6ab76231d37367d735"
+    },
+    "source": {
+      "bytes": 520282,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/d1_official_wire_observation.npz",
+      "sha256": "4545fdf3b335e10b35f9eb4bc038db07480518c9f1672b6ab76231d37367d735"
+    },
+    "validation": {
+      "array_count": 6,
+      "arrays": [
+        {
+          "data_sha256": "de0ee41e9c8d4677d1de877dc029089b32350948fdcd089cfacdc55af1275654",
+          "dtype": "uint8",
+          "key": "observation/exterior_image_0_left",
+          "shape": [
+            180,
+            320,
+            3
+          ]
+        },
+        {
+          "data_sha256": "81aec4298e543f2d63b49816e0cd5eca1aa38c16ccc93a9687fd6c61c283c0e2",
+          "dtype": "uint8",
+          "key": "observation/exterior_image_1_left",
+          "shape": [
+            180,
+            320,
+            3
+          ]
+        },
+        {
+          "data_sha256": "a108bdca68ca3cdb6125f2eed3497825f21a52bfba2c0022a8a143e2ce774abc",
+          "dtype": "uint8",
+          "key": "observation/wrist_image_left",
+          "shape": [
+            180,
+            320,
+            3
+          ]
+        },
+        {
+          "data_sha256": "f8ad0b8c216e405710c63278b9ed39469dc7b785b52d96e904c7060fb649a7eb",
+          "dtype": "float64",
+          "key": "observation/joint_position",
+          "shape": [
+            7
+          ]
+        },
+        {
+          "data_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+          "dtype": "float64",
+          "key": "observation/cartesian_position",
+          "shape": [
+            6
+          ]
+        },
+        {
+          "data_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+          "dtype": "float64",
+          "key": "observation/gripper_position",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "artifact": {
+        "bytes": 1777,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/fixture_validation.json",
+        "sha256": "68505f0b731bced396c789142c43a0914ae69d4d931baccd77461e1e374421e5"
+      }
+    }
+  },
+  "generation_request_count": 6,
+  "job_id": "d1-first-live-005",
+  "probe": {
+    "artifact": {
+      "bytes": 15710,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/d1_probe/d1_probe_qualification.json",
+      "sha256": "b87fc87f9b8323c38daa7d531766249a6d2a7e1b407796eb7a37cb991370eae1"
+    },
+    "behavioral_episode_count": 0,
+    "comparisons": {
+      "decode_toggle__left_no_decode__left_decode": {
+        "action_array_equal": true,
+        "action_rms": 0.0,
+        "latent_rms": 0.0,
+        "latent_tensor_equal": true
+      },
+      "decode_toggle__left_repeat_no_decode__left_repeat_decode": {
+        "action_array_equal": true,
+        "action_rms": 0.0,
+        "latent_rms": 0.0,
+        "latent_tensor_equal": true
+      },
+      "decode_toggle__right_no_decode__right_decode": {
+        "action_array_equal": true,
+        "action_rms": 0.0,
+        "latent_rms": 0.0,
+        "latent_tensor_equal": true
+      },
+      "repeat__left_decode__left_repeat_decode": {
+        "action_array_equal": true,
+        "action_rms": 0.0,
+        "latent_rms": 0.0,
+        "latent_tensor_equal": true
+      },
+      "repeat__left_no_decode__left_repeat_no_decode": {
+        "action_array_equal": true,
+        "action_rms": 0.0,
+        "latent_rms": 0.0,
+        "latent_tensor_equal": true
+      }
+    },
+    "failed_checks": [],
+    "generation_request_count": 6,
+    "passed": true,
+    "sensitivity_measurements": {
+      "prompt_sensitivity__decode": {
+        "action_array_equal": false,
+        "action_difference_observed": true,
+        "action_rms": 0.012752044629000972,
+        "latent_difference_observed": true,
+        "latent_rms": 0.1450234055519104,
+        "latent_tensor_equal": false,
+        "qualification_gate": false
+      },
+      "prompt_sensitivity__no_decode": {
+        "action_array_equal": false,
+        "action_difference_observed": true,
+        "action_rms": 0.012752044629000972,
+        "latent_difference_observed": true,
+        "latent_rms": 0.1450234055519104,
+        "latent_tensor_equal": false,
+        "qualification_gate": false
+      }
+    },
+    "status": "passed"
+  },
+  "probe_exit_code": 0,
+  "raw_attempt_directory": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw",
+  "raw_failure": null,
+  "reason": null,
+  "schema_version": "wmf-d1-qualification-job-receipt-v1",
+  "server_contract": {
+    "artifact": {
+      "bytes": 25049,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/d1_future/server_contract.json",
+      "sha256": "48979e95e0b1e74017eb0a6b2ac844cedf45baa6693ad41257614c3bc9b6af22"
+    },
+    "checkpoint_aggregate_sha256": "b4af0ac93474c3295c1ba841a34a8f2f91a5c3ec3c6aac1431b97689a6618c56",
+    "custom_s2_used": false,
+    "official_action_path": "GrootSimPolicy.lazy_joint_forward_causal",
+    "official_repository_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+    "official_repository_tree": "6b7ba27f1af81e963a6507f1204c05c65a94098c",
+    "patched_s1_used": false,
+    "source_aggregate_sha256": "a39e1ef8b7d8668caf15914637446fe58acb512e6672413d3af8b4b6442eca7f",
+    "tokenizer_aggregate_sha256": "00f9b974f8f0b33c5e284849a0507c308893d01d915377ba88c2f7084ea92434",
+    "world_size": 2
+  },
+  "server_exit": {
+    "initial_returncode": null,
+    "parent_death_signal": "SIGTERM",
+    "reaped": true,
+    "returncode": 1,
+    "schema_version": "wmf-d1-server-exit-v1",
+    "sigkill_required": false,
+    "signal_handler_reap": null,
+    "signal_sent": "SIGTERM",
+    "status": "reaped",
+    "stderr": {
+      "bytes": 8728,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/server.stderr.log",
+      "sha256": "68317f2b569a45430b7464fe163c69d498d81fae76c3a6e8287a9990fc43ee5e"
+    },
+    "stdout": {
+      "bytes": 5809,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/server.stdout.log",
+      "sha256": "fcad43b789ace815aa14d2301933c769f9034f911dcf2d3ec1033761ee7cc019"
+    },
+    "terminated_at_utc": "2026-09-13T04:18:09.691968Z",
+    "termination_started_at_utc": "2026-09-13T04:18:08.224768Z"
+  },
+  "server_process_receipt": {
+    "bytes": 1882,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/server_process.json",
+    "sha256": "4823618040bcc20b840bbd1c5ba597e13c1b68fcc987eefff954de0729237c8d"
+  },
+  "started_at_utc": "2026-09-13T04:13:08.957196Z",
+  "status": "finished",
+  "study_commit": "031b8c4dcddac7d80e1d056db5a370c3aa872ab1",
+  "study_namespace": "wmf_ablation_001_20260912",
+  "topology": {
+    "hostname": "wmf-forecast-0912-worker-d1-00-9j698",
+    "normalized_gpu_uuids": {
+      "nvidia_smi": [
+        "GPU-5d1ef479-5dee-6e80-10dc-9174e5a71a0c",
+        "GPU-4bcd0e45-3713-5bff-f268-32124291bd93"
+      ],
+      "torch": [
+        "GPU-5d1ef479-5dee-6e80-10dc-9174e5a71a0c",
+        "GPU-4bcd0e45-3713-5bff-f268-32124291bd93"
+      ]
+    },
+    "nvidia_smi_devices": [
+      {
+        "driver_version": "580.95.05",
+        "index": "0",
+        "memory.total": "183359",
+        "name": "NVIDIA B200",
+        "uuid": "GPU-5d1ef479-5dee-6e80-10dc-9174e5a71a0c"
+      },
+      {
+        "driver_version": "580.95.05",
+        "index": "1",
+        "memory.total": "183359",
+        "name": "NVIDIA B200",
+        "uuid": "GPU-4bcd0e45-3713-5bff-f268-32124291bd93"
+      }
+    ],
+    "nvidia_visible_devices": [
+      "GPU-5d1ef479-5dee-6e80-10dc-9174e5a71a0c",
+      "GPU-4bcd0e45-3713-5bff-f268-32124291bd93"
+    ],
+    "pod_uid": null,
+    "preexisting_compute_process_count": 0,
+    "schema_version": "wmf-d1-two-b200-topology-v1",
+    "status": "passed",
+    "torch_devices": [
+      {
+        "logical_index": 0,
+        "name": "NVIDIA B200",
+        "total_memory_bytes": 191503138816,
+        "uuid": "5d1ef479-5dee-6e80-10dc-9174e5a71a0c"
+      },
+      {
+        "logical_index": 1,
+        "name": "NVIDIA B200",
+        "total_memory_bytes": 191503138816,
+        "uuid": "4bcd0e45-3713-5bff-f268-32124291bd93"
+      }
+    ],
+    "validated_at_utc": "2026-09-13T04:13:15.870611Z"
+  }
+}

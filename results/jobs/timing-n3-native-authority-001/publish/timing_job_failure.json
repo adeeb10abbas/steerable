@@ -1,0 +1,43 @@
+{
+  "behavioral_policy_skill_evaluated": false,
+  "claim_boundary": "Technical-invalid timing queue attempt only; no behavioral evidence or forecast accuracy is claimed.",
+  "completed_at_utc": "2026-09-13T10:14:16.371132Z",
+  "decision": "no_go",
+  "failure": {
+    "detail": "source-audit timing contract points to another file",
+    "error_type": "TimingQualificationError",
+    "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/0fd0886a57e017e4d9f063f42c1750b4025f35c0/workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_queue_jobs.py\", line 1979, in run_authority_job\n    authority = timing.qualify_timing(\n                ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/0fd0886a57e017e4d9f063f42c1750b4025f35c0/workshops/corl2026_world_models/analysis/qualify_forecast_timing.py\", line 1452, in qualify_timing\n    require_descriptor_matches(\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/0fd0886a57e017e4d9f063f42c1750b4025f35c0/workshops/corl2026_world_models/analysis/qualify_forecast_timing.py\", line 265, in require_descriptor_matches\n    require(path == Path(expected_path).resolve(), f\"{label} points to another file\")\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/0fd0886a57e017e4d9f063f42c1750b4025f35c0/workshops/corl2026_world_models/analysis/qualify_forecast_timing.py\", line 111, in require\n    raise TimingQualificationError(message)\nwmf_forecast_authority_timing_n3_native_authority_001.TimingQualificationError: source-audit timing contract points to another file\n"
+  },
+  "job_dir": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-native-authority-001",
+  "job_id": "timing-n3-native-authority-001",
+  "mode": "n3-native-authority",
+  "namespace": "wmf_ablation_001_20260912",
+  "payload_sha256": "67f3dbd4aea101816a856e461a8fa44d3810142be964b35b5804769fae322c87",
+  "physical_time_qualified": false,
+  "queue_claim": {
+    "bytes": 409,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-native-authority-001/claim/owner.json",
+    "sha256": "b485de516695440643db04578efc238402d573598019eebbc0cf274cac2c7826"
+  },
+  "queue_descriptor": {
+    "bytes": 2349,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-native-authority-001/descriptor.json",
+    "sha256": "da1d5237748b8004f58fa9e3b8e060a73218c19a1ebbba3135649982e01bf7b3"
+  },
+  "queue_role": "wmf-forecast-0912-worker-05",
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-forecast-timing-queue-job-v1",
+  "science_counts": {
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "referenced_generation_requests": 0,
+    "robot_episodes": 0
+  },
+  "status": "technical_invalid",
+  "study_commit": "0fd0886a57e017e4d9f063f42c1750b4025f35c0",
+  "study_id": "WMF-ABLATION-001"
+}

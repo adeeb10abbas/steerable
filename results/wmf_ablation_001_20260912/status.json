@@ -14,7 +14,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "271bb0bd55159fca4f1168d094d9d6774ce5ad30",
-    "control_generation": 591,
+    "control_generation": 592,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -605,9 +605,9 @@
     {
       "descriptor_sha256": "1082e92d6bc78c947ae144950fbc77e3293e967711b06b0f09121c7c45df1406",
       "heartbeat": {
-        "at": "2026-09-13T10:13:58.086952+00:00",
+        "at": "2026-09-13T10:14:32.229521+00:00",
         "child_pid": 66884,
-        "unix": 1789294438.0869741,
+        "unix": 1789294472.229593,
         "worker_id": "wmf-forecast-0912-worker-d1-00",
         "worker_pid": 1
       },
@@ -671,9 +671,9 @@
     {
       "descriptor_sha256": "d0d7c0fd5b0e74a91927766f749a27939c2c912778efbbee3b93b3e350392b3c",
       "heartbeat": {
-        "at": "2026-09-13T10:13:57.694128+00:00",
+        "at": "2026-09-13T10:14:31.845266+00:00",
         "child_pid": 8723,
-        "unix": 1789294437.694147,
+        "unix": 1789294471.8452835,
         "worker_id": "wmf-forecast-0912-worker-00",
         "worker_pid": 1
       },
@@ -3999,10 +3999,30 @@
       "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
+      "child_pid": 15531,
+      "child_reaped": true,
       "descriptor_sha256": "a041b34d2fec971e3734bc3adf5b3f46f5f658d3d194845d63f8ede6d3d942fd",
+      "ended_at": "2026-09-13T10:14:23.468244+00:00",
+      "error_type": null,
       "job_id": "timing-d1-native-authority-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"detail\": \"source-audit timing contract points to another file\", \"error_type\": \"TimingQualificationError\", \"status\": \"technical_invalid\"}\n"
+      },
+      "returncode": 3,
       "source_commit": "0fd0886a57e017e4d9f063f42c1750b4025f35c0",
-      "status": "staged"
+      "started_at": "2026-09-13T10:14:21.028241+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 139,
+        "sha256": "34c0d4cc6b1cf03c036409ea0ebbc1f7ea2f258e228bdccce9fcd2890321cac2"
+      },
+      "wall_seconds": 2.440322340000421,
+      "worker_id": "wmf-forecast-0912-worker-06"
     },
     {
       "child_pid": 15757,
@@ -4141,10 +4161,30 @@
       "worker_id": "wmf-forecast-0912-worker-09"
     },
     {
+      "child_pid": 192,
+      "child_reaped": true,
       "descriptor_sha256": "da1d5237748b8004f58fa9e3b8e060a73218c19a1ebbba3135649982e01bf7b3",
+      "ended_at": "2026-09-13T10:14:16.981846+00:00",
+      "error_type": null,
       "job_id": "timing-n3-native-authority-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"detail\": \"source-audit timing contract points to another file\", \"error_type\": \"TimingQualificationError\", \"status\": \"technical_invalid\"}\n"
+      },
+      "returncode": 3,
       "source_commit": "0fd0886a57e017e4d9f063f42c1750b4025f35c0",
-      "status": "staged"
+      "started_at": "2026-09-13T10:14:14.265203+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 139,
+        "sha256": "34c0d4cc6b1cf03c036409ea0ebbc1f7ea2f258e228bdccce9fcd2890321cac2"
+      },
+      "wall_seconds": 2.7169634089805186,
+      "worker_id": "wmf-forecast-0912-worker-05"
     },
     {
       "child_pid": 20757,

@@ -1,0 +1,124 @@
+{
+  "analysis_manifest": {
+    "assembler_command": "assemble-analysis-manifest",
+    "exact_reference_keys": [
+      "path",
+      "sha256"
+    ],
+    "exact_schema": "wmf-forecast-analysis-evidence-manifest-v1",
+    "exact_source_keys": [
+      "ablation_spec",
+      "annotation_freeze",
+      "development_release_freeze",
+      "final_consensus",
+      "request_selection",
+      "restricted_map"
+    ],
+    "final_gate": "forecast_evidence_analysis.load_evidence",
+    "labels_must_preexist": true
+  },
+  "compiler": {
+    "input_schema": "wmf-confirmation-evidence-compiler-input-v1",
+    "output_schema": "wmf-confirmation-evidence-compiler-receipt-v1",
+    "source": "workshops/corl2026_world_models/analysis/compile_confirmation_evidence.py",
+    "terminal_runtime_source_commit": "03732d3c6fa37c26a3ab2e8608a80d076fdcc33a",
+    "supported_branches": {
+      "full_two_model": {
+        "models": [
+          "N3",
+          "D1"
+        ],
+        "planned_cells": 192,
+        "terminal_block_receipts": 48
+      },
+      "reduced_d1": {
+        "models": [
+          "D1"
+        ],
+        "planned_cells": 96,
+        "terminal_block_receipts": 24
+      },
+      "reduced_n3": {
+        "models": [
+          "N3"
+        ],
+        "planned_cells": 96,
+        "terminal_block_receipts": 24
+      }
+    }
+  },
+  "cohort_seal": {
+    "command": "seal-cohort",
+    "receipt_schema": "wmf-confirmation-cohort-close-v1",
+    "seal_plan_schema": "wmf-confirmation-cohort-seal-plan-v1",
+    "terminal_index_schema": "wmf-confirmation-terminal-block-index-v1",
+    "queue_release_lock_required": true,
+    "d1_global_server_lock_required_when_selected": true,
+    "queue_descriptor_inventory": "scan every immutable confirmation runner descriptor in the task namespace at the frozen commit; every discovered attempt is consumed and caller-supplied selection must equal the deterministically derived retry tail",
+    "attempt_terminal_rule": "every selected and unselected attempt requires an exact executed argv/job-directory identity under the queue-state root named by the close, terminal queue result, hash-bound stdout/stderr, child_reaped, deep runtime cleanup/terminal evidence, and an exact close-time failed-cell sidecar inventory",
+    "retry_selection_rule": "replay a strictly ordered nonoverlapping lifecycle chain from exact resumed/new/final valid-cell descriptor prefixes; only retryable technical failures may have a successor, no valid cell may be reproduced, and the final unique maximal prefix is the sole selectable evidence lifecycle",
+    "admission_barrier_rule": "the already-claimed sealer must be the sole active job, its claim must predate the same immutable control generation's short absolute deadline, and it waits until that deadline expires before taking the release.lock snapshot; shutdown is never used for the executable path",
+    "current_cutoff_boundary": "No truthful closure can be emitted before the currently deployed shared cutoff 2026-09-20T01:48:52Z unless a future independently authenticated deployment publishes a new control generation with a bounded near-term cutoff and releases only this sealer.",
+    "wall_budget_rule": "the cutoff wait is at most 900 seconds and at least 14400 conservative seconds of the 21600-second wrapper budget must remain for locked manifest assembly and compilation",
+    "locked_compile_rule": "the same claimed sealer keeps release.lock (and the D1 global lock when applicable) across the final descriptor/claim/control snapshot, signed compiler-input assembly, and source-only compilation; no second post-cutoff claim is required",
+    "minimal_d1_rule": "a sparse D1 simulator receipt may represent only an explicitly sealed zero-launch block with a complete paired terminal lifecycle, no source cell artifacts, and 0 launched/4 not-run",
+    "producer_authentication": "seal-cohort must execute as a claimed immutable queue job from the exact clean staged commit. The close binds its descriptor, claim, worker hostname/POD/PID, and deterministic outer-result lineage; compilation later requires the successful reaped outer result, exact substituted argv/job directory, and unchanged stdout/stderr.",
+    "mutates_queue": false,
+    "releases_confirmation": false
+  },
+  "detached_wrapper": {
+    "authenticated_commands": [
+      "seal-cohort",
+      "build-manifest",
+      "run"
+    ],
+    "authority_rule": "role and worker identity are derived from the immutable descriptor and claim, never accepted as CLI authority; POD_UID and hostname are read from the runtime environment and validated by the existing queue-context gate",
+    "descriptor_rule": "the wrapper reconstructs every executable descriptor field and the exact source_root/job_dir/state_dir placeholder argv before accepting the claim",
+    "source_rule": "HEAD must equal the descriptor study commit and git status --porcelain=v1 --untracked-files=all must be empty; bytecode is disabled",
+    "output_rule": "seal and compiler bundles are immutable no-overwrite children of the claimed job raw directory; signed receipts are immutable no-overwrite files in that job publish directory",
+    "result_rule": "the signed wrapper receipt records deterministic outer queue-result lineage because result.json is written only after wrapper exit; compiler output made by the active sealer is marked pending_current_wrapper_exit and final consumption replays the close only after validating the successful reaped outer result"
+  },
+  "evidence_outputs": {
+    "action_manifest_schema": "wmf-forecast-action-manifest-v1",
+    "endpoint_trace_schema": "wmf-forecast-endpoint-trace-receipt-v1",
+    "private_video_inventory_schema": "wmf-confirmation-private-video-inventory-v1",
+    "recording_receipt_schema": "wmf-forecast-recording-receipt-v1",
+    "request_history_schema": "wmf-forecast-request-history-receipt-v1",
+    "request_inventory_consumer_schema": "wmf-forecast-request-inventory-v1",
+    "request_inventory_signature_wrapper_schema": "wmf-confirmation-request-inventory-receipt-v1",
+    "request_provenance_schema": "wmf-confirmation-request-provenance-v1",
+    "zero_science_schema": "wmf-confirmation-evidence-zero-science-v1"
+  },
+  "namespace": "wmf_ablation_001_20260912",
+  "prohibited_effects": {
+    "behavioral_actions_executed_by_compiler": 0,
+    "behavioral_cells_launched_by_compiler": 0,
+    "confirmation_jobs_released_by_compiler": 0,
+    "labels_created_by_compiler": 0,
+    "model_requests_issued_by_compiler": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0,
+    "simulator_processes_started": 0
+  },
+  "source_authentication": {
+    "aggregate_roster": "one hash-bound terminal receipt for every selected model/layout block, inside an authoritative cohort-close receipt that exactly binds the release, schedule, all queue attempts, and zero live claims/descendants",
+    "censored": "accepted as valid_censored only when the close hash-binds completion, full journal, source video, failure receipt and the model-native server_context_terminal descriptor, and the exact validators pinned to runtime commit 03732d3c6fa37c26a3ab2e8608a80d076fdcc33a deep-validate wmf-n3-terminal-context-receipt-v1 or wmf-d1-terminal-context-receipt-v1. D1 additionally requires the selected queue pair, ready/claim/manifest lineage and a distinct later two-rank final reset. The safety prefix terminates the whole block and forbids a retry.",
+    "not_run": "derived only from close-bound terminal aggregate counts and frozen ordered cell IDs; D1 sparse fallback requires an explicit zero-launch form and paired terminal proof",
+    "technical_invalid": "close-bound technical_failure receipt; an explicitly verified missing receipt is permitted only for a zero-action/zero-request child death, and any nonzero prefix requires close-bound completion, full journal and deep retained request/action/pixel artifacts. A technical failure may truthfully contain 0 through 450 executed actions, remains excluded from annotation requests and scientific endpoints, and is never relabeled valid or censored.",
+    "valid_complete": "existing model-specific confirmation passed-cell validator plus native completion/journal/request/action/pixel chain"
+  },
+  "status_roster": {
+    "complete": true,
+    "preserved_categories": [
+      "valid_complete",
+      "valid_censored",
+      "technical_invalid",
+      "not_run"
+    ],
+    "technical_reason_policy": "Any failed cell without the complete valid/censored recording chain is retained as recording_integrity_failure; it is never promoted to analyzable forecast evidence."
+  },
+  "study_id": "WMF-ABLATION-001",
+  "schema_version": "wmf-confirmation-evidence-compiler-contract-v1"
+}

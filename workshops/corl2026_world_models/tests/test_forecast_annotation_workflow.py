@@ -858,6 +858,52 @@ class AnnotationWorkflowTests(unittest.TestCase):
         with self.assertRaisesRegex(workflow.ContractError, "action manifest request ownership"):
             workflow.select_requests(rebound)
 
+    def test_technical_invalid_roster_accepts_450_actions_but_rejects_451(self):
+        cell_id = self.roster[0]["cell_id"]
+        for action_count, accepted in ((450, True), (451, False)):
+            with self.subTest(action_count=action_count):
+                inventory = copy.deepcopy(self.inventory)
+                row = inventory["episode_roster"][0]
+                row.update(
+                    recording_status="technical_invalid",
+                    executed_action_count=action_count,
+                    censor_reason="recording_integrity_failure",
+                )
+                row.update(
+                    self.write_recording_artifacts(
+                        cell_id=cell_id,
+                        recording_id=row["recording_id"],
+                        model_id=row["model_id"],
+                        layout_pair_id=row["layout_pair_id"],
+                        condition_id=row["condition_id"],
+                        recording_status="technical_invalid",
+                        executed_action_count=action_count,
+                        censor_reason="recording_integrity_failure",
+                        source_video_id=row["source_video_id"],
+                        source_video_sha256=row["source_video_sha256"],
+                    )
+                )
+                if accepted:
+                    roster, actions = workflow._validate_episode_roster(
+                        inventory["episode_roster"],
+                        stage="development",
+                        cohort_branch="reduced_n3",
+                        base=self.root,
+                    )
+                    self.assertEqual(roster[cell_id]["executed_action_count"], 450)
+                    self.assertEqual(len(actions[cell_id]["actions"]), 450)
+                else:
+                    with self.assertRaisesRegex(
+                        workflow.ContractError,
+                        "technical-invalid executed_action_count is invalid",
+                    ):
+                        workflow._validate_episode_roster(
+                            inventory["episode_roster"],
+                            stage="development",
+                            cohort_branch="reduced_n3",
+                            base=self.root,
+                        )
+
     def test_full_two_model_inventory_accepts_n3_and_d1_exact_request_counts(self):
         inventory = copy.deepcopy(self.inventory)
         inventory["cohort_branch"] = "full_two_model"

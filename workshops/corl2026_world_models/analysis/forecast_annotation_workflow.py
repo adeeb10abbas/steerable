@@ -740,7 +740,7 @@ def _validate_episode_roster(
                 require_nonempty_string(raw["source_video_id"], f"technical-invalid source_video_id {cell_id}")
                 require_sha256(raw["source_video_sha256"], f"technical-invalid source_video_sha256 {cell_id}")
             require(
-                type(raw["executed_action_count"]) is int and 0 <= raw["executed_action_count"] < 450,
+                type(raw["executed_action_count"]) is int and 0 <= raw["executed_action_count"] <= 450,
                 f"technical-invalid executed_action_count is invalid for {cell_id}",
             )
             require_nonempty_string(raw["censor_reason"], f"technical-invalid censor_reason {cell_id}")

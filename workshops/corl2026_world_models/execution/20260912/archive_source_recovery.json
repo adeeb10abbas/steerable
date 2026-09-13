@@ -1,0 +1,261 @@
+{
+  "schema_version": "wmf-archive-source-recovery-v1",
+  "recorded_at_utc": "2026-09-13T01:45:13Z",
+  "study_namespace": "wmf_ablation_001_20260912",
+  "mode": "read_only_archive_source_checkpoint_verification",
+  "access": {
+    "relay": "work Mac to prod-dcwi-warrenq1-vmkub007 namespace 211247-prod",
+    "inspection_pod": "211247-ali-b200-1gpu",
+    "pvc_root": "/data/users/ali/vla_wam",
+    "credentials_read_or_copied": false,
+    "private_deploy_key_read_or_copied": false
+  },
+  "declared_recovery_target_summary": {
+    "target_file": "workshops/corl2026_world_models/execution/20260912/archive_recovery_targets.json",
+    "cohorts": 2,
+    "declared_paths": 22,
+    "present_paths": 22,
+    "paths_hashed": 22,
+    "declared_sha256": 21,
+    "declared_sha256_matches": 21,
+    "declared_sha256_mismatches": 0,
+    "undeclared_sha256_paths": 1,
+    "unavailable_paths": 0
+  },
+  "archives": {
+    "H01": {
+      "selected_cell": "v3b001:nano:seed9400:control:left",
+      "selection_rule": "lowest registered block seed, original layout, LEFT command; no outcome selection",
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl",
+      "source_sha256": "ce67aecb2705394e8161fa4b65df7130e62648e2f6d8b6a93408c8da685a7207",
+      "raw_record": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/raw_episode.jsonl",
+        "bytes": 34858,
+        "sha256": "47f87a8e0bed33eb0a1b224b31570aff03ad002311a73146ec488221de2b8e2f",
+        "batch_manifest_confirmed": true,
+        "row_count": 1,
+        "actions_executed": 122,
+        "behavioral_result_valid": true
+      },
+      "declared_targets": {
+        "paths": 17,
+        "present": 17,
+        "hashed": 17,
+        "declared_sha256": 16,
+        "declared_sha256_matches": 16,
+        "batch_manifest_supplied_sha256_for_remaining_raw_jsonl": true
+      },
+      "raw_record_pointer_closure": {
+        "unique_referenced_paths": 17,
+        "present": 17,
+        "referenced_bytes": 134745451,
+        "sha256_declared": 16,
+        "sha256_matches": 16,
+        "path_descriptor_conflicts": 0,
+        "aggregate_sha256": "6326fd69b729f37edfca113eb4810472ee816e2b26d67c45b880697a541f5fce",
+        "aggregate_definition": "SHA-256 of sorted lines '<payload SHA-256><two spaces><absolute path><newline>'"
+      },
+      "checkpoint": {
+        "id": "nvidia/Cosmos3-Nano-Policy-DROID",
+        "revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e"
+      },
+      "claim_boundary": {
+        "historical_episode_pointer_closure_recovered": true,
+        "forecast_execution_alignment_validated": false,
+        "new_fixed_duration_recording_contract_satisfied": false,
+        "reason": "The historical task stopped on success after 122 actions and does not provide the new synchronized request-control-physics-camera timing contract. Presentation video and decoded-frame indices are not physical-time certificates."
+      }
+    },
+    "H02": {
+      "selected_cell": "v3b003:dreamzero:seed9400:control:left",
+      "selection_rule": "lowest registered block seed, original layout, LEFT command; no outcome selection",
+      "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+      "source_path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_episodes.jsonl",
+      "source_sha256": "31f0715c3cbc682f90e5cc6420b9f45f49622f876734d43ba7c8cb6545b80f34",
+      "raw_record": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_isolated_attempt03/raw/v3b003__dreamzero__seed9400__control__left/attempt01/raw_episode.jsonl",
+        "bytes": 123639,
+        "sha256": "dfabf4167c8c4566e6dddc76110815a54fcd3a60a8e800d00ea21d7816679fd9",
+        "batch_manifest_confirmed": true,
+        "row_count": 1,
+        "actions_executed": 450,
+        "behavioral_result_valid": true,
+        "right_censored": true
+      },
+      "declared_targets": {
+        "paths": 5,
+        "present": 5,
+        "hashed": 5,
+        "declared_sha256": 5,
+        "declared_sha256_matches": 5
+      },
+      "raw_record_pointer_closure": {
+        "unique_referenced_paths": 123,
+        "present": 123,
+        "referenced_bytes": 23236904,
+        "sha256_declared": 122,
+        "sha256_matches": 122,
+        "remaining_raw_jsonl_confirmed_by_batch_manifest": true,
+        "path_descriptor_conflicts": 0,
+        "aggregate_sha256": "09e3401bffed247a4a5803a11e4f062492a5fd6077a6cbaf64e4c4a83349ba3d",
+        "aggregate_definition": "SHA-256 of sorted lines '<payload SHA-256><two spaces><absolute path><newline>'"
+      },
+      "future_manifest": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_004/future_manifest.json",
+        "bytes": 108059,
+        "sha256": "5760b1af79e33056e945a4c6d1ea716b4e5b5d963918ce73c82bd023faa708c3",
+        "request_count": 57,
+        "referenced_latent_action_decode_paths": 115,
+        "present": 115,
+        "size_matches": 115,
+        "sha256_matches": 115,
+        "official_repository_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3"
+      },
+      "configuration_identity": {
+        "checkpoint_id": "GEAR-Dreams/DreamZero-DROID",
+        "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
+        "binding": "V2-A015:dreamzero_action_cfg_s2",
+        "action_cfg_style_scale": 2.0,
+        "video_cfg_scale": 5.0,
+        "effective_official_model_noise_seed": 1140,
+        "is_core_D1": false,
+        "is_optional_D2_like_historical_custom_s2": true
+      },
+      "claim_boundary": {
+        "historical_episode_pointer_closure_recovered": true,
+        "forecast_execution_alignment_validated": false,
+        "new_D1_qualification_satisfied": false,
+        "reason": "All disclosed historical behavioral, action, latent and reset-decode pointers close and hash-match, but H02 is the derived custom s2 action-guidance intervention, not official conditional D1. Its old latent/reset-decode records do not establish generated-frame physical time or the new synchronized camera mapping."
+      }
+    }
+  },
+  "external_sources": {
+    "N3": {
+      "path": "/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b",
+      "commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+      "git_tree": "1e77852f2240d6e00312342ab29164745042b1ae",
+      "tracked_status_clean": true,
+      "tracked_file_count": 729,
+      "tracked_bytes": 14445894,
+      "aggregate_sha256": "f6f61b3689b6cd6a7e20a8e46c9557e53b6d99cfd340380db262e6834dd04ff7",
+      "aggregate_definition": "SHA-256 of sha256sum-format lines for every tracked file in git-ls-files sort order",
+      "server_file": {
+        "path": "cosmos_framework/scripts/action_policy_server_robolab.py",
+        "bytes": 28935,
+        "git_blob": "a5cc459bfc44905d34f0ba672313a8f23a11f68c",
+        "sha256": "024a6d19048a6ac732ca0b23e741b5da6d38424223783b944bf539b2b6bd9a24"
+      }
+    },
+    "D1": {
+      "path": "/data/users/ali/vla_wam/external/DreamZero-v3e004-clean-ab790c1",
+      "commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+      "git_tree": "6b7ba27f1af81e963a6507f1204c05c65a94098c",
+      "tracked_status_clean": true,
+      "tracked_file_count": 129,
+      "tracked_bytes": 4946544,
+      "aggregate_sha256": "a39e1ef8b7d8668caf15914637446fe58acb512e6672413d3af8b4b6442eca7f",
+      "aggregate_definition": "SHA-256 of sha256sum-format lines for every tracked file in git-ls-files sort order",
+      "official_server_file": {
+        "path": "socket_test_optimized_AR.py",
+        "bytes": 36596,
+        "git_blob": "5b93e05e9a8f7f873b81541ed8eddf4cb47f83ad",
+        "sha256": "7ef17f66064bac8defafc1a84551089b124546729a98be8c0515b33d2e159d48"
+      }
+    },
+    "RoboLab": {
+      "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241",
+      "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "git_tree": "8bee3d1f9a9241af419ba93554e77477202bd361",
+      "tracked_and_untracked_status_clean": true,
+      "relevant_file_sha256": {
+        "robolab/registrations/droid/auto_env_registrations_jointpos.py": "7c0796681408af17b940b3d85f68157962715d3f31576ef64fba1398d62935fb",
+        "policies/cosmos3/client.py": "6c22690779922a54bf18324da975253e1a8c9f824e89e22f0a480d92d2609d4d",
+        "policies/dreamzero/client.py": "96de16927536f2b48427a6a2dcc3111d03204e1832e50e159cadf67b3fe956ac",
+        "robolab/eval/episode.py": "aab5fe8fa51235b8bc4db4f557adc2c12031d9198e27e04703ee6aa400fc63c8"
+      }
+    }
+  },
+  "checkpoint_byte_manifests": {
+    "aggregate_definition": "SHA-256 of sorted lines '<payload SHA-256><two spaces><relative path><newline>'; .cache is excluded",
+    "N3": {
+      "path": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+      "repository": "nvidia/Cosmos3-Nano-Policy-DROID",
+      "revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+      "payload_file_count": 43,
+      "payload_bytes": 32937432846,
+      "payload_sha256_computed": 43,
+      "huggingface_etags_verified": 43,
+      "missing_payloads": 0,
+      "unmapped_payloads": 0,
+      "aggregate_sha256": "55895125805b12635ece5dd2e88453a1aca6a684bac556f114337ae448ffdd83"
+    },
+    "D1": {
+      "path": "/data/users/ali/vla_wam/checkpoints/DreamZero-DROID-96ad344",
+      "repository": "GEAR-Dreams/DreamZero-DROID",
+      "revision": "96ad344138c66e82536422432ad742f015784942",
+      "payload_file_count": 25,
+      "payload_bytes": 64789159581,
+      "payload_sha256_computed": 25,
+      "huggingface_etags_verified": 25,
+      "missing_payloads": 0,
+      "unmapped_payloads": 0,
+      "aggregate_sha256": "b4af0ac93474c3295c1ba841a34a8f2f91a5c3ec3c6aac1431b97689a6618c56",
+      "matches_pinned_historical_manifest": true
+    },
+    "D1_tokenizer": {
+      "path": "/data/users/ali/vla_wam/checkpoints/umt5-xxl-tokenizer-66cb9e7",
+      "repository": "google/umt5-xxl",
+      "revision": "66cb9e7e85526fe440a945569e42c72fb6cbc0ad",
+      "payload_file_count": 4,
+      "payload_bytes": 21414790,
+      "payload_sha256_computed": 4,
+      "huggingface_etags_verified": 4,
+      "missing_payloads": 0,
+      "unmapped_payloads": 0,
+      "aggregate_sha256": "00f9b974f8f0b33c5e284849a0507c308893d01d915377ba88c2f7084ea92434",
+      "matches_pinned_historical_manifest": true
+    }
+  },
+  "official_D1_operational_contract": {
+    "authority_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+    "wrapper_path": "experiments/dreamzero_droid/v2_instrumented_server.py",
+    "wrapper_git_blob": "c0e4e5bbb3e34b2f9329204f762d9bb8941734b0",
+    "wrapper_bytes": 10187,
+    "wrapper_sha256": "2b0a83e21ee921527a2d0fc5cb9344d0b1f5950ff88906fd441fac2421c5a95f",
+    "cluster_staged_copy_sha256_matches": true,
+    "official_external_commit_asserted_by_wrapper": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+    "required_distributed_world_size": 2,
+    "required_policy_rank_gpu_name_contains": "B200",
+    "tokenizer_path_argument_required": true,
+    "tokenizer_path_override_passed_to_policy": true,
+    "verified_runtime_tokenizer_path": "/data/users/ali/vla_wam/checkpoints/umt5-xxl-tokenizer-66cb9e7",
+    "tokenizer_path_evidence": "Pinned H02 server contract and pinned official source/checkpoint manifest; current PVC bytes match the manifest.",
+    "planning_consequence": "One official conditional D1 server context requires two B200 ranks; a one-GPU worker cannot host this wrapper unchanged.",
+    "claim_boundary": "This is source and byte identity plus an operational precondition, not a D1 launch, action/latent equivalence result, reset qualification, or behavioral episode. H02 custom s2 cannot fill D1 cells."
+  },
+  "live_capacity_observation": {
+    "observed_at_utc": "2026-09-13T01:44:47Z",
+    "pod": "211247-ali-b200-1gpu",
+    "pod_uid": "c4416e7b-da01-491a-983e-f35870fb491e",
+    "phase": "Running",
+    "node": "dcwipphhgc225.edc.nam.gm.com",
+    "gpu_uuid": "GPU-937f79e0-f27f-f049-5f9d-ed8ea1d5472a",
+    "gpu_name": "NVIDIA B200",
+    "memory_total_mib": 183359,
+    "memory_free_mib": 182632,
+    "utilization_percent": 0,
+    "compute_process_count": 0,
+    "interpretation": "One idle owned B200 was observed. This does not establish a second simultaneously available B200 required by the unchanged D1 wrapper."
+  },
+  "mutations_and_launches": {
+    "kubernetes_objects_created_updated_or_deleted": 0,
+    "policy_requests_launched": 0,
+    "behavioral_episodes_launched": 0,
+    "model_servers_launched": 0,
+    "external_repositories_cleaned_or_modified": 0,
+    "checkpoint_files_modified": 0,
+    "archive_files_modified": 0
+  },
+  "overall_claim_boundary": "The selected historical H01 and H02 archive pointer closures are present and byte-valid on GM. Neither validates the new physical-time recorder. H02 is historical custom s2, not core D1. Official D1 source, model and tokenizer identities are byte-verified, but D1 remains unlaunched and unqualified and requires exactly two B200 ranks."
+}

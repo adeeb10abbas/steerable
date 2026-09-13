@@ -1,0 +1,156 @@
+{
+  "schema_version": "wmf-forecast-layout-source-contract-v1",
+  "study_namespace": "wmf_ablation_001_20260912",
+  "status": "FROZEN_MODEL_BLIND_SOURCE_INPUT",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "generation_uses_model_outcomes": false,
+  "scene": {
+    "name": "rubiks_cube_banana_bowl.usda",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "scene_asset": {
+      "path": "assets/scenes/rubiks_cube_banana_bowl.usda",
+      "git_blob": "9e2cc29674c011807e3665cf4be77046ffdff59f",
+      "git_payload_sha256": "f382838f4da1b72706a5a9a783f4903d455cc3ef2a985305e97cc6fbbdd19977",
+      "lfs_oid_sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0",
+      "lfs_size_bytes": 5373
+    },
+    "scene_metadata": {
+      "path": "assets/scenes/_metadata/scene_metadata.json",
+      "git_blob": "96490dca244efae0838e4aa26d1df931b5b257c0",
+      "sha256": "83ecf76a1fde9091b5db9012b76790aca36c2fe6b2c36a8885f4f98d7c4b7e1c"
+    }
+  },
+  "objects": {
+    "banana": {
+      "asset": {
+        "path": "assets/objects/ycb/banana.usd",
+        "git_blob": "3b08da6b996b025eab1d21d0feb15bd512b44f08",
+        "git_payload_sha256": "d0e00306480cb14573d8b24952c176eee7e81e60b93cacf7712059a8d767c3f8",
+        "lfs_oid_sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9",
+        "lfs_size_bytes": 419223
+      },
+      "scene_payload_reference": "../objects/ycb/banana.usd",
+      "quaternion_wxyz": [
+        0.9999781250953674,
+        -0.002664888769974798,
+        -0.006051987813043361,
+        0.00014540326035168
+      ],
+      "quaternion_source": "scene_metadata row rubiks_cube_banana_bowl.usda/banana at pinned RoboLab commit",
+      "z_m": 0.0684281587600708
+    },
+    "bowl": {
+      "asset": {
+        "path": "assets/objects/ycb/bowl.usd",
+        "git_blob": "d30ffa0c1908f1ced4b5ec6ee5b4a3228854216c",
+        "git_payload_sha256": "5a6cdea802644e5ed21e62f443910f75b864493712bb312bd7870581049be58e",
+        "lfs_oid_sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e",
+        "lfs_size_bytes": 342393
+      },
+      "scene_payload_reference": "../objects/ycb/bowl.usd",
+      "quaternion_wxyz": [
+        0.9999999403953552,
+        -0.00005875354421326538,
+        -0.0003236202968188691,
+        -0.00010501052579296266
+      ],
+      "quaternion_source": "scene_metadata row rubiks_cube_banana_bowl.usda/bowl at pinned RoboLab commit",
+      "z_m": 0.07732785493135452
+    },
+    "rubiks_cube": {
+      "asset": {
+        "path": "assets/objects/hot3d/rubiks_cube.usd",
+        "git_blob": "d71c10ebd6e28a8a3752b73b5b81ee677dd62226",
+        "git_payload_sha256": "753d89a5e69d2f01938291e737cf5f64315ff3f866bad9b393307c7e2073c001",
+        "lfs_oid_sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024",
+        "lfs_size_bytes": 682045
+      },
+      "scene_payload_reference": "../objects/hot3d/rubiks_cube.usd",
+      "quaternion_wxyz": [
+        0.9999990463256836,
+        -0.0009071399440944852,
+        0.0010379400315123045,
+        0.00008441170612118015
+      ],
+      "quaternion_source": "scene_metadata row rubiks_cube_banana_bowl.usda/rubiks_cube at pinned RoboLab commit",
+      "z_m": 0.08113233000040054
+    }
+  },
+  "p00_original_positions_robot_base_m": {
+    "banana": [
+      0.538878858089447,
+      -0.07555567473173141,
+      0.0684281587600708
+    ],
+    "bowl": [
+      0.44258353114128113,
+      0.12658219039440155,
+      0.07732785493135452
+    ],
+    "rubiks_cube": [
+      0.303364634513855,
+      0.12396888434886932,
+      0.08113233000040054
+    ]
+  },
+  "p00_provenance": {
+    "historical_candidate_sha256": "e1799b815da41f9a08a4000a360c4958003269fed27e2abe75b273519e4d1c88",
+    "historical_calibration_report_sha256": "112716acada89050561c9488d93a333a300b1675c2305329c8e5aceeb4e6da71",
+    "historical_evidence_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+    "neutral_left_task_path": "experiments/groot_droid/robolab_v2_tasks/rubiks_cube_left_of_bowl_matched.py",
+    "neutral_left_task_sha256": "9c4d90be770266bac3ba5242b743098348c565ee622179b5e88fa2af0c4891bc",
+    "neutral_right_task_path": "experiments/groot_droid/robolab_v2_tasks/rubiks_cube_right_of_bowl_matched.py",
+    "neutral_right_task_sha256": "ba0eb879590960c57976dd1b749c4ebbd3e86054e152ca5af014ac1bc2b6d02a"
+  },
+  "generation_grid": {
+    "units": "metres in robot-base coordinates",
+    "cube_x": [0.285, 0.345, 0.005],
+    "bowl_longitudinal_offset_from_cube": [0.105, 0.16, 0.005],
+    "shared_lateral_center": [-0.075, 0.075, 0.005],
+    "cube_lateral_offset_from_center": [-0.015, 0.015, 0.005],
+    "bowl_lateral_offset_from_center": [-0.015, 0.015, 0.005],
+    "banana_x": [0.52, 0.59, 0.005],
+    "banana_abs_lateral_offset_from_center": [0.14, 0.21, 0.005],
+    "minimum_planar_center_separation_m": 0.09,
+    "neutrality_margin_m": 0.02,
+    "maximum_abs_y_m": 0.29
+  },
+  "live_gate": {
+    "repeat_resets_per_condition": 2,
+    "settle_steps": 60,
+    "stability_window_steps": 15,
+    "linear_speed_tolerance_m_s": 0.02,
+    "angular_speed_tolerance_rad_s": 0.2,
+    "pose_tolerance_m": 0.003,
+    "minimum_rgb_pixel_range": 16,
+    "required_cameras": [
+      "head_camera",
+      "over_shoulder_left_camera",
+      "over_shoulder_right_camera",
+      "wrist_cam"
+    ],
+    "visibility_cameras": [
+      "over_shoulder_left_camera",
+      "over_shoulder_right_camera"
+    ],
+    "visibility_methods": [
+      "instance_segmentation",
+      "calibrated_projection_and_obb_occlusion"
+    ],
+    "minimum_visible_pixels_by_object": {
+      "banana": 16,
+      "bowl": 32,
+      "rubiks_cube": 32
+    },
+    "forbidden_collision_pairs": [
+      "banana|bowl",
+      "banana|rubiks_cube",
+      "bowl|rubiks_cube",
+      "robot_gripper|banana",
+      "robot_gripper|bowl",
+      "robot_gripper|rubiks_cube"
+    ]
+  },
+  "claim_boundary": "The contract contains only pinned scene/task provenance, geometry ranges, and model-blind physical checks. Numeric candidates remain unreleased until a live gate accepts them; a physical gate does not release model inference."
+}

@@ -17,3 +17,14 @@ User authorizes new core study on GM, with parallel execution. New namespace: wm
 - Final forced-IPv4 work-Mac SSH retry timed out. Required external state: reliable work-Mac access and GM network/VPN route.
 
 - Independent review complete: both preparation scripts satisfy their bounded specifications; no actionable defects. Verified generated artifact counts/hash links, all shared strict-before-end stopping times, full condition ordering, and unreleased status. No model/runtime calls were made by the reviewer.
+
+## 2026-09-13 cluster-independent execution milestone
+
+- The workstation-to-GitHub-to-GM-to-GitHub-to-workstation queue route passed. Four distinct one-B200 workers completed infrastructure diagnostics; result commit `5c7c0ef8de093f10185b31d8b7a869fdb2ba7a83` was fetched and its published artifact hashes were verified. Another 28 workers remain scheduler-pending and are not available capacity.
+- The cluster coordinator and workers use the PVC-backed queue and repo-scoped deploy key. The work Mac is no longer in the dispatch or result-return path. These diagnostics launched zero model requests and zero behavioral episodes.
+- H01 and H02 declared archive targets were recovered on the GM PVC with 22/22 paths present and 21/21 supplied hashes matching. The selected H01 closure is 17/17 files; H02 is 123/123 files plus 115/115 embedded future pointers. H01 remains success-terminated historical evidence and H02 remains custom DreamZero s2, not D1.
+- Exact clean N3, D1 and RoboLab source identities were verified. N3 checkpoint payloads passed 43/43 byte checks; D1 passed 25/25 and its tokenizer 4/4. The unchanged official D1 wrapper requires two B200 ranks, which is a live scheduling prerequisite rather than a qualification result.
+- Implemented the fixed-duration recorder and timeout-only task hook. Its focused tests exercise 450 actual actions after early success, 451 original observation snapshots, exact request/action/future identities, reset evidence, censoring, hash-chained durable journals, and final two-action chunk truncation. This is software qualification only; no real model request or Isaac episode has yet run.
+- Implemented deterministic model-blind layout generation, timeout-only fixture tasks, an append-only live rejection/acceptance ledger and a frozen-manifest builder. Numeric candidates remain unreleased until real simulator gates accept them.
+- Current verified workshop suite: 106/106 passing. Scientific counts remain generation 0, pilot 0/8, development 0/32 and confirmation 0/192.
+- Next concrete action: push the recorder/archive/layout source slice, then release real fixed-observation and model-blind simulator qualification jobs through the independent queue. Do not release behavioral development or confirmation until the corresponding live gates pass.

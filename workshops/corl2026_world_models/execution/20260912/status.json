@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-12T20:47:57.395268+00:00",
+  "as_of_utc": "2026-09-13T02:02:28Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -8,14 +8,14 @@
   "authorization": "User requested execution of attached specification on GM with aggressive parallelism. Core 232 episodes selected; optional D2 not selected. No confirmation release before qualification.",
   "core_episodes_launched": 0,
   "generation_requests_launched": 0,
-  "phase": "offline_preparation_cluster_blocked",
-  "cluster_status": "GM API failed on one successful IPv4 work-Mac connection; final forced-IPv4 retry timed out on SSH. Live GPU capacity remains unknown.",
+  "phase": "cluster_independent_scientific_qualification_implementation",
+  "cluster_status": "Independent Git/PVC queue round trip passed. Coordinator and four one-B200 workers are running; 28 additional workers are scheduler-pending and are not counted as available capacity.",
   "execution_gates": {
-    "archive_recovery": "pending_cluster_access",
+    "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "pending_restore_and_probes",
     "runtime_D1": "pending_official_path_and_probes",
-    "fixed_450_recorder": "implementation_required",
-    "physical_layouts": "pending_model_blind_qualification",
+    "fixed_450_recorder": "software_qualified_live_runtime_pending",
+    "physical_layouts": "model_blind_source_and_gate_implemented_live_qualification_pending",
     "frame_time_camera_mapping": "pending_measured_qualification",
     "annotation_development": "pending_development_recordings",
     "confirmation_release": false
@@ -25,7 +25,7 @@
     "pilot_max_workers": 2,
     "development_max_workers": 8,
     "confirmation_max_workers": 48,
-    "actual_parallel_limit": null,
+    "actual_parallel_limit": 4,
     "limit_rule": "min(verified available isolated workers, remaining blocks); never interleave shared temporal server state"
   },
   "preserve": "All historical V2/V3 evidence and registries; all valid failures; all partial attempts",
@@ -33,8 +33,8 @@
   "workstation_baseline_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "verified_baseline_tests": 23,
   "source_bundle_sha256": "a8cc6b8d393902bd4ea8561ec1236097d02c74c88c500b5477da72df576fde69",
-  "automatic_background_execution": false,
-  "verified_workshop_tests": 43,
+  "automatic_background_execution": true,
+  "verified_workshop_tests": 106,
   "prepared_schedule": {
     "path": "parallel_schedule.json",
     "jobs": 58,
@@ -55,6 +55,51 @@
     "structured_artifact_count": 1848,
     "collisions_within_checked_scope": 0,
     "runtime_acceptance_verified": false
+  },
+  "cluster_autonomy": {
+    "status": "independent_round_trip_passed_and_handed_off",
+    "control_branch": "codex/forecast-layout-gm-20260912",
+    "results_branch": "codex/forecast-layout-gm-20260912-results",
+    "independence_receipt": "autonomy/independence.json",
+    "deployment_receipt": "autonomy/deployment_receipt.json",
+    "control_commit_verified_by_cluster": "84921052b137af79f210157f62396fa56b8062d9",
+    "result_commit_verified_by_workstation": "5c7c0ef8de093f10185b31d8b7a869fdb2ba7a83",
+    "diagnostic_workers_passed": 4,
+    "diagnostic_workers_pending_capacity": 28,
+    "scientific_episodes_from_diagnostics": 0,
+    "work_mac_required_for_dispatch_or_results": false,
+    "admission_deadline_unix": 1789868932
+  },
+  "archive_source_recovery": {
+    "path": "archive_source_recovery.json",
+    "declared_paths_present": 22,
+    "declared_hashes_matching": 21,
+    "declared_hash_mismatches": 0,
+    "h01_pointer_closure_present": "17/17",
+    "h02_pointer_closure_present": "123/123",
+    "n3_checkpoint_payloads_verified": "43/43",
+    "d1_checkpoint_payloads_verified": "25/25",
+    "d1_tokenizer_payloads_verified": "4/4",
+    "claim_boundary": "Archive/source/checkpoint identity only. H01 is success-terminated historical data and H02 is custom s2, so neither qualifies the new recorder or D1."
+  },
+  "fixed_duration_recorder": {
+    "contract": "../../experiments/forecast_layout/recording_contract.json",
+    "implementation": "../../experiments/forecast_layout/recording_adapter.py",
+    "software_tests_passed": 12,
+    "n3_synthetic": {
+      "actions": 450,
+      "observations": 451,
+      "requests": 15,
+      "final_executed_actions_from_chunk": 2
+    },
+    "d1_synthetic": {
+      "actions": 450,
+      "observations": 451,
+      "requests": 57,
+      "final_executed_actions_from_prefix": 2,
+      "returned_actions_outside_executable_prefix_per_full_request": 16
+    },
+    "live_runtime_qualified": false
   },
   "independent_preparation_review": "passed_no_actionable_defects"
 }

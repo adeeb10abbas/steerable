@@ -1,0 +1,123 @@
+{
+  "schema_version": "wmf-forecast-recording-contract-v1",
+  "study_id": "WMF-ABLATION-001",
+  "status": "IMPLEMENTED_NOT_RUNTIME_QUALIFIED",
+  "episode": {
+    "action_cap": 450,
+    "episode_length_s": 30,
+    "stop_on_success": false,
+    "record_first_success": true,
+    "normal_stop_reason": "action_cap",
+    "censored_stop_reasons": [
+      "safety_abort",
+      "technical_failure"
+    ],
+    "initial_left_success_required": false,
+    "initial_right_success_required": false,
+    "runner_reset_calls": 2,
+    "physical_reset_calls": 1
+  },
+  "simulator": {
+    "nominal_physics_dt_s": 0.008333333333333333,
+    "nominal_decimation": 8,
+    "nominal_render_interval": 8,
+    "required_control_period_s": 0.06666666666666667,
+    "required_control_hz": 15,
+    "values_are_runtime_assertions_not_forecast_alignment": true,
+    "required_original_cameras": [
+      "over_shoulder_left_camera",
+      "over_shoulder_right_camera",
+      "wrist_cam"
+    ]
+  },
+  "models": {
+    "N3": {
+      "returned_action_horizon": 32,
+      "executed_prefix_horizon": 32,
+      "required_future_evidence": [
+        "decoded"
+      ]
+    },
+    "D1": {
+      "returned_action_horizon": 24,
+      "executed_prefix_horizon": 8,
+      "required_future_evidence": [
+        "latent",
+        "decoded"
+      ]
+    }
+  },
+  "capture": {
+    "observation_schedule": "settled reset and every returned post-action observation through action 450",
+    "request_observation_binding": "exact current observation plus the immediately preceding observation; request zero explicitly reduces constant velocity to persistence",
+    "original_observation_fields": [
+      "image_obs",
+      "proprio_obs"
+    ],
+    "model_fields": [
+      "extracted_preprocessing_output",
+      "wire_request",
+      "raw_response",
+      "returned_action_chunk",
+      "executable_action_chunk",
+      "latent_future_when_required",
+      "decoded_future_when_required"
+    ],
+    "action_fields": [
+      "policy_returned_action",
+      "environment_executed_action",
+      "request_index",
+      "chunk_offset"
+    ],
+    "timing_fields": [
+      "wall_time_ns",
+      "monotonic_ns",
+      "physics_step",
+      "physics_time_s",
+      "control_step",
+      "camera_frame_id",
+      "camera_capture_time_ns",
+      "request_send_monotonic_ns",
+      "response_receive_monotonic_ns",
+      "env_step_start_monotonic_ns",
+      "env_step_end_monotonic_ns"
+    ],
+    "artifact_encoding": "lossless NumPy NPZ payload plus a SHA-256-bound JSONL hash chain",
+    "raw_storage_scope": "GM PVC attempt directory; compact receipts may be published separately"
+  },
+  "reset": {
+    "model_context_reset_before_physical_reset": true,
+    "context_receipt_required_fields": [
+      "passed",
+      "reset_scope",
+      "server_context_id",
+      "cache_reset_evidence"
+    ],
+    "full_context_claim_requires_server_evidence": true,
+    "reset_scope": "full_episode_temporal_and_cache_context",
+    "second_runner_reset_is_idempotent": true,
+    "settled_reset_receipt_required_fields": [
+      "passed",
+      "settled",
+      "left_success",
+      "right_success",
+      "reset_identity",
+      "pose_manifest_sha256",
+      "initial_observation_hashes",
+      "settle_evidence",
+      "collision_evidence",
+      "visibility_evidence",
+      "settled_observation_returned",
+      "model_request_count_during_settle",
+      "episode_length_buf_reset_to_zero"
+    ]
+  },
+  "qualification": {
+    "forecast_frame_to_physical_time_mapping": null,
+    "camera_timestamp_tolerance_s": null,
+    "primary_horizon_s": null,
+    "null_values_are_unresolved_and_must_be_frozen_from_real_pilot_evidence": true,
+    "video_presentation_fps_is_not_alignment_evidence": true,
+    "generated_frame_index_is_not_action_index": true
+  }
+}

@@ -35,6 +35,24 @@ ROBOLAB_COMMIT = "0aef241fb088ca21bb4ebd24448940ed56620d17"
 WORKER_POOL_TRANSITION_SHA256 = "b14db71d3b6dc90de8761e66ea938010f5a3193a072ef4f5c600b73be6c86ce9"
 ROBOLAB_ROOT = Path("/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241")
 ROBOLAB_PYTHON = Path("/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python")
+ISAACLAB_SOURCE_ROOT = Path(
+    "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/isaaclab/source"
+)
+ISAACLAB_PACKAGES = (
+    "isaaclab",
+    "isaaclab_assets",
+    "isaaclab_tasks",
+    "isaaclab_mimic",
+    "isaaclab_rl",
+)
+NATIVE_LIBRARY_PATH = ":".join(
+    (
+        "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu",
+        "/data/users/ali/glvnd/lib",
+        "/data/users/ali/vla_wam/envs/fastwam-native-libs/lib",
+        "/usr/lib/x86_64-linux-gnu",
+    )
+)
 PLANNED_LAYOUT_IDS = (
     "P00",
     *(f"D{index:02d}" for index in range(1, 5)),
@@ -484,6 +502,7 @@ def _runtime_directories(state_parent: Path, hostname: str) -> dict[str, Path]:
         "numba": root / "cache" / "numba",
         "matplotlib": root / "cache" / "matplotlib",
         "cuda": root / "cache" / "cuda",
+        "warp": root / "cache" / "warp",
         "pycache": root / "cache" / "pycache",
     }
     for directory in directories.values():
@@ -492,11 +511,19 @@ def _runtime_directories(state_parent: Path, hostname: str) -> dict[str, Path]:
     return directories
 
 
-def _build_child_env(directories: Mapping[str, Path], forecast_root: Path) -> dict[str, str]:
+def _build_child_env(
+    directories: Mapping[str, Path], forecast_root: Path, robolab_root: Path
+) -> dict[str, str]:
     env = dict(os.environ)
+    for name in ("DISPLAY", "LD_PRELOAD", "CUDA_VISIBLE_DEVICES"):
+        env.pop(name, None)
     env.update(
+        OMNI_KIT_ACCEPT_EULA="YES",
+        PYTHONNOUSERSITE="1",
         PYTHONDONTWRITEBYTECODE="1",
         PYTHONUNBUFFERED="1",
+        VK_ICD_FILENAMES="/etc/vulkan/icd.d/nvidia_icd.json",
+        LD_LIBRARY_PATH=NATIVE_LIBRARY_PATH,
         TMPDIR=str(directories["tmp"]),
         XDG_CACHE_HOME=str(directories["xdg"]),
         TORCH_HOME=str(directories["torch"]),
@@ -504,10 +531,18 @@ def _build_child_env(directories: Mapping[str, Path], forecast_root: Path) -> di
         NUMBA_CACHE_DIR=str(directories["numba"]),
         MPLCONFIGDIR=str(directories["matplotlib"]),
         CUDA_CACHE_PATH=str(directories["cuda"]),
+        WARP_CACHE_PATH=str(directories["warp"]),
         PYTHONPYCACHEPREFIX=str(directories["pycache"]),
     )
     old_pythonpath = env.get("PYTHONPATH")
-    env["PYTHONPATH"] = str(forecast_root) + (os.pathsep + old_pythonpath if old_pythonpath else "")
+    python_roots = [
+        str(forecast_root),
+        str(Path(robolab_root).resolve()),
+        *(str(ISAACLAB_SOURCE_ROOT / package) for package in ISAACLAB_PACKAGES),
+    ]
+    if old_pythonpath:
+        python_roots.append(old_pythonpath)
+    env["PYTHONPATH"] = os.pathsep.join(python_roots)
     return env
 
 
@@ -721,7 +756,9 @@ def execute_job(
                 ]
                 stdout_path = invocation_dir / "child.stdout.log"
                 stderr_path = invocation_dir / "child.stderr.log"
-                child_env = _build_child_env(directories, forecast_root)
+                child_env = _build_child_env(
+                    directories, forecast_root, Path(robolab_root).resolve()
+                )
                 before_count = len(context["gate_records"])
                 with stdout_path.open("xb") as stdout, stderr_path.open("xb") as stderr:
                     context["child_started"] = True

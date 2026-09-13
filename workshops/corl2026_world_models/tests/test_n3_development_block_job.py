@@ -645,6 +645,12 @@ class NoReplayTransportTests(unittest.TestCase):
             _remote_host = "127.0.0.1"
             _remote_port = 18011
 
+            def _connect(self):
+                raise AssertionError("unpatched cached client transport used")
+
+            def _query_server(self, request):
+                raise AssertionError("unpatched cached client retry path used")
+
         transport_type, client_type = development.build_no_replay_transport_types(
             original_client_class=OriginalClient,
             websocket_policy_class=Policy,
@@ -682,6 +688,28 @@ class NoReplayTransportTests(unittest.TestCase):
         with self.assertRaisesRegex(OSError, "lost response"):
             client._query_server(request)
         self.assertEqual(infer_calls, [request])
+
+        # A class object captured before the module attribute is replaced must
+        # receive the same exact transport patch.  This is the live Isaac import
+        # order that exposed the D02 repeated-request boundary.
+        cached_client = OriginalClient()
+        original_connect = OriginalClient._connect
+        original_query = OriginalClient._query_server
+        originals = development.patch_cached_cosmos_client_methods(
+            OriginalClient, client_type
+        )
+        try:
+            cached_client.client = FailingInference()
+            with self.assertRaisesRegex(OSError, "lost response"):
+                cached_client._query_server(request)
+            self.assertIsInstance(cached_client._connect(), transport_type)
+            self.assertEqual(infer_calls, [request, request])
+        finally:
+            development.restore_cached_cosmos_client_methods(
+                OriginalClient, originals
+            )
+        self.assertIs(OriginalClient._connect, original_connect)
+        self.assertIs(OriginalClient._query_server, original_query)
 
     def test_development_receipt_requires_no_replay_attestation(self) -> None:
         block = development.load_development_block(SOURCE_ROOT, "D01")

@@ -106,6 +106,7 @@ NO_REPLAY_TRANSPORT_CONTRACT = {
     "lost_response_policy": "fail_cell_without_replaying_request",
     "outer_bound": "queue_cell_timeout",
 }
+TRANSPORT_PREFLIGHT_SCHEMA = "wmf-n3-development-transport-preflight-v1"
 
 
 @dataclass(frozen=True)
@@ -266,6 +267,34 @@ def build_no_replay_transport_types(
     return DevelopmentRecordedTransport, DevelopmentNoReplayClient
 
 
+def patch_cached_cosmos_client_methods(
+    original_client_class: type, replacement_client_class: type
+) -> dict[str, Any]:
+    """Patch stale imports of the official client, returning exact originals.
+
+    Isaac/AppLauncher can import ``Cosmos3Client`` before the cell's explicit
+    import statement.  Replacing only the module attribute does not affect a
+    class object already captured by that import path.  Patch the two transport
+    methods on that exact class as well, so every cached reference has the same
+    no-ping, no-replay behavior.
+    """
+
+    originals = {
+        "_connect": original_client_class._connect,
+        "_query_server": original_client_class._query_server,
+    }
+    original_client_class._connect = replacement_client_class._connect
+    original_client_class._query_server = replacement_client_class._query_server
+    return originals
+
+
+def restore_cached_cosmos_client_methods(
+    original_client_class: type, originals: Mapping[str, Any]
+) -> None:
+    for name in ("_connect", "_query_server"):
+        setattr(original_client_class, name, originals[name])
+
+
 @contextmanager
 def installed_no_replay_cosmos_client() -> Iterator[None]:
     """Patch the pinned client exactly when RoboLab imports it after Isaac starts."""
@@ -274,9 +303,10 @@ def installed_no_replay_cosmos_client() -> Iterator[None]:
     original_import = builtins.__import__
     patched_module: Any = None
     original_client_class: type | None = None
+    original_client_methods: dict[str, Any] | None = None
 
     def patch_loaded_module() -> None:
-        nonlocal patched_module, original_client_class
+        nonlocal patched_module, original_client_class, original_client_methods
         if patched_module is not None or module_name not in sys.modules:
             return
         module = sys.modules[module_name]
@@ -292,6 +322,9 @@ def installed_no_replay_cosmos_client() -> Iterator[None]:
             websocket_policy_class=openpi_client.websocket_client_policy.WebsocketClientPolicy,
             connect=websockets_client.connect,
             unpackb=openpi_client.msgpack_numpy.unpackb,
+        )
+        original_client_methods = patch_cached_cosmos_client_methods(
+            original_client_class, replacement
         )
         module.Cosmos3Client = replacement
         patched_module = module
@@ -324,6 +357,10 @@ def installed_no_replay_cosmos_client() -> Iterator[None]:
     finally:
         builtins.__import__ = original_import
         if patched_module is not None and original_client_class is not None:
+            if original_client_methods is not None:
+                restore_cached_cosmos_client_methods(
+                    original_client_class, original_client_methods
+                )
             patched_module.Cosmos3Client = original_client_class
 
 
@@ -1770,6 +1807,115 @@ def run_cell(args: argparse.Namespace, block: DevelopmentBlock) -> int:
         delattr(verify_development_fixture_release, "_active_block")
 
 
+def run_transport_preflight(args: argparse.Namespace) -> int:
+    """Prove that an already-imported official class receives the live patch."""
+
+    source_root = Path(args.source_root).resolve()
+    pilot.verify_clean_git(source_root, args.study_commit, "study")
+    pilot.verify_clean_git(pilot.ROBOLAB_ROOT, pilot.ROBOLAB_COMMIT, "RoboLab")
+    if str(pilot.ROBOLAB_ROOT) not in sys.path:
+        sys.path.insert(0, str(pilot.ROBOLAB_ROOT))
+    import policies.cosmos3.client as cosmos_client
+
+    client_source = Path(cosmos_client.__file__).resolve()
+    expected_client_source = (
+        pilot.ROBOLAB_ROOT.resolve() / "policies/cosmos3/client.py"
+    )
+    pilot.require(
+        client_source == expected_client_source,
+        "transport_preflight_official_client_path_changed",
+        str(client_source),
+    )
+
+    cached_class = cosmos_client.Cosmos3Client
+    original_connect = cached_class._connect
+    original_query = cached_class._query_server
+    inference_calls: list[Mapping[str, Any]] = []
+
+    class LostResponse:
+        def infer(self, request: Mapping[str, Any]) -> Mapping[str, Any]:
+            inference_calls.append(request)
+            raise OSError("deliberate_preflight_lost_response")
+
+    with installed_no_replay_cosmos_client():
+        pilot.require(
+            cosmos_client.Cosmos3Client is not cached_class,
+            "transport_preflight_module_class_not_replaced",
+        )
+        pilot.require(
+            cached_class._query_server is not original_query
+            and cached_class._connect is not original_connect,
+            "transport_preflight_cached_class_not_patched",
+        )
+        instance = cached_class.__new__(cached_class)
+        instance.client = LostResponse()
+        request = {"request_index": 0, "preflight_only": True}
+        try:
+            instance._query_server(request)
+        except OSError as error:
+            pilot.require(
+                str(error) == "deliberate_preflight_lost_response",
+                "transport_preflight_wrong_exception",
+            )
+        else:
+            raise pilot.N3BehavioralPilotError(
+                "transport_preflight_lost_response_not_propagated"
+            )
+        pilot.require(
+            inference_calls == [request],
+            "transport_preflight_request_replayed",
+        )
+
+    pilot.require(
+        cosmos_client.Cosmos3Client is cached_class
+        and cached_class._query_server is original_query
+        and cached_class._connect is original_connect,
+        "transport_preflight_patch_not_restored",
+    )
+
+    class DeliberateContextExit(RuntimeError):
+        pass
+
+    try:
+        with installed_no_replay_cosmos_client():
+            raise DeliberateContextExit("deliberate_context_exit")
+    except DeliberateContextExit:
+        pass
+    pilot.require(
+        cosmos_client.Cosmos3Client is cached_class
+        and cached_class._query_server is original_query
+        and cached_class._connect is original_connect,
+        "transport_preflight_exceptional_exit_not_restored",
+    )
+    receipt = {
+        "schema_version": TRANSPORT_PREFLIGHT_SCHEMA,
+        "status": "passed",
+        "source_commit": args.study_commit,
+        "study_source_root": str(source_root),
+        "robolab_commit": pilot.ROBOLAB_COMMIT,
+        "official_client_source": pilot.file_identity(client_source),
+        "cached_class_imported_before_patch": True,
+        "cached_class_methods_patched": True,
+        "module_class_replaced": True,
+        "lost_response_request_count": len(inference_calls),
+        "lost_response_propagated_without_replay": True,
+        "methods_restored_after_context": True,
+        "methods_restored_after_exceptional_context_exit": True,
+        "transport_contract": dict(NO_REPLAY_TRANSPORT_CONTRACT),
+        "model_request_count": 0,
+        "behavioral_action_count": 0,
+        "claim_boundary": (
+            "Transport-method preflight only; no model server, simulator, "
+            "behavioral request, or action was launched."
+        ),
+        "completed_at_utc": pilot.utc_now(),
+    }
+    destination = Path(args.job_dir) / "publish" / "transport_preflight_receipt.json"
+    pilot.immutable_json(destination, receipt, publish=True)
+    print(json.dumps(receipt, sort_keys=True), flush=True)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="mode", required=True)
@@ -1814,6 +1960,15 @@ def build_parser() -> argparse.ArgumentParser:
     cell.add_argument("--condition-index", type=int, required=True)
     cell.add_argument("--remote-host", default="127.0.0.1")
     cell.add_argument("--remote-port", type=int, default=pilot.DEFAULT_PORT)
+
+    preflight = subparsers.add_parser(
+        "transport-preflight",
+        help="prove cached official client imports use exact no-replay methods",
+    )
+    preflight.add_argument("--layout-pair-id", choices=DEVELOPMENT_LAYOUT_IDS, required=True)
+    preflight.add_argument("--source-root", type=Path, required=True)
+    preflight.add_argument("--study-commit", required=True)
+    preflight.add_argument("--job-dir", type=Path, required=True)
     return parser
 
 
@@ -1821,7 +1976,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     block = load_development_block(Path(args.source_root), args.layout_pair_id)
     port = getattr(args, "port", getattr(args, "remote_port", 0))
-    pilot.require(1 <= port <= 65535, "invalid_port")
+    if args.mode != "transport-preflight":
+        pilot.require(1 <= port <= 65535, "invalid_port")
     with configured_pilot(block):
         if args.mode == "queue":
             pilot.require(
@@ -1834,6 +1990,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             return run_server(args, block)
         if args.mode == "cell":
             return run_cell(args, block)
+        if args.mode == "transport-preflight":
+            return run_transport_preflight(args)
     raise pilot.N3BehavioralPilotError("unknown_mode")
 
 

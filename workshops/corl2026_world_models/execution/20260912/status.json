@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T14:20:00Z",
+  "as_of_utc": "2026-09-13T17:52:40Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -41,8 +41,8 @@
     "active_requests_launched_excluded": 0,
     "invariant": "18_nonbehavioral + 1440_valid_behavioral + 2_technical_invalid_behavioral = 1460_terminal_requests"
   },
-  "phase": "valid40_of_232_formal_development_evidence_compiled_resource_audit_active_camera_diagnostic_repair_pending_annotation_and_confirmation_held",
-  "cluster_status": "Independent Git/PVC queue remains active after the work-Mac cutoff. Results commit b309873e48f4390e48b25df9b3af4dd4fdd37cf7 byte-verifies development-evidence-compiler-formal-004 passed with return code0, empty stderr and child reaped after compiling exactly32 cells,1152 requests and14400 source actions. The retained resource audit remains claimed with a fresh heartbeat. Camera replay attempt001 is preserved zero-science technical-invalid; a signed diagnostic-only repair is being prepared. Confirmation inference remains unreleased.",
+  "phase": "valid40_of_232_source_gates_advanced_results_publication_stalled_external_gm_inspection_required_confirmation_held",
+  "cluster_status": "The independent Git/PVC route previously passed after the work-Mac cutoff, but the results branch has not advanced beyond commit 12839900e5c46299e11fff4813e8602949055b86 at 2026-09-13T14:40:32Z. Its generation998 snapshot last published development-resource-compiler-formal-001 as claimed on worker09 with child PID16032 and heartbeat 2026-09-13T14:40:29.959470Z; current resource001 and camera002 states are unknown. The control queue is intentionally empty with shutdown false and SHA-256 9c1bd52373df4308c3954c5b4598d03d66c9d5940182674904b1279d01a7346f. No new job may be released until an authorized GM inspection reconciles owned processes, claims, results and the shared release lock and a fresh result publication succeeds. Confirmation inference remains unreleased.",
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_and_live_P00_six_request_timing_probe_with_native_time_authority",
@@ -50,7 +50,7 @@
     "fixed_450_recorder": "passed_recorder_only_original_left_with_450_actions_451_observations_zero_model_requests",
     "physical_layouts": "P00, D01-D04 and all C01-C24 have accepted model-blind candidates and fixed-observation captures; C01, C17 and C24 retain candidate_00 physical rejections and use accepted candidate_01; the 24-layout confirmation fixture freeze passed with SHA-256 495046b5102bf1813b0c9afd72d57bf1c30243070d7b525faacf53a076a482ac; this is fixture/capture qualification only",
     "frame_time_camera_mapping": "Both pinned source audits, live P00 input preparation, D1 generation normalization, fresh live-capture N3 six-request generation-only probe and the N3/D1 native clock authorities have passed. N3 maps all240 development requests. D1 authenticates all912 requests, maps the240 source-proven full conditioning-origin decodes, preserves672 incremental decodes as timing-unavailable with zero target bindings, matches224 requests/448 targets to native clocks and prefix-censors16 requests/32 targets. A separate signed model-specific camera-crop replay witness remains required; frame/action ordinals, whole presentation canvases and presentation FPS remain rejected substitutes",
-    "annotation_development": "formal structural evidence compiler passed for32 cells,1152 requests and14400 source actions; blind two-rater workflow is implemented and schema-validated; signed model-specific camera-crop replay, authenticated physical alignment, real blinded development images, legitimate human labels, consensus, usability decisions and empirical movement threshold remain pending",
+    "annotation_development": "formal structural evidence compiler passed for32 cells,1152 requests and14400 source actions; blind two-rater workflow and fail-closed one-batch human-operations gate are implemented, independently reviewed and schema-validated at source commit bd860b1a65a9f0d65c2b4e38f641045a390ee52e; no human artifact or label was created. Signed model-specific camera-crop replay, authenticated physical alignment, real reviewed blinded development images, legitimate human labels, consensus, usability decisions and empirical movement threshold remain pending",
     "confirmation_release": false
   },
   "scheduling": {
@@ -66,8 +66,9 @@
   "workstation_baseline_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "verified_baseline_tests": 23,
   "source_bundle_sha256": "a8cc6b8d393902bd4ea8561ec1236097d02c74c88c500b5477da72df576fde69",
-  "automatic_background_execution": true,
-  "verified_workshop_tests": 324,
+  "durable_automatic_background_execution_configured": true,
+  "automatic_background_execution_current_state": null,
+  "verified_workshop_tests": 566,
   "prepared_schedule": {
     "path": "parallel_schedule.json",
     "jobs": 58,
@@ -90,7 +91,7 @@
     "runtime_acceptance_verified": "P00_seed_only"
   },
   "cluster_autonomy": {
-    "status": "independent_round_trip_passed_and_handed_off",
+    "status": "independent_round_trip_previously_passed_current_result_publication_stalled_external_gm_inspection_required",
     "control_branch": "codex/forecast-layout-gm-20260912",
     "results_branch": "codex/forecast-layout-gm-20260912-results",
     "independence_receipt": "autonomy/independence.json",
@@ -100,16 +101,17 @@
     "diagnostic_workers_passed": 4,
     "diagnostic_workers_failed_pre_correction": 6,
     "diagnostic_workers_controlled_interruption_during_correction": 2,
-    "corrected_one_gpu_workers_running": 3,
-    "corrected_one_gpu_workers_pending_capacity": 27,
-    "corrected_two_gpu_d1_workers_running": 1,
+    "historical_independence_snapshot_one_gpu_workers_running": 3,
+    "historical_independence_snapshot_one_gpu_workers_pending": 27,
+    "historical_independence_snapshot_two_gpu_d1_workers_running": 1,
+    "current_worker_state": null,
     "scientific_episodes_from_diagnostics": 0,
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "6e17ddd8b7c8ca6dfa55c626200dc950b028a0c4",
-    "cluster_staged_control_commit_at_snapshot": "6e17ddd8b7c8ca6dfa55c626200dc950b028a0c4",
-    "cluster_control_generation_at_snapshot": 964,
+    "latest_control_commit": "bd860b1a65a9f0d65c2b4e38f641045a390ee52e",
+    "cluster_staged_control_commit_at_snapshot": "d45dbbff254ba0f08404c1e544e2fc1098937f56",
+    "cluster_control_generation_at_snapshot": 998,
     "cluster_active_job_ids_at_snapshot": [
       "timing-n3-live-generation-p00-002",
       "d1-development-d01-server-003",
@@ -137,9 +139,21 @@
       "camera-crop-replay-witness-001",
       "development-resource-compiler-formal-001"
     ],
-    "latest_results_commit_fetched": "b309873e48f4390e48b25df9b3af4dd4fdd37cf7",
+    "latest_results_commit_fetched": "12839900e5c46299e11fff4813e8602949055b86",
+    "latest_results_commit_at_utc": "2026-09-13T14:40:32Z",
+    "last_published_resource_job": "development-resource-compiler-formal-001",
+    "last_published_resource_status": "claimed_current_state_unknown",
+    "last_published_resource_heartbeat_at_utc": "2026-09-13T14:40:29.959470Z",
+    "camera_replay_attempt_002_public_state": "absent_from_last_snapshot_current_state_unknown",
+    "current_control_queue_jobs": 0,
+    "current_control_queue_shutdown": false,
+    "current_control_queue_sha256": "9c1bd52373df4308c3954c5b4598d03d66c9d5940182674904b1279d01a7346f",
+    "fresh_cluster_snapshot_after_empty_queue": false,
+    "new_dispatch_blocked_pending_reconciliation": true,
+    "publication_incident_assessment": "autonomy/results_publication_incident_assessment_003.json",
     "release_lock_recovery_receipt_sha256": "f985f78cc9a7955d9d038eea7a4da492e7d5f6ed49dfbde8d021806579bf0e8a",
-    "release_lock_current_inode": 44796676,
+    "prior_recovery_replacement_release_lock_inode": 44796676,
+    "current_release_lock_inode": null,
     "post_recovery_detached_diagnostics_passed": 6
   },
   "archive_source_recovery": {
@@ -314,6 +328,55 @@
     "safe_to_release_confirmation": false,
     "science_created_by_job": 0
   },
+  "results_publication_incident": {
+    "status": "external_gm_inspection_required_git_only_recovery_exhausted",
+    "assessment": "autonomy/results_publication_incident_assessment_003.json",
+    "last_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+    "last_results_commit_at_utc": "2026-09-13T14:40:32Z",
+    "last_control_generation_published": 998,
+    "empty_non_shutdown_queue_published": true,
+    "fresh_snapshot_after_empty_queue": false,
+    "current_job_states_known": false,
+    "required_next_action": "Use an authorized GM management path to inspect only ali-owned coordinator/workers and the task PVC; reconcile coordinator status, process stacks, release-lock inode and owners, every nonterminal claim and descendant, GPU processes, and resource001/camera002 result state. Publish a fresh results snapshot before any new descriptor release.",
+    "safe_to_release_new_work": false,
+    "safe_to_revoke_deploy_key": false
+  },
+  "development_resource_qualification": {
+    "formal_compiler_job": "development-resource-compiler-formal-001",
+    "formal_compiler_source_commit": "d8e30b9ca830edf8641df7aa7835b4488879320a",
+    "last_published_status": "claimed_current_state_unknown",
+    "last_published_worker": "wmf-forecast-0912-worker-09",
+    "last_published_child_pid": 16032,
+    "last_published_heartbeat_at_utc": "2026-09-13T14:40:29.959470Z",
+    "qualification_source_commit": "0b11024193377040f2d4fad6233c4b4fbcdfd07a",
+    "qualification_source_review": "independent_go",
+    "future_probe_jobs": 3,
+    "future_nonbehavioral_requests": 12,
+    "future_zero_action_simulator_resets": 2,
+    "future_global_concurrency": 1,
+    "qualification_wave_released": false,
+    "release_precondition": "formal compiler passed receipt plus recovered result publication and reconciled cluster state",
+    "science_created_by_source": 0,
+    "safe_to_release_confirmation": false
+  },
+  "development_annotation_gate": {
+    "source_commit": "bd860b1a65a9f0d65c2b4e38f641045a390ee52e",
+    "source_review": "independent_go_after_three_documented_precommit_no_go_review_cycles",
+    "contract": "../../experiments/forecast_layout/development_annotation_gate_contract.json",
+    "operations": "../../experiments/forecast_layout/development_annotation_gate_jobs.py",
+    "operator_documentation": "../../docs/DEVELOPMENT_ANNOTATION_GATE.md",
+    "focused_tests_passed": 50,
+    "adjacent_tests_passed": 213,
+    "tracked_workshop_plus_gate_tests_passed": 566,
+    "human_pixel_blindness_receipts_consumed": 0,
+    "human_responses_consumed": 0,
+    "human_labels_consumed": 0,
+    "labels_created_by_job": 0,
+    "cluster_descriptors_released": 0,
+    "science_created_by_source": 0,
+    "remaining": "terminal camera and alignment receipts, real media, human-reviewed rubric/examples and pixel-blindness receipt, two legitimate independent rater streams, adjudication where required, consensus, usability decision and empirical development movement threshold",
+    "safe_to_release_confirmation": false
+  },
   "live_fixture_qualification": {
     "P00": {
       "attempts_completed": 7,
@@ -393,9 +456,10 @@
       "results_commit": "ebfa748b8ba845c23b60c30c37805349a0c53fac"
     }
   },
-  "active_owned_jobs": [],
-  "staged_owned_jobs": [],
-  "fenced_unclaimed_jobs": [
+  "active_owned_jobs": null,
+  "staged_owned_jobs": null,
+  "current_owned_job_state": "unknown_until_fresh_results_publication_after_authorized_gm_reconciliation",
+  "historical_fenced_unclaimed_jobs": [
     "d1-development-d04-server-002",
     "d1-development-d04-simulator-002"
   ],

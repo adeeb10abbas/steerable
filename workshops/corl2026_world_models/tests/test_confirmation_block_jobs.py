@@ -32,6 +32,11 @@ def write_json(path: Path, value: dict) -> str:
 
 
 class ScheduleTests(unittest.TestCase):
+    @staticmethod
+    def _schedule() -> dict:
+        path = SOURCE_ROOT / "workshops/corl2026_world_models/execution/20260912/parallel_schedule.json"
+        return json.loads(path.read_text())
+
     def test_all_24_permutations_and_model_orders_are_exact(self) -> None:
         orders = []
         for index, layout in enumerate(common.CONFIRMATION_LAYOUT_IDS, start=1):
@@ -49,6 +54,34 @@ class ScheduleTests(unittest.TestCase):
     def test_schedule_rejects_nonconfirmation_layout(self) -> None:
         with self.assertRaisesRegex(common.ConfirmationRuntimeError, "confirmation_layout_unsupported"):
             common.load_confirmation_schedule_block(SOURCE_ROOT, "D01", "N3")
+
+    def test_schedule_rejects_model_matched_permutation_reassignment(self) -> None:
+        schedule = self._schedule()
+        rows = {
+            (row["layout_pair_id"], row["model_config"]): row
+            for row in schedule["jobs"]
+            if row["phase"] == "confirmation"
+        }
+        for model in ("N3", "D1"):
+            first = rows[("C01", model)]
+            second = rows[("C02", model)]
+            first["condition_order"], second["condition_order"] = (
+                second["condition_order"], first["condition_order"],
+            )
+        with self.assertRaisesRegex(
+            common.ConfirmationRuntimeError,
+            "confirmation_condition_order_assignment_changed",
+        ):
+            common._validate_global_confirmation_order(schedule)
+
+    def test_schedule_rejects_permutation_index_reassignment(self) -> None:
+        schedule = self._schedule()
+        schedule["order_assignment"]["permutation_index_by_block"]["C01"] = 0
+        with self.assertRaisesRegex(
+            common.ConfirmationRuntimeError,
+            "confirmation_permutation_index_changed",
+        ):
+            common._validate_global_confirmation_order(schedule)
 
     def test_d1_contract_is_official_conditional_and_fixed_noise(self) -> None:
         block = d1.load_confirmation_block(SOURCE_ROOT, "C24")

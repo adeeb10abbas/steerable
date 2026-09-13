@@ -13,6 +13,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 import importlib.util
+import itertools
 import json
 from pathlib import Path
 import re
@@ -174,6 +175,11 @@ def _validate_global_confirmation_order(schedule: Mapping[str, Any]) -> None:
         == "Sort C01-C24 by digest (block ID tie-break); assign the 24 lexicographic permutations in that order.",
         "confirmation_order_algorithm_changed",
     )
+    require(
+        assignment.get("input")
+        == "ASCII namespace + ':' + layout_pair_id; SHA-256 hexadecimal digest",
+        "confirmation_order_hash_input_changed",
+    )
     jobs = schedule.get("jobs")
     require(isinstance(jobs, list), "confirmation_schedule_jobs_invalid")
     by_identity: dict[tuple[str, str], Mapping[str, Any]] = {}
@@ -190,6 +196,8 @@ def _validate_global_confirmation_order(schedule: Mapping[str, Any]) -> None:
     }
     require(set(by_identity) == expected_keys, "confirmation_schedule_inventory_changed")
 
+    permutations = tuple(itertools.permutations(CONDITION_ALPHABET))
+    require(len(permutations) == 24, "confirmation_permutation_inventory_invalid")
     observed_orders: list[tuple[str, ...]] = []
     block_hashes = assignment.get("block_sha256")
     indices = assignment.get("permutation_index_by_block")
@@ -216,6 +224,13 @@ def _validate_global_confirmation_order(schedule: Mapping[str, Any]) -> None:
         require(block_hashes.get(layout) == expected_hash, "confirmation_block_hash_changed", layout)
         index = indices.get(layout)
         require(type(index) is int and 0 <= index < 24, "confirmation_permutation_index_invalid", layout)
+        expected_index = hash_order.index(layout)
+        require(index == expected_index, "confirmation_permutation_index_changed", layout)
+        require(
+            order == permutations[expected_index],
+            "confirmation_condition_order_assignment_changed",
+            layout,
+        )
         observed_orders.append(order)
     require(len(set(observed_orders)) == 24, "confirmation_permutations_not_used_exactly_once")
     computed_hash_order = sorted(CONFIRMATION_LAYOUT_IDS, key=lambda item: (block_hashes[item], item))

@@ -1,0 +1,71 @@
+{
+  "behavioral_policy_skill_evaluated": false,
+  "claim_boundary": "Detached timing prerequisite evidence only. This job did not issue a model request, execute a model action, or produce behavioral evidence.",
+  "completed_at_utc": "2026-09-13T09:45:49.174474Z",
+  "decision": "go",
+  "implementation": {
+    "timing_contract": {
+      "bytes": 11765,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/25ff299ca0d2b9964eb48286990ee2301cb207b8/workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_lineage_contract.json",
+      "sha256": "7a9cca8b2d3c0057ab6022b8ce0612fba0e84e4ccacaa4258f6cad266e48490e"
+    },
+    "timing_validator": {
+      "bytes": 115077,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/25ff299ca0d2b9964eb48286990ee2301cb207b8/workshops/corl2026_world_models/analysis/qualify_forecast_timing.py",
+      "sha256": "805fc1bc5d6eeeb174ac880ba034cc9eb7198292ffacce8fc350ea5bc7ffc262"
+    }
+  },
+  "inputs": {
+    "external_source_root": "/data/users/ali/vla_wam/external/DreamZero-v3e004-clean-ab790c1"
+  },
+  "job_dir": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-d1-source-audit-001",
+  "job_id": "timing-d1-source-audit-001",
+  "mode": "d1-source-audit",
+  "namespace": "wmf_ablation_001_20260912",
+  "outputs": {
+    "primary": {
+      "bytes": 5459,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-d1-source-audit-001/raw/d1_source_audit.json",
+      "sha256": "39181fecb7d473b52b2b661c29b61cce653e3ec11edd437c74f1fefbefa76466"
+    },
+    "published_primary": {
+      "bytes": 5459,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-d1-source-audit-001/publish/d1_source_audit.json",
+      "sha256": "39181fecb7d473b52b2b661c29b61cce653e3ec11edd437c74f1fefbefa76466"
+    }
+  },
+  "payload_sha256": "82b49294c3adc7710744c2a09369f253b6b4a00bb678a9c1829dc7ccc61bc12d",
+  "physical_time_qualified": false,
+  "queue_claim": {
+    "bytes": 409,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-d1-source-audit-001/claim/owner.json",
+    "sha256": "bff7b7b972b77d98a608c0e0ccf644525bc42bad0bb771ab5b17f9c92339cb6b"
+  },
+  "queue_descriptor": {
+    "bytes": 984,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-d1-source-audit-001/descriptor.json",
+    "sha256": "5f05f0f66c4c73e38bdd3846de222846b46572cb820e71a69766ff732f7ed944"
+  },
+  "queue_role": "wmf-forecast-0912-worker-06",
+  "runtime_identity": {
+    "hostname": "wmf-forecast-0912-worker-06-m2544",
+    "pid": 15504,
+    "pod_uid": "db43c5d0-832e-4061-b6fe-159fb6660dcc"
+  },
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-forecast-timing-queue-job-v1",
+  "science_counts": {
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "referenced_generation_requests": 0,
+    "robot_episodes": 0
+  },
+  "status": "passed",
+  "study_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+  "study_id": "WMF-ABLATION-001",
+  "worker_id": "wmf-forecast-0912-worker-06"
+}

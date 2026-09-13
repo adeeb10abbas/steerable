@@ -1,0 +1,86 @@
+{
+  "behavioral_policy_skill_evaluated": false,
+  "claim_boundary": "Detached timing prerequisite evidence only. This job did not issue a model request, execute a model action, or produce behavioral evidence.",
+  "completed_at_utc": "2026-09-13T09:45:33.529809Z",
+  "decision": "go",
+  "implementation": {
+    "timing_contract": {
+      "bytes": 11765,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/25ff299ca0d2b9964eb48286990ee2301cb207b8/workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_lineage_contract.json",
+      "sha256": "7a9cca8b2d3c0057ab6022b8ce0612fba0e84e4ccacaa4258f6cad266e48490e"
+    },
+    "timing_validator": {
+      "bytes": 115077,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/25ff299ca0d2b9964eb48286990ee2301cb207b8/workshops/corl2026_world_models/analysis/qualify_forecast_timing.py",
+      "sha256": "805fc1bc5d6eeeb174ac880ba034cc9eb7198292ffacce8fc350ea5bc7ffc262"
+    }
+  },
+  "inputs": {
+    "camera_id": "over_shoulder_left_camera",
+    "capture_receipt": {
+      "bytes": 80178,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/capture_receipt.json",
+      "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+    }
+  },
+  "job_dir": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001",
+  "job_id": "timing-n3-live-input-p00-001",
+  "mode": "n3-live-input",
+  "namespace": "wmf_ablation_001_20260912",
+  "outputs": {
+    "observation_manifest": {
+      "bytes": 2128,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/raw/n3_live_input/observation_manifest.json",
+      "sha256": "ab4dc15aa64722f37cf42b0f9ef813e0eb4279245ce7aba1698f96f3f2e096a9"
+    },
+    "observation_payload": {
+      "bytes": 1037592,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/raw/n3_live_input/observation.npz",
+      "sha256": "a6cf00507e5a2fff6837f9d3a55846830c9ca7306b4bfe580ebd2b78d31a827f"
+    },
+    "primary": {
+      "bytes": 1787,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/raw/n3_live_input/preparation_receipt.json",
+      "sha256": "b4c8a220dd3c936875b6112bbd8fbb0afb32b687fbb4ab2e7262b7695f328dca"
+    },
+    "published_primary": {
+      "bytes": 1787,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/publish/preparation_receipt.json",
+      "sha256": "b4c8a220dd3c936875b6112bbd8fbb0afb32b687fbb4ab2e7262b7695f328dca"
+    }
+  },
+  "payload_sha256": "5ce748421cc047b651861432d8b9834b9e8a2855a2384e212758b2426cff6a99",
+  "physical_time_qualified": false,
+  "queue_claim": {
+    "bytes": 408,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/claim/owner.json",
+    "sha256": "8a5841476bf1e0deffaf1e63e268c54d86fd1c8c174dee2823827fe849a7391a"
+  },
+  "queue_descriptor": {
+    "bytes": 1201,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-input-p00-001/descriptor.json",
+    "sha256": "7ae803449c01fb0a3d9ad27f9edba71770db5aba1e6308c6eba140f40f8633e2"
+  },
+  "queue_role": "wmf-forecast-0912-worker-09",
+  "runtime_identity": {
+    "hostname": "wmf-forecast-0912-worker-09-x9xr6",
+    "pid": 15675,
+    "pod_uid": "6e2e6f80-5eb2-4a4a-bf22-5b8beb3c0dba"
+  },
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-forecast-timing-queue-job-v1",
+  "science_counts": {
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "referenced_generation_requests": 0,
+    "robot_episodes": 0
+  },
+  "status": "passed",
+  "study_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+  "study_id": "WMF-ABLATION-001",
+  "worker_id": "wmf-forecast-0912-worker-09"
+}

@@ -9,7 +9,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "dca69d4a8b1a1993c0c58acfb2e28106115b6d02",
-    "control_generation": 546,
+    "control_generation": 547,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -3942,16 +3942,56 @@
       "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
+      "child_pid": 15757,
+      "child_reaped": true,
       "descriptor_sha256": "b13c39eb9109c75e6afafc39c40341fac9332016af4724f353380b561a43dcb8",
+      "ended_at": "2026-09-13T09:46:06.965009+00:00",
+      "error_type": null,
       "job_id": "timing-d1-normalize-generation-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"job_id\": \"timing-d1-normalize-generation-001\", \"mode\": \"d1-normalize-generation\", \"science_counts\": {\"behavioral_actions\": 0, \"behavioral_cells\": 0, \"model_requests_issued_by_job\": 0, \"model_runtime_loads\": 0, \"model_servers_started\": 0, \"physical_resets\": 0, \"referenced_generation_requests\": 6, \"robot_episodes\": 0}, \"status\": \"passed\"}\n"
+      },
+      "returncode": 0,
       "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
-      "status": "staged"
+      "started_at": "2026-09-13T09:46:04.635850+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 341,
+        "sha256": "57a00f3ca11972e2c0d009e5ba370f4632aaacbafbbca1e8a30540896992925e"
+      },
+      "wall_seconds": 2.329977432033047,
+      "worker_id": "wmf-forecast-0912-worker-09"
     },
     {
+      "child_pid": 15504,
+      "child_reaped": true,
       "descriptor_sha256": "5f05f0f66c4c73e38bdd3846de222846b46572cb820e71a69766ff732f7ed944",
+      "ended_at": "2026-09-13T09:45:50.094948+00:00",
+      "error_type": null,
       "job_id": "timing-d1-source-audit-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"job_id\": \"timing-d1-source-audit-001\", \"mode\": \"d1-source-audit\", \"science_counts\": {\"behavioral_actions\": 0, \"behavioral_cells\": 0, \"model_requests_issued_by_job\": 0, \"model_runtime_loads\": 0, \"model_servers_started\": 0, \"physical_resets\": 0, \"referenced_generation_requests\": 0, \"robot_episodes\": 0}, \"status\": \"passed\"}\n"
+      },
+      "returncode": 0,
       "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
-      "status": "staged"
+      "started_at": "2026-09-13T09:45:47.579759+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 325,
+        "sha256": "7075e84cc63cb695a8ffc32655e6c04c8f7d7d237da69ee363f9df70dc8529d2"
+      },
+      "wall_seconds": 2.5153706450364552,
+      "worker_id": "wmf-forecast-0912-worker-06"
     },
     {
       "descriptor_sha256": "d9342188119985a0ed143d7f714105eaa95589491180ba2252b06407245ca12f",
@@ -3960,17 +4000,29 @@
       "status": "staged"
     },
     {
+      "child_pid": 15675,
+      "child_reaped": true,
       "descriptor_sha256": "7ae803449c01fb0a3d9ad27f9edba71770db5aba1e6308c6eba140f40f8633e2",
-      "heartbeat": {
-        "at": "2026-09-13T09:45:32.579454+00:00",
-        "child_pid": 15675,
-        "unix": 1789292732.579486,
-        "worker_id": "wmf-forecast-0912-worker-09",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T09:45:34.598797+00:00",
+      "error_type": null,
       "job_id": "timing-n3-live-input-p00-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"job_id\": \"timing-n3-live-input-p00-001\", \"mode\": \"n3-live-input\", \"science_counts\": {\"behavioral_actions\": 0, \"behavioral_cells\": 0, \"model_requests_issued_by_job\": 0, \"model_runtime_loads\": 0, \"model_servers_started\": 0, \"physical_resets\": 0, \"referenced_generation_requests\": 0, \"robot_episodes\": 0}, \"status\": \"passed\"}\n"
+      },
+      "returncode": 0,
       "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
-      "status": "claimed",
+      "started_at": "2026-09-13T09:45:32.100533+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 325,
+        "sha256": "a04747fcecbafd0be2aee431a48d64499171c9b0f57c7b0aa2df2b1a16616f9e"
+      },
+      "wall_seconds": 2.498476411914453,
       "worker_id": "wmf-forecast-0912-worker-09"
     },
     {
@@ -4026,10 +4078,30 @@
       "worker_id": "wmf-forecast-0912-worker-n3-00"
     },
     {
+      "child_pid": 165,
+      "child_reaped": true,
       "descriptor_sha256": "99ddb3e5d85f371a3a46324199533c91a0ffbd9747bfab33795568a7ab8d1a63",
+      "ended_at": "2026-09-13T09:45:43.333339+00:00",
+      "error_type": null,
       "job_id": "timing-n3-source-audit-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"job_id\": \"timing-n3-source-audit-001\", \"mode\": \"n3-source-audit\", \"science_counts\": {\"behavioral_actions\": 0, \"behavioral_cells\": 0, \"model_requests_issued_by_job\": 0, \"model_runtime_loads\": 0, \"model_servers_started\": 0, \"physical_resets\": 0, \"referenced_generation_requests\": 0, \"robot_episodes\": 0}, \"status\": \"passed\"}\n"
+      },
+      "returncode": 0,
       "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
-      "status": "staged"
+      "started_at": "2026-09-13T09:45:40.582293+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 325,
+        "sha256": "d3f7c58c4a274e5daa7c3cfaa3163b82691753839083d874e0241afe31896dcf"
+      },
+      "wall_seconds": 2.751217837911099,
+      "worker_id": "wmf-forecast-0912-worker-05"
     },
     {
       "child_pid": 150,

@@ -1,0 +1,26 @@
+{
+  "child_pid": 44349,
+  "child_reaped": true,
+  "descriptor_sha256": "6e0dbd1c9abdd1680233a47962f0e1c367f68fbb78e3fe842715dab2bf78cfe2",
+  "ended_at": "2026-09-13T08:07:52.848923+00:00",
+  "error_type": null,
+  "job_id": "d1-development-d04-server-001",
+  "log_tails": {
+    "stderr": "{\"detail\": \"development_capture_mismatch: schema_version\", \"error_type\": \"D1BehavioralPilotError\", \"reason\": \"development_capture_mismatch\", \"status\": \"technical_failure\"}\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/c86070c60794b72d9c9c47e9fd35fde92c234fab/workshops/corl2026_world_models/experiments/forecast_layout/d1_development_block_jobs.py\", line 1930, in <module>\n    raise SystemExit(main())\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/c86070c60794b72d9c9c47e9fd35fde92c234fab/workshops/corl2026_world_models/experiments/forecast_layout/d1_development_block_jobs.py\", line 1900, in main\n    return run_server_job(args, block)\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/c86070c60794b72d9c9c47e9fd35fde92c234fab/workshops/corl2026_world_models/experiments/forecast_layout/d1_development_block_jobs.py\", line 1661, in run_server_job\n    prerequisites = validate_prerequisites(args, block)\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/c86070c60794b72d9c9c47e9fd35fde92c234fab/workshops/corl2026_world_models/experiments/forecast_layout/d1_development_block_jobs.py\", line 1066, in validate_prerequisites\n    capture = verify_development_capture(\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/c86070c60794b72d9c9c47e9fd35fde92c234fab/workshops/corl2026_world_models/experiments/forecast_layout/d1_development_block_jobs.py\", line 451, in verify_development_capture\n    pilot.require(receipt.get(key) == wanted, \"development_capture_mismatch\", key)\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/c86070c60794b72d9c9c47e9fd35fde92c234fab/workshops/corl2026_world_models/experiments/forecast_layout/d1_behavioral_pilot_jobs.py\", line 213, in require\n    raise D1BehavioralPilotError(reason, detail)\nd1_behavioral_pilot_jobs.D1BehavioralPilotError: development_capture_mismatch: schema_version\n",
+    "stdout": ""
+  },
+  "returncode": 1,
+  "source_commit": "c86070c60794b72d9c9c47e9fd35fde92c234fab",
+  "started_at": "2026-09-13T08:07:50.647667+00:00",
+  "status": "failed",
+  "stderr": {
+    "bytes": 2027,
+    "sha256": "e5390d3b745887c41f9862ef6a768a9748ee6dc5901840247da7feede39b2728"
+  },
+  "stdout": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "wall_seconds": 2.2016406732145697,
+  "worker_id": "wmf-forecast-0912-worker-d1-00"
+}

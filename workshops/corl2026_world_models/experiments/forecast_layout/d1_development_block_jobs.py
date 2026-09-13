@@ -87,8 +87,31 @@ CELL_RECEIPT_SCHEMA = "wmf-d1-behavioral-development-cell-v1"
 RESUME_SCHEMA = "wmf-d1-behavioral-development-resume-v1"
 DEVELOPMENT_CONTRACT_SCHEMA = "wmf-d1-behavioral-development-contract-v1"
 EXECUTION_PREREQUISITES_SCHEMA = "wmf-d1-development-execution-prerequisites-v1"
+PREREQUISITE_PREFLIGHT_SCHEMA = "wmf-d1-development-prerequisite-preflight-v1"
 FIXED_CAPTURE_QUEUE_SCHEMA = "wmf-forecast-layout-fixed-observation-job-v1"
 FIXED_CAPTURE_SCHEMA = "wmf-forecast-layout-fixed-observation-capture-v1"
+CONTROL_ROOT = Path(
+    "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control"
+)
+DEVELOPMENT_CAPTURE_WRAPPER_RELEASES: dict[str, dict[str, str]] = {
+    "D01": {
+        "job_id": "fixed-observation-d01-001",
+        "sha256": "8531d11584a36f2326074b287e42394a1f9cf3b04fd1016855f472152b547077",
+    },
+    "D02": {
+        "job_id": "fixed-observation-d02-001",
+        "sha256": "a700280562d3640349fe8ec5a2594decf4a7b2b9f30450c9e9af55420bb907ac",
+    },
+    "D03": {
+        "job_id": "fixed-observation-d03-001",
+        "sha256": "728416e0c31bfacb5cb36dc46c82370d2e157e508c4c6349ea934ac4bee99a29",
+    },
+    "D04": {
+        "job_id": "fixed-observation-d04-001",
+        "sha256": "f943e9fa2a968bc34fea9ed7cc0cbc4508f86f1a28071a82972863dc602807bc",
+    },
+}
+PREFLIGHT_QUEUE_ROLES = ("any", pilot.SERVER_QUEUE_ROLE, *ALLOWED_SIMULATOR_ROLES)
 NO_REPLAY_TRANSPORT_CONTRACT = {
     "schema_version": "wmf-d1-no-replay-websocket-v1",
     "compression": None,
@@ -419,6 +442,48 @@ def verify_development_fixture_release(
         "development_pose_arms_changed",
     )
     return release
+
+
+def expected_development_capture_wrapper(
+    block: DevelopmentBlock,
+) -> dict[str, str]:
+    """Return the one released queue wrapper authorized for this layout."""
+
+    release = DEVELOPMENT_CAPTURE_WRAPPER_RELEASES.get(block.layout_pair_id)
+    pilot.require(release is not None, "development_capture_wrapper_release_missing")
+    job_id = release["job_id"]
+    return {
+        "job_id": job_id,
+        "path": str(
+            CONTROL_ROOT
+            / "jobs"
+            / job_id
+            / "publish"
+            / "fixed_observation_job_receipt.json"
+        ),
+        "sha256": release["sha256"],
+    }
+
+
+def validate_released_capture_argument(
+    path: Path, expected_sha256: str, *, block: DevelopmentBlock,
+) -> dict[str, str]:
+    """Fail closed unless argv names the released queue wrapper, not its child."""
+
+    expected = expected_development_capture_wrapper(block)
+    supplied = Path(path)
+    pilot.require(supplied.is_absolute(), "development_capture_wrapper_path_not_absolute")
+    lexical = Path(os.path.abspath(os.fspath(supplied)))
+    pilot.require(
+        lexical == Path(expected["path"]),
+        "development_capture_wrapper_path_changed",
+        str(lexical),
+    )
+    pilot.require(
+        expected_sha256 == expected["sha256"],
+        "development_capture_wrapper_sha256_changed",
+    )
+    return expected
 
 
 def verify_development_capture(
@@ -1041,6 +1106,9 @@ def verify_passed_p00_pair(
 def validate_prerequisites(
     args: argparse.Namespace, block: DevelopmentBlock
 ) -> dict[str, Any]:
+    validate_released_capture_argument(
+        Path(args.capture_receipt), args.capture_receipt_sha256, block=block
+    )
     original = verify_development_fixture_release(
         gate_receipt_path=Path(args.gate_receipt),
         gate_receipt_sha256=args.gate_receipt_sha256,
@@ -1257,6 +1325,62 @@ def validate_queue_invocation(
         "development_queue_descriptor_changed_during_validation",
     )
     return {**observed, "role": expected_role, "job_id": job_id}
+
+
+def validate_preflight_queue_invocation(
+    *, source_root: Path, job_dir: Path, study_commit: str, job_id: str,
+    queue_role: str, block: DevelopmentBlock, simulator_worker_role: str,
+) -> dict[str, Any]:
+    """Authenticate a detached prerequisite-only queue descriptor."""
+
+    identity = _PILOT_VALIDATE_QUEUE_INVOCATION(
+        source_root=source_root,
+        job_dir=job_dir,
+        study_commit=study_commit,
+        job_id=job_id,
+        expected_role=queue_role,
+    )
+    descriptor_path = Path(job_dir).resolve() / "descriptor.json"
+    descriptor = pilot.load_json(descriptor_path, "queue_descriptor_unreadable")
+    argv = descriptor.get("argv")
+    pilot.require(isinstance(argv, list) and len(argv) >= 4, "development_queue_argv_invalid")
+    pilot.require(argv[0] == "/usr/bin/python3", "development_queue_python_changed")
+    pilot.require(
+        argv[1]
+        == "{source_root}/workshops/corl2026_world_models/experiments/forecast_layout/"
+        + RUNNER_FILENAME,
+        "development_queue_runner_changed",
+    )
+    pilot.require(
+        argv[2] == "prerequisite-preflight",
+        "development_queue_mode_changed",
+    )
+    expected_options = {
+        "--layout-pair-id": block.layout_pair_id,
+        "--simulator-worker-role": simulator_worker_role,
+        "--queue-role": queue_role,
+        "--study-commit": study_commit,
+        "--job-id": job_id,
+    }
+    capture = expected_development_capture_wrapper(block)
+    expected_options.update(
+        {
+            "--capture-receipt": capture["path"],
+            "--capture-receipt-sha256": capture["sha256"],
+        }
+    )
+    for option, wanted in expected_options.items():
+        pilot.require(
+            _descriptor_option(argv, option) == wanted,
+            "development_preflight_queue_option_changed",
+            option,
+        )
+    observed = pilot.file_identity(descriptor_path)
+    pilot.require(
+        all(identity.get(key) == observed[key] for key in ("path", "bytes", "sha256")),
+        "development_queue_descriptor_changed_during_validation",
+    )
+    return {**observed, "role": queue_role, "job_id": job_id}
 
 
 def build_cell_command(
@@ -1649,6 +1773,131 @@ def _resolve_raw_root(args: argparse.Namespace, block: DevelopmentBlock) -> None
     args.raw_root = supplied
 
 
+def _preflight_science_counts() -> dict[str, int]:
+    return {
+        "model_server_starts": 0,
+        "simulator_process_starts": 0,
+        "physical_resets": 0,
+        "model_requests": 0,
+        "behavioral_actions": 0,
+        "behavioral_cells": 0,
+    }
+
+
+def _preflight_prerequisite_summary(
+    prerequisites: Mapping[str, Any],
+) -> dict[str, Any]:
+    p00 = prerequisites["p00_paired_pilot"]
+    return {
+        "gate_receipt": prerequisites["development_gate_receipt"],
+        "pose_manifest": prerequisites["development_pose_manifest"],
+        "capture_wrapper_receipt": prerequisites["capture_receipt"],
+        "raw_capture_receipt": prerequisites["raw_capture_receipt"],
+        "d1_fixed_observation": prerequisites["d1_fixed_observation"],
+        "recorder_receipt": prerequisites["recorder_receipt"],
+        "d1_qualification_receipt": prerequisites["d1_qualification_receipt"],
+        "p00_simulator_receipt": p00["simulator_receipt"],
+        "p00_server_receipt": p00["server_receipt"],
+    }
+
+
+def run_prerequisite_preflight(
+    args: argparse.Namespace, block: DevelopmentBlock
+) -> int:
+    """Deeply validate one release without starting model or simulator work."""
+
+    destination = (
+        Path(args.job_dir).resolve()
+        / "publish"
+        / "d1_development_prerequisite_preflight_receipt.json"
+    )
+    queue_identity: dict[str, Any] | None = None
+    expected_capture = expected_development_capture_wrapper(block)
+    try:
+        queue_identity = validate_preflight_queue_invocation(
+            source_root=Path(args.source_root),
+            job_dir=Path(args.job_dir),
+            study_commit=args.study_commit,
+            job_id=args.job_id,
+            queue_role=args.queue_role,
+            block=block,
+            simulator_worker_role=args.simulator_worker_role,
+        )
+        prerequisites = validate_prerequisites(args, block)
+    except BaseException as error:
+        failure = {
+            "schema_version": PREREQUISITE_PREFLIGHT_SCHEMA,
+            "status": "technical_invalid",
+            "decision": "no_go",
+            "safe_to_release_behavioral_pair": False,
+            "study_id": pilot.STUDY_ID,
+            "namespace": pilot.NAMESPACE,
+            "source_commit": args.study_commit,
+            "job_id": args.job_id,
+            "queue_role": args.queue_role,
+            "simulator_worker_role": args.simulator_worker_role,
+            "layout_pair_id": block.layout_pair_id,
+            "block_id": block.block_id,
+            "environment_seed": block.environment_seed,
+            "development_contract_sha256": block.contract_sha256,
+            "expected_capture_wrapper": expected_capture,
+            "supplied_capture_wrapper": {
+                "path": str(Path(args.capture_receipt)),
+                "sha256": args.capture_receipt_sha256,
+            },
+            "queue_descriptor": queue_identity,
+            "failure": {
+                "error_type": type(error).__name__,
+                "reason": getattr(error, "reason", "unexpected_preflight_failure"),
+                "detail": str(error),
+            },
+            "science_counts": _preflight_science_counts(),
+            "claim_boundary": (
+                "Failed prerequisite validation only; no model server, simulator, "
+                "physical reset, model request, behavioral action, or cell was launched."
+            ),
+            "completed_at_utc": pilot.utc_now(),
+        }
+        try:
+            _PILOT_IMMUTABLE_JSON(destination, failure, publish=True)
+        except BaseException:
+            # The queue controller still retains the nonzero exit and full logs.
+            # Never obscure the original fail-closed prerequisite reason.
+            pass
+        raise
+
+    prerequisite_sha256 = execution_prerequisites_sha256(block, prerequisites)
+    receipt = {
+        "schema_version": PREREQUISITE_PREFLIGHT_SCHEMA,
+        "status": "passed",
+        "decision": "go",
+        "safe_to_release_behavioral_pair": True,
+        "study_id": pilot.STUDY_ID,
+        "namespace": pilot.NAMESPACE,
+        "source_commit": args.study_commit,
+        "job_id": args.job_id,
+        "queue_role": args.queue_role,
+        "simulator_worker_role": args.simulator_worker_role,
+        "layout_pair_id": block.layout_pair_id,
+        "block_id": block.block_id,
+        "environment_seed": block.environment_seed,
+        "development_contract_sha256": block.contract_sha256,
+        "expected_capture_wrapper": expected_capture,
+        "queue_descriptor": queue_identity,
+        "validated_execution_prerequisites_sha256": prerequisite_sha256,
+        "validated_prerequisites": _preflight_prerequisite_summary(prerequisites),
+        "science_counts": _preflight_science_counts(),
+        "claim_boundary": (
+            "Detached prerequisite validation only; no model server, simulator, "
+            "physical reset, model request, behavioral action, or cell was launched."
+        ),
+        "completed_at_utc": pilot.utc_now(),
+    }
+    _PILOT_IMMUTABLE_JSON(destination, receipt, publish=True)
+    print(json.dumps(receipt, sort_keys=True), flush=True)
+    return 0
+
+
 def run_server_job(args: argparse.Namespace, block: DevelopmentBlock) -> int:
     _resolve_raw_root(args, block)
     queue_identity = validate_queue_invocation(
@@ -1868,6 +2117,25 @@ def build_parser() -> argparse.ArgumentParser:
     cell.add_argument("--evidence-timeout", type=float, default=120.0)
     cell.add_argument("--reset-timeout", type=float, default=1200.0)
     cell.add_argument("--inference-timeout", type=float, default=1200.0)
+
+    preflight = subparsers.add_parser(
+        "prerequisite-preflight",
+        help="deeply validate one released D1 development prerequisite bundle only",
+    )
+    preflight.add_argument("--layout-pair-id", choices=DEVELOPMENT_LAYOUT_IDS, required=True)
+    preflight.add_argument(
+        "--simulator-worker-role", choices=ALLOWED_SIMULATOR_ROLES, required=True
+    )
+    preflight.add_argument("--queue-role", choices=PREFLIGHT_QUEUE_ROLES, required=True)
+    preflight.add_argument("--source-root", type=Path, required=True)
+    preflight.add_argument("--study-commit", required=True)
+    preflight.add_argument("--job-dir", type=Path, required=True)
+    preflight.add_argument("--job-id", required=True)
+    _add_layout_prerequisites(preflight)
+    preflight.add_argument("--recorder-receipt", type=Path, required=True)
+    preflight.add_argument("--d1-qualification-receipt", type=Path, required=True)
+    preflight.add_argument("--d1-qualification-receipt-sha256", required=True)
+    _add_pairing_prerequisites(preflight)
     return parser
 
 
@@ -1884,10 +2152,17 @@ def _validate_sha_options(args: argparse.Namespace) -> None:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     block = load_development_block(Path(args.source_root), args.layout_pair_id)
-    pilot.require(pilot.SAFE_ID_RE.fullmatch(args.run_id) is not None, "invalid_run_id")
+    if args.mode != "prerequisite-preflight":
+        pilot.require(pilot.SAFE_ID_RE.fullmatch(args.run_id) is not None, "invalid_run_id")
     pilot.require(pilot.COMMIT_RE.fullmatch(args.study_commit) is not None, "invalid_study_commit")
     _validate_sha_options(args)
     with configured_pilot(block, args.simulator_worker_role):
+        if args.mode == "prerequisite-preflight":
+            pilot.require(
+                pilot.SAFE_ID_RE.fullmatch(args.job_id) is not None,
+                "invalid_job_id",
+            )
+            return run_prerequisite_preflight(args, block)
         if args.mode == "server-job":
             pilot.require(
                 args.port == pilot.SERVICE_PORT

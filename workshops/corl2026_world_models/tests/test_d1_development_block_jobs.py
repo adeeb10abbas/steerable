@@ -577,6 +577,58 @@ class CommandsAndPairingTests(unittest.TestCase):
 
 
 class PrerequisiteTests(unittest.TestCase):
+    def test_released_wrapper_paths_and_hashes_are_exact_and_raw_children_are_rejected(self) -> None:
+        expected_hashes = {
+            "D01": "8531d11584a36f2326074b287e42394a1f9cf3b04fd1016855f472152b547077",
+            "D02": "a700280562d3640349fe8ec5a2594decf4a7b2b9f30450c9e9af55420bb907ac",
+            "D03": "728416e0c31bfacb5cb36dc46c82370d2e157e508c4c6349ea934ac4bee99a29",
+            "D04": "f943e9fa2a968bc34fea9ed7cc0cbc4508f86f1a28071a82972863dc602807bc",
+        }
+        for layout_pair_id, expected_sha256 in expected_hashes.items():
+            with self.subTest(layout_pair_id=layout_pair_id):
+                block = development.load_development_block(SOURCE_ROOT, layout_pair_id)
+                wrapper = development.expected_development_capture_wrapper(block)
+                expected_job = f"fixed-observation-{layout_pair_id.lower()}-001"
+                self.assertEqual(wrapper["job_id"], expected_job)
+                self.assertEqual(wrapper["sha256"], expected_sha256)
+                self.assertEqual(
+                    wrapper["path"],
+                    str(
+                        development.CONTROL_ROOT
+                        / "jobs"
+                        / expected_job
+                        / "publish"
+                        / "fixed_observation_job_receipt.json"
+                    ),
+                )
+                self.assertEqual(
+                    development.validate_released_capture_argument(
+                        Path(wrapper["path"]), wrapper["sha256"], block=block
+                    ),
+                    wrapper,
+                )
+                raw_child = (
+                    development.RAW_PARENT.parents[2]
+                    / "fixed_observations"
+                    / expected_job
+                    / "capture"
+                    / "capture_receipt.json"
+                )
+                with self.assertRaisesRegex(
+                    pilot.D1BehavioralPilotError,
+                    "development_capture_wrapper_path_changed",
+                ):
+                    development.validate_released_capture_argument(
+                        raw_child, wrapper["sha256"], block=block
+                    )
+                with self.assertRaisesRegex(
+                    pilot.D1BehavioralPilotError,
+                    "development_capture_wrapper_sha256_changed",
+                ):
+                    development.validate_released_capture_argument(
+                        Path(wrapper["path"]), "0" * 64, block=block
+                    )
+
     def test_fixed_capture_is_hash_bound_to_gate_pose_candidate_and_d1_arrays(self) -> None:
         block = development.load_development_block(SOURCE_ROOT, "D04")
         with tempfile.TemporaryDirectory() as temporary:
@@ -669,6 +721,213 @@ class PrerequisiteTests(unittest.TestCase):
                         recorder_receipt_sha256="0" * 64,
                         d1_qualification_receipt_sha256=values[5],
                     )
+
+
+class PrerequisitePreflightTests(unittest.TestCase):
+    def _argv(
+        self, *, block: development.DevelopmentBlock, job_id: str,
+        queue_role: str, simulator_worker_role: str,
+    ) -> list[str]:
+        wrapper = development.expected_development_capture_wrapper(block)
+        return [
+            "/usr/bin/python3",
+            "{source_root}/workshops/corl2026_world_models/experiments/forecast_layout/"
+            + development.RUNNER_FILENAME,
+            "prerequisite-preflight",
+            "--layout-pair-id", block.layout_pair_id,
+            "--simulator-worker-role", simulator_worker_role,
+            "--queue-role", queue_role,
+            "--source-root", "{source_root}",
+            "--study-commit", STUDY_COMMIT,
+            "--job-dir", "{job_dir}",
+            "--job-id", job_id,
+            "--capture-receipt", wrapper["path"],
+            "--capture-receipt-sha256", wrapper["sha256"],
+        ]
+
+    def _args(
+        self, *, root: Path, block: development.DevelopmentBlock,
+        job_id: str = "d1-development-d01-prerequisite-preflight-001",
+    ) -> development.argparse.Namespace:
+        wrapper = development.expected_development_capture_wrapper(block)
+        return development.argparse.Namespace(
+            source_root=SOURCE_ROOT,
+            study_commit=STUDY_COMMIT,
+            job_dir=root / job_id,
+            job_id=job_id,
+            queue_role="wmf-forecast-0912-worker-05",
+            simulator_worker_role="wmf-forecast-0912-worker-00",
+            capture_receipt=Path(wrapper["path"]),
+            capture_receipt_sha256=wrapper["sha256"],
+        )
+
+    def _prerequisites(self) -> dict:
+        descriptor = {"path": "/evidence/file", "bytes": 1, "sha256": "a" * 64}
+        return {
+            "development_gate_receipt": descriptor,
+            "development_pose_manifest": descriptor,
+            "capture_receipt": descriptor,
+            "raw_capture_receipt": descriptor,
+            "d1_fixed_observation": descriptor,
+            "recorder_receipt": descriptor,
+            "d1_qualification_receipt": descriptor,
+            "p00_paired_pilot": {
+                "simulator_receipt": descriptor,
+                "server_receipt": descriptor,
+            },
+        }
+
+    def test_preflight_parser_has_complete_deep_prerequisite_surface(self) -> None:
+        parser = development.build_parser()
+        action = next(item for item in parser._actions if item.dest == "mode")
+        preflight_dests = {
+            item.dest for item in action.choices["prerequisite-preflight"]._actions
+        }
+        self.assertTrue(
+            {
+                "layout_pair_id", "simulator_worker_role", "queue_role",
+                "source_root", "study_commit", "job_dir", "job_id",
+                "candidate_id", "gate_receipt", "gate_receipt_sha256",
+                "pose_manifest", "pose_manifest_sha256", "capture_receipt",
+                "capture_receipt_sha256", "recorder_receipt",
+                "recorder_receipt_sha256", "d1_qualification_receipt",
+                "d1_qualification_receipt_sha256", "pilot_simulator_receipt",
+                "pilot_simulator_receipt_sha256", "pilot_server_receipt",
+                "pilot_server_receipt_sha256",
+            }.issubset(preflight_dests)
+        )
+
+    def test_preflight_queue_descriptor_binds_the_wrapper_not_the_raw_child(self) -> None:
+        block = development.load_development_block(SOURCE_ROOT, "D01")
+        simulator_role = "wmf-forecast-0912-worker-00"
+        queue_role = "wmf-forecast-0912-worker-05"
+        job_id = "d1-development-d01-prerequisite-preflight-001"
+        with tempfile.TemporaryDirectory() as temporary:
+            job = Path(temporary) / job_id
+            job.mkdir()
+            argv = self._argv(
+                block=block,
+                job_id=job_id,
+                queue_role=queue_role,
+                simulator_worker_role=simulator_role,
+            )
+            descriptor_path = job / "descriptor.json"
+            descriptor_path.write_text(json.dumps({"argv": argv}))
+
+            def base_validator(**_kwargs):
+                return {
+                    **pilot.file_identity(descriptor_path),
+                    "role": queue_role,
+                    "job_id": job_id,
+                }
+
+            with mock.patch.object(
+                development,
+                "_PILOT_VALIDATE_QUEUE_INVOCATION",
+                side_effect=base_validator,
+            ):
+                development.validate_preflight_queue_invocation(
+                    source_root=SOURCE_ROOT,
+                    job_dir=job,
+                    study_commit=STUDY_COMMIT,
+                    job_id=job_id,
+                    queue_role=queue_role,
+                    block=block,
+                    simulator_worker_role=simulator_role,
+                )
+                index = argv.index("--capture-receipt") + 1
+                argv[index] = "/data/raw/capture_receipt.json"
+                descriptor_path.write_text(json.dumps({"argv": argv}))
+                with self.assertRaisesRegex(
+                    pilot.D1BehavioralPilotError,
+                    "development_preflight_queue_option_changed",
+                ):
+                    development.validate_preflight_queue_invocation(
+                        source_root=SOURCE_ROOT,
+                        job_dir=job,
+                        study_commit=STUDY_COMMIT,
+                        job_id=job_id,
+                        queue_role=queue_role,
+                        block=block,
+                        simulator_worker_role=simulator_role,
+                    )
+
+    def test_passed_preflight_publishes_a_zero_science_go_receipt(self) -> None:
+        block = development.load_development_block(SOURCE_ROOT, "D01")
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            args = self._args(root=root, block=block)
+            args.job_dir.mkdir()
+            queue = _artifact(args.job_dir / "descriptor.json", b"queue")
+            prerequisites = self._prerequisites()
+            with mock.patch.object(
+                development,
+                "validate_preflight_queue_invocation",
+                return_value=queue,
+            ), mock.patch.object(
+                development,
+                "validate_prerequisites",
+                return_value=prerequisites,
+            ):
+                self.assertEqual(
+                    development.run_prerequisite_preflight(args, block), 0
+                )
+            path = (
+                args.job_dir
+                / "publish"
+                / "d1_development_prerequisite_preflight_receipt.json"
+            )
+            receipt = json.loads(path.read_text())
+        self.assertEqual(receipt["status"], "passed")
+        self.assertEqual(receipt["decision"], "go")
+        self.assertTrue(receipt["safe_to_release_behavioral_pair"])
+        self.assertTrue(all(value == 0 for value in receipt["science_counts"].values()))
+        self.assertEqual(
+            receipt["expected_capture_wrapper"]["sha256"],
+            development.DEVELOPMENT_CAPTURE_WRAPPER_RELEASES["D01"]["sha256"],
+        )
+        self.assertIn("validated_execution_prerequisites_sha256", receipt)
+
+    def test_failed_preflight_publishes_a_zero_science_no_go_receipt(self) -> None:
+        block = development.load_development_block(SOURCE_ROOT, "D02")
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            args = self._args(
+                root=root,
+                block=block,
+                job_id="d1-development-d02-prerequisite-preflight-001",
+            )
+            args.job_dir.mkdir()
+            queue = _artifact(args.job_dir / "descriptor.json", b"queue")
+            with mock.patch.object(
+                development,
+                "validate_preflight_queue_invocation",
+                return_value=queue,
+            ), mock.patch.object(
+                development,
+                "validate_prerequisites",
+                side_effect=pilot.D1BehavioralPilotError(
+                    "development_capture_wrapper_path_changed"
+                ),
+            ), self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError,
+                "development_capture_wrapper_path_changed",
+            ):
+                development.run_prerequisite_preflight(args, block)
+            path = (
+                args.job_dir
+                / "publish"
+                / "d1_development_prerequisite_preflight_receipt.json"
+            )
+            receipt = json.loads(path.read_text())
+        self.assertEqual(receipt["status"], "technical_invalid")
+        self.assertEqual(receipt["decision"], "no_go")
+        self.assertFalse(receipt["safe_to_release_behavioral_pair"])
+        self.assertEqual(
+            receipt["failure"]["reason"],
+            "development_capture_wrapper_path_changed",
+        )
+        self.assertTrue(all(value == 0 for value in receipt["science_counts"].values()))
 
 
 class RecoveryAndReceiptTests(unittest.TestCase):

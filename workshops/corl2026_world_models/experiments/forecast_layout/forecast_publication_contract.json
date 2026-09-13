@@ -1,0 +1,133 @@
+{
+  "compiler": {
+    "command": "python3 workshops/corl2026_world_models/analysis/compile_forecast_publication.py --input-manifest INPUT.json --output-dir OUTPUT",
+    "input_schema": "wmf-forecast-publication-input-v1",
+    "output_receipt_schema": "wmf-forecast-publication-build-receipt-v1",
+    "source": "workshops/corl2026_world_models/analysis/compile_forecast_publication.py"
+  },
+  "deep_validation": {
+    "analyzer": "Before import, the supplied descriptor must equal final_analyzer_dependency, resolve to the canonical analyzer path in a clean checkout whose HEAD is study_commit, and byte-match git show study_commit at that path. The signed final analysis is then replayed byte-for-object from its hash-bound analysis_evidence_manifest.",
+    "confirmation_evidence": "Before import, compiler_source must resolve to its canonical path in the same clean study_commit checkout and byte-match the trusted Git blob. Only then may its _validate_compiled_bundle replay the complete source-only confirmation bundle.",
+    "fixture": "Before import, fixture_freeze_dependency must resolve to its canonical path in the same clean study_commit checkout and byte-match the trusted Git blob. All C01-C24 rows are then deep-replayed and every authenticated aggregate must bind the supplied fixture-freeze descriptor.",
+    "labels": "The final analyzer claim gate, nonempty reproduced human-consensus inventory, annotation freeze, final consensus, and outcome-blind request selection are mandatory.",
+    "private_videos": "The inventory must be the exact compiler-receipt output. Every retained descriptor is hash checked; every declared example is uniquely joined and re-hashed.",
+    "source_drift": "All direct inputs, the analysis evidence manifest, selected pose manifests, and selected source videos are re-hashed immediately before atomic publication.",
+    "publication_source": "The signed input supplies full publication_source_commit P, which must equal the executing repository HEAD. A deployment-only publish/origin sanity check permits only credential-free canonical repository URLs. Independently, read authentication invokes the literal public HTTPS URL https://github.com/adeeb10abbas/steerable.git in a fresh template-free bare repository, with inherited Git/SSH/helper/executable/config state scrubbed, exact inert local config, and a protected allowlisted /usr/bin/git or /usr/local/bin/git binary. Exact refs/heads/codex/forecast-layout-gm-20260912 is observed, fetched with a 1048576-byte blob filter, and observed again at stable remote commit R; the isolated graph is capped at 201326592 bytes and must prove study_commit <= P <= R. Compiler, contract, analyzer, confirmation compiler, and fixture-validator blobs are read from that graph and matched to executing/source-checkout bytes before import. The complete isolated authentication repeats before atomic rename."
+  },
+  "fail_closed": [
+    "missing_or_unreproduced_human_labels",
+    "analysis_claim_gate_not_passed",
+    "null_required_forecast_error_persistence_error_or_primary_skill",
+    "primary_metrics_use_different_complete_layout_cohorts",
+    "bootstrap_not_10000_layout_resamples",
+    "models_pooled_or_cross_model_row",
+    "full_or_reduced_branch_semantics_changed",
+    "per_model_status_counts_do_not_sum_to_96",
+    "compiler_and_analyzer_status_counts_disagree",
+    "analyzer_source_or_any_input_hash_drift",
+    "historical_executable_not_at_its_canonical_repository_path",
+    "historical_executable_not_equal_to_its_trusted_study_commit_blob",
+    "historical_source_checkout_dirty_or_at_another_head",
+    "study_commit_not_ancestor_of_authenticated_publication_source_commit",
+    "publication_source_commit_not_executing_trusted_head",
+    "publication_remote_url_or_push_url_not_the_exact_authorized_repository",
+    "publication_remote_redirected_by_git_url_rewrite",
+    "publication_read_transport_not_literal_canonical_public_https",
+    "inherited_git_config_helper_ssh_askpass_or_exec_state_reaches_read_transport",
+    "isolated_git_executable_unpinned_outside_protected_system_bins_or_writable",
+    "isolated_bare_repository_config_drift",
+    "authenticated_graph_or_required_source_blob_exceeds_its_byte_limit",
+    "publication_checkout_attached_to_another_branch",
+    "publication_source_commit_not_in_authorized_control_ref_history",
+    "publication_control_ref_changed_across_ls_remote_fetch_ls_remote",
+    "historical_executable_differs_between_study_commit_and_publication_head",
+    "fixture_not_exactly_24_model_blind_layouts",
+    "any_confirmation_block_binds_another_fixture_freeze",
+    "declared_example_absent_or_not_the_metadata_hash_winner",
+    "private_video_join_absent_ambiguous_or_hash_mismatched",
+    "absolute_private_path_in_public_output",
+    "output_directory_already_exists",
+    "request_to_generate_or_edit_a_paper"
+  ],
+  "input_manifest": {
+    "copy_selected_videos": "Boolean signed into the manifest; false emits only hash-bound public video metadata. When true, every selected MP4 must be copied byte-identically, each file must be at most 16777216 bytes, and the complete selected set must be at most 67108864 bytes.",
+    "descriptor_keys": [
+      "path",
+      "bytes",
+      "sha256"
+    ],
+    "exact_keys": [
+      "schema_version",
+      "study_id",
+      "cohort_branch",
+      "final_analysis",
+      "confirmation_fixture_freeze",
+      "confirmation_compiler_receipt",
+      "private_video_inventory",
+      "analyzer_source",
+      "publication_source_commit",
+      "copy_selected_videos",
+      "payload_sha256"
+    ],
+    "payload_signature": "SHA256 of canonical UTF-8 JSON with payload_sha256 removed",
+    "publication_source_commit": "Full Git object ID P containing exact tracked copies of this compiler and contract. P must equal local HEAD and be an ancestor of the stable fetched authorized control-ref head R; dirty, untracked, mismatched, divergent, or unpublished local source is rejected.",
+    "publication_source_remote": {
+      "authorized_repository": "https://github.com/adeeb10abbas/steerable.git",
+      "authorized_ref": "refs/heads/codex/forecast-layout-gm-20260912",
+      "authenticated_read": "The literal authorized public HTTPS URL and exact ref are read in a fresh template-free bare repository; aliases and executing-checkout config are never used for read trust. System/global config and inherited Git, SSH, askpass, credential-helper, executable-path and URL-rewrite state are disabled or scrubbed. The exact core-only local config is restored after filtered fetch before object reads.",
+      "authenticated_git_paths": [
+        "/usr/bin/git",
+        "/usr/local/bin/git"
+      ],
+      "authenticated_limits": {
+        "blob_filter_bytes": 1048576,
+        "graph_bytes": 201326592,
+        "process_timeout_seconds": 60
+      },
+      "aliases_in_preference_order": [
+        "publish",
+        "origin"
+      ],
+      "checkout_modes": [
+        "attached exact control branch",
+        "detached immutable source commit"
+      ],
+      "credential_policy": "No credential-bearing URL is accepted or emitted. Exact GitHub SSH forms for adeeb10abbas/steerable are accepted only for the deployment-route check after raw and expanded fetch/push URL validation; authenticated reads always use the pinned literal public HTTPS URL and sanitized failures disclose no command, URL or Git stderr."
+    },
+    "supported_branches": {
+      "full_two_model": [
+        "N3",
+        "D1"
+      ],
+      "reduced_d1": [
+        "D1"
+      ],
+      "reduced_n3": [
+        "N3"
+      ]
+    }
+  },
+  "namespace": "wmf_ablation_001_20260912",
+  "outputs": {
+    "actual_scene_timing.json": "Signed, path-free actual robot-base fixture geometry and exact per-model qualified timing fields.",
+    "build_receipt.json": "Signed receipt binding every other output by relative path, bytes, and SHA-256, plus the local publication source P and separately authenticated remote control head R; its own payload_sha256 is the self-binding.",
+    "coverage_by_condition.csv": "Per-model, per-condition denominator-preserving status and observability counts.",
+    "example_videos.json": "Signed declared-rule selection and unique private-video join, with no private source paths.",
+    "forecast_skill_layout_effects.json": "Signed separate-model primary forecast skill and reflected-minus-original layout-effect inputs.",
+    "model_results.csv": "Separate-model skill, baselines, uncertainty, missingness bounds, reflection discrepancy, and status counts.",
+    "model_results_table.tex": "Generated table fragment only; it never edits or generates a manuscript.",
+    "paper_evidence.json": "Signed compact evidence object preserving all required analysis components and claim boundaries.",
+    "sample_size_table.tex": "Generated full/reduced-branch sample-size fragment.",
+    "videos/": "Optional byte-identical selected MP4 copies, bounded to 16777216 bytes per file and 67108864 bytes total to match the deployed publication copier limits. No transcoding or outcome-based replacement is permitted."
+  },
+  "prohibited_effects": {
+    "behavioral_actions": 0,
+    "labels_created": 0,
+    "model_requests": 0,
+    "paper_files_edited_or_generated": 0,
+    "scientific_estimates_recomputed": 0,
+    "simulator_processes": 0
+  },
+  "study_id": "WMF-ABLATION-001",
+  "schema_version": "wmf-forecast-publication-contract-v1"
+}

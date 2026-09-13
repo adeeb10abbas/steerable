@@ -205,6 +205,58 @@ def topology_receipt() -> dict:
 
 
 class D1QualificationJobTests(unittest.TestCase):
+    def test_child_environment_prepends_system_libs_and_preserves_inherited_path(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            cuda_home = root / "cuda"
+            system_library_dir = root / "jammy/usr/lib/x86_64-linux-gnu"
+            (cuda_home / "bin").mkdir(parents=True)
+            (cuda_home / "bin/nvcc").write_text("test-only executable placeholder\n")
+            system_library_dir.mkdir(parents=True)
+            for soname in JOB.D1_REQUIRED_SYSTEM_SONAMES:
+                (system_library_dir / soname).write_text("test-only library placeholder\n")
+            with (
+                mock.patch.object(JOB, "D1_CUDA_HOME", cuda_home),
+                mock.patch.object(JOB, "D1_SYSTEM_LIBRARY_DIR", system_library_dir),
+                mock.patch.dict(
+                    os.environ,
+                    {
+                        "PATH": "/usr/bin",
+                        "LD_LIBRARY_PATH": "/data/users/jsalfity/glvnd/lib:/retained/lib",
+                    },
+                    clear=True,
+                ),
+            ):
+                env = JOB._child_environment(root / "job")
+
+            self.assertEqual(env["CUDA_HOME"], str(cuda_home))
+            self.assertEqual(env["PATH"], f"{cuda_home / 'bin'}:/usr/bin")
+            self.assertEqual(
+                env["LD_LIBRARY_PATH"],
+                f"{system_library_dir}:/data/users/jsalfity/glvnd/lib:/retained/lib",
+            )
+
+    def test_child_environment_rejects_missing_required_system_soname(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            cuda_home = root / "cuda"
+            system_library_dir = root / "jammy/usr/lib/x86_64-linux-gnu"
+            (cuda_home / "bin").mkdir(parents=True)
+            (cuda_home / "bin/nvcc").write_text("test-only executable placeholder\n")
+            system_library_dir.mkdir(parents=True)
+            missing_soname = JOB.D1_REQUIRED_SYSTEM_SONAMES[-1]
+            for soname in JOB.D1_REQUIRED_SYSTEM_SONAMES[:-1]:
+                (system_library_dir / soname).write_text("test-only library placeholder\n")
+            with (
+                mock.patch.object(JOB, "D1_CUDA_HOME", cuda_home),
+                mock.patch.object(JOB, "D1_SYSTEM_LIBRARY_DIR", system_library_dir),
+                self.assertRaises(JOB.D1JobError) as raised,
+            ):
+                JOB._child_environment(root / "job")
+
+            self.assertEqual(raised.exception.reason, "d1_system_library_missing")
+            self.assertIn(missing_soname, str(raised.exception))
+
     def test_fixture_is_snapshotted_hash_bound_and_exactly_validated(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -672,6 +724,10 @@ finally:
             cuda_home = root / "cuda"
             (cuda_home / "bin").mkdir(parents=True)
             (cuda_home / "bin/nvcc").write_text("test-only executable placeholder\n")
+            system_library_dir = root / "jammy/usr/lib/x86_64-linux-gnu"
+            system_library_dir.mkdir(parents=True)
+            for soname in JOB.D1_REQUIRED_SYSTEM_SONAMES:
+                (system_library_dir / soname).write_text("test-only library placeholder\n")
             queue = JOB.QueueContext(source, job_dir, "a" * 40, "d1-test")
             real_launch = JOB.launch_server
 
@@ -730,6 +786,7 @@ finally:
                 mock.patch.object(JOB, "wait_for_server_contract", side_effect=fake_wait),
                 mock.patch.object(JOB, "build_probe_command", side_effect=fake_probe_command),
                 mock.patch.object(JOB, "D1_CUDA_HOME", cuda_home),
+                mock.patch.object(JOB, "D1_SYSTEM_LIBRARY_DIR", system_library_dir),
             ):
                 receipt = JOB.execute_job(
                     source_root=source,

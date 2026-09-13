@@ -54,6 +54,19 @@ D1_SOURCE = Path("/data/users/ali/vla_wam/external/DreamZero-v3e004-clean-ab790c
 D1_CHECKPOINT = Path("/data/users/ali/vla_wam/checkpoints/DreamZero-DROID-96ad344")
 D1_TOKENIZER = Path("/data/users/ali/vla_wam/checkpoints/umt5-xxl-tokenizer-66cb9e7")
 D1_CUDA_HOME = Path("/data/users/ali/vla_wam/envs/cuda-12.8-toolkit")
+D1_SYSTEM_LIBRARY_DIR = Path(
+    "/data/users/ali/vla_wam/envs/dreamzero-system-libs-jammy/root/usr/lib/x86_64-linux-gnu"
+)
+D1_REQUIRED_SYSTEM_SONAMES = (
+    "libgthread-2.0.so.0",
+    "libglib-2.0.so.0",
+    "libX11.so.6",
+    "libxcb.so.1",
+    "libXau.so.6",
+    "libXdmcp.so.6",
+    "libbsd.so.0",
+    "libmd.so.0",
+)
 DEFAULT_PORT = 18021
 EXPECTED_SOURCE_COMMIT = "ab790c198fbce33503358efbbd4187ce9a89adf3"
 EXPECTED_SOURCE_TREE = "6b7ba27f1af81e963a6507f1204c05c65a94098c"
@@ -1131,6 +1144,14 @@ def _child_environment(job_dir: Path) -> dict[str, str]:
     # this task-owned toolkit is the verified native CUDA 12.x installation.
     cuda_home = D1_CUDA_HOME
     require((cuda_home / "bin" / "nvcc").is_file(), "d1_cuda_toolkit_missing")
+    system_library_dir = D1_SYSTEM_LIBRARY_DIR
+    require(system_library_dir.is_dir(), "d1_system_library_dir_missing")
+    for soname in D1_REQUIRED_SYSTEM_SONAMES:
+        require(
+            (system_library_dir / soname).is_file(),
+            "d1_system_library_missing",
+            soname,
+        )
     runtime_root = job_dir / "raw" / "runtime"
     directories = {
         "tmp": runtime_root / "tmp",
@@ -1142,8 +1163,13 @@ def _child_environment(job_dir: Path) -> dict[str, str]:
     for directory in directories.values():
         directory.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ)
+    inherited_library_path = env.get("LD_LIBRARY_PATH", "")
+    child_library_path = str(system_library_dir)
+    if inherited_library_path:
+        child_library_path = f"{child_library_path}{os.pathsep}{inherited_library_path}"
     env.update(
         CUDA_HOME=str(cuda_home),
+        LD_LIBRARY_PATH=child_library_path,
         PATH=f"{cuda_home / 'bin'}:{env.get('PATH', '')}",
         PYTHONDONTWRITEBYTECODE="1",
         PYTHONUNBUFFERED="1",

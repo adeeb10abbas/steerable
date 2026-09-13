@@ -45,7 +45,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "ff5feab207bc4cae6008b1372eb22110e5e6c900",
-    "control_generation": 119,
+    "control_generation": 120,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -615,9 +615,17 @@
     },
     {
       "descriptor_sha256": "49fbedf64b3b4b4246f4a0f1e253bf9441fb071620b9baab71410818722126a2",
+      "heartbeat": {
+        "at": "2026-09-13T03:16:18.243374+00:00",
+        "child_pid": 1583,
+        "unix": 1789269378.2434042,
+        "worker_id": "wmf-forecast-0912-worker-01",
+        "worker_pid": 1
+      },
       "job_id": "fixture-p00-candidate-01",
       "source_commit": "ac3072b8babee96ed194f04fb42ce81864f114a1",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-01"
     },
     {
       "child_pid": 105,

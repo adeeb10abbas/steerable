@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "namespace": "wmf_ablation_001_20260912",
+  "verdict": "PASS",
+  "kubernetes_context": "prod-dcwi-warrenq1-vmkub007",
+  "kubernetes_namespace": "211247-prod",
+  "lock_path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/bootstrap/flock-preflight.lock",
+  "mechanism": "Python fcntl.flock with LOCK_EX | LOCK_NB on one persistent file inode in the shared task PVC.",
+  "tested_utc": {
+    "start": "2026-09-13T01:52:45.379630+00:00",
+    "end": "2026-09-13T01:53:35.573533+00:00"
+  },
+  "pods_before": {
+    "primary": {
+      "name": "211247-ali-b200-1gpu",
+      "uid": "c4416e7b-da01-491a-983e-f35870fb491e",
+      "node": "dcwipphhgc225.edc.nam.gm.com",
+      "phase": "Running"
+    },
+    "contender": {
+      "name": "wmf-forecast-0912-bootcheck",
+      "uid": "66890b74-22ff-46bc-936e-1dca61272546",
+      "node": "dcwipphhgc199.edc.nam.gm.com",
+      "phase": "Running"
+    }
+  },
+  "pods_after": {
+    "primary": {
+      "name": "211247-ali-b200-1gpu",
+      "uid": "c4416e7b-da01-491a-983e-f35870fb491e",
+      "node": "dcwipphhgc225.edc.nam.gm.com",
+      "phase": "Running"
+    },
+    "contender": {
+      "name": "wmf-forecast-0912-bootcheck",
+      "uid": "66890b74-22ff-46bc-936e-1dca61272546",
+      "node": "dcwipphhgc199.edc.nam.gm.com",
+      "phase": "Running"
+    }
+  },
+  "observations": [
+    {
+      "event": "holder_acquired",
+      "pid": 757846,
+      "hostname": "211247-ali-b200-1gpu",
+      "utc": "2026-09-13T01:52:45.379630+00:00",
+      "hold_seconds": 30,
+      "lock_path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/bootstrap/flock-preflight.lock",
+      "uid": 816149040
+    },
+    {
+      "event": "contender_while_held",
+      "pid": 18,
+      "hostname": "wmf-forecast-0912-bootcheck",
+      "utc": "2026-09-13T01:53:00.427023+00:00",
+      "uid": 816149040,
+      "lock_path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/bootstrap/flock-preflight.lock",
+      "holder_receipt": {
+        "event": "holder_acquired",
+        "pid": 757846,
+        "hostname": "211247-ali-b200-1gpu",
+        "utc": "2026-09-13T01:52:45.379630+00:00",
+        "hold_seconds": 30,
+        "lock_path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/bootstrap/flock-preflight.lock",
+        "uid": 816149040
+      },
+      "acquired": false,
+      "blocked_by_existing_lock": true
+    },
+    {
+      "event": "holder_released",
+      "pid": 757846,
+      "hostname": "211247-ali-b200-1gpu",
+      "utc": "2026-09-13T01:53:15.412654+00:00",
+      "hold_seconds": 30,
+      "lock_path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/bootstrap/flock-preflight.lock",
+      "uid": 816149040,
+      "elapsed_seconds": 30.033097811043262
+    },
+    {
+      "event": "contender_after_holder_exit",
+      "pid": 24,
+      "hostname": "wmf-forecast-0912-bootcheck",
+      "utc": "2026-09-13T01:53:35.573533+00:00",
+      "uid": 816149040,
+      "lock_path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/bootstrap/flock-preflight.lock",
+      "holder_receipt": {
+        "event": "holder_released",
+        "pid": 757846,
+        "hostname": "211247-ali-b200-1gpu",
+        "utc": "2026-09-13T01:53:15.412654+00:00",
+        "hold_seconds": 30,
+        "lock_path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/bootstrap/flock-preflight.lock",
+        "uid": 816149040,
+        "elapsed_seconds": 30.033097811043262
+      },
+      "acquired": true
+    }
+  ],
+  "command_exit_codes": {
+    "holder": 0,
+    "contender_while_held": 0,
+    "contender_after_holder_exit": 0,
+    "pod_metadata_after": 0
+  },
+  "holder_exit_proof": "The foreground holder Python/kubectl/SSH command completed with exit code 0 before the final contender command was started. It explicitly unlocked and closed the file descriptor after the 30-second hold.",
+  "assertions": {
+    "distinct_nodes": true,
+    "pod_uids_unchanged": true,
+    "holder_elapsed_at_least_30_seconds": true,
+    "contender_blocked_during_hold": true,
+    "contender_acquired_after_holder_command_exit": true,
+    "all_commands_completed_successfully": true
+  },
+  "scope": {
+    "remote_files_written": [
+      "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/bootstrap/flock-preflight.lock"
+    ],
+    "actual_queue_locks_or_claims_touched": false,
+    "models_launched": false,
+    "credentials_inspected": false,
+    "scientific_or_gpu_qualification": false,
+    "limitations": [
+      "Tests cross-node exclusion and release after a normal holder exit on the observed shared PVC.",
+      "Does not simulate abrupt node loss, network partition, or NFS server failure.",
+      "The temporary bootcheck pod is a lock-test contender, not a verified experiment worker."
+    ]
+  }
+}

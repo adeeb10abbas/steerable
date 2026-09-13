@@ -608,6 +608,19 @@ def _query_nvidia(nvidia_smi: Path | str, columns: Sequence[str], *, compute: bo
     return rows
 
 
+def _normalized_gpu_uuid(value: Any, reason: str) -> str:
+    """Return NVIDIA's canonical prefixed spelling for one exact UUID."""
+
+    require(isinstance(value, str), reason)
+    raw = value.removeprefix("GPU-")
+    try:
+        parsed = uuid.UUID(raw)
+    except (ValueError, AttributeError) as error:
+        raise D1JobError(reason) from error
+    require(str(parsed) == raw.lower(), reason)
+    return f"GPU-{parsed}"
+
+
 def reconcile_topology(
     *,
     nvidia_devices: Sequence[Mapping[str, str]],
@@ -620,7 +633,10 @@ def reconcile_topology(
     uuids = [row.get("uuid") for row in nvidia_devices]
     indices = [row.get("index") for row in nvidia_devices]
     require(all(row.get("name") == EXPECTED_GPU_NAME for row in nvidia_devices), "nvidia_visible_gpu_not_b200")
-    require(all(isinstance(value, str) and value.startswith("GPU-") for value in uuids), "nvidia_gpu_uuid_invalid")
+    normalized_nvidia_uuids = [
+        _normalized_gpu_uuid(value, "nvidia_gpu_uuid_invalid") for value in uuids
+    ]
+    require(all(str(value).startswith("GPU-") for value in uuids), "nvidia_gpu_uuid_prefix_missing")
     require(len(set(uuids)) == 2 and len(set(indices)) == 2, "nvidia_gpu_identity_not_unique")
     require(isinstance(visible_devices, str), "nvidia_visible_devices_missing")
     tokens = [token.strip() for token in visible_devices.split(",") if token.strip()]
@@ -634,8 +650,15 @@ def reconcile_topology(
     require([row.get("logical_index") for row in torch_devices] == [0, 1], "torch_logical_gpu_indices_changed")
     require(all(row.get("name") == EXPECTED_GPU_NAME for row in torch_devices), "torch_visible_gpu_not_b200")
     torch_uuids = [row.get("uuid") for row in torch_devices]
+    normalized_torch_uuids = None
     if all(torch_uuids):
-        require(set(torch_uuids) == set(uuids), "torch_nvidia_gpu_uuid_mismatch")
+        normalized_torch_uuids = [
+            _normalized_gpu_uuid(value, "torch_gpu_uuid_invalid") for value in torch_uuids
+        ]
+        require(
+            set(normalized_torch_uuids) == set(normalized_nvidia_uuids),
+            "torch_nvidia_gpu_uuid_mismatch",
+        )
     return {
         "schema_version": TOPOLOGY_SCHEMA,
         "status": "passed",
@@ -645,6 +668,10 @@ def reconcile_topology(
         "nvidia_visible_devices": tokens,
         "nvidia_smi_devices": list(nvidia_devices),
         "torch_devices": list(torch_devices),
+        "normalized_gpu_uuids": {
+            "nvidia_smi": normalized_nvidia_uuids,
+            "torch": normalized_torch_uuids,
+        },
         "preexisting_compute_process_count": 0,
     }
 
@@ -924,8 +951,14 @@ def validate_server_contract(
     require(len({row.get("hostname") for row in server_topology}) == 1, "server_topology_multinode")
     require(len({row.get("cuda_device_index") for row in server_topology}) == 2, "server_topology_device_alias")
     require(all(row.get("cuda_device_name") == EXPECTED_GPU_NAME for row in server_topology), "server_topology_not_b200")
-    server_uuids = {row.get("cuda_device_uuid") for row in server_topology}
-    expected_uuids = {row.get("uuid") for row in topology["nvidia_smi_devices"]}
+    server_uuids = {
+        _normalized_gpu_uuid(row.get("cuda_device_uuid"), "server_topology_uuid_invalid")
+        for row in server_topology
+    }
+    expected_uuids = {
+        _normalized_gpu_uuid(row.get("uuid"), "topology_receipt_uuid_invalid")
+        for row in topology["nvidia_smi_devices"]
+    }
     require(server_uuids == expected_uuids, "server_topology_uuid_mismatch")
 
     identity_path = Path(str(contract.get("identity_receipt", ""))).resolve()

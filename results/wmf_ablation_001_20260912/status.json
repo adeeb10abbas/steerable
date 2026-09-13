@@ -57,7 +57,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "8c96ab89b8f3d6fee4b5f178e618b715922db1f2",
-    "control_generation": 166,
+    "control_generation": 167,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -951,9 +951,17 @@
     },
     {
       "descriptor_sha256": "5687802c8b8fdc6fa493b63ad8fe0750e800f3c3a11f54cfbaf8283546232d22",
+      "heartbeat": {
+        "at": "2026-09-13T03:50:43.558222+00:00",
+        "child_pid": 3056,
+        "unix": 1789271443.5582578,
+        "worker_id": "wmf-forecast-0912-worker-00",
+        "worker_pid": 1
+      },
       "job_id": "recorder-qualification-p00-003",
       "source_commit": "69517829da3ae1722335039f26a7334f2fd55364",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-00"
     }
   ],
   "maximum_combined_log_tail_bytes_per_job": 8192,

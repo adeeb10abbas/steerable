@@ -644,6 +644,28 @@
       ],
       "max_wall_seconds": 3600,
       "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "n3-first-live-002",
+      "released": true,
+      "source_commit": "b619c9448c27596e6e400981060a50ca2da7d288",
+      "role": "wmf-forecast-0912-worker-00",
+      "argv": [
+        "/usr/bin/env",
+        "CUDA_VISIBLE_DEVICES=0",
+        "DS_IGNORE_CUDA_DETECTION=1",
+        "HF_HOME=/data/users/ali/vla_wam/cache/huggingface-cosmos",
+        "PATH=/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/compat-bin:/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "LD_LIBRARY_PATH=/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/nvidia/cudnn/lib:/data/users/ali/vla_wam/envs/isaac-system-libs/lib:/data/users/jsalfity/glvnd/lib",
+        "PYTHONPATH=/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b:{source_root}",
+        "TORCHINDUCTOR_CACHE_DIR={job_dir}/torchinductor",
+        "TMPDIR={job_dir}/tmp",
+        "/bin/bash",
+        "-c",
+        "mkdir -p '{job_dir}/torchinductor' '{job_dir}/tmp' && cd /data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b && exec /data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python '{source_root}/workshops/corl2026_world_models/experiments/forecast_layout/n3_first_live.py' --source-root /data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b --checkpoint-root /data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid --observation-manifest /data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/qualification_inputs/n3_historical_packed_5100/observation_manifest.json --output-dir '{job_dir}/raw' --publish-dir '{job_dir}/publish' --effective-seed 2026091000"
+      ],
+      "max_wall_seconds": 7200,
+      "publish_log_tail_bytes": 8192
     }
   ]
 }

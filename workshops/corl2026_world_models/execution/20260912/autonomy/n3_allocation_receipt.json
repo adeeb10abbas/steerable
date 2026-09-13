@@ -1,0 +1,77 @@
+{
+  "schema_version": "wmf-n3-allocation-v1",
+  "study_namespace": "wmf_ablation_001_20260912",
+  "observed_at": "2026-09-13T03:46:31Z",
+  "job": "wmf-forecast-0912-worker-n3-00",
+  "role": "n3",
+  "pod": "wmf-forecast-0912-worker-n3-00-hwtnd",
+  "pod_uid": "8e5e9517-5d02-42d7-8428-f5b2c536ffc9",
+  "node": "dcwipphhgc226.edc.nam.gm.com",
+  "ready": true,
+  "ready_since": "2026-09-13T03:46:06Z",
+  "requests": {
+    "cpu": "48",
+    "memory": "256Gi",
+    "nvidia.com/gpu": 2
+  },
+  "limits": {
+    "cpu": "80",
+    "memory": "512Gi",
+    "nvidia.com/gpu": 2
+  },
+  "gpu_uuids": [
+    "GPU-1bb3e2e7-6bf0-2e3c-7489-8a03b2438515",
+    "GPU-5dca9afb-2127-6d73-10e8-59ed2024b8e6"
+  ],
+  "numeric_devices": [
+    "/dev/nvidia4",
+    "/dev/nvidia6"
+  ],
+  "numeric_devices_accessible": true,
+  "runtime_visible_devices_matches": true,
+  "explicit_visible_devices_override": false,
+  "disjoint_from_d1_uuids": [
+    "GPU-5d1ef479-5dee-6e80-10dc-9174e5a71a0c",
+    "GPU-4bcd0e45-3713-5bff-f268-32124291bd93"
+  ],
+  "service": "wmf-forecast-0912-n3",
+  "port": 18011,
+  "removed_idle_jobs": [
+    "wmf-forecast-0912-worker-01",
+    "wmf-forecast-0912-worker-04"
+  ],
+  "removal_guard": "No outstanding claims under shared NFS release.lock; PVC preserved",
+  "single_gpu_pool_temporarily_suspended": [
+    "wmf-forecast-0912-worker-05",
+    "wmf-forecast-0912-worker-06",
+    "wmf-forecast-0912-worker-07",
+    "wmf-forecast-0912-worker-08",
+    "wmf-forecast-0912-worker-09",
+    "wmf-forecast-0912-worker-10",
+    "wmf-forecast-0912-worker-11",
+    "wmf-forecast-0912-worker-12",
+    "wmf-forecast-0912-worker-13",
+    "wmf-forecast-0912-worker-14",
+    "wmf-forecast-0912-worker-15",
+    "wmf-forecast-0912-worker-16",
+    "wmf-forecast-0912-worker-17",
+    "wmf-forecast-0912-worker-18",
+    "wmf-forecast-0912-worker-19",
+    "wmf-forecast-0912-worker-20",
+    "wmf-forecast-0912-worker-21",
+    "wmf-forecast-0912-worker-22",
+    "wmf-forecast-0912-worker-23",
+    "wmf-forecast-0912-worker-24",
+    "wmf-forecast-0912-worker-25",
+    "wmf-forecast-0912-worker-26",
+    "wmf-forecast-0912-worker-27",
+    "wmf-forecast-0912-worker-28",
+    "wmf-forecast-0912-worker-29",
+    "wmf-forecast-0912-worker-30",
+    "wmf-forecast-0912-worker-31"
+  ],
+  "single_gpu_pool_resumed_after_n3_allocation": true,
+  "preserved_single_gpu_worker": "wmf-forecast-0912-worker-00",
+  "scientific_requests_from_allocation": 0,
+  "scientific_episodes_from_allocation": 0
+}

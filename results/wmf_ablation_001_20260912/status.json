@@ -27,7 +27,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "867d0c601943cebf9c3369d0097310115a2e133e",
-    "control_generation": 894,
+    "control_generation": 895,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -1721,9 +1721,17 @@
     },
     {
       "descriptor_sha256": "a76f76f9456ecacae2a8ff0de89115fc9b3b03f48f07e8d6dfade7747578a832",
+      "heartbeat": {
+        "at": "2026-09-13T13:32:01.657704+00:00",
+        "child_pid": 404,
+        "unix": 1789306321.6577404,
+        "worker_id": "wmf-forecast-0912-worker-05",
+        "worker_pid": 1
+      },
       "job_id": "development-evidence-compiler-formal-003",
       "source_commit": "6c83e7362f421f63b46ab69dc4f697cdd4f377dd",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-05"
     },
     {
       "child_pid": 8949,

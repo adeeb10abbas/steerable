@@ -1,0 +1,74 @@
+{
+  "behavioral_action_count": 0,
+  "candidate_id": "C23__candidate_00",
+  "child_exit_code": 0,
+  "child_logs": {
+    "stderr": {
+      "bytes": 551,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c23-001/child.stderr.log",
+      "sha256": "7cf9baade28e2609f9537bcf104aa569cfb40c1caba998dab486d1211e5a654c"
+    },
+    "stdout": {
+      "bytes": 20173,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c23-001/child.stdout.log",
+      "sha256": "336e8f967df142b7d10c9ae06abac5b68af8a65a9d0e75e0eda62d7397eae89d"
+    }
+  },
+  "child_started": true,
+  "claim_boundary": "One current C23 physical observation and exact preprocessing only; no model request or behavioral episode.",
+  "environment_seed": 2026091223,
+  "exit_code": 0,
+  "finished_at_utc": "2026-09-13T07:35:27.550816Z",
+  "gate_receipt_sha256": "eac77f0f0dcdf25e99dbaf7b068fc5ad01238e7340038e0001a86acb302fbf0c",
+  "gpu_identity": {
+    "driver_version": "580.95.05",
+    "index": "0",
+    "name": "NVIDIA B200",
+    "preexisting_compute_process_count": 0,
+    "uuid": "GPU-1e6dc545-12a1-6021-7ea9-96c638f34bd9"
+  },
+  "job_id": "fixed-observation-c23-001",
+  "layout_pair_id": "C23",
+  "model_fixtures": {
+    "D1": {
+      "array_keys": [
+        "observation/exterior_image_0_left",
+        "observation/exterior_image_1_left",
+        "observation/wrist_image_left",
+        "observation/joint_position",
+        "observation/cartesian_position",
+        "observation/gripper_position"
+      ],
+      "fixture": {
+        "bytes": 520282,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c23-001/capture/d1_official_wire_observation.npz",
+        "sha256": "cac3b96a48a3a239de86766f08bfeacf0b2ae8e4891065173d3ec19d1bfbfa7a"
+      },
+      "interface": "official conditional DreamZero six-array request fixture"
+    },
+    "N3": {
+      "array_keys": [
+        "observation/image",
+        "observation/joint_position",
+        "observation/gripper_position"
+      ],
+      "fixture": {
+        "bytes": 1037692,
+        "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c23-001/capture/n3_official_wire_observation.npz",
+        "sha256": "06d92fdbf1f6b33795d20af9a4f93531b5648e88dd0a50d8aa0881fcdd7289ce"
+      },
+      "interface": "official packed observation/image plus joint/gripper arrays"
+    }
+  },
+  "model_request_count": 0,
+  "pose_manifest_sha256": "e0d39f23c4c5fd16afa20e888110faa1f934cc5d2be0389ff37ff8a823d90904",
+  "raw_capture_receipt": {
+    "bytes": 80237,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c23-001/capture/capture_receipt.json",
+    "sha256": "ec8f95cdbc86380b58809b43324f5355a06da051eec55cd850e8dd49b6fd35fe"
+  },
+  "schema_version": "wmf-forecast-layout-fixed-observation-job-v1",
+  "status": "passed",
+  "study_commit": "148b0bad38382b32667d7cf2484773c11fa744ad",
+  "study_namespace": "wmf_ablation_001_20260912"
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": "wmf-d1-six-request-probe-plan-v1",
+  "study_namespace": "wmf_ablation_001_20260912",
+  "configuration_id": "D1",
+  "fixture_semantics": "One retained request observation. Every probe uses the same six arrays and the same session identifier after a full two-rank reset.",
+  "effective_noise_seed": 1140,
+  "noise_semantics": "fixed; the six requests are not independent noise draws",
+  "decode_semantics": "offline measurement-only VAE rendering of the already-returned latent; joint video/action prediction is always executed",
+  "fixed_session_id": "wmf-d1-six-request-fixed-input",
+  "probes": [
+    {
+      "index": 0,
+      "id": "left_no_decode",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "offline_decode": false
+    },
+    {
+      "index": 1,
+      "id": "left_repeat_no_decode",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "offline_decode": false
+    },
+    {
+      "index": 2,
+      "id": "right_no_decode",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "offline_decode": false
+    },
+    {
+      "index": 3,
+      "id": "left_decode",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "offline_decode": true
+    },
+    {
+      "index": 4,
+      "id": "left_repeat_decode",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "offline_decode": true
+    },
+    {
+      "index": 5,
+      "id": "right_decode",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "offline_decode": true
+    }
+  ],
+  "required_exact_equalities": {
+    "fixed_left_repeats": [
+      ["left_no_decode", "left_repeat_no_decode"],
+      ["left_decode", "left_repeat_decode"]
+    ],
+    "decode_toggle_action_and_latent": [
+      ["left_no_decode", "left_decode"],
+      ["left_repeat_no_decode", "left_repeat_decode"],
+      ["right_no_decode", "right_decode"]
+    ],
+    "same_prompt_preprocessed_inputs": [
+      ["left_no_decode", "left_repeat_no_decode"],
+      ["left_no_decode", "left_decode"],
+      ["left_repeat_no_decode", "left_repeat_decode"],
+      ["right_no_decode", "right_decode"]
+    ]
+  },
+  "input_sensitivity_check": {
+    "left": "left_no_decode",
+    "right": "right_no_decode",
+    "require_nonidentical_actions": true,
+    "require_nonidentical_latents": true,
+    "interpretation": "A failure is a disclosed qualification result, not permission to substitute custom s2."
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "schema_version": "wmf-worker-pool-transition-v1",
+  "study_namespace": "wmf_ablation_001_20260912",
+  "observed_at_utc": "2026-09-13T02:33:44Z",
+  "reason": "Remove the explicit NVIDIA_VISIBLE_DEVICES=all override and let the Kubernetes device plugin inject only allocated devices.",
+  "source_branch": "codex/forecast-layout-gm-20260912",
+  "source_commit_at_apply": "ff01c0e1b073a922e4435ae895d5cd9faf813266",
+  "namespace": "211247-prod",
+  "context": "prod-dcwi-warrenq1-vmkub007",
+  "pvc": "211247-prod-pvc",
+  "bootstrap_sha256": "c9fe3d2da0b889eae2bb6cff4c8c149583e4293b366840134e14dcb07a18ba22",
+  "manifests": {
+    "one_gpu": {
+      "path": "workshops/corl2026_world_models/execution/20260912/autonomy/science_queue_workers_v3.json",
+      "sha256": "9a8e687b547a2fb97047110fe83cefa373dbb4d9c8660cb2b74ffb1545bac94f",
+      "job_count": 30,
+      "running": 3,
+      "pending": 27
+    },
+    "d1_two_gpu": {
+      "path": "workshops/corl2026_world_models/execution/20260912/autonomy/d1_queue_worker_v2.json",
+      "sha256": "23f1299f58761676742bf639f885051409209b9ca42575f758df641cb3c1d093",
+      "job_count": 1,
+      "running": 1,
+      "pending": 0
+    }
+  },
+  "superseded_attempts": {
+    "one_gpu_jobs_deleted_and_recreated": [
+      "wmf-forecast-0912-worker-00",
+      "wmf-forecast-0912-worker-01",
+      "wmf-forecast-0912-worker-04",
+      "wmf-forecast-0912-worker-05",
+      "wmf-forecast-0912-worker-06",
+      "wmf-forecast-0912-worker-07",
+      "wmf-forecast-0912-worker-08",
+      "wmf-forecast-0912-worker-09",
+      "wmf-forecast-0912-worker-10",
+      "wmf-forecast-0912-worker-11",
+      "wmf-forecast-0912-worker-12",
+      "wmf-forecast-0912-worker-13",
+      "wmf-forecast-0912-worker-14",
+      "wmf-forecast-0912-worker-15",
+      "wmf-forecast-0912-worker-16",
+      "wmf-forecast-0912-worker-17",
+      "wmf-forecast-0912-worker-18",
+      "wmf-forecast-0912-worker-19",
+      "wmf-forecast-0912-worker-20",
+      "wmf-forecast-0912-worker-21",
+      "wmf-forecast-0912-worker-22",
+      "wmf-forecast-0912-worker-23",
+      "wmf-forecast-0912-worker-24",
+      "wmf-forecast-0912-worker-25",
+      "wmf-forecast-0912-worker-26",
+      "wmf-forecast-0912-worker-27",
+      "wmf-forecast-0912-worker-28",
+      "wmf-forecast-0912-worker-29",
+      "wmf-forecast-0912-worker-30",
+      "wmf-forecast-0912-worker-31"
+    ],
+    "failed_isolation_diagnostic_job_ids": [
+      "bootstrap-diagnostic-worker-04",
+      "bootstrap-diagnostic-worker-05",
+      "bootstrap-diagnostic-worker-06",
+      "bootstrap-diagnostic-worker-07",
+      "bootstrap-diagnostic-worker-08",
+      "bootstrap-diagnostic-worker-09"
+    ],
+    "controlled_interruption_job_ids": [
+      "bootstrap-diagnostic-worker-27",
+      "bootstrap-diagnostic-worker-28"
+    ],
+    "d1_first_manifest_path": "workshops/corl2026_world_models/execution/20260912/autonomy/d1_queue_worker.json",
+    "d1_first_attempt_observation": "The idle pod exposed eight B200 devices because the manifest inherited NVIDIA_VISIBLE_DEVICES=all. It was deleted without a model load or queue science claim.",
+    "scientific_model_requests": 0,
+    "behavioral_actions": 0
+  },
+  "running_pods": [
+    {
+      "pod": "wmf-forecast-0912-worker-00-5cq8j",
+      "uid": "629abe8d-c940-49c7-a5e9-dfd40280259e",
+      "job": "wmf-forecast-0912-worker-00",
+      "role": "worker",
+      "node": "dcwipphhgc223.edc.nam.gm.com",
+      "phase": "Running",
+      "ready": true,
+      "container_restarts": 0,
+      "gpu_request": 1,
+      "gpu_limit": 1,
+      "nvidia_visible_devices": [
+        "GPU-1e6dc545-12a1-6021-7ea9-96c638f34bd9"
+      ],
+      "nvidia_smi_gpu_count": 1,
+      "torch_cuda_device_count": 1,
+      "gpu_model": "NVIDIA B200",
+      "preexisting_compute_process_count": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-01-86kzf",
+      "uid": "bee7f53d-de85-43fc-a391-2416c580457a",
+      "job": "wmf-forecast-0912-worker-01",
+      "role": "worker",
+      "node": "dcwipphhgc226.edc.nam.gm.com",
+      "phase": "Running",
+      "ready": true,
+      "container_restarts": 0,
+      "gpu_request": 1,
+      "gpu_limit": 1,
+      "nvidia_visible_devices": [
+        "GPU-5dca9afb-2127-6d73-10e8-59ed2024b8e6"
+      ],
+      "nvidia_smi_gpu_count": 1,
+      "torch_cuda_device_count": 1,
+      "gpu_model": "NVIDIA B200",
+      "preexisting_compute_process_count": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-04-wzpwx",
+      "uid": "52d021c3-4a09-48d6-8172-fafae94a6e51",
+      "job": "wmf-forecast-0912-worker-04",
+      "role": "worker",
+      "node": "dcwipphhgc226.edc.nam.gm.com",
+      "phase": "Running",
+      "ready": true,
+      "container_restarts": 0,
+      "gpu_request": 1,
+      "gpu_limit": 1,
+      "nvidia_visible_devices": [
+        "GPU-1bb3e2e7-6bf0-2e3c-7489-8a03b2438515"
+      ],
+      "nvidia_smi_gpu_count": 1,
+      "torch_cuda_device_count": 1,
+      "gpu_model": "NVIDIA B200",
+      "preexisting_compute_process_count": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-d1-00-9j698",
+      "uid": "afa8e604-aabf-4aea-860f-a49d4d316972",
+      "job": "wmf-forecast-0912-worker-d1-00",
+      "role": "d1",
+      "node": "dcwipphhgc226.edc.nam.gm.com",
+      "phase": "Running",
+      "ready": true,
+      "container_restarts": 0,
+      "gpu_request": 2,
+      "gpu_limit": 2,
+      "nvidia_visible_devices": [
+        "GPU-5d1ef479-5dee-6e80-10dc-9174e5a71a0c",
+        "GPU-4bcd0e45-3713-5bff-f268-32124291bd93"
+      ],
+      "nvidia_smi_gpu_count": 2,
+      "torch_cuda_device_count": 2,
+      "gpu_model": "NVIDIA B200",
+      "preexisting_compute_process_count": 0
+    }
+  ],
+  "results_branch_observation": {
+    "branch": "codex/forecast-layout-gm-20260912-results",
+    "commit": "cdc846f",
+    "failed_isolation_diagnostics_preserved": 6,
+    "controlled_interrupted_diagnostics_preserved": 2
+  },
+  "claim_boundary": "This is infrastructure qualification only. No new generation request, policy action, or behavioral episode is represented by this receipt."
+}

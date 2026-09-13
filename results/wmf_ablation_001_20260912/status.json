@@ -75,11 +75,12 @@
       "fixed-observation-d01-001",
       "fixed-observation-d02-001",
       "fixed-observation-d03-001",
-      "fixed-observation-d04-001"
+      "fixed-observation-d04-001",
+      "worker09-isolation-diagnostic-003"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "593c68bdb290eb598a98fdd8f6ef3a1ea6c143f4",
-    "control_generation": 322,
+    "control_commit": "db85ea82cda779e1c48043b127475f15c4ef1ccf",
+    "control_generation": 323,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -904,9 +905,9 @@
     {
       "descriptor_sha256": "bd3b4c303b181a972ff154e36bf3eb8443d4dd06b75383c78d579770e5ad8061",
       "heartbeat": {
-        "at": "2026-09-13T06:35:04.430029+00:00",
+        "at": "2026-09-13T06:35:48.613714+00:00",
         "child_pid": 1265,
-        "unix": 1789281304.4300592,
+        "unix": 1789281348.6137397,
         "worker_id": "wmf-forecast-0912-worker-05",
         "worker_pid": 1
       },
@@ -1952,6 +1953,12 @@
       },
       "wall_seconds": 2.302747579989955,
       "worker_id": "wmf-forecast-0912-worker-09"
+    },
+    {
+      "descriptor_sha256": "6b8d4fec01cc15cc7ce148f959a1da358f3747dfb9dc857bad2e00bd5e7b2115",
+      "job_id": "worker09-isolation-diagnostic-003",
+      "source_commit": "471f28ff31e312f86df33c7c9e79d61f010e96cd",
+      "status": "staged"
     }
   ],
   "maximum_combined_log_tail_bytes_per_job": 8192,

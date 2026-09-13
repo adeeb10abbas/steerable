@@ -3566,6 +3566,27 @@
       ],
       "max_wall_seconds": 3600,
       "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "n3-development-transport-preflight-001",
+      "released": true,
+      "source_commit": "c5b5368d852ecc9356b9df90cc5e6f62bfaecde8",
+      "role": "wmf-forecast-0912-worker-09",
+      "argv": [
+        "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
+        "{source_root}/workshops/corl2026_world_models/experiments/forecast_layout/n3_development_block_job.py",
+        "transport-preflight",
+        "--layout-pair-id",
+        "D02",
+        "--source-root",
+        "{source_root}",
+        "--study-commit",
+        "c5b5368d852ecc9356b9df90cc5e6f62bfaecde8",
+        "--job-dir",
+        "{job_dir}"
+      ],
+      "max_wall_seconds": 600,
+      "publish_log_tail_bytes": 8192
     }
   ]
 }

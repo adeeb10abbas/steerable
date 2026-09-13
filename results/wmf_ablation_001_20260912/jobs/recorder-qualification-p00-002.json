@@ -1,0 +1,26 @@
+{
+  "child_pid": 1148,
+  "child_reaped": true,
+  "descriptor_sha256": "33f60b7c21121aab99e466836b064ba7ef487c5d3487a61396a492345560f8da",
+  "ended_at": "2026-09-13T03:45:25.189469+00:00",
+  "error_type": null,
+  "job_id": "recorder-qualification-p00-002",
+  "log_tails": {
+    "stderr": "",
+    "stdout": "{\"behavioral_episode_count\": 0, \"child_exit\": {\"identity\": {\"bytes\": 1090, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-002/child_exit.json\", \"sha256\": \"fc5ebffee4c78f64a70549240a505e1a83d863df57f94aa7b00361e245bcb6f2\"}, \"logs\": {\"stderr\": {\"bytes\": 551, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-002/child.stderr.log\", \"sha256\": \"f037601d4cdfc665983426c6d544aecfe6ad6cb6f071d65865ff5606a04f1cda\"}, \"stdout\": {\"bytes\": 20049, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-002/child.stdout.log\", \"sha256\": \"e705c521f840ab5dfbda7edae8e3d388b157886039129e4a75ce2ea417d2ecc4\"}}, \"normal_exit\": true, \"pid\": 1169, \"proc_start_ticks\": 107090374, \"process_group_id\": 1169, \"process_identity\": {\"bytes\": 550, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-002/child_process.json\", \"sha256\": \"2a7935fa9c243a998a3fc822256a3c9e9c0e88aff86d4d10ae83d997bab03756\"}, \"recorded_at_utc\": \"2026-09-13T03:45:23.713457Z\", \"return_code\": 0, \"schema_version\": \"wmf-forecast-recorder-child-exit-v1\", \"terminating_signal\": null}, \"child_started\": true, \"claim_boundary\": \"Technical-invalid recorder-only attempt. No learned-policy or forecast claim is made.\", \"command\": \"left\", \"detail\": \"cannot read JSON evidence: /data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-002/child_qualification_receipt.json\", \"environment_seed\": 2026091000, \"exit_code\": 3, \"finished_at_utc\": \"2026-09-13T03:45:23.730156Z\", \"gpu_identity\": {\"driver_version\": \"580.95.05\", \"index\": \"0\", \"name\": \"NVIDIA B200\", \"preexisting_compute_process_count\": 0, \"uuid\": \"GPU-1e6dc545-12a1-6021-7ea9-96c638f34bd9\"}, \"job_id\": \"recorder-qualification-p00-002\", \"layout_arm\": \"original\", \"layout_pair_id\": \"P00\", \"model_request_count\": 0, \"raw_attempt_directory\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-002\", \"reason\": \"RecorderQualificationError\", \"recording_qualification_count\": 0, \"schema_version\": \"wmf-forecast-recorder-qualification-job-v1\", \"status\": \"technical_invalid\", \"study_commit\": \"133578ff3f76cd17e416b392664e3107f30846ba\", \"study_namespace\": \"wmf_ablation_001_20260912\", \"timing_support\": {\"bytes\": 1099, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-002/adapter_attempt/timing_support.json\", \"sha256\": \"186f276f4a4f0b027acaea516a4433a9c39355311e7ae2de4c82f226760a26c7\"}}\n"
+  },
+  "returncode": 3,
+  "source_commit": "133578ff3f76cd17e416b392664e3107f30846ba",
+  "started_at": "2026-09-13T03:43:51.523496+00:00",
+  "status": "failed",
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 2695,
+    "sha256": "964e9a4244aaf5c22f7801bf3945c46dce35c29934a1d059daac8af6569102af"
+  },
+  "wall_seconds": 93.66642034100369,
+  "worker_id": "wmf-forecast-0912-worker-00"
+}

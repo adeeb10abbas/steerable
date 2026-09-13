@@ -99,7 +99,7 @@ OUTPUT_INVENTORY_SCHEMA = "wmf-development-evidence-compiler-output-inventory-v1
 COMPILER_INPUT_SCHEMA = "wmf-development-evidence-compiler-input-v1"
 COMPILER_RECEIPT_SCHEMA = "wmf-development-evidence-compiler-receipt-v1"
 
-JOB_ID = "development-evidence-compiler-formal-003"
+JOB_ID = "development-evidence-compiler-formal-004"
 WORKER_ROLE = "wmf-forecast-0912-worker-05"
 MODE = "formal_full"
 CAMERA_ID = "over_shoulder_left_camera"

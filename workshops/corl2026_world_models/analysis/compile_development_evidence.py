@@ -2038,6 +2038,7 @@ def _validate_context_payload(
     completion_path: Path,
     raw_root: Path,
     expected_receipt: Mapping[str, Any],
+    model_id: str,
     cell_id: str,
 ) -> dict[str, Any]:
     events = _event_rows(rows, "model_context_reset")
@@ -2075,9 +2076,28 @@ def _validate_context_payload(
         "counter_env_ids": [],
         "session_ids": [],
     }
+    # The D1 overlay installs its newly authenticated per-episode session in
+    # ``_env_session_id`` only after the inherited local reset and the remote
+    # two-rank reset have both succeeded.  N3 has no such client-side session
+    # binding.  In either case chunk/counter state must remain empty here.
+    expected_client_state_after = dict(empty_client_state)
+    require(model_id in MODEL_LIMITS, f"{cell_id} recorder model identity is invalid")
+    if model_id == "D1":
+        client_session_id = expected_receipt.get("client_session_id")
+        require(
+            isinstance(client_session_id, str)
+            and SAFE_ID_RE.fullmatch(client_session_id) is not None,
+            f"{cell_id} recorder client session identity is invalid",
+        )
+        expected_client_state_after["session_ids"] = [client_session_id]
+    else:
+        require(
+            "client_session_id" not in expected_receipt,
+            f"{cell_id} N3 begin receipt unexpectedly declares a client session",
+        )
     require(
         client_state_before == empty_client_state
-        and client_state_after == empty_client_state,
+        and client_state_after == expected_client_state_after,
         f"{cell_id} recorder client reset state changed",
     )
     later = _event_rows(rows, "model_request_packed") + _event_rows(
@@ -2231,6 +2251,7 @@ def _validate_n3_context_chain(
         completion_path=completion_path,
         raw_root=raw_root,
         expected_receipt=begin,
+        model_id="N3",
         cell_id=cell_id,
     )
     return {
@@ -2586,6 +2607,7 @@ def _validate_d1_context_chain(
         completion_path=completion_path,
         raw_root=raw_root,
         expected_receipt=begin,
+        model_id="D1",
         cell_id=cell_id,
     )
 

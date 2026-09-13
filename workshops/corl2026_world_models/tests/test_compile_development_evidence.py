@@ -976,22 +976,24 @@ class TinyEvidence:
                 f"aggregate:{chain['checkpoint_pin']['aggregate_sha256']}"
             ),
         }
+        client_state_before = {
+            "chunk_env_ids": [],
+            "counter_env_ids": [],
+            "session_ids": [],
+        }
+        client_state_after = dict(client_state_before)
+        if model == "D1":
+            client_state_after["session_ids"] = [
+                chain["begin"]["client_session_id"]
+            ]
         context_artifact = recorder_payload(
             cell_root / "recording/payloads",
             "context-reset",
             "context_reset",
             freeze_scalar({
                 **chain["begin"],
-                "client_state_before": {
-                    "chunk_env_ids": [],
-                    "counter_env_ids": [],
-                    "session_ids": [],
-                },
-                "client_state_after": {
-                    "chunk_env_ids": [],
-                    "counter_env_ids": [],
-                    "session_ids": [],
-                },
+                "client_state_before": client_state_before,
+                "client_state_after": client_state_after,
             }),
             {},
         )
@@ -1612,7 +1614,11 @@ class CompilerEndToEndTests(unittest.TestCase):
     def test_recorded_context_reset_binds_server_receipt_and_empty_client_state(self) -> None:
         expected = {"passed": True, "server_context_id": "context-1"}
 
-        def validate(structure: dict) -> dict:
+        def validate(
+            structure: dict,
+            expected_receipt: dict | None = None,
+            model_id: str = "N3",
+        ) -> dict:
             artifact = {
                 "role": "context_reset",
                 "payload_sha256": "a" * 64,
@@ -1636,7 +1642,10 @@ class CompilerEndToEndTests(unittest.TestCase):
                     completion={"context_reset_artifact": artifact},
                     completion_path=self.root / "completion.json",
                     raw_root=self.root,
-                    expected_receipt=expected,
+                    expected_receipt=(
+                        expected if expected_receipt is None else expected_receipt
+                    ),
+                    model_id=model_id,
                     cell_id="test-cell",
                 )
 
@@ -1653,6 +1662,21 @@ class CompilerEndToEndTests(unittest.TestCase):
             }
         )
         self.assertEqual(accepted["role"], "context_reset")
+        d1_session = "d1-session-0001"
+        d1_expected = {**expected, "client_session_id": d1_session}
+        accepted_d1 = validate(
+            {
+                **d1_expected,
+                "client_state_before": empty,
+                "client_state_after": {
+                    **empty,
+                    "session_ids": [d1_session],
+                },
+            },
+            d1_expected,
+            "D1",
+        )
+        self.assertEqual(accepted_d1["role"], "context_reset")
         with self.assertRaisesRegex(
             compiler.CompilerError, "recorder client reset state changed"
         ):
@@ -1662,6 +1686,39 @@ class CompilerEndToEndTests(unittest.TestCase):
                     "client_state_before": empty,
                     "client_state_after": {**empty, "chunk_env_ids": [0]},
                 }
+            )
+        for changed_after in (
+            empty,
+            {**empty, "session_ids": ["wrong-session"]},
+            {**empty, "session_ids": [d1_session], "counter_env_ids": [0]},
+        ):
+            with self.subTest(changed_after=changed_after), self.assertRaisesRegex(
+                compiler.CompilerError, "recorder client reset state changed"
+            ):
+                validate(
+                    {
+                        **d1_expected,
+                        "client_state_before": empty,
+                        "client_state_after": changed_after,
+                    },
+                    d1_expected,
+                    "D1",
+                )
+        injected_n3 = {**expected, "client_session_id": "n3-must-not-have-session"}
+        with self.assertRaisesRegex(
+            compiler.CompilerError, "unexpectedly declares a client session"
+        ):
+            validate(
+                {
+                    **injected_n3,
+                    "client_state_before": empty,
+                    "client_state_after": {
+                        **empty,
+                        "session_ids": [injected_n3["client_session_id"]],
+                    },
+                },
+                injected_n3,
+                "N3",
             )
 
     def test_n3_source_pin_and_end_attestation_fail_closed(self) -> None:

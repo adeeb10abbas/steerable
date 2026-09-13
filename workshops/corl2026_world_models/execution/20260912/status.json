@@ -1,31 +1,54 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T07:35:00Z",
+  "as_of_utc": "2026-09-13T09:06:41Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
   "requested_host": "GM allocated cluster",
   "authorization": "User requested execution of attached specification on GM with aggressive parallelism. Core 232 episodes selected; optional D2 not selected. No confirmation release before qualification.",
-  "core_episodes_launched": 11,
-  "generation_requests_launched": 190,
-  "generation_requests_completed": 190,
+  "core_episodes_launched": 30,
+  "core_cells_terminally_classified": 29,
+  "core_cells_completed_valid": 25,
+  "core_cells_completed_technical_invalid": 4,
+  "core_cells_active_not_yet_counted": 1,
+  "core_cell_arithmetic": {
+    "terminal_valid": 25,
+    "terminal_technical_invalid": 4,
+    "terminally_classified": 29,
+    "active_launched_not_counted": 1,
+    "total_launched_including_active": 30,
+    "invariant": "25_terminal_valid + 4_terminal_technical_invalid + 1_active_launched = 30_launched"
+  },
+  "generation_requests_launched": 599,
+  "generation_requests_completed": 599,
   "request_breakdown": {
     "nonbehavioral_generation_qualification": 12,
-    "valid_N3_behavioral": 60,
-    "technical_invalid_N3_behavioral": 1,
-    "valid_D1_behavioral": 57,
-    "valid_N3_development": 60
+    "valid_N3_pilot": 60,
+    "technical_invalid_N3_pilot": 1,
+    "valid_D1_pilot": 228,
+    "valid_N3_development": 240,
+    "technical_invalid_N3_development": 1,
+    "valid_D1_development": 57,
+    "active_D1_D03_condition_01": "zero_requests_at_snapshot_and_excluded_until_terminal_receipt"
   },
-  "phase": "N3_D01_passed_D02_loading_D1_P00_attempt003_verified_prefix_resume_active_confirmation_captures_active",
-  "cluster_status": "Independent Git/PVC queue is active without the work Mac after the fully fenced release-lock inode recovery. Worker00, workers05/06/09, the isolated two-B200 N3 worker and the isolated two-B200 D1 worker all have current hash-bound identity/GPU diagnostics. N3 D01 passed and D02 is loading; D1 attempt003 is loading after writing a passed start-index-1 resume receipt; confirmation fixed-observation captures continue on the one-B200 workers.",
+  "request_arithmetic": {
+    "nonbehavioral_generation_qualification": 12,
+    "terminal_behavioral_valid": 585,
+    "terminal_behavioral_technical_invalid": 2,
+    "terminal_total": 599,
+    "active_requests_excluded": 0,
+    "invariant": "12_qualification + 585_valid_behavioral + 2_technical_invalid_behavioral = 599_terminal_requests; active_condition_has_0_requests"
+  },
+  "phase": "valid25_of_232_N3_development_complete_D1_D03_condition00_passed_condition01_active_D04_fenced_confirmation_inference_held",
+  "cluster_status": "Independent Git/PVC queue remains active without the work Mac. Results snapshot 00f42227360574fb931f85e194564f168094f315 records control e0b6ba10fc228066e89a40c664bb4070e398e8c2 at generation 484 with queue active_job_ids empty. D01/D02 attempt002 remain terminally reconciled. Matching D03 condition00 has an immutable passed receipt with 450 actions, 451 observations and 57 requests; condition01 completed reset/context-reset and is active with zero requests/actions at the snapshot. D1 development is 1/16 valid. D04 is unclaimed and fenced; confirmation inference remains unreleased.",
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_physical_time_still_unqualified",
     "runtime_D1": "passed_six_official_conditional_generation_requests_on_exact_two_B200_worker_after_four_preserved_pre_request_technical_invalid_attempts",
     "fixed_450_recorder": "passed_recorder_only_original_left_with_450_actions_451_observations_zero_model_requests",
-    "physical_layouts": "P00_candidate_01_and_D01_through_D04_candidate_00_accepted_model_blind_with_pose_and_current_capture_frozen; 22_of_24_confirmation_layouts_have_model_blind_acceptances; C17_and_C24_candidate_00_physical_rejections_have_candidate_01_spares_released",
-    "frame_time_camera_mapping": "N3_P00_attempt_004_passed_four_450_action_cells_with_60_joint_action_future_requests_and_native_camera_physics_control_receipts",
-    "annotation_development": "blind_two_rater_workflow_implemented_and_schema_validated; real_development_media_and_human_inputs_pending",
+    "physical_layouts": "P00, D01-D04 and all C01-C24 have accepted model-blind candidates and fixed-observation captures; C01, C17 and C24 retain candidate_00 physical rejections and use accepted candidate_01; the 24-layout confirmation fixture freeze passed with SHA-256 495046b5102bf1813b0c9afd72d57bf1c30243070d7b525faacf53a076a482ac; this is fixture/capture qualification only",
+    "frame_time_camera_mapping": "native request/control/physics/camera identities are recorded, but the authoritative generated-index to physical-target-time bridge remains unresolved for N3 and D1; frame/action ordinals and presentation FPS are rejected substitutes",
+    "annotation_development": "blind_two_rater_workflow_implemented_and_schema_validated; legitimate human development labels, consensus, usability decisions and empirical movement threshold remain pending",
     "confirmation_release": false
   },
   "scheduling": {
@@ -42,7 +65,7 @@
   "verified_baseline_tests": 23,
   "source_bundle_sha256": "a8cc6b8d393902bd4ea8561ec1236097d02c74c88c500b5477da72df576fde69",
   "automatic_background_execution": true,
-  "verified_workshop_tests": 266,
+  "verified_workshop_tests": 303,
   "prepared_schedule": {
     "path": "parallel_schedule.json",
     "jobs": 58,
@@ -82,9 +105,11 @@
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "bc12bf3498c4e0b75ddf99e2f72caab73b6767b3",
-    "cluster_staged_control_commit_at_snapshot": "47ef50d5f5dedbf75af252ffaad2596e5b8bafc8",
-    "latest_results_commit_fetched": "4d4cdcaa9bd65f8e4af3291be38d2f599f53b9bb",
+    "latest_control_commit": "e0b6ba10fc228066e89a40c664bb4070e398e8c2",
+    "cluster_staged_control_commit_at_snapshot": "e0b6ba10fc228066e89a40c664bb4070e398e8c2",
+    "cluster_control_generation_at_snapshot": 484,
+    "cluster_active_job_ids_at_snapshot": [],
+    "latest_results_commit_fetched": "00f42227360574fb931f85e194564f168094f315",
     "release_lock_recovery_receipt_sha256": "f985f78cc9a7955d9d038eea7a4da492e7d5f6ed49dfbde8d021806579bf0e8a",
     "release_lock_current_inode": 44796676,
     "post_recovery_detached_diagnostics_passed": 6
@@ -234,16 +259,17 @@
     }
   },
   "active_owned_jobs": [
-    "d1-p00-server-003",
-    "d1-p00-simulator-003",
-    "n3-development-d02-001",
-    "fixed-observation-c15-001",
-    "fixed-observation-c20-001"
+    "d1-development-d03-server-002",
+    "d1-development-d03-simulator-002"
+  ],
+  "fenced_unclaimed_jobs": [
+    "d1-development-d04-server-002",
+    "d1-development-d04-simulator-002"
   ],
   "behavioral_execution": {
     "pilot": {
       "planned_cells": 8,
-      "completed_valid_cells": 5,
+      "completed_valid_cells": 8,
       "N3": {
         "attempts": 4,
         "preserved_zero_valid_cell_technical_failures": 3,
@@ -266,15 +292,16 @@
       "D1": {
         "attempts": 3,
         "terminal_aggregate_technical_failures": 2,
-        "active_attempt": "d1-p00-003",
-        "launched_behavioral_cells_across_attempts": 2,
+        "active_attempt": null,
+        "passed_attempt": "d1-p00-simulator-003_with_hash_verified_attempt002_condition00_prefix",
+        "launched_behavioral_cells_across_attempts": 5,
         "technically_invalid_behavioral_cells": 1,
-        "scientifically_valid_raw_cells": 1,
-        "published_valid_cells": 0,
-        "valid_behavioral_model_requests": 57,
-        "valid_executed_actions": 450,
-        "valid_observations": 451,
-        "unrun_cells": 3,
+        "scientifically_valid_raw_cells": 4,
+        "published_valid_cells": 4,
+        "valid_behavioral_model_requests": 228,
+        "valid_executed_actions": 1800,
+        "valid_observations": 1804,
+        "unrun_cells": 0,
         "attempt_001_failure": "validated_server_reset_was_not_mapped_into_required_generic_recorder_attestation_fields",
         "attempt_001_server_receipt_sha256": "0dce9e7489b55d20e88cdbf3fea3b4113919b2beec689ce4d10c5ba0e5244c0d",
         "attempt_001_simulator_receipt_sha256": "c494022a1f03e21e8774f98978d2e65d9e46effc875ee7ced2a7c01415ca47ef",
@@ -282,49 +309,119 @@
         "attempt_002_valid_cell_receipt_sha256": "26cbd67d0087ed555177af6ac78fcf57c9acfcf1adccf148a61b6b8d8cefcb56",
         "attempt_002_parent_failure": "system_python_missing_numpy_while_deeply_revalidating_completed_npy_request_artifacts_after_valid_child_exit",
         "prefix_validation_receipt_sha256": "ae5956e4acbc66498a8d1e8bf896b57ca99119ffdc68c5e5968a1518e89a8361",
-        "resume_status": "attempt_003_claimed_with_hash_verified_start_cell_index_1_and_no_new_request_or_action_at_snapshot"
+        "resume_status": "complete; attempt003 reused only the validated attempt002 condition00 and launched conditions01-03 without replay",
+        "passed_simulator_aggregate_sha256": "20b4068ee9748daad7ae5e8350e8b7cf36d62c686af51a0d4b9653f9cecb2ab0",
+        "passed_server_aggregate_sha256": "95ef4351ffa494194ae6d9c4525acd8191b2d35438680f9284cad798d71f3201"
       }
     },
     "development": {
       "planned_cells": 32,
-      "completed_valid_cells": 4,
+      "completed_valid_cells": 17,
       "N3": {
-        "attempts": 3,
-        "active_attempt": "n3-development-d02-001",
+        "attempts": 6,
+        "terminal_attempts": 6,
+        "active_attempt": null,
         "passed_blocks": [
-          "n3-development-d01-002"
+          "n3-development-d01-002",
+          "n3-development-d02-002",
+          "n3-development-d03-001",
+          "n3-development-d04-001"
         ],
-        "launched_behavioral_cells": 4,
-        "completed_valid_cells": 4,
-        "valid_behavioral_model_requests": 60,
-        "valid_behavioral_actions": 1800,
-        "valid_behavioral_observations": 1804,
-        "unrun_cells": 12,
+        "launched_behavioral_cells": 17,
+        "completed_valid_cells": 16,
+        "technically_invalid_behavioral_cells": 1,
+        "valid_behavioral_model_requests": 240,
+        "technical_invalid_behavioral_model_requests": 1,
+        "valid_behavioral_actions": 7200,
+        "valid_behavioral_observations": 7216,
+        "unrun_cells": 0,
         "attempt_001_receipt_sha256": "47081b115a70f707e492429cb50182274d22ea042bdd1612882f7f66834da035",
         "attempt_001_failure": "system_python_missing_numpy_during_zero_array_legacy_reset_descriptor_validation",
         "d01_passed_receipt_sha256": "a9ca815c6e99b270357220fa5ccb97562c50d667dd3c23745d460e5ec8c053de",
         "d01_results_commit": "4d4cdcaa9bd65f8e4af3291be38d2f599f53b9bb",
-        "retry_status": "D01_passed_and_D02_loading_under_source_91aaf8f5337bbf3a03e7cb65062ae1df77b6bb12",
-        "remaining_blocks_released": [
-          "n3-development-d02-001",
-          "n3-development-d03-001",
-          "n3-development-d04-001"
-        ]
+        "d02_passed_receipt_sha256": "efd2ea9f2f015c671a9d9d2d9dc22c1c1f9f5f3ffd87e4810acd5e3767b2f73e",
+        "d02_results_commit": "6624cd0a2f6205bbafd032ef95ac328a69e7f30f",
+        "d02_cell_receipt_sha256s": [
+          "7d62073b04e9c762c9b543f4de30ecfd4c38122cf8284ee8a68597dff9a16736",
+          "3a448afb85b355d1eb12b6bc933b26c367bfa53803659b5663b6284a611b6fe3",
+          "06eeaa04de46931f2f6e2985edab41371611f93f0e377b56333a7ea09178ccb0",
+          "b8a28bb9f7511868656caf5505b540e8620a6e00ec58afa4847f1bfc5e8e1dcc"
+        ],
+        "d03_passed_receipt_sha256": "d3e85f2087d7e24d57974a9344c333408e9769552715d4669e16f1e059082d0e",
+        "d04_passed_receipt_sha256": "e5f3206c6da2b9caa2ca9cd4c3ed82142157656ac9a1d1744486d14fa6e57318",
+        "d02_attempt_001_status": "technical_invalid_after_one_true_request_zero_actions_zero_valid_cells_three_unrun",
+        "d02_attempt_002_status": "passed_four_valid_cells_1800_actions_1804_observations_60_requests_zero_invalid_censored_unrun_child_reaped",
+        "remaining_blocks_released": []
       },
       "D1": {
-        "attempts": 0,
-        "unrun_cells": 16,
-        "release_gate": "complete_D1_P00_pilot_receipt"
+        "paired_block_attempts": 8,
+        "attempt_001_queue_job_failures": 8,
+        "attempt_001_scientific_cells_launched": 0,
+        "attempt_001_model_loads": 0,
+        "attempt_001_model_requests": 0,
+        "attempt_001_behavioral_actions": 0,
+        "attempt_002_queue_jobs_staged": 0,
+        "attempt_002_queue_jobs_claimed": 2,
+        "attempt_002_queue_jobs_failed": 4,
+        "attempt_002_queue_jobs_fenced_unclaimed": 2,
+        "attempt_002_terminal_behavioral_cells_launched": 2,
+        "attempt_002_active_behavioral_cells_not_counted": 1,
+        "attempt_002_technical_invalid_behavioral_cells": 1,
+        "attempt_002_completed_valid_behavioral_cells": 1,
+        "attempt_002_terminal_model_requests": 57,
+        "attempt_002_terminal_behavioral_actions": 450,
+        "attempt_002_terminal_behavioral_observations": 451,
+        "attempt_002_d01_server_status": "technical_failure_before_server_ready_after_rank1_SIGSEGV_with_no_simulator_claim_or_new_model_request_action_cell",
+        "attempt_002_d01_server_receipt_sha256": "4259f247d432feacee31d60c2c680f8a258664a22504c4a5af2baa41cd58c331",
+        "attempt_002_d01_simulator_status": "exactly_terminated_zero_launched_cells_zero_requests_zero_actions_four_unrun",
+        "attempt_002_d01_simulator_receipt_sha256": "1dc29e77e50dd13b679faff050192a194a38b86d777e5396c447fae8538c32b6",
+        "attempt_002_d02_server_status": "reached_matching_D02_ready_then_exactly_terminated_zero_requests_actions_cells",
+        "attempt_002_d02_server_receipt_sha256": "697d663b5d77ea60e80d2ca5754891d307baf33068a7265683333ff9d623e312",
+        "attempt_002_d02_simulator_status": "lease_expired_fail_closed_one_launched_technical_invalid_cell_zero_requests_actions_three_unrun",
+        "attempt_002_d02_simulator_receipt_sha256": "358605a06b178d44d58b3f3efc5145e37b022806b83c0d7d3539cb15503b0d78",
+        "attempt_002_d03_condition_00_status": "passed_450_actions_451_observations_57_requests",
+        "attempt_002_d03_condition_00_cell_receipt_sha256": "a755f3f806ea73a395268d7cda38748b1bb6a7cdd60c7d4ee5e9872d7f912e26",
+        "attempt_002_d03_condition_01_status": "active_after_reset_and_context_reset_zero_requests_zero_actions_not_counted",
+        "attempt_002_pairing_state": "D01_D02_mismatch_contained_by_run-bound coordination and exact process-group terminations; matching D03 pair is live on condition01 after one passed cell; D04 pair is unclaimed and fenced",
+        "completed_valid_cells": 1,
+        "valid_behavioral_model_requests": 57,
+        "valid_behavioral_actions": 450,
+        "valid_behavioral_observations": 451,
+        "technically_invalid_behavioral_cells": 1,
+        "active_behavioral_cells_not_counted": 1,
+        "unrun_cells": 14,
+        "attempt_001_failure": "all four server/simulator pairs received the raw fixed-observation capture instead of its enclosing queue receipt and failed prerequisite schema validation before model load/reset/request/action",
+        "prerequisite_preflights": {
+          "staged": 0,
+          "passed": 4,
+          "interrupted": 1,
+          "terminal_attempts": 5,
+          "statuses": {
+            "d1-development-d01-prerequisite-preflight-001": "interrupted_before_receipt_returncode_minus_15_zero_science",
+            "d1-development-d01-prerequisite-preflight-002": "passed_receipt_sha256_9da254c289e8aa1dbd340ab37ba52b32a76fd98503681fb0dcff6ac24b8a1ab3",
+            "d1-development-d02-prerequisite-preflight-001": "passed_receipt_sha256_418365e8376bc29cd0afbda4b53361d829b7c5e0c685b48a480a1f1f15abe39f",
+            "d1-development-d03-prerequisite-preflight-001": "passed_receipt_sha256_106f7b4eb3f774aaf759110c058dbdca74630f19b415b268fdd045934e621325",
+            "d1-development-d04-prerequisite-preflight-001": "passed_receipt_sha256_6a51fa6abfa0c1ee1e534aa36fa3429e8c0fcd3077eb68770c6f72400df845a6"
+          }
+        },
+        "release_gate": "passed_all_four_zero-model_prerequisites; D01 and D02 attempt002 are terminally reconciled; D03 condition00 is valid and condition01 is active but uncounted; D04 is fenced"
       }
     },
     "confirmation": {
       "planned_cells": 192,
       "completed_valid_cells": 0,
       "released": false,
+      "inference_cells_launched": 0,
+      "hold_reasons": [
+        "complete model-qualified development evidence",
+        "authoritative native generated-target timing qualification",
+        "legitimate two-rater development labels and reproducible consensus",
+        "empirical movement threshold and frozen usability decisions"
+      ],
       "fixture_attempts_only": {
         "technical_invalid_zero_action_zero_request": 7,
         "physical_rejections": 3,
-        "accepted_layouts": 22,
+        "accepted_layouts": 24,
         "accepted_layout_ids": [
           "C01",
           "C02",
@@ -342,18 +439,24 @@
           "C14",
           "C15",
           "C16",
+          "C17",
           "C18",
           "C19",
           "C20",
           "C21",
           "C22",
-          "C23"
+          "C23",
+          "C24"
         ],
-        "remaining_layouts_in_model_blind_queue": 2,
+        "remaining_layouts_in_model_blind_queue": 0,
+        "fixed_observation_captures_passed": 24,
+        "fixed_observation_captures_remaining": 0,
         "model_requests": 0,
         "behavioral_actions": 0,
         "reason_for_preserved_technical_invalid_attempts": "new_worker_hostname_absent_from_static_deployment_receipt",
-        "current_retry_gate": "passed_fresh_hash_bound_dynamic_worker_diagnostics"
+        "current_retry_gate": "complete",
+        "fixture_freeze_job": "confirmation-fixture-freeze-001_passed",
+        "fixture_freeze_sha256": "495046b5102bf1813b0c9afd72d57bf1c30243070d7b525faacf53a076a482ac"
       }
     }
   },

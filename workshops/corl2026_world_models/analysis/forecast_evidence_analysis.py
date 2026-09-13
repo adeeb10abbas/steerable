@@ -1452,12 +1452,19 @@ def request_metrics(
         if early_predicted is not None and early_executed is not None:
             early_forecast_error = distance(early_executed["relative"], early_predicted["relative"])
             early_persistence_error = distance(early_executed["relative"], current["relative"])
+            early_skill = early_persistence_error - early_forecast_error
             result.update(
                 {
                     "early_observable": True,
                     "early_forecast_error": early_forecast_error,
                     "early_persistence_error": early_persistence_error,
-                    "early_skill": early_persistence_error - early_forecast_error,
+                    "early_skill": early_skill,
+                    # This copy is deliberately created only when the same
+                    # request has observable primary and earlier targets.  It
+                    # prevents a later aggregation from subtracting marginal
+                    # means drawn from different request populations.
+                    "primary_skill_paired_with_early": result["skill"],
+                    "primary_minus_early_skill": result["skill"] - early_skill,
                 }
             )
     return result
@@ -1528,6 +1535,8 @@ def _cell_summary(
         "early_forecast_error",
         "early_persistence_error",
         "early_skill",
+        "primary_skill_paired_with_early",
+        "primary_minus_early_skill",
     ):
         means[key] = mean_or_none(row[key] for row in metrics if key in row)
     return {
@@ -2004,7 +2013,50 @@ def build_report(context: Mapping[str, Any]) -> dict[str, Any]:
                 "bowl_forecast_error",
             )
         }
-        early_supported_count = sum(row["early_observable"] for row in request_rows if row["model_id"] == model)
+        jointly_observable_early_count = sum(
+            row["early_observable"] for row in request_rows if row["model_id"] == model
+        )
+        early_horizon = alignment.get("early_horizon")
+        if early_horizon is None:
+            earlier_horizon_report: dict[str, Any] = {
+                "status": "unsupported_no_earlier_qualified_exposed_target",
+                "qualified_target": None,
+                "observable_requests": 0,
+            }
+        elif not jointly_observable_early_count:
+            earlier_horizon_report = {
+                "status": "qualified_but_unobservable_in_consensus",
+                "qualified_target": dict(early_horizon),
+                "observable_requests": 0,
+            }
+        else:
+            earlier_horizon_report = {
+                "status": "supported_and_observed",
+                "qualified_target": dict(early_horizon),
+                "observable_requests": jointly_observable_early_count,
+                "paired_skill_comparison": {
+                    "definition": (
+                        "primary_skill_at_H minus early_skill for the same request; "
+                        "request pairs are averaged within episode, equally across four "
+                        "conditions, then bootstrapped across independent layouts"
+                    ),
+                    "primary_skill_at_H": _metric_report(
+                        cell_summaries,
+                        model=model,
+                        metric="primary_skill_paired_with_early",
+                    ),
+                    "early_skill": _metric_report(
+                        cell_summaries,
+                        model=model,
+                        metric="early_skill",
+                    ),
+                    "primary_minus_early_skill": _metric_report(
+                        cell_summaries,
+                        model=model,
+                        metric="primary_minus_early_skill",
+                    ),
+                },
+            }
         models[model] = {
             "branch_status": "qualified_and_included",
             "baseline_errors_and_skill": baseline,
@@ -2019,28 +2071,7 @@ def build_report(context: Mapping[str, Any]) -> dict[str, Any]:
                 "moving": _stratum_report(cell_summaries, request_rows, model, "moving"),
             },
             "movement_decomposition": decomposition,
-            "earlier_horizon": (
-                {
-                    "status": "unsupported_no_earlier_qualified_exposed_target",
-                    "qualified_target": None,
-                    "observable_requests": 0,
-                }
-                if alignment.get("early_horizon") is None
-                else {
-                    "status": (
-                        "supported_and_observed"
-                        if early_supported_count
-                        else "qualified_but_unobservable_in_consensus"
-                    ),
-                    "qualified_target": dict(alignment["early_horizon"]),
-                    "skill": (
-                        _metric_report(cell_summaries, model=model, metric="early_skill")
-                        if early_supported_count
-                        else None
-                    ),
-                    "observable_requests": early_supported_count,
-                }
-            ),
+            "earlier_horizon": earlier_horizon_report,
             "declared_rule_examples": _example_videos(roster, model),
         }
         model_requests = [row for row in request_rows if row["model_id"] == model]

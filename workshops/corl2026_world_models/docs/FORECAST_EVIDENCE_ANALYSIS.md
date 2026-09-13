@@ -143,9 +143,12 @@ The output also includes:
 - action-450 versus first-success instruction-response controls;
 - moving and stationary strata using the frozen development q95 threshold;
 - separate relative, cube, and bowl motion/error components;
-- an earlier-horizon result only at the exact frozen qualified target, with
-  unsupported qualification kept distinct from qualified-but-unobservable
-  human labels;
+- an earlier-horizon result only at the exact frozen qualified target. Primary
+  and earlier skill are paired within the same selected request before the
+  episode/condition/layout aggregation, and the reported contrast is primary
+  skill at H minus earlier skill. Unsupported qualification is kept distinct
+  from qualified-but-unobservable human labels, and neither state emits a
+  numerical contrast;
 - per-condition request-inventory/timing eligibility, zero-eligible episodes,
   censor reasons, localization/ambiguity coverage, exact cell/request audits,
   and the per-model planned/complete/censored/technical-invalid/unrun table;

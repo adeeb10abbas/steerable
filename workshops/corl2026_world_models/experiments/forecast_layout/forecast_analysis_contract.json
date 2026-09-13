@@ -59,7 +59,18 @@
     "decomposition": ["relative_cube_bowl", "cube", "bowl"]
   },
   "coverage": "per condition: complete request inventory, timing/camera/action eligibility, ineligibility reasons, zero-eligible episodes, recording status/censor reasons, selected localization and ambiguity coverage",
-  "earlier_horizon": "use only the exact frozen early_horizon object; distinguish no qualified target from qualified but human-consensus-unobservable evidence",
+  "earlier_horizon": {
+    "target_rule": "use only the exact frozen early_horizon object",
+    "request_pairing": "primary and earlier skill must be observable on the same selected request; marginal request populations must never be subtracted",
+    "contrast": "primary_skill_at_H - early_skill",
+    "weighting": "mean paired requests within episode, equally over four conditions, then 10000 fixed-seed bootstrap resamples of independent layouts",
+    "states": [
+      "unsupported_no_earlier_qualified_exposed_target",
+      "qualified_but_unobservable_in_consensus",
+      "supported_and_observed"
+    ],
+    "no_joint_observations": "emit no paired_skill_comparison"
+  },
   "model_sample_size_table": "include the full hash-bound model configuration, frozen alignment fields, and separate planned/valid-complete/valid-censored/technical-invalid/unrun counts",
   "annotation_quality": "report exact first-pass agreement and independent-adjudication image counts and rates, bound to the final consensus, restricted map, adjudication map, anonymous rater-code hashes, and response artifact hashes",
   "example_selection": "For each included model and condition, choose the valid-complete cell minimizing SHA256(analysis_seed NUL model NUL condition NUL cell_id); do not use labels, errors, success, or visual outcomes."

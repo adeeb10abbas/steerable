@@ -1,6 +1,7 @@
 import copy
 import hashlib
 import importlib.util
+import math
 from pathlib import Path
 import tempfile
 import unittest
@@ -226,6 +227,33 @@ def make_context(*, branch="reduced_n3", predicted_x=51.8):
     return context
 
 
+def install_early_horizon(context, *, predicted_x=51.0, executed_x=51.0):
+    target = {
+        "horizon_s": 0.25,
+        "generated_frame_index": 1,
+        "target_executed_action_offset": 4,
+    }
+    for alignment in context["selection"]["alignment_contracts"]:
+        alignment["early_horizon"] = copy.deepcopy(target)
+    for index, request_id in enumerate(sorted(context["selected"])):
+        context["selected"][request_id]["early_horizon_supported"] = True
+        roles = context["labels"][request_id]
+        roles["early_predicted"] = consensus_label((predicted_x, 50.0))
+        roles["early_executed"] = consensus_label((executed_x, 50.0))
+        roles["early_predicted"]["restricted_asset_id"] = f"asset_{index:03d}_early_predicted"
+        roles["early_executed"]["restricted_asset_id"] = f"asset_{index:03d}_early_executed"
+    decisions = [
+        {
+            "restricted_asset_id": label["restricted_asset_id"],
+            "decision_source": "first_pass_exact_agreement",
+        }
+        for role_rows in context["labels"].values()
+        for label in role_rows.values()
+    ]
+    install_annotation_quality(context, decisions)
+    return target
+
+
 class ForecastEvidenceAnalysisTests(unittest.TestCase):
     def test_annotation_quality_is_rederived_from_consensus_decisions(self):
         consensus = {
@@ -363,6 +391,126 @@ class ForecastEvidenceAnalysisTests(unittest.TestCase):
         self.assertLess(skill["estimate"], 0)
         self.assertLess(skill["ci95"][1], 0)
         self.assertTrue(report["claim_boundaries"]["either_sign_reported"])
+
+    def test_earlier_horizon_reports_exact_same_request_paired_contrast(self):
+        context = make_context()
+        target = install_early_horizon(context)
+        report = analysis.build_report(context)
+        earlier = report["models"]["N3"]["earlier_horizon"]
+        self.assertEqual(earlier["status"], "supported_and_observed")
+        self.assertEqual(earlier["qualified_target"], target)
+        self.assertEqual(earlier["observable_requests"], 96)
+
+        diagonal = math.hypot(100.0, 100.0)
+        expected_primary = 1.8 / diagonal
+        expected_early = 1.0 / diagonal
+        expected_delta = 0.8 / diagonal
+        comparison = earlier["paired_skill_comparison"]
+        expected = {
+            "primary_skill_at_H": expected_primary,
+            "early_skill": expected_early,
+            "primary_minus_early_skill": expected_delta,
+        }
+        for key, value in expected.items():
+            metric = comparison[key]
+            self.assertAlmostEqual(metric["estimate"], value)
+            self.assertAlmostEqual(metric["ci95"][0], value)
+            self.assertAlmostEqual(metric["ci95"][1], value)
+            self.assertEqual(metric["layout_pairs"], 24)
+            self.assertEqual(metric["resamples"], 10_000)
+            self.assertEqual(metric["seed"], analysis.ANALYSIS_SEED)
+
+    def test_earlier_horizon_pairing_never_subtracts_marginal_request_means(self):
+        request = {
+            "source_request_id": "missing-early",
+            "cell_id": "cell",
+            "model_id": "N3",
+            "layout_pair_id": "C01",
+            "condition_id": "original_left",
+            "history_mode": "persistence_at_initial_request",
+            "target_physical_time_s": 0.5,
+            "early_horizon_supported": True,
+        }
+        missing_early_labels = {
+            "current": consensus_label((50.0, 50.0)),
+            "predicted": consensus_label((52.0, 50.0)),
+            "executed": consensus_label((52.0, 50.0)),
+            "early_predicted": consensus_label((51.0, 50.0)),
+            "early_executed": consensus_label((51.0, 50.0)),
+        }
+        missing_early_labels["early_predicted"]["annotation"]["cube_resolvability"] = "unresolvable"
+        marginal_only = analysis.request_metrics(
+            request, missing_early_labels, None, movement_threshold=0
+        )
+        self.assertTrue(marginal_only["primary_observable"])
+        self.assertFalse(marginal_only["early_observable"])
+        self.assertNotIn("primary_skill_paired_with_early", marginal_only)
+        self.assertNotIn("primary_minus_early_skill", marginal_only)
+
+        paired_request = {**request, "source_request_id": "jointly-observable"}
+        paired_labels = {
+            "current": consensus_label((50.0, 50.0)),
+            "predicted": consensus_label((51.5, 50.0)),
+            "executed": consensus_label((52.0, 50.0)),
+            "early_predicted": consensus_label((50.5, 50.0)),
+            "early_executed": consensus_label((51.0, 50.0)),
+        }
+        paired = analysis.request_metrics(
+            paired_request, paired_labels, None, movement_threshold=0
+        )
+        summary = analysis._cell_summary(
+            {
+                "cell_id": "cell",
+                "model_id": "N3",
+                "layout_pair_id": "C01",
+                "condition_id": "original_left",
+                "recording_status": "valid_complete",
+            },
+            [marginal_only, paired],
+        )
+        self.assertNotAlmostEqual(
+            summary["means"]["skill"],
+            summary["means"]["primary_skill_paired_with_early"],
+        )
+        self.assertAlmostEqual(
+            summary["means"]["primary_skill_paired_with_early"], paired["skill"]
+        )
+        self.assertAlmostEqual(
+            summary["means"]["primary_minus_early_skill"],
+            paired["skill"] - paired["early_skill"],
+        )
+
+    def test_earlier_horizon_state_boundaries_and_full_model_separation(self):
+        unsupported = analysis.build_report(make_context())
+        unsupported_early = unsupported["models"]["N3"]["earlier_horizon"]
+        self.assertEqual(
+            unsupported_early["status"],
+            "unsupported_no_earlier_qualified_exposed_target",
+        )
+        self.assertNotIn("paired_skill_comparison", unsupported_early)
+
+        context = make_context(branch="full_two_model")
+        install_early_horizon(context)
+        for request_id, request in context["selected"].items():
+            if request["model_id"] == "D1":
+                context["labels"][request_id]["early_predicted"]["annotation"][
+                    "cube_resolvability"
+                ] = "unresolvable"
+        report = analysis.build_report(context)
+        n3_early = report["models"]["N3"]["earlier_horizon"]
+        d1_early = report["models"]["D1"]["earlier_horizon"]
+        self.assertEqual(n3_early["status"], "supported_and_observed")
+        self.assertEqual(
+            n3_early["paired_skill_comparison"]["primary_minus_early_skill"][
+                "layout_pairs"
+            ],
+            24,
+        )
+        self.assertEqual(
+            d1_early["status"], "qualified_but_unobservable_in_consensus"
+        )
+        self.assertEqual(d1_early["observable_requests"], 0)
+        self.assertNotIn("paired_skill_comparison", d1_early)
 
     def test_invalid_censored_and_unrun_cells_stay_separate(self):
         context = make_context()

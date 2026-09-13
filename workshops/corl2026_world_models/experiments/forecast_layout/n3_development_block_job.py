@@ -68,6 +68,19 @@ P00_CELL_IDS = tuple(
     f"wmf1__pilot__P00__N3__{condition.replace('-', '__')}"
     for condition in P00_CONDITION_ORDER
 )
+LEGACY_P00_SOURCE_COMMIT = "b8914413f6293c165dd3a57c737f4b977e7e84be"
+LEGACY_P00_AGGREGATE_SHA256 = (
+    "5a7a861acc82615b4eb7aa92308f40f7a0c965e65b6edaf12f776cb64b18b0e0"
+)
+LEGACY_P00_CELL_RECEIPT_SHA256S = (
+    "0a53e9b6df118d79a6361f2f1d1853ec42667120fc1d7caa50d4c3887351b8b9",
+    "7a1a9ff1b3f31f4f56634a75c27ada25db5c7113f986bf64202e85febbc8794d",
+    "805e6723040a4fb5a7e7574a8fe489211a61207379833db5b14924401282220e",
+    "83444671630fbe97f0da50fa938c0c76be1cf65fa7143b33b9abc7fb5038cea1",
+)
+LEGACY_P00_SERVER_READY_SHA256 = (
+    "07ff8b7370d811f98e1474cd8fbc8575d0062f2c76b19f010196f1dbe940b5ba"
+)
 
 RAW_PARENT = Path(
     "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/N3"
@@ -496,6 +509,7 @@ def _validate_cell_receipt(
     cell_ids: Sequence[str],
     schema_version: str,
     condition_index: int,
+    legacy_p00_source_commit: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     pilot.require(0 <= condition_index < len(cell_ids), "resume_cell_index_invalid")
     receipt = pilot.load_json(path, "resume_cell_receipt_unreadable")
@@ -539,26 +553,45 @@ def _validate_cell_receipt(
             receipt.get("transport_contract") == NO_REPLAY_TRANSPORT_CONTRACT,
             "resume_cell_transport_contract_mismatch",
         )
-    source_pins = receipt.get("source_pins")
-    pilot.require(isinstance(source_pins, Mapping), "resume_cell_source_pin_mismatch")
-    pilot.require(
-        isinstance(source_pins.get("study_commit"), str)
-        and pilot.COMMIT_RE.fullmatch(source_pins["study_commit"]) is not None,
-        "resume_cell_study_commit_invalid",
-    )
-    pilot.require(
-        source_pins.get("robolab_commit") == pilot.ROBOLAB_COMMIT
-        and source_pins.get("cosmos_commit") == pilot.COSMOS_COMMIT,
-        "resume_cell_source_pin_mismatch",
-    )
-    pilot.require(
-        receipt.get("checkpoint_pin")
-        == {
-            "revision": pilot.CHECKPOINT_REVISION,
-            "aggregate_sha256": pilot.CHECKPOINT_AGGREGATE_SHA256,
-        },
-        "resume_cell_checkpoint_pin_mismatch",
-    )
+    if legacy_p00_source_commit is None:
+        source_pins = receipt.get("source_pins")
+        pilot.require(isinstance(source_pins, Mapping), "resume_cell_source_pin_mismatch")
+        pilot.require(
+            isinstance(source_pins.get("study_commit"), str)
+            and pilot.COMMIT_RE.fullmatch(source_pins["study_commit"]) is not None,
+            "resume_cell_study_commit_invalid",
+        )
+        pilot.require(
+            source_pins.get("robolab_commit") == pilot.ROBOLAB_COMMIT
+            and source_pins.get("cosmos_commit") == pilot.COSMOS_COMMIT,
+            "resume_cell_source_pin_mismatch",
+        )
+        pilot.require(
+            receipt.get("checkpoint_pin")
+            == {
+                "revision": pilot.CHECKPOINT_REVISION,
+                "aggregate_sha256": pilot.CHECKPOINT_AGGREGATE_SHA256,
+            },
+            "resume_cell_checkpoint_pin_mismatch",
+        )
+        validated_study_commit = source_pins["study_commit"]
+    else:
+        pilot.require(phase == "pilot", "legacy_p00_profile_used_outside_pilot")
+        pilot.require(
+            legacy_p00_source_commit == LEGACY_P00_SOURCE_COMMIT,
+            "legacy_p00_source_commit_changed",
+        )
+        pilot.require(
+            all(
+                key not in receipt
+                for key in ("source_pins", "checkpoint_pin", "server_begin_receipt")
+            ),
+            "legacy_p00_receipt_shape_changed",
+        )
+        # The aggregate commit is authenticated by the exact released
+        # aggregate hash.  Validate it against the completion's existing
+        # identity below; do not manufacture the absent source_pins field.
+        validated_study_commit = legacy_p00_source_commit
     for key in ("adapter_journal", "native_timing_support", "viewport_video"):
         _verify_descriptor(receipt.get(key), f"resume_{phase}_{key}")
     completion_identity = _verify_descriptor(
@@ -619,7 +652,7 @@ def _validate_cell_receipt(
         "model_config": pilot.MODEL_CONFIG,
         "effective_seed": effective_seed,
         "source_identity": (
-            f"study:{source_pins['study_commit']};robolab:{pilot.ROBOLAB_COMMIT};"
+            f"study:{validated_study_commit};robolab:{pilot.ROBOLAB_COMMIT};"
             f"cosmos:{pilot.COSMOS_COMMIT};pose:{pose_manifest_sha256}"
         ),
         "checkpoint_identity": (
@@ -633,8 +666,34 @@ def _validate_cell_receipt(
             "resume_adapter_identity_mismatch",
             key,
         )
-    begin = receipt.get("server_begin_receipt")
+    if legacy_p00_source_commit is None:
+        begin = receipt.get("server_begin_receipt")
+    else:
+        context_descriptor = completion.get("context_reset_artifact")
+        pilot.require(
+            isinstance(context_descriptor, Mapping)
+            and context_descriptor.get("role") == "context_reset",
+            "legacy_p00_context_reset_artifact_missing",
+        )
+        try:
+            import recording_adapter
+
+            begin = recording_adapter.load_payload(
+                Path(completion_identity["path"]).parent,
+                context_descriptor,
+            )
+        except BaseException as error:
+            raise pilot.N3BehavioralPilotError(
+                "legacy_p00_context_reset_artifact_invalid"
+            ) from error
     pilot.require(isinstance(begin, Mapping) and begin.get("passed") is True, "resume_begin_receipt_invalid")
+    pilot.require(
+        begin.get("reset_scope") == pilot.CONTEXT_RESET_SCOPE
+        and begin.get("cell_id") == cell_ids[condition_index]
+        and begin.get("condition_index") == condition_index
+        and begin.get("effective_seed") == effective_seed,
+        "resume_begin_receipt_identity_mismatch",
+    )
     context_id = begin.get("server_context_id")
     pilot.require(isinstance(context_id, str) and context_id, "resume_context_id_missing")
     reset = begin.get("cache_reset_evidence")
@@ -769,6 +828,12 @@ def verify_passed_p00_pilot(path: Path, expected_sha256: str) -> dict[str, Any]:
         and pilot.COMMIT_RE.fullmatch(receipt["source_commit"]) is not None,
         "p00_pilot_source_commit_invalid",
     )
+    legacy_profile = receipt["source_commit"] == LEGACY_P00_SOURCE_COMMIT
+    if legacy_profile:
+        pilot.require(
+            identity["sha256"] == LEGACY_P00_AGGREGATE_SHA256,
+            "p00_legacy_aggregate_sha256_changed",
+        )
     counts = receipt.get("counts")
     expected_counts = {
         "planned_behavioral_cells": 4,
@@ -790,6 +855,12 @@ def verify_passed_p00_pilot(path: Path, expected_sha256: str) -> dict[str, Any]:
     conditions = tuple(_condition_tuple(label) for label in P00_CONDITION_ORDER)
     descriptors = receipt.get("cell_receipts")
     pilot.require(isinstance(descriptors, list) and len(descriptors) == 4, "p00_pilot_cell_inventory_invalid")
+    if legacy_profile:
+        pilot.require(
+            tuple(row.get("sha256") for row in descriptors)
+            == LEGACY_P00_CELL_RECEIPT_SHA256S,
+            "p00_legacy_cell_receipt_inventory_changed",
+        )
     contexts: list[str] = []
     cell_values: list[dict[str, Any]] = []
     cells: list[dict[str, Any]] = []
@@ -805,9 +876,17 @@ def verify_passed_p00_pilot(path: Path, expected_sha256: str) -> dict[str, Any]:
             cell_ids=P00_CELL_IDS,
             schema_version=PILOT_CELL_RECEIPT_SCHEMA,
             condition_index=index,
+            legacy_p00_source_commit=(
+                LEGACY_P00_SOURCE_COMMIT if legacy_profile else None
+            ),
         )
         pilot.require(cell_identity == observed, "p00_pilot_cell_descriptor_changed")
-        contexts.append(cell["server_begin_receipt"]["server_context_id"])
+        if not legacy_profile:
+            pilot.require(
+                cell["source_pins"]["study_commit"] == receipt["source_commit"],
+                "p00_pilot_cell_source_commit_changed",
+            )
+        contexts.append(cell["server_end_receipt"]["server_context_id"])
         cell_values.append(cell)
         cells.append(observed)
     pilot.require(len(contexts) == len(set(contexts)), "p00_pilot_context_id_reused")
@@ -907,8 +986,18 @@ def verify_passed_p00_pilot(path: Path, expected_sha256: str) -> dict[str, Any]:
         "p00_pilot_topology_invalid",
     )
     ready_identity = _verify_descriptor(receipt.get("server_ready"), "p00_pilot_server_ready")
+    if legacy_profile:
+        pilot.require(
+            ready_identity["sha256"] == LEGACY_P00_SERVER_READY_SHA256,
+            "p00_legacy_server_ready_changed",
+        )
     ready = pilot.load_json(
         Path(ready_identity["path"]), "p00_pilot_server_ready_unreadable"
+    )
+    ready_request_count = (
+        ready.get("expected_behavioral_request_count")
+        if legacy_profile
+        else ready.get("planned_block_behavioral_request_count")
     )
     pilot.require(
         ready.get("schema_version") == pilot.SERVER_READY_SCHEMA
@@ -916,7 +1005,7 @@ def verify_passed_p00_pilot(path: Path, expected_sha256: str) -> dict[str, Any]:
         and ready.get("block_id") == P00_BLOCK_ID
         and ready.get("model_config") == "N3"
         and ready.get("expected_cell_order") == list(P00_CELL_IDS)
-        and ready.get("planned_block_behavioral_request_count") == 60
+        and ready_request_count == 60
         and ready.get("generation_qualification_requests_rerun") == 0,
         "p00_pilot_server_ready_invalid",
     )
@@ -936,6 +1025,16 @@ def verify_passed_p00_pilot(path: Path, expected_sha256: str) -> dict[str, Any]:
         "pilot_behavioral_actions": 4 * pilot.ACTION_CAP,
         "pilot_behavioral_model_requests": 4 * pilot.REQUEST_COUNT,
         "new_generation_qualification_requests": 0,
+        "validation_profile": {
+            "name": (
+                "exact_b891_p00_attempt004_legacy_success"
+                if legacy_profile
+                else "strict_current_p00_receipt"
+            ),
+            "source_commit": receipt["source_commit"],
+            "aggregate_sha256": identity["sha256"],
+            "missing_fields_synthesized": False,
+        },
     }
 
 

@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 
 WORKSHOP = Path(__file__).resolve().parents[1]
@@ -16,6 +17,7 @@ import fixture_layouts  # noqa: E402
 import model_blind_fixture_gate as fixture_gate  # noqa: E402
 import n3_behavioral_pilot_job as pilot  # noqa: E402
 import n3_development_block_job as development  # noqa: E402
+import recording_adapter  # noqa: E402
 import recorder_qualification_job as recorder_job  # noqa: E402
 
 
@@ -127,7 +129,11 @@ def _make_passed_cell(
         "viewport_video": pilot.file_identity(video),
         "server_begin_receipt": {
             "passed": True,
+            "reset_scope": pilot.CONTEXT_RESET_SCOPE,
             "server_context_id": context_id,
+            "cell_id": block.cell_ids[index],
+            "condition_index": index,
+            "effective_seed": block.effective_seed,
             "cache_reset_evidence": {
                 "passed": True,
                 "episode_context_id": context_id,
@@ -243,7 +249,9 @@ def _make_fixture_release(
     )
 
 
-def _make_passed_p00_pilot(root: Path) -> tuple[Path, str]:
+def _make_passed_p00_pilot(
+    root: Path, *, legacy_b891_shape: bool = False
+) -> tuple[Path, str]:
     prerequisites_root = root / "pilot_prerequisites"
     prerequisites_root.mkdir()
     simple = {
@@ -310,10 +318,30 @@ def _make_passed_p00_pilot(root: Path) -> tuple[Path, str]:
         for label in development.P00_CONDITION_ORDER
     )
     cell_descriptors = []
+    source_commit = (
+        development.LEGACY_P00_SOURCE_COMMIT if legacy_b891_shape else STUDY_COMMIT
+    )
     for index, (arm, command, _task) in enumerate(conditions):
         cell_root = root / "pilot_attempt" / "cells" / f"{index:02d}-cell"
         artifacts = cell_root / "artifacts"
         artifacts.mkdir(parents=True)
+        context = f"pilot-context-{index}"
+        begin_receipt = {
+            "passed": True,
+            "reset_scope": pilot.CONTEXT_RESET_SCOPE,
+            "server_context_id": context,
+            "cell_id": development.P00_CELL_IDS[index],
+            "condition_index": index,
+            "effective_seed": development.P00_EFFECTIVE_SEED,
+            "cache_reset_evidence": {
+                "passed": True,
+                "episode_context_id": context,
+                "unresolved_mutable_temporal_fields": [],
+            },
+        }
+        context_reset_artifact = recording_adapter._PayloadStore(
+            artifacts / "payloads"
+        ).write("context_reset", begin_receipt)
         completion = _write_json(
             artifacts / "adapter_completion.json",
             {
@@ -330,7 +358,7 @@ def _make_passed_p00_pilot(root: Path) -> tuple[Path, str]:
                     "model_config": "N3",
                     "effective_seed": development.P00_EFFECTIVE_SEED,
                     "source_identity": (
-                        f"study:{STUDY_COMMIT};robolab:{pilot.ROBOLAB_COMMIT};"
+                        f"study:{source_commit};robolab:{pilot.ROBOLAB_COMMIT};"
                         f"cosmos:{pilot.COSMOS_COMMIT};pose:{p00_pose_sha256}"
                     ),
                     "checkpoint_identity": (
@@ -352,6 +380,7 @@ def _make_passed_p00_pilot(root: Path) -> tuple[Path, str]:
                 "success_configured_as_termination": False,
                 "runner_reset_calls": 2,
                 "physical_reset_calls": 1,
+                "context_reset_artifact": context_reset_artifact,
                 "final_two_action_truncation_recorded": True,
                 "validation_errors": [],
             },
@@ -367,7 +396,6 @@ def _make_passed_p00_pilot(root: Path) -> tuple[Path, str]:
         }
         video = artifacts / "viewport.mp4"
         video.write_bytes(f"pilot-video-{index}".encode())
-        context = f"pilot-context-{index}"
         cell = {
             "schema_version": development.PILOT_CELL_RECEIPT_SCHEMA,
             "status": "passed",
@@ -389,27 +417,9 @@ def _make_passed_p00_pilot(root: Path) -> tuple[Path, str]:
             "final_chunk_executed_actions": 2,
             "candidate_id": p00_candidate_id,
             "accepted_gate_record_sha256": p00_gate_record_sha256,
-            "source_pins": {
-                "study_commit": STUDY_COMMIT,
-                "robolab_commit": pilot.ROBOLAB_COMMIT,
-                "cosmos_commit": pilot.COSMOS_COMMIT,
-            },
-            "checkpoint_pin": {
-                "revision": pilot.CHECKPOINT_REVISION,
-                "aggregate_sha256": pilot.CHECKPOINT_AGGREGATE_SHA256,
-            },
             "adapter_completion": completion,
             **descriptors,
             "viewport_video": pilot.file_identity(video),
-            "server_begin_receipt": {
-                "passed": True,
-                "server_context_id": context,
-                "cache_reset_evidence": {
-                    "passed": True,
-                    "episode_context_id": context,
-                    "unresolved_mutable_temporal_fields": [],
-                },
-            },
             "server_end_receipt": {
                 "passed": True,
                 "status": "completed",
@@ -421,6 +431,19 @@ def _make_passed_p00_pilot(root: Path) -> tuple[Path, str]:
                 "actions_executed": 450,
             },
         }
+        if not legacy_b891_shape:
+            cell.update(
+                source_pins={
+                    "study_commit": source_commit,
+                    "robolab_commit": pilot.ROBOLAB_COMMIT,
+                    "cosmos_commit": pilot.COSMOS_COMMIT,
+                },
+                checkpoint_pin={
+                    "revision": pilot.CHECKPOINT_REVISION,
+                    "aggregate_sha256": pilot.CHECKPOINT_AGGREGATE_SHA256,
+                },
+                server_begin_receipt=begin_receipt,
+            )
         cell_path = cell_root / "cell_receipt.json"
         pilot.immutable_json(cell_path, cell)
         cell_descriptors.append(pilot.file_identity(cell_path))
@@ -437,17 +460,22 @@ def _make_passed_p00_pilot(root: Path) -> tuple[Path, str]:
             "preexisting_compute_process_count": 0,
         },
     )
+    ready_payload = {
+        "schema_version": pilot.SERVER_READY_SCHEMA,
+        "status": "ready",
+        "block_id": development.P00_BLOCK_ID,
+        "model_config": "N3",
+        "expected_cell_order": list(development.P00_CELL_IDS),
+        "generation_qualification_requests_rerun": 0,
+    }
+    ready_payload[
+        "expected_behavioral_request_count"
+        if legacy_b891_shape
+        else "planned_block_behavioral_request_count"
+    ] = 60
     ready = _write_json(
         root / "pilot_server_ready.json",
-        {
-            "schema_version": pilot.SERVER_READY_SCHEMA,
-            "status": "ready",
-            "block_id": development.P00_BLOCK_ID,
-            "model_config": "N3",
-            "expected_cell_order": list(development.P00_CELL_IDS),
-            "planned_block_behavioral_request_count": 60,
-            "generation_qualification_requests_rerun": 0,
-        },
+        ready_payload,
     )
     receipt = {
         "schema_version": development.PILOT_QUEUE_RECEIPT_SCHEMA,
@@ -475,7 +503,7 @@ def _make_passed_p00_pilot(root: Path) -> tuple[Path, str]:
             "reused_prerequisite_generation_qualification_requests": 6,
             "recorder_only_episodes_counted_as_behavioral": 0,
         },
-        "source_commit": STUDY_COMMIT,
+        "source_commit": source_commit,
         "cell_receipts": cell_descriptors,
         "prerequisites": {
             **simple,
@@ -735,6 +763,78 @@ class PilotPrerequisiteTests(unittest.TestCase):
                 pilot.N3BehavioralPilotError, "evidence_sha256_mismatch"
             ):
                 development.verify_passed_p00_pilot(receipt, "0" * 64)
+
+    def test_exact_b891_success_shape_uses_hash_bound_legacy_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            receipt, digest = _make_passed_p00_pilot(
+                Path(temporary), legacy_b891_shape=True
+            )
+            aggregate = json.loads(receipt.read_text())
+            cell_hashes = tuple(
+                descriptor["sha256"] for descriptor in aggregate["cell_receipts"]
+            )
+            ready_hash = aggregate["server_ready"]["sha256"]
+            with mock.patch.multiple(
+                development,
+                LEGACY_P00_AGGREGATE_SHA256=digest,
+                LEGACY_P00_CELL_RECEIPT_SHA256S=cell_hashes,
+                LEGACY_P00_SERVER_READY_SHA256=ready_hash,
+            ):
+                verified = development.verify_passed_p00_pilot(receipt, digest)
+        self.assertEqual(
+            verified["validation_profile"]["name"],
+            "exact_b891_p00_attempt004_legacy_success",
+        )
+        self.assertFalse(
+            verified["validation_profile"]["missing_fields_synthesized"]
+        )
+        self.assertEqual(verified["pilot_behavioral_cells"], 4)
+
+    def test_b891_shape_fails_without_the_released_aggregate_hash(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            receipt, digest = _make_passed_p00_pilot(
+                Path(temporary), legacy_b891_shape=True
+            )
+            with self.assertRaisesRegex(
+                pilot.N3BehavioralPilotError,
+                "p00_legacy_aggregate_sha256_changed",
+            ):
+                development.verify_passed_p00_pilot(receipt, digest)
+
+    def test_current_receipt_does_not_fall_through_legacy_missing_field_path(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            receipt, _digest = _make_passed_p00_pilot(Path(temporary))
+            aggregate = json.loads(receipt.read_text())
+            cell_path = Path(aggregate["cell_receipts"][0]["path"])
+            cell = json.loads(cell_path.read_text())
+            del cell["source_pins"]
+            cell_path.unlink()
+            pilot.immutable_json(cell_path, cell)
+            aggregate["cell_receipts"][0] = pilot.file_identity(cell_path)
+            receipt.unlink()
+            pilot.immutable_json(receipt, aggregate)
+            with self.assertRaisesRegex(
+                pilot.N3BehavioralPilotError,
+                "resume_cell_source_pin_mismatch",
+            ):
+                development.verify_passed_p00_pilot(
+                    receipt, pilot.sha256_file(receipt)
+                )
+
+    def test_current_receipt_cells_bind_the_aggregate_source_commit(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            receipt, _digest = _make_passed_p00_pilot(Path(temporary))
+            aggregate = json.loads(receipt.read_text())
+            aggregate["source_commit"] = "b" * 40
+            receipt.unlink()
+            pilot.immutable_json(receipt, aggregate)
+            with self.assertRaisesRegex(
+                pilot.N3BehavioralPilotError,
+                "p00_pilot_cell_source_commit_changed",
+            ):
+                development.verify_passed_p00_pilot(
+                    receipt, pilot.sha256_file(receipt)
+                )
 
 
 class ResumeTests(unittest.TestCase):

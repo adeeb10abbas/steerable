@@ -1,0 +1,72 @@
+{
+  "block_id": "wmf_ablation_001_20260912__development__D01__N3",
+  "cell_ids": [
+    "wmf1__development__D01__N3__original__left",
+    "wmf1__development__D01__N3__reflected__right",
+    "wmf1__development__D01__N3__original__right",
+    "wmf1__development__D01__N3__reflected__left"
+  ],
+  "cell_receipts": [],
+  "claim_boundary": "This receipt counts only valid 450-action N3 development cells. The passed P00 pilot and its fixed-capture, recorder-only, and six-request generation qualification prerequisites are reused and never counted again.",
+  "completed_at_utc": "2026-09-13T06:54:27.562560Z",
+  "condition_order": [
+    "original-left",
+    "reflected-right",
+    "original-right",
+    "reflected-left"
+  ],
+  "counts": {
+    "actual_behavioral_actions": 0,
+    "actual_behavioral_model_requests": 0,
+    "completed_valid_behavioral_cells": 0,
+    "launched_behavioral_cells": 0,
+    "new_generation_qualification_requests": 0,
+    "newly_launched_behavioral_cells": 0,
+    "planned_behavioral_cells": 4,
+    "recorder_only_episodes_counted_as_behavioral": 0,
+    "resumed_valid_behavioral_cells": 0,
+    "reused_prerequisite_generation_qualification_requests": 6,
+    "right_censored_behavioral_cells": 0,
+    "technically_invalid_behavioral_cells": 0,
+    "unrun_behavioral_cells": 4
+  },
+  "effective_seed": 2026091101,
+  "exit_code": 1,
+  "failure": {
+    "detail": "legacy_p00_context_reset_artifact_invalid",
+    "error_type": "N3BehavioralPilotError",
+    "reason": "legacy_p00_context_reset_artifact_invalid"
+  },
+  "layout_pair_id": "D01",
+  "model_config": "N3",
+  "namespace": "wmf_ablation_001_20260912",
+  "new_cell_receipts": [],
+  "phase": "development",
+  "prerequisites": null,
+  "queue_descriptor": {
+    "bytes": 1523,
+    "job_id": "n3-development-d01-001",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-development-d01-001/descriptor.json",
+    "role": "n3",
+    "sha256": "fba5d7eb50dfbd2ad5b58369461089f47ceffc30b1f980d5d0509d5c473bb964"
+  },
+  "raw_attempt_recoverable_on_gm_pvc": true,
+  "raw_attempt_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/N3/D01/n3-development-d01-001",
+  "resume": {
+    "bytes": 385,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/N3/D01/n3-development-d01-001/resume.json",
+    "sha256": "df28f8f0926f8c9a18cda5b807ecdc7a93d5b503b31759f44fb222b8a29275ef"
+  },
+  "resumed_cell_receipts": [],
+  "schedule": {
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/f982e92f45886ec99ac2ddee4367afe1a87f08ca/workshops/corl2026_world_models/execution/20260912/parallel_schedule.json",
+    "sha256": "9a4a1cce1e980a624ec4161cf4438bfa01a6681dcd8fcb6e2b01150b62409a58"
+  },
+  "schema_version": "wmf-n3-behavioral-development-job-v1",
+  "server_exit": null,
+  "server_ready": null,
+  "source_commit": "f982e92f45886ec99ac2ddee4367afe1a87f08ca",
+  "status": "technical_failure",
+  "study_id": "WMF-ABLATION-001",
+  "topology": null
+}

@@ -1,0 +1,26 @@
+{
+  "child_pid": 15662,
+  "child_reaped": true,
+  "descriptor_sha256": "08dc8ffbd25924eaee64ac11971390c7fad3edbb46041fe58b7ceb384a0f783a",
+  "ended_at": "2026-09-13T13:57:50.269743+00:00",
+  "error_type": null,
+  "job_id": "camera-crop-replay-witness-001",
+  "log_tails": {
+    "stderr": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9f4e0f127b55f96792cc04a33f4d13bc85171c11/workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py\", line 686, in <module>\n    raise SystemExit(main())\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9f4e0f127b55f96792cc04a33f4d13bc85171c11/workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py\", line 670, in main\n    run_job(args)\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9f4e0f127b55f96792cc04a33f4d13bc85171c11/workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py\", line 589, in run_job\n    contracts, launches = _launch_children(\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9f4e0f127b55f96792cc04a33f4d13bc85171c11/workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py\", line 440, in _launch_children\n    require(exits == {\"N3\": 0, \"D1\": 0}, f\"camera replay child exits changed: {exits}\")\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9f4e0f127b55f96792cc04a33f4d13bc85171c11/workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py\", line 109, in require\n    raise CameraCropQueueError(message)\n__main__.CameraCropQueueError: camera replay child exits changed: {'N3': 1, 'D1': 1}\n",
+    "stdout": ""
+  },
+  "returncode": 1,
+  "source_commit": "9f4e0f127b55f96792cc04a33f4d13bc85171c11",
+  "started_at": "2026-09-13T13:57:32.941288+00:00",
+  "status": "failed",
+  "stderr": {
+    "bytes": 1496,
+    "sha256": "a2bf9ff0707832e9d1b4968ad6e954cd23290f791b449c29cf72834b39e85922"
+  },
+  "stdout": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "wall_seconds": 17.328738350013737,
+  "worker_id": "wmf-forecast-0912-worker-06"
+}

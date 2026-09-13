@@ -1,0 +1,33 @@
+{
+  "claim_boundary": "Technical-invalid CPU replay. No model, simulator, request, action, behavior, label, or confirmation job was started; no crop contract is published.",
+  "completed_at_utc": "2026-09-13T13:57:50.071356Z",
+  "confirmation_released": false,
+  "decision": "no_go",
+  "failure": {
+    "detail": "camera replay child exits changed: {'N3': 1, 'D1': 1}",
+    "error_type": "CameraCropQueueError",
+    "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9f4e0f127b55f96792cc04a33f4d13bc85171c11/workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py\", line 589, in run_job\n    contracts, launches = _launch_children(\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9f4e0f127b55f96792cc04a33f4d13bc85171c11/workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py\", line 440, in _launch_children\n    require(exits == {\"N3\": 0, \"D1\": 0}, f\"camera replay child exits changed: {exits}\")\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9f4e0f127b55f96792cc04a33f4d13bc85171c11/workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py\", line 109, in require\n    raise CameraCropQueueError(message)\nCameraCropQueueError: camera replay child exits changed: {'N3': 1, 'D1': 1}\n"
+  },
+  "job_id": "camera-crop-replay-witness-001",
+  "namespace": "wmf_ablation_001_20260912",
+  "payload_sha256": "da06331b841c021919ad3afa714602871ae8681ab231deb8497e4700c24d4112",
+  "queue_role": "wmf-forecast-0912-worker-06",
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-camera-crop-witness-queue-job-v1",
+  "science_counts": {
+    "behavioral_actions_executed_by_job": 0,
+    "behavioral_cells_launched_by_job": 0,
+    "labels_created_by_job": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0,
+    "simulator_processes_started": 0
+  },
+  "simulator_state_render_used": false,
+  "status": "technical_invalid",
+  "study_commit": "9f4e0f127b55f96792cc04a33f4d13bc85171c11",
+  "study_id": "WMF-ABLATION-001",
+  "whole_frame_identity": false
+}

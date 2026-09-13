@@ -1,0 +1,18 @@
+[Unit]
+Description=WMF forecast ablation autonomous coordinator
+After=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ali/projects/steerable-forecast-layout-20260912
+Environment=PATH=/home/ali/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 /home/ali/wmf-forecast-autonomy-20260912/supervisor.py --codex /home/ali/.local/bin/codex --repo /home/ali/projects/steerable-forecast-layout-20260912 --state-dir /home/ali/wmf-forecast-autonomy-20260912 --initial-prompt /home/ali/projects/steerable-forecast-layout-20260912/workshops/corl2026_world_models/execution/20260912/autonomy/initial_prompt.md --continuation-prompt /home/ali/projects/steerable-forecast-layout-20260912/workshops/corl2026_world_models/execution/20260912/autonomy/continuation_prompt.md
+Restart=on-failure
+RestartSec=20
+KillMode=mixed
+TimeoutStopSec=50
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,64 @@
+{
+  "schema_version": "wmf-cluster-autonomy-preflight-v1",
+  "observed_on_utc": "2026-09-13",
+  "mode": "read_only_access_and_auth_checks",
+  "jobs_created": 0,
+  "rbac_changed": false,
+  "credentials_copied_or_printed": false,
+  "pod": "211247-ali-b200-1gpu",
+  "namespace": "211247-prod",
+  "serviceaccount": {
+    "name": "default",
+    "automount_service_account_token": "not explicitly set in pod spec; token mount verified present",
+    "mount": "/var/run/secrets/kubernetes.io/serviceaccount",
+    "namespace_file_matches": true,
+    "token_exists_and_readable": true,
+    "ca_exists_and_readable": true,
+    "api_service_environment_present": true,
+    "cluster_local_tls_api_access": true,
+    "introspection_method": "SelfSubjectAccessReview over verified TLS from in-pod Python; existing mounted token used in memory, never printed or copied",
+    "resources_checked": ["pods", "jobs", "configmaps", "pods/log", "pods/exec"],
+    "verbs_checked_for_each": ["get", "list", "create", "delete"],
+    "allowed_for_all_checked_pairs": false,
+    "result": "All twenty requests returned status.allowed=false; existing serviceaccount cannot manage coordinator jobs or workers."
+  },
+  "tools": {
+    "python3": "/usr/bin/python3",
+    "curl": "/usr/bin/curl",
+    "git": "/usr/local/bin/git",
+    "ssh": "/usr/bin/ssh",
+    "kubectl": null,
+    "gh": null
+  },
+  "git_synchronization": {
+    "checked_repositories": ["/data/users/ali/vla_wam/src/steerable", "/data/users/ali/vla_wam/src/steerable-current"],
+    "sanitized_origin": "https://github.com/adeeb10abbas/steerable.git",
+    "public_ls_remote_succeeded": true,
+    "push_dry_run": {
+      "command": "git push --dry-run origin HEAD:refs/heads/main",
+      "remote_mutated": false,
+      "exit_code": 128,
+      "failure_category": "could not read Username with terminal prompts disabled"
+    },
+    "credential_helper_configured": false,
+    "github_auth_environment_present": false,
+    "ssh_agent_environment_present": false,
+    "ssh_directory_at_home_or_persistent_user_root": false,
+    "gitconfig_netrc_or_git_credentials_at_home_or_persistent_user_root": false,
+    "existing_independent_push_auth_verified": false,
+    "scope": "Primary pod environment plus /home/ali and /data/users/ali credential-path existence. Did not recursively inspect alternative runtime homes or credential contents."
+  },
+  "existing_pvc_mechanisms": {
+    "persistent_roots_present": ["/data/users/ali/vla_wam/control", "/data/users/ali/vla_wam/locks", "/data/users/ali/vla_wam/releases", "/data/users/ali/vla_wam/compiled", "/data/users/ali/vla_wam/publication_outputs", "/data/users/ali/vla_wam/publication"],
+    "push_or_sync_named_files_in_top_level_tools_and_control": [],
+    "autonomous_remote_push_mechanism_verified": false
+  },
+  "recommended_cluster_only_topology": {
+    "worker_admission": "Create bounded Ali-owned coordinator and persistent worker jobs through the authorized Mac route before departure; rely on normal scheduler admission.",
+    "work_dispatch": "Cluster-resident coordinator and workers exchange durable claims/results through the already-mounted shared PVC and run model/simulator subprocesses inside workers. No later Kubernetes API call is required for dispatch.",
+    "source_destination_proposed_by_parent": "/data/users/ali/vla_wam/src/wmf_ablation_001_20260912",
+    "control_destination_proposed_by_parent": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control",
+    "results_push_prerequisite": "Establish and verify repository-scoped write authentication that remains inside the cluster, such as a newly generated in-cluster deploy key with only its public half registered. No broad local credentials should be copied.",
+    "status": "Recommendation only; this probe created no jobs, queue, authentication material or supervisor."
+  }
+}

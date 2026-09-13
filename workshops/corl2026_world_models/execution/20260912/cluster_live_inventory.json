@@ -1,0 +1,112 @@
+{
+  "schema_version": "wmf-cluster-live-inventory-v1",
+  "observed_at_utc": "2026-09-13T01:09:53Z",
+  "supersedes_connectivity_state_only": "cluster_preflight.json",
+  "mode": "read_only_capacity_and_runtime_discovery",
+  "cluster_reachable": true,
+  "policy_requests_launched": 0,
+  "jobs_created_or_stopped": 0,
+  "credentials_copied": false,
+  "access": {
+    "ssh_prefix": "ssh -4 -o BatchMode=yes -o ConnectTimeout=8 -o ConnectionAttempts=1 work-mac",
+    "kubectl": "/usr/local/bin/kubectl",
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "can_create_pods": true,
+    "namespace_resource_quotas": [],
+    "credentials_location": "existing work Mac configuration; not read or copied"
+  },
+  "verified_idle_worker": {
+    "pod": "211247-ali-b200-1gpu",
+    "ownership_label": {"user": "ali"},
+    "pod_uid": "c4416e7b-da01-491a-983e-f35870fb491e",
+    "status": "Running",
+    "node": "dcwipphhgc225.edc.nam.gm.com",
+    "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+    "requests": {"cpu": "24", "memory": "128Gi", "nvidia.com/gpu": "1"},
+    "limits": {"cpu": "48", "memory": "256Gi", "nvidia.com/gpu": "1"},
+    "cgroup_memory_max_bytes": 274877906944,
+    "cgroup_cpu_max": "4800000 100000",
+    "gpu": {
+      "logical_index": 0,
+      "uuid": "GPU-937f79e0-f27f-f049-5f9d-ed8ea1d5472a",
+      "name": "NVIDIA B200",
+      "driver": "580.95.05",
+      "memory_total_mib": 183359,
+      "memory_free_mib": 182632,
+      "utilization_percent": 0,
+      "compute_processes": []
+    },
+    "active_workload_conflicts": [],
+    "process_observation": "Only sleep infinity and discovery probes were running; historical zombies are exited. One slow discovery-only du scan was terminated and verified exited; no workload process was stopped.",
+    "vulkan_icd": "/etc/vulkan/icd.d/nvidia_icd.json",
+    "vulkan_icd_readable": true,
+    "runtime_imports_or_rendering_qualified": false,
+    "exec_command": "ssh -4 -o BatchMode=yes -o ConnectTimeout=8 -o ConnectionAttempts=1 work-mac '/usr/local/bin/kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod exec 211247-ali-b200-1gpu -- COMMAND'"
+  },
+  "persistence": {
+    "claim": "211247-prod-pvc",
+    "phase": "Bound",
+    "access_modes": ["ReadWriteMany"],
+    "declared_claim_capacity": "2Ti",
+    "mount": "/data",
+    "filesystem": "nfs",
+    "persistent_root": "/data/users/ali/vla_wam",
+    "persistent_root_writable": true,
+    "df_reported_total": "200T",
+    "df_reported_used": "51T",
+    "df_reported_available": "150T",
+    "space_interpretation": "df reports shared NFS filesystem space, not an individual Ali storage allocation or verified per-user quota. Claim declaration is 2Ti; effective quota not established.",
+    "ephemeral_mounts": ["/home/ali", "/tmp", "/var/tmp", "/dev/shm"],
+    "raw_root": "/data/users/ali/vla_wam/raw",
+    "source_root": "/data/users/ali/vla_wam/src",
+    "recursive_directory_sizes": "not measured; stopped slow read-only recursive scan"
+  },
+  "owned_resource_queries": [
+    {"selector": "user=ali", "pod_count": 1, "running_pods": ["211247-ali-b200-1gpu"]},
+    {"selector": "owner=ali", "pod_count": 0},
+    {"named_pod": "lerobot-b200-4gpu-1-ali", "status": "NotFound"},
+    {"selector": "app.kubernetes.io/part-of=vla-wam-v4", "ownership_basis": "Ali's existing V4 manifests on workstation use this exact study label and Ali PVC runtime roots", "pod_count": 159, "pod_phases": {"Succeeded": 92, "Failed": 67}, "nonterminal_pods": [], "job_count": 1545, "active_jobs": []},
+    {"selector": "app.kubernetes.io/part-of=vla-wam-v3", "pod_count": 0, "job_count": 0}
+  ],
+  "gpu_node_pool": {
+    "scope": "Read-only GPU-worker node metadata, no other users' pods or secrets inspected",
+    "node_count": 70,
+    "all_listed_nodes_ready": true,
+    "all_listed_nodes_uncordoned": true,
+    "allocatable_capacity_not_currently_free": {
+      "NVIDIA-A100-SXM4-40GB": 64,
+      "NVIDIA-A100-SXM4-80GB": 95,
+      "Tesla-V100-SXM2-32GB": 16,
+      "NVIDIA-A40": 42,
+      "NVIDIA-B200": 40,
+      "NVIDIA-RTX-PRO-6000-Blackwell-Server-Edition": 8
+    },
+    "b200_nodes": ["dcwipphhgc223.edc.nam.gm.com", "dcwipphhgc224.edc.nam.gm.com", "dcwipphhgc225.edc.nam.gm.com", "dcwipphhgc226.edc.nam.gm.com", "dcwipphhgc227.edc.nam.gm.com"],
+    "b200_allocatable_gpus_per_node": 8,
+    "additional_immediately_idle_owned_workers_verified": 0,
+    "other_users_allocations": "not inspected",
+    "scheduling_interpretation": "One existing idle B200 worker verified. Node allocatable totals are pool ceilings, not free GPU counts or reserved ownership. Additional Ali jobs must be admitted by the normal scheduler; observe their actual placement before counting them as available."
+  },
+  "runtime_paths": {
+    "interpreters_exist_readable": [
+      "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python",
+      "/data/users/ali/vla_wam/envs/dreamzero-ab790c1-py311/bin/python",
+      "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+    ],
+    "checkpoint_directories_exist_readable": [
+      "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+      "/data/users/ali/vla_wam/checkpoints/DreamZero-DROID-96ad344"
+    ],
+    "checkpoint_bytes_verified": false,
+    "external_checkouts": [
+      {"path": "/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b", "commit": "411d25b2e35bc441126f48c44a4b93e1c0564274", "tracked_dirty": false},
+      {"path": "/data/users/ali/vla_wam/external/DreamZero-v3e004-clean-ab790c1", "commit": "ab790c198fbce33503358efbbd4187ce9a89adf3", "tracked_dirty": false},
+      {"path": "/data/users/ali/vla_wam/external/DreamZero-ab790c1", "commit": "ab790c198fbce33503358efbbd4187ce9a89adf3", "tracked_dirty": false},
+      {"path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241", "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17", "tracked_dirty": false},
+      {"path": "/data/users/ali/vla_wam/external/RoboLab-11142d4", "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17", "tracked_dirty": false, "note": "Directory name differs from actual verified HEAD; use commit identity."}
+    ],
+    "untracked_files_audited": false,
+    "interpretation": "Existing paths and tracked commit state are verified, not imports, complete checkpoint identity, model equivalence, physical fixtures or recording qualification."
+  }
+}

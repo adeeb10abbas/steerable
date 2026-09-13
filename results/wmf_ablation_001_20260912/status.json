@@ -3,8 +3,8 @@
   "control": {
     "active_job_ids": [],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "c670287483693b5b89aea71427f02da3d182ec4c",
-    "control_generation": 509,
+    "control_commit": "ed0d8694cbe24b81d5cd62d544abd6a7022162d5",
+    "control_generation": 510,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -827,17 +827,29 @@
       "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
+      "child_pid": 45191,
+      "child_reaped": true,
       "descriptor_sha256": "851e139ab3002fd7ee386e13179c4f4384155693f8b4e26890f7dbc351d368d7",
-      "heartbeat": {
-        "at": "2026-09-13T09:20:53.690343+00:00",
-        "child_pid": 45191,
-        "unix": 1789291253.6903667,
-        "worker_id": "wmf-forecast-0912-worker-d1-00",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T09:23:46.334275+00:00",
+      "error_type": null,
       "job_id": "d1-development-d03-server-002",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"status\": \"passed\", \"server_ready\": {\"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D03/coordination/d1-development-d03-002/server_ready.json\", \"bytes\": 4954, \"sha256\": \"c3b41b8e7731532b3bb83677d6ab3f7320e6ed00650c91fcc093aceef7dcc39e\"}}\n"
+      },
+      "returncode": 0,
       "source_commit": "64e84d1f7634e2a7fbaaf0e1ffd05bf021614517",
-      "status": "claimed",
+      "started_at": "2026-09-13T08:54:10.795273+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 281,
+        "sha256": "9e6d92909c23c857f2b37d9be604d13930ca51c3322d79378e5093ac1f7a0751"
+      },
+      "wall_seconds": 1775.5393620159011,
       "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
@@ -867,17 +879,29 @@
       "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
+      "child_pid": 5436,
+      "child_reaped": true,
       "descriptor_sha256": "deeacda4c09b490b0d9aad8d1bff71825308e6e0c0aa316f6da7208959c64d66",
-      "heartbeat": {
-        "at": "2026-09-13T09:20:52.354123+00:00",
-        "child_pid": 5436,
-        "unix": 1789291252.3541458,
-        "worker_id": "wmf-forecast-0912-worker-00",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T09:23:32.813656+00:00",
+      "error_type": null,
       "job_id": "d1-development-d03-simulator-002",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"status\": \"passed\", \"counts\": {\"planned_behavioral_cells\": 4, \"launched_behavioral_cells\": 4, \"resumed_valid_behavioral_cells\": 0, \"newly_launched_behavioral_cells\": 4, \"completed_valid_behavioral_cells\": 4, \"technically_invalid_behavioral_cells\": 0, \"right_censored_behavioral_cells\": 0, \"unrun_behavioral_cells\": 0, \"actual_behavioral_actions\": 1800, \"actual_behavioral_model_requests\": 228, \"new_generation_qualification_requests\": 0, \"reused_prerequisite_generation_qualification_requests\": 6, \"recorder_only_episodes_counted_as_behavioral\": 0}, \"raw_attempt_root\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/development/D1/D03/simulator_attempts/d1-development-d03-simulator-002\"}\n"
+      },
+      "returncode": 0,
       "source_commit": "64e84d1f7634e2a7fbaaf0e1ffd05bf021614517",
-      "status": "claimed",
+      "started_at": "2026-09-13T08:55:41.782183+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 710,
+        "sha256": "9e3dbed795d006a62475130e9e36b7caf5c9f3ee0c75c38873ebfcceac249a81"
+      },
+      "wall_seconds": 1671.031866459176,
       "worker_id": "wmf-forecast-0912-worker-00"
     },
     {

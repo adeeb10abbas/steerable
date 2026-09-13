@@ -1558,6 +1558,46 @@
       ],
       "max_wall_seconds": 60000,
       "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "worker05-isolation-diagnostic-003",
+      "released": true,
+      "source_commit": "471f28ff31e312f86df33c7c9e79d61f010e96cd",
+      "role": "wmf-forecast-0912-worker-05",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1",
+        "--expected-worker-id",
+        "wmf-forecast-0912-worker-05"
+      ],
+      "max_wall_seconds": 300,
+      "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "worker06-isolation-diagnostic-003",
+      "released": true,
+      "source_commit": "471f28ff31e312f86df33c7c9e79d61f010e96cd",
+      "role": "wmf-forecast-0912-worker-06",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1",
+        "--expected-worker-id",
+        "wmf-forecast-0912-worker-06"
+      ],
+      "max_wall_seconds": 300,
+      "publish_log_tail_bytes": 8192
     }
   ]
 }

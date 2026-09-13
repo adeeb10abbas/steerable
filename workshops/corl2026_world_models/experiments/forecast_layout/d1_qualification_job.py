@@ -420,7 +420,32 @@ def validate_capture_manifest(
     for name in sorted(expected_cameras):
         row = cameras[name]
         require(isinstance(row, Mapping), "capture_camera_counter_invalid", name)
-        require(type(row.get("frame_id")) is int and row["frame_id"] >= 0, "capture_frame_id_invalid", name)
+        frame_id = row.get("frame_id")
+        native_counter = type(frame_id) is int and frame_id >= 0
+        rgb_identity = isinstance(frame_id, str) and re.fullmatch(r"rgb-sha256:[0-9a-f]{64}", frame_id) is not None
+        require(native_counter or rgb_identity, "capture_frame_id_invalid", name)
+        if rgb_identity:
+            # Pinned Isaac SensorBase exposes native sensor time but no frame
+            # counter.  The producer therefore binds the returned RGB bytes as
+            # the frame identity rather than inventing an ordinal.
+            array_identity = row.get("rgb_array_identity")
+            require(
+                row.get("frame_identity_source") == "exact returned RGB array value identity",
+                "capture_frame_identity_source_invalid",
+                name,
+            )
+            require(row.get("native_frame_counter") is None, "capture_native_frame_counter_conflict", name)
+            require(
+                row.get("native_frame_counter_status") == "unavailable_in_pinned_isaaclab_sensorbase",
+                "capture_native_frame_counter_status_invalid",
+                name,
+            )
+            require(isinstance(array_identity, Mapping), "capture_rgb_identity_missing", name)
+            require(
+                array_identity.get("value_sha256") == frame_id.removeprefix("rgb-sha256:"),
+                "capture_rgb_identity_binding_mismatch",
+                name,
+            )
         require(type(row.get("capture_time_ns")) is int and row["capture_time_ns"] >= 0, "capture_timestamp_invalid", name)
         require(isinstance(row.get("native_capture_time_source"), str) and row["native_capture_time_source"], "capture_timestamp_source_invalid", name)
         require(frame_ids[name] == row["frame_id"], "capture_frame_id_binding_mismatch", name)

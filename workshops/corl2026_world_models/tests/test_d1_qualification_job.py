@@ -243,6 +243,45 @@ class D1QualificationJobTests(unittest.TestCase):
                     fixture_sha256=file_sha(fixture),
                 )
 
+    def test_capture_manifest_accepts_hash_bound_frame_identity_when_native_counter_is_unavailable(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            fixture = root / "fixture.npz"
+            np.savez(fixture, **fixture_arrays())
+            manifest = write_capture_manifest(root, fixture)
+            payload = json.loads(manifest.read_text())
+            for name, row in payload["native_clock"]["camera_counters"].items():
+                digest = hashlib.sha256(name.encode("ascii")).hexdigest()
+                frame_id = f"rgb-sha256:{digest}"
+                row.update(
+                    frame_id=frame_id,
+                    frame_identity_source="exact returned RGB array value identity",
+                    native_frame_counter=None,
+                    native_frame_counter_status="unavailable_in_pinned_isaaclab_sensorbase",
+                    rgb_array_identity={"value_sha256": digest},
+                )
+                payload["source_capture"]["camera_frame_ids"][name] = frame_id
+            manifest.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+            receipt = JOB.validate_capture_manifest(
+                manifest,
+                file_sha(manifest),
+                artifact_root=root,
+                fixture_path=fixture,
+                fixture_sha256=file_sha(fixture),
+            )
+            self.assertTrue(all(str(value).startswith("rgb-sha256:") for value in receipt["camera_frame_ids"].values()))
+            payload = json.loads(manifest.read_text())
+            payload["native_clock"]["camera_counters"]["head_camera"]["rgb_array_identity"]["value_sha256"] = "0" * 64
+            manifest.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+            with self.assertRaisesRegex(JOB.D1JobError, "capture_rgb_identity_binding_mismatch"):
+                JOB.validate_capture_manifest(
+                    manifest,
+                    file_sha(manifest),
+                    artifact_root=root,
+                    fixture_path=fixture,
+                    fixture_sha256=file_sha(fixture),
+                )
+
     def test_retained_artifact_paths_cannot_escape_attempt_roots(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

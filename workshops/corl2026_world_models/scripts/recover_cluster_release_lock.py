@@ -132,6 +132,7 @@ def snapshot(state: Path):
 
 def _lock_helper(paths):
     descriptors = []
+    acquired = []
     try:
         for raw in paths:
             path = Path(raw)
@@ -144,6 +145,7 @@ def _lock_helper(paths):
                 print(json.dumps({"status": "would_block", "errno": exc.errno, "path": str(path),
                                   "device": opened.st_dev, "inode": opened.st_ino}), flush=True)
                 return 3
+            acquired.append(fd)
         print(json.dumps({"status": "acquired", "locks": [
             {"path": str(Path(raw)), "device": os.fstat(fd).st_dev, "inode": os.fstat(fd).st_ino}
             for raw, fd in zip(paths, descriptors)
@@ -154,11 +156,15 @@ def _lock_helper(paths):
         print(json.dumps({"status": "error", "error_type": type(exc).__name__}), flush=True)
         return 4
     finally:
-        for fd in reversed(descriptors):
+        # Never issue LOCK_UN for a descriptor whose acquisition failed.  In
+        # particular, an NFS/NLM client may turn that nominal cleanup into a
+        # second blocking RPC after the bounded LOCK_NB result was emitted.
+        for fd in reversed(acquired):
             try:
                 fcntl.flock(fd, fcntl.LOCK_UN)
             except OSError:
                 pass
+        for fd in reversed(descriptors):
             os.close(fd)
 
 

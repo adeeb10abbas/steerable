@@ -4,7 +4,9 @@ import importlib.util
 import json
 from pathlib import Path
 import tempfile
+import time
 import unittest
+from unittest import mock
 
 MODULE = Path(__file__).resolve().parents[1] / "scripts/recover_cluster_release_lock.py"
 
@@ -110,6 +112,19 @@ class ReleaseLockRecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(self.r.RecoveryError, "already exists"):
             self.recover()
         self.assertEqual((self.state / "receipt.json").read_text(), "existing\n")
+
+    def test_helper_never_unlocks_descriptor_whose_acquire_would_block(self):
+        opened = mock.Mock(st_dev=23, st_ino=47)
+        blocked = BlockingIOError(11, "would block")
+        started = time.monotonic()
+        with mock.patch.object(self.r.os, "open", return_value=91), \
+             mock.patch.object(self.r.os, "fstat", return_value=opened), \
+             mock.patch.object(self.r.os, "close") as close, \
+             mock.patch.object(self.r.fcntl, "flock", side_effect=blocked) as flock:
+            self.assertEqual(self.r._lock_helper(["release.lock"]), 3)
+        self.assertLess(time.monotonic() - started, 0.2)
+        flock.assert_called_once_with(91, self.r.fcntl.LOCK_EX | self.r.fcntl.LOCK_NB)
+        close.assert_called_once_with(91)
 
 
 if __name__ == "__main__":

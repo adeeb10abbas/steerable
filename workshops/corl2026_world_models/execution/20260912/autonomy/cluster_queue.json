@@ -4124,6 +4124,27 @@
         ],
         "max_wall_seconds": 60000,
         "publish_log_tail_bytes": 8192
+      },
+      {
+        "job_id": "confirmation-fixture-freeze-001",
+        "released": true,
+        "source_commit": "cb394fc2f5a8e8c629f200aa8b700374f5223daf",
+        "role": "wmf-forecast-0912-worker-09",
+        "argv": [
+          "/usr/bin/python3",
+          "{source_root}/workshops/corl2026_world_models/experiments/forecast_layout/confirmation_fixture_freeze.py",
+          "freeze",
+          "--source-root",
+          "{source_root}",
+          "--inventory",
+          "{source_root}/workshops/corl2026_world_models/execution/20260912/confirmation_fixture_inventory.json",
+          "--study-commit",
+          "cb394fc2f5a8e8c629f200aa8b700374f5223daf",
+          "--output",
+          "{job_dir}/publish/confirmation_fixture_freeze.json"
+        ],
+        "max_wall_seconds": 3600,
+        "publish_log_tail_bytes": 8192
       }
   ]
 }

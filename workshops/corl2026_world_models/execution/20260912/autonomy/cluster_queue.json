@@ -3504,6 +3504,68 @@
       ],
       "max_wall_seconds": 3600,
       "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "fixed-observation-c17-001",
+      "released": true,
+      "source_commit": "148b0bad38382b32667d7cf2484773c11fa744ad",
+      "role": "wmf-forecast-0912-worker-05",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/experiments/forecast_layout/fixed_observation_job.py",
+        "queue",
+        "--source-root",
+        "{source_root}",
+        "--state-dir",
+        "{state_dir}",
+        "--job-dir",
+        "{job_dir}",
+        "--gate-receipt",
+        "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-c17-candidate-01/publish/fixture_gate_receipt.json",
+        "--gate-receipt-sha256",
+        "22236b5c535651685b4dea0f951c5bafd538042ea637ade29f464574dd5c6dae",
+        "--pose-manifest",
+        "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/c17_pose_manifest.json",
+        "--environment-seed",
+        "2026091217",
+        "--layout-pair-id",
+        "C17",
+        "--candidate-id",
+        "C17__candidate_01"
+      ],
+      "max_wall_seconds": 3600,
+      "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "fixed-observation-c24-001",
+      "released": true,
+      "source_commit": "148b0bad38382b32667d7cf2484773c11fa744ad",
+      "role": "wmf-forecast-0912-worker-06",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/experiments/forecast_layout/fixed_observation_job.py",
+        "queue",
+        "--source-root",
+        "{source_root}",
+        "--state-dir",
+        "{state_dir}",
+        "--job-dir",
+        "{job_dir}",
+        "--gate-receipt",
+        "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-c24-candidate-01/publish/fixture_gate_receipt.json",
+        "--gate-receipt-sha256",
+        "9865362e6767baa24c1017c2072b614597f0940c7d0e3a610f549e0f4ecb8356",
+        "--pose-manifest",
+        "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/c24_pose_manifest.json",
+        "--environment-seed",
+        "2026091224",
+        "--layout-pair-id",
+        "C24",
+        "--candidate-id",
+        "C24__candidate_01"
+      ],
+      "max_wall_seconds": 3600,
+      "publish_log_tail_bytes": 8192
     }
   ]
 }

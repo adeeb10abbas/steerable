@@ -6,17 +6,30 @@ qualification belongs to the coordinator producing that manifest. Claims are
 never reclaimed automatically. Full logs stay on PVC; published receipts contain
 metadata and hashes by default. Log tails require an explicit bounded opt-in;
 command arguments are never published automatically.
+
+Control replacement and claim-time release checks share a persistent advisory
+lock. A completed claim is the release boundary: removal prevents later claims
+but does not revoke earlier claims; global shutdown still interrupts running
+work. Deploy only after cross-pod flock exclusion/release is verified on the
+actual PVC. Lock files are never unlinked, and locks are never stolen by TTL.
+All processes receive one absolute admission cutoff. After that cutoff the
+coordinator publishes for a bounded two-day drain plus ten-minute grace; it
+never exits early based on a potentially pre-cutoff snapshot. Explicit shutdown
+may finish early only after a fresh publication contains no outstanding claims.
 """
 from __future__ import annotations
 import argparse
 from contextlib import contextmanager
 from datetime import datetime, timezone
+import fcntl
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
 import signal
+import socket
 import stat
 import subprocess
 import tempfile
@@ -29,6 +42,10 @@ QUEUE_PATH = 'workshops/corl2026_world_models/execution/20260912/autonomy/cluste
 RESULTS_BRANCH = 'codex/forecast-layout-gm-20260912-results'
 SAFE_ID = re.compile(r'[a-zA-Z0-9][a-zA-Z0-9_.-]{0,95}\Z')
 COMMIT = re.compile(r'[0-9a-f]{40}\Z')
+MAX_JOB_WALL_SECONDS = 172800
+MAX_CONTROLLER_WALL_SECONDS = 604800
+PUBLICATION_GRACE_SECONDS = 600
+MAX_COORDINATOR_WALL_SECONDS = MAX_CONTROLLER_WALL_SECONDS + MAX_JOB_WALL_SECONDS + PUBLICATION_GRACE_SECONDS
 
 
 def now():
@@ -62,6 +79,29 @@ def atomic_json(path, value, immutable=False):
     finally:
         try: os.unlink(temporary)
         except FileNotFoundError: pass
+
+
+@contextmanager
+def advisory_lock(path, *, blocking=True):
+    """Hold a kernel/NFS lock on a stable inode, released on process/client loss.
+
+An unsupported lock operation fails closed. Legacy mkdir daemon locks require
+offline inspection/migration; they are not silently reinterpreted or removed.
+"""
+    path = Path(path); path.parent.mkdir(parents=True, exist_ok=True)
+    if path.is_dir():
+        raise RuntimeError('legacy lock directory requires offline migration after prior process inspection')
+    with path.open('a+b') as handle:
+        try:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | (0 if blocking else fcntl.LOCK_NB))
+        except BlockingIOError:
+            raise RuntimeError(f'{path.name} is held by another process') from None
+        try: yield
+        finally: fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+def shared_release_lock(state):
+    return advisory_lock(Path(state)/'release.lock')
 
 
 def git(repo, *args, accepted=(0,), timeout=60):
@@ -100,8 +140,8 @@ def normalize_job(job):
     if (not isinstance(argv, list) or not argv or len(argv) > 256
             or any(not isinstance(v, str) or '\0' in v or len(v) > 65536 for v in argv)):
         raise ValueError('argv must be a bounded array of literal strings')
-    wall = job.get('max_wall_seconds', 172800)
-    if isinstance(wall, bool) or not isinstance(wall, (int, float)) or not 0 < wall <= 172800:
+    wall = job.get('max_wall_seconds', MAX_JOB_WALL_SECONDS)
+    if isinstance(wall, bool) or not isinstance(wall, (int, float)) or not 0 < wall <= MAX_JOB_WALL_SECONDS:
         raise ValueError('job max_wall_seconds must be positive and at most 172800')
     tail = job.get('publish_log_tail_bytes', 0)
     if type(tail) is not int or not 0 <= tail <= 8192:
@@ -119,8 +159,12 @@ def verify_worktree(path, commit):
         raise ValueError('immutable source worktree tracked content changed')
 
 
-def stage_queue(repo, state_dir, control_ref, manifest):
+def stage_queue(repo, state_dir, control_ref, manifest, *, admission_deadline_unix=None):
     state = Path(state_dir).resolve(); repo = Path(repo).resolve()
+    if admission_deadline_unix is not None and (isinstance(admission_deadline_unix, bool)
+            or not isinstance(admission_deadline_unix, (int, float))
+            or not math.isfinite(admission_deadline_unix) or admission_deadline_unix <= 0):
+        raise ValueError('admission deadline must be a finite positive Unix timestamp')
     if (manifest.get('schema_version') != 'wmf-cluster-queue-v1'
             or manifest.get('namespace') != NAMESPACE
             or type(manifest.get('shutdown')) is not bool
@@ -153,18 +197,35 @@ def stage_queue(repo, state_dir, control_ref, manifest):
             git(repo, 'worktree', 'add', '--detach', str(source), job['source_commit'])
         verify_worktree(source, job['source_commit'])
         atomic_json(state/'jobs'/job['job_id']/'descriptor.json', job, immutable=True)
-    control = {'namespace': NAMESPACE, 'control_commit': control_commit,
-               'shutdown': manifest['shutdown'], 'active_job_ids': [j['job_id'] for j in jobs]}
-    atomic_json(state/'control.json', control)
+    with shared_release_lock(state):
+        control = {'namespace': NAMESPACE, 'control_commit': control_commit,
+                   'control_generation': control_state(state).get('control_generation', 0)+1,
+                   'admission_deadline_unix': admission_deadline_unix,
+                   'shutdown': manifest['shutdown'], 'active_job_ids': [j['job_id'] for j in jobs]}
+        atomic_json(state/'control.json', control)
     return control
 
 
 def claim_job(job_dir, worker_id):
-    worker_id = safe_id(worker_id); claim = Path(job_dir)/'claim'
-    try: claim.mkdir()
-    except FileExistsError: return False
-    atomic_json(claim/'owner.json', {'worker_id': worker_id, 'claimed_at': now(),
-                                  'claimed_unix': time.time(), 'worker_pid': os.getpid()})
+    worker_id = safe_id(worker_id); directory = Path(job_dir).resolve()
+    claim = directory/'claim'; state = directory.parent.parent
+    with shared_release_lock(state):
+        # The worker's discovery snapshot is not authority. Reread the currently
+        # published release while holding the same lock as control replacement.
+        control = control_state(state)
+        cutoff = control.get('admission_deadline_unix')
+        if (control['shutdown'] or directory.name not in control['active_job_ids']
+                or (cutoff is not None and time.time() >= cutoff)):
+            return False
+        descriptor_hash = file_identity(directory/'descriptor.json')['sha256']
+        try: claim.mkdir()
+        except FileExistsError: return False
+        atomic_json(claim/'owner.json', {'worker_id': worker_id, 'claimed_at': now(),
+                    'claimed_unix': time.time(), 'worker_pid': os.getpid(),
+                    'control_commit': control['control_commit'],
+                    'control_generation': control.get('control_generation', 0),
+                    'descriptor_sha256': descriptor_hash,
+                    'release_boundary': 'claim_committed_under_shared_release_lock'})
     return True
 
 
@@ -195,7 +256,7 @@ def terminate_owned(proc, grace):
     except ProcessLookupError: pass
 
 
-def worker_once(repo, state_dir, worker_id, role='any', *, max_wall_seconds=172800,
+def worker_once(repo, state_dir, worker_id, role='any', *, max_wall_seconds=MAX_JOB_WALL_SECONDS,
                 poll_seconds=2, terminate_grace_seconds=10, stop_event=None):
     state = Path(state_dir).resolve(); safe_id(worker_id); safe_id(role)
     stop_event = stop_event or threading.Event()
@@ -383,12 +444,15 @@ def publish_results(repo, state_dir, control_ref, results_branch):
 @contextmanager
 def exclusive_process(state, name):
     lock = Path(state)/name; lock.parent.mkdir(parents=True, exist_ok=True)
-    try: lock.mkdir()
-    except FileExistsError: raise RuntimeError(f'{name} exists; operator must inspect prior process') from None
-    atomic_json(lock/'owner.json', {'pid': os.getpid(), 'started_at': now()})
-    try: yield
-    finally:
-        (lock/'owner.json').unlink(); lock.rmdir()
+    with advisory_lock(lock, blocking=False):
+        owner = {'pid': os.getpid(), 'hostname': socket.gethostname(),
+                 'pod_uid': os.environ.get('POD_UID'), 'started_at': now(),
+                 'status': 'held', 'authority': 'kernel_advisory_flock_not_owner_receipt'}
+        receipt = lock.with_name(lock.name+'.owner.json')
+        atomic_json(receipt, owner)
+        try: yield
+        finally:
+            atomic_json(receipt, dict(owner, status='released', ended_at=now()))
 
 
 def fetch_control(repo, control_ref, queue_path):
@@ -411,31 +475,66 @@ def main():
     parser.add_argument('--results-branch',default=RESULTS_BRANCH)
     parser.add_argument('--worker-id',default=os.environ.get('HOSTNAME','worker'))
     parser.add_argument('--role',default='any')
-    parser.add_argument('--max-wall-seconds',type=float,default=172800)
+    parser.add_argument('--max-wall-seconds',type=float,
+                        help='worker controller <=604800s; coordinator publisher <=778200s; jobs remain <=172800s')
+    parser.add_argument('--admission-deadline-unix',type=float,
+                        help='shared absolute job-admission cutoff supplied identically to every pool process')
     parser.add_argument('--poll-seconds',type=float,default=30)
     parser.add_argument('--once',action='store_true')
     args=parser.parse_args()
-    if not 0 < args.max_wall_seconds <= 172800 or args.poll_seconds <= 0:
-        parser.error('positive polling and wall limit at most 172800 required')
+    maximum=MAX_COORDINATOR_WALL_SECONDS if args.mode=='coordinator' else MAX_CONTROLLER_WALL_SECONDS
+    if args.max_wall_seconds is None: args.max_wall_seconds=maximum
+    if not 0 < args.max_wall_seconds <= maximum or not math.isfinite(args.poll_seconds) or args.poll_seconds <= 0:
+        parser.error(f'positive finite polling and controller wall limit at most {maximum} required')
+    if args.admission_deadline_unix is None:
+        args.admission_deadline_unix=time.time()+min(args.max_wall_seconds,MAX_CONTROLLER_WALL_SECONDS)
+    if not math.isfinite(args.admission_deadline_unix) or args.admission_deadline_unix <= 0:
+        parser.error('admission deadline must be a finite positive Unix timestamp')
     state=args.state_dir.resolve(); state.mkdir(parents=True,exist_ok=True)
     stop=threading.Event()
     for sig in (signal.SIGTERM,signal.SIGINT): signal.signal(sig,lambda *_:stop.set())
-    deadline=time.monotonic()+args.max_wall_seconds
+    # All pods use one cutoff, so delayed starts cannot admit jobs after the
+    # publisher's drain budget. Controller age never shortens an existing job.
+    drain=MAX_JOB_WALL_SECONDS+PUBLICATION_GRACE_SECONDS if args.mode=='coordinator' else 0
+    publisher_deadline=min(time.time()+args.max_wall_seconds,args.admission_deadline_unix+drain)
+    deadline=time.monotonic()+max(0,publisher_deadline-time.time())
+    draining=False; shutdown_requested=False
     lock='coordinator.lock' if args.mode=='coordinator' else 'worker-'+safe_id(args.worker_id)+'.lock'
     with exclusive_process(state,lock):
         while not stop.is_set() and time.monotonic()<deadline:
             if args.mode=='coordinator':
                 try:
-                    manifest=fetch_control(args.repo,args.control_ref,args.queue_path)
-                    stage_queue(args.repo,state,args.control_ref,manifest)
+                    draining=draining or time.time()>=args.admission_deadline_unix
+                    if not draining:
+                        manifest=fetch_control(args.repo,args.control_ref,args.queue_path)
+                        if time.time()<args.admission_deadline_unix:
+                            stage_queue(args.repo,state,args.control_ref,manifest,
+                                        admission_deadline_unix=args.admission_deadline_unix)
+                            draining=manifest['shutdown']
+                            shutdown_requested=manifest['shutdown']
+                        else:
+                            draining=True
                     report=publish_results(args.repo,state,args.control_ref,args.results_branch)
-                    atomic_json(state/'coordinator_status.json',{'at':now(),'status':'ok','jobs':len(report['jobs'])})
-                    if manifest['shutdown']: break
+                    draining=draining or time.time()>=args.admission_deadline_unix
+                    atomic_json(state/'coordinator_status.json',{'at':now(),'status':'ok','jobs':len(report['jobs']),
+                                'phase':'draining' if draining else 'admitting',
+                                'admission_deadline_unix':args.admission_deadline_unix,
+                                'publisher_deadline_unix':publisher_deadline})
+                    outstanding=any(row['status'] in {'claimed','stale_claim_requires_decision'} for row in report['jobs'])
+                    # An admitting snapshot may have preceded a final claim
+                    # even when its Git push returns after the cutoff. Keep
+                    # time-based drain alive for the entire bounded window.
+                    # Explicit shutdown was serialized with all prior claims
+                    # before this publication and prevents any later claim.
+                    if shutdown_requested and not outstanding: break
                 except Exception as error:
                     atomic_json(state/'coordinator_status.json',{'at':now(),'status':'error','error_type':type(error).__name__})
                     # Leave all claims/results intact. A later trusted control update may repair readiness.
             else:
-                worker_once(args.repo,state,args.worker_id,args.role,max_wall_seconds=deadline-time.monotonic(),stop_event=stop)
+                # Controller age stops new polling; it does not shorten a job
+                # that already acquired its bounded release claim.
+                worker_once(args.repo,state,args.worker_id,args.role,
+                            max_wall_seconds=MAX_JOB_WALL_SECONDS,stop_event=stop)
                 if control_state(state)['shutdown']: break
             if args.once: break
             stop.wait(min(args.poll_seconds,max(0,deadline-time.monotonic())))

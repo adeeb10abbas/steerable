@@ -6,7 +6,10 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 import unittest
+from unittest import mock
 
 MODULE = Path(__file__).resolve().parents[1] / 'execution/20260912/autonomy/cluster_queue.py'
 
@@ -57,6 +60,126 @@ class ClusterQueueTests(unittest.TestCase):
         self.assertTrue((path/'claim').is_dir())
         status=self.q.snapshot(self.state,stale_after_seconds=-1)
         self.assertEqual(status['jobs'][0]['status'],'stale_claim_requires_decision')
+    def test_withdrawal_after_worker_snapshot_prevents_unclaimed_launch(self):
+        self.stage(self.manifest([self.job()]))
+        original=self.q.claim_job
+        def withdraw_then_claim(directory, worker_id):
+            self.stage(self.manifest())
+            return original(directory,worker_id)
+        self.q.claim_job=withdraw_then_claim
+        self.assertEqual(self.q.worker_once(self.repo,self.state,'worker-1',poll_seconds=.02),0)
+        path=self.state/'jobs/diagnostic-001'
+        self.assertFalse((path/'claim').exists())
+        self.assertFalse((path/'stdout.log').exists())
+
+    def test_claim_before_withdrawal_keeps_explicit_claim_authority(self):
+        staged=self.stage(self.manifest([self.job()]))
+        original=self.q.claim_job
+        def claim_then_withdraw(directory,worker_id):
+            claimed=original(directory,worker_id)
+            self.stage(self.manifest())
+            return claimed
+        self.q.claim_job=claim_then_withdraw
+        self.assertEqual(self.q.worker_once(self.repo,self.state,'worker-1',poll_seconds=.02),1)
+        path=self.state/'jobs/diagnostic-001'
+        owner=json.loads((path/'claim/owner.json').read_text())
+        self.assertEqual(owner['control_commit'],self.commit)
+        self.assertEqual(owner['control_generation'],staged['control_generation'])
+        self.assertEqual(owner['descriptor_sha256'],self.q.file_identity(path/'descriptor.json')['sha256'])
+        self.assertEqual(json.loads((path/'result.json').read_text())['status'],'succeeded')
+
+    def test_shared_release_lock_serializes_control_change_and_claim(self):
+        self.stage(self.manifest([self.job()]))
+        ready=self.root/'claim-ready'
+        code='''import importlib.util, pathlib, sys
+spec=importlib.util.spec_from_file_location('queue',sys.argv[1]); q=importlib.util.module_from_spec(spec); spec.loader.exec_module(q)
+pathlib.Path(sys.argv[3]).write_text('ready')
+print(q.claim_job(pathlib.Path(sys.argv[2])/'jobs/diagnostic-001','other-process'),flush=True)
+'''
+        with self.q.shared_release_lock(self.state):
+            proc=subprocess.Popen([sys.executable,'-c',code,str(MODULE),str(self.state),str(ready)],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+            self.addCleanup(lambda: proc.kill() if proc.poll() is None else None)
+            deadline=time.monotonic()+3
+            while not ready.exists() and time.monotonic()<deadline: time.sleep(.01)
+            self.assertTrue(ready.exists()); self.assertIsNone(proc.poll())
+            control=self.q.control_state(self.state); control['active_job_ids']=[]; control['control_generation']+=1
+            self.q.atomic_json(self.state/'control.json',control)
+        stdout,stderr=proc.communicate(timeout=3)
+        self.assertEqual(proc.returncode,0,stderr); self.assertEqual(stdout.strip(),'False')
+        self.assertFalse((self.state/'jobs/diagnostic-001/claim').exists())
+
+    def test_daemon_lock_releases_after_process_death_but_job_claim_does_not(self):
+        self.stage(self.manifest([self.job()]))
+        self.assertTrue(self.q.claim_job(self.state/'jobs/diagnostic-001','original-worker'))
+        ready=self.root/'lock-ready'
+        code='''import importlib.util, pathlib, sys, time
+spec=importlib.util.spec_from_file_location('queue',sys.argv[1]); q=importlib.util.module_from_spec(spec); spec.loader.exec_module(q)
+with q.exclusive_process(sys.argv[2],'coordinator.lock'):
+ pathlib.Path(sys.argv[3]).write_text('ready')
+ time.sleep(30)
+'''
+        proc=subprocess.Popen([sys.executable,'-c',code,str(MODULE),str(self.state),str(ready)])
+        self.addCleanup(lambda: proc.kill() if proc.poll() is None else None)
+        deadline=time.monotonic()+3
+        while not ready.exists() and time.monotonic()<deadline: time.sleep(.01)
+        self.assertTrue(ready.exists())
+        with self.assertRaises(RuntimeError):
+            with self.q.exclusive_process(self.state,'coordinator.lock'): self.fail('duplicate coordinator')
+        proc.kill(); proc.wait(timeout=3)
+        with self.q.exclusive_process(self.state,'coordinator.lock'):
+            self.assertTrue((self.state/'coordinator.lock').is_file())
+            self.assertFalse(self.q.claim_job(self.state/'jobs/diagnostic-001','new-worker'))
+        self.assertTrue((self.state/'coordinator.lock').is_file())
+
+    def test_controller_accepts_seven_days_but_jobs_remain_at_most_two_days(self):
+        command=[sys.executable,str(MODULE),'worker','--repo',str(self.repo),'--state-dir',str(self.state),'--once']
+        result=subprocess.run(command+['--max-wall-seconds','604800'],capture_output=True,text=True,timeout=3)
+        self.assertEqual(result.returncode,0,result.stderr)
+        result=subprocess.run(command+['--max-wall-seconds','604801'],capture_output=True,text=True,timeout=3)
+        self.assertEqual(result.returncode,2)
+        job=self.job(); job['max_wall_seconds']=604800
+        with self.assertRaisesRegex(ValueError,'172800'): self.q.normalize_job(job)
+
+    def test_claimed_job_finishes_own_budget_after_controller_poll_window_expires(self):
+        job=self.job(); job['max_wall_seconds']=1
+        job['argv']=[sys.executable,'-c','import time; time.sleep(.2); print("finished within job budget")']
+        self.stage(self.manifest([job]))
+        result=subprocess.run([sys.executable,str(MODULE),'worker','--repo',str(self.repo),'--state-dir',str(self.state),
+                               '--max-wall-seconds','.1','--poll-seconds','.01','--once'],capture_output=True,text=True,timeout=4)
+        self.assertEqual(result.returncode,0,result.stderr)
+        path=self.state/'jobs/diagnostic-001'
+        self.assertEqual(json.loads((path/'result.json').read_text())['status'],'succeeded')
+
+    def test_shared_absolute_admission_cutoff_blocks_late_claim(self):
+        control=self.q.stage_queue(self.repo,self.state,self.ref,self.manifest([self.job()]),admission_deadline_unix=time.time()-.1)
+        self.assertLess(control['admission_deadline_unix'],time.time())
+        self.assertFalse(self.q.claim_job(self.state/'jobs/diagnostic-001','late-worker'))
+        self.assertFalse((self.state/'jobs/diagnostic-001/claim').exists())
+
+    def test_coordinator_keeps_publishing_when_admission_snapshot_crosses_cutoff(self):
+        job=self.job(); job['max_wall_seconds']=1
+        job['argv']=[sys.executable,'-c','import time; time.sleep(.25); print("late receipt")']
+        cutoff=time.time()+.15; observed=[]; threads=[]
+        def publish(*_args):
+            report=self.q.snapshot(self.state)
+            if not threads:
+                thread=threading.Thread(target=self.q.worker_once,args=(self.repo,self.state,'drain-worker'),kwargs={'poll_seconds':.01})
+                threads.append(thread); thread.start()
+                deadline=time.monotonic()+2
+                while not (self.state/'jobs/diagnostic-001/claim').exists() and time.monotonic()<deadline: time.sleep(.005)
+                time.sleep(max(0,cutoff-time.time())+.02)
+            observed.append((time.time(),report['jobs'][0]['status']))
+            return report
+        argv=[str(MODULE),'coordinator','--repo',str(self.repo),'--state-dir',str(self.state),
+              '--max-wall-seconds','.8','--admission-deadline-unix',str(cutoff),'--poll-seconds','.01']
+        with mock.patch.object(sys,'argv',argv), mock.patch.object(self.q,'fetch_control',return_value=self.manifest([job])) as fetch, mock.patch.object(self.q,'publish_results',side_effect=publish):
+            self.assertEqual(self.q.main(),0)
+            self.assertEqual(fetch.call_count,1)
+        for thread in threads: thread.join(timeout=2)
+        self.assertEqual(observed[0][1],'staged')
+        self.assertEqual(observed[-1][1],'succeeded')
+        self.assertGreater(observed[-1][0],cutoff)
+        self.assertEqual(json.loads((self.state/'coordinator_status.json').read_text())['phase'],'draining')
     def test_failed_receipt_and_full_logs_are_retained_without_retry(self):
         self.stage(self.manifest([self.job(code=7)]))
         self.assertEqual(self.q.worker_once(self.repo,self.state,'worker-1','any',max_wall_seconds=10,poll_seconds=.02),1)

@@ -776,6 +776,33 @@
       ],
       "max_wall_seconds": 3600,
       "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "fixed-observation-p00-001",
+      "released": true,
+      "source_commit": "ce5ad4282d2392245f843d5270a9656d4e99f842",
+      "role": "wmf-forecast-0912-worker-01",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/experiments/forecast_layout/fixed_observation_job.py",
+        "queue",
+        "--source-root",
+        "{source_root}",
+        "--state-dir",
+        "{state_dir}",
+        "--job-dir",
+        "{job_dir}",
+        "--gate-receipt",
+        "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-p00-candidate-01-r2/publish/fixture_gate_receipt.json",
+        "--gate-receipt-sha256",
+        "9611b5bd1fee98ebc7f480e7044a871e54894bbb63ce2e91966ca46d96a6adbf",
+        "--pose-manifest",
+        "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/p00_pose_manifest.json",
+        "--environment-seed",
+        "2026091000"
+      ],
+      "max_wall_seconds": 3600,
+      "publish_log_tail_bytes": 8192
     }
   ]
 }

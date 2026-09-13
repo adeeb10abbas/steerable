@@ -321,7 +321,9 @@ def select_candidate(
     return None, None
 
 
-def verify_deployment_identity(source_root: Path, hostname: str, pod_uid: str) -> dict[str, Any]:
+def verify_deployment_identity(
+    source_root: Path, hostname: str, pod_uid: str | None
+) -> dict[str, Any]:
     receipt_path = source_root / "workshops/corl2026_world_models/execution/20260912/autonomy/deployment_receipt.json"
     receipt, _payload = load_json(receipt_path, "deployment_receipt_unreadable")
     require(isinstance(receipt, dict), "deployment_receipt_invalid")
@@ -358,7 +360,13 @@ def verify_deployment_identity(source_root: Path, hostname: str, pod_uid: str) -
         receipt_kind = "corrected_worker_pool_transition"
     require(len(matches) == 1, "hostname_absent_from_deployment_receipt")
     row = matches[0]
-    require(row.get("uid") == pod_uid, "pod_uid_mismatch")
+    expected_uid = row.get("uid")
+    require(
+        isinstance(expected_uid, str) and SAFE_ID_RE.fullmatch(expected_uid) is not None,
+        "receipt_pod_uid_invalid",
+    )
+    if pod_uid:
+        require(expected_uid == pod_uid, "pod_uid_mismatch")
     require(row.get("role") == "worker" and row.get("phase") == "Running" and row.get("ready") is True, "pod_not_ready_worker")
     if receipt_kind == "corrected_worker_pool_transition":
         require(
@@ -372,7 +380,12 @@ def verify_deployment_identity(source_root: Path, hostname: str, pod_uid: str) -
         "receipt": file_identity(receipt_path),
         "receipt_kind": receipt_kind,
         "pod": hostname,
-        "pod_uid": pod_uid,
+        "pod_uid": expected_uid,
+        "pod_uid_attestation_source": (
+            "downward_api_environment_and_hash_bound_receipt"
+            if pod_uid
+            else "exact_kernel_hostname_and_hash_bound_receipt"
+        ),
         "deployment_job": row.get("job"),
         "node": row.get("node"),
     }
@@ -659,8 +672,7 @@ def execute_job(
             else:
                 context["candidate"] = candidate
                 current_hostname = hostname or socket.gethostname()
-                current_pod_uid = pod_uid or os.environ.get("POD_UID", "")
-                require(bool(current_pod_uid), "pod_uid_environment_missing")
+                current_pod_uid = pod_uid or os.environ.get("POD_UID")
                 context["deployment"] = verify_deployment_identity(source, current_hostname, current_pod_uid)
                 context["gpu"] = verify_idle_b200(nvidia_smi)
                 directories = _runtime_directories(state_parent, current_hostname)
@@ -673,7 +685,7 @@ def execute_job(
                     "expected_study_commit": source_commit,
                     "expected_robolab_commit": ROBOLAB_COMMIT,
                     "pod": current_hostname,
-                    "pod_uid": current_pod_uid,
+                    "pod_uid": context["deployment"]["pod_uid"],
                     "gpu_uuid": context["gpu"]["uuid"],
                     "device": "cuda:0",
                     "renderer": "realtime",

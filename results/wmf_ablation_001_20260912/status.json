@@ -49,7 +49,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "fc18e9d26aa91741f12df0efc151bfffa9194f72",
-    "control_generation": 147,
+    "control_generation": 148,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -488,10 +488,30 @@
       "status": "staged"
     },
     {
+      "child_pid": 890,
+      "child_reaped": true,
       "descriptor_sha256": "8a35b743602e1ea6a88de40e3fe1d01085101ac98863579f9b2a5882406386e4",
+      "ended_at": "2026-09-13T03:36:02.184001+00:00",
+      "error_type": null,
       "job_id": "d1-first-live-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"behavioral_episode_count\": 0, \"decision\": \"technical_invalid\", \"exit_code\": 3, \"generation_request_count\": 0, \"job_id\": \"d1-first-live-001\", \"published\": true}\n"
+      },
+      "returncode": 3,
       "source_commit": "ce5ad4282d2392245f843d5270a9656d4e99f842",
-      "status": "staged"
+      "started_at": "2026-09-13T03:35:59.553235+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 162,
+        "sha256": "55e41dcad7e7919fd34edf1237a7e0e7cf3493f6ae6ce81082e6f4f394514c85"
+      },
+      "wall_seconds": 2.631722357997205,
+      "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
       "child_pid": 3507,
@@ -755,9 +775,17 @@
     },
     {
       "descriptor_sha256": "333ac53376701c794f96c9fad6a5373f13151872de36d9f1a4b68bea2f9fbb2c",
+      "heartbeat": {
+        "at": "2026-09-13T03:36:23.228561+00:00",
+        "child_pid": 4613,
+        "unix": 1789270583.228582,
+        "worker_id": "wmf-forecast-0912-worker-01",
+        "worker_pid": 1
+      },
       "job_id": "recorder-qualification-p00-001",
       "source_commit": "ce5ad4282d2392245f843d5270a9656d4e99f842",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-01"
     }
   ],
   "maximum_combined_log_tail_bytes_per_job": 8192,

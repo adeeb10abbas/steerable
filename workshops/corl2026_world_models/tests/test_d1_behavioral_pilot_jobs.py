@@ -438,6 +438,20 @@ class ServerEvidenceTests(unittest.TestCase):
             }
             path = request_root / "request_receipt.json"
             pilot.immutable_json(path, receipt)
+            real_import = __import__
+
+            def reject_numpy(name, *args, **kwargs):
+                if name == "numpy" or name.startswith("numpy."):
+                    raise ModuleNotFoundError("NumPy deliberately unavailable")
+                return real_import(name, *args, **kwargs)
+
+            with mock.patch("builtins.__import__", side_effect=reject_numpy):
+                _, parent_identity = pilot.validate_request_receipt(
+                    path, future_root=future, episode_id=episode_id,
+                    session_id="session-1", prompt=pilot.PROMPTS["right"],
+                    request_index=0, server_contract_sha256="e" * 64,
+                )
+            self.assertEqual(parent_identity["sha256"], pilot.sha256_file(path))
             _, identity = pilot.validate_request_receipt(
                 path, future_root=future, episode_id=episode_id,
                 session_id="session-1", prompt=pilot.PROMPTS["right"],
@@ -452,6 +466,53 @@ class ServerEvidenceTests(unittest.TestCase):
                     request_index=0, server_contract_sha256="e" * 64,
                     returned_action=action + 1,
                 )
+
+    def test_dependency_free_npy_parser_rejects_unsafe_action_arrays(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            valid = np.arange(24 * 8, dtype=np.float32).reshape(24, 8)
+            valid_path = root / "valid.npy"
+            np.save(valid_path, valid, allow_pickle=False)
+
+            shape, values = pilot._validate_persisted_float32_action_npy(valid_path)
+            self.assertEqual(shape, (24, 8))
+            self.assertEqual(len(values), 24 * 8)
+
+            cases = {
+                "float64": np.arange(24 * 8, dtype=np.float64).reshape(24, 8),
+                "big-endian-float32": valid.astype(">f4"),
+                "wrong-shape": np.arange(24 * 8, dtype=np.float32).reshape(12, 16),
+                "nan": valid.copy(),
+                "inf": valid.copy(),
+                "fortran": np.asfortranarray(valid),
+            }
+            cases["nan"][0, 0] = np.nan
+            cases["inf"][0, 0] = np.inf
+            for name, array in cases.items():
+                with self.subTest(name=name):
+                    candidate = root / f"{name}.npy"
+                    np.save(candidate, array, allow_pickle=False)
+                    reason = (
+                        "d1_persisted_action_shape_changed"
+                        if name == "wrong-shape"
+                        else "d1_persisted_action_invalid"
+                    )
+                    with self.assertRaisesRegex(pilot.D1BehavioralPilotError, reason):
+                        pilot._validate_persisted_float32_action_npy(candidate)
+
+            truncated = root / "truncated.npy"
+            truncated.write_bytes(valid_path.read_bytes()[:-1])
+            with self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError, "d1_persisted_action_invalid"
+            ):
+                pilot._validate_persisted_float32_action_npy(truncated)
+
+            trailing = root / "trailing.npy"
+            trailing.write_bytes(valid_path.read_bytes() + b"unexpected")
+            with self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError, "d1_persisted_action_invalid"
+            ):
+                pilot._validate_persisted_float32_action_npy(trailing)
 
     def test_runner_never_calls_uninstrumented_dreamzero_reset(self) -> None:
         source = (FORECAST / "d1_behavioral_pilot_jobs.py").read_text()

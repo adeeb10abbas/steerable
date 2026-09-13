@@ -17,6 +17,7 @@ on the GM PVC.  Queue publish directories receive bounded receipts only.
 from __future__ import annotations
 
 import argparse
+import ast
 from contextlib import contextmanager
 from datetime import datetime, timezone
 import csv
@@ -30,6 +31,7 @@ from pathlib import Path
 import re
 import signal
 import socket
+import struct
 import subprocess
 import sys
 import tempfile
@@ -1131,6 +1133,84 @@ def _validate_first_request_temporal_metrics(value: Any) -> dict[str, Any]:
     return {"passed": True, "rank_temporal_state_scan": scans, "unresolved_mutable_temporal_fields": []}
 
 
+def _validate_persisted_float32_action_npy(
+    path: Path,
+) -> tuple[tuple[int, int], tuple[float, ...]]:
+    """Validate the fixed D1 action array without importing NumPy.
+
+    The queue parent performs this check while authenticating completed cells
+    for resume.  Its system Python deliberately has no scientific packages, so
+    parse only the small, documented NPY container and fail closed on every
+    unsupported representation.  The enclosing descriptor validation still
+    binds the complete file bytes by SHA-256 before this parser is reached.
+    """
+
+    path = Path(path)
+    try:
+        with path.open("rb") as stream:
+            magic = stream.read(6)
+            require(magic == b"\x93NUMPY", "d1_persisted_action_invalid")
+            version_bytes = stream.read(2)
+            require(len(version_bytes) == 2, "d1_persisted_action_invalid")
+            version = (version_bytes[0], version_bytes[1])
+            require(version in {(1, 0), (2, 0), (3, 0)}, "d1_persisted_action_invalid")
+            length_size = 2 if version == (1, 0) else 4
+            length_bytes = stream.read(length_size)
+            require(len(length_bytes) == length_size, "d1_persisted_action_invalid")
+            header_length = int.from_bytes(length_bytes, "little", signed=False)
+            require(0 < header_length <= 4096, "d1_persisted_action_invalid")
+            header_bytes = stream.read(header_length)
+            require(
+                len(header_bytes) == header_length and header_bytes.endswith(b"\n"),
+                "d1_persisted_action_invalid",
+            )
+            encoding = "utf-8" if version == (3, 0) else "latin1"
+            try:
+                header = ast.literal_eval(header_bytes.decode(encoding).strip())
+            except (SyntaxError, ValueError, UnicodeDecodeError) as error:
+                raise D1BehavioralPilotError("d1_persisted_action_invalid") from error
+            require(
+                isinstance(header, dict)
+                and set(header) == {"descr", "fortran_order", "shape"},
+                "d1_persisted_action_invalid",
+            )
+            descriptor = header.get("descr")
+            # The qualified GM workers are little-endian and np.save emits
+            # ``<f4`` for the native np.float32 action returned by DreamZero.
+            # This preserves the former ``loaded.dtype == np.float32`` gate.
+            require(
+                isinstance(descriptor, str)
+                and descriptor == "<f4",
+                "d1_persisted_action_invalid",
+            )
+            require(header.get("fortran_order") is False, "d1_persisted_action_invalid")
+            shape = header.get("shape")
+            require(
+                isinstance(shape, tuple)
+                and all(type(dimension) is int and dimension > 0 for dimension in shape),
+                "d1_persisted_action_invalid",
+            )
+            require(
+                shape == (RETURNED_ACTION_HORIZON, ACTION_DIM),
+                "d1_persisted_action_shape_changed",
+            )
+            element_count = RETURNED_ACTION_HORIZON * ACTION_DIM
+            payload = stream.read(element_count * 4)
+            require(
+                len(payload) == element_count * 4 and stream.read(1) == b"",
+                "d1_persisted_action_invalid",
+            )
+    except OSError as error:
+        raise D1BehavioralPilotError("d1_persisted_action_invalid") from error
+
+    try:
+        values = struct.unpack(f"<{element_count}f", payload)
+    except struct.error as error:
+        raise D1BehavioralPilotError("d1_persisted_action_invalid") from error
+    require(all(math.isfinite(value) for value in values), "d1_persisted_action_invalid")
+    return shape, values
+
+
 def validate_request_receipt(
     path: Path,
     *,
@@ -1142,8 +1222,6 @@ def validate_request_receipt(
     server_contract_sha256: str,
     returned_action: Any | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    import numpy as np
-
     expected_path = (
         Path(future_root).resolve() / "episodes" / episode_id
         / f"request_{request_index:04d}" / "request_receipt.json"
@@ -1180,12 +1258,17 @@ def validate_request_receipt(
     )
     require(action_entry.get("shape") == [RETURNED_ACTION_HORIZON, ACTION_DIM], "d1_returned_action_shape_changed")
     require(action_entry.get("dtype") == "float32", "d1_returned_action_dtype_changed")
-    persisted_action = np.load(action_identity["path"], allow_pickle=False)
-    require(persisted_action.shape == (RETURNED_ACTION_HORIZON, ACTION_DIM), "d1_persisted_action_shape_changed")
-    require(persisted_action.dtype == np.float32 and np.isfinite(persisted_action).all(), "d1_persisted_action_invalid")
+    persisted_shape, persisted_values = _validate_persisted_float32_action_npy(
+        Path(action_identity["path"])
+    )
     if returned_action is not None:
+        # Only a live RoboLab child supplies a wire action.  That pinned
+        # environment has NumPy; the system-Python resume path above does not.
+        import numpy as np
+
         observed = np.asarray(returned_action)
-        require(observed.shape == persisted_action.shape and observed.dtype == np.float32, "d1_wire_action_shape_or_dtype_changed")
+        require(observed.shape == persisted_shape and observed.dtype == np.float32, "d1_wire_action_shape_or_dtype_changed")
+        persisted_action = np.asarray(persisted_values, dtype=np.float32).reshape(persisted_shape)
         require(np.array_equal(observed, persisted_action, equal_nan=False), "d1_wire_action_differs_from_server_artifact")
     latent = receipt.get("latent_video")
     _resolve_server_artifact(latent, f"request_{request_index}_latent", future_root=future_root)

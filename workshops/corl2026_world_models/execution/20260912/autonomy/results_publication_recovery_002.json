@@ -1,0 +1,52 @@
+{
+  "schema_version": "wmf-results-publication-recovery-v1",
+  "recorded_at": "2026-09-13T16:30:06Z",
+  "status": "all_active_ids_forward_fenced_pending_fresh_publication",
+  "trigger": {
+    "last_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+    "last_results_commit_at": "2026-09-13T14:40:32Z",
+    "control_commit_of_first_fence": "3a66b29f3b24e88328c7e8dba1950bd139158252",
+    "minutes_without_publication_after_first_fence": 20,
+    "first_fence_restored_prior_publishing_queue_sha256": "5791624d0412ac74d653b278ca21ea763c63061cc16c84aa2809c222cf587972",
+    "first_fence_produced_public_recovery_evidence": false
+  },
+  "last_published_active_state": {
+    "terminal_descriptors_removed_from_active_manifest": 24,
+    "claimed_descriptors_removed_from_active_manifest": 1,
+    "claimed_job_ids": [
+      "development-resource-compiler-formal-001"
+    ],
+    "unseen_previously_fenced_job_ids": [
+      "camera-crop-replay-witness-002"
+    ],
+    "unclassified_additional_active_job_ids": []
+  },
+  "recovery_action": {
+    "kind": "empty_non_shutdown_active_manifest",
+    "shutdown": false,
+    "jobs_released": 0,
+    "active_job_ids_after_uptake": 0,
+    "purpose": "remove every source-worktree verification from the coordinator path before its next results snapshot",
+    "descriptor_claim_and_result_directories_remain_immutable_on_pvc": true,
+    "claimed_children_are_not_terminated_by_active_manifest_removal": true,
+    "worker_controller_shutdown_requested": false,
+    "automatic_claim_recovery": false,
+    "duplicate_job_released": false,
+    "new_work_may_be_released_before_fresh_reconciliation": false
+  },
+  "bounded_interpretation": {
+    "if_publication_resumes": "reconcile every claimed or terminal job before a fresh descriptor release",
+    "if_publication_remains_silent": "source staging is not established as the cause; coordinator process loss or untimed shared-PVC/publication work remains possible",
+    "camera_attempt_002_state_is_known": false,
+    "resource_attempt_001_terminal_state_is_known": false
+  },
+  "science_counts": {
+    "model_requests": 0,
+    "behavioral_actions": 0,
+    "robot_episodes": 0,
+    "behavioral_cells": 0,
+    "labels": 0,
+    "confirmation_cells": 0
+  },
+  "safe_to_release_confirmation": false
+}

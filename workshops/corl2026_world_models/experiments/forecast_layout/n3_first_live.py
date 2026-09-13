@@ -20,7 +20,7 @@ import argparse
 import ast
 import contextlib
 import copy
-from dataclasses import dataclass
+from dataclasses import dataclass, fields, is_dataclass
 import hashlib
 import importlib
 import json
@@ -278,6 +278,15 @@ class _ArtifactWriter:
             return self._write_numpy(value, safe_role)
         if isinstance(value, np.generic):
             return self._write_numpy(np.asarray(value), safe_role)
+        if is_dataclass(value) and not isinstance(value, type):
+            return {
+                "__type__": "dataclass",
+                "class": f"{type(value).__module__}.{type(value).__qualname__}",
+                "fields": {
+                    field.name: self._freeze(getattr(value, field.name), f"{role}_{field.name}")
+                    for field in fields(value)
+                },
+            }
         if isinstance(value, Mapping):
             items: dict[str, Any] = {}
             for key, child in value.items():

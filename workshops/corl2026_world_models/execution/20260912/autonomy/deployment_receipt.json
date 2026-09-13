@@ -1,0 +1,357 @@
+{
+  "schema_version": "wmf-deployment-receipt-v1",
+  "status": "deployed_and_execution_handed_to_durable_workstation_coordinator",
+  "observed_at_utc": "2026-09-13T01:54:05.036545+00:00",
+  "applied_manifest": "cluster_bootstrap_v2.json",
+  "applied_manifest_sha256": "bb171f03d990bf57a45f7d23f153af6757dd32e63b3445e3795bdb8a84bd0fee",
+  "reviewed_queue_commit": "b6c78c2d50dcc71a37ca17bdf3b2bd1333d78242",
+  "tests_passed": 82,
+  "cross_node_flock_receipt": "flock_preflight.json",
+  "independence_receipt": "independence.json",
+  "worker_counts": {
+    "Running": 4,
+    "Pending": 28
+  },
+  "pods": [
+    {
+      "pod": "wmf-forecast-0912-coordinator-pgvwg",
+      "uid": "7d4f9797-7d2a-497e-b336-8cade6e5b124",
+      "role": "coordinator",
+      "job": "wmf-forecast-0912-coordinator",
+      "node": "dcwipphai0068.edc.nam.gm.com",
+      "phase": "Running",
+      "ready": true,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-00-5vvt7",
+      "uid": "24c1515a-af80-4c55-9e7b-d983ada0fcee",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-00",
+      "node": "dcwipphhgc226.edc.nam.gm.com",
+      "phase": "Running",
+      "ready": true,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-01-7vj7f",
+      "uid": "de6ed4c0-8458-491f-b6f7-679bd1bf7485",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-01",
+      "node": "dcwipphhgc226.edc.nam.gm.com",
+      "phase": "Running",
+      "ready": true,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-02-khp24",
+      "uid": "3be3e6c5-e8ac-47ff-ba83-9cef7cd3e5e1",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-02",
+      "node": "dcwipphhgc226.edc.nam.gm.com",
+      "phase": "Running",
+      "ready": true,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-03-t2lg8",
+      "uid": "9f2d38d2-9bc2-4c85-82b6-bcb7d09cd58b",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-03",
+      "node": "dcwipphhgc226.edc.nam.gm.com",
+      "phase": "Running",
+      "ready": true,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-04-xtzsw",
+      "uid": "617e30c4-085f-4c7c-80a4-4b740977a3a0",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-04",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-05-8d8lj",
+      "uid": "62e153c9-b346-489a-acf7-55409d4f8dba",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-05",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-06-95j87",
+      "uid": "59bd274b-8c48-4e5b-a773-54c65416b162",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-06",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-07-hzczl",
+      "uid": "b34631b8-beb1-48ac-bc18-e8f2d0e7dc30",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-07",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-08-wdzq8",
+      "uid": "8e8c778e-5489-446b-a514-553338278bbc",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-08",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-09-k6tvc",
+      "uid": "959015eb-4f53-44af-ba65-feed2a8bfd5d",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-09",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-10-6kwnz",
+      "uid": "3f17841c-5419-4e19-aecc-83cedd5cec9f",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-10",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-11-6nwn4",
+      "uid": "a5822d4d-844b-4a6c-8727-6d3c1cb01770",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-11",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-12-8rw4z",
+      "uid": "26b4670e-db4c-420b-b35f-fa5bec664c35",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-12",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-13-jl27x",
+      "uid": "f2c05fd1-15a6-4a1a-944b-8a1433777d82",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-13",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-14-b9fr7",
+      "uid": "e6475441-2850-4700-9c1d-548b030e60a9",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-14",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-15-dq46j",
+      "uid": "fe9a2cd4-3c6d-45a8-965e-0b572afbc0eb",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-15",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-16-8pxpv",
+      "uid": "8c8e9aa3-97c7-428d-a6fc-e1798d190a80",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-16",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-17-46m8v",
+      "uid": "c7ca51e0-567d-487b-a4aa-04af860fd194",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-17",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-18-m6zjm",
+      "uid": "dcbbf2db-c8b9-4e7d-941a-dde833776f73",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-18",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-19-xs8fm",
+      "uid": "c951d4f4-36ff-4edb-af9c-9c9e5ccb163c",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-19",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-20-b7h6k",
+      "uid": "2cb2fd7f-15c9-403a-854a-8b1d7e0485be",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-20",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-21-bx5fh",
+      "uid": "f682e4e9-3e59-433f-b65a-54bec0b26534",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-21",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-22-bl5c2",
+      "uid": "b4873f9b-f795-43b8-9fe6-cfc6c0b3af84",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-22",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-23-q2d4h",
+      "uid": "388806be-3991-4b93-8148-337629f5ce8e",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-23",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-24-qvmxb",
+      "uid": "bd052446-16ad-4458-8391-caf3babe3cf8",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-24",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-25-kj5lw",
+      "uid": "1d19402b-ffb1-4d97-9ddc-24b9804e7182",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-25",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-26-zl876",
+      "uid": "c7831261-4f64-43c6-8cab-7f01af728b59",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-26",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-27-crxtn",
+      "uid": "94347a4f-2b39-4087-a907-c7e3d6a492f5",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-27",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-28-rffgf",
+      "uid": "f8625cd2-e752-4613-9d3a-17b723d32bfe",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-28",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-29-qtqbv",
+      "uid": "2f73aa77-125c-434b-901f-6d0642ff8f70",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-29",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-30-lds9k",
+      "uid": "464f5aa7-adf5-4928-bd9e-0c5f6b23193a",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-30",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    },
+    {
+      "pod": "wmf-forecast-0912-worker-31-4hsrz",
+      "uid": "309e371b-bf11-4511-bcbb-d14cd5108e96",
+      "role": "worker",
+      "job": "wmf-forecast-0912-worker-31",
+      "node": null,
+      "phase": "Pending",
+      "ready": false,
+      "container_restarts": 0
+    }
+  ],
+  "temporary_bootcheck_pod_deleted": true,
+  "initial_failed_bootstrap_retained_in": "bootstrap_attempt_1.json",
+  "no_scientific_cells_released_by_parent": true,
+  "study_execution_owner": "Active workstation Codex service wmf-forecast-autonomy.service",
+  "source_branch": "codex/forecast-layout-gm-20260912",
+  "results_branch": "codex/forecast-layout-gm-20260912-results",
+  "raw_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912",
+  "work_mac_cutoff": "2026-09-13T11:00:00Z",
+  "work_mac_required_for_ongoing_dispatch_or_result_return": false,
+  "credential_boundary": "Only repo-scoped cluster deploy key; GM and Codex credentials remain on their original hosts."
+}

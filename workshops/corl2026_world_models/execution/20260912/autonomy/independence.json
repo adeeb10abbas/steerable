@@ -1,0 +1,107 @@
+{
+  "schema_version": "wmf-independence-receipt-v1",
+  "verdict": "PASS",
+  "observed_at_utc": "2026-09-13T01:59:11.523358+00:00",
+  "verified_path": [
+    "workstation GitHub push of control release",
+    "cluster coordinator GitHub fetch and PVC source staging",
+    "four isolated cluster GPU workers execute diagnostics",
+    "cluster coordinator direct GitHub result push",
+    "workstation GitHub fetch and artifact hash verification"
+  ],
+  "work_mac_in_submission_execution_or_return_path": false,
+  "physical_mac_shutdown_test_performed": false,
+  "control_commit": "84921052b137af79f210157f62396fa56b8062d9",
+  "result_commit": "5c7c0ef8de093f10185b31d8b7a869fdb2ba7a83",
+  "results_branch": "codex/forecast-layout-gm-20260912-results",
+  "requested_gpu_workers": 32,
+  "diagnostic_workers_verified": 4,
+  "diagnostics_waiting_for_scheduler_capacity": 28,
+  "worker_diagnostics": [
+    {
+      "job_id": "bootstrap-diagnostic-worker-00",
+      "worker_id": "wmf-forecast-0912-worker-00",
+      "hostname": "wmf-forecast-0912-worker-00-5vvt7",
+      "gpu": {
+        "driver_version": "580.95.05",
+        "index": 0,
+        "memory.free": 182632,
+        "memory.total": 183359,
+        "name": "NVIDIA B200",
+        "utilization.gpu": 0,
+        "uuid": "GPU-1bb3e2e7-6bf0-2e3c-7489-8a03b2438515"
+      },
+      "compute_processes": [],
+      "artifact_sha256": "e8f56382fead5addc4d1f7be60975c8599347aba309af97860106d5d894e7b2e",
+      "result_status": "succeeded",
+      "started_at": "2026-09-13T01:57:40.573876+00:00",
+      "ended_at": "2026-09-13T01:57:43.553210+00:00"
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-01",
+      "worker_id": "wmf-forecast-0912-worker-01",
+      "hostname": "wmf-forecast-0912-worker-01-7vj7f",
+      "gpu": {
+        "driver_version": "580.95.05",
+        "index": 0,
+        "memory.free": 182632,
+        "memory.total": 183359,
+        "name": "NVIDIA B200",
+        "utilization.gpu": 0,
+        "uuid": "GPU-5dca9afb-2127-6d73-10e8-59ed2024b8e6"
+      },
+      "compute_processes": [],
+      "artifact_sha256": "5d6245af986de1cc2bd24db5e9caa6a02bf53104a91784200a44d49dd703c5e9",
+      "result_status": "succeeded",
+      "started_at": "2026-09-13T01:57:40.558810+00:00",
+      "ended_at": "2026-09-13T01:57:43.527973+00:00"
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-02",
+      "worker_id": "wmf-forecast-0912-worker-02",
+      "hostname": "wmf-forecast-0912-worker-02-khp24",
+      "gpu": {
+        "driver_version": "580.95.05",
+        "index": 0,
+        "memory.free": 182632,
+        "memory.total": 183359,
+        "name": "NVIDIA B200",
+        "utilization.gpu": 0,
+        "uuid": "GPU-4bcd0e45-3713-5bff-f268-32124291bd93"
+      },
+      "compute_processes": [],
+      "artifact_sha256": "e9b86e5731632303871b84d67e20e108ef2e1a4956bb83b8c2fd8f4acb079172",
+      "result_status": "succeeded",
+      "started_at": "2026-09-13T01:57:40.885521+00:00",
+      "ended_at": "2026-09-13T01:57:44.264435+00:00"
+    },
+    {
+      "job_id": "bootstrap-diagnostic-worker-03",
+      "worker_id": "wmf-forecast-0912-worker-03",
+      "hostname": "wmf-forecast-0912-worker-03-t2lg8",
+      "gpu": {
+        "driver_version": "580.95.05",
+        "index": 0,
+        "memory.free": 182632,
+        "memory.total": 183359,
+        "name": "NVIDIA B200",
+        "utilization.gpu": 0,
+        "uuid": "GPU-5d1ef479-5dee-6e80-10dc-9174e5a71a0c"
+      },
+      "compute_processes": [],
+      "artifact_sha256": "96b6609939ad1db3f533394cc2609212e8acc1993c49dd9fc234f83a8a2248ef",
+      "result_status": "succeeded",
+      "started_at": "2026-09-13T01:57:40.584134+00:00",
+      "ended_at": "2026-09-13T01:57:43.527523+00:00"
+    }
+  ],
+  "workstation_service": "active",
+  "workstation_supervisor_state": "running",
+  "workstation_codex_session": "01a09865-d24b-70c1-88fc-5c308a087a2b",
+  "workstation_supervisor_pid": 1438253,
+  "workstation_linger": "Linger=yes",
+  "shared_admission_deadline_unix": 1789868932.0,
+  "bootstrap_sha256": "c9fe3d2da0b889eae2bb6cff4c8c149583e4293b366840134e14dcb07a18ba22",
+  "scientific_episodes_launched_by_bootstrap": 0,
+  "scope": "Infrastructure independence and GPU diagnostics passed; model, recorder, physical-layout and scientific release qualifications remain owned by the active autonomous workstation coordinator."
+}

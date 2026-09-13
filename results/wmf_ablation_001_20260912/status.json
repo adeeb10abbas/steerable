@@ -139,11 +139,19 @@
       "fixed-observation-c17-001",
       "fixed-observation-c24-001",
       "n3-development-transport-preflight-001",
-      "n3-development-d02-002"
+      "n3-development-d02-002",
+      "d1-development-d01-server-001",
+      "d1-development-d01-simulator-001",
+      "d1-development-d02-server-001",
+      "d1-development-d02-simulator-001",
+      "d1-development-d03-server-001",
+      "d1-development-d03-simulator-001",
+      "d1-development-d04-server-001",
+      "d1-development-d04-simulator-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "c86070c60794b72d9c9c47e9fd35fde92c234fab",
-    "control_generation": 420,
+    "control_commit": "044b2788bd00d861a961b4254d572733049f1565",
+    "control_generation": 421,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -599,6 +607,54 @@
       "descriptor_sha256": "6b50d5e25d3327c401b43b0314dc5ded76e2103cc5e5fde6021534eb039831dd",
       "job_id": "bootstrap-diagnostic-worker-31",
       "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "00265eb6e6770904c70fed2654e1741de9b4e3bb36e8baaeae75d4489108dab4",
+      "job_id": "d1-development-d01-server-001",
+      "source_commit": "c86070c60794b72d9c9c47e9fd35fde92c234fab",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "4db54e85f606e748564ebb1eefb9e697a89c7d3e078b61fe8828659884f30918",
+      "job_id": "d1-development-d01-simulator-001",
+      "source_commit": "c86070c60794b72d9c9c47e9fd35fde92c234fab",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "de61f6b35a18063eaf34b9dada301a2bd201d6b4ccdf19fbb032e75940515027",
+      "job_id": "d1-development-d02-server-001",
+      "source_commit": "c86070c60794b72d9c9c47e9fd35fde92c234fab",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "49e2ec227377233b2e4802185de7d37d690010fa79f82ea8296f03fb9dde556a",
+      "job_id": "d1-development-d02-simulator-001",
+      "source_commit": "c86070c60794b72d9c9c47e9fd35fde92c234fab",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "d9ba8382ef8fae39e4906b43634cbbbcc1b5f87f376d238694cf8c1b8b7221d8",
+      "job_id": "d1-development-d03-server-001",
+      "source_commit": "c86070c60794b72d9c9c47e9fd35fde92c234fab",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "d07e230ac93ad882040cb4eb91981835cc44ba0db1c6f6fc3eaceff4b02f771b",
+      "job_id": "d1-development-d03-simulator-001",
+      "source_commit": "c86070c60794b72d9c9c47e9fd35fde92c234fab",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "6e0dbd1c9abdd1680233a47962f0e1c367f68fbb78e3fe842715dab2bf78cfe2",
+      "job_id": "d1-development-d04-server-001",
+      "source_commit": "c86070c60794b72d9c9c47e9fd35fde92c234fab",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "2ab5016b7e878e63160002a3469d3a92216ba16fc9461ab469cc5d33d84bab21",
+      "job_id": "d1-development-d04-simulator-001",
+      "source_commit": "c86070c60794b72d9c9c47e9fd35fde92c234fab",
       "status": "staged"
     },
     {
@@ -3156,9 +3212,9 @@
     {
       "descriptor_sha256": "ba030c9c27ae4f0c35c4b5e68b397ad5eabf749d8cb77322d36ac75a7186c04e",
       "heartbeat": {
-        "at": "2026-09-13T08:05:01.359225+00:00",
+        "at": "2026-09-13T08:06:07.652364+00:00",
         "child_pid": 11405,
-        "unix": 1789286701.3592556,
+        "unix": 1789286767.652397,
         "worker_id": "wmf-forecast-0912-worker-n3-00",
         "worker_pid": 1
       },

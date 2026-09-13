@@ -1,0 +1,197 @@
+{
+  "schema_version": "wmf-camera-crop-witness-runtime-contract-v1",
+  "study_id": "WMF-ABLATION-001",
+  "namespace": "wmf_ablation_001_20260912",
+  "camera_id": "over_shoulder_left_camera",
+  "job": {
+    "job_id": "camera-crop-replay-witness-001",
+    "worker_role": "wmf-forecast-0912-worker-06",
+    "max_wall_seconds": 10800,
+    "cpu_only": true
+  },
+  "paths": {
+    "robolab_root": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "robolab_python": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
+    "d1_python": "/data/users/ali/vla_wam/envs/dreamzero-ab790c1-py311/bin/python",
+    "n3_source": "/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b",
+    "n3_checkpoint": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+    "d1_source": "/data/users/ali/vla_wam/external/DreamZero-v3e004-clean-ab790c1",
+    "d1_checkpoint": "/data/users/ali/vla_wam/checkpoints/DreamZero-DROID-96ad344",
+    "d1_capture_overlay": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/ce5ad4282d2392245f843d5270a9656d4e99f842/experiments/dreamzero_droid/v2_robolab_client.py",
+    "capture_receipt": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/capture_receipt.json",
+    "n3_qualification": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/raw/n3_generation_raw/n3_qualification.json",
+    "d1_episode_manifest": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/d1_future/episodes/left_decode/episode_manifest.json"
+  },
+  "prerequisite_receipts": {
+    "n3_source_audit": {
+      "schema_version": "wmf-forecast-source-timing-lineage-v1",
+      "model_id": "N3",
+      "status": null,
+      "bytes": 7394,
+      "sha256": "98fe2660232c479db1f98b552915c98f5c5695df6b4090bc6dffb50952e2f8c3"
+    },
+    "d1_source_audit": {
+      "schema_version": "wmf-forecast-source-timing-lineage-v1",
+      "model_id": "D1",
+      "status": null,
+      "bytes": 5459,
+      "sha256": "39181fecb7d473b52b2b661c29b61cce653e3ec11edd437c74f1fefbefa76466"
+    },
+    "n3_generation": {
+      "schema_version": "wmf-n3-runtime-qualification-v1",
+      "model_id": null,
+      "status": "passed",
+      "bytes": 2975,
+      "sha256": "8be9c7a07f6156eecd5a4bf6a1750e6f28de1c92738d4777c91d28ad593b783f"
+    },
+    "d1_generation": {
+      "schema_version": "wmf-forecast-zero-policy-generation-probe-v1",
+      "model_id": "D1",
+      "status": "live_generation_shape_passed_physical_clock_probe_required",
+      "bytes": 4764,
+      "sha256": "e7eddb7c3cc81b2c352e57dda7cb7a19ef5cf4bec8ca33309bfc3a58ad724127"
+    },
+    "d1_qualification": {
+      "schema_version": "wmf-d1-qualification-job-receipt-v1",
+      "model_id": null,
+      "status": null,
+      "decision": "qualified",
+      "bytes": 13992,
+      "sha256": "3c856549999b9145dc07c30853a4c6d2968d09eb31c2db883f5eb1655d31627b"
+    }
+  },
+  "retained_inputs": {
+    "capture_receipt": {
+      "bytes": 80178,
+      "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+    },
+    "raw_settled_observation": {
+      "bytes": 11062100,
+      "sha256": "2f1c457d418ef8d23d35ef688ac9835f9af133979543cb42b04dce5e25f8165f"
+    },
+    "preprocessing_intermediates": {
+      "bytes": 10371122,
+      "sha256": "cafbff70da83bd72765f2e88ede758eb43b8887f7c97479b440046fdd5d9dd2e"
+    },
+    "n3_wire": {
+      "bytes": 1037692,
+      "sha256": "32ced616cb872d69abf7f69705b09e5529b346b7664b32cec51b250be3bffd94"
+    },
+    "d1_wire": {
+      "bytes": 520282,
+      "sha256": "4545fdf3b335e10b35f9eb4bc038db07480518c9f1672b6ab76231d37367d735"
+    },
+    "n3_qualification": {
+      "bytes": 41305,
+      "sha256": "4a46f1efbbac37debc1779077837ba2d4e803c49639334fba1804b993c02298a"
+    },
+    "d1_episode_manifest": {
+      "bytes": 370531,
+      "sha256": "4bf11b8dc2cfed682186570bd4b4b78eefb1b11ee77e4c9de74db8581c06d367"
+    }
+  },
+  "dependencies": {
+    "robolab": {
+      "policies/cosmos3/client.py": "547f3f9f4f4851b91b606e11f122d5a67b7c7454d58e32155816495db9841f5e",
+      "policies/dreamzero/client.py": "96de16927536f2b48427a6a2dcc3111d03204e1832e50e159cadf67b3fe956ac",
+      "robolab/core/utils/image_utils.py": "aead0c246b696ce5feabbbc63df93f42762365cc6315269fa08ad5c98e1a3d94",
+      "robolab/variations/camera.py": "3a37bb3a95bf6f2af730d5bb7a5acd33c15acfe5d956c2f40010e384bffac260"
+    },
+    "d1_capture_overlay_sha256": "3f3fe50f4b7747c52a995efb1e07bf00af8a5e38620829d8b0c991b43fd9a7ec",
+    "n3": {
+      "commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+      "git_tree": "1e77852f2240d6e00312342ab29164745042b1ae",
+      "tracked_file_count": 729,
+      "tracked_bytes": 14445894,
+      "tracked_aggregate_sha256": "f6f61b3689b6cd6a7e20a8e46c9557e53b6d99cfd340380db262e6834dd04ff7",
+      "required_files": {
+        "cosmos_framework/scripts/action_policy_server_robolab.py": "024a6d19048a6ac732ca0b23e741b5da6d38424223783b944bf539b2b6bd9a24",
+        "cosmos_framework/data/vfm/utils.py": "62eeda71daa4dfde8feda69a87d54161f080f2d6f86267d2778f2752494cb077",
+        "cosmos_framework/data/vfm/action/transforms.py": "1a0577cf481c8cadd2dda9cc344f1f5dd60b16b020f4636221c8bb71403cfea4",
+        "cosmos_framework/model/vfm/omni_mot_model.py": "751c4ca40942b66aa867d89eefdb50f0943a60b7c37323b45f9eaf31d0eb2a03"
+      },
+      "openpi_image_tools_sha256": "d48b4bd7f44e79fe6db8a8e07c9161144fa250be686e1245014a8b47e6171977",
+      "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+      "checkpoint_file_count": 43,
+      "checkpoint_bytes": 32937432846,
+      "checkpoint_aggregate_sha256": "55895125805b12635ece5dd2e88453a1aca6a684bac556f114337ae448ffdd83"
+    },
+    "d1": {
+      "commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+      "git_tree": "6b7ba27f1af81e963a6507f1204c05c65a94098c",
+      "tracked_file_count": 129,
+      "tracked_bytes": 4946544,
+      "tracked_aggregate_sha256": "a39e1ef8b7d8668caf15914637446fe58acb512e6672413d3af8b4b6442eca7f",
+      "required_files": {
+        "socket_test_optimized_AR.py": "7ef17f66064bac8defafc1a84551089b124546729a98be8c0515b33d2e159d48",
+        "groot/vla/model/n1_5/sim_policy.py": "c7b692b84a03a70adc7e0d21fb7632a9866285645e8d43c916100e6f5fb7497a",
+        "groot/vla/data/transform/video.py": "d75b7c79b54d368db48d2053976a1c2dd760a5bd043bb4dcc80dfba9984f6274",
+        "groot/vla/model/dreamzero/transform/dreamzero_cotrain.py": "8b4544b0f1c52a1ba78f764cd1882132b212e4be0a78a86e67ca39ccb3902151",
+        "groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.py": "7193cd73423472aa252bee73bd80e0d673c89d773ec852e90f50154729b50845"
+      },
+      "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
+      "checkpoint_file_count": 25,
+      "checkpoint_bytes": 64789159581,
+      "checkpoint_aggregate_sha256": "b4af0ac93474c3295c1ba841a34a8f2f91a5c3ec3c6aac1431b97689a6618c56",
+      "checkpoint_config_relative": "experiment_cfg/conf.yaml",
+      "checkpoint_config_sha256": "d63a63201c5141a6bc655ff29e60102aa2d9b1a16c2f526751d032e17b6e83a4",
+      "required_python_packages": {
+        "numpy": "1.26.4",
+        "torch": "2.8.0",
+        "torchvision": "0.23.0"
+      }
+    }
+  },
+  "models": {
+    "N3": {
+      "camera_crop_id": "n3-over-shoulder-left-168x320-v1",
+      "source_camera_shape": [720, 1280, 3],
+      "wire_shape": [540, 640, 3],
+      "transformed_image_size": [544, 736, 540, 640],
+      "transformed_video_shape": [1, 3, 33, 544, 736],
+      "spatial_factor": 16,
+      "latent_shape": [1, 48, 9, 33, 40],
+      "decoded_shape": [33, 528, 640, 3],
+      "generated_crop": {
+        "operation": "crop_half_open_thwc",
+        "canvas_shape": [33, 528, 640, 3],
+        "y": [360, 528],
+        "x": [0, 320],
+        "output_shape": [33, 168, 320, 3]
+      },
+      "original_output_shape": [168, 320, 3]
+    },
+    "D1": {
+      "camera_crop_id": "d1-over-shoulder-left-176x320-v1",
+      "source_camera_shape": [720, 1280, 3],
+      "wire_shape": [180, 320, 3],
+      "converted_shape": [1, 180, 320, 3],
+      "normalized_images_shape": [1, 1, 352, 640, 3],
+      "latent_shape": [1, 16, 3, 44, 80],
+      "decoded_shape": [9, 352, 640, 3],
+      "generated_crop": {
+        "operation": "crop_half_open_thwc",
+        "canvas_shape": [9, 352, 640, 3],
+        "y": [176, 352],
+        "x": [0, 320],
+        "output_shape": [9, 176, 320, 3]
+      },
+      "original_output_shape": [176, 320, 3]
+    }
+  },
+  "science_counts": {
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "model_requests_issued_by_job": 0,
+    "simulator_processes_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0,
+    "behavioral_actions_executed_by_job": 0,
+    "behavioral_cells_launched_by_job": 0,
+    "labels_created_by_job": 0
+  },
+  "simulator_state_render_used": false,
+  "whole_frame_identity": false,
+  "safe_to_release_confirmation": false
+}

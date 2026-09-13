@@ -53,6 +53,126 @@ def signed(value: dict) -> dict:
     return freeze.sign_document(value)
 
 
+def d1_missingness_timing_fixture(
+    request_indices: list[int] | None = None,
+    *,
+    truncated_ordinals: set[int] | None = None,
+) -> tuple[dict, list[str], list[dict]]:
+    if request_indices is None:
+        request_indices = list(range(4))
+    truncated_ordinals = set() if truncated_ordinals is None else truncated_ordinals
+    targets = [
+        {
+            "generated_frame_index": 1,
+            "target_physical_time_s": 0.2,
+            "native_runtime_field": "request_timing_sidecar.generated_targets",
+        },
+        {
+            "generated_frame_index": 2,
+            "target_physical_time_s": 0.4,
+            "native_runtime_field": "request_timing_sidecar.generated_targets",
+        },
+    ]
+    hashes: list[str] = []
+    receipts: list[dict] = []
+    bindings: list[dict] = []
+    mapped = unmapped = matched_requests = matched_targets = 0
+    truncated_requests = truncated_targets = 0
+    for ordinal, request_index in enumerate(request_indices):
+        request_hash = hashlib.sha256(
+            f"d1-request-{ordinal}-{request_index}".encode()
+        ).hexdigest()
+        hashes.append(request_hash)
+        kind = (
+            "full_conditioning_origin"
+            if request_index % 4 == 0
+            else "incremental_standalone"
+        )
+        shape = freeze.D1_DECODE_SHAPES[kind]
+        receipts.append({
+            "request_index": request_index,
+            "latent_video": {"shape": list(shape["latent_shape"])},
+            "offline_decode": {
+                "decoded_tensor": {"shape": list(shape["decoded_tensor_shape"])},
+                "decoded_rgb": {"shape": list(shape["decoded_rgb_shape"])},
+            },
+        })
+        applies = kind == "full_conditioning_origin"
+        target_status = (
+            "not_executed_in_truncated_prefix"
+            if ordinal in truncated_ordinals
+            else "matched_native_request_clocks"
+        )
+        target_bindings = (
+            [
+                {
+                    "generated_frame_index": target["generated_frame_index"],
+                    "authority_target_physical_time_s": target["target_physical_time_s"],
+                    "status": target_status,
+                }
+                for target in targets
+            ]
+            if applies
+            else []
+        )
+        mapped += int(applies)
+        unmapped += int(not applies)
+        matched = applies and ordinal not in truncated_ordinals
+        truncated = applies and ordinal in truncated_ordinals
+        matched_requests += int(matched)
+        truncated_requests += int(truncated)
+        matched_targets += len(target_bindings) if matched else 0
+        truncated_targets += len(target_bindings) if truncated else 0
+        bindings.append({
+            "request_index": request_index,
+            "source_request_receipt": {
+                "path": f"/evidence/request-{request_index}.json",
+                "sha256": request_hash,
+                "bytes": 1,
+            },
+            "decoded_output_timing": {
+                "schedule_kind": kind,
+                "request_index_modulo_four": request_index % 4,
+                "latent_shape": list(shape["latent_shape"]),
+                "decoded_tensor_shape": list(shape["decoded_tensor_shape"]),
+                "decoded_rgb_shape": list(shape["decoded_rgb_shape"]),
+                "authority_target_frame_indices_present": True,
+                "authority_target_frame_indices": [1, 2],
+                "source_timing_status": shape["source_timing_status"],
+                "source_timing_mapping_applies": applies,
+                "unmapped_reason": None if applies else "fresh standalone VAE cache",
+            },
+            "target_bindings": target_bindings,
+            "timing_eligible_target_count": len(target_bindings) if matched else 0,
+            "eligible_for_timed_target_sampling": bool(matched),
+        })
+    timing = {
+        "schema_version": freeze.TIMING_MISSINGNESS_SCHEMA,
+        "status": freeze.D1_TIMING_STATUS,
+        "native_runtime_field": "request_timing_sidecar.generated_targets",
+        "time_source_kind": "native_runtime_exposed_target_offsets",
+        "clock_bridge": (
+            "elapsed physical seconds from request current original-camera capture"
+        ),
+        "generated_targets": targets,
+        "generated_targets_scope": freeze.D1_GENERATED_TARGETS_SCOPE,
+        "incremental_standalone_decodes_assigned_target_times": False,
+        "confirmation_release_compatible": False,
+        "request_timing_bindings": bindings,
+        "request_timing_coverage": {
+            "total_request_count": len(request_indices),
+            "source_proven_full_decode_request_count": mapped,
+            "source_unmapped_incremental_decode_request_count": unmapped,
+            "native_clock_matched_request_count": matched_requests,
+            "action_prefix_truncated_request_count": truncated_requests,
+            "native_clock_matched_target_binding_count": matched_targets,
+            "action_prefix_truncated_target_binding_count": truncated_targets,
+            "unmapped_potential_authority_target_count": unmapped * len(targets),
+        },
+    }
+    return timing, hashes, receipts
+
+
 def journal_event(sequence: int, previous: str | None, kind: str, payload: dict) -> dict:
     base = {
         "sequence": sequence,
@@ -403,6 +523,204 @@ class DevelopmentReleaseTests(unittest.TestCase):
         self.assertFalse(mapping["timing_claim_boundary"]["presentation_video_fps_used"])
         self.assertEqual(mapping["development_cell_count"], 16)
         self.assertEqual(mapping["development_request_count"], 240)
+
+    def test_d1_missingness_mask_keeps_incremental_decodes_ineligible(self) -> None:
+        timing, hashes, receipts = d1_missingness_timing_fixture()
+        self.assertEqual(
+            freeze._d1_timing_applicability(
+                timing, request_hashes=hashes, request_receipts=receipts
+            ),
+            [True, False, False, False],
+        )
+
+        forged = copy.deepcopy(timing)
+        forged["request_timing_bindings"][1]["target_bindings"] = [
+            copy.deepcopy(forged["request_timing_bindings"][0]["target_bindings"][0])
+        ]
+        with self.assertRaisesRegex(
+            freeze.FreezeError, "incremental decode binding 1 acquired timing eligibility"
+        ):
+            freeze._d1_timing_applicability(
+                forged, request_hashes=hashes, request_receipts=receipts
+            )
+
+    def test_d1_missingness_discriminator_and_coverage_fail_closed(self) -> None:
+        timing, hashes, receipts = d1_missingness_timing_fixture()
+        cases = []
+        wrong_schedule = copy.deepcopy(timing)
+        wrong_schedule["request_timing_bindings"][1]["decoded_output_timing"][
+            "source_timing_mapping_applies"
+        ] = True
+        cases.append((wrong_schedule, "decode discriminator changed"))
+        omitted_target = copy.deepcopy(timing)
+        omitted_target["request_timing_bindings"][0]["target_bindings"].pop()
+        cases.append((omitted_target, "omitted an authority target"))
+        wrong_coverage = copy.deepcopy(timing)
+        wrong_coverage["request_timing_coverage"][
+            "source_unmapped_incremental_decode_request_count"
+        ] -= 1
+        cases.append((wrong_coverage, "coverage summary changed"))
+        for forged, message in cases:
+            with self.subTest(message=message), self.assertRaisesRegex(
+                freeze.FreezeError, message
+            ):
+                freeze._d1_timing_applicability(
+                    forged, request_hashes=hashes, request_receipts=receipts
+                )
+
+    def test_d1_alignment_uses_only_source_proven_full_decode_requests(self) -> None:
+        request_indices = list(range(57)) * 16
+        truncated = {cell_index * 57 + 56 for cell_index in range(16)}
+        timing, hashes, receipts = d1_missingness_timing_fixture(
+            request_indices, truncated_ordinals=truncated
+        )
+        self.assertEqual(timing["request_timing_coverage"], freeze.D1_FORMAL_TIMING_COVERAGE)
+        applicability = freeze._d1_timing_applicability(
+            timing, request_hashes=hashes, request_receipts=receipts
+        )
+        self.assertEqual(sum(applicability), 240)
+
+        observations = []
+        for action in range(451):
+            capture_ns = 1_000_000_000 + action * 66_666_667
+            observations.append({
+                "clock": {
+                    "physics_step": action * 8,
+                    "physics_time_s": action / 15,
+                    "control_step": action,
+                    "cameras": {
+                        "over_shoulder_left_camera": {
+                            "frame_id": f"left:{action}",
+                            "capture_time_ns": capture_ns,
+                            "timestamp_source": "native test camera clock",
+                        }
+                    },
+                }
+            })
+
+        expected_cells: set[str] = set()
+        entries: list[dict] = []
+        validated_cells: dict[str, dict] = {}
+        for cell_index in range(16):
+            cell_id = f"d1-development-cell-{cell_index:02d}"
+            expected_cells.add(cell_id)
+            identity_path = write_json(
+                self.root / "d1-identities" / f"{cell_id}.json",
+                {"cell_id": cell_id},
+            )
+            identity = descriptor(identity_path)
+            entries.append({"cell_receipt": identity})
+            start = cell_index * 57
+            validated_cells[cell_id] = {
+                "cell_id": cell_id,
+                "cell_receipt": identity,
+                "adapter_completion": identity,
+                "adapter_journal": identity,
+                "request_receipt_sha256s": hashes[start:start + 57],
+                "request_receipts": receipts[start:start + 57],
+                "observations": observations,
+                "request_execution": [
+                    {
+                        "request_index": request_index,
+                        "action_step_start": request_index * 8,
+                        "executed_actions": 2 if request_index == 56 else 8,
+                    }
+                    for request_index in range(57)
+                ],
+                "resource_receipt": None,
+                "resource": None,
+            }
+
+        def validated_cell(
+            entry: dict,
+            *,
+            model: str,
+            expected_cell_id: str,
+            evidence_base: Path,
+            require_resource: bool,
+        ) -> dict:
+            del entry, evidence_base, require_resource
+            self.assertEqual(model, "D1")
+            return validated_cells[expected_cell_id]
+
+        crop = {
+            "camera_id": "over_shoulder_left_camera",
+            "camera_crop_id": "d1-primary-original-camera-v1",
+            "payload_sha256": "a" * 64,
+            "image_width_px": 640,
+            "image_height_px": 352,
+            "crop_operation": "identity original RGB; no simulator-state render",
+            "file_sha256": freeze.sha256_file(self.fixture.crop_path),
+            "path": str(self.fixture.crop_path),
+        }
+        model_evidence = {
+            "model_id": "D1",
+            "development_cells": entries,
+        }
+        with mock.patch.object(
+            freeze, "_validate_cell", side_effect=validated_cell
+        ), mock.patch.object(
+            freeze,
+            "_validate_generated_timing",
+            return_value=(timing, self.fixture.timing_path, applicability),
+        ), mock.patch.object(freeze, "_validate_crop", return_value=crop):
+            mapping, _, _ = freeze._derive_model_alignment(
+                model_evidence,
+                model="D1",
+                expected_cells=expected_cells,
+                evidence_base=self.root,
+                require_resources=False,
+            )
+
+        self.assertEqual(
+            mapping["timing_claim_boundary"]["request_timing_coverage"],
+            freeze.D1_FORMAL_TIMING_COVERAGE,
+        )
+        self.assertFalse(
+            mapping["timing_claim_boundary"]["timing_unmapped_requests_eligible"]
+        )
+        qualified = [
+            row for row in mapping["frame_to_physical_time"]
+            if row["status"] == "qualified"
+        ]
+        self.assertEqual(
+            [row["target_executed_action_offset"] for row in qualified], [3, 6]
+        )
+        self.assertTrue(all(row["eligible_request_count"] == 224 for row in qualified))
+        self.assertTrue(all(row["full_prefix_request_count"] == 224 for row in qualified))
+
+    def test_alignment_only_defers_absent_resource_receipts(self) -> None:
+        for cell in self.fixture.evidence["model_evidence"][0]["development_cells"]:
+            cell["resource_receipt"] = None
+        self.fixture.evidence_path = write_json(
+            self.fixture.evidence_path, self.fixture.evidence
+        )
+        mappings, contracts, annotation = freeze.derive_bundle(
+            self.fixture.evidence_path, require_annotation=False
+        )
+        self.assertIsNone(annotation)
+        self.assertEqual(mappings["N3"]["development_cell_count"], 16)
+        self.assertEqual(contracts["N3"]["model_id"], "N3")
+
+    def test_confirmation_derivation_still_requires_every_resource_receipt(self) -> None:
+        self.fixture.evidence["model_evidence"][0]["development_cells"][0][
+            "resource_receipt"
+        ] = None
+        self.fixture.evidence_path = write_json(
+            self.fixture.evidence_path, self.fixture.evidence
+        )
+        with self.assertRaisesRegex(
+            freeze.FreezeError, "resource receipt is required for confirmation"
+        ):
+            freeze.derive_bundle(self.fixture.evidence_path, require_annotation=True)
+
+    def test_alignment_only_authenticates_a_supplied_resource_receipt(self) -> None:
+        resource = self.fixture.evidence["model_evidence"][0]["development_cells"][0][
+            "resource_receipt"
+        ]
+        Path(resource["path"]).write_text("tampered\n", encoding="utf-8")
+        with self.assertRaisesRegex(freeze.FreezeError, "resource receipt.*hash mismatch"):
+            freeze.derive_bundle(self.fixture.evidence_path, require_annotation=False)
 
     def test_confirmation_freeze_requires_labels_and_writes_nothing_on_failure(self) -> None:
         output = self.root / "not-written"

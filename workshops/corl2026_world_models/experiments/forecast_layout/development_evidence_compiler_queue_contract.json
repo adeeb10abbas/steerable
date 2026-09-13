@@ -1,0 +1,70 @@
+{
+  "aggregate_jobs": {
+    "D1": {
+      "D01": "d1-development-d01-simulator-003",
+      "D02": "d1-development-d02-simulator-003",
+      "D03": "d1-development-d03-simulator-002",
+      "D04": "d1-development-d04-simulator-003"
+    },
+    "N3": {
+      "D01": "n3-development-d01-002",
+      "D02": "n3-development-d02-002",
+      "D03": "n3-development-d03-001",
+      "D04": "n3-development-d04-001"
+    }
+  },
+  "compiler": {
+    "camera_id": "over_shoulder_left_camera",
+    "expected_compiled_cells": 32,
+    "expected_source_behavioral_actions": 14400,
+    "expected_source_behavioral_requests": 1152,
+    "input_schema": "wmf-development-evidence-compiler-input-v1",
+    "planned_cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
+    "receipt_schema": "wmf-development-evidence-compiler-receipt-v1",
+    "semantic_validator_paths": {
+      "annotation": "workshops/corl2026_world_models/analysis/forecast_annotation_workflow.py",
+      "freeze": "workshops/corl2026_world_models/analysis/freeze_development_release.py",
+      "timing": "workshops/corl2026_world_models/analysis/qualify_forecast_timing.py"
+    },
+    "supported_production_modes": [
+      "formal_full"
+    ]
+  },
+  "job": {
+    "compiler_output_relative": "raw/compiler_bundle",
+    "id": "development-evidence-compiler-formal-001",
+    "input_manifest_relative": "raw/compiler_input_manifest.json",
+    "max_wall_seconds": 21600,
+    "mode": "formal_full",
+    "publish_log_tail_bytes": 8192,
+    "raw_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912",
+    "role": "wmf-forecast-0912-worker-05"
+  },
+  "namespace": "wmf_ablation_001_20260912",
+  "output_policy": {
+    "diagnostic_release_capable": false,
+    "failure_publish_files": [
+      "development_evidence_compiler_job_failure.json"
+    ],
+    "mutually_exclusive_terminal_receipts": true,
+    "raw_bundle_file_count": 71,
+    "semantically_validated_nonreceipt_file_count": 70,
+    "success_publish_files": [
+      "development_evidence_compiler_job_receipt.json"
+    ]
+  },
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-development-evidence-compiler-queue-contract-v1",
+  "science_counts": {
+    "behavioral_actions_executed_by_job": 0,
+    "behavioral_cells_launched_by_job": 0,
+    "labels_created_by_job": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0,
+    "simulator_processes_started": 0
+  },
+  "study_id": "WMF-ABLATION-001"
+}

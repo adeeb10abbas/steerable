@@ -35,6 +35,7 @@ from typing import Any, Mapping, Sequence
 STUDY_ID = "WMF-ABLATION-001"
 EVIDENCE_SCHEMA = "wmf-development-release-evidence-v1"
 TIMING_SCHEMA = "wmf-native-generated-target-timing-v1"
+TIMING_MISSINGNESS_SCHEMA = "wmf-native-generated-target-timing-v2"
 RESOURCE_SCHEMA = "wmf-development-resource-measurement-v1"
 CROP_SCHEMA = "wmf-camera-crop-contract-v1"
 MAPPING_SCHEMA = "wmf-forecast-physical-alignment-receipt-v1"
@@ -59,6 +60,50 @@ MOVEMENT_DISAGREEMENT_DEFINITION = (
 )
 MOVEMENT_QUANTILE_METHOD = "linear interpolation at p=0.95 (Hyndman-Fan type 7)"
 TIMING_QUALIFIER_PATH = Path(__file__).with_name("qualify_forecast_timing.py")
+
+D1_TIMING_STATUS = (
+    "qualified_subset_from_native_runtime_metadata_with_explicit_missingness"
+)
+D1_GENERATED_TARGETS_SCOPE = (
+    "request_timing_bindings.decoded_output_timing."
+    "source_timing_mapping_applies == true"
+)
+D1_DECODE_SHAPES = {
+    "full_conditioning_origin": {
+        "latent_shape": [1, 16, 3, 44, 80],
+        "decoded_tensor_shape": [1, 3, 9, 352, 640],
+        "decoded_rgb_shape": [9, 352, 640, 3],
+        "source_timing_status": "source_proven_full_conditioning_origin",
+        "source_timing_mapping_applies": True,
+    },
+    "incremental_standalone": {
+        "latent_shape": [1, 16, 2, 44, 80],
+        "decoded_tensor_shape": [1, 3, 5, 352, 640],
+        "decoded_rgb_shape": [5, 352, 640, 3],
+        "source_timing_status": "unmapped_incremental_standalone_decode",
+        "source_timing_mapping_applies": False,
+    },
+}
+D1_TIMING_COVERAGE_KEYS = {
+    "total_request_count",
+    "source_proven_full_decode_request_count",
+    "source_unmapped_incremental_decode_request_count",
+    "native_clock_matched_request_count",
+    "action_prefix_truncated_request_count",
+    "native_clock_matched_target_binding_count",
+    "action_prefix_truncated_target_binding_count",
+    "unmapped_potential_authority_target_count",
+}
+D1_FORMAL_TIMING_COVERAGE = {
+    "total_request_count": 912,
+    "source_proven_full_decode_request_count": 240,
+    "source_unmapped_incremental_decode_request_count": 672,
+    "native_clock_matched_request_count": 224,
+    "action_prefix_truncated_request_count": 16,
+    "native_clock_matched_target_binding_count": 448,
+    "action_prefix_truncated_target_binding_count": 32,
+    "unmapped_potential_authority_target_count": 1344,
+}
 
 SHA_RE = re.compile(r"[0-9a-f]{64}")
 MODEL_LIMITS = {
@@ -343,7 +388,7 @@ def _resource_measurement(path: Path, *, model: str, cell_id: str) -> dict[str, 
 
 def _validate_cell(
     entry: Mapping[str, Any], *, model: str, expected_cell_id: str,
-    evidence_base: Path,
+    evidence_base: Path, require_resource: bool = True,
 ) -> dict[str, Any]:
     require(set(entry) == {"cell_receipt", "server_request_receipts", "resource_receipt"},
             f"{expected_cell_id} evidence keys changed")
@@ -438,10 +483,22 @@ def _validate_cell(
         request_hashes.append(request_hash)
         request_receipts.append(request_receipt)
 
-    resource_descriptor, resource_path = _descriptor(
-        entry.get("resource_receipt"), f"{expected_cell_id} resource receipt", base=evidence_base
-    )
-    resource = _resource_measurement(resource_path, model=model, cell_id=expected_cell_id)
+    resource_descriptor: dict[str, Any] | None = None
+    resource: dict[str, Any] | None = None
+    raw_resource = entry.get("resource_receipt")
+    if raw_resource is None:
+        require(
+            not require_resource,
+            f"{expected_cell_id} resource receipt is required for confirmation",
+        )
+    else:
+        # Alignment-only derivation may legitimately precede the resource-budget
+        # measurement.  If a receipt is supplied, however, authenticate it even
+        # in alignment-only mode rather than silently ignoring bad evidence.
+        resource_descriptor, resource_path = _descriptor(
+            raw_resource, f"{expected_cell_id} resource receipt", base=evidence_base
+        )
+        resource = _resource_measurement(resource_path, model=model, cell_id=expected_cell_id)
     return {
         "cell_id": expected_cell_id,
         "cell_receipt": _file_descriptor(cell_path),
@@ -474,17 +531,194 @@ def _validate_crop(model_evidence: Mapping[str, Any], *, model: str, base: Path)
     return {**value, "file_sha256": sha256_file(path), "path": str(path)}
 
 
+def _d1_timing_applicability(
+    value: Mapping[str, Any],
+    *,
+    request_hashes: Sequence[str],
+    request_receipts: Sequence[Mapping[str, Any]],
+) -> list[bool]:
+    """Validate and return the D1 per-request timing applicability mask.
+
+    The five-frame incremental decodes are retained evidence, but their fresh
+    standalone VAE frame numbers do not inherit the conditioning-origin timing
+    authority.  They must therefore remain present in coverage while
+    contributing no target binding to physical alignment.
+    """
+
+    bindings = value.get("request_timing_bindings")
+    targets = value.get("generated_targets")
+    require(
+        isinstance(bindings, list)
+        and len(bindings) == len(request_hashes) == len(request_receipts),
+        "D1 timing binding inventory is incomplete",
+    )
+    require(isinstance(targets, list) and bool(targets),
+            "D1 generated timing target inventory is empty")
+    target_indices = [row.get("generated_frame_index") for row in targets]
+    require(
+        all(type(index) is int and index >= 0 for index in target_indices)
+        and len(set(target_indices)) == len(target_indices),
+        "D1 generated timing target indices are invalid",
+    )
+    require(
+        value.get("generated_targets_scope") == D1_GENERATED_TARGETS_SCOPE
+        and value.get("incremental_standalone_decodes_assigned_target_times") is False
+        and value.get("confirmation_release_compatible") is False,
+        "D1 timing missingness claim boundary changed",
+    )
+
+    decoded_keys = {
+        "schedule_kind",
+        "request_index_modulo_four",
+        "latent_shape",
+        "decoded_tensor_shape",
+        "decoded_rgb_shape",
+        "authority_target_frame_indices_present",
+        "authority_target_frame_indices",
+        "source_timing_status",
+        "source_timing_mapping_applies",
+        "unmapped_reason",
+    }
+    applicability: list[bool] = []
+    mapped = unmapped = 0
+    matched_requests = truncated_requests = 0
+    matched_targets = truncated_targets = 0
+    for ordinal, (binding, request_hash, receipt) in enumerate(
+        zip(bindings, request_hashes, request_receipts)
+    ):
+        require(isinstance(binding, Mapping),
+                f"D1 timing binding {ordinal} is invalid")
+        source = binding.get("source_request_receipt")
+        request_index = binding.get("request_index")
+        require(
+            isinstance(source, Mapping)
+            and source.get("sha256") == request_hash
+            and type(request_index) is int
+            and request_index >= 0
+            and receipt.get("request_index") == request_index,
+            f"D1 timing binding {ordinal} request identity changed",
+        )
+        schedule_key = (
+            "full_conditioning_origin"
+            if request_index % 4 == 0
+            else "incremental_standalone"
+        )
+        expected = D1_DECODE_SHAPES[schedule_key]
+        decoded = binding.get("decoded_output_timing")
+        require(
+            isinstance(decoded, Mapping)
+            and set(decoded) == decoded_keys
+            and decoded.get("schedule_kind") == schedule_key
+            and decoded.get("request_index_modulo_four") == request_index % 4
+            and decoded.get("latent_shape") == expected["latent_shape"]
+            and decoded.get("decoded_tensor_shape")
+            == expected["decoded_tensor_shape"]
+            and decoded.get("decoded_rgb_shape") == expected["decoded_rgb_shape"]
+            and decoded.get("authority_target_frame_indices_present") is True
+            and decoded.get("authority_target_frame_indices") == target_indices
+            and decoded.get("source_timing_status")
+            == expected["source_timing_status"]
+            and decoded.get("source_timing_mapping_applies")
+            is expected["source_timing_mapping_applies"],
+            f"D1 timing binding {ordinal} decode discriminator changed",
+        )
+        latent = receipt.get("latent_video")
+        offline = receipt.get("offline_decode")
+        rgb = offline.get("decoded_rgb") if isinstance(offline, Mapping) else None
+        tensor = offline.get("decoded_tensor") if isinstance(offline, Mapping) else None
+        require(
+            isinstance(latent, Mapping)
+            and latent.get("shape") == expected["latent_shape"]
+            and isinstance(rgb, Mapping)
+            and rgb.get("shape") == expected["decoded_rgb_shape"]
+            and isinstance(tensor, Mapping)
+            and tensor.get("shape") == expected["decoded_tensor_shape"],
+            f"D1 timing binding {ordinal} differs from retained decode shapes",
+        )
+        target_bindings = binding.get("target_bindings")
+        eligible_count = binding.get("timing_eligible_target_count")
+        eligible = binding.get("eligible_for_timed_target_sampling")
+        require(isinstance(target_bindings, list),
+                f"D1 timing binding {ordinal} target inventory is invalid")
+        applies = schedule_key == "full_conditioning_origin"
+        applicability.append(applies)
+        if applies:
+            mapped += 1
+            require(
+                decoded.get("unmapped_reason") is None
+                and len(target_bindings) == len(targets),
+                f"D1 full decode binding {ordinal} omitted an authority target",
+            )
+            statuses: list[str] = []
+            for target, row in zip(targets, target_bindings):
+                require(
+                    isinstance(row, Mapping)
+                    and row.get("generated_frame_index")
+                    == target.get("generated_frame_index")
+                    and row.get("authority_target_physical_time_s")
+                    == target.get("target_physical_time_s")
+                    and row.get("status") in {
+                        "matched_native_request_clocks",
+                        "not_executed_in_truncated_prefix",
+                    },
+                    f"D1 full decode binding {ordinal} target changed",
+                )
+                statuses.append(str(row["status"]))
+            matched = statuses.count("matched_native_request_clocks")
+            truncated = statuses.count("not_executed_in_truncated_prefix")
+            require(
+                eligible_count == matched and eligible is (matched > 0),
+                f"D1 full decode binding {ordinal} eligibility changed",
+            )
+            matched_requests += int(matched > 0)
+            truncated_requests += int(truncated > 0)
+            matched_targets += matched
+            truncated_targets += truncated
+        else:
+            unmapped += 1
+            require(
+                isinstance(decoded.get("unmapped_reason"), str)
+                and bool(decoded["unmapped_reason"])
+                and target_bindings == []
+                and eligible_count == 0
+                and eligible is False,
+                f"D1 incremental decode binding {ordinal} acquired timing eligibility",
+            )
+
+    expected_coverage = {
+        "total_request_count": len(bindings),
+        "source_proven_full_decode_request_count": mapped,
+        "source_unmapped_incremental_decode_request_count": unmapped,
+        "native_clock_matched_request_count": matched_requests,
+        "action_prefix_truncated_request_count": truncated_requests,
+        "native_clock_matched_target_binding_count": matched_targets,
+        "action_prefix_truncated_target_binding_count": truncated_targets,
+        "unmapped_potential_authority_target_count": unmapped * len(targets),
+    }
+    coverage = value.get("request_timing_coverage")
+    require(
+        isinstance(coverage, Mapping)
+        and set(coverage) == D1_TIMING_COVERAGE_KEYS
+        and dict(coverage) == expected_coverage,
+        "D1 timing coverage summary changed",
+    )
+    return applicability
+
+
 def _validate_generated_timing(
     model_evidence: Mapping[str, Any], *, model: str, base: Path,
     request_hashes: Sequence[str], request_receipts: Sequence[Mapping[str, Any]],
-) -> tuple[dict[str, Any], Path]:
+) -> tuple[dict[str, Any], Path, list[bool]]:
     _, path = _descriptor(model_evidence.get("generated_target_timing_receipt"), f"{model} generated timing", base=base)
     value = load_json(path, f"{model} generated timing receipt")
-    require(value.get("schema_version") == TIMING_SCHEMA, f"{model} generated timing schema changed")
+    expected_schema = TIMING_MISSINGNESS_SCHEMA if model == "D1" else TIMING_SCHEMA
+    expected_status = D1_TIMING_STATUS if model == "D1" else "qualified_from_native_runtime_metadata"
+    require(value.get("schema_version") == expected_schema,
+            f"{model} generated timing schema changed")
     verify_signed(value, f"{model} generated timing receipt")
     require(value.get("study_id") == STUDY_ID and value.get("model_id") == model,
             f"{model} generated timing identity changed")
-    require(value.get("status") == "qualified_from_native_runtime_metadata",
+    require(value.get("status") == expected_status,
             f"{model} generated timing was not natively qualified")
     require(value.get("time_source_kind") == "native_runtime_exposed_target_offsets",
             f"{model} timing does not come from native exposed target offsets")
@@ -530,6 +764,10 @@ def _validate_generated_timing(
     require(len(request_receipts) == len(request_hashes),
             f"{model} native timing request inventory is incomplete")
     sidecar_mode = value.get("binding_mode") == "immutable_request_receipt_native_clock_sidecar"
+    if model == "D1":
+        require(sidecar_mode, "D1 missingness timing must use immutable request sidecars")
+        require(value.get("dreamzero_action_block_ratio_used_as_mapping") is False,
+                "D1 timing uses a prohibited action/block-ratio inference")
     if sidecar_mode:
         spec = importlib.util.spec_from_file_location(
             "wmf_validate_forecast_timing_sidecar", TIMING_QUALIFIER_PATH
@@ -551,6 +789,20 @@ def _validate_generated_timing(
                 f"{model} timing sidecar claims old request receipts were modified")
         require(source_field == "request_timing_sidecar.generated_targets",
                 f"{model} timing sidecar pretends metadata existed in immutable request receipts")
+    applicability = (
+        _d1_timing_applicability(
+            value,
+            request_hashes=request_hashes,
+            request_receipts=request_receipts,
+        )
+        if model == "D1"
+        else [True] * len(request_receipts)
+    )
+    if model == "D1":
+        require(
+            value.get("request_timing_coverage") == D1_FORMAL_TIMING_COVERAGE,
+            "D1 formal timing coverage differs from the frozen 912-request cohort",
+        )
     for index, receipt in enumerate(request_receipts):
         if model == "N3":
             decoded_shape = receipt.get("decoded_future_shape")
@@ -571,8 +823,9 @@ def _validate_generated_timing(
                     and type(tensor_shape[2]) is int and tensor_shape[2] == rgb_shape[0],
                     f"{model} request {index} decoded tensor/RGB frame counts differ")
             decoded_frame_count = rgb_shape[0]
-        require(all(row["generated_frame_index"] < decoded_frame_count for row in exposed_targets),
-                f"{model} request {index} native target cites a nonexistent decoded frame")
+        if applicability[index]:
+            require(all(row["generated_frame_index"] < decoded_frame_count for row in exposed_targets),
+                    f"{model} request {index} native target cites a nonexistent decoded frame")
         if not sidecar_mode:
             observed: Any = receipt
             for component in source_field.split("."):
@@ -581,7 +834,7 @@ def _validate_generated_timing(
                 observed = observed[component]
             require(observed == exposed_targets,
                     f"{model} request {index} native target times differ from the timing receipt")
-    return value, path
+    return value, path, applicability
 
 
 def _camera_sample(observation: Mapping[str, Any], camera_id: str, label: str) -> tuple[float, int, Any, int, int]:
@@ -606,7 +859,7 @@ def _camera_sample(observation: Mapping[str, Any], camera_id: str, label: str) -
 
 def _derive_model_alignment(
     model_evidence: Mapping[str, Any], *, model: str, expected_cells: set[str],
-    evidence_base: Path,
+    evidence_base: Path, require_resources: bool = True,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     require(model_evidence.get("model_id") == model, f"{model} evidence identity changed")
     raw_cells = model_evidence.get("development_cells")
@@ -624,14 +877,17 @@ def _derive_model_alignment(
         by_id[cell_id] = entry
     require(set(by_id) == expected_cells, f"{model} development cohort is incomplete or contains extra cells")
     cells = [
-        _validate_cell(by_id[cell_id], model=model, expected_cell_id=cell_id, evidence_base=evidence_base)
+        _validate_cell(
+            by_id[cell_id], model=model, expected_cell_id=cell_id,
+            evidence_base=evidence_base, require_resource=require_resources,
+        )
         for cell_id in sorted(expected_cells)
     ]
     request_hashes = [digest for cell in cells for digest in cell["request_receipt_sha256s"]]
     request_receipts = [receipt for cell in cells for receipt in cell["request_receipts"]]
     require(len(request_hashes) == len(set(request_hashes)),
             f"{model} development request receipt identities are not unique")
-    timing, timing_path = _validate_generated_timing(
+    timing, timing_path, timing_applicability = _validate_generated_timing(
         model_evidence, model=model, base=evidence_base,
         request_hashes=request_hashes, request_receipts=request_receipts,
     )
@@ -658,6 +914,19 @@ def _derive_model_alignment(
     tolerance_s = min(control_step_s / 2.0, capture_interval_s / 2.0)
     require(tolerance_s > 0, f"{model} derived timestamp tolerance is not positive")
 
+    timed_requests: list[tuple[dict[str, Any], Mapping[str, Any], bool]] = []
+    applicability_index = 0
+    for cell in cells:
+        for request in cell["request_execution"]:
+            require(applicability_index < len(timing_applicability),
+                    f"{model} timing applicability inventory ended early")
+            timed_requests.append(
+                (cell, request, timing_applicability[applicability_index])
+            )
+            applicability_index += 1
+    require(applicability_index == len(timing_applicability),
+            f"{model} timing applicability inventory has extra requests")
+
     mapping_rows: list[dict[str, Any]] = []
     prefix = int(MODEL_LIMITS[model]["unchanged_executed_prefix_horizon"])
     for target in timing["generated_targets"]:
@@ -679,29 +948,32 @@ def _derive_model_alignment(
         physics_residuals: list[float] = []
         full_prefix_count = 0
         unsupported = False
-        for cell in cells:
+        for cell, request, mapping_applies in timed_requests:
+            if not mapping_applies:
+                # A retained D1 five-frame standalone decode remains part of
+                # source coverage but cannot contribute a target observation.
+                continue
             observations = cell["observations"]
-            for request in cell["request_execution"]:
-                start = int(request["action_step_start"])
-                executed = int(request["executed_actions"])
-                if executed == prefix:
-                    full_prefix_count += 1
-                start_sample = _camera_sample(observations[start], camera_id, "request start")
-                candidates: list[tuple[float, int, float]] = []
-                for offset in range(1, executed + 1):
-                    sample = _camera_sample(observations[start + offset], camera_id, "request target")
-                    camera_elapsed = (sample[1] - start_sample[1]) / 1e9
-                    physics_elapsed = sample[0] - start_sample[0]
-                    candidates.append((abs(camera_elapsed - horizon), offset, abs(physics_elapsed - horizon)))
-                if not candidates:
-                    continue
-                camera_residual, offset, physics_residual = min(candidates, key=lambda item: (item[0], item[1]))
-                if camera_residual <= tolerance_s and physics_residual <= tolerance_s:
-                    offsets.append(offset)
-                    camera_residuals.append(camera_residual)
-                    physics_residuals.append(physics_residual)
-                elif executed == prefix:
-                    unsupported = True
+            start = int(request["action_step_start"])
+            executed = int(request["executed_actions"])
+            if executed == prefix:
+                full_prefix_count += 1
+            start_sample = _camera_sample(observations[start], camera_id, "request start")
+            candidates: list[tuple[float, int, float]] = []
+            for offset in range(1, executed + 1):
+                sample = _camera_sample(observations[start + offset], camera_id, "request target")
+                camera_elapsed = (sample[1] - start_sample[1]) / 1e9
+                physics_elapsed = sample[0] - start_sample[0]
+                candidates.append((abs(camera_elapsed - horizon), offset, abs(physics_elapsed - horizon)))
+            if not candidates:
+                continue
+            camera_residual, offset, physics_residual = min(candidates, key=lambda item: (item[0], item[1]))
+            if camera_residual <= tolerance_s and physics_residual <= tolerance_s:
+                offsets.append(offset)
+                camera_residuals.append(camera_residual)
+                physics_residuals.append(physics_residual)
+            elif executed == prefix:
+                unsupported = True
         unique_offsets = sorted(set(offsets))
         qualified = (
             not unsupported and bool(offsets) and len(unique_offsets) == 1
@@ -724,7 +996,11 @@ def _derive_model_alignment(
     earlier = [row for row in qualified if row["target_physical_time_s"] < primary["target_physical_time_s"]]
     early = min(earlier, key=lambda row: (row["target_physical_time_s"], row["generated_frame_index"])) if earlier else None
 
-    resources = [cell["resource"] for cell in cells]
+    resources = [cell["resource"] for cell in cells if cell["resource"] is not None]
+    require(
+        not require_resources or len(resources) == len(cells),
+        f"{model} resource inventory is incomplete",
+    )
     source_receipts = {
         "development_cell_receipts": [cell["cell_receipt"] for cell in cells],
         "adapter_completions": [cell["adapter_completion"] for cell in cells],
@@ -738,6 +1014,21 @@ def _derive_model_alignment(
         },
     }
     mapping_receipt_id = f"wmf1-development-{model.lower()}-physical-alignment-v1"
+    timing_claim_boundary: dict[str, Any] = {
+        "generated_target_source": timing["native_runtime_field"],
+        "time_source_kind": timing["time_source_kind"],
+        "clock_bridge": timing["clock_bridge"],
+        "presentation_video_fps_used": False,
+        "conditioning_fps_used_as_target_timing": False,
+        "generated_frame_index_interpreted_as_action_index": False,
+    }
+    if model == "D1":
+        timing_claim_boundary.update({
+            "generated_targets_scope": timing["generated_targets_scope"],
+            "request_timing_coverage": dict(timing["request_timing_coverage"]),
+            "incremental_standalone_decodes_assigned_target_times": False,
+            "timing_unmapped_requests_eligible": False,
+        })
     mapping = sign_document({
         "schema_version": MAPPING_SCHEMA,
         "receipt_id": mapping_receipt_id,
@@ -754,14 +1045,7 @@ def _derive_model_alignment(
                 "action_space", "seed_semantics", "temporal_context",
             )
         },
-        "timing_claim_boundary": {
-            "generated_target_source": timing["native_runtime_field"],
-            "time_source_kind": timing["time_source_kind"],
-            "clock_bridge": timing["clock_bridge"],
-            "presentation_video_fps_used": False,
-            "conditioning_fps_used_as_target_timing": False,
-            "generated_frame_index_interpreted_as_action_index": False,
-        },
+        "timing_claim_boundary": timing_claim_boundary,
         "camera": {
             "camera_id": camera_id,
             "camera_crop_id": crop["camera_crop_id"],
@@ -1132,7 +1416,7 @@ def derive_bundle(
     for model in models:
         mappings[model], alignment_unsigned[model], model_aux[model] = _derive_model_alignment(
             by_model[model], model=model, expected_cells=expected_cells[model],
-            evidence_base=evidence_base,
+            evidence_base=evidence_base, require_resources=require_annotation,
         )
     if not require_annotation:
         return mappings, alignment_unsigned, None
@@ -1348,6 +1632,18 @@ def validate_release_freeze(
             "conditioning_fps_used_as_target_timing": False,
             "generated_frame_index_interpreted_as_action_index": False,
         }, f"{model} mapping contains prohibited timing inference")
+        if model == "D1":
+            require(
+                timing_boundary.get("generated_targets_scope")
+                == D1_GENERATED_TARGETS_SCOPE
+                and timing_boundary.get("request_timing_coverage")
+                == D1_FORMAL_TIMING_COVERAGE
+                and timing_boundary.get(
+                    "incremental_standalone_decodes_assigned_target_times"
+                ) is False
+                and timing_boundary.get("timing_unmapped_requests_eligible") is False,
+                "D1 mapping missingness boundary changed",
+            )
         require(alignment.get("mapping_receipt_id") == mapping.get("receipt_id"),
                 f"{model} alignment/mapping receipt ID changed")
         primary = mapping.get("primary_target")
@@ -1358,6 +1654,12 @@ def validate_release_freeze(
                 and alignment.get("target_executed_action_offset")
                 == primary.get("target_executed_action_offset"),
                 f"{model} alignment primary target differs from its mapping")
+        if model == "D1":
+            require(
+                primary.get("eligible_request_count") == 224
+                and primary.get("full_prefix_request_count") == 224,
+                "D1 primary mapping includes timing-unmapped or truncated requests",
+            )
         early = mapping.get("early_target")
         expected_early = None if early is None else {
             "horizon_s": early.get("target_physical_time_s"),
@@ -1366,6 +1668,12 @@ def validate_release_freeze(
         }
         require(alignment.get("early_horizon") == expected_early,
                 f"{model} alignment early target differs from its mapping")
+        if model == "D1" and early is not None:
+            require(
+                early.get("eligible_request_count") == 224
+                and early.get("full_prefix_request_count") == 224,
+                "D1 early mapping includes timing-unmapped or truncated requests",
+            )
         camera = mapping.get("camera")
         clocks = mapping.get("measured_clock_intervals")
         require(isinstance(camera, Mapping) and isinstance(clocks, Mapping),

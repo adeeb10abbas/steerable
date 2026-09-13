@@ -1,26 +1,26 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T11:01:15.397470Z",
+  "as_of_utc": "2026-09-13T11:28:51.570607Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
   "requested_host": "GM allocated cluster",
   "authorization": "User requested execution of attached specification on GM with aggressive parallelism. Core 232 episodes selected; optional D2 not selected. No confirmation release before qualification.",
-  "core_episodes_launched": 40,
-  "core_cells_terminally_classified": 40,
-  "core_cells_completed_valid": 36,
+  "core_episodes_launched": 44,
+  "core_cells_terminally_classified": 44,
+  "core_cells_completed_valid": 40,
   "core_cells_completed_technical_invalid": 4,
   "core_cells_active_not_yet_counted": 0,
   "core_cell_arithmetic": {
-    "terminal_valid": 36,
+    "terminal_valid": 40,
     "terminal_technical_invalid": 4,
-    "terminally_classified": 40,
+    "terminally_classified": 44,
     "active_launched_not_counted": 0,
-    "total_launched_including_active": 40,
-    "invariant": "36_terminal_valid + 4_terminal_technical_invalid + 0_active_launched = 40_launched"
+    "total_launched_including_active": 44,
+    "invariant": "40_terminal_valid + 4_terminal_technical_invalid + 0_active_launched = 44_launched"
   },
-  "generation_requests_launched": 1232,
-  "generation_requests_completed": 1232,
+  "generation_requests_launched": 1460,
+  "generation_requests_completed": 1460,
   "request_breakdown": {
     "nonbehavioral_generation_qualification": 18,
     "valid_N3_pilot": 60,
@@ -28,28 +28,28 @@
     "valid_D1_pilot": 228,
     "valid_N3_development": 240,
     "technical_invalid_N3_development": 1,
-    "valid_D1_development": 684,
+    "valid_D1_development": 912,
     "active_D1_development_completed": 0,
     "active_D1_development_launched": 0
   },
   "request_arithmetic": {
     "nonbehavioral_generation_qualification": 18,
-    "terminal_behavioral_valid": 1212,
+    "terminal_behavioral_valid": 1440,
     "terminal_behavioral_technical_invalid": 2,
-    "terminal_total": 1232,
+    "terminal_total": 1460,
     "active_requests_completed_excluded": 0,
     "active_requests_launched_excluded": 0,
-    "invariant": "18_nonbehavioral + 1212_valid_behavioral + 2_technical_invalid_behavioral = 1232_terminal_requests"
+    "invariant": "18_nonbehavioral + 1440_valid_behavioral + 2_technical_invalid_behavioral = 1460_terminal_requests"
   },
-  "phase": "valid36_of_232_N3_development_sidecar_passed_D1_D02_attempt003_passed_D04_pair_claimed_confirmation_inference_held",
-  "cluster_status": "Independent Git/PVC queue remains active after the work-Mac cutoff. Results commit 14b89fd5fab92af177e483e1d49f1dbc0d7007b9 byte-verifies D1 D02 attempt003 passed4/4 with1800 actions,1804 observations and228 requests; both queue wrappers and all nested children reaped. The transitive pair gate then admitted D04 attempt003 on its exact d1 and worker00 roles with fresh 2026-09-13T11:01:14Z/11:01:15Z heartbeats. N3 development timing sidecar remains passed for all16 cells/240 requests. Confirmation inference remains unreleased.",
+  "phase": "valid40_of_232_both_models_development_complete_D1_sidecar_next_confirmation_inference_held",
+  "cluster_status": "Independent Git/PVC queue remains active after the work-Mac cutoff. Results commit 20c53451d1bb34d36ad2908ba7d7fb507f8b1ebc byte-verifies D1 D04 attempt003 passed4/4 with1800 actions,1804 observations and228 requests; both queue wrappers and all nested children reaped. D1 development is now16/16 valid across D01-D04. N3 development timing sidecar remains passed for all16 cells/240 requests; the zero-science D1 sidecar is next. Confirmation inference remains unreleased.",
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_and_live_P00_six_request_timing_probe_with_native_time_authority",
     "runtime_D1": "passed_six_official_conditional_generation_requests_on_exact_two_B200_worker_after_four_preserved_pre_request_technical_invalid_attempts",
     "fixed_450_recorder": "passed_recorder_only_original_left_with_450_actions_451_observations_zero_model_requests",
     "physical_layouts": "P00, D01-D04 and all C01-C24 have accepted model-blind candidates and fixed-observation captures; C01, C17 and C24 retain candidate_00 physical rejections and use accepted candidate_01; the 24-layout confirmation fixture freeze passed with SHA-256 495046b5102bf1813b0c9afd72d57bf1c30243070d7b525faacf53a076a482ac; this is fixture/capture qualification only",
-    "frame_time_camera_mapping": "Both pinned source audits, live P00 input preparation, D1 generation normalization, fresh live-capture N3 six-request generation-only probe and the N3/D1 native clock authorities have passed. The N3 development sidecar passed for all16 cells/240 request receipts; the D1 sidecar remains gated on terminal D02/D04 aggregates. Frame/action ordinals and presentation FPS remain rejected substitutes",
+    "frame_time_camera_mapping": "Both pinned source audits, live P00 input preparation, D1 generation normalization, fresh live-capture N3 six-request generation-only probe and the N3/D1 native clock authorities have passed. The N3 development sidecar passed for all16 cells/240 request receipts; all16 D1 development cells are now terminal and the D1 sidecar is ready for detached release. Frame/action ordinals and presentation FPS remain rejected substitutes",
     "annotation_development": "blind_two_rater_workflow_implemented_and_schema_validated; legitimate human development labels, consensus, usability decisions and empirical movement threshold remain pending",
     "confirmation_release": false
   },
@@ -107,9 +107,9 @@
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "4eb44adb444f57a0d0a29892484c19c855992cf9",
-    "cluster_staged_control_commit_at_snapshot": "4eb44adb444f57a0d0a29892484c19c855992cf9",
-    "cluster_control_generation_at_snapshot": 664,
+    "latest_control_commit": "a065b5bdf26ed76417b62bffe4caab407e4f7855",
+    "cluster_staged_control_commit_at_snapshot": "a065b5bdf26ed76417b62bffe4caab407e4f7855",
+    "cluster_control_generation_at_snapshot": 710,
     "cluster_active_job_ids_at_snapshot": [
       "timing-n3-live-generation-p00-002",
       "d1-development-d01-server-003",
@@ -124,9 +124,10 @@
       "timing-n3-native-authority-002",
       "timing-d1-native-authority-002",
       "timing-n3-development-sidecar-001",
-      "d1-development-d02-snapshot-001"
+      "d1-development-d02-snapshot-001",
+      "d1-development-d04-snapshot-001"
     ],
-    "latest_results_commit_fetched": "14b89fd5fab92af177e483e1d49f1dbc0d7007b9",
+    "latest_results_commit_fetched": "20c53451d1bb34d36ad2908ba7d7fb507f8b1ebc",
     "release_lock_recovery_receipt_sha256": "f985f78cc9a7955d9d038eea7a4da492e7d5f6ed49dfbde8d021806579bf0e8a",
     "release_lock_current_inode": 44796676,
     "post_recovery_detached_diagnostics_passed": 6
@@ -324,10 +325,7 @@
       "results_commit": "ebfa748b8ba845c23b60c30c37805349a0c53fac"
     }
   },
-  "active_owned_jobs": [
-    "d1-development-d04-server-003",
-    "d1-development-d04-simulator-003"
-  ],
+  "active_owned_jobs": [],
   "staged_owned_jobs": [],
   "fenced_unclaimed_jobs": [
     "d1-development-d04-server-002",
@@ -383,7 +381,7 @@
     },
     "development": {
       "planned_cells": 32,
-      "completed_valid_cells": 28,
+      "completed_valid_cells": 32,
       "N3": {
         "attempts": 6,
         "terminal_attempts": 6,
@@ -460,9 +458,9 @@
         "attempt_002_d03_results_commit": "7862436d10e6dc17997b64810145721d2c2cd885",
         "attempt_002_pairing_state": "D01_D02 mismatch contained by run-bound coordination and exact process-group terminations; matching D03 pair passed all four cells and both queue plus nested children are reaped; D04 pair remains unclaimed and fenced",
         "attempt_003_queue_jobs_staged": 0,
-        "attempt_003_queue_jobs_claimed": 2,
-        "attempt_003_queue_jobs_terminal": 4,
-        "attempt_003_active_pair": "D04 server and simulator are claimed on their exact d1 and worker00 roles after D02 passed its transitive terminal gate; no D04 behavioral cell is counted at this snapshot",
+        "attempt_003_queue_jobs_claimed": 0,
+        "attempt_003_queue_jobs_terminal": 6,
+        "attempt_003_active_pair": null,
         "attempt_003_source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
         "attempt_003_release_commit": "e5abbafd2a44becd628ccd0b6d1e669d914b6847",
         "attempt_003_d01_status": "passed_four_valid_cells_1800_actions_1804_observations_228_requests_zero_invalid_censored_unrun_all_children_reaped",
@@ -497,13 +495,25 @@
         "attempt_003_d02_server_admission_sha256": "1e0f093e8b406a76b6d43f37a1578d236add9bbb62c11821a92646bc80cb333e",
         "attempt_003_d02_results_commit": "14b89fd5fab92af177e483e1d49f1dbc0d7007b9",
         "attempt_003_d02_status": "passed_four_valid_cells_1800_actions_1804_observations_228_requests_zero_invalid_censored_unrun_all_children_reaped",
-        "completed_valid_cells": 12,
-        "valid_behavioral_model_requests": 684,
-        "valid_behavioral_actions": 5400,
-        "valid_behavioral_observations": 5412,
+        "attempt_003_d04_cell_receipt_sha256s": [
+          "5ee363b92407a957b1ec5190643780722fdf6a55c2e7a5a9a72d7b2adaf8b1f5",
+          "b7172bccec6f9d4d72c0da204401e59c45787449780b6dba397539348666b632",
+          "9f72821183a135430026d34b2fa996b0a0062ef8d2f7f705e8c6e0a4782df050",
+          "cc45bb066436bd510938137448216450ed6de1e10a7f3741bd84a25f80e65154"
+        ],
+        "attempt_003_d04_simulator_aggregate_sha256": "78a9b8b7095e48ce5412a902a7120f3c9ad71e3edb6eeeddb228720fe1b458fa",
+        "attempt_003_d04_server_aggregate_sha256": "043424b7cbde31c7616ee7c9873ccc0b42f5077561005e9800654a483460dfcb",
+        "attempt_003_d04_simulator_admission_sha256": "9f19bdd83e97732b42561c0a5a30d00e7740a163bcc818e252caec6341690b12",
+        "attempt_003_d04_server_admission_sha256": "ff17149a9bb46f19fd9a71f94a7180166f0d67ed19e96a5599197f5ada7da416",
+        "attempt_003_d04_results_commit": "20c53451d1bb34d36ad2908ba7d7fb507f8b1ebc",
+        "attempt_003_d04_status": "passed_four_valid_cells_1800_actions_1804_observations_228_requests_zero_invalid_censored_unrun_all_children_reaped",
+        "completed_valid_cells": 16,
+        "valid_behavioral_model_requests": 912,
+        "valid_behavioral_actions": 7200,
+        "valid_behavioral_observations": 7216,
         "technically_invalid_behavioral_cells": 1,
         "active_behavioral_cells_not_counted": 0,
-        "unrun_cells": 4,
+        "unrun_cells": 0,
         "attempt_001_failure": "all four server/simulator pairs received the raw fixed-observation capture instead of its enclosing queue receipt and failed prerequisite schema validation before model load/reset/request/action",
         "prerequisite_preflights": {
           "staged": 0,
@@ -518,7 +528,7 @@
             "d1-development-d04-prerequisite-preflight-001": "passed_receipt_sha256_6a51fa6abfa0c1ee1e534aa36fa3429e8c0fcd3077eb68770c6f72400df845a6"
           }
         },
-        "release_gate": "passed_all_four_zero-model_prerequisites; D01 and D02 attempt002 are terminally reconciled; D03 attempt002 plus D01/D02 attempt003 each passed all four cells; D04 attempt003 is admitted and claimed on the exact paired roles; D04 attempt002 stays fenced"
+        "release_gate": "passed_all_four_zero-model_prerequisites; D01 and D02 attempt002 are terminally reconciled; D03 attempt002 plus D01/D02/D04 attempt003 each passed all four cells with all queue and nested children reaped; D04 attempt002 stays fenced"
       }
     },
     "confirmation": {
@@ -527,10 +537,9 @@
       "released": false,
       "inference_cells_launched": 0,
       "hold_reasons": [
-        "complete model-qualified development evidence",
-        "authoritative native generated-target timing qualification",
+        "complete D1 per-request development timing sidecar and authenticated alignment freeze",
         "legitimate two-rater development labels and reproducible consensus",
-        "empirical movement threshold and frozen usability decisions"
+        "empirical movement threshold and frozen usability/resource decisions"
       ],
       "fixture_attempts_only": {
         "technical_invalid_zero_action_zero_request": 7,

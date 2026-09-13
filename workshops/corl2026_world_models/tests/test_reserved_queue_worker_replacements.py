@@ -84,6 +84,10 @@ class ReservedQueueWorkerReplacementTests(unittest.TestCase):
                     environment.pop(), reserved_worker_replacements.POD_UID_ENV
                 )
                 self.assertFalse(any(row.get("name") == "POD_UID" for row in environment))
+                if target_name == "wmf-forecast-0912-worker-d1-00":
+                    self.assertFalse(
+                        any(row.get("name") == "NVIDIA_VISIBLE_DEVICES" for row in environment)
+                    )
 
                 # Removing the three deliberate additions must reproduce every
                 # byte-decoded source field, including labels, resources,

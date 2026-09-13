@@ -20,10 +20,10 @@ from pathlib import Path
 WORKSHOP = Path(__file__).resolve().parents[1]
 AUTONOMY = WORKSHOP / "execution/20260912/autonomy"
 GENERIC_SOURCE = AUTONOMY / "science_queue_workers_v3.json"
-D1_SOURCE = AUTONOMY / "d1_queue_worker.json"
+D1_SOURCE = AUTONOMY / "d1_queue_worker_v2.json"
 SOURCE_SHA256 = {
     GENERIC_SOURCE.name: "9a8e687b547a2fb97047110fe83cefa373dbb4d9c8660cb2b74ffb1545bac94f",
-    D1_SOURCE.name: "81f252a0ff924c8327f61c62233b4ea68b95db319ea6c875f089b1fd905d3242",
+    D1_SOURCE.name: "23f1299f58761676742bf639f885051409209b9ca42575f758df641cb3c1d093",
 }
 TARGETS = (
     (GENERIC_SOURCE, "wmf-forecast-0912-worker-00"),

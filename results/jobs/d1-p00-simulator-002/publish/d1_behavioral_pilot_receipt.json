@@ -1,0 +1,129 @@
+{
+  "all_simulator_children_reaped": true,
+  "block_id": "wmf_ablation_001_20260912__pilot__P00__D1",
+  "cell_ids": [
+    "wmf1__pilot__P00__D1__reflected__right",
+    "wmf1__pilot__P00__D1__reflected__left",
+    "wmf1__pilot__P00__D1__original__left",
+    "wmf1__pilot__P00__D1__original__right"
+  ],
+  "cell_receipts": [],
+  "claim_boundary": "This receipt counts only valid 450-action D1 behavioral cells. The reused six-request generation and recorder-only qualifications remain nonbehavioral.",
+  "completed_at_utc": "2026-09-13T07:05:16.903969Z",
+  "condition_order": [
+    "reflected-right",
+    "reflected-left",
+    "original-left",
+    "original-right"
+  ],
+  "counts": {
+    "actual_behavioral_actions": 0,
+    "actual_behavioral_model_requests": 0,
+    "completed_valid_behavioral_cells": 0,
+    "launched_behavioral_cells": 1,
+    "new_generation_qualification_requests": 0,
+    "newly_launched_behavioral_cells": 1,
+    "planned_behavioral_cells": 4,
+    "recorder_only_episodes_counted_as_behavioral": 0,
+    "resumed_valid_behavioral_cells": 0,
+    "reused_prerequisite_generation_qualification_requests": 6,
+    "right_censored_behavioral_cells": 0,
+    "technically_invalid_behavioral_cells": 1,
+    "unrun_behavioral_cells": 3
+  },
+  "effective_model_noise_seed": 1140,
+  "exit_code": 1,
+  "failure": {
+    "detail": "No module named 'numpy'",
+    "error_type": "ModuleNotFoundError",
+    "reason": null
+  },
+  "layout_pair_id": "P00",
+  "model_config": "D1",
+  "namespace": "wmf_ablation_001_20260912",
+  "new_cell_receipts": [],
+  "noise_semantics": "fixed; cells and requests are not independent noise draws",
+  "phase": "pilot",
+  "prerequisites": {
+    "accepted_gate_record_sha256": "9e96cf0ecbdfe79c05d37fd1f89c75b8aa851068163153b3909e7888956f0683",
+    "candidate_id": "P00__candidate_01",
+    "candidate_payload_sha256": "4814457b47f5e703fc49faff10660cbf1f5143f8e6a59299c3c0c7d5a9de24a0",
+    "capture_receipt": {
+      "bytes": 80178,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/capture_receipt.json",
+      "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+    },
+    "d1_qualification_receipt": {
+      "bytes": 13992,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/publish/d1_qualification_job_receipt.json",
+      "sha256": "3c856549999b9145dc07c30853a4c6d2968d09eb31c2db883f5eb1655d31627b"
+    },
+    "gate_receipt": {
+      "bytes": 3944,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-p00-candidate-01-r2/publish/fixture_gate_receipt.json",
+      "sha256": "9611b5bd1fee98ebc7f480e7044a871e54894bbb63ce2e91966ca46d96a6adbf"
+    },
+    "generation_qualification_requests_reused_not_rerun": 6,
+    "native_timing_support": {
+      "bytes": 1148,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-003/adapter_attempt/timing_support.json",
+      "sha256": "7703f4171a3f2bb482b7b818f36ae51ad959ed4705c537d897cd59613466118a"
+    },
+    "pose_manifest": {
+      "bytes": 5150,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/p00_pose_manifest.json",
+      "sha256": "c597bbafdaab3155b35945f8e6130e599fa3c8dc1c9d83f247611aee2bbd0954"
+    },
+    "recorder_child_receipt": {
+      "bytes": 29276,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-003/child_qualification_receipt.json",
+      "sha256": "b25617f8d7a52bfc3d4df161d6c947ef6b73788986581f107b1c6b638c1a296e"
+    },
+    "recorder_receipt": {
+      "bytes": 4232,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/recorder-qualification-p00-003/publish/recorder_qualification_receipt.json",
+      "sha256": "0e3f02f37a2548e36ae3a45a38a1fac63c56cd8798732056f24b03d103991fde"
+    }
+  },
+  "queue_descriptor": {
+    "bytes": 2149,
+    "job_id": "d1-p00-simulator-002",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-simulator-002/descriptor.json",
+    "role": "wmf-forecast-0912-worker-00",
+    "sha256": "c9b90bd58adb0a15088b5327b92b14b0bde0f65b7b6a8ff1510b70cc7220895c"
+  },
+  "raw_attempt_recoverable_on_gm_pvc": true,
+  "raw_attempt_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-002",
+  "resume": {
+    "bytes": 403,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-002/resume.json",
+    "sha256": "d5175c54e29e3ceed93483543964d77025d372f783d5c64ce80d625502b1a912"
+  },
+  "resumed_cell_receipts": [],
+  "run_id": "d1-p00-002",
+  "schedule": {
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/34cf933563fc0e61013b5776d599a3035f4a5a58/workshops/corl2026_world_models/execution/20260912/parallel_schedule.json",
+    "sha256": "9a4a1cce1e980a624ec4161cf4438bfa01a6681dcd8fcb6e2b01150b62409a58"
+  },
+  "schema_version": "wmf-d1-behavioral-pilot-simulator-job-v1",
+  "server_job_id": "d1-p00-server-002",
+  "server_ready": {
+    "bytes": 4371,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-002/server_ready.json",
+    "sha256": "52e9a93660b238d650dc3ab24f77b7eb754ad950b38791ed9228ac2e95df4217"
+  },
+  "simulator_claim": {
+    "bytes": 868,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-002/simulator_claim.json",
+    "sha256": "d079745ebc8e518487fc916e955f7151b76f46ca58008e67205c5686fb349817"
+  },
+  "simulator_job_id": "d1-p00-simulator-002",
+  "status": "technical_failure",
+  "study_commit": "34cf933563fc0e61013b5776d599a3035f4a5a58",
+  "study_id": "WMF-ABLATION-001",
+  "topology": {
+    "bytes": 438,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/simulator_attempts/d1-p00-simulator-002/topology.json",
+    "sha256": "4ef497afcb736d45307e68bc2fa452256780b5b9a15b7d3e1948f78a5e7571de"
+  }
+}

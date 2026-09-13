@@ -1,0 +1,95 @@
+{
+  "behavioral_action_count": 0,
+  "candidate_id": "C13__candidate_00",
+  "candidate_payload_sha256": "db5810f5f4c2c7168ef65500222804e224ab4559f5749d711c4ec6d2a7ba127f",
+  "candidate_pool_sha256": "ec80f4adc5272ec666c94d753241b84c954ef382bd30e1f2907459bff1cdb2b1",
+  "child_exit_code": 0,
+  "child_logs": {
+    "stderr": {
+      "bytes": 551,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/C13/queue_attempts/fixture-c13-candidate-00-r2/child.stderr.log",
+      "sha256": "f87e212ae3e1616e6abefb1925034f07378cd23a3cbac165d520ca3f5cec36e8"
+    },
+    "stdout": {
+      "bytes": 94754,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/C13/queue_attempts/fixture-c13-candidate-00-r2/child.stdout.log",
+      "sha256": "a9827531b802e2410746d09662f800a81ee87c9ec692c857f817545abfe93fa6"
+    }
+  },
+  "child_started": true,
+  "claim_boundary": "Model-blind physical fixture qualification only; this receipt releases no model inference or behavioral episode.",
+  "decision": "accepted",
+  "deployment_identity": {
+    "deployment_job": "wmf-forecast-0912-worker-09",
+    "diagnostic_descriptor": {
+      "bytes": 622,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/worker09-isolation-diagnostic-003/descriptor.json",
+      "sha256": "6b8d4fec01cc15cc7ce148f959a1da358f3747dfb9dc857bad2e00bd5e7b2115"
+    },
+    "diagnostic_gpu_identity": {
+      "driver_version": "580.95.05",
+      "index": 0,
+      "name": "NVIDIA B200",
+      "preexisting_compute_process_count": 0,
+      "uuid": "GPU-1dd1d72a-abf0-2118-b3fb-75a3b52f0c87"
+    },
+    "diagnostic_job_id": "worker09-isolation-diagnostic-003",
+    "node": null,
+    "pod": "wmf-forecast-0912-worker-09-x9xr6",
+    "pod_uid": "6e2e6f80-5eb2-4a4a-bf22-5b8beb3c0dba",
+    "pod_uid_attestation_source": "downward_api_environment_and_hash_bound_worker_diagnostic",
+    "receipt": {
+      "bytes": 1657,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/worker09-isolation-diagnostic-003/publish/diagnostic.json",
+      "sha256": "1b9aeac25f5a7173e92a33223245b4a0cfcb95e8a0d4a7687ac8d749c48e16e1"
+    },
+    "receipt_kind": "dynamic_worker_diagnostic",
+    "scientific_qualification": false,
+    "scope": "Harmless host/GPU/logging diagnostic only; no model import, generation, simulator or credential inspection."
+  },
+  "exit_code": 0,
+  "finished_at_utc": "2026-09-13T07:05:03.107095Z",
+  "fixture_job_ledger": {
+    "bytes": 704,
+    "last_record_sha256": "f7b1246b26585f2529596dfa1953e408022200b1150721d12cdb86b639a70e14",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/C13/fixture_job_ledger.jsonl",
+    "record_count": 1,
+    "sha256": "ecfaffc8cb912b9409ba587fc6f4a84050f5c4a6b1f67ca7a839bfa813c42c23"
+  },
+  "fixture_job_ledger_record_sha256": "f7b1246b26585f2529596dfa1953e408022200b1150721d12cdb86b639a70e14",
+  "gate_evidence": {
+    "failure_count": 0,
+    "gate_attempt_receipt": {
+      "bytes": 271734,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/C13/attempts/C13/C13__candidate_00/attempt_000/gate_attempt_receipt.json",
+      "sha256": "47a59645e17d8f41b5e28c20d479d022e92c8e6b64287999fb0969879c437087"
+    },
+    "gate_record_sha256": "ce5c51603217a07b8b6f3c9c34e92a87242ad3869e5c62c82fe622ae81e0f0d8",
+    "raw_attempt_directory": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/C13/attempts/C13/C13__candidate_00/attempt_000"
+  },
+  "gate_ledger": {
+    "bytes": 1076,
+    "last_record_sha256": "ce5c51603217a07b8b6f3c9c34e92a87242ad3869e5c62c82fe622ae81e0f0d8",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/C13/gate_ledger.jsonl",
+    "record_count": 1,
+    "sha256": "e68cea27baf3b636c50be59ed4ea5987bfff8410810c4cdfa6b769fdfa03b98e"
+  },
+  "gate_record_count": 1,
+  "gpu_identity": {
+    "driver_version": "580.95.05",
+    "index": 0,
+    "name": "NVIDIA B200",
+    "preexisting_compute_process_count": 0,
+    "uuid": "GPU-1dd1d72a-abf0-2118-b3fb-75a3b52f0c87"
+  },
+  "job_id": "fixture-c13-candidate-00-r2",
+  "layout_pair_id": "C13",
+  "model_request_count": 0,
+  "reason": null,
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "schema_version": "wmf-forecast-layout-fixture-job-receipt-v1",
+  "source_contract_sha256": "88a1268ae7f27776fd5246a5808c069b2906399e99bb0e7d8b6f09020a6b85d3",
+  "status": "finished",
+  "study_commit": "471f28ff31e312f86df33c7c9e79d61f010e96cd",
+  "study_namespace": "wmf_ablation_001_20260912"
+}

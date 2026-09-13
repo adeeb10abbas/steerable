@@ -1,0 +1,56 @@
+{
+  "all_server_children_reaped": true,
+  "block_id": "wmf_ablation_001_20260912__pilot__P00__D1",
+  "completed_at_utc": "2026-09-13T07:05:20.477651Z",
+  "d1_qualification_receipt": {
+    "bytes": 13992,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/publish/d1_qualification_job_receipt.json",
+    "sha256": "3c856549999b9145dc07c30853a4c6d2968d09eb31c2db883f5eb1655d31627b"
+  },
+  "exit_code": 1,
+  "failure": {
+    "detail": "paired_simulator_failed",
+    "error_type": "D1BehavioralPilotError",
+    "reason": "paired_simulator_failed"
+  },
+  "paired_simulator_job_id": "d1-p00-simulator-002",
+  "queue_descriptor": {
+    "bytes": 1034,
+    "job_id": "d1-p00-server-002",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-server-002/descriptor.json",
+    "role": "d1",
+    "sha256": "ada5b4510e1904e3ae58f8e6b8a532468577658eab8bc8269295fb32fa7605af"
+  },
+  "raw_attempt_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/server_attempts/d1-p00-server-002",
+  "run_id": "d1-p00-002",
+  "schema_version": "wmf-d1-behavioral-pilot-server-job-v1",
+  "server_job_id": "d1-p00-server-002",
+  "server_process_exit": {
+    "ended_at_utc": "2026-09-13T07:05:20.475017Z",
+    "reaped": true,
+    "returncode": 1,
+    "status": "reaped"
+  },
+  "server_ready": {
+    "bytes": 4371,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-002/server_ready.json",
+    "sha256": "52e9a93660b238d650dc3ab24f77b7eb754ad950b38791ed9228ac2e95df4217"
+  },
+  "simulator_claim": {
+    "bytes": 868,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-002/simulator_claim.json",
+    "sha256": "d079745ebc8e518487fc916e955f7151b76f46ca58008e67205c5686fb349817"
+  },
+  "simulator_terminal": {
+    "bytes": 1073,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/coordination/d1-p00-002/simulator_terminal.json",
+    "sha256": "58e2b0064dfca6bc7c41d19fcd12ef5ef465652fc29332a349b5f756c867482b"
+  },
+  "status": "technical_failure",
+  "study_commit": "34cf933563fc0e61013b5776d599a3035f4a5a58",
+  "topology": {
+    "bytes": 1444,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00/server_attempts/d1-p00-server-002/topology_receipt.json",
+    "sha256": "55a18eeebf079916aba00be736c602e9eaa64c0fc1a63a2c7d10c1e56dcba940"
+  }
+}

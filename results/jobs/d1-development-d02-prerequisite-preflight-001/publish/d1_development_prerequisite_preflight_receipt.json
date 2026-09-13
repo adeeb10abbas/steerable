@@ -1,0 +1,86 @@
+{
+  "block_id": "wmf_ablation_001_20260912__development__D02__D1",
+  "claim_boundary": "Detached prerequisite validation only; no model server, simulator, physical reset, model request, behavioral action, or cell was launched.",
+  "completed_at_utc": "2026-09-13T08:28:16.865978Z",
+  "decision": "go",
+  "development_contract_sha256": "5964f153db83c4cd23522098f1646747d5a14c28d54b8d510089e70e4911529a",
+  "environment_seed": 2026091102,
+  "expected_capture_wrapper": {
+    "job_id": "fixed-observation-d02-001",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixed-observation-d02-001/publish/fixed_observation_job_receipt.json",
+    "sha256": "a700280562d3640349fe8ec5a2594decf4a7b2b9f30450c9e9af55420bb907ac"
+  },
+  "job_id": "d1-development-d02-prerequisite-preflight-001",
+  "layout_pair_id": "D02",
+  "namespace": "wmf_ablation_001_20260912",
+  "queue_descriptor": {
+    "bytes": 2804,
+    "job_id": "d1-development-d02-prerequisite-preflight-001",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-development-d02-prerequisite-preflight-001/descriptor.json",
+    "role": "wmf-forecast-0912-worker-06",
+    "sha256": "4713d15ed334efc4b56f09a06b8d410c588c7481164f71564404284f00a9be1e"
+  },
+  "queue_role": "wmf-forecast-0912-worker-06",
+  "safe_to_release_behavioral_pair": true,
+  "schema_version": "wmf-d1-development-prerequisite-preflight-v1",
+  "science_counts": {
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "model_requests": 0,
+    "model_server_starts": 0,
+    "physical_resets": 0,
+    "simulator_process_starts": 0
+  },
+  "simulator_worker_role": "wmf-forecast-0912-worker-00",
+  "source_commit": "64e84d1f7634e2a7fbaaf0e1ffd05bf021614517",
+  "status": "passed",
+  "study_id": "WMF-ABLATION-001",
+  "validated_execution_prerequisites_sha256": "20f762c8ce1ce423946406d903a405b14001cfaad18d5ace30aa718fe9392b4f",
+  "validated_prerequisites": {
+    "capture_wrapper_receipt": {
+      "bytes": 3099,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixed-observation-d02-001/publish/fixed_observation_job_receipt.json",
+      "sha256": "a700280562d3640349fe8ec5a2594decf4a7b2b9f30450c9e9af55420bb907ac"
+    },
+    "d1_fixed_observation": {
+      "bytes": 520282,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/d1_official_wire_observation.npz",
+      "sha256": "03d99a3eb49442aa65b4d032ae73d960d748f40018934624bf14711264d1d21f"
+    },
+    "d1_qualification_receipt": {
+      "bytes": 13992,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/publish/d1_qualification_job_receipt.json",
+      "sha256": "3c856549999b9145dc07c30853a4c6d2968d09eb31c2db883f5eb1655d31627b"
+    },
+    "gate_receipt": {
+      "bytes": 3934,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixture-d02-candidate-00/publish/fixture_gate_receipt.json",
+      "sha256": "e30a3dd1ad3d8621661a406a7c1d6c30034383f9b5ad6bed8a96c63015a477d6"
+    },
+    "p00_server_receipt": {
+      "bytes": 2382,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-server-003/publish/d1_behavioral_server_receipt.json",
+      "sha256": "95ef4351ffa494194ae6d9c4525acd8191b2d35438680f9284cad798d71f3201"
+    },
+    "p00_simulator_receipt": {
+      "bytes": 8596,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-simulator-003/publish/d1_behavioral_pilot_receipt.json",
+      "sha256": "20b4068ee9748daad7ae5e8350e8b7cf36d62c686af51a0d4b9653f9cecb2ab0"
+    },
+    "pose_manifest": {
+      "bytes": 5090,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/d02_pose_manifest.json",
+      "sha256": "701c2d0acdd9ccb546673d1ae028de2838eb425ee42cd79df3cbc82829d760af"
+    },
+    "raw_capture_receipt": {
+      "bytes": 80231,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-d02-001/capture/capture_receipt.json",
+      "sha256": "7ad03352a7fbd0f5c30f425712df716733ea4d2e0306037eee14e6fe013d9c43"
+    },
+    "recorder_receipt": {
+      "bytes": 4232,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/recorder-qualification-p00-003/publish/recorder_qualification_receipt.json",
+      "sha256": "0e3f02f37a2548e36ae3a45a38a1fac63c56cd8798732056f24b03d103991fde"
+    }
+  }
+}

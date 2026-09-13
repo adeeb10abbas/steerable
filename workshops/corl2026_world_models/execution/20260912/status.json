@@ -1,23 +1,23 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T03:15:43Z",
+  "as_of_utc": "2026-09-13T04:22:00Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
   "requested_host": "GM allocated cluster",
   "authorization": "User requested execution of attached specification on GM with aggressive parallelism. Core 232 episodes selected; optional D2 not selected. No confirmation release before qualification.",
-  "core_episodes_launched": 0,
-  "generation_requests_launched": 6,
-  "generation_requests_completed": 6,
-  "phase": "live_model_and_physical_qualification",
-  "cluster_status": "Independent Git/PVC queue is active. Three corrected one-B200 workers and one corrected two-B200 D1 worker are Running; 27 one-B200 workers are scheduler-pending. Device-plugin isolation was verified live on every running study worker.",
+  "core_episodes_launched": 1,
+  "generation_requests_launched": 12,
+  "generation_requests_completed": 12,
+  "phase": "both_primary_models_generation_qualified_and_N3_behavioral_pilot_live",
+  "cluster_status": "Independent Git/PVC queue is active without the work Mac. Two isolated one-B200 workers, one isolated two-B200 N3 worker and one isolated two-B200 D1 worker are Running; device-plugin identities and accessible device nodes were verified for all six allocated B200s.",
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_physical_time_still_unqualified",
-    "runtime_D1": "official_two_rank_launcher_ready_waiting_for_current_hash_bound_capture",
-    "fixed_450_recorder": "software_qualified_live_queue_launcher_ready_waiting_for_accepted_P00_manifest",
-    "physical_layouts": "P00_candidate_00_preserved_physical_rejection_after_four_setup_invalid_attempts; prospective_candidate_01_released",
-    "frame_time_camera_mapping": "pending_measured_qualification",
+    "runtime_D1": "passed_six_official_conditional_generation_requests_on_exact_two_B200_worker_after_four_preserved_pre_request_technical_invalid_attempts",
+    "fixed_450_recorder": "passed_recorder_only_original_left_with_450_actions_451_observations_zero_model_requests",
+    "physical_layouts": "P00_candidate_01_and_D01_through_D04_candidate_00_accepted_model_blind; P00_pose_and_current_capture_frozen",
+    "frame_time_camera_mapping": "N3_P00_attempt_003_preserved_transport_invalid_after_one_generated_request_and_zero_actions; attempt_004_claimed_with_no_replay_transport_fix",
     "annotation_development": "pending_development_recordings",
     "confirmation_release": false
   },
@@ -35,7 +35,7 @@
   "verified_baseline_tests": 23,
   "source_bundle_sha256": "a8cc6b8d393902bd4ea8561ec1236097d02c74c88c500b5477da72df576fde69",
   "automatic_background_execution": true,
-  "verified_workshop_tests": 152,
+  "verified_workshop_tests": 175,
   "prepared_schedule": {
     "path": "parallel_schedule.json",
     "jobs": 58,
@@ -55,7 +55,7 @@
     "candidate_count": 29,
     "structured_artifact_count": 1848,
     "collisions_within_checked_scope": 0,
-    "runtime_acceptance_verified": false
+    "runtime_acceptance_verified": "P00_seed_only"
   },
   "cluster_autonomy": {
     "status": "independent_round_trip_passed_and_handed_off",
@@ -75,8 +75,8 @@
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "ff5feab207bc4cae6008b1372eb22110e5e6c900",
-    "latest_results_commit_fetched": "f48de8fec9da072ebe27d23c0ca60fabf9555444"
+    "latest_control_commit": "05761356030901be2877e46ac15740d48354fb2c",
+    "latest_results_commit_fetched": "315dc7d5c590e93644e986d872054ef77c14afff"
   },
   "archive_source_recovery": {
     "path": "archive_source_recovery.json",
@@ -108,7 +108,14 @@
       "returned_actions_outside_executable_prefix_per_full_request": 16
     },
     "live_queue_launcher": "../../experiments/forecast_layout/recorder_qualification_job.py",
-    "live_runtime_qualified": false
+    "live_runtime_qualified": true,
+    "passed_job": "recorder-qualification-p00-003",
+    "actions_executed": 450,
+    "observations_recorded": 451,
+    "model_requests": 0,
+    "behavioral_episodes": 0,
+    "receipt_sha256": "0e3f02f37a2548e36ae3a45a38a1fac63c56cd8798732056f24b03d103991fde",
+    "timing_support_sha256": "7703f4171a3f2bb482b7b818f36ae51ad959ed4705c537d897cd59613466118a"
   },
   "generation_qualification": {
     "planned_requests_per_primary_model": 6,
@@ -124,18 +131,25 @@
       "claim_boundary": "Fixed historical observation only. This passes runtime seed/reset/decode behavior, not robot skill or generated-frame physical-time alignment."
     },
     "D1": {
-      "attempts": 0,
-      "generation_requests_completed": 0,
-      "qualified": false
+      "attempts": 5,
+      "technical_invalid_attempts": 4,
+      "generation_requests_completed": 6,
+      "qualified": true,
+      "passed_attempt": "d1-first-live-005",
+      "source_commit": "031b8c4dcddac7d80e1d056db5a370c3aa872ab1",
+      "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
+      "official_repository_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+      "raw_receipt_sha256": "3c856549999b9145dc07c30853a4c6d2968d09eb31c2db883f5eb1655d31627b",
+      "claim_boundary": "Fixed current P00 observation only. This passes official conditional-path runtime/repeat/decode behavior, not robot skill or generated-frame physical-time alignment."
     }
   },
   "live_fixture_qualification": {
     "P00": {
-      "attempts_completed": 5,
-      "technical_invalid": 4,
+      "attempts_completed": 7,
+      "technical_invalid": 5,
       "physical_rejections": 1,
-      "accepted": 0,
-      "active_or_staged_attempt": "fixture-p00-candidate-01",
+      "accepted": 1,
+      "active_or_staged_attempt": null,
       "model_requests": 0,
       "behavioral_actions": 0,
       "preserved_reasons": [
@@ -143,20 +157,89 @@
         "pod_uid_environment_missing",
         "isaaclab_module_missing_from_child_path",
         "venv_entrypoint_resolved_to_base_python_missing_toml",
-        "candidate_00_physical_rejection_under_exact_RTX_byte_identity_gate"
+        "candidate_00_physical_rejection_under_exact_RTX_byte_identity_gate",
+        "candidate_01_attempt_000_camera_hash_canonicalization_mismatch"
       ],
       "candidate_00_gate_record_sha256": "2e0d2a8c56feb8e975f2babb714c3ca7e0f09fed7eedaa55a79b590d8fddfe5b",
+      "accepted_candidate": "P00__candidate_01",
+      "accepted_gate_record_sha256": "9e96cf0ecbdfe79c05d37fd1f89c75b8aa851068163153b3909e7888956f0683",
+      "accepted_receipt_sha256": "9611b5bd1fee98ebc7f480e7044a871e54894bbb63ce2e91966ca46d96a6adbf",
       "renderer_diagnostic": "p00_renderer_nondeterminism.json",
       "prospective_matched_reset_gate": "wmf-forecast-layout-matched-reset-gate-v2"
+    },
+    "development": {
+      "D01": {
+        "accepted_candidate": "D01__candidate_00",
+        "receipt_sha256": "ae001a2f7377909e4e42852a69b6583c1ed178fb10ac9d62f7f5e66051dc8f9c"
+      },
+      "D02": {
+        "accepted_candidate": "D02__candidate_00",
+        "receipt_sha256": "e30a3ddc96c5f0b693e7c5666d04e6d820b49ad668fb9964185f702616459bbc"
+      },
+      "D03": {
+        "accepted_candidate": "D03__candidate_00",
+        "receipt_sha256": "fbef54885878a3e4c20e16cb96e394f0d7d4db1ba1a7c82977633521f7d9c9c4"
+      },
+      "D04": {
+        "accepted_candidate": "D04__candidate_00",
+        "receipt_sha256": "c700f4ab9e46893065f4eff6ad36b41870dc283817522bf6af8cff1d33b43994"
+      },
+      "model_requests": 0,
+      "behavioral_actions": 0,
+      "results_commit": "87063dfe2b6c6a2f52415093674274932b17de3c"
     }
+  },
+  "fixed_observation_capture": {
+    "status": "passed",
+    "job_id": "fixed-observation-p00-001",
+    "candidate_id": "P00__candidate_01",
+    "pose_manifest_sha256": "c597bbafdaab3155b35945f8e6130e599fa3c8dc1c9d83f247611aee2bbd0954",
+    "capture_manifest_sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663",
+    "d1_fixture_sha256": "4545fdf3b335e10b35f9eb4bc038db07480518c9f1672b6ab76231d37367d735",
+    "n3_fixture_sha256": "32ced616cb872d69abf7f69705b09e5529b346b7664b32cec51b250be3bffd94",
+    "model_requests": 0,
+    "behavioral_actions": 0,
+    "results_commit": "e1675b05b64a17157c0a575d06b652c7390861bc"
   },
   "active_owned_jobs": [
     {
-      "job_id": "fixture-p00-candidate-01",
-      "role": "wmf-forecast-0912-worker-01",
-      "source_commit": "ac3072b8babee96ed194f04fb42ce81864f114a1",
-      "state": "released_to_independent_queue"
+      "job_id": "n3-p00-pilot-004",
+      "role": "n3",
+      "source_commit": "b8914413f6293c165dd3a57c737f4b977e7e84be",
+      "state": "claimed_counts_unreported"
     }
   ],
+  "behavioral_execution": {
+    "pilot": {
+      "planned_cells": 8,
+      "completed_valid_cells": 0,
+      "N3": {
+        "attempts": 4,
+        "preserved_zero_valid_cell_technical_failures": 3,
+        "active_attempt": "n3-p00-pilot-004",
+        "launched_behavioral_cells_across_terminal_attempts": 1,
+        "technically_invalid_behavioral_cells_across_terminal_attempts": 1,
+        "published_valid_cells": 0,
+        "published_behavioral_actions": 0,
+        "published_behavioral_model_requests": 1,
+        "attempt_003_failure": "client_ping_timeout_after_true_request_0_generation_caused_replay_guard_rejection",
+        "attempt_003_receipt_path": "results/jobs/n3-p00-pilot-003/publish/n3_behavioral_pilot_receipt.json"
+      },
+      "D1": {
+        "attempts": 0,
+        "published_valid_cells": 0,
+        "unrun_cells": 4
+      }
+    },
+    "development": {
+      "planned_cells": 32,
+      "completed_valid_cells": 0
+    },
+    "confirmation": {
+      "planned_cells": 192,
+      "completed_valid_cells": 0,
+      "released": false
+    }
+  },
   "independent_preparation_review": "reviewed_runtime_findings_are_fixed_or_tracked_before_release"
 }

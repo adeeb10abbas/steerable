@@ -1,0 +1,61 @@
+{
+  "artifact_schemas": {
+    "adjudication_package": "wmf-development-adjudication-private-package-v1",
+    "collection": "wmf-development-annotation-collection-v1",
+    "delivery": "wmf-development-annotation-delivery-v1",
+    "private_package": "wmf-development-annotation-private-package-v1",
+    "revocation": "wmf-development-annotation-revocation-v1",
+    "time_accounting": "wmf-development-annotation-time-accounting-v1"
+  },
+  "confirmation_policy": {
+    "confirmation_jobs_released": 0,
+    "development_summary_consensus_and_human_usability_decision_still_required": true,
+    "safe_to_release_confirmation": false
+  },
+  "human_input_policy": {
+    "approved_rubric_and_examples_required_through_freeze": true,
+    "job_may_create_or_fill_labels": false,
+    "job_may_invent_reviewer_rater_or_adjudicator": false,
+    "locked_response_required_for_collection": true,
+    "pixel_blindness_receipt_required": true
+  },
+  "publication_policy": {
+    "batch_tree_source_free": true,
+    "delivery_collection_revocation_receipts_immutable": true,
+    "delivery_rule": "ONE_GLOBAL_SOURCE_FREE_BATCH_WITH_PRIOR_BATCH_COLLECTED_AND_REVOKED",
+    "external_distribution_or_access_revocation_claimed": false,
+    "global_active_batch_limit": 1,
+    "prior_batch_collection_and_revocation_required": true,
+    "publication_uses_atomic_directory_rename": true,
+    "restricted_map_private": true
+  },
+  "required_existing_calls": [
+    "prepare_development_annotation_media.finalize_reviewed_inventory",
+    "forecast_annotation_workflow.validate_freeze",
+    "forecast_annotation_workflow.package_packets"
+  ],
+  "response_time_policy": {
+    "adjudicator_total_reported_when_required": true,
+    "annotation_seconds_must_fit_session": true,
+    "collector_timestamp_and_response_hash_bound": true,
+    "max_future_clock_skew_seconds": 300,
+    "response_lock_not_after_collection": true,
+    "response_start_not_before_delivery": true,
+    "same_rater_batches_follow_frozen_packet_order": true,
+    "same_rater_batches_must_not_overlap": true
+  },
+  "schema_version": "wmf-development-annotation-gate-contract-v1",
+  "science_counts": {
+    "behavioral_actions_executed_by_job": 0,
+    "behavioral_cells_launched_by_job": 0,
+    "labels_created_by_job": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0,
+    "simulator_processes_started": 0
+  },
+  "stage": "development",
+  "study_id": "WMF-ABLATION-001"
+}

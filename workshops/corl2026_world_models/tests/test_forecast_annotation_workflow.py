@@ -513,7 +513,27 @@ class AnnotationWorkflowTests(unittest.TestCase):
     def complete_response(self, slot_directory, *, rater_code, offset):
         response_directory = self.root / f"responses_{slot_directory.parent.name}_{slot_directory.name}_{rater_code}"
         response_directory.mkdir()
-        for batch_index, template_path in enumerate(sorted(slot_directory.glob("batch_*/response_template.json"))):
+        template_by_packet = {
+            json.loads(path.read_text())["packet_id"]: path
+            for path in slot_directory.glob("batch_*/response_template.json")
+        }
+        response_slot = json.loads(next(iter(template_by_packet.values())).read_text())["rater_slot"]
+        expected_packet_root = (
+            slot_directory if response_slot == "adjudicator" else slot_directory.parent
+        )
+        packet_order = None
+        for mapping_path in (self.root / "restricted").glob("*.json"):
+            candidate = json.loads(mapping_path.read_text())
+            stream = candidate.get("packets", {}).get(response_slot)
+            if (
+                isinstance(stream, dict)
+                and Path(candidate.get("packet_root", "")).resolve() == expected_packet_root.resolve()
+            ):
+                packet_order = [batch["packet_id"] for batch in stream["batches"]]
+                break
+        self.assertIsNotNone(packet_order, "could not recover frozen packet order for response fixture")
+        for batch_index, packet_id in enumerate(packet_order):
+            template_path = template_by_packet[packet_id]
             response = json.loads(template_path.read_text())
             response["rater_code"] = rater_code
             required_attestations = (
@@ -522,10 +542,11 @@ class AnnotationWorkflowTests(unittest.TestCase):
                 else workflow.RESPONSE_ATTESTATIONS
             )
             response["attestations"] = {key: True for key in required_attestations}
-            response["started_at"] = "2026-09-13T01:00:00Z"
-            response["completed_at"] = "2026-09-13T02:00:00Z"
+            start_hour = 1 + 2 * batch_index
+            response["started_at"] = f"2026-09-13T{start_hour:02d}:00:00Z"
+            response["completed_at"] = f"2026-09-13T{start_hour + 1:02d}:00:00Z"
             response["locked"] = True
-            response["locked_at"] = "2026-09-13T02:00:01Z"
+            response["locked_at"] = f"2026-09-13T{start_hour + 1:02d}:00:01Z"
             for index, annotation in enumerate(response["annotations"]):
                 annotation.update(
                     {
@@ -1336,6 +1357,43 @@ class AnnotationWorkflowTests(unittest.TestCase):
         )
         json_write(response_path, response)
         with self.assertRaisesRegex(workflow.ContractError, "unresolved cube must not have coordinates"):
+            workflow.summarize_development_labels(
+                restricted_map_path=restricted_path,
+                rater_a_response_path=rater_a,
+                rater_b_response_path=rater_b,
+            )
+
+    def test_response_sets_reject_impossible_time_and_same_rater_batch_overlap(self):
+        _, packet_root, restricted_path = self.make_packages()
+        rater_a = self.complete_response(
+            packet_root / "rater_a", rater_code="timing-human-a", offset=0.0
+        )
+        rater_b = self.complete_response(
+            packet_root / "rater_b", rater_code="timing-human-b", offset=0.25
+        )
+        mapping = json.loads(restricted_path.read_text())
+        batches = mapping["packets"]["rater_a"]["batches"]
+        first_path = rater_a / f"{batches[0]['packet_id']}.json"
+        first = json.loads(first_path.read_text())
+        first["annotations"][0]["annotation_seconds"] = 100000.0
+        json_write(first_path, first)
+        with self.assertRaisesRegex(workflow.ContractError, "session duration"):
+            workflow.summarize_development_labels(
+                restricted_map_path=restricted_path,
+                rater_a_response_path=rater_a,
+                rater_b_response_path=rater_b,
+            )
+
+        first["annotations"][0]["annotation_seconds"] = 7.5
+        json_write(first_path, first)
+        self.assertGreaterEqual(len(batches), 2)
+        second_path = rater_a / f"{batches[1]['packet_id']}.json"
+        second = json.loads(second_path.read_text())
+        second["started_at"] = first["started_at"]
+        second["completed_at"] = first["completed_at"]
+        second["locked_at"] = first["locked_at"]
+        json_write(second_path, second)
+        with self.assertRaisesRegex(workflow.ContractError, "overlap or are out of packet order"):
             workflow.summarize_development_labels(
                 restricted_map_path=restricted_path,
                 rater_a_response_path=rater_a,

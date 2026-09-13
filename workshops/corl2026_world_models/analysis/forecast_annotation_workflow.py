@@ -2202,6 +2202,13 @@ def _validate_response(
         require(isinstance(annotation.get("notes"), str), f"{slot} notes must be a string")
         by_id[opaque] = dict(annotation)
     require(set(by_id) == set(dimensions), f"{slot} response is incomplete")
+    annotation_seconds = math.fsum(
+        item["annotation_seconds"] for item in by_id.values()
+    )
+    require(
+        annotation_seconds <= (completed_at - started_at).total_seconds(),
+        f"{slot} annotation_seconds exceed the response session duration",
+    )
     return by_id
 
 
@@ -2284,10 +2291,17 @@ def _validate_response_set(
         response_by_packet[packet_id] = response
     combined: dict[str, dict[str, Any]] = {}
     rater_codes: set[str] = set()
+    prior_locked_at: datetime | None = None
     for batch in batches:
         packet, dimensions = _validate_packet_artifacts(mapping, slot=slot, batch=batch)
         require(packet["packet_id"] in response_by_packet, f"{slot} response directory omits a packet")
         response = response_by_packet[packet["packet_id"]]
+        started_at = require_rfc3339_utc(
+            response.get("started_at"), f"{slot} started_at"
+        )
+        locked_at = require_rfc3339_utc(
+            response.get("locked_at"), f"{slot} locked_at"
+        )
         validated = _validate_response(
             response,
             mapping=mapping,
@@ -2295,9 +2309,15 @@ def _validate_response_set(
             packet=batch,
             dimensions=dimensions,
         )
+        if prior_locked_at is not None:
+            require(
+                prior_locked_at <= started_at,
+                f"{slot} batch response sessions overlap or are out of packet order",
+            )
         require(not (set(combined) & set(validated)), f"{slot} response repeats an image across batches")
         combined.update(validated)
         rater_codes.add(response["rater_code"])
+        prior_locked_at = locked_at
     require(len(rater_codes) == 1, f"{slot} batch responses must all identify the same rater")
     return combined, next(iter(rater_codes))
 

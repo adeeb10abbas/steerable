@@ -1,0 +1,165 @@
+{
+  "camera_id": "over_shoulder_left_camera",
+  "checkpoint_aggregate_sha256": "b4af0ac93474c3295c1ba841a34a8f2f91a5c3ec3c6aac1431b97689a6618c56",
+  "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
+  "claim_boundary": "Qualifies decoded-frame targets against native physical clocks for later development receipt metadata. It is not a policy episode or forecast-accuracy result.",
+  "clock_bridge": "elapsed physical seconds from request current original-camera capture",
+  "conditioning_fps_used_as_target_timing": false,
+  "contract": {
+    "bytes": 11765,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/950468266b05a2c429e4f13d7a5fb103728f206e/workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_lineage_contract.json",
+    "sha256": "7a9cca8b2d3c0057ab6022b8ce0612fba0e84e4ccacaa4258f6cad266e48490e"
+  },
+  "dreamzero_action_block_ratio_used_as_mapping": false,
+  "generated_frame_index_interpreted_as_action_index": false,
+  "generated_targets": [
+    {
+      "generated_frame_index": 1,
+      "target_physical_time_s": 0.199996948
+    },
+    {
+      "generated_frame_index": 2,
+      "target_physical_time_s": 0.399993896
+    }
+  ],
+  "generation_capture": {
+    "camera_capture_time_ns": {
+      "over_shoulder_left_camera": 5000009537,
+      "over_shoulder_right_camera": 5000009537,
+      "wrist_cam": 5000009537
+    },
+    "camera_frame_ids": {
+      "over_shoulder_left_camera": "rgb-sha256:0fa39afc963ac36cbcd45225a1d728c6b746fe125bc30e1146dc22d9570570dc",
+      "over_shoulder_right_camera": "rgb-sha256:9898fc622ba082c3e23fc9f39935cf0185179459a0cced7eba79a7c519af2cce",
+      "wrist_cam": "rgb-sha256:5fc4ebb0bd42f5e14d82e3285a62448c426b727e72888adb81bbbf91e456002e"
+    },
+    "camera_timestamp_source": {
+      "over_shoulder_left_camera": "_timestamp_last_update",
+      "over_shoulder_right_camera": "_timestamp_last_update",
+      "wrist_cam": "_timestamp_last_update"
+    },
+    "capture": {
+      "bytes": 80178,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/fixed_observation/capture_receipt.json",
+      "sha256": "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663"
+    },
+    "capture_id": "P00-2026091000-bcdd49da3920dbdf",
+    "model_fixture": {
+      "bytes": 520282,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/d1_official_wire_observation.npz",
+      "sha256": "4545fdf3b335e10b35f9eb4bc038db07480518c9f1672b6ab76231d37367d735"
+    },
+    "settled_reset_identity": "fixed-observation:ce5ad4282d2392245f843d5270a9656d4e99f842:P00:2026091000"
+  },
+  "generation_probe": {
+    "bytes": 4764,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-d1-normalize-generation-001/raw/d1_generation_probe.json",
+    "sha256": "e7eddb7c3cc81b2c352e57dda7cb7a19ef5cf4bec8ca33309bfc3a58ad724127"
+  },
+  "mapping_did_not_execute_model_returned_actions": true,
+  "model_id": "D1",
+  "native_runtime_field": "forecast_timing.generated_targets",
+  "payload_sha256": "47d85fc66bbb53df4557ec24b2c3851910f00f4d78d4591be78438ee1a4242d4",
+  "presentation_video_fps_used": false,
+  "qualified_at_utc": "2026-09-13T10:21:25.353865Z",
+  "qualified_mapping_rows": [
+    {
+      "camera_capture_time_ns": 5200006485,
+      "camera_elapsed_s": 0.199996948,
+      "camera_frame_id": 79,
+      "cross_clock_residual_s": 3.0624308128279765e-06,
+      "executed_control_boundary": 3,
+      "generated_frame_index": 1,
+      "observation_id": "obs_000003",
+      "physics_elapsed_s": 0.20000001043081284,
+      "physics_step": 626,
+      "physics_time_s": 5.216666938737035,
+      "within_timestamp_tolerance": true
+    },
+    {
+      "camera_capture_time_ns": 5400003433,
+      "camera_elapsed_s": 0.399993896,
+      "camera_frame_id": 82,
+      "cross_clock_residual_s": 6.124861625655953e-06,
+      "executed_control_boundary": 6,
+      "generated_frame_index": 2,
+      "observation_id": "obs_000006",
+      "physics_elapsed_s": 0.40000002086162567,
+      "physics_step": 650,
+      "physics_time_s": 5.416666949167848,
+      "within_timestamp_tolerance": true
+    }
+  ],
+  "returned_action_horizon": 24,
+  "schema_version": "wmf-forecast-native-target-authority-v1",
+  "selected_generation_request": {
+    "decoded_rgb_shape": [
+      9,
+      352,
+      640,
+      3
+    ],
+    "decoded_value_sha256": "532a548d74e65a71dde51a5c8588a71abd6b030473e266d9cd703cd21656c282",
+    "episode_manifest": {
+      "bytes": 370531,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/raw/d1_future/episodes/left_decode/episode_manifest.json",
+      "sha256": "4bf11b8dc2cfed682186570bd4b4b78eefb1b11ee77e4c9de74db8581c06d367"
+    },
+    "generation_robot_episode_count": 0,
+    "latent_shape": [
+      1,
+      16,
+      3,
+      44,
+      80
+    ],
+    "latent_value_sha256": "f18ffac4f2bb3af0363f12102c7cc89e2e1fc69f0e59a10f5159c0d967c508bb",
+    "record_sha256": "13e031b1444c8cb625294264e0ac1e2ddba98e8e1851c96125b2e02236654cef",
+    "request_id": "left_decode",
+    "request_index": 0,
+    "returned_action_executed": false,
+    "returned_action_shape": [
+      24,
+      8
+    ],
+    "returned_action_value_sha256": "69e97d8570d76db46ebf189de20c36665c5b1b21fbf2ed9f1a6220776521e1fa"
+  },
+  "source_lineage_audit": {
+    "bytes": 5459,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-d1-source-audit-001/raw/d1_source_audit.json",
+    "sha256": "39181fecb7d473b52b2b661c29b61cce653e3ec11edd437c74f1fefbefa76466"
+  },
+  "source_mapping_sha256": "1f5a262bfeb8a70137603b1386fc13f01d3b3940a2084c0382e336393195a98c",
+  "status": "qualified_from_source_lineage_and_native_zero_policy_clocks",
+  "study_id": "WMF-ABLATION-001",
+  "timestamp_tolerance_s": 0.03333282449999997,
+  "unchanged_executed_prefix_horizon": 8,
+  "zero_policy_clock_probe": {
+    "camera_id": "over_shoulder_left_camera",
+    "child_receipt": {
+      "bytes": 29276,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-003/child_qualification_receipt.json",
+      "sha256": "b25617f8d7a52bfc3d4df161d6c947ef6b73788986581f107b1c6b638c1a296e"
+    },
+    "completion": {
+      "bytes": 75754,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-003/adapter_attempt/completion.json",
+      "sha256": "1a9dc3b145500511c15586d7de8e3baf6db0a90839c488913789663c77b3dd02"
+    },
+    "journal": {
+      "bytes": 4075572,
+      "event_count": 1807,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-003/adapter_attempt/events.partial.jsonl",
+      "sha256": "8fa0200a85e2735fbe51c8b86878c3fa5aecdf87b3a319042d312ba4da74d164",
+      "tail_sha256": "2d898aab93adecdb531a9b457b942c231464f2c1a027bbbd57989787932deb99"
+    },
+    "minimum_positive_camera_capture_interval_s": 0.06666564899999994,
+    "minimum_positive_physics_control_interval_s": 0.06666667014360428,
+    "queue_receipt": {
+      "bytes": 4232,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/recorder-qualification-p00-003/publish/recorder_qualification_receipt.json",
+      "sha256": "0e3f02f37a2548e36ae3a45a38a1fac63c56cd8798732056f24b03d103991fde"
+    },
+    "timestamp_tolerance_s": 0.03333282449999997
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "behavioral_policy_skill_evaluated": false,
+  "claim_boundary": "Source/probe-backed native physical timing authority only. This job issued zero new model requests, executed zero robot actions, evaluated no policy skill, and does not release confirmation.",
+  "completed_at_utc": "2026-09-13T10:21:22.895574Z",
+  "decision": "go",
+  "evidence_counts": {
+    "qualified_generated_targets": 32,
+    "referenced_recorder_actions": 450,
+    "referenced_recorder_observations": 451
+  },
+  "implementation": {
+    "timing_contract": {
+      "bytes": 11765,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/950468266b05a2c429e4f13d7a5fb103728f206e/workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_lineage_contract.json",
+      "sha256": "7a9cca8b2d3c0057ab6022b8ce0612fba0e84e4ccacaa4258f6cad266e48490e"
+    },
+    "timing_validator": {
+      "bytes": 116377,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/950468266b05a2c429e4f13d7a5fb103728f206e/workshops/corl2026_world_models/analysis/qualify_forecast_timing.py",
+      "sha256": "aab99105478b983c0e58fba11642f394d08c09de855367806474452763a5965b"
+    }
+  },
+  "inputs": {
+    "camera_id": "over_shoulder_left_camera",
+    "generation_job": {
+      "bytes": 7362,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/publish/timing_job_receipt.json",
+      "sha256": "1ead7d0c58b8abd7c27361ef37c42a4e131354212c490cd019f45918f150ea2a"
+    },
+    "generation_probe": {
+      "bytes": 4729,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-002/raw/n3_generation_probe.json",
+      "sha256": "4282abc44a7cbfec53ad2d6dd04cd6d2c7eade4859c4d6efd2631aac30a472c3"
+    },
+    "recorder_receipt": {
+      "bytes": 4232,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/recorder-qualification-p00-003/publish/recorder_qualification_receipt.json",
+      "sha256": "0e3f02f37a2548e36ae3a45a38a1fac63c56cd8798732056f24b03d103991fde"
+    },
+    "source_audit": {
+      "bytes": 7394,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-source-audit-001/raw/n3_source_audit.json",
+      "sha256": "98fe2660232c479db1f98b552915c98f5c5695df6b4090bc6dffb50952e2f8c3"
+    },
+    "source_audit_job": {
+      "bytes": 3267,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-source-audit-001/publish/timing_job_receipt.json",
+      "sha256": "9807b7b9fd895eb080740b2d135fb8d5877020a53c6ee2ac9a3796f0fe144619"
+    }
+  },
+  "job_dir": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-native-authority-002",
+  "job_id": "timing-n3-native-authority-002",
+  "mode": "n3-native-authority",
+  "namespace": "wmf_ablation_001_20260912",
+  "outputs": {
+    "published_timing_authority": {
+      "bytes": 23676,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-native-authority-002/publish/n3_timing_authority.json",
+      "sha256": "fe4bc0056489bbc752824212f7fed96df99a857c84736c767e1cca278f2adb22"
+    },
+    "timing_authority": {
+      "bytes": 23676,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-native-authority-002/raw/n3_timing_authority.json",
+      "sha256": "fe4bc0056489bbc752824212f7fed96df99a857c84736c767e1cca278f2adb22"
+    }
+  },
+  "payload_sha256": "6660de59d937354670131bf701f45acc3aa44fc5c2100f078b161ee89f6e85c3",
+  "physical_time_qualified": true,
+  "queue_claim": {
+    "bytes": 409,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-native-authority-002/claim/owner.json",
+    "sha256": "36b17f7549863100cd4f8ec953563e5722b5db76f2c8a6837facc2b28d87ee96"
+  },
+  "queue_descriptor": {
+    "bytes": 2349,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-native-authority-002/descriptor.json",
+    "sha256": "e7a146f3b0867f6175e6268a6ebb922a2c5d7d8aeb93ef31767a330671c5cb4a"
+  },
+  "queue_role": "wmf-forecast-0912-worker-05",
+  "runtime_identity": {
+    "hostname": "wmf-forecast-0912-worker-05-vw5gw",
+    "pid": 274,
+    "pod_uid": "d73e25f5-2a2b-4d7d-9673-3399c0e3e2d6"
+  },
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-forecast-timing-queue-job-v1",
+  "science_counts": {
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "referenced_generation_requests": 6,
+    "robot_episodes": 0
+  },
+  "status": "passed",
+  "study_commit": "950468266b05a2c429e4f13d7a5fb103728f206e",
+  "study_id": "WMF-ABLATION-001",
+  "worker_id": "wmf-forecast-0912-worker-05"
+}

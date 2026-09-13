@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T12:43:50Z",
+  "as_of_utc": "2026-09-13T14:20:00Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -41,8 +41,8 @@
     "active_requests_launched_excluded": 0,
     "invariant": "18_nonbehavioral + 1440_valid_behavioral + 2_technical_invalid_behavioral = 1460_terminal_requests"
   },
-  "phase": "valid40_of_232_both_models_development_and_timing_sidecars_complete_camera_crop_annotation_resource_freeze_pending_confirmation_held",
-  "cluster_status": "Independent Git/PVC queue remains active after the work-Mac cutoff. Results commit 260338bf3226bedc6103b44209aba73ba579de6e byte-verifies D1 development timing sidecar attempt002 passed with return code0, empty stderr and child reaped. Both models now have complete authenticated development sidecars. D1 preserves explicit timing missingness for672/912 incremental decodes and maps only240 source-proven full decodes. Confirmation inference remains unreleased.",
+  "phase": "valid40_of_232_formal_development_evidence_compiled_resource_audit_active_camera_diagnostic_repair_pending_annotation_and_confirmation_held",
+  "cluster_status": "Independent Git/PVC queue remains active after the work-Mac cutoff. Results commit b309873e48f4390e48b25df9b3af4dd4fdd37cf7 byte-verifies development-evidence-compiler-formal-004 passed with return code0, empty stderr and child reaped after compiling exactly32 cells,1152 requests and14400 source actions. The retained resource audit remains claimed with a fresh heartbeat. Camera replay attempt001 is preserved zero-science technical-invalid; a signed diagnostic-only repair is being prepared. Confirmation inference remains unreleased.",
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_and_live_P00_six_request_timing_probe_with_native_time_authority",
@@ -50,7 +50,7 @@
     "fixed_450_recorder": "passed_recorder_only_original_left_with_450_actions_451_observations_zero_model_requests",
     "physical_layouts": "P00, D01-D04 and all C01-C24 have accepted model-blind candidates and fixed-observation captures; C01, C17 and C24 retain candidate_00 physical rejections and use accepted candidate_01; the 24-layout confirmation fixture freeze passed with SHA-256 495046b5102bf1813b0c9afd72d57bf1c30243070d7b525faacf53a076a482ac; this is fixture/capture qualification only",
     "frame_time_camera_mapping": "Both pinned source audits, live P00 input preparation, D1 generation normalization, fresh live-capture N3 six-request generation-only probe and the N3/D1 native clock authorities have passed. N3 maps all240 development requests. D1 authenticates all912 requests, maps the240 source-proven full conditioning-origin decodes, preserves672 incremental decodes as timing-unavailable with zero target bindings, matches224 requests/448 targets to native clocks and prefix-censors16 requests/32 targets. A separate signed model-specific camera-crop replay witness remains required; frame/action ordinals, whole presentation canvases and presentation FPS remain rejected substitutes",
-    "annotation_development": "blind_two_rater_workflow_implemented_and_schema_validated; structural evidence compiler is under final review; signed model-specific camera-crop replay, real blinded development images, legitimate human labels, consensus, usability decisions and empirical movement threshold remain pending",
+    "annotation_development": "formal structural evidence compiler passed for32 cells,1152 requests and14400 source actions; blind two-rater workflow is implemented and schema-validated; signed model-specific camera-crop replay, authenticated physical alignment, real blinded development images, legitimate human labels, consensus, usability decisions and empirical movement threshold remain pending",
     "confirmation_release": false
   },
   "scheduling": {
@@ -107,9 +107,9 @@
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "ffcb9c32b0a9e1b86c2f2317eb303c937e91b482",
-    "cluster_staged_control_commit_at_snapshot": "ffcb9c32b0a9e1b86c2f2317eb303c937e91b482",
-    "cluster_control_generation_at_snapshot": 824,
+    "latest_control_commit": "6e17ddd8b7c8ca6dfa55c626200dc950b028a0c4",
+    "cluster_staged_control_commit_at_snapshot": "6e17ddd8b7c8ca6dfa55c626200dc950b028a0c4",
+    "cluster_control_generation_at_snapshot": 964,
     "cluster_active_job_ids_at_snapshot": [
       "timing-n3-live-generation-p00-002",
       "d1-development-d01-server-003",
@@ -129,9 +129,15 @@
       "timing-d1-development-sidecar-001",
       "timing-d1-development-sidecar-decode-diagnostic-001",
       "timing-d1-development-sidecar-cache-schedule-diagnostic-001",
-      "timing-d1-development-sidecar-002"
+      "timing-d1-development-sidecar-002",
+      "development-evidence-compiler-formal-001",
+      "development-evidence-compiler-formal-002",
+      "development-evidence-compiler-formal-003",
+      "development-evidence-compiler-formal-004",
+      "camera-crop-replay-witness-001",
+      "development-resource-compiler-formal-001"
     ],
-    "latest_results_commit_fetched": "260338bf3226bedc6103b44209aba73ba579de6e",
+    "latest_results_commit_fetched": "b309873e48f4390e48b25df9b3af4dd4fdd37cf7",
     "release_lock_recovery_receipt_sha256": "f985f78cc9a7955d9d038eea7a4da492e7d5f6ed49dfbde8d021806579bf0e8a",
     "release_lock_current_inode": 44796676,
     "post_recovery_detached_diagnostics_passed": 6
@@ -286,7 +292,27 @@
     "physical_time_qualified_scope": "N3 all retained development requests; D1 source-proven full conditioning-origin decodes only",
     "physical_time_coverage_complete": false,
     "safe_to_release_confirmation": false,
-    "remaining": "compile the two passed development sidecars, pass a signed model-specific camera-crop replay witness, freeze request/rubric/resource decisions, render real blinded development images, then obtain legitimate two-rater labels, consensus and the empirical movement threshold"
+    "remaining": "pass a signed model-specific camera-crop replay witness and authenticated alignment freeze, finish the retained resource audit, freeze request/rubric/resource decisions, render real blinded development images, then obtain legitimate two-rater labels, consensus and the empirical movement threshold"
+  },
+  "development_evidence_compiler": {
+    "passed_job": "development-evidence-compiler-formal-004",
+    "results_commit": "b309873e48f4390e48b25df9b3af4dd4fdd37cf7",
+    "source_commit": "8124d2b3e64e71e584b45d5707e47d763b77ab93",
+    "job_receipt_sha256": "00329a3c991ee6eb0c68996ecaca1aed59ea3017329272cd82b4b5bfb5cee434",
+    "job_receipt_bytes": 12374,
+    "job_receipt_payload_sha256": "9bacea4a83f73d87ec6ef4f23f3e6083166d886d32901d2f2933de826dfeb381",
+    "raw_compiler_receipt_sha256": "efc6ca7487fc85e3d8cb8e976c4e77e756d51edcacc31a0dbf017bb73ab5d84a",
+    "raw_compiler_receipt_bytes": 52888,
+    "raw_output_inventory_sha256": "b1f38b3001337845e27ea205638d14b0e6bc90255498b5e5ed048859a155c537",
+    "raw_output_inventory_bytes": 36866,
+    "compiled_cells": 32,
+    "compiled_requests": 1152,
+    "compiled_source_actions": 14400,
+    "bundle_files": 71,
+    "prior_zero_science_failed_attempts": 3,
+    "safe_for_timing_binding": true,
+    "safe_to_release_confirmation": false,
+    "science_created_by_job": 0
   },
   "live_fixture_qualification": {
     "P00": {

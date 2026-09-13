@@ -1123,7 +1123,7 @@ class TinyEvidence:
             "phase": "development",
             "layout_pair_id": layout,
             "model_config": model,
-            "source_commit": chain["study_commit"],
+            ("study_commit" if model == "D1" else "source_commit"): chain["study_commit"],
             "counts": {
                 "planned_behavioral_cells": 1,
                 "launched_behavioral_cells": 1,
@@ -1495,6 +1495,27 @@ class CompilerEndToEndTests(unittest.TestCase):
         with self.assertRaisesRegex(compiler.CompilerError, "requires all four passed D1"):
             self.compile(fixture, manifest, output)
         self.assertFalse(output.exists())
+
+    def test_aggregate_commit_field_is_model_specific(self) -> None:
+        fixture = TinyEvidence(self.root)
+        for model, wrong_field in (("N3", "study_commit"), ("D1", "source_commit")):
+            aggregate_path = Path(fixture.aggregates[(model, "D01")]["path"])
+            aggregate = json.loads(aggregate_path.read_text())
+            expected_field = "study_commit" if model == "D1" else "source_commit"
+            aggregate[wrong_field] = aggregate.pop(expected_field)
+            write_json(aggregate_path, aggregate)
+            fixture.aggregates[(model, "D01")] = descriptor(aggregate_path)
+            manifest = fixture.manifest("formal_full")
+            output = self.root / f"wrong-{model.lower()}-aggregate-commit-field"
+            with self.assertRaisesRegex(
+                compiler.CompilerError,
+                rf"{model} D01 aggregate {expected_field} is invalid",
+            ):
+                self.compile(fixture, manifest, output)
+            self.assertFalse(output.exists())
+            aggregate[expected_field] = aggregate.pop(wrong_field)
+            write_json(aggregate_path, aggregate)
+            fixture.aggregates[(model, "D01")] = descriptor(aggregate_path)
 
     def test_partial_d1_is_only_accepted_as_nonrelease_diagnostic(self) -> None:
         fixture = TinyEvidence(self.root, ("D01", "D02"))

@@ -3155,10 +3155,16 @@ def _validate_aggregate(
     }
     for key, wanted in exact.items():
         require(receipt.get(key) == wanted, f"{model} {layout} aggregate {key} changed")
-    source_commit = receipt.get("source_commit")
+    # The two production launchers intentionally use different names for the
+    # top-level study-source pin.  N3's single-process aggregate predates the
+    # paired D1 launcher and records ``source_commit``; the paired D1 aggregate
+    # records the same semantic identity as ``study_commit``.  Do not accept a
+    # fallback field: bind the exact model-specific signed aggregate contract.
+    aggregate_commit_field = "study_commit" if model == "D1" else "source_commit"
+    source_commit = receipt.get(aggregate_commit_field)
     require(
         isinstance(source_commit, str) and COMMIT_RE.fullmatch(source_commit) is not None,
-        f"{model} {layout} aggregate source commit is invalid",
+        f"{model} {layout} aggregate {aggregate_commit_field} is invalid",
     )
     counts = receipt.get("counts")
     expected_count_values = {

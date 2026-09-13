@@ -1,0 +1,63 @@
+{
+  "block_id": "wmf_ablation_001_20260912__pilot__P00__N3",
+  "cell_ids": [
+    "wmf1__pilot__P00__N3__reflected__right",
+    "wmf1__pilot__P00__N3__reflected__left",
+    "wmf1__pilot__P00__N3__original__left",
+    "wmf1__pilot__P00__N3__original__right"
+  ],
+  "cell_receipts": [],
+  "claim_boundary": "This receipt counts only valid 450-action N3 behavioral cells. The reused six-request generation qualification and recorder-only qualification are explicitly nonbehavioral.",
+  "completed_at_utc": "2026-09-13T04:04:12.489036Z",
+  "condition_order": [
+    "reflected-right",
+    "reflected-left",
+    "original-left",
+    "original-right"
+  ],
+  "counts": {
+    "actual_behavioral_actions": 0,
+    "actual_behavioral_model_requests": 0,
+    "completed_valid_behavioral_cells": 0,
+    "launched_behavioral_cells": 0,
+    "new_generation_qualification_requests": 0,
+    "planned_behavioral_cells": 4,
+    "recorder_only_episodes_counted_as_behavioral": 0,
+    "reused_prerequisite_generation_qualification_requests": 6,
+    "right_censored_behavioral_cells": 0,
+    "technically_invalid_behavioral_cells": 0,
+    "unrun_behavioral_cells": 4
+  },
+  "effective_seed": 2026091000,
+  "exit_code": 1,
+  "failure": {
+    "detail": "n3_source_identity_changed",
+    "error_type": "N3BehavioralPilotError",
+    "reason": "n3_source_identity_changed"
+  },
+  "layout_pair_id": "P00",
+  "model_config": "N3",
+  "namespace": "wmf_ablation_001_20260912",
+  "phase": "pilot",
+  "prerequisites": null,
+  "queue_descriptor": {
+    "bytes": 1943,
+    "job_id": "n3-p00-pilot-001",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-p00-pilot-001/descriptor.json",
+    "role": "n3",
+    "sha256": "fde3900232560dd8b0b0c088dd2dd35b57dfbaf17a1f309c5a5c541a798ac777"
+  },
+  "raw_attempt_recoverable_on_gm_pvc": true,
+  "raw_attempt_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/N3/P00/n3-p00-pilot-001",
+  "schedule": {
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/e4df55ede9a12111b3b8e94a4896c4e570a96014/workshops/corl2026_world_models/execution/20260912/parallel_schedule.json",
+    "sha256": "9a4a1cce1e980a624ec4161cf4438bfa01a6681dcd8fcb6e2b01150b62409a58"
+  },
+  "schema_version": "wmf-n3-behavioral-pilot-job-v1",
+  "server_exit": null,
+  "server_ready": null,
+  "source_commit": "e4df55ede9a12111b3b8e94a4896c4e570a96014",
+  "status": "technical_failure",
+  "study_id": "WMF-ABLATION-001",
+  "topology": null
+}

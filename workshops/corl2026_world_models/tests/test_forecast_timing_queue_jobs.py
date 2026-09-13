@@ -39,20 +39,28 @@ class ForecastTimingDescriptorTests(unittest.TestCase):
             duplicates.extend((node.lineno, key) for key in set(keys) if keys.count(key) > 1)
         self.assertEqual(duplicates, [])
 
-    def test_reviewed_implementation_hashes_are_still_exact(self) -> None:
+    def test_historical_queue_pin_rejects_fresh_sidecar_validator(self) -> None:
         root = Path(__file__).resolve().parents[3]
-        evidence = queue_jobs._validate_staged_implementation(root, include_n3_runner=True)
+        self.assertNotEqual(
+            queue_jobs.sha256_file(root / queue_jobs.TOOL_RELATIVE),
+            queue_jobs.TOOL_SHA256,
+        )
+        with self.assertRaisesRegex(
+            queue_jobs.TimingQueueError, "staged timing validator hash changed"
+        ):
+            queue_jobs._validate_staged_implementation(
+                root, include_n3_runner=True
+            )
         self.assertEqual(
-            evidence["timing_validator"]["sha256"], queue_jobs.TOOL_SHA256
+            queue_jobs.sha256_file(root / queue_jobs.CONTRACT_RELATIVE),
+            queue_jobs.CONTRACT_SHA256,
         )
         self.assertEqual(
-            evidence["timing_contract"]["sha256"], queue_jobs.CONTRACT_SHA256
+            queue_jobs.sha256_file(root / queue_jobs.N3_RUNNER_RELATIVE),
+            queue_jobs.N3_RUNNER_SHA256,
         )
         self.assertEqual(
-            evidence["n3_generation_runner"]["sha256"], queue_jobs.N3_RUNNER_SHA256
-        )
-        self.assertEqual(
-            evidence["n3_runtime_contract"]["sha256"],
+            queue_jobs.sha256_file(root / queue_jobs.N3_RUNTIME_CONTRACT_RELATIVE),
             queue_jobs.N3_RUNTIME_CONTRACT_SHA256,
         )
 

@@ -4,6 +4,7 @@ import argparse
 import ast
 from dataclasses import replace
 import importlib.util
+import json
 import os
 from pathlib import Path
 import tempfile
@@ -67,6 +68,92 @@ class DevelopmentTimingSidecarTests(unittest.TestCase):
             authority_bytes=1234,
             target_count=32 if model == "N3" else 2,
         )
+
+    @staticmethod
+    def _d1_cache_diagnostic_value() -> dict:
+        by_index = {}
+        for request_index in range(57):
+            full = request_index % 4 == 0
+            before = (
+                (0 if request_index == 0 else 9)
+                if full
+                else {1: 3, 2: 5, 3: 7}[request_index % 4]
+            )
+            after = 3 if full else before + 2
+            latent = "[1,16,3,44,80]" if full else "[1,16,2,44,80]"
+            rgb = "[9,352,640,3]" if full else "[5,352,640,3]"
+            tensor = "[1,3,9,352,640]" if full else "[1,3,5,352,640]"
+            by_index[str(request_index)] = {
+                "count": 16,
+                "latent_shapes": {latent: 16},
+                "rank0_start_after": {str(after): 16},
+                "rank0_start_before": {str(before): 16},
+                "rank1_start_after": {str(after): 16},
+                "rank1_start_before": {str(before): 16},
+                "rgb_shapes": {rgb: 16},
+                "tensor_shapes": {tensor: 16},
+            }
+        controls = {
+            json.dumps(
+                {
+                    "offline_decode": True,
+                    "probe_id": None,
+                    "probe_plan_sha256": digest,
+                },
+                sort_keys=True,
+                separators=(",", ":"),
+            ): 228
+            for digest in (
+                "5964f153db83c4cd23522098f1646747d5a14c28d54b8d510089e70e4911529a",
+                "695e8cb5d34f3a9cddc31bf5356aa02603b74385664ba4cc38bdd629f61c90dd",
+                "6ad5f8928ea83ec6359d30ae802e53c43bdfe339e7dccf5dcbe69c57947ddf70",
+                "94288f027985c0069f065cf439c4ab90a2e88018597bfca42597ab0b296a6e19",
+            )
+        }
+        return {
+            "by_request_index": by_index,
+            "cell_count": 16,
+            "claim_boundary": (
+                "Read-only cache/decode schedule summary of immutable D1 development "
+                "receipts; not timing qualification, annotation, or forecast accuracy."
+            ),
+            "completed_at_utc": "2026-09-13T11:56:08.550482+00:00",
+            "decoded_rgb_shapes_by_request_index_modulo_four": {
+                "0": {"[9,352,640,3]": 240},
+                "1": {"[5,352,640,3]": 224},
+                "2": {"[5,352,640,3]": 224},
+                "3": {"[5,352,640,3]": 224},
+            },
+            "exact_modulo_four_shape_schedule_observed": True,
+            "inventory": {
+                "bytes": sidecar.D1_INVENTORY_BYTES,
+                "path": str(sidecar.D1_DIAGNOSTIC_INVENTORY_PATH),
+                "sha256": sidecar.D1_INVENTORY_SHA256,
+            },
+            "inventory_payload_sha256_verified": True,
+            "measurement_control_distribution": controls,
+            "official_action_path_distribution": {
+                json.dumps("GrootSimPolicy.lazy_joint_forward_causal"): 912
+            },
+            "request_count": 912,
+            "requests_per_cell_distribution": {"57": 16},
+            "schema_version": "wmf-d1-development-cache-schedule-diagnostic-v1",
+            "science_counts": {
+                "behavioral_actions": 0,
+                "behavioral_cells": 0,
+                "model_requests": 0,
+                "physical_resets": 0,
+                "robot_episodes": 0,
+            },
+            "scientific_qualification": False,
+            "source_attempt": "timing-d1-development-sidecar-001",
+            "status": "read_only_summary_complete",
+            "study_id": sidecar.STUDY_ID,
+            "unique_request_receipt_hashes": 912,
+        }
+
+    def _d1_cache_diagnostic(self, root: Path) -> Path:
+        return write_json(root / "diagnostic.json", self._d1_cache_diagnostic_value())
 
     def _authority_receipt(
         self, root: Path, model: str, *, safe: bool = False
@@ -149,6 +236,48 @@ class DevelopmentTimingSidecarTests(unittest.TestCase):
                 sidecar.validate_local_authority_receipt(
                     unsafe, unsafe_digest, unsafe_spec
                 )
+
+    def test_cache_schedule_diagnostic_is_exact_and_semantically_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            path = self._d1_cache_diagnostic(root)
+            observed = sidecar.validate_local_d1_cache_schedule_diagnostic(
+                path, sidecar.D1_CACHE_DIAGNOSTIC_SHA256
+            )
+            self.assertEqual(
+                observed,
+                {
+                    "path": str(sidecar.D1_CACHE_DIAGNOSTIC_PATH),
+                    "sha256": sidecar.D1_CACHE_DIAGNOSTIC_SHA256,
+                    "bytes": sidecar.D1_CACHE_DIAGNOSTIC_BYTES,
+                },
+            )
+            with self.assertRaisesRegex(
+                sidecar.DevelopmentTimingJobError, "hash is not frozen"
+            ):
+                sidecar.validate_local_d1_cache_schedule_diagnostic(path, "f" * 64)
+
+            malformed_value = self._d1_cache_diagnostic_value()
+            malformed_value["by_request_index"]["1"]["rgb_shapes"] = {
+                "[9,352,640,3]": 16
+            }
+            malformed = write_json(root / "malformed.json", malformed_value)
+            malformed_identity = sidecar.queue.file_identity(malformed)
+            with mock.patch.object(
+                sidecar,
+                "D1_CACHE_DIAGNOSTIC_SHA256",
+                malformed_identity["sha256"],
+            ), mock.patch.object(
+                sidecar,
+                "D1_CACHE_DIAGNOSTIC_BYTES",
+                malformed_identity["bytes"],
+            ):
+                with self.assertRaisesRegex(
+                    sidecar.DevelopmentTimingJobError, "request index 1 changed"
+                ):
+                    sidecar.validate_local_d1_cache_schedule_diagnostic(
+                        malformed, malformed_identity["sha256"]
+                    )
 
     def _dynamic_d1_aggregate(
         self, root: Path, *, status: str = "passed", wrong_path: bool = False
@@ -344,6 +473,102 @@ class DevelopmentTimingSidecarTests(unittest.TestCase):
                     },
                 )
 
+    def test_d1_attempt002_wave_binds_exact_cache_diagnostic_and_holds_confirmation(self) -> None:
+        authorities = self._mock_authorities()
+        aggregates = self._mock_aggregates("D1")
+        with tempfile.TemporaryDirectory() as temporary:
+            diagnostic = self._d1_cache_diagnostic(Path(temporary))
+            with mock.patch.object(
+                sidecar,
+                "validate_local_authority_receipt",
+                side_effect=[authorities["N3"], authorities["D1"]],
+            ), mock.patch.object(
+                sidecar,
+                "validate_local_aggregate_receipt",
+                side_effect=[aggregates[layout] for layout in sidecar.LAYOUTS],
+            ):
+                wave = sidecar.build_sidecar_wave(
+                    model="D1",
+                    study_commit="b" * 40,
+                    n3_authority_receipt_path=Path("n3.json"),
+                    n3_authority_receipt_sha256=(
+                        sidecar.AUTHORITIES["N3"].receipt_sha256
+                    ),
+                    d1_authority_receipt_path=Path("d1.json"),
+                    d1_authority_receipt_sha256=(
+                        sidecar.AUTHORITIES["D1"].receipt_sha256
+                    ),
+                    aggregate_inputs={
+                        layout: (
+                            Path(f"{layout}.json"),
+                            aggregates[layout]["aggregate_receipt"]["sha256"],
+                        )
+                        for layout in sidecar.LAYOUTS
+                    },
+                    d1_cache_schedule_diagnostic_path=diagnostic,
+                    d1_cache_schedule_diagnostic_sha256=(
+                        sidecar.D1_CACHE_DIAGNOSTIC_SHA256
+                    ),
+                )
+        job = wave["jobs"][0]
+        self.assertEqual(job["job_id"], "timing-d1-development-sidecar-002")
+        self.assertEqual(sidecar.JOB_ID["D1"], job["job_id"])
+        command = " ".join(job["argv"])
+        self.assertIn(str(sidecar.D1_CACHE_DIAGNOSTIC_PATH), command)
+        self.assertIn(sidecar.D1_CACHE_DIAGNOSTIC_SHA256, command)
+        self.assertIn(sidecar.SIDECAR_TIMING_TOOL_SHA256, command)
+        self.assertNotIn("timing-d1-development-sidecar-001 --", command)
+        self.assertIs(wave["physical_time_coverage_complete"], False)
+        self.assertEqual(
+            wave["request_timing_coverage"], sidecar.D1_REQUEST_TIMING_COVERAGE
+        )
+        self.assertEqual(
+            wave["physical_time_qualified_scope"],
+            "source-proven full conditioning-origin decodes only",
+        )
+        self.assertIs(wave["safe_to_release_confirmation"], False)
+        self.assertEqual(wave["science_counts"], sidecar._zero_science_counts())
+
+    def test_d1_attempt002_runtime_rejects_old_id_and_missing_diagnostic(self) -> None:
+        authorities = self._mock_authorities()
+        aggregates = self._mock_aggregates("D1")
+        base = dict(
+            command="d1-sidecar",
+            job_id=sidecar.JOB_ID["D1"],
+            expected_role=sidecar.WORKER_ROLE,
+            timing_tool_sha256=sidecar.SIDECAR_TIMING_TOOL_SHA256,
+            contract_sha256=sidecar.CONTRACT_SHA256,
+            expected_request_count=912,
+            study_commit="c" * 40,
+            sidecar_builder_sha256=sidecar.queue.sha256_file(MODULE_PATH),
+            n3_authority_receipt_sha256=sidecar.AUTHORITIES["N3"].receipt_sha256,
+            d1_authority_receipt_sha256=sidecar.AUTHORITIES["D1"].receipt_sha256,
+            aggregate_receipt=[
+                Path(aggregates[layout]["aggregate_receipt"]["path"])
+                for layout in sidecar.LAYOUTS
+            ],
+            aggregate_receipt_sha256=[
+                aggregates[layout]["aggregate_receipt"]["sha256"]
+                for layout in sidecar.LAYOUTS
+            ],
+            d1_cache_schedule_diagnostic=sidecar.D1_CACHE_DIAGNOSTIC_PATH,
+            d1_cache_schedule_diagnostic_sha256=sidecar.D1_CACHE_DIAGNOSTIC_SHA256,
+        )
+        with self.assertRaisesRegex(sidecar.DevelopmentTimingJobError, "job ID"):
+            sidecar._runtime_descriptor(
+                argparse.Namespace(
+                    **{**base, "job_id": "timing-d1-development-sidecar-001"}
+                )
+            )
+        with self.assertRaisesRegex(
+            sidecar.DevelopmentTimingJobError, "cache schedule diagnostic"
+        ):
+            sidecar._runtime_descriptor(
+                argparse.Namespace(
+                    **{**base, "d1_cache_schedule_diagnostic": None}
+                )
+            )
+
     def test_runtime_descriptor_reconstructs_builder_exactly(self) -> None:
         authorities = self._mock_authorities()
         aggregates = self._mock_aggregates("D1")
@@ -354,12 +579,17 @@ class DevelopmentTimingSidecarTests(unittest.TestCase):
             self_sha256=self_hash,
             authorities=authorities,
             aggregates=aggregates,
+            d1_cache_schedule_diagnostic={
+                "path": str(sidecar.D1_CACHE_DIAGNOSTIC_PATH),
+                "sha256": sidecar.D1_CACHE_DIAGNOSTIC_SHA256,
+                "bytes": sidecar.D1_CACHE_DIAGNOSTIC_BYTES,
+            },
         )
         args = argparse.Namespace(
             command="d1-sidecar",
             job_id=sidecar.JOB_ID["D1"],
             expected_role=sidecar.WORKER_ROLE,
-            timing_tool_sha256=sidecar.TOOL_SHA256,
+            timing_tool_sha256=sidecar.SIDECAR_TIMING_TOOL_SHA256,
             contract_sha256=sidecar.CONTRACT_SHA256,
             expected_request_count=912,
             study_commit="c" * 40,
@@ -374,10 +604,44 @@ class DevelopmentTimingSidecarTests(unittest.TestCase):
                 aggregates[layout]["aggregate_receipt"]["sha256"]
                 for layout in sidecar.LAYOUTS
             ],
+            d1_cache_schedule_diagnostic=sidecar.D1_CACHE_DIAGNOSTIC_PATH,
+            d1_cache_schedule_diagnostic_sha256=(
+                sidecar.D1_CACHE_DIAGNOSTIC_SHA256
+            ),
         )
         model, observed = sidecar._runtime_descriptor(args)
         self.assertEqual(model, "D1")
         self.assertEqual(observed, expected)
+
+    def test_staged_sidecar_implementation_uses_fresh_validator_pin(self) -> None:
+        source = Path("/staged/source")
+        exact = [
+            {
+                "path": str((source / sidecar.TOOL_RELATIVE).resolve()),
+                "sha256": sidecar.SIDECAR_TIMING_TOOL_SHA256,
+                "bytes": sidecar.SIDECAR_TIMING_TOOL_BYTES,
+            },
+            {
+                "path": str((source / sidecar.CONTRACT_RELATIVE).resolve()),
+                "sha256": sidecar.CONTRACT_SHA256,
+                "bytes": 11765,
+            },
+        ]
+        with mock.patch.object(sidecar.queue, "file_identity", side_effect=exact):
+            observed = sidecar._validate_staged_sidecar_implementation(source)
+        self.assertEqual(
+            observed["timing_validator"]["sha256"],
+            sidecar.SIDECAR_TIMING_TOOL_SHA256,
+        )
+        wrong = [
+            {**exact[0], "sha256": sidecar.TOOL_SHA256},
+            exact[1],
+        ]
+        with mock.patch.object(sidecar.queue, "file_identity", side_effect=wrong):
+            with self.assertRaisesRegex(
+                sidecar.DevelopmentTimingJobError, "validator bytes/hash changed"
+            ):
+                sidecar._validate_staged_sidecar_implementation(source)
 
     def test_recorder_transport_extracts_exact_request_and_rejects_cell_swap(self) -> None:
         cell_id = "wmf1__development__D01__N3__original__left"

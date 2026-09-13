@@ -35,6 +35,7 @@ GENERATION_PROBE_SCHEMA = "wmf-forecast-zero-policy-generation-probe-v1"
 AUTHORITY_SCHEMA = "wmf-forecast-native-target-authority-v1"
 REQUEST_INVENTORY_SCHEMA = "wmf-development-timing-request-inventory-v1"
 DEVELOPMENT_TIMING_SCHEMA = "wmf-native-generated-target-timing-v1"
+DEVELOPMENT_TIMING_MISSINGNESS_SCHEMA = "wmf-native-generated-target-timing-v2"
 RECORDER_QUEUE_SCHEMA = "wmf-forecast-recorder-qualification-job-v1"
 RECORDER_CHILD_SCHEMA = "wmf-forecast-recorder-qualification-child-v1"
 RECORDER_ATTEMPT_SCHEMA = "wmf-forecast-recording-attempt-v1"
@@ -49,6 +50,18 @@ CONTRACT_REPOSITORY_RELATIVE = Path(
     "workshops/corl2026_world_models/experiments/forecast_layout/"
     "forecast_timing_lineage_contract.json"
 )
+TOOL_REPOSITORY_RELATIVE = Path(
+    "workshops/corl2026_world_models/analysis/qualify_forecast_timing.py"
+)
+
+# The already-passed N3 development sidecar was produced by this exact prior
+# validator.  New D1 sidecars use the current validator, but N3 v1 remains
+# revalidatable across immutable staged-source prefixes by pinning its original
+# bytes rather than pretending the new implementation produced it.
+PRIOR_DEVELOPMENT_TIMING_VALIDATOR_SHA256 = (
+    "aab99105478b983c0e58fba11642f394d08c09de855367806474452763a5965b"
+)
+PRIOR_DEVELOPMENT_TIMING_VALIDATOR_BYTES = 116377
 
 NATIVE_RUNTIME_FIELD = "forecast_timing.generated_targets"
 SIDECAR_RUNTIME_FIELD = "request_timing_sidecar.generated_targets"
@@ -104,6 +117,38 @@ EXPECTED_MODELS: dict[str, dict[str, Any]] = {
         },
     },
 }
+
+
+# Pinned DreamZero ab790c1 returns conditioning+two generated latents only on
+# cache-reset requests and returns the two generated latents alone between
+# resets.  A fresh causal-VAE decode maps those shapes to nine and five RGB
+# frames respectively.  The existing timing authority is source-proven only
+# for the former: it maps a conditioning-origin nine-frame decode.  The latter
+# is authenticated as retained output but deliberately has no target binding.
+D1_DEVELOPMENT_DECODE_SCHEDULE: dict[str, dict[str, Any]] = {
+    "full_conditioning_origin": {
+        "request_index_modulo_four": 0,
+        "latent_shape": [1, 16, 3, 44, 80],
+        "decoded_tensor_shape": [1, 3, 9, 352, 640],
+        "decoded_rgb_shape": [9, 352, 640, 3],
+        "source_timing_status": "source_proven_full_conditioning_origin",
+        "source_timing_mapping_applies": True,
+    },
+    "incremental_standalone": {
+        "request_index_modulo_four": [1, 2, 3],
+        "latent_shape": [1, 16, 2, 44, 80],
+        "decoded_tensor_shape": [1, 3, 5, 352, 640],
+        "decoded_rgb_shape": [5, 352, 640, 3],
+        "source_timing_status": "unmapped_incremental_standalone_decode",
+        "source_timing_mapping_applies": False,
+    },
+}
+D1_INCREMENTAL_UNMAPPED_REASON = (
+    "The pinned source returns only two generated latents on this cache-active "
+    "request, while the retained measurement decodes that chunk with a fresh "
+    "causal-VAE feature cache. Its five output indices do not inherit the "
+    "conditioning-origin nine-frame authority mapping."
+)
 
 
 class TimingQualificationError(RuntimeError):
@@ -1735,6 +1780,361 @@ def validate_timing_authority(
     return value
 
 
+def _d1_development_decode_contract(
+    request: Mapping[str, Any],
+    *,
+    request_index: int,
+    authority: Mapping[str, Any],
+    label: str,
+) -> dict[str, Any]:
+    """Authenticate the two observed D1 decode forms without conflating them.
+
+    DreamZero commit ab790c1 concatenates the conditioning latent only when its
+    causal cache starts at zero.  A per-request measurement decode therefore
+    has nine frames on those reset calls and five on the intervening calls.
+    Only the former has the conditioning-origin frame numbering established by
+    the native timing authority.
+    """
+
+    require(type(request_index) is int and request_index >= 0,
+            f"{label} D1 request index is invalid")
+    modulo = request_index % 4
+    schedule_key = (
+        "full_conditioning_origin" if modulo == 0 else "incremental_standalone"
+    )
+    expected = D1_DEVELOPMENT_DECODE_SCHEDULE[schedule_key]
+    latent = request.get("latent_video")
+    decoded = request.get("offline_decode")
+    decoded_rgb = decoded.get("decoded_rgb") if isinstance(decoded, Mapping) else None
+    decoded_tensor = decoded.get("decoded_tensor") if isinstance(decoded, Mapping) else None
+    latent_shape = latent.get("shape") if isinstance(latent, Mapping) else None
+    rgb_shape = decoded_rgb.get("shape") if isinstance(decoded_rgb, Mapping) else None
+    tensor_shape = decoded_tensor.get("shape") if isinstance(decoded_tensor, Mapping) else None
+    require(
+        isinstance(decoded, Mapping)
+        and decoded.get("requested") is True
+        and decoded.get("performed") is True,
+        f"{label} D1 measurement-only decode was not performed",
+    )
+    require(
+        isinstance(latent, Mapping)
+        and latent_shape == expected["latent_shape"],
+        f"{label} D1 retained latent shape changed",
+    )
+    require(
+        isinstance(decoded_rgb, Mapping)
+        and rgb_shape == expected["decoded_rgb_shape"],
+        f"{label} D1 decoded RGB shape/schedule changed",
+    )
+    require(
+        isinstance(decoded_tensor, Mapping)
+        and tensor_shape == expected["decoded_tensor_shape"],
+        f"{label} D1 decoded tensor shape/schedule changed",
+    )
+    require(
+        tensor_shape[2] == rgb_shape[0]
+        and tensor_shape[3:] == rgb_shape[1:3]
+        and tensor_shape[:2] == [1, 3]
+        and rgb_shape[-1] == 3,
+        f"{label} D1 decoded RGB/tensor dimensions are incoherent",
+    )
+    latent_data_sha256 = latent.get("data_sha256")
+    require(
+        _valid_sha(latent_data_sha256)
+        and decoded.get("latent_data_sha256_before") == latent_data_sha256
+        and decoded.get("latent_data_sha256_after") == latent_data_sha256,
+        f"{label} D1 decode is not bound to the retained latent",
+    )
+    targets = authority.get("generated_targets")
+    require(isinstance(targets, list) and bool(targets),
+            f"{label} D1 authority target inventory is empty")
+    target_indices = [row.get("generated_frame_index") for row in targets]
+    require(
+        all(type(index) is int and 0 <= index < rgb_shape[0] for index in target_indices),
+        f"{label} D1 decode lacks an authority target frame index",
+    )
+
+    metrics = request.get("temporal_and_cache_rank_metrics")
+    metric_ranks = (
+        [row.get("rank") for row in metrics]
+        if isinstance(metrics, list) and all(isinstance(row, Mapping) for row in metrics)
+        else []
+    )
+    require(
+        isinstance(metrics, list)
+        and len(metrics) == 2
+        and all(isinstance(row, Mapping) for row in metrics)
+        and all(type(rank) is int for rank in metric_ranks)
+        and sorted(metric_ranks) == [0, 1],
+        f"{label} D1 two-rank temporal metrics changed",
+    )
+    expected_before = (
+        0 if request_index == 0 else 9
+    ) if modulo == 0 else {1: 3, 2: 5, 3: 7}[modulo]
+    expected_after = 3 if modulo == 0 else expected_before + 2
+    expected_cache_constructors = 1 if modulo == 0 else 0
+    for rank, metric in enumerate(sorted(metrics, key=lambda row: row.get("rank"))):
+        before = metric.get("temporal_before")
+        after = metric.get("temporal_after")
+        require(
+            metric.get("rank") == rank
+            and isinstance(before, Mapping)
+            and isinstance(after, Mapping)
+            and before.get("rank") == rank
+            and after.get("rank") == rank
+            and before.get("current_start_frame") == expected_before
+            and after.get("current_start_frame") == expected_after,
+            f"{label} D1 cache-frame schedule changed on rank {rank}",
+        )
+        for snapshot in (before, after):
+            require(
+                snapshot.get("fixed_seed") == 1140
+                and snapshot.get("video_guidance_scale") == 5.0
+                and snapshot.get("configured_inference_steps") == 16
+                and snapshot.get("num_frame_per_block") == 2
+                and snapshot.get("action_horizon") == 24
+                and snapshot.get("ip_rank") == rank
+                and snapshot.get("ip_size") == 2,
+                f"{label} D1 pinned temporal configuration changed on rank {rank}",
+            )
+        cache = metric.get("cache_reinitialization")
+        require(isinstance(cache, Mapping),
+                f"{label} D1 cache-constructor receipt is missing on rank {rank}")
+        for method in ("_create_kv_caches", "_create_crossattn_caches"):
+            events = cache.get(method)
+            require(
+                isinstance(events, list) and len(events) == expected_cache_constructors,
+                f"{label} D1 {method} schedule changed on rank {rank}",
+            )
+
+    applies = bool(expected["source_timing_mapping_applies"])
+    return {
+        "schedule_kind": schedule_key,
+        "request_index_modulo_four": modulo,
+        "latent_shape": list(latent_shape),
+        "decoded_tensor_shape": list(tensor_shape),
+        "decoded_rgb_shape": list(rgb_shape),
+        "authority_target_frame_indices_present": True,
+        "authority_target_frame_indices": target_indices,
+        "source_timing_status": expected["source_timing_status"],
+        "source_timing_mapping_applies": applies,
+        "unmapped_reason": None if applies else D1_INCREMENTAL_UNMAPPED_REASON,
+    }
+
+
+def _compact_shape_key(shape: Sequence[int]) -> str:
+    return json.dumps(list(shape), separators=(",", ":"))
+
+
+def validate_d1_cache_schedule_diagnostic(
+    path: Path,
+    expected_sha256: str,
+    *,
+    inventory_sha256: str,
+    inventory_bytes: int,
+    request_entries: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Reopen the zero-science summary that exposed the retained cache schedule."""
+
+    value, _ = _read_hashed_json(path, expected_sha256, "D1 cache schedule diagnostic")
+    require(
+        value.get("schema_version") == "wmf-d1-development-cache-schedule-diagnostic-v1"
+        and value.get("study_id") == STUDY_ID
+        and value.get("status") == "read_only_summary_complete"
+        and value.get("source_attempt") == "timing-d1-development-sidecar-001"
+        and value.get("scientific_qualification") is False
+        and value.get("exact_modulo_four_shape_schedule_observed") is True,
+        "D1 cache schedule diagnostic identity/status changed",
+    )
+    require(
+        value.get("science_counts")
+        == {
+            "model_requests": 0,
+            "behavioral_actions": 0,
+            "physical_resets": 0,
+            "robot_episodes": 0,
+            "behavioral_cells": 0,
+        },
+        "D1 cache schedule diagnostic contains new science",
+    )
+    inventory = value.get("inventory")
+    require(
+        isinstance(inventory, Mapping)
+        and inventory.get("sha256") == inventory_sha256
+        and inventory.get("bytes") == inventory_bytes
+        and value.get("inventory_payload_sha256_verified") is True,
+        "D1 cache schedule diagnostic does not bind the exact request inventory",
+    )
+    require(
+        isinstance(inventory.get("path"), str)
+        and Path(inventory["path"]).name == "d1_development_request_inventory.json",
+        "D1 cache schedule diagnostic inventory path changed",
+    )
+    require(
+        isinstance(request_entries, Sequence) and bool(request_entries)
+        and all(isinstance(row, Mapping) for row in request_entries),
+        "D1 cache schedule request entries are invalid",
+    )
+    cell_ids = [row.get("cell_id") for row in request_entries]
+    request_indices = [row.get("request_index") for row in request_entries]
+    require(
+        all(isinstance(cell_id, str) and cell_id for cell_id in cell_ids)
+        and all(type(index) is int and index >= 0 for index in request_indices),
+        "D1 cache schedule request identities are invalid",
+    )
+    per_cell: dict[str, list[int]] = {}
+    for cell_id, request_index in zip(cell_ids, request_indices):
+        per_cell.setdefault(cell_id, []).append(request_index)
+    expected_per_cell = sorted(len(indices) for indices in per_cell.values())
+    require(
+        all(indices == list(range(len(indices))) for indices in per_cell.values()),
+        "D1 cache schedule request indices are not contiguous within each cell",
+    )
+    require(
+        value.get("request_count") == len(request_entries)
+        and value.get("unique_request_receipt_hashes") == len(request_entries)
+        and value.get("cell_count") == len(per_cell)
+        and value.get("requests_per_cell_distribution")
+        == {
+            str(count): expected_per_cell.count(count)
+            for count in sorted(set(expected_per_cell))
+        },
+        "D1 cache schedule diagnostic request/cell counts changed",
+    )
+
+    by_index = value.get("by_request_index")
+    expected_index_counts = {
+        index: request_indices.count(index) for index in sorted(set(request_indices))
+    }
+    require(
+        isinstance(by_index, Mapping)
+        and set(by_index) == {str(index) for index in expected_index_counts},
+        "D1 cache schedule diagnostic index inventory changed",
+    )
+    expected_modulo_shapes: dict[str, dict[str, int]] = {
+        str(modulo): {} for modulo in range(4)
+    }
+    for request_index, count in expected_index_counts.items():
+        modulo = request_index % 4
+        schedule = D1_DEVELOPMENT_DECODE_SCHEDULE[
+            "full_conditioning_origin" if modulo == 0 else "incremental_standalone"
+        ]
+        before = (0 if request_index == 0 else 9) if modulo == 0 else {1: 3, 2: 5, 3: 7}[modulo]
+        after = 3 if modulo == 0 else before + 2
+        row = by_index[str(request_index)]
+        require(
+            isinstance(row, Mapping)
+            and row.get("count") == count
+            and row.get("latent_shapes") == {_compact_shape_key(schedule["latent_shape"]): count}
+            and row.get("rgb_shapes") == {_compact_shape_key(schedule["decoded_rgb_shape"]): count}
+            and row.get("tensor_shapes")
+            == {_compact_shape_key(schedule["decoded_tensor_shape"]): count}
+            and row.get("rank0_start_before") == {str(before): count}
+            and row.get("rank0_start_after") == {str(after): count}
+            and row.get("rank1_start_before") == {str(before): count}
+            and row.get("rank1_start_after") == {str(after): count},
+            f"D1 cache schedule diagnostic request index {request_index} changed",
+        )
+        rgb_key = _compact_shape_key(schedule["decoded_rgb_shape"])
+        expected_modulo_shapes[str(modulo)][rgb_key] = (
+            expected_modulo_shapes[str(modulo)].get(rgb_key, 0) + count
+        )
+    require(
+        value.get("decoded_rgb_shapes_by_request_index_modulo_four")
+        == expected_modulo_shapes,
+        "D1 cache schedule diagnostic modulo-four summary changed",
+    )
+    control_distribution = value.get("measurement_control_distribution")
+    require(isinstance(control_distribution, Mapping) and bool(control_distribution),
+            "D1 cache schedule diagnostic measurement-control summary is missing")
+    control_count = 0
+    for encoded, count in control_distribution.items():
+        require(isinstance(encoded, str) and type(count) is int and count > 0,
+                "D1 cache schedule diagnostic measurement-control row is invalid")
+        try:
+            control = json.loads(encoded)
+        except json.JSONDecodeError as error:
+            raise TimingQualificationError(
+                "D1 cache schedule diagnostic measurement-control JSON is invalid"
+            ) from error
+        require(
+            isinstance(control, Mapping)
+            and control.get("offline_decode") is True
+            and control.get("probe_id") is None
+            and _valid_sha(control.get("probe_plan_sha256")),
+            "D1 cache schedule diagnostic contains a non-development decode control",
+        )
+        control_count += count
+    require(control_count == len(request_entries),
+            "D1 cache schedule diagnostic measurement-control count changed")
+    require(
+        value.get("official_action_path_distribution")
+        == {json.dumps("GrootSimPolicy.lazy_joint_forward_causal"): len(request_entries)},
+        "D1 cache schedule diagnostic official action path changed",
+    )
+    return value
+
+
+def _d1_request_timing_coverage(
+    bindings: Sequence[Mapping[str, Any]], *, authority_target_count: int
+) -> dict[str, int]:
+    mapped = 0
+    unmapped = 0
+    matched_requests = 0
+    truncated_requests = 0
+    matched_targets = 0
+    truncated_targets = 0
+    for binding in bindings:
+        decode = binding.get("decoded_output_timing")
+        require(isinstance(decode, Mapping), "D1 timing binding lacks decode provenance")
+        targets = binding.get("target_bindings")
+        require(isinstance(targets, list), "D1 timing binding target inventory is invalid")
+        if decode.get("source_timing_mapping_applies") is True:
+            mapped += 1
+            require(len(targets) == authority_target_count,
+                    "D1 mapped request omitted an authority target")
+            statuses = [row.get("status") for row in targets if isinstance(row, Mapping)]
+            require(
+                len(statuses) == authority_target_count
+                and set(statuses) <= {
+                    "matched_native_request_clocks",
+                    "not_executed_in_truncated_prefix",
+                },
+                "D1 mapped request has an invalid target status",
+            )
+            matched = statuses.count("matched_native_request_clocks")
+            truncated = statuses.count("not_executed_in_truncated_prefix")
+            matched_requests += matched > 0
+            truncated_requests += truncated > 0
+            matched_targets += matched
+            truncated_targets += truncated
+            require(
+                binding.get("timing_eligible_target_count") == matched
+                and binding.get("eligible_for_timed_target_sampling") is (matched > 0),
+                "D1 mapped request eligibility summary changed",
+            )
+        else:
+            unmapped += 1
+            require(
+                decode.get("source_timing_status") == "unmapped_incremental_standalone_decode"
+                and targets == []
+                and binding.get("timing_eligible_target_count") == 0
+                and binding.get("eligible_for_timed_target_sampling") is False,
+                "D1 incremental request acquired a timing target",
+            )
+    require(mapped + unmapped == len(bindings), "D1 timing coverage omitted a request")
+    return {
+        "total_request_count": len(bindings),
+        "source_proven_full_decode_request_count": mapped,
+        "source_unmapped_incremental_decode_request_count": unmapped,
+        "native_clock_matched_request_count": matched_requests,
+        "action_prefix_truncated_request_count": truncated_requests,
+        "native_clock_matched_target_binding_count": matched_targets,
+        "action_prefix_truncated_target_binding_count": truncated_targets,
+        "unmapped_potential_authority_target_count": unmapped * authority_target_count,
+    }
+
+
 def _development_request_binding(
     entry: Any,
     *,
@@ -1750,6 +2150,10 @@ def _development_request_binding(
     request = load_json(request_path, f"{label} request")
     expected_schema = N3_REQUEST_SCHEMA if model_id == "N3" else D1_REQUEST_SCHEMA
     require(request.get("schema_version") == expected_schema, f"{label} request schema changed")
+    request_index = entry.get("request_index")
+    require(type(request_index) is int and request.get("request_index") == request_index,
+            f"{label} request index changed")
+    d1_decode_contract: dict[str, Any] | None = None
     if model_id == "N3":
         require(request.get("study_id") == STUDY_ID and request.get("behavioral_model_request") is True
                 and request.get("generation_qualification_request") is False,
@@ -1763,15 +2167,12 @@ def _development_request_binding(
                 and request.get("official_action_path") == "GrootSimPolicy.lazy_joint_forward_causal"
                 and request.get("custom_s2_used") is False and request.get("patched_s1_used") is False,
                 f"{label} is not an official D1 request")
-        decoded = request.get("offline_decode")
-        rgb = decoded.get("decoded_rgb") if isinstance(decoded, Mapping) else None
-        require(isinstance(decoded, Mapping) and decoded.get("performed") is True
-                and isinstance(rgb, Mapping)
-                and rgb.get("shape", [None])[0] == EXPECTED_MODELS[model_id]["decoded_frames"],
-                f"{label} D1 decoded frame count changed")
-    request_index = entry.get("request_index")
-    require(type(request_index) is int and request.get("request_index") == request_index,
-            f"{label} request index changed")
+        d1_decode_contract = _d1_development_decode_contract(
+            request,
+            request_index=request_index,
+            authority=authority,
+            label=label,
+        )
     completion_descriptor, completion_path = verify_descriptor(
         entry.get("adapter_completion"), base=base, label=f"{label} completion", require_bytes=True
     )
@@ -1866,7 +2267,12 @@ def _development_request_binding(
     start_sample = sample(start, action_start)
     target_bindings = []
     tolerance = float(authority["timestamp_tolerance_s"])
-    for mapping, target in zip(authority["qualified_mapping_rows"], authority["generated_targets"]):
+    mapping_applies = (
+        d1_decode_contract is None
+        or d1_decode_contract["source_timing_mapping_applies"] is True
+    )
+    source_rows = zip(authority["qualified_mapping_rows"], authority["generated_targets"])
+    for mapping, target in (source_rows if mapping_applies else ()):
         boundary = mapping["executed_control_boundary"]
         row = {
             "generated_frame_index": mapping["generated_frame_index"],
@@ -1906,7 +2312,7 @@ def _development_request_binding(
             "target_physics_step": target_sample["physics_step"],
             "target_physics_time_s": target_sample["physics_time_s"],
         })
-    return {
+    result = {
         "cell_id": cell_id,
         "request_index": request_index,
         "source_request_receipt": file_descriptor(request_path),
@@ -1920,6 +2326,17 @@ def _development_request_binding(
         "target_bindings": target_bindings,
         "model_output_or_action_modified": False,
     }
+    if d1_decode_contract is not None:
+        matched_target_count = sum(
+            row.get("status") == "matched_native_request_clocks"
+            for row in target_bindings
+        )
+        result.update({
+            "decoded_output_timing": d1_decode_contract,
+            "timing_eligible_target_count": matched_target_count,
+            "eligible_for_timed_target_sampling": matched_target_count > 0,
+        })
+    return result
 
 
 def bind_development_requests(
@@ -1928,6 +2345,8 @@ def bind_development_requests(
     authority_sha256: str,
     inventory_path: Path,
     inventory_sha256: str,
+    d1_cache_schedule_diagnostic_path: Path | None = None,
+    d1_cache_schedule_diagnostic_sha256: str | None = None,
 ) -> dict[str, Any]:
     authority = validate_timing_authority(authority_path, authority_sha256)
     inventory, inventory_resolved = _read_hashed_json(
@@ -1950,6 +2369,33 @@ def bind_development_requests(
     ]
     hashes = [binding["source_request_receipt"]["sha256"] for binding in bindings]
     require(len(set(hashes)) == len(hashes), "development request receipts are duplicated")
+    d1_schedule_descriptor: dict[str, Any] | None = None
+    d1_coverage: dict[str, int] | None = None
+    if model_id == "D1":
+        require(
+            d1_cache_schedule_diagnostic_path is not None
+            and _valid_sha(d1_cache_schedule_diagnostic_sha256),
+            "D1 development timing requires the exact cache schedule diagnostic",
+        )
+        validate_d1_cache_schedule_diagnostic(
+            Path(d1_cache_schedule_diagnostic_path),
+            str(d1_cache_schedule_diagnostic_sha256),
+            inventory_sha256=inventory_sha256,
+            inventory_bytes=inventory_resolved.stat().st_size,
+            request_entries=requests,
+        )
+        d1_schedule_descriptor = file_descriptor(
+            Path(d1_cache_schedule_diagnostic_path).resolve()
+        )
+        d1_coverage = _d1_request_timing_coverage(
+            bindings, authority_target_count=len(authority["generated_targets"])
+        )
+    else:
+        require(
+            d1_cache_schedule_diagnostic_path is None
+            and d1_cache_schedule_diagnostic_sha256 is None,
+            "N3 development timing must not bind a D1 cache diagnostic",
+        )
     output_targets = [
         {
             "generated_frame_index": row["generated_frame_index"],
@@ -1958,11 +2404,19 @@ def bind_development_requests(
         }
         for row in authority["generated_targets"]
     ]
-    return sign_document({
-        "schema_version": DEVELOPMENT_TIMING_SCHEMA,
+    result: dict[str, Any] = {
+        "schema_version": (
+            DEVELOPMENT_TIMING_MISSINGNESS_SCHEMA
+            if model_id == "D1"
+            else DEVELOPMENT_TIMING_SCHEMA
+        ),
         "study_id": STUDY_ID,
         "model_id": model_id,
-        "status": "qualified_from_native_runtime_metadata",
+        "status": (
+            "qualified_subset_from_native_runtime_metadata_with_explicit_missingness"
+            if model_id == "D1"
+            else "qualified_from_native_runtime_metadata"
+        ),
         "time_source_kind": "native_runtime_exposed_target_offsets",
         "binding_mode": "immutable_request_receipt_native_clock_sidecar",
         "clock_bridge": "elapsed physical seconds from request current original-camera capture",
@@ -1978,8 +2432,63 @@ def bind_development_requests(
         "conditioning_fps_used_as_target_timing": False,
         "generated_frame_index_interpreted_as_action_index": False,
         "dreamzero_action_block_ratio_used_as_mapping": False,
-        "claim_boundary": "Binds qualified native timing to immutable development request and cell-clock receipts through a sidecar; does not release confirmation or claim prediction accuracy.",
-    })
+        "claim_boundary": (
+            "Binds qualified native timing only to source-proven full conditioning-origin "
+            "development decodes; incremental standalone decodes remain explicitly timing-"
+            "unmapped. It does not release confirmation or claim prediction accuracy."
+            if model_id == "D1"
+            else "Binds qualified native timing to immutable development request and cell-clock receipts through a sidecar; does not release confirmation or claim prediction accuracy."
+        ),
+    }
+    if model_id == "D1":
+        result.update({
+            "cache_schedule_diagnostic": d1_schedule_descriptor,
+            "request_timing_coverage": d1_coverage,
+            "generated_targets_scope": (
+                "request_timing_bindings.decoded_output_timing."
+                "source_timing_mapping_applies == true"
+            ),
+            "incremental_standalone_decodes_assigned_target_times": False,
+            "confirmation_release_compatible": False,
+        })
+    return sign_document(result)
+
+
+def _validate_development_validator_descriptor(
+    descriptor: Any,
+    *,
+    base: Path,
+    model_id: str,
+    schema_version: str,
+) -> None:
+    observed, path = verify_descriptor(
+        descriptor,
+        base=base,
+        label="development timing validator",
+        require_bytes=True,
+    )
+    suffix = TOOL_REPOSITORY_RELATIVE.parts
+    require(tuple(path.parts[-len(suffix):]) == suffix,
+            "development timing validator repository-relative identity changed")
+    current = file_descriptor(Path(__file__).resolve())
+    if model_id == "N3" and schema_version == DEVELOPMENT_TIMING_SCHEMA:
+        allowed = {
+            (current["sha256"], current["bytes"]),
+            (
+                PRIOR_DEVELOPMENT_TIMING_VALIDATOR_SHA256,
+                PRIOR_DEVELOPMENT_TIMING_VALIDATOR_BYTES,
+            ),
+        }
+        require(
+            (observed.get("sha256"), observed.get("bytes")) in allowed,
+            "development timing validator identity changed",
+        )
+        return
+    require(
+        observed.get("sha256") == current["sha256"]
+        and observed.get("bytes") == current["bytes"],
+        "development timing validator identity changed",
+    )
 
 
 def validate_development_timing(
@@ -1990,21 +2499,41 @@ def validate_development_timing(
     expected_request_hashes: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     value, resolved = _read_hashed_json(path, expected_sha256, "development timing sidecar")
-    require(value.get("schema_version") == DEVELOPMENT_TIMING_SCHEMA, "development timing schema changed")
+    schema_version = value.get("schema_version")
+    require(
+        schema_version in {
+            DEVELOPMENT_TIMING_SCHEMA,
+            DEVELOPMENT_TIMING_MISSINGNESS_SCHEMA,
+        },
+        "development timing schema changed",
+    )
     verify_signed(value, "development timing sidecar")
     model_id = value.get("model_id")
     require(model_id in EXPECTED_MODELS and value.get("study_id") == STUDY_ID,
             "development timing identity changed")
     if expected_model is not None:
         require(model_id == expected_model, "development timing model mismatch")
-    require(value.get("status") == "qualified_from_native_runtime_metadata"
+    expected_schema = (
+        DEVELOPMENT_TIMING_MISSINGNESS_SCHEMA
+        if model_id == "D1"
+        else DEVELOPMENT_TIMING_SCHEMA
+    )
+    expected_status = (
+        "qualified_subset_from_native_runtime_metadata_with_explicit_missingness"
+        if model_id == "D1"
+        else "qualified_from_native_runtime_metadata"
+    )
+    require(schema_version == expected_schema, "development timing model/schema changed")
+    require(value.get("status") == expected_status
             and value.get("time_source_kind") == "native_runtime_exposed_target_offsets"
             and value.get("binding_mode") == "immutable_request_receipt_native_clock_sidecar"
             and value.get("old_request_receipts_modified") is False,
             "development timing sidecar did not qualify immutable receipts")
-    require_descriptor_matches(
-        value.get("validator"), Path(__file__).resolve(),
-        base=resolved.parent, label="development timing validator",
+    _validate_development_validator_descriptor(
+        value.get("validator"),
+        base=resolved.parent,
+        model_id=model_id,
+        schema_version=schema_version,
     )
     for field in (
         "presentation_video_fps_used",
@@ -2056,6 +2585,90 @@ def validate_development_timing(
     if expected_request_hashes is not None:
         require(hashes == list(expected_request_hashes),
                 "development timing sidecar does not bind the expected request inventory")
+    if model_id == "D1":
+        inventory_descriptor, inventory_path = verify_descriptor(
+            value.get("request_inventory"),
+            base=resolved.parent,
+            label="D1 development request inventory",
+            require_bytes=True,
+        )
+        inventory = load_json(inventory_path, "D1 development request inventory")
+        signed_inventory = "payload_sha256" in inventory
+        if signed_inventory:
+            verify_signed(inventory, "D1 development request inventory")
+            require(
+                set(inventory)
+                == {
+                    "schema_version",
+                    "study_id",
+                    "model_id",
+                    "status",
+                    "aggregate_receipts",
+                    "request_receipts",
+                    "old_request_receipts_modified",
+                    "model_requests_issued_by_inventory_job",
+                    "behavioral_actions_executed_by_inventory_job",
+                    "payload_sha256",
+                }
+                and inventory.get("status") == "complete_exact_development_inventory"
+                and isinstance(inventory.get("aggregate_receipts"), list)
+                and inventory.get("old_request_receipts_modified") is False
+                and inventory.get("model_requests_issued_by_inventory_job") == 0
+                and inventory.get("behavioral_actions_executed_by_inventory_job") == 0,
+                "signed D1 development request inventory envelope changed",
+            )
+        else:
+            require(
+                set(inventory)
+                == {"schema_version", "study_id", "model_id", "request_receipts"},
+                "unsigned D1 development request inventory is not canonical",
+            )
+        inventory_entries = inventory.get("request_receipts")
+        require(
+            inventory.get("schema_version") == REQUEST_INVENTORY_SCHEMA
+            and inventory.get("study_id") == STUDY_ID
+            and inventory.get("model_id") == "D1"
+            and isinstance(inventory_entries, list)
+            and len(inventory_entries) == len(bindings),
+            "D1 development request inventory changed",
+        )
+        for index, (entry, binding) in enumerate(zip(inventory_entries, bindings)):
+            require(
+                isinstance(entry, Mapping)
+                and entry.get("cell_id") == binding["cell_id"]
+                and entry.get("request_index") == binding["request_index"]
+                and entry.get("request_receipt") == binding["source_request_receipt"]
+                and entry.get("adapter_completion") == binding["adapter_completion"]
+                and entry.get("adapter_journal") == binding["adapter_journal"],
+                f"D1 development request inventory entry {index} changed",
+            )
+        diagnostic_descriptor, diagnostic_path = verify_descriptor(
+            value.get("cache_schedule_diagnostic"),
+            base=resolved.parent,
+            label="D1 cache schedule diagnostic",
+            require_bytes=True,
+        )
+        validate_d1_cache_schedule_diagnostic(
+            diagnostic_path,
+            diagnostic_descriptor["sha256"],
+            inventory_sha256=inventory_descriptor["sha256"],
+            inventory_bytes=inventory_descriptor["bytes"],
+            request_entries=inventory_entries,
+        )
+        coverage = _d1_request_timing_coverage(
+            regenerated, authority_target_count=len(authority["generated_targets"])
+        )
+        require(
+            value.get("request_timing_coverage") == coverage
+            and value.get("generated_targets_scope")
+            == (
+                "request_timing_bindings.decoded_output_timing."
+                "source_timing_mapping_applies == true"
+            )
+            and value.get("incremental_standalone_decodes_assigned_target_times") is False
+            and value.get("confirmation_release_compatible") is False,
+            "D1 development timing missingness boundary changed",
+        )
     return value
 
 
@@ -2110,6 +2723,8 @@ def _parser() -> argparse.ArgumentParser:
     bind.add_argument("--authority-sha256", required=True)
     bind.add_argument("--request-inventory", type=Path, required=True)
     bind.add_argument("--request-inventory-sha256", required=True)
+    bind.add_argument("--d1-cache-schedule-diagnostic", type=Path)
+    bind.add_argument("--d1-cache-schedule-diagnostic-sha256")
     bind.add_argument("--output", type=Path, required=True)
 
     validate_development = commands.add_parser(
@@ -2197,6 +2812,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         authority_sha256=args.authority_sha256,
         inventory_path=args.request_inventory,
         inventory_sha256=args.request_inventory_sha256,
+        d1_cache_schedule_diagnostic_path=args.d1_cache_schedule_diagnostic,
+        d1_cache_schedule_diagnostic_sha256=(
+            args.d1_cache_schedule_diagnostic_sha256
+        ),
     )
     atomic_json(args.output, result)
     print(json.dumps({"status": result["status"], "model": result["model_id"],

@@ -58,8 +58,19 @@ CONTROL_ROOT = queue.CONTROL_ROOT
 ROBOLAB_PYTHON = queue.ROBOLAB_PYTHON
 TOOL_RELATIVE = queue.TOOL_RELATIVE
 CONTRACT_RELATIVE = queue.CONTRACT_RELATIVE
+# Native-authority receipts were produced by this prior validator and remain
+# bound to it.  The D1 missingness-aware sidecar is staged with a fresh,
+# separately pinned validator below.
 TOOL_SHA256 = queue.TOOL_SHA256
 CONTRACT_SHA256 = queue.CONTRACT_SHA256
+
+# Filled from the final reviewed bytes of qualify_forecast_timing.py.  Keeping
+# this distinct from TOOL_SHA256 prevents a new sidecar from pretending that it
+# was produced by the older authority validator.
+SIDECAR_TIMING_TOOL_SHA256 = (
+    "4d8994d75fd0fe8fd9178bad1f88efad010b067a90ef97352bd9ca4ab65f49ff"
+)
+SIDECAR_TIMING_TOOL_BYTES = 143587
 
 THIS_RELATIVE = (
     queue.FORECAST_RELATIVE
@@ -74,6 +85,34 @@ D1_CELL_SCHEMA = "wmf-d1-behavioral-development-cell-v1"
 AUTHORITY_SOURCE_COMMIT = "950468266b05a2c429e4f13d7a5fb103728f206e"
 D1_ATTEMPT003_SOURCE_COMMIT = "25ff299ca0d2b9964eb48286990ee2301cb207b8"
 WORKER_ROLE = "wmf-forecast-0912-worker-09"
+D1_CACHE_DIAGNOSTIC_JOB_ID = (
+    "timing-d1-development-sidecar-cache-schedule-diagnostic-001"
+)
+D1_CACHE_DIAGNOSTIC_PATH = (
+    CONTROL_ROOT / "jobs" / D1_CACHE_DIAGNOSTIC_JOB_ID / "publish" / "diagnostic.json"
+)
+D1_CACHE_DIAGNOSTIC_SHA256 = (
+    "cb13bee1cb6aadbeef9acb8cad5417677b2c3c18ab9fc115ca1eb3fe1f2e0630"
+)
+D1_CACHE_DIAGNOSTIC_BYTES = 27270
+D1_DIAGNOSTIC_INVENTORY_PATH = (
+    CONTROL_ROOT / "jobs" / "timing-d1-development-sidecar-001" / "raw"
+    / "d1_development_request_inventory.json"
+)
+D1_INVENTORY_SHA256 = (
+    "31e54cdabee693966f8263de531a20dd96847b8e7e3507a1a464d408c8326f06"
+)
+D1_INVENTORY_BYTES = 1250872
+D1_REQUEST_TIMING_COVERAGE = {
+    "total_request_count": 912,
+    "source_proven_full_decode_request_count": 240,
+    "source_unmapped_incremental_decode_request_count": 672,
+    "native_clock_matched_request_count": 224,
+    "action_prefix_truncated_request_count": 16,
+    "native_clock_matched_target_binding_count": 448,
+    "action_prefix_truncated_target_binding_count": 32,
+    "unmapped_potential_authority_target_count": 1344,
+}
 LAYOUTS = ("D01", "D02", "D03", "D04")
 CONDITION_ORDER: dict[str, tuple[str, ...]] = {
     "D01": ("original-left", "reflected-right", "original-right", "reflected-left"),
@@ -276,7 +315,7 @@ D1_AGGREGATES["D03"] = AggregateSpec(
 AGGREGATES = {"N3": N3_AGGREGATES, "D1": D1_AGGREGATES}
 JOB_ID = {
     "N3": "timing-n3-development-sidecar-001",
-    "D1": "timing-d1-development-sidecar-001",
+    "D1": "timing-d1-development-sidecar-002",
 }
 REQUEST_COUNT = {"N3": 240, "D1": 912}
 REQUESTS_PER_CELL = {"N3": 15, "D1": 57}
@@ -314,6 +353,135 @@ def _free_descriptor(value: Any, *, path: Path, label: str) -> dict[str, Any]:
     require(type(size) is int and size > 0, f"{label} descriptor byte count is invalid")
     require(Path(str(value.get("path"))) == path, f"{label} descriptor path changed")
     return {"path": str(path), "sha256": digest, "bytes": size}
+
+
+def validate_local_d1_cache_schedule_diagnostic(
+    path: Path, expected_sha256: str
+) -> dict[str, Any]:
+    """Validate the published zero-science schedule diagnostic exactly.
+
+    The workstation artifact may live under a fetched results checkout, so its
+    local path is intentionally not used in the detached descriptor.  Its
+    complete bytes are pinned, while the returned descriptor names the exact
+    PVC artifact that the detached runtime must reopen.
+    """
+
+    require(
+        expected_sha256 == D1_CACHE_DIAGNOSTIC_SHA256,
+        "D1 cache schedule diagnostic hash is not frozen",
+    )
+    identity = queue.file_identity(path)
+    require(
+        identity["sha256"] == D1_CACHE_DIAGNOSTIC_SHA256
+        and identity["bytes"] == D1_CACHE_DIAGNOSTIC_BYTES,
+        "D1 cache schedule diagnostic bytes/hash changed",
+    )
+    value = queue.load_json(path, "D1 cache schedule diagnostic")
+    exact = {
+        "schema_version": "wmf-d1-development-cache-schedule-diagnostic-v1",
+        "study_id": STUDY_ID,
+        "status": "read_only_summary_complete",
+        "source_attempt": "timing-d1-development-sidecar-001",
+        "request_count": REQUEST_COUNT["D1"],
+        "unique_request_receipt_hashes": REQUEST_COUNT["D1"],
+        "cell_count": 16,
+        "requests_per_cell_distribution": {"57": 16},
+        "exact_modulo_four_shape_schedule_observed": True,
+        "inventory_payload_sha256_verified": True,
+        "scientific_qualification": False,
+        "science_counts": {
+            "model_requests": 0,
+            "behavioral_actions": 0,
+            "physical_resets": 0,
+            "robot_episodes": 0,
+            "behavioral_cells": 0,
+        },
+    }
+    for key, wanted in exact.items():
+        require(value.get(key) == wanted, f"D1 cache schedule diagnostic changed: {key}")
+    _descriptor(
+        value.get("inventory"),
+        path=D1_DIAGNOSTIC_INVENTORY_PATH,
+        sha256=D1_INVENTORY_SHA256,
+        bytes_=D1_INVENTORY_BYTES,
+        label="D1 diagnostic source inventory",
+    )
+    by_index = value.get("by_request_index")
+    require(
+        isinstance(by_index, Mapping)
+        and set(by_index) == {str(index) for index in range(57)},
+        "D1 cache schedule diagnostic request-index inventory changed",
+    )
+    for request_index in range(57):
+        full = request_index % 4 == 0
+        before = (
+            (0 if request_index == 0 else 9)
+            if full
+            else {1: 3, 2: 5, 3: 7}[request_index % 4]
+        )
+        after = 3 if full else before + 2
+        latent = "[1,16,3,44,80]" if full else "[1,16,2,44,80]"
+        rgb = "[9,352,640,3]" if full else "[5,352,640,3]"
+        tensor = "[1,3,9,352,640]" if full else "[1,3,5,352,640]"
+        require(
+            by_index[str(request_index)]
+            == {
+                "count": 16,
+                "latent_shapes": {latent: 16},
+                "rgb_shapes": {rgb: 16},
+                "tensor_shapes": {tensor: 16},
+                "rank0_start_before": {str(before): 16},
+                "rank0_start_after": {str(after): 16},
+                "rank1_start_before": {str(before): 16},
+                "rank1_start_after": {str(after): 16},
+            },
+            f"D1 cache schedule diagnostic request index {request_index} changed",
+        )
+    require(
+        value.get("decoded_rgb_shapes_by_request_index_modulo_four")
+        == {
+            "0": {"[9,352,640,3]": 240},
+            "1": {"[5,352,640,3]": 224},
+            "2": {"[5,352,640,3]": 224},
+            "3": {"[5,352,640,3]": 224},
+        },
+        "D1 cache schedule diagnostic modulo-four summary changed",
+    )
+    controls = value.get("measurement_control_distribution")
+    require(
+        isinstance(controls, Mapping)
+        and all(type(count) is int and count > 0 for count in controls.values())
+        and sum(controls.values()) == 912,
+        "D1 cache schedule diagnostic measurement controls changed",
+    )
+    for encoded, count in controls.items():
+        try:
+            control = json.loads(encoded)
+        except (TypeError, json.JSONDecodeError) as error:
+            raise DevelopmentTimingJobError(
+                "D1 cache schedule diagnostic measurement control is invalid"
+            ) from error
+        require(
+            count == 228
+            and isinstance(control, Mapping)
+            and set(control) == {"offline_decode", "probe_id", "probe_plan_sha256"}
+            and control.get("offline_decode") is True
+            and control.get("probe_id") is None
+            and isinstance(control.get("probe_plan_sha256"), str)
+            and queue.SHA256_RE.fullmatch(control["probe_plan_sha256"]) is not None,
+            "D1 cache schedule diagnostic measurement control changed",
+        )
+    require(len(controls) == 4, "D1 cache schedule diagnostic control inventory changed")
+    require(
+        value.get("official_action_path_distribution")
+        == {json.dumps("GrootSimPolicy.lazy_joint_forward_causal"): 912},
+        "D1 cache schedule diagnostic official action path changed",
+    )
+    return {
+        "path": str(D1_CACHE_DIAGNOSTIC_PATH),
+        "sha256": D1_CACHE_DIAGNOSTIC_SHA256,
+        "bytes": D1_CACHE_DIAGNOSTIC_BYTES,
+    }
 
 
 def validate_local_authority_receipt(
@@ -533,10 +701,26 @@ def _job_descriptor(
     *, model: str, study_commit: str, self_sha256: str,
     authorities: Mapping[str, Mapping[str, Any]],
     aggregates: Mapping[str, Mapping[str, Any]],
+    d1_cache_schedule_diagnostic: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     require(model in ("N3", "D1"), "sidecar model is unsupported")
+    if model == "D1":
+        diagnostic = _descriptor(
+            d1_cache_schedule_diagnostic,
+            path=D1_CACHE_DIAGNOSTIC_PATH,
+            sha256=D1_CACHE_DIAGNOSTIC_SHA256,
+            bytes_=D1_CACHE_DIAGNOSTIC_BYTES,
+            label="D1 cache schedule diagnostic",
+        )
+    else:
+        require(
+            d1_cache_schedule_diagnostic is None,
+            "N3 sidecar must not bind a D1 cache schedule diagnostic",
+        )
+        diagnostic = None
     commit = queue._verified_commit(study_commit)
     queue._verified_sha(self_sha256, "sidecar builder digest")
+    queue._verified_sha(SIDECAR_TIMING_TOOL_SHA256, "sidecar timing validator digest")
     argv = [
         str(ROBOLAB_PYTHON),
         "{source_root}/" + str(THIS_RELATIVE),
@@ -547,7 +731,7 @@ def _job_descriptor(
         "--job-id", JOB_ID[model],
         "--expected-role", WORKER_ROLE,
         "--sidecar-builder-sha256", self_sha256,
-        "--timing-tool-sha256", TOOL_SHA256,
+        "--timing-tool-sha256", SIDECAR_TIMING_TOOL_SHA256,
         "--contract-sha256", CONTRACT_SHA256,
         "--expected-request-count", str(REQUEST_COUNT[model]),
     ]
@@ -569,6 +753,13 @@ def _job_descriptor(
                 "--aggregate-receipt-sha256", str(aggregate["sha256"]),
             ]
         )
+    if diagnostic is not None:
+        argv.extend(
+            [
+                "--d1-cache-schedule-diagnostic", diagnostic["path"],
+                "--d1-cache-schedule-diagnostic-sha256", diagnostic["sha256"],
+            ]
+        )
     return {
         "job_id": JOB_ID[model],
         "released": True,
@@ -585,6 +776,8 @@ def build_sidecar_wave(
     n3_authority_receipt_path: Path, n3_authority_receipt_sha256: str,
     d1_authority_receipt_path: Path, d1_authority_receipt_sha256: str,
     aggregate_inputs: Mapping[str, tuple[Path, str]],
+    d1_cache_schedule_diagnostic_path: Path | None = None,
+    d1_cache_schedule_diagnostic_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Emit one descriptor only after every exact local gate validates."""
 
@@ -604,6 +797,23 @@ def build_sidecar_wave(
         )
         for layout in LAYOUTS
     }
+    if model == "D1":
+        require(
+            d1_cache_schedule_diagnostic_path is not None
+            and d1_cache_schedule_diagnostic_sha256 is not None,
+            "D1 sidecar requires the exact cache schedule diagnostic",
+        )
+        diagnostic = validate_local_d1_cache_schedule_diagnostic(
+            d1_cache_schedule_diagnostic_path,
+            d1_cache_schedule_diagnostic_sha256,
+        )
+    else:
+        require(
+            d1_cache_schedule_diagnostic_path is None
+            and d1_cache_schedule_diagnostic_sha256 is None,
+            "N3 sidecar must not bind a D1 cache schedule diagnostic",
+        )
+        diagnostic = None
     self_sha256 = queue.sha256_file(Path(__file__).resolve())
     descriptor = _job_descriptor(
         model=model,
@@ -611,6 +821,7 @@ def build_sidecar_wave(
         self_sha256=self_sha256,
         authorities=authorities,
         aggregates=aggregates,
+        d1_cache_schedule_diagnostic=diagnostic,
     )
     return {
         "schema_version": WAVE_SCHEMA,
@@ -623,14 +834,40 @@ def build_sidecar_wave(
         "evidence_gate": {
             "authorities": authorities,
             "development_aggregates": aggregates,
+            **(
+                {"d1_cache_schedule_diagnostic": diagnostic}
+                if diagnostic is not None
+                else {}
+            ),
         },
         "science_counts": _zero_science_counts(),
         "referenced_behavioral_cells": 16,
         "referenced_behavioral_model_requests": REQUEST_COUNT[model],
         "safe_to_release_confirmation": False,
+        "physical_time_coverage_complete": model == "N3",
+        **(
+            {
+                "request_timing_coverage": D1_REQUEST_TIMING_COVERAGE,
+                "physical_time_qualified_scope": (
+                    "source-proven full conditioning-origin decodes only"
+                ),
+            }
+            if model == "D1"
+            else {}
+        ),
         "claim_boundary": (
-            "One CPU-side inventory/bind/validate job over immutable completed development "
-            "evidence. It issues no request or action and cannot release confirmation."
+            (
+                "One CPU-side inventory/bind/validate job over immutable completed D1 "
+                "evidence. It maps only source-proven full conditioning-origin decodes, "
+                "retains incremental standalone decodes as timing-unmapped, issues no "
+                "request or action, and cannot release confirmation."
+            )
+            if model == "D1"
+            else (
+                "One CPU-side inventory/bind/validate job over immutable completed "
+                "development evidence. It issues no request or action and cannot "
+                "release confirmation."
+            )
         ),
     }
 
@@ -647,7 +884,9 @@ def _zero_science_counts() -> dict[str, int]:
     }
 
 
-def _runtime_evidence(args: argparse.Namespace, model: str) -> tuple[dict[str, Any], dict[str, Any]]:
+def _runtime_evidence(
+    args: argparse.Namespace, model: str
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any] | None]:
     authority_args = {
         "N3": (Path(args.n3_authority_receipt), args.n3_authority_receipt_sha256),
         "D1": (Path(args.d1_authority_receipt), args.d1_authority_receipt_sha256),
@@ -673,7 +912,24 @@ def _runtime_evidence(args: argparse.Namespace, model: str) -> tuple[dict[str, A
         aggregates[layout] = validate_local_aggregate_receipt(
             Path(supplied_path), supplied_sha, spec
         )
-    return authorities, aggregates
+    diagnostic_path = getattr(args, "d1_cache_schedule_diagnostic", None)
+    diagnostic_sha256 = getattr(args, "d1_cache_schedule_diagnostic_sha256", None)
+    if model == "D1":
+        require(
+            diagnostic_path is not None
+            and Path(diagnostic_path) == D1_CACHE_DIAGNOSTIC_PATH,
+            "D1 runtime cache schedule diagnostic path changed",
+        )
+        diagnostic = validate_local_d1_cache_schedule_diagnostic(
+            Path(diagnostic_path), str(diagnostic_sha256)
+        )
+    else:
+        require(
+            diagnostic_path is None and diagnostic_sha256 is None,
+            "N3 runtime must not bind a D1 cache schedule diagnostic",
+        )
+        diagnostic = None
+    return authorities, aggregates, diagnostic
 
 
 def _runtime_descriptor(args: argparse.Namespace) -> tuple[str, dict[str, Any]]:
@@ -681,7 +937,10 @@ def _runtime_descriptor(args: argparse.Namespace) -> tuple[str, dict[str, Any]]:
     require(model is not None, "runtime sidecar mode is unsupported")
     require(args.job_id == JOB_ID[model], "runtime sidecar job ID changed")
     require(args.expected_role == WORKER_ROLE, "runtime sidecar worker role changed")
-    require(args.timing_tool_sha256 == TOOL_SHA256, "runtime timing validator hash changed")
+    require(
+        args.timing_tool_sha256 == SIDECAR_TIMING_TOOL_SHA256,
+        "runtime timing validator hash changed",
+    )
     require(args.contract_sha256 == CONTRACT_SHA256, "runtime timing contract hash changed")
     require(args.expected_request_count == REQUEST_COUNT[model], "runtime request count changed")
     authorities = {
@@ -704,12 +963,33 @@ def _runtime_descriptor(args: argparse.Namespace) -> tuple[str, dict[str, Any]]:
             LAYOUTS, args.aggregate_receipt, args.aggregate_receipt_sha256
         )
     }
+    diagnostic_path = getattr(args, "d1_cache_schedule_diagnostic", None)
+    diagnostic_sha256 = getattr(args, "d1_cache_schedule_diagnostic_sha256", None)
+    if model == "D1":
+        require(
+            diagnostic_path is not None
+            and Path(diagnostic_path) == D1_CACHE_DIAGNOSTIC_PATH
+            and diagnostic_sha256 == D1_CACHE_DIAGNOSTIC_SHA256,
+            "runtime D1 cache schedule diagnostic changed",
+        )
+        diagnostic = {
+            "path": str(D1_CACHE_DIAGNOSTIC_PATH),
+            "sha256": D1_CACHE_DIAGNOSTIC_SHA256,
+            "bytes": D1_CACHE_DIAGNOSTIC_BYTES,
+        }
+    else:
+        require(
+            diagnostic_path is None and diagnostic_sha256 is None,
+            "runtime N3 sidecar acquired a D1 cache schedule diagnostic",
+        )
+        diagnostic = None
     descriptor = _job_descriptor(
         model=model,
         study_commit=args.study_commit,
         self_sha256=args.sidecar_builder_sha256,
         authorities=authorities,
         aggregates=aggregates,
+        d1_cache_schedule_diagnostic=diagnostic,
     )
     return model, descriptor
 
@@ -917,6 +1197,23 @@ def _failure_receipt(
         return
 
 
+def _validate_staged_sidecar_implementation(source_root: Path) -> dict[str, Any]:
+    """Pin the fresh sidecar validator while retaining the authority contract."""
+
+    validator = queue.file_identity(Path(source_root) / TOOL_RELATIVE)
+    contract = queue.file_identity(Path(source_root) / CONTRACT_RELATIVE)
+    require(
+        validator["sha256"] == SIDECAR_TIMING_TOOL_SHA256
+        and validator["bytes"] == SIDECAR_TIMING_TOOL_BYTES,
+        "staged sidecar timing validator bytes/hash changed",
+    )
+    require(
+        contract["sha256"] == CONTRACT_SHA256,
+        "staged timing contract hash changed",
+    )
+    return {"timing_validator": validator, "timing_contract": contract}
+
+
 def run_sidecar_job(args: argparse.Namespace) -> dict[str, Any]:
     model, expected_descriptor = _runtime_descriptor(args)
     context = None
@@ -934,13 +1231,13 @@ def run_sidecar_job(args: argparse.Namespace) -> dict[str, Any]:
             self_identity["sha256"] == args.sidecar_builder_sha256,
             "staged sidecar builder hash changed",
         )
-        implementation = queue._validate_staged_implementation(context.source_root)
+        implementation = _validate_staged_sidecar_implementation(context.source_root)
         require(
             implementation["timing_validator"]["sha256"] == args.timing_tool_sha256
             and implementation["timing_contract"]["sha256"] == args.contract_sha256,
             "staged timing implementation differs from descriptor",
         )
-        authorities, aggregates = _runtime_evidence(args, model)
+        authorities, aggregates, diagnostic = _runtime_evidence(args, model)
         timing = _load_module(
             context.source_root / TOOL_RELATIVE,
             f"wmf_development_timing_{model.lower()}_{context.job_id.replace('-', '_')}",
@@ -953,11 +1250,23 @@ def run_sidecar_job(args: argparse.Namespace) -> dict[str, Any]:
         inventory_path = raw / f"{model.lower()}_development_request_inventory.json"
         timing.atomic_json(inventory_path, inventory)
         inventory_identity = queue.file_identity(inventory_path)
+        if model == "D1":
+            require(
+                inventory_identity["sha256"] == D1_INVENTORY_SHA256
+                and inventory_identity["bytes"] == D1_INVENTORY_BYTES,
+                "D1 regenerated request inventory differs from the diagnosed inventory",
+            )
         sidecar = timing.bind_development_requests(
             authority_path=AUTHORITIES[model].raw_authority_path,
             authority_sha256=AUTHORITIES[model].authority_sha256,
             inventory_path=inventory_path,
             inventory_sha256=inventory_identity["sha256"],
+            d1_cache_schedule_diagnostic_path=(
+                D1_CACHE_DIAGNOSTIC_PATH if model == "D1" else None
+            ),
+            d1_cache_schedule_diagnostic_sha256=(
+                D1_CACHE_DIAGNOSTIC_SHA256 if model == "D1" else None
+            ),
         )
         sidecar_path = raw / f"{model.lower()}_development_timing_sidecar.json"
         timing.atomic_json(sidecar_path, sidecar)
@@ -972,6 +1281,12 @@ def run_sidecar_job(args: argparse.Namespace) -> dict[str, Any]:
             len(validated.get("request_timing_bindings", [])) == REQUEST_COUNT[model],
             f"{model} validated sidecar request count changed",
         )
+        coverage = validated.get("request_timing_coverage") if model == "D1" else None
+        if model == "D1":
+            require(
+                coverage == D1_REQUEST_TIMING_COVERAGE,
+                "D1 missingness-aware timing coverage changed",
+            )
         receipt = queue.signed_document(
             {
                 "schema_version": JOB_RECEIPT_SCHEMA,
@@ -996,6 +1311,11 @@ def run_sidecar_job(args: argparse.Namespace) -> dict[str, Any]:
                 "inputs": {
                     "authorities": authorities,
                     "development_aggregates": aggregates,
+                    **(
+                        {"d1_cache_schedule_diagnostic": diagnostic}
+                        if diagnostic is not None
+                        else {}
+                    ),
                 },
                 "outputs": {
                     "raw_request_inventory": inventory_identity,
@@ -1006,13 +1326,34 @@ def run_sidecar_job(args: argparse.Namespace) -> dict[str, Any]:
                 "source_request_receipt_sha256s": request_hashes,
                 "science_counts": _zero_science_counts(),
                 "physical_time_qualified": True,
+                "physical_time_coverage_complete": model == "N3",
+                **(
+                    {
+                        "request_timing_coverage": coverage,
+                        "physical_time_qualified_scope": (
+                            "source-proven full conditioning-origin decodes only"
+                        ),
+                    }
+                    if coverage is not None
+                    else {}
+                ),
                 "development_timing_sidecar_valid": True,
                 "behavioral_policy_skill_evaluated": False,
                 "safe_to_release_confirmation": False,
                 "raw_outputs_recoverable_on_gm_pvc": True,
                 "claim_boundary": (
-                    "Binds native timing to immutable completed development requests only. "
-                    "It issues no new request/action and does not release confirmation."
+                    (
+                        "Binds native timing only to the source-proven full conditioning-"
+                        "origin D1 development decodes; preserves incremental standalone "
+                        "decodes as explicit timing-unmapped missingness. It issues no new "
+                        "request/action and does not release confirmation."
+                    )
+                    if model == "D1"
+                    else (
+                        "Binds native timing to immutable completed development requests "
+                        "only. It issues no new request/action and does not release "
+                        "confirmation."
+                    )
                 ),
                 "completed_at_utc": queue.utc_now(),
             }
@@ -1050,6 +1391,8 @@ def _add_builder_inputs(parser: argparse.ArgumentParser) -> None:
     for layout in LAYOUTS:
         parser.add_argument(f"--{layout.lower()}-aggregate", type=Path, required=True)
         parser.add_argument(f"--{layout.lower()}-aggregate-sha256", required=True)
+    parser.add_argument("--d1-cache-schedule-diagnostic", type=Path)
+    parser.add_argument("--d1-cache-schedule-diagnostic-sha256")
     parser.add_argument("--output", type=Path)
 
 
@@ -1069,6 +1412,8 @@ def _add_runtime_inputs(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--d1-authority-receipt-sha256", required=True)
     parser.add_argument("--aggregate-receipt", type=Path, action="append", required=True)
     parser.add_argument("--aggregate-receipt-sha256", action="append", required=True)
+    parser.add_argument("--d1-cache-schedule-diagnostic", type=Path)
+    parser.add_argument("--d1-cache-schedule-diagnostic-sha256")
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -1094,6 +1439,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             d1_authority_receipt_path=args.d1_authority_receipt,
             d1_authority_receipt_sha256=args.d1_authority_receipt_sha256,
             aggregate_inputs=_aggregate_inputs(args),
+            d1_cache_schedule_diagnostic_path=args.d1_cache_schedule_diagnostic,
+            d1_cache_schedule_diagnostic_sha256=(
+                args.d1_cache_schedule_diagnostic_sha256
+            ),
         )
         queue._write_descriptor_output(args.output, wave)
         return 0

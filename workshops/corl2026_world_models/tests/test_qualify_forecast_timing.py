@@ -43,6 +43,75 @@ def sign_to(path: Path, value: dict) -> Path:
     return write_json(path, timing.sign_document(value))
 
 
+def d1_cache_schedule_diagnostic(
+    path: Path, *, inventory_path: Path, entries: list[dict]
+) -> Path:
+    request_indices = [entry["request_index"] for entry in entries]
+    cells = {entry["cell_id"] for entry in entries}
+    by_index = {}
+    modulo_shapes = {str(index): {} for index in range(4)}
+    for request_index in sorted(set(request_indices)):
+        count = request_indices.count(request_index)
+        full = request_index % 4 == 0
+        before = (
+            (0 if request_index == 0 else 9)
+            if full
+            else {1: 3, 2: 5, 3: 7}[request_index % 4]
+        )
+        after = 3 if full else before + 2
+        latent = [1, 16, 3, 44, 80] if full else [1, 16, 2, 44, 80]
+        rgb = [9, 352, 640, 3] if full else [5, 352, 640, 3]
+        tensor = [1, 3, rgb[0], 352, 640]
+        rgb_key = timing._compact_shape_key(rgb)
+        by_index[str(request_index)] = {
+            "count": count,
+            "latent_shapes": {timing._compact_shape_key(latent): count},
+            "rgb_shapes": {rgb_key: count},
+            "tensor_shapes": {timing._compact_shape_key(tensor): count},
+            "rank0_start_before": {str(before): count},
+            "rank0_start_after": {str(after): count},
+            "rank1_start_before": {str(before): count},
+            "rank1_start_after": {str(after): count},
+        }
+        modulo = str(request_index % 4)
+        modulo_shapes[modulo][rgb_key] = modulo_shapes[modulo].get(rgb_key, 0) + count
+    per_cell = [sum(entry["cell_id"] == cell for entry in entries) for cell in cells]
+    control = json.dumps(
+        {"offline_decode": True, "probe_id": None, "probe_plan_sha256": SHA},
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return write_json(path, {
+        "schema_version": "wmf-d1-development-cache-schedule-diagnostic-v1",
+        "study_id": timing.STUDY_ID,
+        "status": "read_only_summary_complete",
+        "source_attempt": "timing-d1-development-sidecar-001",
+        "inventory": descriptor(inventory_path),
+        "inventory_payload_sha256_verified": True,
+        "request_count": len(entries),
+        "unique_request_receipt_hashes": len(entries),
+        "cell_count": len(cells),
+        "requests_per_cell_distribution": {
+            str(count): per_cell.count(count) for count in sorted(set(per_cell))
+        },
+        "by_request_index": by_index,
+        "decoded_rgb_shapes_by_request_index_modulo_four": modulo_shapes,
+        "exact_modulo_four_shape_schedule_observed": True,
+        "measurement_control_distribution": {control: len(entries)},
+        "official_action_path_distribution": {
+            json.dumps("GrootSimPolicy.lazy_joint_forward_causal"): len(entries)
+        },
+        "science_counts": {
+            "model_requests": 0,
+            "behavioral_actions": 0,
+            "physical_resets": 0,
+            "robot_episodes": 0,
+            "behavioral_cells": 0,
+        },
+        "scientific_qualification": False,
+    })
+
+
 def frozen(value: object) -> object:
     if isinstance(value, dict):
         return {"__type__": "mapping", "items": {key: frozen(child) for key, child in value.items()}}
@@ -61,6 +130,65 @@ def journal_event(sequence: int, previous: str | None, kind: str, payload: dict)
         "payload": payload,
     }
     return {**base, "event_sha256": timing.sha256_bytes(timing.canonical_bytes(base, ensure_ascii=True))}
+
+
+def d1_development_decode_request(request_index: int) -> dict:
+    full = request_index % 4 == 0
+    before = (
+        (0 if request_index == 0 else 9)
+        if full
+        else {1: 3, 2: 5, 3: 7}[request_index % 4]
+    )
+    after = 3 if full else before + 2
+    frame_count = 9 if full else 5
+    latent_count = 3 if full else 2
+    latent_sha = "8" * 64
+    return {
+        "latent_video": {
+            "shape": [1, 16, latent_count, 44, 80],
+            "data_sha256": latent_sha,
+        },
+        "offline_decode": {
+            "requested": True,
+            "performed": True,
+            "latent_data_sha256_before": latent_sha,
+            "latent_data_sha256_after": latent_sha,
+            "decoded_rgb": {"shape": [frame_count, 352, 640, 3]},
+            "decoded_tensor": {"shape": [1, 3, frame_count, 352, 640]},
+        },
+        "temporal_and_cache_rank_metrics": [
+            {
+                "rank": rank,
+                "temporal_before": {
+                    "rank": rank,
+                    "current_start_frame": before,
+                    "fixed_seed": 1140,
+                    "video_guidance_scale": 5.0,
+                    "configured_inference_steps": 16,
+                    "num_frame_per_block": 2,
+                    "action_horizon": 24,
+                    "ip_rank": rank,
+                    "ip_size": 2,
+                },
+                "temporal_after": {
+                    "rank": rank,
+                    "current_start_frame": after,
+                    "fixed_seed": 1140,
+                    "video_guidance_scale": 5.0,
+                    "configured_inference_steps": 16,
+                    "num_frame_per_block": 2,
+                    "action_horizon": 24,
+                    "ip_rank": rank,
+                    "ip_size": 2,
+                },
+                "cache_reinitialization": {
+                    "_create_kv_caches": ([{"called": True}] if full else []),
+                    "_create_crossattn_caches": ([{"called": True}] if full else []),
+                },
+            }
+            for rank in (0, 1)
+        ],
+    }
 
 
 class EvidenceFixture:
@@ -514,6 +642,7 @@ class EvidenceFixture:
             "current_observation_id": "obs_000000",
         })
         if model == "D1":
+            latent_sha = "6" * 64
             request_value = {
                 "schema_version": timing.D1_REQUEST_SCHEMA,
                 "configuration_id": "D1",
@@ -522,11 +651,50 @@ class EvidenceFixture:
                 "official_action_path": "GrootSimPolicy.lazy_joint_forward_causal",
                 "custom_s2_used": False,
                 "patched_s1_used": False,
-                "offline_decode": {
-                    "performed": True,
-                    "decoded_rgb": {"shape": [9, 8, 8, 3]},
-                    "decoded_tensor": {"shape": [1, 3, 9, 8, 8]},
+                "latent_video": {
+                    "shape": [1, 16, 3, 44, 80],
+                    "data_sha256": latent_sha,
                 },
+                "offline_decode": {
+                    "requested": True,
+                    "performed": True,
+                    "latent_data_sha256_before": latent_sha,
+                    "latent_data_sha256_after": latent_sha,
+                    "decoded_rgb": {"shape": [9, 352, 640, 3]},
+                    "decoded_tensor": {"shape": [1, 3, 9, 352, 640]},
+                },
+                "temporal_and_cache_rank_metrics": [
+                    {
+                        "rank": rank,
+                        "temporal_before": {
+                            "rank": rank,
+                            "current_start_frame": 0,
+                            "fixed_seed": 1140,
+                            "video_guidance_scale": 5.0,
+                            "configured_inference_steps": 16,
+                            "num_frame_per_block": 2,
+                            "action_horizon": 24,
+                            "ip_rank": rank,
+                            "ip_size": 2,
+                        },
+                        "temporal_after": {
+                            "rank": rank,
+                            "current_start_frame": 3,
+                            "fixed_seed": 1140,
+                            "video_guidance_scale": 5.0,
+                            "configured_inference_steps": 16,
+                            "num_frame_per_block": 2,
+                            "action_horizon": 24,
+                            "ip_rank": rank,
+                            "ip_size": 2,
+                        },
+                        "cache_reinitialization": {
+                            "_create_kv_caches": [{"called": True}],
+                            "_create_crossattn_caches": [{"called": True}],
+                        },
+                    }
+                    for rank in (0, 1)
+                ],
             }
         else:
             request_value = {
@@ -751,21 +919,43 @@ class ForecastTimingQualificationTests(unittest.TestCase):
             authority_path = fixture.authority("D1")
             authority = json.loads(authority_path.read_text())
             entry = fixture.development_entry("D1")
-            inventory = write_json(root / "inventory.json", {
+            inventory = write_json(root / "d1_development_request_inventory.json", {
                 "schema_version": timing.REQUEST_INVENTORY_SCHEMA,
                 "study_id": timing.STUDY_ID,
                 "model_id": "D1",
                 "request_receipts": [entry],
             })
+            diagnostic = d1_cache_schedule_diagnostic(
+                root / "cache_schedule_diagnostic.json",
+                inventory_path=inventory,
+                entries=[entry],
+            )
             bound = timing.bind_development_requests(
                 authority_path=authority_path,
                 authority_sha256=timing.sha256_file(authority_path),
                 inventory_path=inventory,
                 inventory_sha256=timing.sha256_file(inventory),
+                d1_cache_schedule_diagnostic_path=diagnostic,
+                d1_cache_schedule_diagnostic_sha256=timing.sha256_file(diagnostic),
             )
-            self.assertEqual(bound["schema_version"], timing.DEVELOPMENT_TIMING_SCHEMA)
+            self.assertEqual(
+                bound["schema_version"], timing.DEVELOPMENT_TIMING_MISSINGNESS_SCHEMA
+            )
             self.assertEqual(len(bound["source_request_receipt_sha256s"]), 1)
             self.assertEqual(bound["binding_mode"], "immutable_request_receipt_native_clock_sidecar")
+            self.assertEqual(
+                bound["request_timing_coverage"],
+                {
+                    "total_request_count": 1,
+                    "source_proven_full_decode_request_count": 1,
+                    "source_unmapped_incremental_decode_request_count": 0,
+                    "native_clock_matched_request_count": 1,
+                    "action_prefix_truncated_request_count": 0,
+                    "native_clock_matched_target_binding_count": 2,
+                    "action_prefix_truncated_target_binding_count": 0,
+                    "unmapped_potential_authority_target_count": 0,
+                },
+            )
             sidecar_path = write_json(root / "timing_sidecar.json", bound)
             timing.validate_development_timing(
                 sidecar_path,
@@ -774,15 +964,14 @@ class ForecastTimingQualificationTests(unittest.TestCase):
                 expected_request_hashes=bound["source_request_receipt_sha256s"],
             )
             request_path = Path(entry["request_receipt"]["path"])
-            validated, validated_path = freeze._validate_generated_timing(
-                {"generated_target_timing_receipt": descriptor(sidecar_path)},
-                model="D1",
-                base=root,
-                request_hashes=[timing.sha256_file(request_path)],
-                request_receipts=[json.loads(request_path.read_text())],
-            )
-            self.assertEqual(validated["binding_mode"], "immutable_request_receipt_native_clock_sidecar")
-            self.assertEqual(validated_path, sidecar_path.resolve())
+            with self.assertRaises(freeze.FreezeError):
+                freeze._validate_generated_timing(
+                    {"generated_target_timing_receipt": descriptor(sidecar_path)},
+                    model="D1",
+                    base=root,
+                    request_hashes=[timing.sha256_file(request_path)],
+                    request_receipts=[json.loads(request_path.read_text())],
+                )
             forged_value = copy.deepcopy(bound)
             forged_value["request_timing_bindings"][0]["target_bindings"][0]["camera_elapsed_s"] += 0.01
             forged_value.pop("payload_sha256")
@@ -805,6 +994,8 @@ class ForecastTimingQualificationTests(unittest.TestCase):
                     authority_sha256=timing.sha256_file(authority_path),
                     inventory_path=wrong_inventory,
                     inventory_sha256=timing.sha256_file(wrong_inventory),
+                    d1_cache_schedule_diagnostic_path=diagnostic,
+                    d1_cache_schedule_diagnostic_sha256=timing.sha256_file(diagnostic),
                 )
             copied_request = root / "same-bytes-other-attempt-request.json"
             copied_request.write_bytes(request_path.read_bytes())
@@ -820,6 +1011,166 @@ class ForecastTimingQualificationTests(unittest.TestCase):
                     authority_sha256=timing.sha256_file(authority_path),
                     inventory_path=substituted_inventory,
                     inventory_sha256=timing.sha256_file(substituted_inventory),
+                    d1_cache_schedule_diagnostic_path=diagnostic,
+                    d1_cache_schedule_diagnostic_sha256=timing.sha256_file(diagnostic),
+                )
+
+    def test_d1_development_decode_schedule_maps_only_full_conditioning_origin(self) -> None:
+        authority = {
+            "generated_targets": [
+                {"generated_frame_index": 1},
+                {"generated_frame_index": 2},
+            ]
+        }
+        full = timing._d1_development_decode_contract(
+            d1_development_decode_request(4),
+            request_index=4,
+            authority=authority,
+            label="full request",
+        )
+        self.assertEqual(full["schedule_kind"], "full_conditioning_origin")
+        self.assertIs(full["source_timing_mapping_applies"], True)
+        self.assertIsNone(full["unmapped_reason"])
+
+        incremental = timing._d1_development_decode_contract(
+            d1_development_decode_request(1),
+            request_index=1,
+            authority=authority,
+            label="incremental request",
+        )
+        self.assertEqual(incremental["schedule_kind"], "incremental_standalone")
+        self.assertEqual(
+            incremental["source_timing_status"],
+            "unmapped_incremental_standalone_decode",
+        )
+        self.assertIs(incremental["source_timing_mapping_applies"], False)
+        self.assertIsInstance(incremental["unmapped_reason"], str)
+
+    def test_d1_development_decode_schedule_rejects_malformed_or_too_short_outputs(self) -> None:
+        authority = {
+            "generated_targets": [
+                {"generated_frame_index": 1},
+                {"generated_frame_index": 2},
+            ]
+        }
+        incoherent = d1_development_decode_request(1)
+        incoherent["offline_decode"]["decoded_tensor"]["shape"][2] = 9
+        with self.assertRaisesRegex(
+            timing.TimingQualificationError, "tensor shape/schedule changed"
+        ):
+            timing._d1_development_decode_contract(
+                incoherent,
+                request_index=1,
+                authority=authority,
+                label="incoherent request",
+            )
+
+        arbitrary = d1_development_decode_request(1)
+        arbitrary["offline_decode"]["decoded_rgb"]["shape"][0] = 7
+        arbitrary["offline_decode"]["decoded_tensor"]["shape"][2] = 7
+        with self.assertRaisesRegex(
+            timing.TimingQualificationError, "RGB shape/schedule changed"
+        ):
+            timing._d1_development_decode_contract(
+                arbitrary,
+                request_index=1,
+                authority=authority,
+                label="arbitrary request",
+            )
+
+        too_short = d1_development_decode_request(1)
+        with self.assertRaisesRegex(
+            timing.TimingQualificationError, "lacks an authority target frame index"
+        ):
+            timing._d1_development_decode_contract(
+                too_short,
+                request_index=1,
+                authority={"generated_targets": [{"generated_frame_index": 5}]},
+                label="too-short request",
+            )
+
+    def test_d1_missingness_coverage_matches_complete_development_schedule(self) -> None:
+        bindings = []
+        for _cell_index in range(16):
+            for request_index in range(57):
+                mapped = request_index % 4 == 0
+                if mapped:
+                    status = (
+                        "not_executed_in_truncated_prefix"
+                        if request_index == 56
+                        else "matched_native_request_clocks"
+                    )
+                    targets = [{"status": status}, {"status": status}]
+                    eligible_count = 0 if request_index == 56 else 2
+                else:
+                    targets = []
+                    eligible_count = 0
+                bindings.append({
+                    "decoded_output_timing": {
+                        "source_timing_mapping_applies": mapped,
+                        "source_timing_status": (
+                            "source_proven_full_conditioning_origin"
+                            if mapped
+                            else "unmapped_incremental_standalone_decode"
+                        ),
+                    },
+                    "target_bindings": targets,
+                    "timing_eligible_target_count": eligible_count,
+                    "eligible_for_timed_target_sampling": eligible_count > 0,
+                })
+        self.assertEqual(
+            timing._d1_request_timing_coverage(bindings, authority_target_count=2),
+            {
+                "total_request_count": 912,
+                "source_proven_full_decode_request_count": 240,
+                "source_unmapped_incremental_decode_request_count": 672,
+                "native_clock_matched_request_count": 224,
+                "action_prefix_truncated_request_count": 16,
+                "native_clock_matched_target_binding_count": 448,
+                "action_prefix_truncated_target_binding_count": 32,
+                "unmapped_potential_authority_target_count": 1344,
+            },
+        )
+
+    def test_d1_v2_validator_identity_survives_fresh_staged_source_prefix(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            fresh = root / "sources" / ("a" * 40) / timing.TOOL_REPOSITORY_RELATIVE
+            fresh.parent.mkdir(parents=True)
+            fresh.write_bytes(MODULE.read_bytes())
+            timing._validate_development_validator_descriptor(
+                descriptor(fresh),
+                base=root,
+                model_id="D1",
+                schema_version=timing.DEVELOPMENT_TIMING_MISSINGNESS_SCHEMA,
+            )
+
+            wrong_suffix = root / "sources" / ("b" * 40) / "wrong" / MODULE.name
+            wrong_suffix.parent.mkdir(parents=True)
+            wrong_suffix.write_bytes(MODULE.read_bytes())
+            with self.assertRaisesRegex(
+                timing.TimingQualificationError, "repository-relative identity"
+            ):
+                timing._validate_development_validator_descriptor(
+                    descriptor(wrong_suffix),
+                    base=root,
+                    model_id="D1",
+                    schema_version=timing.DEVELOPMENT_TIMING_MISSINGNESS_SCHEMA,
+                )
+
+            wrong_bytes = (
+                root / "sources" / ("c" * 40) / timing.TOOL_REPOSITORY_RELATIVE
+            )
+            wrong_bytes.parent.mkdir(parents=True)
+            wrong_bytes.write_bytes(MODULE.read_bytes() + b"\n# changed\n")
+            with self.assertRaisesRegex(
+                timing.TimingQualificationError, "validator identity changed"
+            ):
+                timing._validate_development_validator_descriptor(
+                    descriptor(wrong_bytes),
+                    base=root,
+                    model_id="D1",
+                    schema_version=timing.DEVELOPMENT_TIMING_MISSINGNESS_SCHEMA,
                 )
 
     def test_symlink_and_duplicate_json_are_rejected(self) -> None:

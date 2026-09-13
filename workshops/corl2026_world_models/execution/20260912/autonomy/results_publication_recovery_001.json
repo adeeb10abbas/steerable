@@ -1,0 +1,52 @@
+{
+  "schema_version": "wmf-results-publication-recovery-v1",
+  "recorded_at": "2026-09-13T16:08:56Z",
+  "status": "camera_attempt_002_forward_fenced_pending_fresh_publication",
+  "trigger": {
+    "last_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+    "last_results_commit_at": "2026-09-13T14:40:32Z",
+    "last_published_control_generation": 998,
+    "last_published_claimed_job": "development-resource-compiler-formal-001",
+    "last_published_claim_heartbeat_at": "2026-09-13T14:40:29.959470Z",
+    "control_commit_before_recovery": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+    "unseen_released_job": "camera-crop-replay-witness-002",
+    "unseen_job_source_commit": "93993dae1902ba561b594b9ae0849bd45b37ecc2"
+  },
+  "bounded_diagnosis": {
+    "confirmed": [
+      "the workstation can read both GitHub branches",
+      "the control branch contains the camera attempt 002 release",
+      "the results branch has not published a newer coordinator snapshot",
+      "the last published resource attempt has a unique claim"
+    ],
+    "not_confirmed": [
+      "whether camera attempt 002 was staged or claimed on the PVC",
+      "whether either outstanding child is still running or terminal",
+      "whether the coordinator is stopped, retrying a Git error, or blocked on PVC work"
+    ],
+    "code_path_observation": "coordinator staging precedes every results snapshot; camera attempt 002 is the only active descriptor whose source was absent from the last published snapshot"
+  },
+  "recovery_action": {
+    "kind": "forward_fence_only",
+    "removed_from_active_manifest": [
+      "camera-crop-replay-witness-002"
+    ],
+    "preserved_in_active_manifest": [
+      "development-resource-compiler-formal-001"
+    ],
+    "descriptor_and_any_existing_claim_remain_immutable_on_pvc": true,
+    "claimed_child_is_not_terminated_by_active_manifest_removal": true,
+    "automatic_claim_recovery": false,
+    "duplicate_job_released": false,
+    "rerelease_allowed_before_fresh_reconciliation": false
+  },
+  "science_counts": {
+    "model_requests": 0,
+    "behavioral_actions": 0,
+    "robot_episodes": 0,
+    "behavioral_cells": 0,
+    "labels": 0,
+    "confirmation_cells": 0
+  },
+  "safe_to_release_confirmation": false
+}

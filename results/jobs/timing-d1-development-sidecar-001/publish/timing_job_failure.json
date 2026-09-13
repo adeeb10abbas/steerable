@@ -1,0 +1,41 @@
+{
+  "behavioral_policy_skill_evaluated": false,
+  "claim_boundary": "Failed CPU-side evidence validation only; no model, simulator, reset, request, action, episode, or behavioral cell was started.",
+  "completed_at_utc": "2026-09-13T11:38:06.191833Z",
+  "decision": "no_go",
+  "failure": {
+    "detail": "development request 1 D1 decoded frame count changed",
+    "error_type": "TimingQualificationError",
+    "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/bde0f55bf0516cbc9d07a2e5e26d33a851c77c6e/workshops/corl2026_world_models/experiments/forecast_layout/development_timing_sidecar_jobs.py\", line 956, in run_sidecar_job\n    sidecar = timing.bind_development_requests(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/bde0f55bf0516cbc9d07a2e5e26d33a851c77c6e/workshops/corl2026_world_models/analysis/qualify_forecast_timing.py\", line 1944, in bind_development_requests\n    bindings = [\n               ^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/bde0f55bf0516cbc9d07a2e5e26d33a851c77c6e/workshops/corl2026_world_models/analysis/qualify_forecast_timing.py\", line 1945, in <listcomp>\n    _development_request_binding(\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/bde0f55bf0516cbc9d07a2e5e26d33a851c77c6e/workshops/corl2026_world_models/analysis/qualify_forecast_timing.py\", line 1768, in _development_request_binding\n    require(isinstance(decoded, Mapping) and decoded.get(\"performed\") is True\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/bde0f55bf0516cbc9d07a2e5e26d33a851c77c6e/workshops/corl2026_world_models/analysis/qualify_forecast_timing.py\", line 115, in require\n    raise TimingQualificationError(message)\nwmf_development_timing_d1_timing_d1_development_sidecar_001.TimingQualificationError: development request 1 D1 decoded frame count changed\n"
+  },
+  "job_id": "timing-d1-development-sidecar-001",
+  "model_id": "D1",
+  "namespace": "wmf_ablation_001_20260912",
+  "payload_sha256": "52e1a11773ab651f64534789a4bfb0c0c42748320501821a43cbce1566f192b6",
+  "physical_time_qualified": false,
+  "queue_claim": {
+    "bytes": 409,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-d1-development-sidecar-001/claim/owner.json",
+    "sha256": "ca5561d6990177653eca01d4ec3752efc3b6ad1435ed97e5d56f2a6c09eaeb61"
+  },
+  "queue_descriptor": {
+    "bytes": 2846,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-d1-development-sidecar-001/descriptor.json",
+    "sha256": "02c300bd34ff4ab15a0699adf60a1c0e8862cd75304100cd1a867101b7682600"
+  },
+  "queue_role": "wmf-forecast-0912-worker-09",
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-development-timing-sidecar-queue-job-v1",
+  "science_counts": {
+    "behavioral_actions_executed_by_job": 0,
+    "behavioral_cells_launched_by_job": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0
+  },
+  "status": "technical_invalid",
+  "study_commit": "bde0f55bf0516cbc9d07a2e5e26d33a851c77c6e",
+  "study_id": "WMF-ABLATION-001"
+}

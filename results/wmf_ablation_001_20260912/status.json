@@ -42,11 +42,12 @@
       "fixture-p00-candidate-00-r4",
       "fixture-p00-candidate-00-r5",
       "fixture-p00-candidate-01",
-      "fixture-p00-candidate-01-r2"
+      "fixture-p00-candidate-01-r2",
+      "fixed-observation-p00-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "87acc3e75ac47b4cfb6f50fdc267b2a800bdc3a8",
-    "control_generation": 140,
+    "control_commit": "71d842ddad581f38aecbb9880df862e8cd281b77",
+    "control_generation": 141,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -485,6 +486,12 @@
       "status": "staged"
     },
     {
+      "descriptor_sha256": "0340da03131f298d7d6ec59133dcf208646569de2eee621f8424fdd0e08f23a5",
+      "job_id": "fixed-observation-p00-001",
+      "source_commit": "ce5ad4282d2392245f843d5270a9656d4e99f842",
+      "status": "staged"
+    },
+    {
       "child_pid": 105,
       "child_reaped": true,
       "descriptor_sha256": "ccd46bcf13bfdca6fc149948d347876972ae245a09a60e96aa976971677e0cbc",
@@ -641,17 +648,29 @@
       "worker_id": "wmf-forecast-0912-worker-01"
     },
     {
+      "child_pid": 2571,
+      "child_reaped": true,
       "descriptor_sha256": "58650cb96e494f0c0bbb9cc2077199bd8b22c43c440b1b915cbdfdf93996906b",
-      "heartbeat": {
-        "at": "2026-09-13T03:29:37.420598+00:00",
-        "child_pid": 2571,
-        "unix": 1789270177.4206371,
-        "worker_id": "wmf-forecast-0912-worker-01",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T03:30:39.687885+00:00",
+      "error_type": null,
       "job_id": "fixture-p00-candidate-01-r2",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"decision\": \"accepted\", \"exit_code\": 0, \"idempotent_replay\": false, \"job_id\": \"fixture-p00-candidate-01-r2\", \"layout_pair_id\": \"P00\", \"published\": true}\n"
+      },
+      "returncode": 0,
       "source_commit": "ce5ad4282d2392245f843d5270a9656d4e99f842",
-      "status": "claimed",
+      "started_at": "2026-09-13T03:26:41.936443+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 154,
+        "sha256": "1de468f7ac43209bf42e32e64a9197bf0852c254bd42ae090b420026f16b3ec2"
+      },
+      "wall_seconds": 237.7515842290013,
       "worker_id": "wmf-forecast-0912-worker-01"
     },
     {

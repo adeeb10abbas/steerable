@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import hashlib
 import importlib.util
 import json
@@ -167,10 +168,14 @@ def write_capture_manifest(root: Path, fixture: Path) -> Path:
 
 
 def topology_receipt() -> dict:
+    gpu_uuids = [
+        "GPU-00000000-0000-0000-0000-000000000001",
+        "GPU-00000000-0000-0000-0000-000000000002",
+    ]
     devices = [
         {
             "index": str(index),
-            "uuid": f"GPU-test-{index}",
+            "uuid": gpu_uuids[index],
             "name": "NVIDIA B200",
             "driver_version": "580.95.05",
             "memory.total": "183359",
@@ -184,7 +189,7 @@ def topology_receipt() -> dict:
         "devices": [
             {
                 "logical_index": index,
-                "uuid": f"GPU-test-{index}",
+                "uuid": gpu_uuids[index],
                 "name": "NVIDIA B200",
                 "total_memory_bytes": 192000000000,
             }
@@ -195,7 +200,7 @@ def topology_receipt() -> dict:
         nvidia_devices=devices,
         compute_processes=[],
         torch_receipt=torch,
-        visible_devices="GPU-test-0,GPU-test-1",
+        visible_devices=",".join(gpu_uuids),
     )
 
 
@@ -326,8 +331,21 @@ class D1QualificationJobTests(unittest.TestCase):
                 nvidia_devices=devices,
                 compute_processes=[{"pid": "12"}],
                 torch_receipt=torch,
-                visible_devices="GPU-test-0,GPU-test-1",
+                visible_devices=",".join(row["uuid"] for row in devices),
             )
+        torch_without_prefix = copy.deepcopy(torch)
+        for row in torch_without_prefix["devices"]:
+            row["uuid"] = row["uuid"].removeprefix("GPU-")
+        normalized = JOB.reconcile_topology(
+            nvidia_devices=devices,
+            compute_processes=[],
+            torch_receipt=torch_without_prefix,
+            visible_devices=",".join(row["uuid"] for row in devices),
+        )
+        self.assertEqual(
+            normalized["normalized_gpu_uuids"]["torch"],
+            normalized["normalized_gpu_uuids"]["nvidia_smi"],
+        )
 
     def test_commands_pin_torchrun_two_ranks_official_server_and_six_request_probe(self) -> None:
         runtime = JOB.RuntimePaths(
@@ -443,7 +461,7 @@ class D1QualificationJobTests(unittest.TestCase):
                         "hostname": "one-node",
                         "cuda_device_index": index,
                         "cuda_device_name": "NVIDIA B200",
-                        "cuda_device_uuid": f"GPU-test-{index}",
+                        "cuda_device_uuid": topology["torch_devices"][index]["uuid"].removeprefix("GPU-"),
                     }
                     for index in range(2)
                 ],

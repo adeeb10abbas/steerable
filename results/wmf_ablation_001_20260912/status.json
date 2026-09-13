@@ -3,15 +3,15 @@
   "control": {
     "active_job_ids": [
       "post-d03-worker00-diagnostic-001",
-      "post-d03-d1-diagnostic-001",
+      "post-d03-d1-role-diagnostic-001",
       "timing-worker05-diagnostic-001",
       "timing-worker06-diagnostic-001",
       "timing-worker09-diagnostic-001",
-      "timing-n3-diagnostic-001"
+      "timing-n3-role-diagnostic-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "dbfe68ffec13c97a2f512bcf4e846ee79846cb59",
-    "control_generation": 523,
+    "control_commit": "ef1d6b59bd3ad8849d855c723ba0a40091e3047b",
+    "control_generation": 524,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -3814,6 +3814,12 @@
       "status": "staged"
     },
     {
+      "descriptor_sha256": "824d4287fec224f9fa8e435f6c5efebcc04d16ec2640bd50c633146d71facc01",
+      "job_id": "post-d03-d1-role-diagnostic-001",
+      "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
+      "status": "staged"
+    },
+    {
       "child_pid": 8708,
       "child_reaped": true,
       "descriptor_sha256": "5ef14d4781af638b70698d8e1ef56abcdd349972bf8e1191425a3aed5e6e97ea",
@@ -3920,6 +3926,12 @@
     {
       "descriptor_sha256": "d9342188119985a0ed143d7f714105eaa95589491180ba2252b06407245ca12f",
       "job_id": "timing-n3-diagnostic-001",
+      "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "af0ecf19af14daca946d01ff6c999c2a5c099f81c895501d192c6428bc19dbb9",
+      "job_id": "timing-n3-role-diagnostic-001",
       "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
       "status": "staged"
     },

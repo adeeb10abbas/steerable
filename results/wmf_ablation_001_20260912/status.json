@@ -46,11 +46,16 @@
       "fixed-observation-p00-001",
       "d1-first-live-001",
       "recorder-qualification-p00-001",
-      "d1-first-live-002"
+      "d1-first-live-002",
+      "recorder-qualification-p00-002",
+      "fixture-d01-candidate-00",
+      "fixture-d02-candidate-00",
+      "fixture-d03-candidate-00",
+      "fixture-d04-candidate-00"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "b10cb566dd6077d411da0d4adca4a85fa51673e5",
-    "control_generation": 156,
+    "control_commit": "55913e9b17fd6ed5f9f5a028cc8a44570c0f696c",
+    "control_generation": 157,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -567,6 +572,30 @@
       "worker_id": "wmf-forecast-0912-worker-01"
     },
     {
+      "descriptor_sha256": "504e9d972bcb5ad61f466d4469874c864f0a562c2b82d9d661cf588de7932792",
+      "job_id": "fixture-d01-candidate-00",
+      "source_commit": "133578ff3f76cd17e416b392664e3107f30846ba",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "61c115bb636e04b07df095d1625af7575a5c11a042e6f4f10d86b014b5b83a90",
+      "job_id": "fixture-d02-candidate-00",
+      "source_commit": "133578ff3f76cd17e416b392664e3107f30846ba",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "013a4dcd29fd4d83ca9a23c036cc5a358c3da179e2c2e65fa7d2ac80dcad1015",
+      "job_id": "fixture-d03-candidate-00",
+      "source_commit": "133578ff3f76cd17e416b392664e3107f30846ba",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "fcc3453ecb5b15332ee4e6646b03ba33b4a850a8af850052e318c1f8a1857a61",
+      "job_id": "fixture-d04-candidate-00",
+      "source_commit": "133578ff3f76cd17e416b392664e3107f30846ba",
+      "status": "staged"
+    },
+    {
       "child_pid": 105,
       "child_reaped": true,
       "descriptor_sha256": "ccd46bcf13bfdca6fc149948d347876972ae245a09a60e96aa976971677e0cbc",
@@ -825,6 +854,12 @@
       },
       "wall_seconds": 54.507117336965166,
       "worker_id": "wmf-forecast-0912-worker-01"
+    },
+    {
+      "descriptor_sha256": "33f60b7c21121aab99e466836b064ba7ef487c5d3487a61396a492345560f8da",
+      "job_id": "recorder-qualification-p00-002",
+      "source_commit": "133578ff3f76cd17e416b392664e3107f30846ba",
+      "status": "staged"
     }
   ],
   "maximum_combined_log_tail_bytes_per_job": 8192,

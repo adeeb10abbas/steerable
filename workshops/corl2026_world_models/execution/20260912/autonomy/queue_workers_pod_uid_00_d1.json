@@ -1,0 +1,533 @@
+{
+  "apiVersion": "v1",
+  "items": [
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "annotations": {
+          "wmf-bootstrap-sha256": "c9fe3d2da0b889eae2bb6cff4c8c149583e4293b366840134e14dcb07a18ba22",
+          "wmf-device-visibility": "kubernetes-device-plugin-injected",
+          "wmf-pod-uid-source": "downward-api-metadata.uid"
+        },
+        "labels": {
+          "app.kubernetes.io/name": "wmf-forecast-queue",
+          "app.kubernetes.io/part-of": "wmf_ablation_001_20260912",
+          "user": "ali",
+          "wmf-role": "worker"
+        },
+        "name": "wmf-forecast-0912-worker-00",
+        "namespace": "211247-prod"
+      },
+      "spec": {
+        "activeDeadlineSeconds": 777900,
+        "backoffLimit": 3,
+        "completions": 1,
+        "parallelism": 1,
+        "template": {
+          "metadata": {
+            "annotations": {
+              "wmf-bootstrap-sha256": "c9fe3d2da0b889eae2bb6cff4c8c149583e4293b366840134e14dcb07a18ba22",
+              "wmf-device-visibility": "kubernetes-device-plugin-injected",
+              "wmf-pod-uid-source": "downward-api-metadata.uid"
+            },
+            "labels": {
+              "app.kubernetes.io/name": "wmf-forecast-queue",
+              "app.kubernetes.io/part-of": "wmf_ablation_001_20260912",
+              "user": "ali",
+              "wmf-role": "worker"
+            }
+          },
+          "spec": {
+            "automountServiceAccountToken": false,
+            "containers": [
+              {
+                "args": [
+                  "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/bootstrap/cluster_queue.py",
+                  "c9fe3d2da0b889eae2bb6cff4c8c149583e4293b366840134e14dcb07a18ba22",
+                  "worker",
+                  "--repo",
+                  "/data/users/ali/vla_wam/src/wmf_ablation_001_20260912",
+                  "--state-dir",
+                  "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control",
+                  "--max-wall-seconds",
+                  "604800",
+                  "--poll-seconds",
+                  "30",
+                  "--admission-deadline-unix",
+                  "1789868932",
+                  "--worker-id",
+                  "wmf-forecast-0912-worker-00",
+                  "--role",
+                  "wmf-forecast-0912-worker-00"
+                ],
+                "command": [
+                  "/usr/bin/python3",
+                  "-c",
+                  "import hashlib, os, sys\npath, expected = sys.argv[1:3]\nwith open(path, \"rb\") as stream:\n    actual = hashlib.sha256(stream.read()).hexdigest()\nif actual != expected:\n    raise SystemExit(\"bootstrap digest mismatch; no queue code executed\")\nos.execv(sys.executable, [sys.executable, path, *sys.argv[3:]])\n"
+                ],
+                "env": [
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "XDG_CACHE_HOME",
+                    "value": "/home/ali/.cache"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "PYTHONUNBUFFERED",
+                    "value": "1"
+                  },
+                  {
+                    "name": "GIT_TERMINAL_PROMPT",
+                    "value": "0"
+                  },
+                  {
+                    "name": "GCM_INTERACTIVE",
+                    "value": "never"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display,video"
+                  },
+                  {
+                    "name": "CUDA_DEVICE_ORDER",
+                    "value": "PCI_BUS_ID"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "VK_DRIVER_FILES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/jsalfity/glvnd/lib"
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  }
+                ],
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "worker",
+                "resources": {
+                  "limits": {
+                    "cpu": "48",
+                    "memory": "256Gi",
+                    "nvidia.com/gpu": 1
+                  },
+                  "requests": {
+                    "cpu": "24",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": 1
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "readOnlyRootFilesystem": false,
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "mountPath": "/data",
+                    "name": "workspace"
+                  },
+                  {
+                    "mountPath": "/dev/shm",
+                    "name": "dshm"
+                  },
+                  {
+                    "mountPath": "/tmp",
+                    "name": "tmp"
+                  },
+                  {
+                    "mountPath": "/var/tmp",
+                    "name": "vartmp"
+                  },
+                  {
+                    "mountPath": "/home/ali",
+                    "name": "home"
+                  },
+                  {
+                    "mountPath": "/etc/passwd",
+                    "name": "userdb",
+                    "readOnly": true,
+                    "subPath": "passwd"
+                  },
+                  {
+                    "mountPath": "/etc/group",
+                    "name": "userdb",
+                    "readOnly": true,
+                    "subPath": "group"
+                  }
+                ],
+                "workingDir": "/home/ali"
+              }
+            ],
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "nodeSelector": {
+              "node-role.kubernetes.io/worker-gpu": "",
+              "nvidia.com/gpu.product": "NVIDIA-B200"
+            },
+            "restartPolicy": "OnFailure",
+            "securityContext": {
+              "fsGroup": 2518800,
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              },
+              "supplementalGroups": [
+                2518800
+              ]
+            },
+            "terminationGracePeriodSeconds": 120,
+            "tolerations": [
+              {
+                "effect": "NoSchedule",
+                "key": "nvidia.com/gpu",
+                "operator": "Equal",
+                "value": "present"
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "emptyDir": {
+                  "medium": "Memory"
+                },
+                "name": "dshm"
+              },
+              {
+                "emptyDir": {},
+                "name": "tmp"
+              },
+              {
+                "emptyDir": {},
+                "name": "vartmp"
+              },
+              {
+                "emptyDir": {},
+                "name": "home"
+              },
+              {
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                },
+                "name": "userdb"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "annotations": {
+          "wmf-bootstrap-sha256": "c9fe3d2da0b889eae2bb6cff4c8c149583e4293b366840134e14dcb07a18ba22",
+          "wmf-pod-uid-source": "downward-api-metadata.uid"
+        },
+        "labels": {
+          "app.kubernetes.io/name": "wmf-forecast-queue",
+          "app.kubernetes.io/part-of": "wmf_ablation_001_20260912",
+          "user": "ali",
+          "wmf-role": "d1"
+        },
+        "name": "wmf-forecast-0912-worker-d1-00",
+        "namespace": "211247-prod"
+      },
+      "spec": {
+        "activeDeadlineSeconds": 777900,
+        "backoffLimit": 3,
+        "completions": 1,
+        "parallelism": 1,
+        "template": {
+          "metadata": {
+            "annotations": {
+              "wmf-bootstrap-sha256": "c9fe3d2da0b889eae2bb6cff4c8c149583e4293b366840134e14dcb07a18ba22",
+              "wmf-pod-uid-source": "downward-api-metadata.uid"
+            },
+            "labels": {
+              "app.kubernetes.io/name": "wmf-forecast-queue",
+              "app.kubernetes.io/part-of": "wmf_ablation_001_20260912",
+              "user": "ali",
+              "wmf-role": "d1"
+            }
+          },
+          "spec": {
+            "automountServiceAccountToken": false,
+            "containers": [
+              {
+                "args": [
+                  "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/bootstrap/cluster_queue.py",
+                  "c9fe3d2da0b889eae2bb6cff4c8c149583e4293b366840134e14dcb07a18ba22",
+                  "worker",
+                  "--repo",
+                  "/data/users/ali/vla_wam/src/wmf_ablation_001_20260912",
+                  "--state-dir",
+                  "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control",
+                  "--max-wall-seconds",
+                  "604800",
+                  "--poll-seconds",
+                  "30",
+                  "--admission-deadline-unix",
+                  "1789868932",
+                  "--worker-id",
+                  "wmf-forecast-0912-worker-d1-00",
+                  "--role",
+                  "d1"
+                ],
+                "command": [
+                  "/usr/bin/python3",
+                  "-c",
+                  "import hashlib, os, sys\npath, expected = sys.argv[1:3]\nwith open(path, \"rb\") as stream:\n    actual = hashlib.sha256(stream.read()).hexdigest()\nif actual != expected:\n    raise SystemExit(\"bootstrap digest mismatch; no queue code executed\")\nos.execv(sys.executable, [sys.executable, path, *sys.argv[3:]])\n"
+                ],
+                "env": [
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "XDG_CACHE_HOME",
+                    "value": "/home/ali/.cache"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "PYTHONUNBUFFERED",
+                    "value": "1"
+                  },
+                  {
+                    "name": "GIT_TERMINAL_PROMPT",
+                    "value": "0"
+                  },
+                  {
+                    "name": "GCM_INTERACTIVE",
+                    "value": "never"
+                  },
+                  {
+                    "name": "NVIDIA_VISIBLE_DEVICES",
+                    "value": "all"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display,video"
+                  },
+                  {
+                    "name": "CUDA_DEVICE_ORDER",
+                    "value": "PCI_BUS_ID"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "VK_DRIVER_FILES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/jsalfity/glvnd/lib"
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  }
+                ],
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "worker",
+                "ports": [
+                  {
+                    "containerPort": 18021,
+                    "name": "d1-policy",
+                    "protocol": "TCP"
+                  }
+                ],
+                "resources": {
+                  "limits": {
+                    "cpu": "80",
+                    "memory": "512Gi",
+                    "nvidia.com/gpu": 2
+                  },
+                  "requests": {
+                    "cpu": "48",
+                    "memory": "256Gi",
+                    "nvidia.com/gpu": 2
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "readOnlyRootFilesystem": false,
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "mountPath": "/data",
+                    "name": "workspace"
+                  },
+                  {
+                    "mountPath": "/dev/shm",
+                    "name": "dshm"
+                  },
+                  {
+                    "mountPath": "/tmp",
+                    "name": "tmp"
+                  },
+                  {
+                    "mountPath": "/var/tmp",
+                    "name": "vartmp"
+                  },
+                  {
+                    "mountPath": "/home/ali",
+                    "name": "home"
+                  },
+                  {
+                    "mountPath": "/etc/passwd",
+                    "name": "userdb",
+                    "readOnly": true,
+                    "subPath": "passwd"
+                  },
+                  {
+                    "mountPath": "/etc/group",
+                    "name": "userdb",
+                    "readOnly": true,
+                    "subPath": "group"
+                  }
+                ],
+                "workingDir": "/home/ali"
+              }
+            ],
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "nodeSelector": {
+              "node-role.kubernetes.io/worker-gpu": "",
+              "nvidia.com/gpu.product": "NVIDIA-B200"
+            },
+            "restartPolicy": "OnFailure",
+            "securityContext": {
+              "fsGroup": 2518800,
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              },
+              "supplementalGroups": [
+                2518800
+              ]
+            },
+            "terminationGracePeriodSeconds": 120,
+            "tolerations": [
+              {
+                "effect": "NoSchedule",
+                "key": "nvidia.com/gpu",
+                "operator": "Equal",
+                "value": "present"
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "emptyDir": {
+                  "medium": "Memory"
+                },
+                "name": "dshm"
+              },
+              {
+                "emptyDir": {},
+                "name": "tmp"
+              },
+              {
+                "emptyDir": {},
+                "name": "vartmp"
+              },
+              {
+                "emptyDir": {},
+                "name": "home"
+              },
+              {
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                },
+                "name": "userdb"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "kind": "List"
+}

@@ -1,0 +1,75 @@
+{
+  "array_identities": {
+    "observation/gripper_position": {
+      "archive_key": "gripper_position",
+      "dtype": "<f4",
+      "kind": "numpy",
+      "shape": [
+        1
+      ],
+      "value_sha256": "090b07f76279bc257e9d1be41e5eb9868dec3205741221f29de0a6a47380d3a4"
+    },
+    "observation/image": {
+      "archive_key": "image",
+      "dtype": "|u1",
+      "kind": "numpy",
+      "shape": [
+        540,
+        640,
+        3
+      ],
+      "value_sha256": "e9ed5d7e547f8cb0e24b0b7850af18c497b4d4f3357fa58cdd2c21a7a3211e9d"
+    },
+    "observation/joint_position": {
+      "archive_key": "joint_position",
+      "dtype": "<f4",
+      "kind": "numpy",
+      "shape": [
+        7
+      ],
+      "value_sha256": "f23a4da72d1c8c0eb99e1304f718eb1d91dbd54e602fb0b60301dd92f8a7319d"
+    }
+  },
+  "capture_receipt": {
+    "bytes": 3682,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/qualification_inputs/n3_historical_packed_5100/capture_receipt.json",
+    "sha256": "ef87e7544da13e268d592d2e5bcc2743a4e45f7c8967db6edc6b0ab79179ee84"
+  },
+  "is_H01_seed9400_observation": false,
+  "manifest": {
+    "bytes": 2520,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/qualification_inputs/n3_historical_packed_5100/observation_manifest.json",
+    "sha256": "a2907abb9cb6530d6281a357b246174c3703668b568cada1cc87076f312652b2"
+  },
+  "model_requests_executed_by_preparer": 0,
+  "payload": {
+    "bytes": 1037620,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/qualification_inputs/n3_historical_packed_5100/observation.npz",
+    "sha256": "d4be657562e286e37278228c2497a11e2bf9d9dba87061cd7d5b9ca343a8358b"
+  },
+  "physical_time_mapping_qualified": false,
+  "runner_loader_validation": "pending parent correction to official three-field Nano wire contract and explicit historical unavailable timing",
+  "schema_version": "wmf-n3-archived-observation-preparation-v1",
+  "source_artifacts": {
+    "conditioning.png": {
+      "bytes": 577323,
+      "path": "/data/users/ali/vla_wam/raw/cosmos_v2/fixed_observation_gate/conditioning.png",
+      "sha256": "2a431b0fa288890b3509b314c0351c91123d5f64b237678fed972848e29cd55b"
+    },
+    "source_plan.json": {
+      "bytes": 5336,
+      "path": "/data/users/ali/vla_wam/raw/cosmos_v2/fixed_observation_gate/source_plan.json",
+      "sha256": "c5025b51f57224308d16338db38ab57b06e7025ba9e585a05993e01a79952fc3"
+    }
+  },
+  "status": "prepared_and_payload_validated",
+  "wire_observation_sha256": "af9c03ffa66df52875d7cac58dec60678b853b520941dbf6e90e26f7d0703ad5",
+  "preparer_process_exit_code": 0,
+  "validation_performed": [
+    "Historical PNG and source-plan SHA-256 match pinned evidence.",
+    "Decoded uint8 RGB bytes match pinned raw RGB SHA-256.",
+    "Packed image shape is [540,640,3], recorded joint shape [7] and gripper shape [1].",
+    "All values finite; saved NPZ round-trips without dtype or value changes.",
+    "All generated artifact descriptors contain actual byte lengths and SHA-256 hashes."
+  ]
+}

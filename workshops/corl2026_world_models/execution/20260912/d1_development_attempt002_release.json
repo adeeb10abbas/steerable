@@ -1,0 +1,124 @@
+{
+  "schema_version": "wmf-d1-development-attempt002-release-v1",
+  "study_id": "WMF-ABLATION-001",
+  "namespace": "wmf_ablation_001_20260912",
+  "created_at_utc": "2026-09-13T08:44:13Z",
+  "decision": "release_d1_development_attempt002",
+  "runtime_source_commit": "64e84d1f7634e2a7fbaaf0e1ffd05bf021614517",
+  "preflight_results_branch_commit": "6624cd0a2f6205bbafd032ef95ac328a69e7f30f",
+  "release_scope": {
+    "phase": "development",
+    "model_config": "D1",
+    "layout_pair_ids": [
+      "D01",
+      "D02",
+      "D03",
+      "D04"
+    ],
+    "condition_cells_per_layout_pair": 4,
+    "maximum_behavioral_cells": 16,
+    "confirmation_inference_authorized": false
+  },
+  "prerequisite_preflights": [
+    {
+      "layout_pair_id": "D01",
+      "job_id": "d1-development-d01-prerequisite-preflight-002",
+      "receipt_results_path": "results/jobs/d1-development-d01-prerequisite-preflight-002/publish/d1_development_prerequisite_preflight_receipt.json",
+      "receipt_sha256": "9da254c289e8aa1dbd340ab37ba52b32a76fd98503681fb0dcff6ac24b8a1ab3",
+      "queue_result_status": "succeeded",
+      "queue_returncode": 0,
+      "child_reaped": true,
+      "receipt_status": "passed",
+      "receipt_decision": "go",
+      "safe_to_release_behavioral_pair": true
+    },
+    {
+      "layout_pair_id": "D02",
+      "job_id": "d1-development-d02-prerequisite-preflight-001",
+      "receipt_results_path": "results/jobs/d1-development-d02-prerequisite-preflight-001/publish/d1_development_prerequisite_preflight_receipt.json",
+      "receipt_sha256": "418365e8376bc29cd0afbda4b53361d829b7c5e0c685b48a480a1f1f15abe39f",
+      "queue_result_status": "succeeded",
+      "queue_returncode": 0,
+      "child_reaped": true,
+      "receipt_status": "passed",
+      "receipt_decision": "go",
+      "safe_to_release_behavioral_pair": true
+    },
+    {
+      "layout_pair_id": "D03",
+      "job_id": "d1-development-d03-prerequisite-preflight-001",
+      "receipt_results_path": "results/jobs/d1-development-d03-prerequisite-preflight-001/publish/d1_development_prerequisite_preflight_receipt.json",
+      "receipt_sha256": "106f7b4eb3f774aaf759110c058dbdca74630f19b415b268fdd045934e621325",
+      "queue_result_status": "succeeded",
+      "queue_returncode": 0,
+      "child_reaped": true,
+      "receipt_status": "passed",
+      "receipt_decision": "go",
+      "safe_to_release_behavioral_pair": true
+    },
+    {
+      "layout_pair_id": "D04",
+      "job_id": "d1-development-d04-prerequisite-preflight-001",
+      "receipt_results_path": "results/jobs/d1-development-d04-prerequisite-preflight-001/publish/d1_development_prerequisite_preflight_receipt.json",
+      "receipt_sha256": "6a51fa6abfa0c1ee1e534aa36fa3429e8c0fcd3077eb68770c6f72400df845a6",
+      "queue_result_status": "succeeded",
+      "queue_returncode": 0,
+      "child_reaped": true,
+      "receipt_status": "passed",
+      "receipt_decision": "go",
+      "safe_to_release_behavioral_pair": true
+    }
+  ],
+  "attempt002_pairs": [
+    {
+      "layout_pair_id": "D01",
+      "run_id": "d1-development-d01-002",
+      "server_job_id": "d1-development-d01-server-002",
+      "server_descriptor_sha256": "8500c2d292729fea40bd1d5745333bb432909d685feae812ac02accc500a1434",
+      "simulator_job_id": "d1-development-d01-simulator-002",
+      "simulator_descriptor_sha256": "c3aceacc7e56572a1223e009d09cc6c5e953ec9a96c7c3a38280e146966a8c3e",
+      "capture_wrapper_receipt": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixed-observation-d01-001/publish/fixed_observation_job_receipt.json",
+      "capture_wrapper_receipt_sha256": "8531d11584a36f2326074b287e42394a1f9cf3b04fd1016855f472152b547077"
+    },
+    {
+      "layout_pair_id": "D02",
+      "run_id": "d1-development-d02-002",
+      "server_job_id": "d1-development-d02-server-002",
+      "server_descriptor_sha256": "7f9081ce17b8e8dc3cc4bcce3945c84e2d53437b98fb9abe8f895d6da7906e74",
+      "simulator_job_id": "d1-development-d02-simulator-002",
+      "simulator_descriptor_sha256": "23469894af5b1123efb87dbfc651afb35c274bb692a04ba6450eec4ae99fd380",
+      "capture_wrapper_receipt": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixed-observation-d02-001/publish/fixed_observation_job_receipt.json",
+      "capture_wrapper_receipt_sha256": "a700280562d3640349fe8ec5a2594decf4a7b2b9f30450c9e9af55420bb907ac"
+    },
+    {
+      "layout_pair_id": "D03",
+      "run_id": "d1-development-d03-002",
+      "server_job_id": "d1-development-d03-server-002",
+      "server_descriptor_sha256": "851e139ab3002fd7ee386e13179c4f4384155693f8b4e26890f7dbc351d368d7",
+      "simulator_job_id": "d1-development-d03-simulator-002",
+      "simulator_descriptor_sha256": "deeacda4c09b490b0d9aad8d1bff71825308e6e0c0aa316f6da7208959c64d66",
+      "capture_wrapper_receipt": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixed-observation-d03-001/publish/fixed_observation_job_receipt.json",
+      "capture_wrapper_receipt_sha256": "728416e0c31bfacb5cb36dc46c82370d2e157e508c4c6349ea934ac4bee99a29"
+    },
+    {
+      "layout_pair_id": "D04",
+      "run_id": "d1-development-d04-002",
+      "server_job_id": "d1-development-d04-server-002",
+      "server_descriptor_sha256": "24789ab48609be3d7023351c4878c778677b9a1d5e155a45f152cba44905929a",
+      "simulator_job_id": "d1-development-d04-simulator-002",
+      "simulator_descriptor_sha256": "2bb3160b6a7ad684ade23d1c8a6861a17c449b03c5c7b598c4b34e1a05f06e5d",
+      "capture_wrapper_receipt": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/fixed-observation-d04-001/publish/fixed_observation_job_receipt.json",
+      "capture_wrapper_receipt_sha256": "f943e9fa2a968bc34fea9ed7cc0cbc4508f86f1a28071a82972863dc602807bc"
+    }
+  ],
+  "preflight_science_counts": {
+    "model_server_starts": 0,
+    "simulator_process_starts": 0,
+    "physical_resets": 0,
+    "model_requests": 0,
+    "behavioral_actions": 0,
+    "behavioral_cells": 0
+  },
+  "binding_boundary": "The runtime CLI has no preflight-receipt option. This release record binds the four published preflight receipts to the eight immutable queue descriptors; each runtime independently revalidates the same hash-pinned gate, pose, enclosing capture wrapper, recorder, D1 qualification and P00 pilot evidence before model or simulator start.",
+  "prior_attempt_boundary": "Attempt001 server/simulator IDs and failures remain immutable and are not reused. Interrupted D01 prerequisite-preflight-001 remains immutable and is not a passed prerequisite."
+}

@@ -5,7 +5,9 @@ The coordinator is CPU-only. Each of the 32 isolated B200 workers uses the
 primary pod's verified 24 CPU/128Gi request and 48 CPU/256Gi limit. Keeping this
 headroom avoids an unmeasured reduction in simulator/model capacity. Scheduler
 admission, cross-pod NFS flock and an empty initial queue must be verified before
-any job is released. A generated manifest is not scientific qualification.
+any job is released. Controllers admit work for seven days and retain up to
+48 additional hours for an already-started job to drain. A generated manifest
+is not scientific qualification.
 """
 from __future__ import annotations
 import argparse
@@ -57,7 +59,8 @@ def build_manifest(bootstrap_sha256, worker_count=32):
         if role=='worker':environment.update({'NVIDIA_VISIBLE_DEVICES':'all',
             'NVIDIA_DRIVER_CAPABILITIES':'compute,utility,graphics,display,video',
             'CUDA_DEVICE_ORDER':'PCI_BUS_ID','VK_ICD_FILENAMES':'/etc/vulkan/icd.d/nvidia_icd.json',
-            'VK_DRIVER_FILES':'/etc/vulkan/icd.d/nvidia_icd.json'})
+            'VK_DRIVER_FILES':'/etc/vulkan/icd.d/nvidia_icd.json',
+            'LD_LIBRARY_PATH':'/data/users/jsalfity/glvnd/lib'})
         pod={'restartPolicy':'OnFailure','terminationGracePeriodSeconds':120,
              'automountServiceAccountToken':False,
              'securityContext':{'fsGroup':2518800,'supplementalGroups':[2518800],
@@ -84,7 +87,7 @@ def build_manifest(bootstrap_sha256, worker_count=32):
             'metadata':{'name':name,'namespace':NAMESPACE,'labels':labels,
                         'annotations':{'wmf-bootstrap-sha256':bootstrap_sha256}},
             'spec':{'completions':1,'parallelism':1,'backoffLimit':3,
-                    'activeDeadlineSeconds':CONTROLLER_WALL_SECONDS+300,
+                    'activeDeadlineSeconds':CONTROLLER_WALL_SECONDS+172800+300,
                     'template':{'metadata':{'labels':labels,'annotations':{'wmf-bootstrap-sha256':bootstrap_sha256}},'spec':pod}}})
     return {'apiVersion':'v1','kind':'List','items':items}
 

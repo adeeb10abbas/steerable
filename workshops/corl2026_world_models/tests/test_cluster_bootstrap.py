@@ -33,6 +33,7 @@ class BootstrapTests(unittest.TestCase):
             self.assertFalse(spec['automountServiceAccountToken'])
             self.assertEqual(spec['restartPolicy'],'OnFailure')
             self.assertEqual(job['spec']['backoffLimit'],3)
+            self.assertEqual(job['spec']['activeDeadlineSeconds'],777900)
             self.assertEqual(spec['securityContext']['fsGroup'],2518800)
             self.assertEqual(container['securityContext']['runAsUser'],816149040)
             self.assertFalse(container['securityContext']['allowPrivilegeEscalation'])
@@ -49,6 +50,8 @@ class BootstrapTests(unittest.TestCase):
                 self.assertEqual(container['resources']['requests']['memory'],'128Gi')
                 self.assertEqual(spec['nodeSelector']['nvidia.com/gpu.product'],'NVIDIA-B200')
                 self.assertIn('any',container['args'])
+                environment={item['name']:item['value'] for item in container['env']}
+                self.assertEqual(environment['LD_LIBRARY_PATH'],'/data/users/jsalfity/glvnd/lib')
             else:
                 self.assertNotIn('nvidia.com/gpu',container['resources']['requests'])
         self.assertEqual(workers,[f'wmf-forecast-0912-worker-{i:02d}' for i in range(32)])

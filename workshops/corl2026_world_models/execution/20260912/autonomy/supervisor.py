@@ -5,11 +5,14 @@ Codex 0.153.4 flags were checked with exec/resume --help. Prompts arrive on
 stdin; no model override, shell, resume --last, or new-session fallback is used.
 Stop receipts live in --state-dir: completion.json requires status=complete,
 a nonempty summary and nonempty list of evidence strings; needs_input.json
-requires a nonempty reason. Both require safe_to_stop=true. Rejected receipts
+requires status=needs_input and a nonempty reason. Both require safe_to_stop=true. Rejected receipts
 are retained separately and trigger corrective continuation, not abandonment
 of monitored work. Scientific claim validation belongs to the agent.
 
-Transient failures have capped exponential backoff and a finite retry budget.
+Transient failures retry indefinitely with exponential backoff capped at 300s.
+Other errors enter a live needs_attention watchdog. An operator can atomically
+write operator_resolution.json with action=retry and the unchanged thread_id
+to retry after fixing the cause; unresolved prior child processes still block.
 An operator may resolve a needs-input state, remove its marker, and restart with
 --continue-after-input; the recorded thread identity and old outputs are retained.
 """
@@ -36,6 +39,19 @@ TRANSIENT = re.compile(
 UNKNOWN_SESSION = re.compile(
     r"(?:session|thread|conversation).{0,120}(?:not found|unknown|does not exist|invalid)|"
     r"(?:unknown|invalid).{0,60}(?:session|thread|uuid)|no (?:session|thread).{0,80}found", re.I)
+
+
+class RetryRequested(Exception):
+    """Return from the attention watchdog to checkpoint restoration."""
+
+
+def process_start_identity(pid):
+    """Linux boot/start identity protects against PID reuse; unavailable is explicit."""
+    try:
+        stat = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()
+        return Path("/proc/sys/kernel/random/boot_id").read_text().strip() + ":" + stat[19]
+    except (OSError, IndexError):
+        return None
 
 
 def atomic_json(path, value):
@@ -93,8 +109,58 @@ class Supervisor:
             os.fsync(events.fileno())
 
     def park(self, reason, **fields):
-        self.checkpoint("needs_input", reason=reason, child_pid=None, **fields)
+        self.checkpoint("needs_attention", reason=reason, **fields)
+        while not self.stop_signal:
+            if self.apply_markers():
+                return 0
+            resolution = self.directory / "operator_resolution.json"
+            if resolution.exists():
+                try:
+                    value = json.loads(resolution.read_text())
+                    if (not isinstance(value, dict) or value.get("action") != "retry"
+                            or "thread_id" not in value or value["thread_id"] != self.status["thread_id"]):
+                        raise ValueError("retry must explicitly preserve the recorded thread_id")
+                    if self.unresolved_child_alive():
+                        raise ValueError("prior child identity is still unresolved; no new agent may launch")
+                except (ValueError, OSError) as error:
+                    destination = resolution.with_name(f"operator_resolution.rejected-{time.time_ns()}.json")
+                    os.replace(resolution, destination)
+                    self.checkpoint("needs_attention", operator_resolution_error=str(error),
+                                    rejected_operator_resolution=str(destination))
+                else:
+                    destination = resolution.with_name(f"operator_resolution.applied-{time.time_ns()}.json")
+                    os.replace(resolution, destination)
+                    self.checkpoint("retrying", reason=None, applied_operator_resolution=str(destination), next_retry_at=None)
+                    raise RetryRequested()
+            self.checkpoint("needs_attention", next_attention_check_at=time.time() + self.args.attention_poll)
+            self.wait(self.args.attention_poll)
+        self.checkpoint("stopped", signal=self.stop_signal, reason="Supervisor received a stop signal")
         return 0
+
+    def unresolved_child_alive(self):
+        """Never discard an unresolved process identity, including legacy checkpoints."""
+        pid = (self.status.get("unresolved_child_pid") or self.status.get("child_pid")
+               or self.status.get("previous_child_pid"))
+        if pid is None:
+            return False
+        identity = (self.status.get("unresolved_child_start_identity")
+                    or self.status.get("child_start_identity"))
+        self.status.update(unresolved_child_pid=pid, unresolved_child_start_identity=identity)
+        try:
+            if type(pid) is not int or pid <= 0:
+                return True
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            alive = False
+        except (PermissionError, ValueError, TypeError):
+            return True
+        else:
+            observed = process_start_identity(pid)
+            alive = not (identity is not None and observed is not None and identity != observed)
+        if not alive:
+            self.status.update(unresolved_child_pid=None, unresolved_child_start_identity=None,
+                               previous_child_pid=None, child_pid=None, child_start_identity=None)
+        return alive
 
     def on_signal(self, signum, _frame):
         if self.stop_signal is None:
@@ -138,8 +204,8 @@ class Supervisor:
                 if value.get("safe_to_stop") is not True:
                     raise ValueError("safe_to_stop must be exactly true after jobs are reconciled or independently monitored")
                 if path == needs_input:
-                    if not nonempty(value.get("reason")):
-                        raise ValueError("needs_input reason must be nonempty")
+                    if value.get("status") != "needs_input" or not nonempty(value.get("reason")):
+                        raise ValueError("needs_input requires status=needs_input and a nonempty reason")
                     return "needs_input", {"reason": value["reason"], "receipt": value}
                 if (value.get("status") != "complete" or not nonempty(value.get("summary"))
                         or not isinstance(value.get("evidence"), list) or not value["evidence"]
@@ -170,7 +236,7 @@ class Supervisor:
             "all jobs are finished or independently durably monitored and reconciled; "
             "include safe_to_stop: true. Completion also requires status: complete, "
             "a nonempty summary and a nonempty list of evidence strings; needs_input "
-            "requires a nonempty reason. Prior rejected receipts remain preserved."
+            "requires status: needs_input and a nonempty reason. Prior rejected receipts remain preserved."
         )
         self.checkpoint("receipt_rejected", rejected_receipts=retained,
                         receipt_correction=correction, reason=fields["reason"])
@@ -192,16 +258,8 @@ class Supervisor:
                     raise ValueError("Malformed retry counter")
             except (ValueError, KeyError) as error:
                 return self.park(f"Cannot restore checkpoint: {error}", preserved_invalid_status=raw)
-        previous_child = self.status.get("child_pid")
-        if previous_child is not None:
-            try:
-                os.kill(previous_child, 0)
-            except ProcessLookupError:
-                pass
-            except (PermissionError, TypeError, ValueError):
-                return self.park("Cannot rule out a surviving child; inspect before resuming", previous_child_pid=previous_child)
-            else:
-                return self.park("A prior child PID is still alive; inspect before resuming", previous_child_pid=previous_child)
+        if self.unresolved_child_alive():
+            return self.park("A prior child process is still unresolved; inspect before resuming")
         self.status["child_pid"] = None
         # A crash can occur after fsync of thread.started but before the status replace.
         if self.status["thread_id"] is None:
@@ -228,13 +286,19 @@ class Supervisor:
         if self.apply_markers():
             return 0
         if self.status["state"] == "complete":
-            self.checkpoint("complete", child_pid=None)
-            return 0
+            if self.status.get("receipt", {}).get("safe_to_stop") is True:
+                self.checkpoint("complete", child_pid=None)
+                return 0
+            return self.park("Completed checkpoint lacks a safe stop receipt")
         if self.status["state"] == "needs_input":
             if not self.args.continue_after_input:
-                self.checkpoint("needs_input", child_pid=None)
-                return 0
+                if self.status.get("receipt", {}).get("safe_to_stop") is True:
+                    self.checkpoint("needs_input", child_pid=None)
+                    return 0
+                return self.park("Legacy needs_input checkpoint lacks a safe stop receipt")
             self.status.update(consecutive_failures=0, next_retry_at=None)
+        if self.status["state"] == "needs_attention":
+            return self.park(self.status.get("reason") or "Operator attention remains required")
         return None
 
     def command(self, final_path):
@@ -263,7 +327,7 @@ class Supervisor:
                                       start_new_session=True)
         if self.stop_signal:
             self.child.send_signal(self.stop_signal)
-        self.checkpoint("running", child_pid=self.child.pid)
+        self.checkpoint("running", child_pid=self.child.pid, child_start_identity=process_start_identity(self.child.pid))
         try:
             self.child.stdin.write(prompt)
             self.child.stdin.close()
@@ -324,7 +388,7 @@ class Supervisor:
             stream.close()
         returncode = self.child.wait()
         self.child = None
-        self.checkpoint("turn_finished", child_pid=None, returncode=returncode)
+        self.checkpoint("turn_finished", child_pid=None, child_start_identity=None, returncode=returncode)
         return returncode, completed and not failed_event, protocol_error, tail.decode(errors="replace")
 
     def run(self):
@@ -336,6 +400,8 @@ class Supervisor:
         while not self.stop_signal:
             if self.apply_markers():
                 return 0
+            if self.unresolved_child_alive():
+                return self.park("Prior child identity blocks a new agent launch")
             try:
                 code, completed, protocol_error, tail = self.run_turn()
             except (OSError, ValueError) as error:
@@ -358,8 +424,6 @@ class Supervisor:
             if not TRANSIENT.search(tail):
                 return self.park("Codex failed without a recognized transient error; inspect retained logs", error_tail=tail)
             failures = self.status["consecutive_failures"] + 1
-            if failures >= self.args.max_transient_failures:
-                return self.park("Transient retry limit reached; inspect service/network/usage state", consecutive_failures=failures, error_tail=tail)
             delay = retry_delay(failures, self.args.retry_base, self.args.retry_cap)
             self.checkpoint("backoff", consecutive_failures=failures, retry_delay_s=delay,
                             next_retry_at=time.time() + delay, error_tail=tail)
@@ -377,17 +441,17 @@ def main():
     parser.add_argument("--continuation-prompt", type=Path, required=True)
     parser.add_argument("--retry-base", type=float, default=10)
     parser.add_argument("--retry-cap", type=float, default=300)
-    parser.add_argument("--max-transient-failures", type=int, default=12)
+    parser.add_argument("--attention-poll", type=float, default=10)
     parser.add_argument("--turn-delay", type=float, default=2)
     parser.add_argument("--signal-grace", type=float, default=20)
     parser.add_argument("--continue-after-input", action="store_true")
     args = parser.parse_args()
     if not args.codex.is_absolute():
         parser.error("--codex must be an absolute executable path")
-    if (not all(math.isfinite(v) for v in (args.retry_base, args.retry_cap, args.turn_delay, args.signal_grace))
-            or not 0 < args.retry_base <= args.retry_cap <= 300 or args.max_transient_failures < 1
-            or args.turn_delay < 0 or args.signal_grace <= 0):
-        parser.error("Retry bounds must satisfy 0 < base <= cap <= 300; counts/grace positive, turn delay nonnegative")
+    if (not all(math.isfinite(v) for v in (args.retry_base, args.retry_cap, args.turn_delay, args.signal_grace, args.attention_poll))
+            or not 0 < args.retry_base <= args.retry_cap <= 300
+            or args.turn_delay < 0 or args.signal_grace <= 0 or args.attention_poll <= 0):
+        parser.error("Retry bounds must satisfy 0 < base <= cap <= 300; polling/grace positive, turn delay nonnegative")
     for name in ("repo", "state_dir", "initial_prompt", "continuation_prompt"):
         setattr(args, name, getattr(args, name).resolve())
     args.state_dir.mkdir(parents=True, exist_ok=True)
@@ -400,16 +464,21 @@ def main():
         supervisor = Supervisor(args)
         signal.signal(signal.SIGTERM, supervisor.on_signal)
         signal.signal(signal.SIGINT, supervisor.on_signal)
-        try:
-            return supervisor.run()
-        except Exception as error:
-            supervisor.stop_owned_child()
-            print(f"Unexpected supervisor error: {error}", file=sys.stderr)
+        while True:
             try:
-                return supervisor.park(f"Unexpected supervisor error: {error}")
-            except OSError as checkpoint_error:
-                print(f"Cannot publish durable error status: {checkpoint_error}", file=sys.stderr)
-                return 1
+                return supervisor.run()
+            except RetryRequested:
+                continue
+            except Exception as error:
+                supervisor.stop_owned_child()
+                print(f"Unexpected supervisor error: {error}", file=sys.stderr)
+                try:
+                    return supervisor.park(f"Unexpected supervisor error: {error}")
+                except RetryRequested:
+                    continue
+                except OSError as checkpoint_error:
+                    print(f"Cannot publish durable error status: {checkpoint_error}", file=sys.stderr)
+                    return 1
 
 
 if __name__ == "__main__":

@@ -58,7 +58,28 @@ class AutonomousSupervisorTests(unittest.TestCase):
                         "--repo", str(self.repo), "--state-dir", str(self.state),
                         "--initial-prompt", str(self.initial), "--continuation-prompt", str(self.continuation),
                         "--retry-base", "0.01", "--retry-cap", "0.02",
-                        "--max-transient-failures", "3", "--turn-delay", "0"]
+                        "--attention-poll", "0.02", "--turn-delay", "0"]
+
+    def start_plan(self, plan):
+        (self.root / "plan.json").write_text(json.dumps(plan))
+        proc = subprocess.Popen(self.command, env=self.env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        def cleanup():
+            if proc.poll() is None:
+                proc.terminate()
+            proc.communicate(timeout=4)
+        self.addCleanup(cleanup)
+        return proc
+
+    def wait_state(self, state):
+        deadline = time.monotonic() + 5
+        while time.monotonic() < deadline:
+            try:
+                if self.status().get("state") == state:
+                    return self.status()
+            except (FileNotFoundError, json.JSONDecodeError):
+                pass
+            time.sleep(0.02)
+        self.fail(f"Supervisor did not enter {state}: {self.status()}")
 
     def run_plan(self, plan):
         (self.root / "plan.json").write_text(json.dumps(plan))
@@ -110,27 +131,47 @@ class AutonomousSupervisorTests(unittest.TestCase):
         self.assertEqual(retries[0]["retry_delay_s"], 0.01)
         self.assertEqual(self.status()["consecutive_failures"], 0)
 
-    def test_repeated_transient_failures_park_at_retry_limit(self):
-        failure = {"exit": 1, "completed": False, "stderr": "429 rate limit"}
-        result = self.run_plan([failure, failure, failure])
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(len(self.calls()), 3)
-        self.assertEqual(self.status()["state"], "needs_input")
-        self.assertIn("retry limit", self.status()["reason"])
-        events = [json.loads(x) for x in (self.state / "supervisor_events.jsonl").read_text().splitlines()]
-        self.assertEqual([e["retry_delay_s"] for e in events if e["state"] == "backoff"], [0.01, 0.02])
+    def test_restart_honors_persisted_future_retry_time(self):
+        saved = {"schema_version": 1, "state": "backoff", "turn": 3, "thread_id": THREAD,
+                 "child_pid": None, "consecutive_failures": 19, "next_retry_at": time.time() + 0.3}
+        (self.state / "supervisor_status.json").write_text(json.dumps(saved))
+        started = time.monotonic()
+        proc = self.start_plan([self.completion()])
+        time.sleep(0.1)
+        self.assertEqual(self.calls(), [])
+        _, stderr = proc.communicate(timeout=4)
+        self.assertEqual(proc.returncode, 0, stderr)
+        self.assertGreaterEqual(time.monotonic() - started, 0.25)
+        self.assertEqual(self.calls()[0]["args"][-2:], [THREAD, "-"])
 
-    def test_unknown_resume_id_parks_without_starting_another_session(self):
-        result = self.run_plan([{}, {"thread": False, "completed": False, "exit": 1, "stderr": "Error: session not found for requested UUID"}])
+    def test_transient_failures_continue_past_former_limit_until_recovery(self):
+        failure = {"exit": 1, "completed": False, "stderr": "429 rate limit"}
+        result = self.run_plan([failure] * 14 + [self.completion()])
         self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(self.calls()), 15)
+        self.assertEqual(self.status()["state"], "complete")
+        events = [json.loads(x) for x in (self.state / "supervisor_events.jsonl").read_text().splitlines()]
+        self.assertEqual([e["retry_delay_s"] for e in events if e["state"] == "backoff"], [0.01] + [0.02] * 13)
+        self.assertTrue(all(e["next_retry_at"] > e["updated_at"] for e in events if e["state"] == "backoff"))
+        self.assertFalse(any(e["state"] in ("needs_input", "needs_attention") for e in events))
+
+    def test_unknown_resume_id_keeps_watchdog_alive_until_explicit_resolution(self):
+        proc = self.start_plan([{}, {"thread": False, "completed": False, "exit": 1, "stderr": "Error: session not found for requested UUID"}, self.completion()])
+        self.wait_state("needs_attention")
+        time.sleep(0.08)
+        self.assertIsNone(proc.poll())
         self.assertEqual(len(self.calls()), 2)
-        self.assertEqual(self.status()["state"], "needs_input")
         self.assertEqual(self.status()["thread_id"], THREAD)
         self.assertIn("resume", self.status()["reason"])
         self.assertTrue((self.state / "turn-000001.jsonl").exists())
+        (self.state / "operator_resolution.json").write_text(json.dumps({"action": "retry", "thread_id": THREAD}))
+        _, stderr = proc.communicate(timeout=4)
+        self.assertEqual(proc.returncode, 0, stderr)
+        self.assertEqual(self.calls()[2]["args"][-2:], [THREAD, "-"])
+        self.assertEqual(self.status()["state"], "complete")
 
     def test_safe_needs_input_marker_stops_without_launch(self):
-        (self.state / "needs_input.json").write_text(json.dumps({"reason": "Missing approved resource", "safe_to_stop": True}))
+        (self.state / "needs_input.json").write_text(json.dumps({"status": "needs_input", "reason": "Missing approved resource", "safe_to_stop": True}))
         result = self.run_plan([])
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(self.calls(), [])
@@ -166,11 +207,41 @@ class AutonomousSupervisorTests(unittest.TestCase):
         self.assertEqual(self.status()["turn"], 2)
 
     def test_resume_uuid_mismatch_never_replaces_original_identity(self):
-        result = self.run_plan([{}, {"uuid": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee"}])
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(self.status()["state"], "needs_input")
+        proc = self.start_plan([{}, {"uuid": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee"}])
+        self.wait_state("needs_attention")
+        self.assertIsNone(proc.poll())
         self.assertEqual(self.status()["thread_id"], THREAD)
         self.assertIn("different thread UUID", self.status()["reason"])
+        (self.state / "needs_input.json").write_text(json.dumps({"status": "needs_input", "reason": "Monitoring independently reconciled", "safe_to_stop": True}))
+        _, stderr = proc.communicate(timeout=4)
+        self.assertEqual(proc.returncode, 0, stderr)
+
+    def test_needs_input_without_matching_status_is_rejected(self):
+        marker = {"marker": "needs_input.json", "contents": {"reason": "Help needed", "safe_to_stop": True}}
+        wrong = {"marker": "needs_input.json", "contents": {"status": "complete", "reason": "Help needed", "safe_to_stop": True}}
+        result = self.run_plan([marker, wrong, self.completion()])
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(self.calls()), 3)
+        self.assertEqual(self.status()["state"], "complete")
+        self.assertEqual(len(list(self.state.glob("needs_input.rejected-*.json"))), 2)
+
+    def test_unresolved_child_survives_restart_guard_and_explicit_retry(self):
+        saved = {"schema_version": 1, "state": "needs_input", "turn": 2,
+                 "thread_id": THREAD, "child_pid": None, "previous_child_pid": os.getpid()}
+        (self.state / "supervisor_status.json").write_text(json.dumps(saved))
+        self.command.append("--continue-after-input")
+        proc = self.start_plan([])
+        status = self.wait_state("needs_attention")
+        self.assertEqual(status["unresolved_child_pid"], os.getpid())
+        self.assertEqual(self.calls(), [])
+        (self.state / "operator_resolution.json").write_text(json.dumps({"action": "retry", "thread_id": THREAD}))
+        time.sleep(0.12)
+        self.assertEqual(self.calls(), [])
+        self.assertIsNone(proc.poll())
+        self.assertEqual(self.status()["unresolved_child_pid"], os.getpid())
+        proc.terminate()
+        proc.communicate(timeout=4)
+        self.assertEqual(self.status()["unresolved_child_pid"], os.getpid())
 
     def test_valid_completion_marker_remains_stopped_after_restart(self):
         self.run_plan([self.completion()])

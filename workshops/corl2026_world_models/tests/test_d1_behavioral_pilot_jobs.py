@@ -15,6 +15,7 @@ WORKSHOP = Path(__file__).resolve().parents[1]
 FORECAST = WORKSHOP / "experiments/forecast_layout"
 sys.path.insert(0, str(FORECAST))
 import d1_behavioral_pilot_jobs as pilot  # noqa: E402
+import recording_adapter as recording  # noqa: E402
 
 
 STUDY_COMMIT = "a" * 40
@@ -314,6 +315,70 @@ class ServerEvidenceTests(unittest.TestCase):
         reset["rank_receipts"][1]["after"]["fields"]["kv_cache1"]["is_none"] = False
         with self.assertRaisesRegex(pilot.D1BehavioralPilotError, "d1_temporal_field_not_cleared"):
             pilot._validate_temporal_reset(reset, expected_control=control)
+
+    def test_validated_d1_reset_populates_recording_context_attestation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            future = Path(temporary) / "future"
+            episode_id = "episode-1"
+            control = {"episode_id": episode_id, "expected_session_id": "session-1"}
+            reset_path = future / "episodes" / episode_id / "reset_receipt.json"
+            reset_path.parent.mkdir(parents=True)
+            pilot.immutable_json(reset_path, _reset(control))
+            reset, reset_identity, reset_scan = pilot.validate_reset_receipt(
+                reset_path, expected_control=control, future_root=future
+            )
+            attestation = pilot.build_context_reset_attestation(
+                reset=reset,
+                reset_identity=reset_identity,
+                reset_scan=reset_scan,
+                episode_id=episode_id,
+            )
+            self.assertEqual(
+                set(attestation),
+                {"passed", "reset_scope", "server_context_id", "cache_reset_evidence"},
+            )
+            self.assertEqual(attestation["reset_scope"], recording.CONTEXT_RESET_SCOPE)
+            self.assertEqual(attestation["server_context_id"], episode_id)
+            self.assertEqual(
+                attestation["cache_reset_evidence"]["server_reset_receipt"],
+                reset_identity,
+            )
+            self.assertEqual(
+                [row["rank"] for row in attestation["cache_reset_evidence"]["rank_temporal_state_scan"]],
+                [0, 1],
+            )
+            recorder = recording.ForecastRecordingAdapter(
+                Path(temporary) / "recording",
+                {
+                    "attempt_id": "attempt-reset-test",
+                    "cell_id": pilot.CELL_IDS[0],
+                    "stage": "pilot",
+                    "layout_pair_id": "P00",
+                    "layout_arm": "reflected",
+                    "command": "right",
+                    "prompt": pilot.PROMPTS["right"],
+                    "model_config": "D1",
+                    "effective_seed": pilot.EFFECTIVE_MODEL_NOISE_SEED,
+                    "source_identity": "source-test",
+                    "checkpoint_identity": "checkpoint-test",
+                },
+            )
+            recorder.record_context_reset(attestation)
+            self.assertEqual(
+                recorder.context_reset["receipt"]["server_context_id"], episode_id
+            )
+
+            changed_scan = dict(reset_scan)
+            changed_scan["reset_id"] = "different-reset"
+            with self.assertRaisesRegex(
+                pilot.D1BehavioralPilotError, "d1_context_reset_scan_invalid"
+            ):
+                pilot.build_context_reset_attestation(
+                    reset=reset,
+                    reset_identity=reset_identity,
+                    reset_scan=changed_scan,
+                    episode_id=episode_id,
+                )
 
     def test_request_receipt_binds_wire_action_latent_decode_and_cache(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

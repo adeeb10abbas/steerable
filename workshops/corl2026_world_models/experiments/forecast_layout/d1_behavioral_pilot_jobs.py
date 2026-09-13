@@ -96,6 +96,18 @@ ROBOLAB_ROOT = Path("/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241")
 ROBOLAB_PYTHON = Path("/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python")
 RAW_ROOT = Path("/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00")
 
+# Narrow extension points used by the development/confirmation wrappers.  The
+# P00 defaults are intentionally unchanged.  Child processes re-enter the
+# wrapper that selected a later phase, so scientific identities cannot fall
+# back silently to the pilot constants.
+RUNNER_FILENAME = "d1_behavioral_pilot_jobs.py"
+BEHAVIORAL_PURPOSE = "d1_behavioral_pilot"
+BEHAVIORAL_FINALIZE_PURPOSE = "d1_behavioral_pilot_finalize"
+EPISODE_ID_PREFIX = "d1p00"
+POLICY_LABEL = "wmf_d1_behavioral_pilot"
+SIMULATOR_RECEIPT_FILENAME = "d1_behavioral_pilot_receipt.json"
+GLOBAL_SERVER_LOCK_PATH = RAW_ROOT / ".locks" / "d1-global-server.lock"
+
 MAX_PUBLISH_BYTES = 512 * 1024
 LEASE_TTL_SECONDS = 90.0
 LEASE_POLL_SECONDS = 2.0
@@ -121,6 +133,7 @@ D1_REQUEST_SCHEMA = "wmf-d1-request-receipt-v1"
 D1_EPISODE_SCHEMA = "wmf-d1-episode-manifest-v1"
 CAPTURE_RECEIPT_SCHEMA = "wmf-forecast-layout-fixed-observation-capture-v1"
 RECORDER_RECEIPT_SCHEMA = "wmf-forecast-recorder-qualification-job-v1"
+CONTEXT_RESET_SCOPE = "full_episode_temporal_and_cache_context"
 
 RESET_FIELDS_TO_NONE = (
     "kv_cache1",
@@ -1039,6 +1052,66 @@ def validate_reset_receipt(
     return reset, file_identity(path), scan
 
 
+def build_context_reset_attestation(
+    *, reset: Mapping[str, Any], reset_identity: Mapping[str, Any],
+    reset_scan: Mapping[str, Any], episode_id: str,
+) -> dict[str, Any]:
+    """Translate only validated server reset evidence into recorder fields."""
+
+    observed_identity = _verify_descriptor(
+        reset_identity, "d1_context_reset_server_receipt"
+    )
+    require(
+        observed_identity == dict(reset_identity),
+        "d1_context_reset_receipt_identity_changed",
+    )
+    control = reset.get("control")
+    require(isinstance(control, Mapping), "d1_context_reset_control_missing")
+    server_context_id = control.get("episode_id")
+    require(
+        isinstance(episode_id, str)
+        and SAFE_ID_RE.fullmatch(episode_id) is not None
+        and server_context_id == episode_id,
+        "d1_server_context_identity_changed",
+    )
+    reset_id = reset.get("reset_id")
+    ranks = reset_scan.get("rank_temporal_state_scan")
+    require(
+        reset.get("schema_version") == D1_RESET_SCHEMA
+        and reset.get("status") == "passed"
+        and reset.get("world_size") == 2
+        and isinstance(reset_id, str)
+        and bool(reset_id),
+        "d1_context_reset_server_receipt_invalid",
+    )
+    require(
+        reset_scan.get("passed") is True
+        and reset_scan.get("reset_id") == reset_id
+        and reset_scan.get("world_size") == 2
+        and isinstance(ranks, list)
+        and len(ranks) == 2
+        and all(isinstance(row, Mapping) for row in ranks)
+        and sorted(row.get("rank") for row in ranks if isinstance(row, Mapping))
+        == [0, 1]
+        and reset_scan.get("unresolved_mutable_temporal_fields") == [],
+        "d1_context_reset_scan_invalid",
+    )
+    cache_reset_evidence = {
+        "source": "validated_official_d1_two_rank_reset_receipt",
+        "server_reset_receipt": observed_identity,
+        "reset_id": reset_id,
+        "world_size": 2,
+        "rank_temporal_state_scan": list(ranks),
+        "unresolved_mutable_temporal_fields": [],
+    }
+    return {
+        "passed": True,
+        "reset_scope": CONTEXT_RESET_SCOPE,
+        "server_context_id": server_context_id,
+        "cache_reset_evidence": cache_reset_evidence,
+    }
+
+
 def _validate_first_request_temporal_metrics(value: Any) -> dict[str, Any]:
     require(isinstance(value, list) and sorted(row.get("rank") for row in value) == [0, 1], "d1_request_rank_metrics_invalid")
     scans = []
@@ -1248,7 +1321,11 @@ def build_cell_command(
     future_root: Path, condition_index: int,
 ) -> list[str]:
     require(0 <= condition_index < len(CONDITIONS), "cell_condition_index_invalid")
-    script = Path(source_root) / "workshops/corl2026_world_models/experiments/forecast_layout/d1_behavioral_pilot_jobs.py"
+    script = (
+        Path(source_root)
+        / "workshops/corl2026_world_models/experiments/forecast_layout"
+        / RUNNER_FILENAME
+    )
     layout_arm, command, _task = CONDITIONS[condition_index]
     return [
         os.path.abspath(os.fspath(ROBOLAB_PYTHON)), str(script.resolve()), "cell",
@@ -1369,11 +1446,17 @@ def run_cell(args: argparse.Namespace) -> int:
         from robolab.registrations.droid.camera_presets import WRIST_LEFT_RIGHT_HEAD
         from fixture_tasks import settle_for_recording_reset, success_measurements
         from recording_adapter import (
+            CONTEXT_RESET_SCOPE as RECORDING_CONTEXT_RESET_SCOPE,
             FixedDurationEnvProxy,
             ForecastRecordingAdapter,
             RecordingClientMixin,
             assert_fixed_duration_environment,
             verify_journal,
+        )
+
+        require(
+            RECORDING_CONTEXT_RESET_SCOPE == CONTEXT_RESET_SCOPE,
+            "recording_context_reset_scope_changed",
         )
 
         require(Path(robolab.__file__).resolve().is_relative_to(ROBOLAB_ROOT), "effective_robolab_import_unpinned")
@@ -1497,7 +1580,7 @@ def run_cell(args: argparse.Namespace) -> int:
                 return {
                     "episode_id": episode_id,
                     "expected_session_id": session_id,
-                    "purpose": "d1_behavioral_pilot",
+                    "purpose": BEHAVIORAL_PURPOSE,
                     "study_id": STUDY_ID,
                     "block_id": BLOCK_ID,
                     "cell_id": cell_id,
@@ -1512,7 +1595,7 @@ def run_cell(args: argparse.Namespace) -> int:
 
             def begin_episode(self) -> Mapping[str, Any]:
                 require(not self.wmf_episode_active, "d1_client_episode_context_overlap")
-                episode_id = f"d1p00-c{condition_index:02d}-{uuid.uuid4().hex}"
+                episode_id = f"{EPISODE_ID_PREFIX}-c{condition_index:02d}-{uuid.uuid4().hex}"
                 session_id = str(uuid.uuid4())
                 require(episode_id != session_id, "d1_context_identifiers_alias")
                 control = self._reset_control(episode_id, session_id)
@@ -1532,8 +1615,14 @@ def run_cell(args: argparse.Namespace) -> int:
                 self.wmf_reset_receipt = reset
                 self.wmf_reset_identity = reset_identity
                 self.wmf_temporal_reset_scan = reset_scan
+                reset_attestation = build_context_reset_attestation(
+                    reset=reset,
+                    reset_identity=reset_identity,
+                    reset_scan=reset_scan,
+                    episode_id=episode_id,
+                )
                 self.wmf_begin_receipt = {
-                    "passed": True,
+                    **reset_attestation,
                     "service_route_proved_by_reset_artifact": True,
                     "service_host": args.remote_host,
                     "service_port": args.remote_port,
@@ -1658,7 +1747,7 @@ def run_cell(args: argparse.Namespace) -> int:
                         control = self._reset_control(self.wmf_episode_id, self.wmf_session_id)
                         finalize = {
                             "finalize_only": True,
-                            "purpose": "d1_behavioral_pilot_finalize",
+                            "purpose": BEHAVIORAL_FINALIZE_PURPOSE,
                             "previous_episode_id": self.wmf_episode_id,
                             "server_ready_sha256": args.server_ready_sha256,
                             "simulator_claim_sha256": args.simulator_claim_sha256,
@@ -1721,7 +1810,7 @@ def run_cell(args: argparse.Namespace) -> int:
             seed=ENVIRONMENT_SEED,
             num_envs=1,
             instruction_type="default",
-            policy="wmf_d1_behavioral_pilot",
+            policy=POLICY_LABEL,
             renderer="realtime",
             rendering_mode="balanced",
         )
@@ -2033,7 +2122,7 @@ def validate_passed_cell_receipt(
     expected_control = {
         "episode_id": episode_id,
         "expected_session_id": session_id,
-        "purpose": "d1_behavioral_pilot",
+        "purpose": BEHAVIORAL_PURPOSE,
         "study_id": STUDY_ID,
         "block_id": BLOCK_ID,
         "cell_id": CELL_IDS[condition_index],
@@ -2050,9 +2139,17 @@ def validate_passed_cell_receipt(
     future_root = manifest_path.parents[2]
     require(Path(ready.get("future_root", "")).resolve() == future_root.resolve(), "resume_manifest_future_root_changed")
     reset_path = future_root / "episodes" / episode_id / "reset_receipt.json"
-    _reset, reset_identity, reset_scan = validate_reset_receipt(
+    reset, reset_identity, reset_scan = validate_reset_receipt(
         reset_path, expected_control=expected_control, future_root=future_root
     )
+    expected_reset_attestation = build_context_reset_attestation(
+        reset=reset,
+        reset_identity=reset_identity,
+        reset_scan=reset_scan,
+        episode_id=episode_id,
+    )
+    for key, wanted in expected_reset_attestation.items():
+        require(begin.get(key) == wanted, "resume_context_reset_attestation_changed", key)
     require(receipt.get("server_reset_receipt") == reset_identity, "resume_reset_descriptor_changed")
     require(receipt.get("server_temporal_reset_scan") == reset_scan, "resume_temporal_reset_scan_changed")
     _manifest, observed_manifest_identity, request_identities = validate_episode_manifest(
@@ -2243,7 +2340,7 @@ def run_server_job(args: argparse.Namespace) -> int:
     process_exit: dict[str, Any] | None = None
 
     raw_root.mkdir(parents=True, exist_ok=True)
-    lock_path = raw_root / ".locks" / "d1-global-server.lock"
+    lock_path = Path(GLOBAL_SERVER_LOCK_PATH).resolve()
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     with lock_path.open("a+b") as lock_handle:
         try:
@@ -2518,7 +2615,7 @@ def run_simulator_job(args: argparse.Namespace) -> int:
     require(args.remote_host == SERVICE_HOST and args.remote_port == SERVICE_PORT, "d1_service_endpoint_changed")
     paths = coordination_paths(raw_root, args.run_id)
     attempt_root = raw_root / "simulator_attempts" / args.job_id
-    publish_path = job_dir / "publish" / "d1_behavioral_pilot_receipt.json"
+    publish_path = job_dir / "publish" / SIMULATOR_RECEIPT_FILENAME
     failure: BaseException | None = None
     queue_identity: dict[str, Any] | None = None
     schedule: dict[str, Any] | None = None
@@ -2770,7 +2867,7 @@ def run_simulator_job(args: argparse.Namespace) -> int:
                         "six-request generation and recorder-only qualifications remain nonbehavioral."
                     ),
                 }
-                immutable_json(attempt_root / "publish" / "d1_behavioral_pilot_receipt.json", receipt, publish=True)
+                immutable_json(attempt_root / "publish" / SIMULATOR_RECEIPT_FILENAME, receipt, publish=True)
                 publish_path.parent.mkdir(parents=True, exist_ok=True)
                 immutable_json(publish_path, receipt, publish=True)
             except BaseException as outer_error:
@@ -2796,7 +2893,7 @@ def run_simulator_job(args: argparse.Namespace) -> int:
                         "raw_attempt_root": str(attempt_root),
                         "completed_at_utc": utc_now(),
                     }
-                    fallback = attempt_root / "publish" / "d1_behavioral_pilot_receipt.json"
+                    fallback = attempt_root / "publish" / SIMULATOR_RECEIPT_FILENAME
                     if not fallback.exists():
                         immutable_json(fallback, receipt, publish=True)
                     if not publish_path.exists():
@@ -2807,8 +2904,8 @@ def run_simulator_job(args: argparse.Namespace) -> int:
                 # reaped and after the aggregate receipt write was attempted.
                 terminal_status = "passed" if receipt is not None and receipt.get("status") == "passed" else "technical_failure"
                 terminal_receipt = (
-                    file_identity(attempt_root / "publish" / "d1_behavioral_pilot_receipt.json")
-                    if (attempt_root / "publish" / "d1_behavioral_pilot_receipt.json").is_file()
+                    file_identity(attempt_root / "publish" / SIMULATOR_RECEIPT_FILENAME)
+                    if (attempt_root / "publish" / SIMULATOR_RECEIPT_FILENAME).is_file()
                     else None
                 )
                 terminal = _minimal_terminal(

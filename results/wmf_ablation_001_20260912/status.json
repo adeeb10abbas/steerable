@@ -37,35 +37,115 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "84921052b137af79f210157f62396fa56b8062d9",
-    "control_generation": 7,
+    "control_generation": 8,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
   "default_published_log_tail_bytes": 0,
   "jobs": [
     {
+      "child_pid": 23,
+      "child_reaped": true,
       "descriptor_sha256": "6fe49e57855959b54ec1071c5e83c4bccc5a87abf98619d487818bcb4b13806a",
+      "ended_at": "2026-09-13T01:57:43.553210+00:00",
+      "error_type": null,
       "job_id": "bootstrap-diagnostic-worker-00",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"diagnostic_published\": true, \"gpu_count\": 1, \"diagnostic_passed\": true, \"scientific_qualification\": false}\n"
+      },
+      "returncode": 0,
       "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
-      "status": "staged"
+      "started_at": "2026-09-13T01:57:40.573876+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 109,
+        "sha256": "7d9cffb007dfd0a7a828683d27d983c6e64dbd684ac0ea3ccc36a16129ba2e59"
+      },
+      "wall_seconds": 2.9798557679750957,
+      "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
+      "child_pid": 24,
+      "child_reaped": true,
       "descriptor_sha256": "ccd9a4a186db64497bccbd6d18623096eb620410c6e71787b44a2ecc93c51ea6",
+      "ended_at": "2026-09-13T01:57:43.527973+00:00",
+      "error_type": null,
       "job_id": "bootstrap-diagnostic-worker-01",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"diagnostic_published\": true, \"gpu_count\": 1, \"diagnostic_passed\": true, \"scientific_qualification\": false}\n"
+      },
+      "returncode": 0,
       "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
-      "status": "staged"
+      "started_at": "2026-09-13T01:57:40.558810+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 109,
+        "sha256": "7d9cffb007dfd0a7a828683d27d983c6e64dbd684ac0ea3ccc36a16129ba2e59"
+      },
+      "wall_seconds": 2.969292427995242,
+      "worker_id": "wmf-forecast-0912-worker-01"
     },
     {
+      "child_pid": 23,
+      "child_reaped": true,
       "descriptor_sha256": "231290ef63aca6f73a57c1df18671e9b162aa94257fb7fa2b95e785314e29c47",
+      "ended_at": "2026-09-13T01:57:44.264435+00:00",
+      "error_type": null,
       "job_id": "bootstrap-diagnostic-worker-02",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"diagnostic_published\": true, \"gpu_count\": 1, \"diagnostic_passed\": true, \"scientific_qualification\": false}\n"
+      },
+      "returncode": 0,
       "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
-      "status": "staged"
+      "started_at": "2026-09-13T01:57:40.885521+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 109,
+        "sha256": "7d9cffb007dfd0a7a828683d27d983c6e64dbd684ac0ea3ccc36a16129ba2e59"
+      },
+      "wall_seconds": 3.3790418949793093,
+      "worker_id": "wmf-forecast-0912-worker-02"
     },
     {
+      "child_pid": 22,
+      "child_reaped": true,
       "descriptor_sha256": "8f3b3fe64ce58e5f8cbc56251adb96679615d1054923ea3ea5fa2bbd2cb8fbc5",
+      "ended_at": "2026-09-13T01:57:43.527523+00:00",
+      "error_type": null,
       "job_id": "bootstrap-diagnostic-worker-03",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"diagnostic_published\": true, \"gpu_count\": 1, \"diagnostic_passed\": true, \"scientific_qualification\": false}\n"
+      },
+      "returncode": 0,
       "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
-      "status": "staged"
+      "started_at": "2026-09-13T01:57:40.584134+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 109,
+        "sha256": "7d9cffb007dfd0a7a828683d27d983c6e64dbd684ac0ea3ccc36a16129ba2e59"
+      },
+      "wall_seconds": 2.943516783998348,
+      "worker_id": "wmf-forecast-0912-worker-03"
     },
     {
       "descriptor_sha256": "80ff0779b694b61fa3df3e58d3caad578f2a32b9b751baf07f2a8c2a5ad7aaad",

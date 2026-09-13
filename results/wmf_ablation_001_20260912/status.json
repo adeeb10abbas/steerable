@@ -121,7 +121,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "067e65964562071e33424ea6f359e3484846f3ac",
-    "control_generation": 360,
+    "control_generation": 361,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -1774,9 +1774,9 @@
     {
       "descriptor_sha256": "25f6b242f68d3a0178940b4ba2dea594a0f0a55c9fe2a263862ea7439c997935",
       "heartbeat": {
-        "at": "2026-09-13T07:07:31.198309+00:00",
+        "at": "2026-09-13T07:08:21.416502+00:00",
         "child_pid": 5739,
-        "unix": 1789283251.1983385,
+        "unix": 1789283301.4165435,
         "worker_id": "wmf-forecast-0912-worker-09",
         "worker_pid": 1
       },
@@ -1794,9 +1794,9 @@
     {
       "descriptor_sha256": "a020f6e189a4ae23a0a7da24673b37f593ab3d1053a3bf61521fc60806c21d52",
       "heartbeat": {
-        "at": "2026-09-13T07:07:30.793916+00:00",
+        "at": "2026-09-13T07:08:23.019492+00:00",
         "child_pid": 6218,
-        "unix": 1789283250.7939446,
+        "unix": 1789283303.0195298,
         "worker_id": "wmf-forecast-0912-worker-05",
         "worker_pid": 1
       },
@@ -1812,17 +1812,29 @@
       "status": "staged"
     },
     {
+      "child_pid": 4926,
+      "child_reaped": true,
       "descriptor_sha256": "16c23a14a474312552179b7161e162011b5d9fe0f79a0c937a3a7d8bf78ec28a",
-      "heartbeat": {
-        "at": "2026-09-13T07:07:30.402906+00:00",
-        "child_pid": 4926,
-        "unix": 1789283250.4029405,
-        "worker_id": "wmf-forecast-0912-worker-06",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T07:08:20.621884+00:00",
+      "error_type": null,
       "job_id": "fixture-c18-candidate-00-r2",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"decision\": \"accepted\", \"exit_code\": 0, \"idempotent_replay\": false, \"job_id\": \"fixture-c18-candidate-00-r2\", \"layout_pair_id\": \"C18\", \"published\": true}\n"
+      },
+      "returncode": 0,
       "source_commit": "471f28ff31e312f86df33c7c9e79d61f010e96cd",
-      "status": "claimed",
+      "started_at": "2026-09-13T07:04:27.280001+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 154,
+        "sha256": "e9681f9adaf2a584d1ad5ba0cd03cca80dba85a45454b3dc76ea1e8d5022b4c0"
+      },
+      "wall_seconds": 233.34205204900354,
       "worker_id": "wmf-forecast-0912-worker-06"
     },
     {
@@ -2212,9 +2224,9 @@
     {
       "descriptor_sha256": "48ab701dcfd44e815ef924797129bed68ec9ba2a8a5f124cea7437474930f7bb",
       "heartbeat": {
-        "at": "2026-09-13T07:07:29.356713+00:00",
+        "at": "2026-09-13T07:08:21.575793+00:00",
         "child_pid": 155,
-        "unix": 1789283249.3567493,
+        "unix": 1789283301.575803,
         "worker_id": "wmf-forecast-0912-worker-n3-00",
         "worker_pid": 1
       },

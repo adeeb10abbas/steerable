@@ -37,7 +37,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "5a0fc7d83761e32d46f044ec04c90e746ac4d97f",
-    "control_generation": 13,
+    "control_generation": 14,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -148,10 +148,30 @@
       "worker_id": "wmf-forecast-0912-worker-03"
     },
     {
+      "child_pid": 24,
+      "child_reaped": true,
       "descriptor_sha256": "80ff0779b694b61fa3df3e58d3caad578f2a32b9b751baf07f2a8c2a5ad7aaad",
+      "ended_at": "2026-09-13T02:01:46.969516+00:00",
+      "error_type": null,
       "job_id": "bootstrap-diagnostic-worker-04",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"diagnostic_published\": true, \"gpu_count\": 8, \"diagnostic_passed\": false, \"scientific_qualification\": false}\n"
+      },
+      "returncode": 1,
       "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
-      "status": "staged"
+      "started_at": "2026-09-13T02:01:44.316767+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 110,
+        "sha256": "ee465ea396c3029ff1cc3eaac0f083f63f83c6bf67b0873abadad7f513701576"
+      },
+      "wall_seconds": 2.652887806063518,
+      "worker_id": "wmf-forecast-0912-worker-04"
     },
     {
       "descriptor_sha256": "06a5a27c3604f3bf4095528df49fafb27f11b269ffd5c8e646c956ab5bd09091",

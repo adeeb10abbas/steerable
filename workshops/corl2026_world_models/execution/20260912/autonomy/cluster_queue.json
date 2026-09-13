@@ -2,5 +2,86 @@
   "schema_version": "wmf-cluster-queue-v1",
   "namespace": "wmf_ablation_001_20260912",
   "shutdown": false,
-  "jobs": []
+  "jobs": [
+    {
+      "job_id": "worker00-isolation-diagnostic-002",
+      "released": true,
+      "source_commit": "e95f0ba19e8526663c70a8b8460eb563b2c6f573",
+      "role": "wmf-forecast-0912-worker-00",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1",
+        "--expected-worker-id",
+        "wmf-forecast-0912-worker-00"
+      ],
+      "max_wall_seconds": 300,
+      "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "worker09-isolation-diagnostic-002",
+      "released": true,
+      "source_commit": "e95f0ba19e8526663c70a8b8460eb563b2c6f573",
+      "role": "wmf-forecast-0912-worker-09",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1",
+        "--expected-worker-id",
+        "wmf-forecast-0912-worker-09"
+      ],
+      "max_wall_seconds": 300,
+      "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "n3-isolation-diagnostic-002",
+      "released": true,
+      "source_commit": "e95f0ba19e8526663c70a8b8460eb563b2c6f573",
+      "role": "n3",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "2",
+        "--expected-worker-id",
+        "wmf-forecast-0912-worker-n3-00"
+      ],
+      "max_wall_seconds": 300,
+      "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "d1-isolation-diagnostic-002",
+      "released": true,
+      "source_commit": "e95f0ba19e8526663c70a8b8460eb563b2c6f573",
+      "role": "d1",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py",
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "2",
+        "--expected-worker-id",
+        "wmf-forecast-0912-worker-d1-00"
+      ],
+      "max_wall_seconds": 300,
+      "publish_log_tail_bytes": 8192
+    }
+  ]
 }

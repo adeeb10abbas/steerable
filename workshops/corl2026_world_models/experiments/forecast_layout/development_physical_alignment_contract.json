@@ -1,0 +1,78 @@
+{
+  "annotation_authority": false,
+  "confirmation_authority": false,
+  "job": {
+    "bundle_relative": "raw/physical_alignment_bundle",
+    "evidence_relative": "raw/development_release_evidence.json",
+    "id": "development-physical-alignment-001",
+    "input_relative": "raw/development_physical_alignment_input.json",
+    "max_wall_seconds": 21600,
+    "mode": "formal_full_two_model_alignment",
+    "publish_log_tail_bytes": 8192,
+    "raw_manifest_relative": "raw/physical_alignment_evidence_manifest.json",
+    "raw_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912",
+    "role": "wmf-forecast-0912-worker-00"
+  },
+  "labels_created": 0,
+  "namespace": "wmf_ablation_001_20260912",
+  "prerequisites": {
+    "camera_contracts": 2,
+    "camera_output_key": "published_camera_crop_contracts",
+    "camera_terminal_minimum_attempt": 3,
+    "camera_terminal_output_declarations": 2,
+    "camera_terminal_receipt_schema": "wmf-camera-crop-witness-queue-job-v1",
+    "compiler_job_file_sha256": "00329a3c991ee6eb0c68996ecaca1aed59ea3017329272cd82b4b5bfb5cee434",
+    "compiler_job_id": "development-evidence-compiler-formal-004",
+    "forbidden_camera_job_ids": [
+      "camera-crop-replay-witness-001",
+      "camera-crop-replay-witness-002"
+    ],
+    "timing_job_file_sha256": {
+      "D1": "75490aab357d8290afa10f0e1a85437794a37c81f6a9a0524c94c746198da68d",
+      "N3": "7c4aa556d37f170308ef5529489936e3fd7fbce819909d8e1d5937c16965f9d9"
+    },
+    "timing_job_ids": {
+      "D1": "timing-d1-development-sidecar-002",
+      "N3": "timing-n3-development-sidecar-001"
+    }
+  },
+  "release": {
+    "alignment_contracts": 2,
+    "authoritative_freeze_source_replay": true,
+    "cohort_branch": "full_two_model",
+    "confirmation_release_argument": false,
+    "evidence_schema": "wmf-development-release-evidence-v1",
+    "mapping_receipts": 2,
+    "published_outputs_byte_identical_to_raw_bundle": true,
+    "publisher_file_limit_bytes": 16777216,
+    "publisher_job_limit_bytes": 67108864,
+    "published_files": [
+      "n3_physical_alignment_receipt.json",
+      "n3_alignment_contract.json",
+      "d1_physical_alignment_receipt.json",
+      "d1_alignment_contract.json",
+      "development_physical_alignment_job_receipt.json"
+    ],
+    "qualified_model_ids": [
+      "N3",
+      "D1"
+    ],
+    "raw_bundle_files": 4
+  },
+  "resource_freeze_authority": false,
+  "resource_measurements_created": 0,
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-development-physical-alignment-contract-v1",
+  "science_counts": {
+    "behavioral_actions_executed_by_job": 0,
+    "behavioral_cells_launched_by_job": 0,
+    "labels_created_by_job": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0,
+    "simulator_processes_started": 0
+  },
+  "study_id": "WMF-ABLATION-001"
+}

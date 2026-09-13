@@ -1,0 +1,130 @@
+{
+  "schema_version": "wmf-development-resource-contract-v1",
+  "study_id": "WMF-ABLATION-001",
+  "status": "implemented_fail_closed_pending_detached_pvc_audit",
+  "mode": "formal_full",
+  "cohort": {
+    "models": [
+      "N3",
+      "D1"
+    ],
+    "layout_pair_ids": [
+      "D01",
+      "D02",
+      "D03",
+      "D04"
+    ],
+    "cells": 32,
+    "source_behavioral_requests": 1152,
+    "source_behavioral_actions": 14400,
+    "aggregate_receipts": 8,
+    "d1_server_receipts": 4,
+    "timing_sidecar_receipts": 2,
+    "queue_wrapper_snapshots": 14
+  },
+  "input_schema": "wmf-development-resource-compiler-input-v1",
+  "outputs": {
+    "cell_measurement_schema": "wmf-development-resource-cell-measurement-v1",
+    "aggregate_schema": "wmf-development-resource-aggregate-v1",
+    "file_inventory_schema": "wmf-development-resource-file-inventory-v1",
+    "compiler_receipt_schema": "wmf-development-resource-compiler-receipt-v1",
+    "queue_job_receipt_schema": "wmf-development-resource-queue-job-v1"
+  },
+  "measurement_definitions": {
+    "episode_wall": "journal_attempt_boundary_monotonic_ns_delta",
+    "policy_request_roundtrip": "recorder_model_request_sent_to_model_response_received_monotonic_ns_delta_sum",
+    "n3_server_request_service": "n3_server_request_started_to_completed_monotonic_ns_delta_sum",
+    "d1_rank0_inference_wrapper": "d1_producer_rank0_official_infer_wrapper_wall_seconds_sum",
+    "d1_summed_rank_forward_gpu_seconds_proxy": "d1_producer_sum_of_per_rank_forward_wall_seconds_proxy_sum",
+    "d1_source_cost_definition": "GPU-seconds proxy is the sum of measured distributed-rank forward wall times; it is not a cloud billing claim",
+    "d1_offline_decode": "d1_producer_offline_vae_decode_wall_seconds_sum",
+    "d1_retained_output_bytes": "d1_producer_action_latent_decoded_tensor_and_decoded_rgb_file_bytes_sum",
+    "raw_attributable_bytes": "unique_resolved_regular_file_paths_in_cell_and_request_trees_excluding_shared_block_overhead",
+    "gpu_allocator_peak": "pytorch_cuda_allocator_peak_after_per_request_reset_per_rank_or_rank0_decode",
+    "annotation_time": "sum_of_per_image_annotation_seconds_from_locked_rater_responses"
+  },
+  "execution_authorization": {
+    "status": "authorized_bounded_core_study",
+    "selected_execution_host": "GM cluster",
+    "selected_kubernetes_namespace": "211247-prod",
+    "authorized_block_counts": {
+      "recording_pilot_max": 2,
+      "development": 8,
+      "confirmation": 48,
+      "maximum_core": 58
+    },
+    "authorized_behavioral_cell_counts": {
+      "recording_pilot_max": 8,
+      "development": 32,
+      "confirmation": 192,
+      "maximum_core": 232
+    },
+    "confirmation_cells_authorized_by_model": {
+      "N3": 96,
+      "D1": 96
+    },
+    "measured_safe_parallel_blocks_by_model": null,
+    "measured_gpu_memory_envelope_bytes_per_gpu": null,
+    "measurement_freeze_complete": false,
+    "user_authorization_pending": false,
+    "boundary": "Authorization does not substitute for measured GPU peaks, annotation time, or the pre-confirmation safe topology/concurrency freeze."
+  },
+  "storage_inventory": {
+    "raw_block_roots": 12,
+    "components": {
+      "N3": [
+        "four joint model-and-simulator attempt roots"
+      ],
+      "D1": [
+        "four simulator attempt roots",
+        "four paired model-server attempt roots"
+      ]
+    },
+    "scope_priority": [
+      "model_request_tree",
+      "recorder_cell_tree",
+      "shared_block_overhead"
+    ],
+    "resolved_path_deduplication": true,
+    "storage_object_deduplication": "st_dev_and_st_ino_within_one_pvc_scan",
+    "hash_every_regular_file": true,
+    "pre_and_post_metadata_snapshot_required": true,
+    "symlinks_allowed": false,
+    "non_regular_files_allowed": false
+  },
+  "missingness": {
+    "null_not_zero": true,
+    "known_unavailable_dimensions": [
+      "N3 behavioral model-server allocator peak",
+      "N3 simulator GPU peak",
+      "D1 simulator GPU peak",
+      "simultaneous all-process GPU peak for either model",
+      "two independent raters' per-image annotation time",
+      "adjudication time",
+      "measured confirmation execution topology, GPU-memory envelope, and safe concurrency freeze"
+    ],
+    "qualification_or_idle_gpu_memory_may_substitute": false,
+    "queue_job_wall_may_substitute_for_per_cell_episode_wall": false,
+    "queue_job_wall_may_substitute_for_inference_time": false,
+    "response_session_span_may_substitute_for_annotation_seconds": false,
+    "d1_retained_output_bytes_may_substitute_for_raw_recording_bytes": false
+  },
+  "release_boundary": {
+    "safe_to_release_confirmation": false,
+    "reason": "GM and the bounded 58-block core study are authorized, but ABLATION_SPEC section 8 still requires measured memory and annotation costs and a safe execution-topology/concurrency freeze before confirmation; it defines no missing-resource exception.",
+    "legacy_resource_receipts_emitted": false,
+    "confirmation_jobs_emitted": false,
+    "diagnostic_or_missingness_audit_can_release": false
+  },
+  "science_counts": {
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "model_requests_issued_by_job": 0,
+    "simulator_processes_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0,
+    "behavioral_actions_executed_by_job": 0,
+    "behavioral_cells_launched_by_job": 0,
+    "labels_created_by_job": 0
+  }
+}

@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -107,6 +109,19 @@ class CameraCropReplayWitnessTests(unittest.TestCase):
         self.assertIs(runtime["simulator_state_render_used"], False)
         self.assertIs(runtime["whole_frame_identity"], False)
         self.assertIs(runtime["safe_to_release_confirmation"], False)
+        self.assertIs(runtime["confirmation_released"], False)
+
+    def test_runtime_rejects_rehashed_confirmation_release(self) -> None:
+        runtime = json.loads(RUNTIME_CONTRACT.read_text(encoding="utf-8"))
+        runtime["confirmation_released"] = True
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary).resolve() / "runtime.json"
+            path.write_text(json.dumps(runtime), encoding="utf-8")
+            with mock.patch.dict(witness.os.environ, {"CUDA_VISIBLE_DEVICES": ""}):
+                with self.assertRaisesRegex(
+                    witness.CameraCropWitnessError, "authority boundary"
+                ):
+                    witness.run_witness("N3", path, path.parent / "output")
 
     def test_extract_generated_n3_crop_is_exact_half_open_geometry(self) -> None:
         contract = crop_contract("N3")
@@ -238,6 +253,35 @@ class CameraCropReplayWitnessTests(unittest.TestCase):
             witness.extract_generated_crop(np.zeros((9, 351, 640, 3), dtype=np.uint8), contract)
         with self.assertRaisesRegex(witness.CameraCropWitnessError, "dtype"):
             witness.extract_generated_crop(np.zeros((9, 352, 640, 3), dtype=np.float32), contract)
+
+    def test_runtime_preflight_is_publish_safe_and_contains_no_argv(self) -> None:
+        buffer = io.BytesIO()
+        stdout = SimpleNamespace(buffer=buffer)
+        with mock.patch.object(witness.sys, "stdout", stdout), mock.patch.dict(
+            witness.os.environ,
+            {
+                "PYTHONPATH": "/exact/one:/exact/two:relative-redacted",
+                "CUDA_VISIBLE_DEVICES": "",
+            },
+            clear=True,
+        ):
+            witness.emit_runtime_preflight("N3")
+        value = json.loads(buffer.getvalue())
+        self.assertEqual(value["schema_version"], "wmf-camera-crop-child-runtime-preflight-v1")
+        self.assertEqual(value["phase"], "before_replay")
+        self.assertEqual(value["model_id"], "N3")
+        self.assertIn("openpi_client.image_tools", value["module_specs"])
+        self.assertEqual(
+            value["path_environment"]["PYTHONPATH"][:2],
+            [{"absolute_path": "/exact/one"}, {"absolute_path": "/exact/two"}],
+        )
+        self.assertIn(
+            "redacted_nonabsolute_value_sha256",
+            value["path_environment"]["PYTHONPATH"][2],
+        )
+        self.assertIs(value["argv_published"], False)
+        self.assertIs(value["secret_environment_published"], False)
+        self.assertNotIn("argv", " ".join(value.keys()).replace("argv_published", ""))
 
 
 if __name__ == "__main__":

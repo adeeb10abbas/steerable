@@ -1,16 +1,51 @@
 # Camera-crop replay witness
 
-This slice qualifies only the pixel geometry used to compare an original
-selected camera with a generated decoded future. It does not run a model or a
-simulator, infer physical time, evaluate behavior or prediction skill, create a
-label, or release confirmation.
+This slice defines the fail-closed pixel replay needed to qualify the geometry
+used to compare an original selected camera with a generated decoded future.
+The current attempt is diagnostic-only and does not qualify that geometry. It
+does not run a model or simulator, infer physical time, evaluate behavior or
+prediction skill, create a label, or release confirmation.
 
-The queue job is `camera-crop-replay-witness-001` on
-`wmf-forecast-0912-worker-06`. Its two replay children run concurrently in
-new process groups with `CUDA_VISIBLE_DEVICES` empty. Their launch PIDs and
-process-group IDs are persisted before the wrapper waits, so an SSH disconnect
-does not define their lifetime. The shared queue controller remains the durable
-owner.
+Attempt `camera-crop-replay-witness-001` ended technical-invalid after both
+children exited 1. Its signed failure receipt SHA-256 is
+`b8ba6bb884f7c2daaf6695bafd7fed97675d8bc9bc11a125e4353eb52df42550`;
+the outer wrapper stderr SHA-256 is
+`a2bf9ff0707832e9d1b4968ad6e954cd23290f791b449c29cf72834b39e85922`.
+Its raw child logs remain on the PVC but were not published, so attempt 001
+does not establish the common cause and remains preserved.
+
+The fresh queue job is diagnostic-only `camera-crop-replay-witness-002` on
+`wmf-forecast-0912-worker-06`. The queue controller already starts the wrapper
+as a detached process-group leader. Both replay children deliberately inherit
+that wrapper group, so controller shutdown, timeout, or interruption reaches
+the wrapper and both children. The wrapper rejects execution unless its PID is
+also its process-group ID, persists a signed launch receipt immediately after
+each successful spawn, and locally terminates and reaps every started child on
+partial launch, receipt-write, timeout, or other orchestration failure.
+
+Attempt 002 uses the inherited queue environment and the same CPU/offline
+overrides; only `PYTHONUNBUFFERED=1` is added so a crash cannot strand buffered
+diagnostics. Before heavyweight imports, each child emits one interpreter,
+module-spec, and path-only `PYTHONPATH`/`PYTHONHOME`/`VIRTUAL_ENV` preflight.
+On failure it repeats that preflight immediately before the terminal traceback
+so it normally remains inside the bounded tail. It never emits argv or
+arbitrary/secret environment values. An SSH disconnect does not define the
+wrapper lifetime; the shared queue controller remains the durable owner.
+
+Attempt 002 can publish only `camera_crop_witness_job_failure.json`. Within
+that signed job receipt, each child row binds the exit code, full retained-log
+path/byte count/SHA-256, and at most the final 8,192 raw bytes by offset and SHA-256. It
+publishes no arbitrary log text. Instead it drops a partial leading line and
+projects only allowlisted preflight fields, traceback frame identities, error
+types, and a missing-module identifier; all messages and unapproved paths are
+represented only by byte counts and SHA-256. Generic wrapper exceptions use
+the same structural-only rule and omit traceback source text. Full raw logs
+remain only at their signed PVC paths. The queue descriptor sets its outer
+stdout/stderr publication-tail budget to zero, so a chained interpreter
+traceback cannot bypass the signed structural projection. Even if both
+diagnostic children unexpectedly complete, raw contracts remain only on the
+PVC and no crop contract is published. A later fresh attempt may apply only a
+cause evidenced by this diagnostic.
 
 ## Fail-closed inputs
 
@@ -36,8 +71,8 @@ resolved paths differ. N3 rehashes its 43-file checkpoint and D1 rehashes its
 25-file checkpoint. Both rehash the exact tracked source tree and every
 retained artifact they consume. The active Python, NumPy, torch, Pillow,
 openpi, and (for D1) torchvision implementation/version chain is signed into
-the result. A failed check produces only a technical-invalid zero-science job
-receipt; it never fabricates or publishes a crop contract.
+the result. A failed check produces only a technical-invalid zero-science
+diagnostic receipt; it never fabricates or publishes a crop contract.
 
 ## N3 replay
 
@@ -89,13 +124,15 @@ bottom-left, and right at the bottom-right. Its exact normalized tensor shape is
 selected crop is `[:,176:352,0:320,:]`, shape `[9,176,320,3]`; the original
 comparison image is the exact normalized selected-left view, `176x320`.
 
-## Published contract and API
+## Candidate contract and API
 
-A successful job publishes only:
+Attempt 002 publishes none of the candidate crop-contract files. Once a later
+fresh qualification attempt passes the exact replay without weakening a check,
+its permitted compact outputs are:
 
 - `n3_camera_crop_contract.json`;
 - `d1_camera_crop_contract.json`; and
-- `camera_crop_witness_job_receipt.json`.
+- a fresh-attempt camera witness job receipt.
 
 Each model document is signed `wmf-camera-crop-contract-v1`. The executable
 fields include top-level `crop_operation`, `image_width_px`, and
@@ -120,6 +157,7 @@ dependencies before executing them. `extract_generated_crop` requires the
 exact uint8 THWC decoded canvas and applies the signed half-open slice. Neither
 API accepts simulator-state renders.
 
-Every contract and the job receipt fixes all science and label counts to zero,
+Every candidate contract and the diagnostic receipt fixes all science and label
+counts to zero,
 with `simulator_state_render_used`, `whole_frame_identity`,
 `safe_to_release_confirmation`, and `confirmation_released` false.

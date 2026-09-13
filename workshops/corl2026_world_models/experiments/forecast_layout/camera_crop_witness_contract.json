@@ -4,10 +4,32 @@
   "namespace": "wmf_ablation_001_20260912",
   "camera_id": "over_shoulder_left_camera",
   "job": {
-    "job_id": "camera-crop-replay-witness-001",
+    "job_id": "camera-crop-replay-witness-002",
     "worker_role": "wmf-forecast-0912-worker-06",
     "max_wall_seconds": 10800,
-    "cpu_only": true
+    "cpu_only": true,
+    "publish_log_tail_bytes": 0
+  },
+  "prior_attempt": {
+    "job_id": "camera-crop-replay-witness-001",
+    "status": "technical_invalid",
+    "failure_receipt_sha256": "b8ba6bb884f7c2daaf6695bafd7fed97675d8bc9bc11a125e4353eb52df42550",
+    "wrapper_stderr_sha256": "a2bf9ff0707832e9d1b4968ad6e954cd23290f791b449c29cf72834b39e85922",
+    "preserved": true
+  },
+  "child_runtime": {
+    "mode": "diagnostic_replay_of_attempt_001_environment",
+    "diagnostic_only": true,
+    "inherit_queue_environment": true,
+    "overrides": {
+      "CUDA_VISIBLE_DEVICES": "",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1"
+    },
+    "failure_log_tail_bytes": 8192,
+    "publish_crop_contracts": false
   },
   "paths": {
     "robolab_root": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241",
@@ -193,5 +215,6 @@
   },
   "simulator_state_render_used": false,
   "whole_frame_identity": false,
-  "safe_to_release_confirmation": false
+  "safe_to_release_confirmation": false,
+  "confirmation_released": false
 }

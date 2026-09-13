@@ -1376,6 +1376,76 @@ def _final_contract(
     return result
 
 
+def _safe_path_list(value: str | None) -> list[dict[str, Any]]:
+    """Describe local import roots without echoing non-path environment values."""
+
+    if value is None:
+        return []
+    rows: list[dict[str, Any]] = []
+    for item in value.split(os.pathsep):
+        if item and Path(item).is_absolute() and not any(char in item for char in "\r\n\0"):
+            rows.append({"absolute_path": item})
+        else:
+            payload = item.encode("utf-8", errors="surrogateescape")
+            rows.append({
+                "redacted_nonabsolute_value_bytes": len(payload),
+                "redacted_nonabsolute_value_sha256": sha256_bytes(payload),
+            })
+    return rows
+
+
+def emit_runtime_preflight(model: str, *, phase: str = "before_replay") -> None:
+    """Emit one publish-safe diagnostic line before any heavyweight replay import."""
+
+    require(model in {"N3", "D1"}, "model must be N3 or D1")
+    require(phase in {"before_replay", "after_replay_failure"},
+            "runtime diagnostic phase changed")
+    modules = ["numpy", "torch", "torchvision", "PIL"]
+    if model == "N3":
+        modules.append("openpi_client.image_tools")
+    specs: dict[str, Any] = {}
+    for name in modules:
+        try:
+            specification = importlib.util.find_spec(name)
+            specs[name] = {
+                "found": specification is not None,
+                "origin": None if specification is None else specification.origin,
+                "search_locations": (
+                    []
+                    if specification is None or specification.submodule_search_locations is None
+                    else list(specification.submodule_search_locations)
+                ),
+            }
+        except BaseException as error:
+            specs[name] = {
+                "found": False,
+                "lookup_error_type": type(error).__name__,
+                "lookup_error_detail": str(error)[:500],
+            }
+    executable = Path(sys.executable)
+    event = {
+        "schema_version": "wmf-camera-crop-child-runtime-preflight-v1",
+        "event": "runtime_preflight",
+        "phase": phase,
+        "model_id": model,
+        "python": {
+            "lexical_path": str(executable),
+            "resolved_path": str(executable.resolve()),
+        },
+        "module_specs": specs,
+        "path_environment": {
+            "PYTHONPATH": _safe_path_list(os.environ.get("PYTHONPATH")),
+            "PYTHONHOME": _safe_path_list(os.environ.get("PYTHONHOME")),
+            "VIRTUAL_ENV": _safe_path_list(os.environ.get("VIRTUAL_ENV")),
+        },
+        "cuda_visible_devices_empty": os.environ.get("CUDA_VISIBLE_DEVICES") == "",
+        "argv_published": False,
+        "secret_environment_published": False,
+    }
+    sys.stdout.buffer.write(compact_bytes(event) + b"\n")
+    sys.stdout.buffer.flush()
+
+
 def run_witness(model: str, runtime_contract_path: Path, output_root: Path) -> dict[str, Any]:
     require(os.environ.get("CUDA_VISIBLE_DEVICES") == "", "witness is not explicitly CPU-only")
     runtime = load_json(Path(runtime_contract_path), "camera witness runtime contract")
@@ -1385,7 +1455,8 @@ def run_witness(model: str, runtime_contract_path: Path, output_root: Path) -> d
             "runtime contract science counts changed")
     require(runtime.get("simulator_state_render_used") is False
             and runtime.get("whole_frame_identity") is False
-            and runtime.get("safe_to_release_confirmation") is False,
+            and runtime.get("safe_to_release_confirmation") is False
+            and runtime.get("confirmation_released") is False,
             "runtime contract authority boundary changed")
     require(model in {"N3", "D1"}, "model must be N3 or D1")
     return _n3_witness(runtime, output_root) if model == "N3" else _d1_witness(runtime, output_root)
@@ -1411,7 +1482,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         value = load_json(args.contract, "camera crop contract")
         validate_camera_crop_contract(value, args.model)
         return 0
-    result = run_witness(args.model, args.runtime_contract, args.output_root)
+    emit_runtime_preflight(args.model)
+    try:
+        result = run_witness(args.model, args.runtime_contract, args.output_root)
+    except BaseException:
+        emit_runtime_preflight(args.model, phase="after_replay_failure")
+        raise
     target = Path(args.output_contract)
     require(target.parent == Path(args.output_root).parent, "contract output parent changed")
     require(not target.exists() and not target.is_symlink(), "refusing to replace contract output")

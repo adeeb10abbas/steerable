@@ -56,8 +56,8 @@
       "d1-first-live-003"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "8c96ab89b8f3d6fee4b5f178e618b715922db1f2",
-    "control_generation": 172,
+    "control_commit": "248589137ad0b1a4a6c1fe6ff080ac776740da22",
+    "control_generation": 173,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -647,9 +647,17 @@
     },
     {
       "descriptor_sha256": "61c115bb636e04b07df095d1625af7575a5c11a042e6f4f10d86b014b5b83a90",
+      "heartbeat": {
+        "at": "2026-09-13T03:55:20.968045+00:00",
+        "child_pid": 3973,
+        "unix": 1789271720.9680684,
+        "worker_id": "wmf-forecast-0912-worker-00",
+        "worker_pid": 1
+      },
       "job_id": "fixture-d02-candidate-00",
       "source_commit": "133578ff3f76cd17e416b392664e3107f30846ba",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
       "descriptor_sha256": "013a4dcd29fd4d83ca9a23c036cc5a358c3da179e2c2e65fa7d2ac80dcad1015",

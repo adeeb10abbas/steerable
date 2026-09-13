@@ -1390,6 +1390,20 @@
       ],
       "max_wall_seconds": 3600,
       "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "detached-attempt-snapshot-002",
+      "released": true,
+      "source_commit": "9982681d11941aa4eeb7a0f9786d9630f682502b",
+      "role": "any",
+      "argv": [
+        "/usr/bin/python3",
+        "-c",
+        "import pathlib,json,sys,datetime,collections\nb=pathlib.Path('/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912')\ndef read_json(p):\n if not p.exists():return None\n if p.stat().st_size>1000000:return {'error':'json_size_limit','path':str(p)}\n try:return json.loads(p.read_text())\n except Exception as e:return {'error':type(e).__name__,'path':str(p)}\ndef tail(p,n=5000):\n if not p.exists():return None\n with p.open('rb') as f:\n  f.seek(max(0,p.stat().st_size-n));return f.read(n).decode(errors='replace')\nout={'at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'jobs':{},'n3_attempts':{}}\nfor jid in ['n3-p00-pilot-003','n3-p00-pilot-004','d1-first-live-005']:\n j=b/'control/jobs'/jid\n out['jobs'][jid]={n:read_json(j/n) for n in ['heartbeat.json','result.json']}\n out['jobs'][jid]['receipts']={p.name:read_json(p) for p in (j/'publish').glob('*.json')}\nfor aid in ['n3-p00-pilot-003','n3-p00-pilot-004']:\n a=b/'behavioral/pilot/N3/P00'/aid\n v={'server_ready':read_json(a/'server/ready.json'),'server_failure':read_json(a/'server/failure.json'),'server_stderr':tail(a/'server/stderr.log'),'cells':{},'generated_request_receipts':len(list((a/'server').rglob('request_receipt.json')))}\n for c in sorted((a/'cells').glob('*')):\n  z={n:read_json(c/n) for n in ['cell_receipt.json','technical_failure.json']}\n  ep=c/'recording/events.partial.jsonl';counts=collections.Counter();actions=0;last=None\n  if ep.exists():\n   for line in ep.open():\n    try:e=json.loads(line)\n    except:continue\n    counts[e.get('kind')]+=1;last=e.get('kind');actions=max(actions,e.get('payload',{}).get('action_step',0))\n  z.update(event_counts=dict(counts),actions_observed=actions,last_event_kind=last)\n  z['stdout_tail']=tail(a/'cell_logs'/c.name/'stdout.log',2500);z['stderr_tail']=tail(a/'cell_logs'/c.name/'stderr.log')\n  v['cells'][c.name]=z\n out['n3_attempts'][aid]=v\np=pathlib.Path(sys.argv[1])/'publish';p.mkdir(parents=True,exist_ok=True)\nwith (p/'diagnostic.json').open('x') as f:json.dump(out,f,indent=2)\nprint(json.dumps({'status':'snapshot_written','at_utc':out['at_utc'],'path':str(p/'diagnostic.json')}))\n",
+        "{job_dir}"
+      ],
+      "max_wall_seconds": 30,
+      "publish_log_tail_bytes": 1024
     }
   ]
 }

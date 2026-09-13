@@ -107,6 +107,8 @@
       "d1-p00-server-002",
       "d1-p00-simulator-002",
       "d1-p00-prefix-validation-001",
+      "d1-p00-server-003",
+      "d1-p00-simulator-003",
       "n3-development-d01-001",
       "n3-development-d01-002",
       "n3-development-d02-001",
@@ -134,8 +136,8 @@
       "fixed-observation-c21-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "597efba761c9b6e915bfbcad744b356ea410914b",
-    "control_generation": 381,
+    "control_commit": "47ef50d5f5dedbf75af252ffaad2596e5b8bafc8",
+    "control_generation": 382,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -828,6 +830,12 @@
       "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
+      "descriptor_sha256": "84ad19dd319715b0ba6df6a363791028b71578c70093accc3aa9df646d7a8adb",
+      "job_id": "d1-p00-server-003",
+      "source_commit": "dc6ee449074c1e8acbfda83d6f31caefbac20ff8",
+      "status": "staged"
+    },
+    {
       "child_pid": 54,
       "child_reaped": true,
       "descriptor_sha256": "9aeff1464276fb65ddf27d8c4d39843bc343e4e73816c5c4aea3fa81b79364d6",
@@ -878,6 +886,12 @@
       },
       "wall_seconds": 776.0880140580703,
       "worker_id": "wmf-forecast-0912-worker-00"
+    },
+    {
+      "descriptor_sha256": "1e51c7e4bad2e347e413c81fbf36e42e18c3e9ed811619b7deb25fc3d844d91e",
+      "job_id": "d1-p00-simulator-003",
+      "source_commit": "dc6ee449074c1e8acbfda83d6f31caefbac20ff8",
+      "status": "staged"
     },
     {
       "child_pid": 6428,
@@ -1141,9 +1155,17 @@
     },
     {
       "descriptor_sha256": "5607dbb71e9fec7b136d411cae23ecd118656f0b8964973210d0d49234ebd89b",
+      "heartbeat": {
+        "at": "2026-09-13T07:28:56.103288+00:00",
+        "child_pid": 12096,
+        "unix": 1789284536.1033266,
+        "worker_id": "wmf-forecast-0912-worker-05",
+        "worker_pid": 1
+      },
       "job_id": "fixed-observation-c08-001",
       "source_commit": "148b0bad38382b32667d7cf2484773c11fa744ad",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-05"
     },
     {
       "child_pid": 9987,
@@ -1250,17 +1272,29 @@
       "worker_id": "wmf-forecast-0912-worker-06"
     },
     {
+      "child_pid": 11750,
+      "child_reaped": true,
       "descriptor_sha256": "b22fde3de90952074132cd1eb92539dcf4419f1563bfe0ac37368a0f7e3d84ee",
-      "heartbeat": {
-        "at": "2026-09-13T07:28:02.671393+00:00",
-        "child_pid": 11750,
-        "unix": 1789284482.6714194,
-        "worker_id": "wmf-forecast-0912-worker-09",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T07:28:40.845346+00:00",
+      "error_type": null,
       "job_id": "fixed-observation-c13-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"behavioral_action_count\": 0, \"candidate_id\": \"C13__candidate_00\", \"child_exit_code\": 0, \"child_logs\": {\"stderr\": {\"bytes\": 551, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c13-001/child.stderr.log\", \"sha256\": \"10935d76547f4748b44b1511c4fae57e8da39d8cc9dd19513128a0f9efdb9a72\"}, \"stdout\": {\"bytes\": 20170, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c13-001/child.stdout.log\", \"sha256\": \"d40b1fb1617408dd077ea9637b36f788cb85ccc1cec35ef09a3f422d1f22d794\"}}, \"child_started\": true, \"claim_boundary\": \"One current C13 physical observation and exact preprocessing only; no model request or behavioral episode.\", \"environment_seed\": 2026091213, \"exit_code\": 0, \"finished_at_utc\": \"2026-09-13T07:28:40.776305Z\", \"gate_receipt_sha256\": \"38791e01a7564d29827cab35a5692e0c76e374662aced04acd6f4ddb0d10a2e5\", \"gpu_identity\": {\"driver_version\": \"580.95.05\", \"index\": \"0\", \"name\": \"NVIDIA B200\", \"preexisting_compute_process_count\": 0, \"uuid\": \"GPU-1dd1d72a-abf0-2118-b3fb-75a3b52f0c87\"}, \"job_id\": \"fixed-observation-c13-001\", \"layout_pair_id\": \"C13\", \"model_fixtures\": {\"D1\": {\"array_keys\": [\"observation/exterior_image_0_left\", \"observation/exterior_image_1_left\", \"observation/wrist_image_left\", \"observation/joint_position\", \"observation/cartesian_position\", \"observation/gripper_position\"], \"fixture\": {\"bytes\": 520282, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c13-001/capture/d1_official_wire_observation.npz\", \"sha256\": \"e82d421881ae1513d85d9e048cd99a11d68a8c1ef70f4c2f39d02ca0f57336e2\"}, \"interface\": \"official conditional DreamZero six-array request fixture\"}, \"N3\": {\"array_keys\": [\"observation/image\", \"observation/joint_position\", \"observation/gripper_position\"], \"fixture\": {\"bytes\": 1037692, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c13-001/capture/n3_official_wire_observation.npz\", \"sha256\": \"f7634d2abe168e18f9fd6cc875dd68da33049f6c7b9fe5607791441f38b4fa33\"}, \"interface\": \"official packed observation/image plus joint/gripper arrays\"}}, \"model_request_count\": 0, \"pose_manifest_sha256\": \"207f9352f889ad24111017fe0e5c24270a2cc528d53895bfcc5f0838a749bce3\", \"raw_capture_receipt\": {\"bytes\": 80182, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c13-001/capture/capture_receipt.json\", \"sha256\": \"8426641434629cbb709a78e902962d0455f5d55dce3cb278bb029c8e7ac34003\"}, \"schema_version\": \"wmf-forecast-layout-fixed-observation-job-v1\", \"status\": \"passed\", \"study_commit\": \"148b0bad38382b32667d7cf2484773c11fa744ad\", \"study_namespace\": \"wmf_ablation_001_20260912\"}\n"
+      },
+      "returncode": 0,
       "source_commit": "148b0bad38382b32667d7cf2484773c11fa744ad",
-      "status": "claimed",
+      "started_at": "2026-09-13T07:27:38.283397+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 2743,
+        "sha256": "1d98978a96a773b0a8f577016336c767ad5604b01633842a84dc10f335ed03c1"
+      },
+      "wall_seconds": 62.56226991605945,
       "worker_id": "wmf-forecast-0912-worker-09"
     },
     {
@@ -2398,9 +2432,9 @@
     {
       "descriptor_sha256": "3056f4a7484c9edc1fe6aa8c22c82cf513246bd8905b277bdfa78171794c6d23",
       "heartbeat": {
-        "at": "2026-09-13T07:28:03.791136+00:00",
+        "at": "2026-09-13T07:28:56.020431+00:00",
         "child_pid": 10926,
-        "unix": 1789284483.791168,
+        "unix": 1789284536.0204499,
         "worker_id": "wmf-forecast-0912-worker-06",
         "worker_pid": 1
       },
@@ -2724,9 +2758,9 @@
     {
       "descriptor_sha256": "48ab701dcfd44e815ef924797129bed68ec9ba2a8a5f124cea7437474930f7bb",
       "heartbeat": {
-        "at": "2026-09-13T07:28:03.279637+00:00",
+        "at": "2026-09-13T07:28:57.555554+00:00",
         "child_pid": 155,
-        "unix": 1789284483.279651,
+        "unix": 1789284537.5555704,
         "worker_id": "wmf-forecast-0912-worker-n3-00",
         "worker_pid": 1
       },

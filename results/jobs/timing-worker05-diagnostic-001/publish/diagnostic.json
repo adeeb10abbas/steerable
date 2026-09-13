@@ -1,0 +1,46 @@
+{
+  "cross_pod_lock_qualification": false,
+  "diagnostic_passed": true,
+  "elapsed_seconds": 0.1624185407999903,
+  "expected_gpu_count": 1,
+  "expected_worker_id": null,
+  "filesystem_space": {
+    "free_bytes": 164524351029248,
+    "interpretation": "filesystem capacity, not a verified per-user quota",
+    "total_bytes": 219902325555200
+  },
+  "gid": 2518800,
+  "gpu": {
+    "available": true,
+    "compute_processes": [],
+    "count": 1,
+    "devices": [
+      {
+        "driver_version": "580.95.05",
+        "index": 0,
+        "memory.free": 182632,
+        "memory.total": 183359,
+        "name": "NVIDIA B200",
+        "utilization.gpu": 0,
+        "uuid": "GPU-1e6dc545-12a1-6021-7ea9-96c638f34bd9"
+      }
+    ],
+    "errors": []
+  },
+  "hostname": "wmf-forecast-0912-worker-05-vw5gw",
+  "idle_worker_checks_applied": false,
+  "idle_worker_errors": [],
+  "job_dir": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-worker05-diagnostic-001",
+  "job_dir_writable": true,
+  "namespace": "wmf_ablation_001_20260912",
+  "observed_at_utc": "2026-09-13T09:29:37.989561+00:00",
+  "pid": 150,
+  "pod_uid": "d73e25f5-2a2b-4d7d-9673-3399c0e3e2d6",
+  "schema_version": "wmf-worker-diagnostic-v1",
+  "scientific_qualification": false,
+  "scope": "Harmless host/GPU/logging diagnostic only; no model import, generation, simulator or credential inspection.",
+  "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
+  "source_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/1753f36617218c1d9462924299cd36e0b8013196",
+  "uid": 816149040,
+  "worker_identity_errors": []
+}

@@ -19,6 +19,7 @@ sys.path.insert(0, str(LAYOUT_ROOT))
 fixture = importlib.import_module("fixture_layouts")
 gate = importlib.import_module("model_blind_fixture_gate")
 tasks = importlib.import_module("fixture_tasks")
+robolab_adapter = importlib.import_module("robolab_fixture_gate_adapter")
 
 
 def load_source():
@@ -177,6 +178,18 @@ class LiveGateTests(unittest.TestCase):
         self.candidate = self.pool["candidates"][4]
         self.pool_payload = fixture.canonical_json_bytes(self.pool)
         self.pool_sha = fixture.sha256_bytes(self.pool_payload)
+
+    def test_adapter_and_gate_use_identical_canonical_hash_bytes(self):
+        value = {
+            "camera_center_robot_base_m": [1.5, -0.0, 1.0],
+            "camera_quaternion_world_wxyz_ros": [-0.4738018, 1.2e-8, 0.8806315, -1.7e-8],
+            "image_size_wh": [1280, 720],
+            "intrinsic_matrix_3x3": [[500.0, 0.0, 640.0], [0.0, 500.0, 360.0], [0.0, 0.0, 1.0]],
+        }
+        self.assertEqual(
+            robolab_adapter._gate_canonical_sha(value),
+            gate.canonical_value_sha256(value),
+        )
 
     def test_full_capture_matrix_passes_and_hashes_match_left_right(self):
         result = gate.evaluate_candidate_captures(

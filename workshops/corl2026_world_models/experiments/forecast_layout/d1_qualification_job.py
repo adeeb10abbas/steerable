@@ -53,6 +53,7 @@ D1_PYTHON = Path("/data/users/ali/vla_wam/envs/dreamzero-ab790c1-py311/bin/pytho
 D1_SOURCE = Path("/data/users/ali/vla_wam/external/DreamZero-v3e004-clean-ab790c1")
 D1_CHECKPOINT = Path("/data/users/ali/vla_wam/checkpoints/DreamZero-DROID-96ad344")
 D1_TOKENIZER = Path("/data/users/ali/vla_wam/checkpoints/umt5-xxl-tokenizer-66cb9e7")
+D1_CUDA_HOME = Path("/data/users/ali/vla_wam/envs/cuda-12.8-toolkit")
 DEFAULT_PORT = 18021
 EXPECTED_SOURCE_COMMIT = "ab790c198fbce33503358efbbd4187ce9a89adf3"
 EXPECTED_SOURCE_TREE = "6b7ba27f1af81e963a6507f1204c05c65a94098c"
@@ -1067,6 +1068,11 @@ def _signal_handler(signum: int, _frame: Any) -> None:
 
 
 def _child_environment(job_dir: Path) -> dict[str, str]:
+    # DeepSpeed discovers and validates its CUDA extension toolchain during
+    # import.  GM's pinned D1 image does not expose a /usr/local/cuda symlink;
+    # this task-owned toolkit is the verified native CUDA 12.x installation.
+    cuda_home = D1_CUDA_HOME
+    require((cuda_home / "bin" / "nvcc").is_file(), "d1_cuda_toolkit_missing")
     runtime_root = job_dir / "raw" / "runtime"
     directories = {
         "tmp": runtime_root / "tmp",
@@ -1079,6 +1085,8 @@ def _child_environment(job_dir: Path) -> dict[str, str]:
         directory.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ)
     env.update(
+        CUDA_HOME=str(cuda_home),
+        PATH=f"{cuda_home / 'bin'}:{env.get('PATH', '')}",
         PYTHONDONTWRITEBYTECODE="1",
         PYTHONUNBUFFERED="1",
         TMPDIR=str(directories["tmp"]),

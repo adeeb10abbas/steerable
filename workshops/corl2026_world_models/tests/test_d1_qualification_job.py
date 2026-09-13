@@ -612,6 +612,9 @@ finally:
             )
             for directory in (runtime.source, runtime.checkpoint, runtime.tokenizer):
                 directory.mkdir()
+            cuda_home = root / "cuda"
+            (cuda_home / "bin").mkdir(parents=True)
+            (cuda_home / "bin/nvcc").write_text("test-only executable placeholder\n")
             queue = JOB.QueueContext(source, job_dir, "a" * 40, "d1-test")
             real_launch = JOB.launch_server
 
@@ -669,6 +672,7 @@ finally:
                 mock.patch.object(JOB, "launch_server", side_effect=fake_launch),
                 mock.patch.object(JOB, "wait_for_server_contract", side_effect=fake_wait),
                 mock.patch.object(JOB, "build_probe_command", side_effect=fake_probe_command),
+                mock.patch.object(JOB, "D1_CUDA_HOME", cuda_home),
             ):
                 receipt = JOB.execute_job(
                     source_root=source,

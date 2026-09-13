@@ -20,6 +20,8 @@ import subprocess
 import sys
 from typing import Any, Mapping, Sequence
 
+from fixture_layouts import canonical_json_bytes, sha256_bytes
+
 
 def _require(condition: bool, message: str) -> None:
     if not condition:
@@ -38,6 +40,12 @@ def _canonical_sha(value: Any) -> str:
     return hashlib.sha256(
         json.dumps(value, allow_nan=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
+
+
+def _gate_canonical_sha(value: Any) -> str:
+    """Hash the one field whose digest the gate recomputes independently."""
+
+    return sha256_bytes(canonical_json_bytes(value))
 
 
 def _host(value: Any) -> list[float]:
@@ -323,7 +331,7 @@ class RoboLabFixtureGateAdapter:
                 "visibility_source_sha256": geometry_sha,
                 "camera_geometry_source_sha256": geometry_sha,
                 "camera_configuration": camera_configuration,
-                "camera_configuration_sha256": _canonical_sha(camera_configuration),
+                "camera_configuration_sha256": _gate_canonical_sha(camera_configuration),
                 "projected_object_centers_uv": projections,
                 "projected_unoccluded_by_object": unoccluded,
                 "geometry": geometry,

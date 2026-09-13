@@ -87,14 +87,65 @@ class DiagnosticTests(unittest.TestCase):
             root=Path(tmp);binary=root/'nvidia-smi'
             binary.write_text('#!/bin/sh\ncase "$1" in\n--query-gpu=*) echo "0, GPU-test, NVIDIA B200, 580.95.05, 183359, 182632, 0";;\n--query-compute-apps=*) exit 0;;\nesac\n')
             binary.chmod(0o755)
-            with patch.dict(os.environ,{'PATH':str(root)+os.pathsep+os.environ['PATH'],'GH_TOKEN':'do-not-publish-this'}):
-                result=module.write_diagnostic(root/'job',source_root=root)
+            pod_uid='11111111-2222-3333-4444-555555555555'
+            with (patch.dict(os.environ,{'PATH':str(root)+os.pathsep+os.environ['PATH'],
+                                        'POD_UID':pod_uid,'GH_TOKEN':'do-not-publish-this'}),
+                  patch.object(module.socket,'gethostname',return_value='fixture-worker-00-testpod')):
+                result=module.write_diagnostic(root/'job',source_root=root,
+                                               expected_worker_id='fixture-worker-00',
+                                               expected_gpu_count=1)
             text=(root/'job/publish/diagnostic.json').read_text()
             self.assertNotIn('do-not-publish-this',text)
             self.assertFalse(result['scientific_qualification'])
             self.assertEqual(result['gpu']['count'],1)
             self.assertEqual(result['gpu']['devices'][0]['name'],'NVIDIA B200')
             self.assertEqual(result['gpu']['compute_processes'],[])
+            self.assertEqual(result['pod_uid'],pod_uid)
+            self.assertEqual(result['expected_worker_id'],'fixture-worker-00')
+            self.assertEqual(result['worker_identity_errors'],[])
+            self.assertTrue(result['idle_worker_checks_applied'])
+            self.assertEqual(result['idle_worker_errors'],[])
+            self.assertTrue(result['diagnostic_passed'])
             self.assertLess(len(text),16000)
+
+    def test_worker_bound_diagnostic_exits_nonzero_when_not_idle_or_wrong_pod(self):
+        module=load('cluster_worker_diagnostic.py')
+        base_gpu={
+            'available':True,
+            'count':1,
+            'devices':[{'index':0,'uuid':'GPU-test','name':'NVIDIA B200',
+                        'driver_version':'580.95.05','memory.total':183359,
+                        'memory.free':182632,'utilization.gpu':0}],
+            'compute_processes':[],
+            'errors':[],
+        }
+        cases={
+            'busy':('visible_gpu_not_idle','fixture-worker-00-testpod','uid-test'),
+            'process':('preexisting_compute_processes','fixture-worker-00-testpod','uid-test'),
+            'wrong_index':('visible_gpu_index_mismatch','fixture-worker-00-testpod','uid-test'),
+            'wrong_gpu':('visible_gpu_not_b200','fixture-worker-00-testpod','uid-test'),
+            'wrong_host':('hostname_does_not_match_expected_worker','wrong-worker-testpod','uid-test'),
+            'missing_pod_uid':('pod_uid_environment_missing','fixture-worker-00-testpod',''),
+        }
+        for case,(expected_error,hostname,pod_uid) in cases.items():
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as tmp:
+                gpu=json.loads(json.dumps(base_gpu))
+                if case=='busy':gpu['devices'][0]['utilization.gpu']=9
+                if case=='process':gpu['compute_processes']=[{
+                    'gpu_uuid':'GPU-test','pid':123,'process_name':'other','used_memory':1024}]
+                if case=='wrong_index':gpu['devices'][0]['index']=1
+                if case=='wrong_gpu':gpu['devices'][0]['name']='NVIDIA H100'
+                argv=['cluster_worker_diagnostic.py','--job-dir',str(Path(tmp)/'job'),
+                      '--expect-gpus','1','--expected-worker-id','fixture-worker-00']
+                with (patch.object(module,'query_gpu',return_value=gpu),
+                      patch.object(module.socket,'gethostname',return_value=hostname),
+                      patch.dict(os.environ,{'POD_UID':pod_uid}),
+                      patch.object(sys,'argv',argv),patch('builtins.print')):
+                    exit_code=module.main()
+                report=json.loads((Path(tmp)/'job/publish/diagnostic.json').read_text())
+                self.assertEqual(exit_code,1)
+                self.assertFalse(report['diagnostic_passed'])
+                self.assertIn(expected_error,
+                              report['worker_identity_errors']+report['idle_worker_errors'])
 
 if __name__=='__main__':unittest.main()

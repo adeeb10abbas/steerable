@@ -63,6 +63,14 @@ COMMIT_RE = re.compile(r"[0-9a-f]{40}\Z")
 SAFE_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}\Z")
 DECISION_EXIT = {"accepted": 0, "physical_rejection": 2, "technical_invalid": 3}
 MAX_PUBLISH_BYTES = 128 * 1024
+WORKER_DIAGNOSTIC_SCHEMA = "wmf-worker-diagnostic-v1"
+WORKER_DIAGNOSTIC_SCOPE = (
+    "Harmless host/GPU/logging diagnostic only; no model import, generation, "
+    "simulator or credential inspection."
+)
+WORKER_DIAGNOSTIC_SCRIPT = (
+    "{source_root}/workshops/corl2026_world_models/scripts/cluster_worker_diagnostic.py"
+)
 
 
 class FixtureJobError(RuntimeError):
@@ -415,6 +423,222 @@ def verify_deployment_identity(
     }
 
 
+def verify_worker_diagnostic(
+    *,
+    source_root: Path,
+    state_dir: Path,
+    fixture_descriptor: Mapping[str, Any],
+    diagnostic_path: Path,
+    diagnostic_sha256: str,
+    hostname: str,
+    pod_uid: str | None,
+) -> dict[str, Any]:
+    """Authenticate a current dynamically admitted worker without Kubernetes.
+
+    The diagnostic remains explicitly non-scientific.  Its immutable queue
+    descriptor proves which exact source and worker role produced it; the
+    report then binds that role to the current pod hostname, downward-API UID,
+    and one idle visible B200.  A fresh live GPU check still runs afterwards.
+    """
+
+    source_root = Path(source_root).resolve()
+    state_dir = Path(state_dir).resolve()
+    supplied_path = Path(diagnostic_path)
+    require(supplied_path.is_absolute(), "worker_diagnostic_path_not_absolute")
+    require(not supplied_path.is_symlink(), "worker_diagnostic_is_symlink")
+    require(
+        not supplied_path.parent.is_symlink()
+        and not supplied_path.parent.parent.is_symlink(),
+        "worker_diagnostic_parent_is_symlink",
+    )
+    require(
+        isinstance(diagnostic_sha256, str)
+        and SHA256_RE.fullmatch(diagnostic_sha256) is not None,
+        "worker_diagnostic_hash_invalid",
+    )
+    try:
+        diagnostic_path = supplied_path.resolve(strict=True)
+    except OSError as error:
+        raise FixtureJobError("worker_diagnostic_unreadable") from error
+    jobs_root = (state_dir / "jobs").resolve()
+    diagnostic_job = diagnostic_path.parent.parent
+    require(diagnostic_path.name == "diagnostic.json", "worker_diagnostic_filename_invalid")
+    require(diagnostic_path.parent.name == "publish", "worker_diagnostic_publish_path_invalid")
+    require(diagnostic_job.parent == jobs_root, "worker_diagnostic_outside_queue_jobs")
+    require(
+        SAFE_ID_RE.fullmatch(diagnostic_job.name) is not None,
+        "worker_diagnostic_job_id_unsafe",
+    )
+    require(
+        diagnostic_job.name != fixture_descriptor.get("job_id"),
+        "worker_diagnostic_is_fixture_job",
+    )
+
+    descriptor_path = diagnostic_job / "descriptor.json"
+    require(not descriptor_path.is_symlink(), "worker_diagnostic_descriptor_is_symlink")
+    diagnostic_descriptor, descriptor_payload = load_json(
+        descriptor_path,
+        "worker_diagnostic_descriptor_unreadable",
+    )
+    require(len(descriptor_payload) <= MAX_PUBLISH_BYTES, "worker_diagnostic_descriptor_oversize")
+    require(isinstance(diagnostic_descriptor, dict), "worker_diagnostic_descriptor_invalid")
+    require(
+        diagnostic_descriptor.get("schema_version") == "wmf-cluster-job-v1",
+        "worker_diagnostic_descriptor_schema_mismatch",
+    )
+    require(
+        diagnostic_descriptor.get("namespace") == NAMESPACE,
+        "worker_diagnostic_descriptor_namespace_mismatch",
+    )
+    require(
+        diagnostic_descriptor.get("job_id") == diagnostic_job.name,
+        "worker_diagnostic_descriptor_job_mismatch",
+    )
+    require(
+        diagnostic_descriptor.get("released") is True,
+        "worker_diagnostic_descriptor_not_released",
+    )
+    source_commit = fixture_descriptor.get("source_commit")
+    require(
+        isinstance(source_commit, str) and COMMIT_RE.fullmatch(source_commit) is not None,
+        "fixture_descriptor_source_invalid",
+    )
+    require(source_root.name == source_commit, "fixture_source_commit_path_mismatch")
+    require(
+        diagnostic_descriptor.get("source_commit") == source_commit,
+        "worker_diagnostic_source_mismatch",
+    )
+    worker_role = diagnostic_descriptor.get("role")
+    require(
+        isinstance(worker_role, str)
+        and SAFE_ID_RE.fullmatch(worker_role) is not None
+        and worker_role != "any",
+        "worker_diagnostic_role_invalid",
+    )
+    require(fixture_descriptor.get("role") == worker_role, "worker_diagnostic_role_mismatch")
+    expected_argv = [
+        "/usr/bin/python3",
+        WORKER_DIAGNOSTIC_SCRIPT,
+        "--job-dir",
+        "{job_dir}",
+        "--source-root",
+        "{source_root}",
+        "--expect-gpus",
+        "1",
+        "--expected-worker-id",
+        worker_role,
+    ]
+    require(
+        diagnostic_descriptor.get("argv") == expected_argv,
+        "worker_diagnostic_descriptor_argv_mismatch",
+    )
+
+    diagnostic, payload = load_json(diagnostic_path, "worker_diagnostic_unreadable")
+    require(len(payload) <= MAX_PUBLISH_BYTES, "worker_diagnostic_oversize")
+    observed_sha256 = sha256_bytes(payload)
+    require(observed_sha256 == diagnostic_sha256, "worker_diagnostic_hash_mismatch")
+    identity = {
+        "path": str(diagnostic_path),
+        "bytes": len(payload),
+        "sha256": observed_sha256,
+    }
+    require(isinstance(diagnostic, dict), "worker_diagnostic_invalid")
+    require(
+        diagnostic.get("schema_version") == WORKER_DIAGNOSTIC_SCHEMA,
+        "worker_diagnostic_schema_mismatch",
+    )
+    require(diagnostic.get("namespace") == NAMESPACE, "worker_diagnostic_namespace_mismatch")
+    require(
+        diagnostic.get("job_dir") == str(diagnostic_job),
+        "worker_diagnostic_job_path_mismatch",
+    )
+    require(
+        diagnostic.get("source_root") == str(source_root)
+        and diagnostic.get("source_commit") == source_commit,
+        "worker_diagnostic_report_source_mismatch",
+    )
+    require(
+        diagnostic.get("expected_worker_id") == worker_role,
+        "worker_diagnostic_report_role_mismatch",
+    )
+    require(
+        diagnostic.get("worker_identity_errors") == [],
+        "worker_diagnostic_identity_errors",
+    )
+    require(
+        isinstance(hostname, str)
+        and hostname == diagnostic.get("hostname")
+        and hostname.startswith(worker_role + "-"),
+        "worker_diagnostic_hostname_mismatch",
+    )
+    require(
+        isinstance(pod_uid, str)
+        and SAFE_ID_RE.fullmatch(pod_uid) is not None
+        and diagnostic.get("pod_uid") == pod_uid,
+        "worker_diagnostic_pod_uid_mismatch",
+    )
+    require(diagnostic.get("job_dir_writable") is True, "worker_diagnostic_job_not_writable")
+    require(
+        diagnostic.get("scientific_qualification") is False
+        and diagnostic.get("cross_pod_lock_qualification") is False
+        and diagnostic.get("scope") == WORKER_DIAGNOSTIC_SCOPE,
+        "worker_diagnostic_scope_invalid",
+    )
+    gpu = diagnostic.get("gpu")
+    require(isinstance(gpu, dict), "worker_diagnostic_gpu_invalid")
+    require(gpu.get("available") is True, "worker_diagnostic_gpu_unavailable")
+    require(gpu.get("errors") == [], "worker_diagnostic_gpu_errors")
+    require(gpu.get("count") == 1, "worker_diagnostic_gpu_count_invalid")
+    devices = gpu.get("devices")
+    require(isinstance(devices, list) and len(devices) == 1, "worker_diagnostic_gpu_inventory_invalid")
+    device = devices[0]
+    require(isinstance(device, dict), "worker_diagnostic_gpu_device_invalid")
+    require(device.get("index") == 0, "worker_diagnostic_gpu_index_invalid")
+    require(device.get("name") == "NVIDIA B200", "worker_diagnostic_gpu_not_b200")
+    require(
+        isinstance(device.get("uuid"), str)
+        and device["uuid"].startswith("GPU-")
+        and len(device["uuid"]) <= 80,
+        "worker_diagnostic_gpu_uuid_invalid",
+    )
+    require(device.get("utilization.gpu") == 0, "worker_diagnostic_gpu_not_idle")
+    require(
+        gpu.get("compute_processes") == [],
+        "worker_diagnostic_preexisting_compute_processes",
+    )
+    require(
+        diagnostic.get("expected_gpu_count") == 1
+        and diagnostic.get("idle_worker_checks_applied") is True
+        and diagnostic.get("idle_worker_errors") == []
+        and diagnostic.get("diagnostic_passed") is True,
+        "worker_diagnostic_idle_gate_failed",
+    )
+    return {
+        "receipt": identity,
+        "receipt_kind": "dynamic_worker_diagnostic",
+        "diagnostic_descriptor": {
+            "path": str(descriptor_path.resolve()),
+            "bytes": len(descriptor_payload),
+            "sha256": sha256_bytes(descriptor_payload),
+        },
+        "diagnostic_job_id": diagnostic_job.name,
+        "pod": hostname,
+        "pod_uid": pod_uid,
+        "pod_uid_attestation_source": "downward_api_environment_and_hash_bound_worker_diagnostic",
+        "deployment_job": worker_role,
+        "node": None,
+        "diagnostic_gpu_identity": {
+            "index": device["index"],
+            "uuid": device["uuid"],
+            "name": device["name"],
+            "driver_version": device.get("driver_version"),
+            "preexisting_compute_process_count": 0,
+        },
+        "scientific_qualification": False,
+        "scope": WORKER_DIAGNOSTIC_SCOPE,
+    }
+
+
 def _query_csv(executable: Path | str, columns: Sequence[str], *, compute: bool) -> list[dict[str, str]]:
     prefix = "--query-compute-apps=" if compute else "--query-gpu="
     try:
@@ -649,8 +873,14 @@ def execute_job(
     nvidia_smi: Path | str = "nvidia-smi",
     hostname: str | None = None,
     pod_uid: str | None = None,
+    worker_diagnostic_path: Path | None = None,
+    worker_diagnostic_sha256: str | None = None,
 ) -> dict[str, Any]:
     require(layout_pair_id in PLANNED_LAYOUT_IDS, "layout_pair_unplanned")
+    require(
+        (worker_diagnostic_path is None) == (worker_diagnostic_sha256 is None),
+        "worker_diagnostic_path_hash_pair_required",
+    )
     if requested_candidate is not None:
         require(SAFE_ID_RE.fullmatch(requested_candidate) is not None, "candidate_id_unsafe")
     source, state, job, descriptor = _validate_queue_paths(source_root, state_dir, job_dir)
@@ -714,8 +944,29 @@ def execute_job(
                 context["candidate"] = candidate
                 current_hostname = hostname or socket.gethostname()
                 current_pod_uid = pod_uid or os.environ.get("POD_UID")
-                context["deployment"] = verify_deployment_identity(source, current_hostname, current_pod_uid)
+                if worker_diagnostic_path is None:
+                    context["deployment"] = verify_deployment_identity(
+                        source,
+                        current_hostname,
+                        current_pod_uid,
+                    )
+                else:
+                    context["deployment"] = verify_worker_diagnostic(
+                        source_root=source,
+                        state_dir=state,
+                        fixture_descriptor=descriptor,
+                        diagnostic_path=worker_diagnostic_path,
+                        diagnostic_sha256=str(worker_diagnostic_sha256),
+                        hostname=current_hostname,
+                        pod_uid=current_pod_uid,
+                    )
                 context["gpu"] = verify_idle_b200(nvidia_smi)
+                if context["deployment"]["receipt_kind"] == "dynamic_worker_diagnostic":
+                    require(
+                        context["deployment"]["diagnostic_gpu_identity"]["uuid"]
+                        == context["gpu"]["uuid"],
+                        "worker_diagnostic_gpu_uuid_changed",
+                    )
                 directories = _runtime_directories(state_parent, current_hostname)
                 invocation_dir = layout_root / "queue_attempts" / job.name
                 require(not invocation_dir.exists() and not invocation_dir.is_symlink(), "immutable_queue_attempt_exists")
@@ -889,6 +1140,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--job-dir", type=Path, required=True)
     parser.add_argument("--layout-pair-id", choices=PLANNED_LAYOUT_IDS, required=True)
     parser.add_argument("--candidate")
+    parser.add_argument(
+        "--worker-diagnostic",
+        "--worker-diagnostic-path",
+        dest="worker_diagnostic",
+        type=Path,
+    )
+    parser.add_argument("--worker-diagnostic-sha256")
     args = parser.parse_args(argv)
     try:
         receipt = execute_job(
@@ -897,6 +1155,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             job_dir=args.job_dir,
             layout_pair_id=args.layout_pair_id,
             requested_candidate=args.candidate,
+            worker_diagnostic_path=args.worker_diagnostic,
+            worker_diagnostic_sha256=args.worker_diagnostic_sha256,
         )
     except FixtureJobError as error:
         print(json.dumps({"decision": "technical_invalid", "exit_code": 3, "reason": error.reason}, sort_keys=True))

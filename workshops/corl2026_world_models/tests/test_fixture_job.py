@@ -121,7 +121,7 @@ else:
 
 
 class QueueHarness:
-    def __init__(self, temporary: str) -> None:
+    def __init__(self, temporary: str, *, dynamic_worker: bool = False) -> None:
         self.root = Path(temporary)
         self.private = self.root / "private"
         self.state = self.private / "queue-state"
@@ -130,12 +130,16 @@ class QueueHarness:
         staging = self.root / "staging-source"
         forecast = staging / "workshops/corl2026_world_models/experiments/forecast_layout"
         autonomy = staging / "workshops/corl2026_world_models/execution/20260912/autonomy"
+        scripts = staging / "workshops/corl2026_world_models/scripts"
         forecast.mkdir(parents=True)
         autonomy.mkdir(parents=True)
+        scripts.mkdir(parents=True)
         shutil.copy2(FORECAST / "layout_source_contract.json", forecast / "layout_source_contract.json")
         shutil.copy2(FORECAST / "layout_candidate_pool.json", forecast / "layout_candidate_pool.json")
+        shutil.copy2(WORKSHOP / "scripts/cluster_worker_diagnostic.py", scripts / "cluster_worker_diagnostic.py")
         (forecast / "model_blind_fixture_gate.py").write_text(FAKE_GATE)
-        self.hostname = "fixture-worker-00"
+        self.worker_role = "fixture-worker-00"
+        self.hostname = self.worker_role + "-testpod"
         self.pod_uid = "11111111-2222-3333-4444-555555555555"
         deployment = {
             "schema_version": "wmf-deployment-receipt-v1",
@@ -169,7 +173,7 @@ class QueueHarness:
             "job_id": self.job.name,
             "released": True,
             "source_commit": self.commit,
-            "role": "any",
+            "role": self.worker_role if dynamic_worker else "any",
             "argv": ["python3", "fixture_job.py"],
             "max_wall_seconds": 1000,
             "publish_log_tail_bytes": 0,
@@ -181,6 +185,74 @@ class QueueHarness:
         self.counter = self.root / "child-count"
         self.robolab = self.root / "RoboLab"
         self.robolab.mkdir()
+
+    def create_worker_diagnostic(self) -> tuple[Path, str]:
+        diagnostic_job = self.state / "jobs/worker-diagnostic-test"
+        publish = diagnostic_job / "publish"
+        publish.mkdir(parents=True)
+        descriptor = {
+            "schema_version": "wmf-cluster-job-v1",
+            "namespace": fixture_job.NAMESPACE,
+            "job_id": diagnostic_job.name,
+            "released": True,
+            "source_commit": self.commit,
+            "role": self.worker_role,
+            "argv": [
+                "/usr/bin/python3",
+                fixture_job.WORKER_DIAGNOSTIC_SCRIPT,
+                "--job-dir",
+                "{job_dir}",
+                "--source-root",
+                "{source_root}",
+                "--expect-gpus",
+                "1",
+                "--expected-worker-id",
+                self.worker_role,
+            ],
+            "max_wall_seconds": 120,
+            "publish_log_tail_bytes": 2048,
+        }
+        (diagnostic_job / "descriptor.json").write_bytes(fixture_job.canonical_bytes(descriptor))
+        report = {
+            "schema_version": fixture_job.WORKER_DIAGNOSTIC_SCHEMA,
+            "namespace": fixture_job.NAMESPACE,
+            "observed_at_utc": "2026-09-13T04:30:00+00:00",
+            "hostname": self.hostname,
+            "pod_uid": self.pod_uid,
+            "expected_worker_id": self.worker_role,
+            "worker_identity_errors": [],
+            "expected_gpu_count": 1,
+            "idle_worker_checks_applied": True,
+            "idle_worker_errors": [],
+            "diagnostic_passed": True,
+            "job_dir": str(diagnostic_job.resolve()),
+            "job_dir_writable": True,
+            "source_root": str(self.source.resolve()),
+            "source_commit": self.commit,
+            "gpu": {
+                "available": True,
+                "count": 1,
+                "devices": [
+                    {
+                        "index": 0,
+                        "uuid": "GPU-test-fixture",
+                        "name": "NVIDIA B200",
+                        "driver_version": "580.95.05",
+                        "memory.total": 183359,
+                        "memory.free": 182632,
+                        "utilization.gpu": 0,
+                    }
+                ],
+                "compute_processes": [],
+                "errors": [],
+            },
+            "scientific_qualification": False,
+            "cross_pod_lock_qualification": False,
+            "scope": fixture_job.WORKER_DIAGNOSTIC_SCOPE,
+        }
+        path = publish / "diagnostic.json"
+        path.write_bytes(fixture_job.canonical_bytes(report))
+        return path.resolve(), fixture_job.file_identity(path)["sha256"]
 
     @staticmethod
     def _git(root: Path, *argv: str) -> subprocess.CompletedProcess[str]:
@@ -197,6 +269,8 @@ class QueueHarness:
         candidate: str = "P00__candidate_00",
         mode: str = "accepted",
         normalize_exit: bool = False,
+        worker_diagnostic_path: Path | None = None,
+        worker_diagnostic_sha256: str | None = None,
     ) -> dict:
         real_verify = fixture_job.verify_clean_git
 
@@ -229,6 +303,8 @@ class QueueHarness:
                 nvidia_smi=self.nvidia_smi,
                 hostname=self.hostname,
                 pod_uid=self.pod_uid,
+                worker_diagnostic_path=worker_diagnostic_path,
+                worker_diagnostic_sha256=worker_diagnostic_sha256,
             )
 
     def assert_robolab_arguments(self, root: Path, expected: str) -> None:
@@ -260,11 +336,137 @@ class FixtureJobTests(unittest.TestCase):
             self.assertLess(len(first_payload), fixture_job.MAX_PUBLISH_BYTES)
             self.assertEqual(first["gpu_identity"]["name"], "NVIDIA B200")
             self.assertEqual(first["gpu_identity"]["preexisting_compute_process_count"], 0)
+            self.assertEqual(first["deployment_identity"]["receipt_kind"], "initial_deployment")
             self.assertNotIn("failures", first)
             raw_attempt = Path(first["gate_evidence"]["raw_attempt_directory"])
             self.assertTrue(raw_attempt.is_relative_to(harness.private / "fixture_gates/P00/attempts"))
             cache_values = json.loads((raw_attempt / "gate_attempt_receipt.json").read_text())["cache_paths"]
             self.assertTrue(all(Path(value).is_relative_to(harness.private / "worker_runtime") for value in cache_values.values()))
+
+    def test_dynamic_worker_diagnostic_authenticates_role_pod_source_and_idle_b200(self):
+        with tempfile.TemporaryDirectory() as directory:
+            harness = QueueHarness(directory, dynamic_worker=True)
+            diagnostic_path, diagnostic_sha256 = harness.create_worker_diagnostic()
+            receipt = harness.execute(
+                worker_diagnostic_path=diagnostic_path,
+                worker_diagnostic_sha256=diagnostic_sha256,
+            )
+            self.assertEqual(receipt["decision"], "accepted")
+            identity = receipt["deployment_identity"]
+            self.assertEqual(identity["receipt_kind"], "dynamic_worker_diagnostic")
+            self.assertEqual(identity["receipt"]["sha256"], diagnostic_sha256)
+            self.assertEqual(identity["diagnostic_job_id"], "worker-diagnostic-test")
+            self.assertEqual(identity["pod"], harness.hostname)
+            self.assertEqual(identity["pod_uid"], harness.pod_uid)
+            self.assertEqual(identity["deployment_job"], harness.worker_role)
+            self.assertFalse(identity["scientific_qualification"])
+            self.assertEqual(identity["scope"], fixture_job.WORKER_DIAGNOSTIC_SCOPE)
+            self.assertEqual(receipt["gpu_identity"]["preexisting_compute_process_count"], 0)
+            self.assertEqual(harness.counter.read_text(), "1")
+
+    def test_dynamic_worker_diagnostic_rejects_identity_gpu_and_scope_changes(self):
+        cases = {
+            "hostname": "worker_diagnostic_hostname_mismatch",
+            "pod_uid": "worker_diagnostic_pod_uid_mismatch",
+            "report_source": "worker_diagnostic_report_source_mismatch",
+            "identity_errors": "worker_diagnostic_identity_errors",
+            "gpu_errors": "worker_diagnostic_gpu_errors",
+            "gpu_count": "worker_diagnostic_gpu_count_invalid",
+            "gpu_index": "worker_diagnostic_gpu_index_invalid",
+            "gpu_name": "worker_diagnostic_gpu_not_b200",
+            "gpu_busy": "worker_diagnostic_gpu_not_idle",
+            "compute_process": "worker_diagnostic_preexisting_compute_processes",
+            "gpu_uuid": "worker_diagnostic_gpu_uuid_changed",
+            "scientific_scope": "worker_diagnostic_scope_invalid",
+        }
+        for mutation, expected_reason in cases.items():
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
+                harness = QueueHarness(directory, dynamic_worker=True)
+                diagnostic_path, _ = harness.create_worker_diagnostic()
+                report = json.loads(diagnostic_path.read_text())
+                if mutation == "hostname":
+                    report["hostname"] = "another-worker-testpod"
+                elif mutation == "pod_uid":
+                    report["pod_uid"] = "99999999-2222-3333-4444-555555555555"
+                elif mutation == "report_source":
+                    report["source_commit"] = "b" * 40
+                elif mutation == "identity_errors":
+                    report["worker_identity_errors"] = ["hostname_does_not_match_expected_worker"]
+                elif mutation == "gpu_errors":
+                    report["gpu"]["errors"] = [{"query": "devices", "reason": "nonzero_exit"}]
+                elif mutation == "gpu_count":
+                    report["gpu"]["count"] = 2
+                elif mutation == "gpu_index":
+                    report["gpu"]["devices"][0]["index"] = 1
+                elif mutation == "gpu_name":
+                    report["gpu"]["devices"][0]["name"] = "NVIDIA H100"
+                elif mutation == "gpu_busy":
+                    report["gpu"]["devices"][0]["utilization.gpu"] = 17
+                elif mutation == "compute_process":
+                    report["gpu"]["compute_processes"] = [
+                        {
+                            "gpu_uuid": "GPU-test-fixture",
+                            "pid": 123,
+                            "process_name": "unrelated",
+                            "used_memory": 1024,
+                        }
+                    ]
+                elif mutation == "gpu_uuid":
+                    report["gpu"]["devices"][0]["uuid"] = "GPU-another-fixture"
+                elif mutation == "scientific_scope":
+                    report["scientific_qualification"] = True
+                diagnostic_path.write_bytes(fixture_job.canonical_bytes(report))
+                diagnostic_sha256 = fixture_job.file_identity(diagnostic_path)["sha256"]
+                receipt = harness.execute(
+                    worker_diagnostic_path=diagnostic_path,
+                    worker_diagnostic_sha256=diagnostic_sha256,
+                )
+                self.assertEqual(receipt["decision"], "technical_invalid")
+                self.assertEqual(receipt["reason"], expected_reason)
+                self.assertFalse(receipt["child_started"])
+                self.assertFalse(harness.counter.exists())
+
+    def test_dynamic_worker_diagnostic_rejects_hash_path_and_descriptor_changes(self):
+        cases = {
+            "hash": "worker_diagnostic_hash_mismatch",
+            "path": "worker_diagnostic_outside_queue_jobs",
+            "descriptor_job": "worker_diagnostic_descriptor_job_mismatch",
+            "descriptor_role": "worker_diagnostic_role_mismatch",
+            "descriptor_source": "worker_diagnostic_source_mismatch",
+            "descriptor_argv": "worker_diagnostic_descriptor_argv_mismatch",
+        }
+        for mutation, expected_reason in cases.items():
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
+                harness = QueueHarness(directory, dynamic_worker=True)
+                diagnostic_path, diagnostic_sha256 = harness.create_worker_diagnostic()
+                descriptor_path = diagnostic_path.parent.parent / "descriptor.json"
+                if mutation == "hash":
+                    diagnostic_sha256 = "f" * 64
+                elif mutation == "path":
+                    outside_path = harness.root / "outside/publish/diagnostic.json"
+                    outside_path.parent.mkdir(parents=True)
+                    shutil.copy2(diagnostic_path, outside_path)
+                    diagnostic_path = outside_path.resolve()
+                    diagnostic_sha256 = fixture_job.file_identity(diagnostic_path)["sha256"]
+                else:
+                    descriptor = json.loads(descriptor_path.read_text())
+                    if mutation == "descriptor_job":
+                        descriptor["job_id"] = "another-diagnostic-job"
+                    elif mutation == "descriptor_role":
+                        descriptor["role"] = "fixture-worker-01"
+                    elif mutation == "descriptor_source":
+                        descriptor["source_commit"] = "b" * 40
+                    elif mutation == "descriptor_argv":
+                        descriptor["argv"][1] = "{source_root}/wrong.py"
+                    descriptor_path.write_bytes(fixture_job.canonical_bytes(descriptor))
+                receipt = harness.execute(
+                    worker_diagnostic_path=diagnostic_path,
+                    worker_diagnostic_sha256=diagnostic_sha256,
+                )
+                self.assertEqual(receipt["decision"], "technical_invalid")
+                self.assertEqual(receipt["reason"], expected_reason)
+                self.assertFalse(receipt["child_started"])
+                self.assertFalse(harness.counter.exists())
 
     def test_physical_rejection_preserves_child_exit_two_and_raw_evidence(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T11:28:51.570607Z",
+  "as_of_utc": "2026-09-13T12:43:50Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -41,16 +41,16 @@
     "active_requests_launched_excluded": 0,
     "invariant": "18_nonbehavioral + 1440_valid_behavioral + 2_technical_invalid_behavioral = 1460_terminal_requests"
   },
-  "phase": "valid40_of_232_both_models_development_complete_D1_sidecar_next_confirmation_inference_held",
-  "cluster_status": "Independent Git/PVC queue remains active after the work-Mac cutoff. Results commit 20c53451d1bb34d36ad2908ba7d7fb507f8b1ebc byte-verifies D1 D04 attempt003 passed4/4 with1800 actions,1804 observations and228 requests; both queue wrappers and all nested children reaped. D1 development is now16/16 valid across D01-D04. N3 development timing sidecar remains passed for all16 cells/240 requests; the zero-science D1 sidecar is next. Confirmation inference remains unreleased.",
+  "phase": "valid40_of_232_both_models_development_and_timing_sidecars_complete_camera_crop_annotation_resource_freeze_pending_confirmation_held",
+  "cluster_status": "Independent Git/PVC queue remains active after the work-Mac cutoff. Results commit 260338bf3226bedc6103b44209aba73ba579de6e byte-verifies D1 development timing sidecar attempt002 passed with return code0, empty stderr and child reaped. Both models now have complete authenticated development sidecars. D1 preserves explicit timing missingness for672/912 incremental decodes and maps only240 source-proven full decodes. Confirmation inference remains unreleased.",
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_and_live_P00_six_request_timing_probe_with_native_time_authority",
     "runtime_D1": "passed_six_official_conditional_generation_requests_on_exact_two_B200_worker_after_four_preserved_pre_request_technical_invalid_attempts",
     "fixed_450_recorder": "passed_recorder_only_original_left_with_450_actions_451_observations_zero_model_requests",
     "physical_layouts": "P00, D01-D04 and all C01-C24 have accepted model-blind candidates and fixed-observation captures; C01, C17 and C24 retain candidate_00 physical rejections and use accepted candidate_01; the 24-layout confirmation fixture freeze passed with SHA-256 495046b5102bf1813b0c9afd72d57bf1c30243070d7b525faacf53a076a482ac; this is fixture/capture qualification only",
-    "frame_time_camera_mapping": "Both pinned source audits, live P00 input preparation, D1 generation normalization, fresh live-capture N3 six-request generation-only probe and the N3/D1 native clock authorities have passed. The N3 development sidecar passed for all16 cells/240 request receipts; all16 D1 development cells are now terminal and the D1 sidecar is ready for detached release. Frame/action ordinals and presentation FPS remain rejected substitutes",
-    "annotation_development": "blind_two_rater_workflow_implemented_and_schema_validated; legitimate human development labels, consensus, usability decisions and empirical movement threshold remain pending",
+    "frame_time_camera_mapping": "Both pinned source audits, live P00 input preparation, D1 generation normalization, fresh live-capture N3 six-request generation-only probe and the N3/D1 native clock authorities have passed. N3 maps all240 development requests. D1 authenticates all912 requests, maps the240 source-proven full conditioning-origin decodes, preserves672 incremental decodes as timing-unavailable with zero target bindings, matches224 requests/448 targets to native clocks and prefix-censors16 requests/32 targets. A separate signed model-specific camera-crop replay witness remains required; frame/action ordinals, whole presentation canvases and presentation FPS remain rejected substitutes",
+    "annotation_development": "blind_two_rater_workflow_implemented_and_schema_validated; structural evidence compiler is under final review; signed model-specific camera-crop replay, real blinded development images, legitimate human labels, consensus, usability decisions and empirical movement threshold remain pending",
     "confirmation_release": false
   },
   "scheduling": {
@@ -107,9 +107,9 @@
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "a065b5bdf26ed76417b62bffe4caab407e4f7855",
-    "cluster_staged_control_commit_at_snapshot": "a065b5bdf26ed76417b62bffe4caab407e4f7855",
-    "cluster_control_generation_at_snapshot": 710,
+    "latest_control_commit": "ffcb9c32b0a9e1b86c2f2317eb303c937e91b482",
+    "cluster_staged_control_commit_at_snapshot": "ffcb9c32b0a9e1b86c2f2317eb303c937e91b482",
+    "cluster_control_generation_at_snapshot": 824,
     "cluster_active_job_ids_at_snapshot": [
       "timing-n3-live-generation-p00-002",
       "d1-development-d01-server-003",
@@ -125,9 +125,13 @@
       "timing-d1-native-authority-002",
       "timing-n3-development-sidecar-001",
       "d1-development-d02-snapshot-001",
-      "d1-development-d04-snapshot-001"
+      "d1-development-d04-snapshot-001",
+      "timing-d1-development-sidecar-001",
+      "timing-d1-development-sidecar-decode-diagnostic-001",
+      "timing-d1-development-sidecar-cache-schedule-diagnostic-001",
+      "timing-d1-development-sidecar-002"
     ],
-    "latest_results_commit_fetched": "20c53451d1bb34d36ad2908ba7d7fb507f8b1ebc",
+    "latest_results_commit_fetched": "260338bf3226bedc6103b44209aba73ba579de6e",
     "release_lock_recovery_receipt_sha256": "f985f78cc9a7955d9d038eea7a4da492e7d5f6ed49dfbde8d021806579bf0e8a",
     "release_lock_current_inode": 44796676,
     "post_recovery_detached_diagnostics_passed": 6
@@ -242,9 +246,47 @@
       "physical_resets": 0,
       "robot_episodes": 0
     },
+    "d1_development_sidecar_attempt_001_status": "preserved_zero_science_technical_invalid_fixed_nine_frame_validator_rejected_authentic_incremental_five_frame_decodes",
+    "d1_development_sidecar_attempt_001_failure_receipt_sha256": "2bcacdace9b252a1d5f9b9de222e76fb7c2c112bc7bace0a7fa087f8a1e211db",
+    "d1_cache_schedule_diagnostic_sha256": "cb13bee1cb6aadbeef9acb8cad5417677b2c3c18ab9fc115ca1eb3fe1f2e0630",
+    "d1_development_sidecar_passed_job": "timing-d1-development-sidecar-002",
+    "d1_development_sidecar_results_commit": "260338bf3226bedc6103b44209aba73ba579de6e",
+    "d1_development_sidecar_job_receipt_sha256": "75490aab357d8290afa10f0e1a85437794a37c81f6a9a0524c94c746198da68d",
+    "d1_development_sidecar_job_receipt_bytes": 79824,
+    "d1_development_sidecar_payload_sha256": "8a0cabb99d544d4816d53159d7a610e25076c5ce2a22bd574edf2bfa70e8df65",
+    "d1_development_referenced_cells": 16,
+    "d1_development_referenced_requests": 912,
+    "d1_development_request_inventory_sha256": "31e54cdabee693966f8263de531a20dd96847b8e7e3507a1a464d408c8326f06",
+    "d1_development_request_inventory_bytes": 1250872,
+    "d1_development_timing_sidecar_sha256": "6bd497fce7ed5cbff8d78b6769ca4fcc8545fdefdcdf3b41126e92d01ae06ab3",
+    "d1_development_timing_sidecar_bytes": 3360158,
+    "d1_development_sidecar_physical_time_qualified": true,
+    "d1_development_sidecar_physical_time_coverage_complete": false,
+    "d1_development_sidecar_physical_time_qualified_scope": "source-proven full conditioning-origin decodes only",
+    "d1_development_request_timing_coverage": {
+      "total_requests": 912,
+      "source_proven_full_decode_requests": 240,
+      "source_unmapped_incremental_decode_requests": 672,
+      "native_clock_matched_requests": 224,
+      "native_clock_matched_target_bindings": 448,
+      "action_prefix_truncated_requests": 16,
+      "action_prefix_truncated_target_bindings": 32,
+      "unmapped_potential_authority_targets": 1344
+    },
+    "d1_development_sidecar_science_counts": {
+      "behavioral_actions": 0,
+      "behavioral_cells": 0,
+      "model_requests": 0,
+      "model_loads": 0,
+      "model_servers": 0,
+      "physical_resets": 0,
+      "robot_episodes": 0
+    },
     "physical_time_qualified": true,
+    "physical_time_qualified_scope": "N3 all retained development requests; D1 source-proven full conditioning-origin decodes only",
+    "physical_time_coverage_complete": false,
     "safe_to_release_confirmation": false,
-    "remaining": "complete D1 development and its immutable per-request sidecar, plus legitimate two-rater labels, consensus and the empirical movement threshold"
+    "remaining": "compile the two passed development sidecars, pass a signed model-specific camera-crop replay witness, freeze request/rubric/resource decisions, render real blinded development images, then obtain legitimate two-rater labels, consensus and the empirical movement threshold"
   },
   "live_fixture_qualification": {
     "P00": {
@@ -537,7 +579,7 @@
       "released": false,
       "inference_cells_launched": 0,
       "hold_reasons": [
-        "complete D1 per-request development timing sidecar and authenticated alignment freeze",
+        "signed model-specific camera-crop replay witness and authenticated alignment freeze",
         "legitimate two-rater development labels and reproducible consensus",
         "empirical movement threshold and frozen usability/resource decisions"
       ],

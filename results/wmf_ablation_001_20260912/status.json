@@ -49,7 +49,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "fc18e9d26aa91741f12df0efc151bfffa9194f72",
-    "control_generation": 148,
+    "control_generation": 149,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -774,17 +774,29 @@
       "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
+      "child_pid": 4613,
+      "child_reaped": true,
       "descriptor_sha256": "333ac53376701c794f96c9fad6a5373f13151872de36d9f1a4b68bea2f9fbb2c",
-      "heartbeat": {
-        "at": "2026-09-13T03:36:23.228561+00:00",
-        "child_pid": 4613,
-        "unix": 1789270583.228582,
-        "worker_id": "wmf-forecast-0912-worker-01",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T03:36:47.349741+00:00",
+      "error_type": null,
       "job_id": "recorder-qualification-p00-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"behavioral_episode_count\": 0, \"child_exit\": {\"identity\": {\"bytes\": 1089, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-001/child_exit.json\", \"sha256\": \"cb7e974dac24c1a562ae3662ea0db19e989acc4076f064a3f2e29a1f2310c298\"}, \"logs\": {\"stderr\": {\"bytes\": 551, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-001/child.stderr.log\", \"sha256\": \"56f23ddf0696ec346e1fb88f9202c1c6b7e48a52e3a82eb7a9196078cca266a2\"}, \"stdout\": {\"bytes\": 19805, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-001/child.stdout.log\", \"sha256\": \"7ff4d30dfd8c1d4e5608b4bdb46fc36d8b9379c2528f9bed132c2a8845242147\"}}, \"normal_exit\": true, \"pid\": 4634, \"proc_start_ticks\": 46390826, \"process_group_id\": 4634, \"process_identity\": {\"bytes\": 549, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-001/child_process.json\", \"sha256\": \"0d2fab713ecb5ca8e24404c95d2d9cd21d225856ebd5f0121b97d5d866245959\"}, \"recorded_at_utc\": \"2026-09-13T03:36:46.324000Z\", \"return_code\": 0, \"schema_version\": \"wmf-forecast-recorder-child-exit-v1\", \"terminating_signal\": null}, \"child_started\": true, \"claim_boundary\": \"Technical-invalid recorder-only attempt. No learned-policy or forecast claim is made.\", \"command\": \"left\", \"detail\": \"cannot read JSON evidence: /data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-001/child_qualification_receipt.json\", \"environment_seed\": 2026091000, \"exit_code\": 3, \"finished_at_utc\": \"2026-09-13T03:36:46.336166Z\", \"gpu_identity\": {\"driver_version\": \"580.95.05\", \"index\": \"0\", \"name\": \"NVIDIA B200\", \"preexisting_compute_process_count\": 0, \"uuid\": \"GPU-5dca9afb-2127-6d73-10e8-59ed2024b8e6\"}, \"job_id\": \"recorder-qualification-p00-001\", \"layout_arm\": \"original\", \"layout_pair_id\": \"P00\", \"model_request_count\": 0, \"raw_attempt_directory\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/recording_qualification/recorder-qualification-p00-001\", \"reason\": \"RecorderQualificationError\", \"recording_qualification_count\": 0, \"schema_version\": \"wmf-forecast-recorder-qualification-job-v1\", \"status\": \"technical_invalid\", \"study_commit\": \"ce5ad4282d2392245f843d5270a9656d4e99f842\", \"study_namespace\": \"wmf_ablation_001_20260912\", \"timing_support\": null}\n"
+      },
+      "returncode": 3,
       "source_commit": "ce5ad4282d2392245f843d5270a9656d4e99f842",
-      "status": "claimed",
+      "started_at": "2026-09-13T03:35:52.842837+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 2449,
+        "sha256": "288040d3f845a582ce2f577661543d2f3e650399ef6f43756395dd4e8bc13b02"
+      },
+      "wall_seconds": 54.507117336965166,
       "worker_id": "wmf-forecast-0912-worker-01"
     }
   ],

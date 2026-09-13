@@ -37,7 +37,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "3511cdd621af1600a15dc46a526cc3f3ea54662d",
-    "control_generation": 43,
+    "control_generation": 44,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -226,16 +226,56 @@
       "worker_id": "wmf-forecast-0912-worker-06"
     },
     {
+      "child_pid": 24,
+      "child_reaped": true,
       "descriptor_sha256": "0fbb6a5c8bd6edd5ba046359edefb71732f3482a61955f936cb64908224d6dfb",
+      "ended_at": "2026-09-13T02:20:17.533366+00:00",
+      "error_type": null,
       "job_id": "bootstrap-diagnostic-worker-07",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"diagnostic_published\": true, \"gpu_count\": 8, \"diagnostic_passed\": false, \"scientific_qualification\": false}\n"
+      },
+      "returncode": 1,
       "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
-      "status": "staged"
+      "started_at": "2026-09-13T02:20:14.112417+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 110,
+        "sha256": "ee465ea396c3029ff1cc3eaac0f083f63f83c6bf67b0873abadad7f513701576"
+      },
+      "wall_seconds": 3.4210692530032247,
+      "worker_id": "wmf-forecast-0912-worker-07"
     },
     {
+      "child_pid": 24,
+      "child_reaped": true,
       "descriptor_sha256": "bc752152cf0ca20f1f09e0d4a88b321d9c72adb6d4ea4534de76b27ae82f495c",
+      "ended_at": "2026-09-13T02:20:17.196373+00:00",
+      "error_type": null,
       "job_id": "bootstrap-diagnostic-worker-08",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"diagnostic_published\": true, \"gpu_count\": 8, \"diagnostic_passed\": false, \"scientific_qualification\": false}\n"
+      },
+      "returncode": 1,
       "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
-      "status": "staged"
+      "started_at": "2026-09-13T02:20:14.164591+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 110,
+        "sha256": "ee465ea396c3029ff1cc3eaac0f083f63f83c6bf67b0873abadad7f513701576"
+      },
+      "wall_seconds": 3.0319115449674428,
+      "worker_id": "wmf-forecast-0912-worker-08"
     },
     {
       "descriptor_sha256": "4789396d2f010b657ecbb0f657d1ab9604f038c2b16676d917f98851b5b94259",

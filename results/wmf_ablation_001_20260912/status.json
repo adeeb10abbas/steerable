@@ -56,7 +56,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "6578653ffdc1453d9024e57a99e74a166b868d1f",
-    "control_generation": 160,
+    "control_generation": 161,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -365,10 +365,30 @@
       "status": "staged"
     },
     {
+      "child_pid": 25,
+      "child_reaped": true,
       "descriptor_sha256": "dbde0588b39fedc5b7594921221a2b6283135a1157067a142f167285609fb996",
+      "ended_at": "2026-09-13T03:45:57.036903+00:00",
+      "error_type": null,
       "job_id": "bootstrap-diagnostic-worker-17",
+      "log_tails": {
+        "stderr": "",
+        "stdout": ""
+      },
+      "returncode": -15,
       "source_commit": "cb699417072b8ed74a9494bc4c4eaac1a71978ad",
-      "status": "staged"
+      "started_at": "2026-09-13T03:45:56.364189+00:00",
+      "status": "interrupted",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "wall_seconds": 0.6728475399431773,
+      "worker_id": "wmf-forecast-0912-worker-17"
     },
     {
       "descriptor_sha256": "dbe3904d426e6af11c05fa0a8e7822c4ae29123deebf92b09c8b9d4673b2903a",
@@ -548,9 +568,17 @@
     },
     {
       "descriptor_sha256": "80e19d2e57125c5a1a1012e3d018db0f0d79c84a5dcdb326680250c546a7caf8",
+      "heartbeat": {
+        "at": "2026-09-13T03:46:25.146259+00:00",
+        "child_pid": 1196,
+        "unix": 1789271185.146281,
+        "worker_id": "wmf-forecast-0912-worker-d1-00",
+        "worker_pid": 1
+      },
       "job_id": "d1-first-live-003",
       "source_commit": "d585d5d72246136299b67219aa7e88e46bd9201b",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
       "child_pid": 3507,
@@ -580,9 +608,17 @@
     },
     {
       "descriptor_sha256": "504e9d972bcb5ad61f466d4469874c864f0a562c2b82d9d661cf588de7932792",
+      "heartbeat": {
+        "at": "2026-09-13T03:46:25.657404+00:00",
+        "child_pid": 2061,
+        "unix": 1789271185.6574297,
+        "worker_id": "wmf-forecast-0912-worker-00",
+        "worker_pid": 1
+      },
       "job_id": "fixture-d01-candidate-00",
       "source_commit": "133578ff3f76cd17e416b392664e3107f30846ba",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
       "descriptor_sha256": "61c115bb636e04b07df095d1625af7575a5c11a042e6f4f10d86b014b5b83a90",

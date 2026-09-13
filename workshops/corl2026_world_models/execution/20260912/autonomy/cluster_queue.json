@@ -870,6 +870,40 @@
       ],
       "max_wall_seconds": 7200,
       "publish_log_tail_bytes": 8192
+    },
+    {
+      "job_id": "d1-first-live-002",
+      "released": true,
+      "source_commit": "414d8aa89d6832b79531cd4418a0b4745c1ddd9a",
+      "role": "d1",
+      "argv": [
+        "/usr/bin/python3",
+        "{source_root}/workshops/corl2026_world_models/experiments/forecast_layout/d1_qualification_job.py",
+        "--source-root",
+        "{source_root}",
+        "--job-dir",
+        "{job_dir}",
+        "--fixture",
+        "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/d1_official_wire_observation.npz",
+        "--fixture-sha256",
+        "4545fdf3b335e10b35f9eb4bc038db07480518c9f1672b6ab76231d37367d735",
+        "--capture-manifest",
+        "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-p00-001/capture/capture_receipt.json",
+        "--capture-manifest-sha256",
+        "8d42bc36fe57747f5ce008c54f14e64f03bbe27be756b80c2b431d50aef7f663",
+        "--port",
+        "18021",
+        "--readiness-timeout-seconds",
+        "7200",
+        "--probe-timeout-seconds",
+        "43200",
+        "--server-group-timeout-seconds",
+        "50000",
+        "--terminate-grace-seconds",
+        "5"
+      ],
+      "max_wall_seconds": 60000,
+      "publish_log_tail_bytes": 8192
     }
   ]
 }

@@ -58,6 +58,7 @@ MOVEMENT_DISAGREEMENT_DEFINITION = (
     "vectors, with each vector divided by that image's pixel diagonal."
 )
 MOVEMENT_QUANTILE_METHOD = "linear interpolation at p=0.95 (Hyndman-Fan type 7)"
+TIMING_QUALIFIER_PATH = Path(__file__).with_name("qualify_forecast_timing.py")
 
 SHA_RE = re.compile(r"[0-9a-f]{64}")
 MODEL_LIMITS = {
@@ -528,6 +529,28 @@ def _validate_generated_timing(
     ]
     require(len(request_receipts) == len(request_hashes),
             f"{model} native timing request inventory is incomplete")
+    sidecar_mode = value.get("binding_mode") == "immutable_request_receipt_native_clock_sidecar"
+    if sidecar_mode:
+        spec = importlib.util.spec_from_file_location(
+            "wmf_validate_forecast_timing_sidecar", TIMING_QUALIFIER_PATH
+        )
+        require(spec is not None and spec.loader is not None,
+                "forecast timing sidecar validator is unavailable")
+        qualifier = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(qualifier)
+        try:
+            qualifier.validate_development_timing(
+                path,
+                sha256_file(path),
+                expected_model=model,
+                expected_request_hashes=request_hashes,
+            )
+        except Exception as error:
+            raise FreezeError(f"{model} immutable timing sidecar failed deep validation: {error}") from error
+        require(value.get("old_request_receipts_modified") is False,
+                f"{model} timing sidecar claims old request receipts were modified")
+        require(source_field == "request_timing_sidecar.generated_targets",
+                f"{model} timing sidecar pretends metadata existed in immutable request receipts")
     for index, receipt in enumerate(request_receipts):
         if model == "N3":
             decoded_shape = receipt.get("decoded_future_shape")
@@ -550,13 +573,14 @@ def _validate_generated_timing(
             decoded_frame_count = rgb_shape[0]
         require(all(row["generated_frame_index"] < decoded_frame_count for row in exposed_targets),
                 f"{model} request {index} native target cites a nonexistent decoded frame")
-        observed: Any = receipt
-        for component in source_field.split("."):
-            require(isinstance(observed, Mapping) and component in observed,
-                    f"{model} request {index} lacks native timing field {source_field}")
-            observed = observed[component]
-        require(observed == exposed_targets,
-                f"{model} request {index} native target times differ from the timing receipt")
+        if not sidecar_mode:
+            observed: Any = receipt
+            for component in source_field.split("."):
+                require(isinstance(observed, Mapping) and component in observed,
+                        f"{model} request {index} lacks native timing field {source_field}")
+                observed = observed[component]
+            require(observed == exposed_targets,
+                    f"{model} request {index} native target times differ from the timing receipt")
     return value, path
 
 

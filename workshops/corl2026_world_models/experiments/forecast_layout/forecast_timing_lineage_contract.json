@@ -1,0 +1,207 @@
+{
+  "schema_version": "wmf-forecast-timing-lineage-contract-v1",
+  "study_id": "WMF-ABLATION-001",
+  "status": "source_mapping_frozen_live_clock_probe_required",
+  "prohibited_inferences": {
+    "presentation_video_fps_as_physical_time": true,
+    "conditioning_fps_alone_as_physical_time": true,
+    "generated_frame_ordinal_as_action_ordinal": true,
+    "dreamzero_action_block_ratio_as_mapping": true
+  },
+  "original_camera_ids": [
+    "over_shoulder_left_camera",
+    "over_shoulder_right_camera",
+    "wrist_cam"
+  ],
+  "models": {
+    "N3": {
+      "configuration_id": "N3",
+      "source": {
+        "repository": "nvidia/cosmos",
+        "commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+        "git_tree": "1e77852f2240d6e00312342ab29164745042b1ae",
+        "default_gm_path": "/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b"
+      },
+      "checkpoint": {
+        "repository": "nvidia/Cosmos3-Nano-Policy-DROID",
+        "revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+        "payload_aggregate_sha256": "55895125805b12635ece5dd2e88453a1aca6a684bac556f114337ae448ffdd83"
+      },
+      "source_files": [
+        {
+          "path": "cosmos_framework/data/vfm/action/datasets/droid_lerobot_dataset.py",
+          "sha256": "5ba98de83a2cb13dba5e52a2d3d605444af1fa635657558b13bae3b013139a76",
+          "role": "DROID timestamp rows and aligned 33-observation/32-action training slices",
+          "evidence_lines": [145, 146, 167, 202]
+        },
+        {
+          "path": "cosmos_framework/data/vfm/action/transforms.py",
+          "sha256": "1a0577cf481c8cadd2dda9cc344f1f5dd60b16b020f4636221c8bb71403cfea4",
+          "role": "sequence-plan action start offset and inference conditioning-row handling",
+          "evidence_lines": [309, 321, 631, 646]
+        },
+        {
+          "path": "cosmos_framework/data/vfm/sequence_packing.py",
+          "sha256": "84cf39f1e2adba885f593cd621509c985b5c17db55d8147501f763dbdfd2edd7",
+          "role": "VAE temporal packing and explicit action-to-vision-frame position alignment",
+          "evidence_lines": [677, 796, 826, 887, 895, 897, 1583]
+        },
+        {
+          "path": "cosmos_framework/model/vfm/mot/unified_3dmrope_utils.py",
+          "sha256": "8388b7071565ef28b86f271b15bdb99f858b081269f84987802b9f9527af1741",
+          "role": "temporal position construction through VAE compression; FPS modulation is representation metadata only",
+          "evidence_lines": [23, 75, 104, 112, 135, 145]
+        },
+        {
+          "path": "cosmos_framework/inference/action.py",
+          "sha256": "19ff6b3c3a7ca99628b694978cae0eff6b6fb760e2bfb126ab69cc7cbbb3de23",
+          "role": "official inference constructs action_chunk_size plus one video frames and its sequence plan",
+          "evidence_lines": [91, 109, 111, 112]
+        },
+        {
+          "path": "cosmos_framework/scripts/action_policy_server_robolab.py",
+          "sha256": "024a6d19048a6ac732ca0b23e741b5da6d38424223783b944bf539b2b6bd9a24",
+          "role": "live 33-frame input, one conditioning state row, 32 returned actions, retained latent and official decode",
+          "evidence_lines": [500, 504, 505, 516, 573, 574, 595, 597]
+        }
+      ],
+      "lineage": {
+        "dataset_timestamp_rows": {
+          "observation_row_offsets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32],
+          "action_transition_row_offsets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+          "video_lookup_field": "timestamp",
+          "claim": "Training video pixels are fetched at each selected observation row timestamp; action[0] is explicitly positioned with vision frame 1."
+        },
+        "inference_tensor_witness": {
+          "pre_transform_video_frames": 33,
+          "pre_transform_action_rows_including_state": 33,
+          "conditioning_action_rows": 1,
+          "sequence_plan_action_start_frame_offset": 0,
+          "raw_generated_action_rows": 33,
+          "returned_action_rows_after_conditioning_strip": 32,
+          "decoded_frame_count": 33
+        },
+        "decoded_frame_indices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32],
+        "executed_control_boundaries": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32],
+        "mapping_basis": "The pinned dataset constructs 33 timestamped observation rows and 32 transition actions; the pinned sequence plan explicitly aligns action[0] to vision frame 1. The live server adds one conditioning state action at frame 0, then removes that exact row before returning 32 actions. Equality of the two ordinal sequences is not used as evidence.",
+        "returned_action_horizon": 32,
+        "unchanged_executed_prefix_horizon": 32
+      },
+      "live_generation_receipt": {
+        "qualification_schema": "wmf-n3-runtime-qualification-v1",
+        "request_decode_mode": "offline_exact_retained_latent_after_action_capture",
+        "required_robot_episode_count": 0,
+        "required_source_capture_provenance": "live_fixed_observation_zero_policy_input",
+        "historical_generation_receipt_eligible": false,
+        "input_preparation_schema": "wmf-n3-live-zero-policy-input-v1"
+      }
+    },
+    "D1": {
+      "configuration_id": "D1",
+      "source": {
+        "repository": "https://github.com/dreamzero0/dreamzero.git",
+        "commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+        "git_tree": "6b7ba27f1af81e963a6507f1204c05c65a94098c",
+        "default_gm_path": "/data/users/ali/vla_wam/external/DreamZero-v3e004-clean-ab790c1"
+      },
+      "checkpoint": {
+        "repository": "GEAR-Dreams/DreamZero-DROID",
+        "revision": "96ad344138c66e82536422432ad742f015784942",
+        "payload_aggregate_sha256": "b4af0ac93474c3295c1ba841a34a8f2f91a5c3ec3c6aac1431b97689a6618c56",
+        "small_files": [
+          {
+            "path": "config.json",
+            "bytes": 3881,
+            "sha256": "93b808c65724db8cd29bd70d37d1f26f70d498c7c5d621b7b754fdbaa82d46f2"
+          },
+          {
+            "path": "experiment_cfg/conf.yaml",
+            "bytes": 351759,
+            "sha256": "d63a63201c5141a6bc655ff29e60102aa2d9b1a16c2f526751d032e17b6e83a4"
+          }
+        ]
+      },
+      "source_files": [
+        {
+          "path": "groot/vla/data/dataset/lerobot.py",
+          "sha256": "9ec2bae810e385936ca30c885be41e27242bf4ed7a8e4e276f2fbc548d24da46",
+          "role": "base LeRobot video lookup from dataset timestamp rows",
+          "evidence_lines": [1469, 1471, 1472, 1474]
+        },
+        {
+          "path": "groot/vla/data/dataset/lerobot_sharded.py",
+          "sha256": "e075de07675c77818e8b75ba62b74357284dde2e4cfa7235b225bb59584fbf80",
+          "role": "official DROID sharded video row offsets and action row offsets",
+          "evidence_lines": [928, 963, 977, 1131, 1160, 1171, 1213, 1217, 1232]
+        },
+        {
+          "path": "groot/vla/model/dreamzero/transform/dreamzero_cotrain.py",
+          "sha256": "8b4544b0f1c52a1ba78f764cd1882132b212e4be0a78a86e67ca39ccb3902151",
+          "role": "video temporal order is retained while views are packed; action temporal rows are padded only in channel dimension",
+          "evidence_lines": [309, 313, 337, 475, 485, 488, 495]
+        },
+        {
+          "path": "groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.py",
+          "sha256": "7193cd73423472aa252bee73bd80e0d673c89d773ec852e90f50154729b50845",
+          "role": "official conditional inference encodes the observation, jointly generates two future visual latents and 24 actions, and returns both",
+          "evidence_lines": [1058, 1065, 1095, 1104, 1105, 1307, 1311, 1338]
+        },
+        {
+          "path": "groot/vla/model/dreamzero/modules/wan_video_vae.py",
+          "sha256": "1f65f8fd915c1e6703da9d320e764df107dbb988b12623a7e087554281c84edc",
+          "role": "causal 9-frame to 3-latent encode and 3-latent to 9-frame decode order",
+          "evidence_lines": [947, 972, 973, 981, 998, 1009, 1012, 1018, 1208, 1223]
+        },
+        {
+          "path": "groot/vla/model/dreamzero/modules/wan_video_dit_action_casual_chunk.py",
+          "sha256": "efc5120f73cbce2e00b67d78e8bf71a561e943a909791f039b435abc27ccd605",
+          "role": "joint causal visual/action block implementation; block ratio is explicitly not timing authority",
+          "evidence_lines": []
+        }
+      ],
+      "lineage": {
+        "dataset_timestamp_rows": {
+          "video_row_offsets": [0, 3, 6, 9, 12, 15, 18, 21, 24],
+          "action_row_offsets": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+          "timestamp_field": "timestamp",
+          "claim": "The pinned DROID sharded sampler explicitly selects these row offsets. Dataset timestamps document the row clock; live physical seconds are measured separately from native simulator/camera clocks."
+        },
+        "inference_tensor_witness": {
+          "sampled_video_frames": 9,
+          "sampled_action_rows": 24,
+          "vae_input_frames": 9,
+          "vae_latent_frames": 3,
+          "conditioning_latent_frames": 1,
+          "jointly_generated_future_latent_frames": 2,
+          "returned_action_rows": 24,
+          "offline_decoded_frame_count": 9
+        },
+        "decoded_frame_indices": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        "executed_control_boundaries": [0, 3, 6, 9, 12, 15, 18, 21, 24],
+        "mapping_basis": "The pinned DROID sampler literally selects video rows 0,3,...,24 beside action rows 0,...,23; the temporal transform preserves order, the causal VAE encodes those nine frames to three latents, and official first-request inference returns the conditioning latent plus two generated latents which decode to nine ordered frames. No inference from num_action_per_block/num_frame_per_block is accepted.",
+        "returned_action_horizon": 24,
+        "unchanged_executed_prefix_horizon": 8
+      },
+      "live_generation_receipt": {
+        "qualification_schema": "wmf-d1-qualification-job-receipt-v1",
+        "report_schema": "wmf-d1-six-request-qualification-v1",
+        "request_schema": "wmf-d1-request-receipt-v1",
+        "required_behavioral_episode_count": 0,
+        "required_source_capture_provenance": "live fixed-observation capture",
+        "official_action_path": "GrootSimPolicy.lazy_joint_forward_causal"
+      }
+    }
+  },
+  "live_clock_probe": {
+    "recorder_child_schema": "wmf-forecast-recorder-qualification-child-v1",
+    "recording_attempt_schema": "wmf-forecast-recording-attempt-v1",
+    "action_source": "joint_position_hold_from_each_preceding_original_proprioception",
+    "required_actions": 450,
+    "required_observations": 451,
+    "required_model_requests": 0,
+    "target_time_source": "elapsed native original-camera capture time from control boundary zero",
+    "cross_clock_check": "absolute difference between camera elapsed time and native physics elapsed time must not exceed the frozen timestamp tolerance",
+    "timestamp_tolerance_rule": "min(half minimum positive native physics/control interval, half minimum positive selected original-camera capture interval)"
+  },
+  "claim_boundary": "This contract freezes source-proven decoded-frame to executed-control-boundary candidates. It does not itself qualify physical seconds. Qualification additionally requires a real zero-robot-episode generation request and a separate no-model joint-hold recorder trace with native control, physics and original-camera receipts."
+}

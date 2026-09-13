@@ -1,0 +1,37 @@
+{
+  "behavioral_policy_skill_evaluated": false,
+  "claim_boundary": "Technical-invalid timing queue attempt only; no behavioral evidence or forecast accuracy is claimed.",
+  "completed_at_utc": "2026-09-13T09:48:58.350913Z",
+  "decision": "no_go",
+  "failure": {
+    "detail": "queue claim worker role changed",
+    "error_type": "TimingQueueError",
+    "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/dca69d4a8b1a1993c0c58acfb2e28106115b6d02/workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_queue_jobs.py\", line 1034, in run_n3_generation_job\n    context = validate_queue_context(\n        source_root=args.source_root,\n    ...<4 lines>...\n        expected_descriptor=expected_descriptor,\n    )\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/dca69d4a8b1a1993c0c58acfb2e28106115b6d02/workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_queue_jobs.py\", line 627, in validate_queue_context\n    require(claim.get(\"worker_id\") == expected_role, \"queue claim worker role changed\")\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/dca69d4a8b1a1993c0c58acfb2e28106115b6d02/workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_queue_jobs.py\", line 114, in require\n    raise TimingQueueError(message)\nTimingQueueError: queue claim worker role changed\n"
+  },
+  "job_dir": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-live-generation-p00-001",
+  "job_id": "timing-n3-live-generation-p00-001",
+  "mode": "n3-generate",
+  "namespace": "wmf_ablation_001_20260912",
+  "payload_sha256": "7b8b79b20ce3a4a2d7b4651839d9b3d989dbb67f2d98e0795a675bdc6ae4acf7",
+  "physical_time_qualified": false,
+  "queue_claim": null,
+  "queue_descriptor": null,
+  "queue_role": null,
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-forecast-timing-queue-job-v1",
+  "science_counts": {
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "model_requests_completed_before_failure": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "n3_generation_child_started": false,
+    "physical_resets": 0,
+    "referenced_generation_requests": 0,
+    "robot_episodes": 0
+  },
+  "status": "technical_invalid",
+  "study_commit": null,
+  "study_id": "WMF-ABLATION-001"
+}

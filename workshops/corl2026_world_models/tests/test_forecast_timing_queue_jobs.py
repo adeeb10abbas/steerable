@@ -150,6 +150,128 @@ class ForecastTimingDescriptorTests(unittest.TestCase):
         path.write_bytes(queue_jobs.canonical_bytes(receipt or self._preparation_receipt()))
         return path, queue_jobs.sha256_file(path)
 
+    def _n3_generation_receipt(self) -> dict:
+        job = queue_jobs.N3_GENERATION_CLUSTER_JOB_DIR
+        source = (
+            queue_jobs.CONTROL_ROOT
+            / "sources"
+            / queue_jobs.N3_GENERATION_STUDY_COMMIT
+        )
+
+        def descriptor(path: Path, digest: str, size: int = 100) -> dict:
+            return {"path": str(path), "bytes": size, "sha256": digest}
+
+        implementation = {
+            "timing_validator": descriptor(
+                source / queue_jobs.TOOL_RELATIVE, queue_jobs.TOOL_SHA256
+            ),
+            "timing_contract": descriptor(
+                source / queue_jobs.CONTRACT_RELATIVE, queue_jobs.CONTRACT_SHA256
+            ),
+            "n3_generation_runner": descriptor(
+                source / queue_jobs.N3_RUNNER_RELATIVE, queue_jobs.N3_RUNNER_SHA256
+            ),
+            "n3_runtime_contract": descriptor(
+                source / queue_jobs.N3_RUNTIME_CONTRACT_RELATIVE,
+                queue_jobs.N3_RUNTIME_CONTRACT_SHA256,
+            ),
+        }
+        probe = descriptor(job / "raw" / "n3_generation_probe.json", "4" * 64, 4729)
+        qualification = descriptor(
+            job / "raw" / "n3_generation_publish" / "n3_qualification.json",
+            "5" * 64,
+            2975,
+        )
+        child = [
+            str(queue_jobs.COSMOS_PYTHON),
+            str(source / queue_jobs.N3_RUNNER_RELATIVE),
+            "--source-root",
+            str(queue_jobs.N3_SOURCE),
+            "--checkpoint-root",
+            str(queue_jobs.N3_CHECKPOINT),
+            "--observation-manifest",
+            str(
+                queue_jobs.PREPARATION_CLUSTER_JOB_DIR
+                / "raw"
+                / "n3_live_input"
+                / "observation_manifest.json"
+            ),
+            "--output-dir",
+            str(job / "raw" / "n3_generation_raw"),
+            "--publish-dir",
+            str(job / "raw" / "n3_generation_publish"),
+            "--effective-seed",
+            str(queue_jobs.EFFECTIVE_SEED),
+        ]
+        return queue_jobs.signed_document(
+            {
+                "schema_version": queue_jobs.TIMING_JOB_SCHEMA,
+                "namespace": queue_jobs.NAMESPACE,
+                "study_id": queue_jobs.STUDY_ID,
+                "status": "passed",
+                "decision": "go",
+                "mode": "n3-generate",
+                "job_id": queue_jobs.N3_GENERATION_JOB_ID,
+                "job_dir": str(job),
+                "study_commit": queue_jobs.N3_GENERATION_STUDY_COMMIT,
+                "queue_role": queue_jobs.N3_GENERATION_ROLE,
+                "worker_id": queue_jobs.N3_GENERATION_WORKER_ID,
+                "runtime_identity": {
+                    "hostname": queue_jobs.N3_GENERATION_WORKER_ID + "-pod",
+                    "pod_uid": "pod-uid",
+                    "pid": 42,
+                },
+                "queue_descriptor": descriptor(job / "descriptor.json", "6" * 64),
+                "queue_claim": descriptor(job / "claim" / "owner.json", "7" * 64),
+                "implementation": implementation,
+                "inputs": {
+                    "preparation_job_receipt": descriptor(
+                        queue_jobs.PREPARATION_CLUSTER_JOB_RECEIPT,
+                        queue_jobs.PREPARATION_CLUSTER_JOB_RECEIPT_SHA256,
+                        4125,
+                    ),
+                    "preparation_receipt": descriptor(
+                        queue_jobs.PREPARATION_RAW_ROOT / "preparation_receipt.json",
+                        queue_jobs.PREPARATION_RECEIPT_SHA256,
+                        1787,
+                    ),
+                    "observation_manifest": descriptor(
+                        queue_jobs.PREPARATION_RAW_ROOT / "observation_manifest.json",
+                        queue_jobs.PREPARATION_MANIFEST_SHA256,
+                        2128,
+                    ),
+                    "observation_payload": descriptor(
+                        queue_jobs.PREPARATION_RAW_ROOT / "observation.npz",
+                        queue_jobs.PREPARATION_PAYLOAD_SHA256,
+                        1037592,
+                    ),
+                },
+                "physical_time_qualified": False,
+                "behavioral_policy_skill_evaluated": False,
+                "safe_to_release_confirmation": False,
+                "science_counts": queue_jobs._expected_science_counts(
+                    issued=6, referenced=0
+                ),
+                "child": {"argv": child, "returncode": 0, "reaped": True},
+                "outputs": {
+                    "normalized_generation_probe": probe,
+                    "published_generation_probe": descriptor(
+                        job / "publish" / "n3_generation_probe.json", "4" * 64, 4729
+                    ),
+                    "qualification": qualification,
+                    "published_qualification": descriptor(
+                        job / "publish" / "n3_qualification.json", "5" * 64, 2975
+                    ),
+                },
+            }
+        )
+
+    @staticmethod
+    def _resign(receipt: dict) -> dict:
+        changed = dict(receipt)
+        changed.pop("payload_sha256", None)
+        return queue_jobs.signed_document(changed)
+
     def test_n3_descriptor_requires_and_binds_passed_preparation_receipt(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             path, digest = self._write_receipt(Path(temporary))
@@ -236,6 +358,234 @@ class ForecastTimingDescriptorTests(unittest.TestCase):
             observation_manifest_sha256="2" * 64,
         )
         self.assertEqual(queue_jobs._runtime_n3_descriptor(args), descriptor)
+
+    def test_authority_wave_requires_attempt002_and_binds_both_models(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path, digest = self._write_receipt(
+                Path(temporary), self._n3_generation_receipt()
+            )
+            wave = queue_jobs.build_authority_wave(
+                "e" * 40,
+                n3_generation_job_receipt_path=path,
+                n3_generation_job_receipt_sha256=digest,
+            )
+        self.assertEqual(
+            [job["job_id"] for job in wave["jobs"]],
+            ["timing-n3-native-authority-001", "timing-d1-native-authority-001"],
+        )
+        self.assertEqual(
+            [job["role"] for job in wave["jobs"]],
+            ["wmf-forecast-0912-worker-05", "wmf-forecast-0912-worker-06"],
+        )
+        self.assertEqual(wave["generation_requests_issued_by_wave"], 0)
+        self.assertEqual(wave["behavioral_actions_executed"], 0)
+        self.assertIs(wave["safe_to_release_confirmation"], False)
+        n3_command = " ".join(wave["jobs"][0]["argv"])
+        d1_command = " ".join(wave["jobs"][1]["argv"])
+        self.assertIn(digest, n3_command)
+        self.assertIn("4" * 64, n3_command)
+        self.assertIn(queue_jobs.N3_SOURCE_AUDIT_JOB.receipt_sha256, n3_command)
+        self.assertIn(queue_jobs.D1_SOURCE_AUDIT_JOB.receipt_sha256, d1_command)
+        self.assertIn(queue_jobs.D1_GENERATION_JOB.receipt_sha256, d1_command)
+        for descriptor in wave["jobs"]:
+            command = " ".join(descriptor["argv"])
+            self.assertNotIn("n3_first_live.py", command)
+            self.assertNotIn("simulator", command)
+            self.assertIn(queue_jobs.RECORDER_RECEIPT_SHA256, command)
+
+    def test_authority_wave_rejects_missing_failed_or_drifted_attempt002(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with self.assertRaises(queue_jobs.TimingQueueError):
+                queue_jobs.build_authority_wave(
+                    "e" * 40,
+                    n3_generation_job_receipt_path=root / "missing.json",
+                    n3_generation_job_receipt_sha256="0" * 64,
+                )
+            for field, value, message in (
+                ("status", "technical_invalid", "receipt changed: status"),
+                ("study_commit", "f" * 40, "receipt changed: study_commit"),
+            ):
+                receipt = self._n3_generation_receipt()
+                receipt[field] = value
+                receipt = self._resign(receipt)
+                path, digest = self._write_receipt(root, receipt)
+                with self.assertRaisesRegex(queue_jobs.TimingQueueError, message):
+                    queue_jobs.build_authority_wave(
+                        "e" * 40,
+                        n3_generation_job_receipt_path=path,
+                        n3_generation_job_receipt_sha256=digest,
+                    )
+                path.unlink()
+
+            receipt = self._n3_generation_receipt()
+            receipt["science_counts"]["behavioral_actions"] = 1
+            receipt = self._resign(receipt)
+            path, digest = self._write_receipt(root, receipt)
+            with self.assertRaisesRegex(queue_jobs.TimingQueueError, "science counts"):
+                queue_jobs.build_authority_wave(
+                    "e" * 40,
+                    n3_generation_job_receipt_path=path,
+                    n3_generation_job_receipt_sha256=digest,
+                )
+            path.unlink()
+
+            receipt = self._n3_generation_receipt()
+            receipt["inputs"]["observation_manifest"]["sha256"] = "8" * 64
+            receipt = self._resign(receipt)
+            path, digest = self._write_receipt(root, receipt)
+            with self.assertRaisesRegex(queue_jobs.TimingQueueError, "manifest input hash"):
+                queue_jobs.build_authority_wave(
+                    "e" * 40,
+                    n3_generation_job_receipt_path=path,
+                    n3_generation_job_receipt_sha256=digest,
+                )
+
+    def test_runtime_authority_descriptors_equal_receipt_gated_builder(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            path, digest = self._write_receipt(
+                Path(temporary), self._n3_generation_receipt()
+            )
+            wave = queue_jobs.build_authority_wave(
+                "e" * 40,
+                n3_generation_job_receipt_path=path,
+                n3_generation_job_receipt_sha256=digest,
+            )
+        parser = queue_jobs._parser()
+        for descriptor in wave["jobs"]:
+            runtime_argv = [
+                value.replace("{source_root}", "/tmp/source").replace(
+                    "{job_dir}", "/tmp/job"
+                )
+                for value in descriptor["argv"][2:]
+            ]
+            args = parser.parse_args(runtime_argv)
+            _, rebuilt = queue_jobs._runtime_authority_descriptor(args)
+            self.assertEqual(rebuilt, descriptor)
+
+
+class AuthorityRuntimeTests(unittest.TestCase):
+    def _args(self, root: Path) -> argparse.Namespace:
+        job = queue_jobs.AUTHORITY_BY_MODE["d1-native-authority"]
+        return argparse.Namespace(
+            command=job.mode,
+            source_root=root / "source",
+            study_commit="e" * 40,
+            job_dir=root / job.job_id,
+            job_id=job.job_id,
+            expected_role=job.role,
+            contract_sha256=queue_jobs.CONTRACT_SHA256,
+            source_audit_job_receipt=queue_jobs.D1_SOURCE_AUDIT_JOB.receipt_path,
+            source_audit_job_receipt_sha256=queue_jobs.D1_SOURCE_AUDIT_JOB.receipt_sha256,
+            source_audit=queue_jobs.D1_SOURCE_AUDIT_JOB.artifact_path,
+            source_audit_sha256=queue_jobs.D1_SOURCE_AUDIT_JOB.artifact_sha256,
+            generation_job_receipt=queue_jobs.D1_GENERATION_JOB.receipt_path,
+            generation_job_receipt_sha256=queue_jobs.D1_GENERATION_JOB.receipt_sha256,
+            generation_probe=queue_jobs.D1_GENERATION_JOB.artifact_path,
+            generation_probe_sha256=queue_jobs.D1_GENERATION_JOB.artifact_sha256,
+            recorder_receipt=queue_jobs.RECORDER_RECEIPT,
+            recorder_receipt_sha256=queue_jobs.RECORDER_RECEIPT_SHA256,
+            camera_id=queue_jobs.CAMERA_ID,
+            expected_target_count=job.expected_target_count,
+        )
+
+    def _context(
+        self, args: argparse.Namespace, descriptor: dict
+    ) -> queue_jobs.QueueContext:
+        identity = {"path": "/exact.json", "bytes": 1, "sha256": "9" * 64}
+        return queue_jobs.QueueContext(
+            source_root=Path(args.source_root),
+            job_dir=Path(args.job_dir),
+            study_commit=args.study_commit,
+            job_id=args.job_id,
+            role=args.expected_role,
+            descriptor=queue_jobs._normalized_descriptor(descriptor),
+            descriptor_identity=identity,
+            claim_identity=identity,
+            worker_id=args.expected_role,
+            hostname=args.expected_role + "-pod",
+            pod_uid="pod-uid",
+        )
+
+    @staticmethod
+    def _timing(target_count: int) -> mock.Mock:
+        timing = mock.Mock()
+        result = {
+            "schema_version": "wmf-forecast-native-target-authority-v1",
+            "generated_targets": [
+                {"generated_frame_index": index + 1, "target_physical_time_s": index + 0.1}
+                for index in range(target_count)
+            ],
+        }
+        timing.qualify_timing.return_value = result
+        timing.validate_timing_authority.return_value = result
+
+        def write(path: Path, value: dict) -> None:
+            Path(path).write_bytes(queue_jobs.canonical_bytes(value))
+
+        timing.atomic_json.side_effect = write
+        return timing
+
+    def test_authority_runtime_emits_zero_action_receipt_and_keeps_hold(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            args = self._args(root)
+            args.job_dir.mkdir()
+            _, descriptor = queue_jobs._runtime_authority_descriptor(args)
+            context = self._context(args, descriptor)
+            timing = self._timing(args.expected_target_count)
+            with mock.patch.object(
+                queue_jobs, "validate_queue_context", return_value=context
+            ), mock.patch.object(
+                queue_jobs, "_validate_staged_implementation", return_value={}
+            ), mock.patch.object(
+                queue_jobs, "_authority_prerequisites", return_value={}
+            ), mock.patch.object(queue_jobs, "_load_module", return_value=timing):
+                receipt = queue_jobs.run_authority_job(args)
+            self.assertEqual(receipt["status"], "passed")
+            self.assertIs(receipt["physical_time_qualified"], True)
+            self.assertIs(receipt["behavioral_policy_skill_evaluated"], False)
+            self.assertIs(receipt["safe_to_release_confirmation"], False)
+            self.assertEqual(receipt["science_counts"]["model_requests_issued_by_job"], 0)
+            self.assertEqual(receipt["science_counts"]["behavioral_actions"], 0)
+            self.assertEqual(receipt["science_counts"]["referenced_generation_requests"], 6)
+            self.assertEqual(receipt["evidence_counts"]["qualified_generated_targets"], 2)
+            self.assertTrue(
+                (args.job_dir / "publish" / "timing_job_receipt.json").is_file()
+            )
+
+    def test_authority_target_count_failure_records_zero_science(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            args = self._args(root)
+            args.job_dir.mkdir()
+            _, descriptor = queue_jobs._runtime_authority_descriptor(args)
+            context = self._context(args, descriptor)
+            timing = self._timing(1)
+            with mock.patch.object(
+                queue_jobs, "validate_queue_context", return_value=context
+            ), mock.patch.object(
+                queue_jobs, "_validate_staged_implementation", return_value={}
+            ), mock.patch.object(
+                queue_jobs, "_authority_prerequisites", return_value={}
+            ), mock.patch.object(queue_jobs, "_load_module", return_value=timing):
+                with self.assertRaisesRegex(queue_jobs.TimingQueueError, "target count"):
+                    queue_jobs.run_authority_job(args)
+            failure = queue_jobs.load_json(
+                args.job_dir / "publish" / "timing_job_failure.json",
+                "authority failure",
+            )
+            self.assertIs(failure["safe_to_release_confirmation"], False)
+            for field in (
+                "model_runtime_loads",
+                "model_servers_started",
+                "model_requests_issued_by_job",
+                "physical_resets",
+                "robot_episodes",
+                "behavioral_actions",
+                "behavioral_cells",
+            ):
+                self.assertEqual(failure["science_counts"][field], 0, field)
 
 
 class QueueContextTests(unittest.TestCase):

@@ -8,6 +8,12 @@ action.  A separate N3 descriptor builder is deliberately receipt-gated: it
 cannot emit the six-request generation job until the live P00 input preparation
 job has published a hash-bound passing receipt.
 
+The native-authority wave is likewise receipt-gated.  Its builder accepts the
+passed N3 generation attempt instead of predicting that outcome, and binds the
+already-published source audits, D1 generation normalization, and recorder
+trace by exact PVC path and hash.  Those jobs qualify timing only; confirmation
+remains held.
+
 Every runtime command reopens its immutable queue descriptor and claim, proves
 the exact staged Git checkout and worker role, verifies fixed input hashes, and
 writes only beneath its unique queue job directory on the shared PVC.  The
@@ -42,6 +48,7 @@ STUDY_ID = "WMF-ABLATION-001"
 QUEUE_JOB_SCHEMA = "wmf-cluster-job-v1"
 TIMING_JOB_SCHEMA = "wmf-forecast-timing-queue-job-v1"
 INITIAL_DESCRIPTOR_SCHEMA = "wmf-forecast-timing-initial-wave-descriptors-v1"
+AUTHORITY_DESCRIPTOR_SCHEMA = "wmf-forecast-timing-authority-wave-descriptors-v1"
 
 COMMIT_RE = re.compile(r"[0-9a-f]{40}\Z")
 SHA256_RE = re.compile(r"[0-9a-f]{64}\Z")
@@ -88,6 +95,12 @@ D1_QUALIFICATION_RECEIPT = CONTROL_ROOT / (
 )
 D1_QUALIFICATION_RECEIPT_SHA256 = (
     "3c856549999b9145dc07c30853a4c6d2968d09eb31c2db883f5eb1655d31627b"
+)
+RECORDER_RECEIPT = CONTROL_ROOT / (
+    "jobs/recorder-qualification-p00-003/publish/recorder_qualification_receipt.json"
+)
+RECORDER_RECEIPT_SHA256 = (
+    "0e3f02f37a2548e36ae3a45a38a1fac63c56cd8798732056f24b03d103991fde"
 )
 CAMERA_ID = "over_shoulder_left_camera"
 EFFECTIVE_SEED = 2026091000
@@ -309,6 +322,129 @@ PREPARATION_JOB = INITIAL_BY_MODE["n3-live-input"]
 PREPARATION_CLUSTER_JOB_DIR = CONTROL_ROOT / "jobs" / PREPARATION_JOB.job_id
 PREPARATION_CLUSTER_JOB_RECEIPT = (
     PREPARATION_CLUSTER_JOB_DIR / "publish" / "timing_job_receipt.json"
+)
+PREPARATION_CLUSTER_JOB_RECEIPT_SHA256 = (
+    "e1119ea9bc30cb27ec54736569e71d02f692ed5ba2b37f9fde25404729114d07"
+)
+PREPARATION_RAW_ROOT = PREPARATION_CLUSTER_JOB_DIR / "raw" / "n3_live_input"
+PREPARATION_RECEIPT_SHA256 = (
+    "b4c8a220dd3c936875b6112bbd8fbb0afb32b687fbb4ab2e7262b7695f328dca"
+)
+PREPARATION_MANIFEST_SHA256 = (
+    "ab4dc15aa64722f37cf42b0f9ef813e0eb4279245ce7aba1698f96f3f2e096a9"
+)
+PREPARATION_PAYLOAD_SHA256 = (
+    "a6cf00507e5a2fff6837f9d3a55846830c9ca7306b4bfe580ebd2b78d31a827f"
+)
+
+
+@dataclass(frozen=True)
+class PriorTimingJob:
+    model: str
+    mode: str
+    job_id: str
+    role: str
+    worker_id: str
+    study_commit: str
+    receipt_sha256: str
+    output_key: str
+    published_output_key: str
+    artifact_name: str
+    artifact_bytes: int
+    artifact_sha256: str
+    referenced_generation_requests: int
+
+    @property
+    def job_dir(self) -> Path:
+        return CONTROL_ROOT / "jobs" / self.job_id
+
+    @property
+    def receipt_path(self) -> Path:
+        return self.job_dir / "publish" / "timing_job_receipt.json"
+
+    @property
+    def artifact_path(self) -> Path:
+        return self.job_dir / "raw" / self.artifact_name
+
+
+N3_SOURCE_AUDIT_JOB = PriorTimingJob(
+    "N3",
+    "n3-source-audit",
+    "timing-n3-source-audit-001",
+    "wmf-forecast-0912-worker-05",
+    "wmf-forecast-0912-worker-05",
+    "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+    "9807b7b9fd895eb080740b2d135fb8d5877020a53c6ee2ac9a3796f0fe144619",
+    "primary",
+    "published_primary",
+    "n3_source_audit.json",
+    7394,
+    "98fe2660232c479db1f98b552915c98f5c5695df6b4090bc6dffb50952e2f8c3",
+    0,
+)
+D1_SOURCE_AUDIT_JOB = PriorTimingJob(
+    "D1",
+    "d1-source-audit",
+    "timing-d1-source-audit-001",
+    "wmf-forecast-0912-worker-06",
+    "wmf-forecast-0912-worker-06",
+    "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+    "b669f9576a32b2ca8fa5127d82d4ba4d6f765d44ab2f7ce31eb24d0f2ae25dd9",
+    "primary",
+    "published_primary",
+    "d1_source_audit.json",
+    5459,
+    "39181fecb7d473b52b2b661c29b61cce653e3ec11edd437c74f1fefbefa76466",
+    0,
+)
+D1_GENERATION_JOB = PriorTimingJob(
+    "D1",
+    "d1-normalize-generation",
+    "timing-d1-normalize-generation-001",
+    "wmf-forecast-0912-worker-09",
+    "wmf-forecast-0912-worker-09",
+    "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+    "dc490e78f4290a319e05c76b4bebd1ab7d10b5519cfb747656d1f1d4905acaf7",
+    "primary",
+    "published_primary",
+    "d1_generation_probe.json",
+    4764,
+    "e7eddb7c3cc81b2c352e57dda7cb7a19ef5cf4bec8ca33309bfc3a58ad724127",
+    6,
+)
+
+
+@dataclass(frozen=True)
+class AuthorityJob:
+    model: str
+    mode: str
+    job_id: str
+    role: str
+    expected_target_count: int
+
+
+AUTHORITY_JOBS: tuple[AuthorityJob, ...] = (
+    AuthorityJob(
+        "N3",
+        "n3-native-authority",
+        "timing-n3-native-authority-001",
+        "wmf-forecast-0912-worker-05",
+        32,
+    ),
+    AuthorityJob(
+        "D1",
+        "d1-native-authority",
+        "timing-d1-native-authority-001",
+        "wmf-forecast-0912-worker-06",
+        2,
+    ),
+)
+AUTHORITY_BY_MODE = {job.mode: job for job in AUTHORITY_JOBS}
+
+N3_GENERATION_STUDY_COMMIT = "35e969b7fae02592a9ac45025bd0c64c5432e3ac"
+N3_GENERATION_CLUSTER_JOB_DIR = CONTROL_ROOT / "jobs" / N3_GENERATION_JOB_ID
+N3_GENERATION_CLUSTER_JOB_RECEIPT = (
+    N3_GENERATION_CLUSTER_JOB_DIR / "publish" / "timing_job_receipt.json"
 )
 
 
@@ -548,6 +684,405 @@ def build_n3_generation_descriptor(
     }
 
 
+def _require_bound_descriptor(
+    value: Any,
+    *,
+    expected_path: Path,
+    expected_sha256: str,
+    label: str,
+    expected_bytes: int | None = None,
+) -> dict[str, Any]:
+    descriptor = _require_descriptor(value, label)
+    require(Path(descriptor["path"]) == expected_path, f"{label} path changed")
+    require(
+        descriptor["sha256"] == _verified_sha(expected_sha256, f"{label} digest"),
+        f"{label} hash changed",
+    )
+    if expected_bytes is not None:
+        require(descriptor["bytes"] == expected_bytes, f"{label} byte count changed")
+    return descriptor
+
+
+def _validate_receipt_implementation(
+    receipt: Mapping[str, Any], *, study_commit: str, include_n3_runner: bool
+) -> dict[str, dict[str, Any]]:
+    implementation = receipt.get("implementation")
+    require(isinstance(implementation, Mapping), "timing receipt implementation is missing")
+    expected: dict[str, tuple[Path, str]] = {
+        "timing_validator": (TOOL_RELATIVE, TOOL_SHA256),
+        "timing_contract": (CONTRACT_RELATIVE, CONTRACT_SHA256),
+    }
+    if include_n3_runner:
+        expected.update(
+            {
+                "n3_generation_runner": (N3_RUNNER_RELATIVE, N3_RUNNER_SHA256),
+                "n3_runtime_contract": (
+                    N3_RUNTIME_CONTRACT_RELATIVE,
+                    N3_RUNTIME_CONTRACT_SHA256,
+                ),
+            }
+        )
+    require(set(implementation) == set(expected), "timing receipt implementation inventory changed")
+    source_root = CONTROL_ROOT / "sources" / study_commit
+    return {
+        key: _require_bound_descriptor(
+            implementation[key],
+            expected_path=source_root / relative,
+            expected_sha256=digest,
+            label=f"timing receipt {key}",
+        )
+        for key, (relative, digest) in expected.items()
+    }
+
+
+def _validate_timing_receipt_header(
+    receipt: Mapping[str, Any],
+    *,
+    mode: str,
+    job_id: str,
+    job_dir: Path,
+    role: str,
+    worker_id: str,
+    study_commit: str,
+) -> None:
+    exact = {
+        "schema_version": TIMING_JOB_SCHEMA,
+        "namespace": NAMESPACE,
+        "study_id": STUDY_ID,
+        "status": "passed",
+        "decision": "go",
+        "mode": mode,
+        "job_id": job_id,
+        "job_dir": str(job_dir),
+        "study_commit": study_commit,
+        "queue_role": role,
+        "worker_id": worker_id,
+        "physical_time_qualified": False,
+        "behavioral_policy_skill_evaluated": False,
+        "safe_to_release_confirmation": False,
+    }
+    for key, wanted in exact.items():
+        require(receipt.get(key) == wanted, f"timing job receipt changed: {key}")
+    runtime = receipt.get("runtime_identity")
+    require(isinstance(runtime, Mapping), "timing receipt runtime identity is missing")
+    require(
+        isinstance(runtime.get("hostname"), str)
+        and runtime["hostname"].startswith(worker_id + "-"),
+        "timing receipt hostname differs from its worker identity",
+    )
+    require(
+        isinstance(runtime.get("pod_uid"), str) and bool(runtime["pod_uid"]),
+        "timing receipt pod UID is missing",
+    )
+    require(type(runtime.get("pid")) is int and runtime["pid"] > 0, "timing receipt PID is invalid")
+    queue_descriptor = receipt.get("queue_descriptor")
+    require(isinstance(queue_descriptor, Mapping), "timing queue descriptor is missing")
+    _require_bound_descriptor(
+        queue_descriptor,
+        expected_path=job_dir / "descriptor.json",
+        expected_sha256=str(queue_descriptor.get("sha256", "")),
+        label="timing queue descriptor",
+    )
+    queue_claim = receipt.get("queue_claim")
+    require(isinstance(queue_claim, Mapping), "timing queue claim is missing")
+    _require_bound_descriptor(
+        queue_claim,
+        expected_path=job_dir / "claim" / "owner.json",
+        expected_sha256=str(queue_claim.get("sha256", "")),
+        label="timing queue claim",
+    )
+
+
+def _expected_science_counts(*, issued: int, referenced: int) -> dict[str, int]:
+    return {
+        "model_runtime_loads": 1 if issued else 0,
+        "model_servers_started": 0,
+        "model_requests_issued_by_job": issued,
+        "referenced_generation_requests": referenced,
+        "physical_resets": 0,
+        "robot_episodes": 0,
+        "behavioral_actions": 0,
+        "behavioral_cells": 0,
+    }
+
+
+def validate_n3_generation_job_receipt(
+    path: Path, expected_sha256: str
+) -> dict[str, Any]:
+    """Validate passed attempt 002 without requiring its PVC artifacts locally.
+
+    The builder may read the deliberately published receipt from a fetched
+    results branch.  The detached runtime later reopens the exact PVC receipt,
+    normalized probe, qualification, and their transitive raw evidence.
+    """
+
+    expected = _verified_sha(expected_sha256, "N3 generation job receipt digest")
+    identity = file_identity(path)
+    require(identity["sha256"] == expected, "N3 generation job receipt hash mismatch")
+    receipt = load_json(path, "N3 generation job receipt")
+    verify_signed_document(receipt, "N3 generation job receipt")
+    _validate_timing_receipt_header(
+        receipt,
+        mode="n3-generate",
+        job_id=N3_GENERATION_JOB_ID,
+        job_dir=N3_GENERATION_CLUSTER_JOB_DIR,
+        role=N3_GENERATION_ROLE,
+        worker_id=N3_GENERATION_WORKER_ID,
+        study_commit=N3_GENERATION_STUDY_COMMIT,
+    )
+    require(
+        receipt.get("science_counts") == _expected_science_counts(issued=6, referenced=0),
+        "N3 generation job receipt science counts changed",
+    )
+    _validate_receipt_implementation(
+        receipt, study_commit=N3_GENERATION_STUDY_COMMIT, include_n3_runner=True
+    )
+    inputs = receipt.get("inputs")
+    require(isinstance(inputs, Mapping), "N3 generation inputs are missing")
+    _require_bound_descriptor(
+        inputs.get("preparation_job_receipt"),
+        expected_path=PREPARATION_CLUSTER_JOB_RECEIPT,
+        expected_sha256=PREPARATION_CLUSTER_JOB_RECEIPT_SHA256,
+        expected_bytes=4125,
+        label="N3 preparation job receipt input",
+    )
+    _require_bound_descriptor(
+        inputs.get("preparation_receipt"),
+        expected_path=PREPARATION_RAW_ROOT / "preparation_receipt.json",
+        expected_sha256=PREPARATION_RECEIPT_SHA256,
+        expected_bytes=1787,
+        label="N3 preparation receipt input",
+    )
+    _require_bound_descriptor(
+        inputs.get("observation_manifest"),
+        expected_path=PREPARATION_RAW_ROOT / "observation_manifest.json",
+        expected_sha256=PREPARATION_MANIFEST_SHA256,
+        expected_bytes=2128,
+        label="N3 observation manifest input",
+    )
+    _require_bound_descriptor(
+        inputs.get("observation_payload"),
+        expected_path=PREPARATION_RAW_ROOT / "observation.npz",
+        expected_sha256=PREPARATION_PAYLOAD_SHA256,
+        expected_bytes=1037592,
+        label="N3 observation payload input",
+    )
+    child = receipt.get("child")
+    require(
+        isinstance(child, Mapping)
+        and child.get("returncode") == 0
+        and child.get("reaped") is True,
+        "N3 generation child did not exit cleanly",
+    )
+    expected_child = [
+        str(COSMOS_PYTHON),
+        str(CONTROL_ROOT / "sources" / N3_GENERATION_STUDY_COMMIT / N3_RUNNER_RELATIVE),
+        "--source-root",
+        str(N3_SOURCE),
+        "--checkpoint-root",
+        str(N3_CHECKPOINT),
+        "--observation-manifest",
+        str(
+            PREPARATION_CLUSTER_JOB_DIR
+            / "raw"
+            / "n3_live_input"
+            / "observation_manifest.json"
+        ),
+        "--output-dir",
+        str(N3_GENERATION_CLUSTER_JOB_DIR / "raw" / "n3_generation_raw"),
+        "--publish-dir",
+        str(N3_GENERATION_CLUSTER_JOB_DIR / "raw" / "n3_generation_publish"),
+        "--effective-seed",
+        str(EFFECTIVE_SEED),
+    ]
+    require(child.get("argv") == expected_child, "N3 generation child command changed")
+    outputs = receipt.get("outputs")
+    require(isinstance(outputs, Mapping), "N3 generation outputs are missing")
+    normalized = _require_descriptor(
+        outputs.get("normalized_generation_probe"), "N3 normalized generation probe"
+    )
+    require(
+        Path(normalized["path"])
+        == N3_GENERATION_CLUSTER_JOB_DIR / "raw" / "n3_generation_probe.json",
+        "N3 normalized generation probe escaped attempt 002",
+    )
+    published = _require_bound_descriptor(
+        outputs.get("published_generation_probe"),
+        expected_path=N3_GENERATION_CLUSTER_JOB_DIR / "publish" / "n3_generation_probe.json",
+        expected_sha256=str(normalized["sha256"]),
+        expected_bytes=int(normalized["bytes"]),
+        label="published N3 generation probe",
+    )
+    qualification = _require_descriptor(outputs.get("qualification"), "N3 qualification")
+    require(
+        Path(qualification["path"])
+        == N3_GENERATION_CLUSTER_JOB_DIR
+        / "raw"
+        / "n3_generation_publish"
+        / "n3_qualification.json",
+        "N3 qualification escaped attempt 002",
+    )
+    published_qualification = _require_bound_descriptor(
+        outputs.get("published_qualification"),
+        expected_path=N3_GENERATION_CLUSTER_JOB_DIR / "publish" / "n3_qualification.json",
+        expected_sha256=str(qualification["sha256"]),
+        expected_bytes=int(qualification["bytes"]),
+        label="published N3 qualification",
+    )
+    return {
+        "job_receipt": {
+            "path": str(N3_GENERATION_CLUSTER_JOB_RECEIPT),
+            "bytes": identity["bytes"],
+            "sha256": expected,
+        },
+        "generation_probe": normalized,
+        "published_generation_probe": published,
+        "qualification": qualification,
+        "published_qualification": published_qualification,
+    }
+
+
+def _prior_receipt_descriptor(job: PriorTimingJob) -> dict[str, Any]:
+    return {
+        "path": str(job.receipt_path),
+        "sha256": job.receipt_sha256,
+    }
+
+
+def _prior_artifact_descriptor(job: PriorTimingJob) -> dict[str, Any]:
+    return {
+        "path": str(job.artifact_path),
+        "bytes": job.artifact_bytes,
+        "sha256": job.artifact_sha256,
+    }
+
+
+def _authority_argv(
+    job: AuthorityJob,
+    study_commit: str,
+    *,
+    generation_job_receipt: Mapping[str, Any],
+    generation_probe: Mapping[str, Any],
+) -> list[str]:
+    source_job = N3_SOURCE_AUDIT_JOB if job.model == "N3" else D1_SOURCE_AUDIT_JOB
+    return [
+        str(ROBOLAB_PYTHON),
+        "{source_root}/" + str(THIS_RELATIVE),
+        job.mode,
+        "--source-root",
+        "{source_root}",
+        "--study-commit",
+        study_commit,
+        "--job-dir",
+        "{job_dir}",
+        "--job-id",
+        job.job_id,
+        "--expected-role",
+        job.role,
+        "--contract-sha256",
+        CONTRACT_SHA256,
+        "--source-audit-job-receipt",
+        str(source_job.receipt_path),
+        "--source-audit-job-receipt-sha256",
+        source_job.receipt_sha256,
+        "--source-audit",
+        str(source_job.artifact_path),
+        "--source-audit-sha256",
+        source_job.artifact_sha256,
+        "--generation-job-receipt",
+        str(generation_job_receipt["path"]),
+        "--generation-job-receipt-sha256",
+        str(generation_job_receipt["sha256"]),
+        "--generation-probe",
+        str(generation_probe["path"]),
+        "--generation-probe-sha256",
+        str(generation_probe["sha256"]),
+        "--recorder-receipt",
+        str(RECORDER_RECEIPT),
+        "--recorder-receipt-sha256",
+        RECORDER_RECEIPT_SHA256,
+        "--camera-id",
+        CAMERA_ID,
+        "--expected-target-count",
+        str(job.expected_target_count),
+    ]
+
+
+def build_authority_descriptor(
+    job: AuthorityJob,
+    study_commit: str,
+    *,
+    n3_generation: Mapping[str, Any],
+) -> dict[str, Any]:
+    commit = _verified_commit(study_commit)
+    require(job in AUTHORITY_JOBS, "job is outside the frozen native-authority wave")
+    if job.model == "N3":
+        generation_job_receipt = n3_generation["job_receipt"]
+        generation_probe = n3_generation["generation_probe"]
+    else:
+        generation_job_receipt = _prior_receipt_descriptor(D1_GENERATION_JOB)
+        generation_probe = _prior_artifact_descriptor(D1_GENERATION_JOB)
+    require(isinstance(generation_job_receipt, Mapping), "generation receipt binding is missing")
+    require(isinstance(generation_probe, Mapping), "generation probe binding is missing")
+    return {
+        "job_id": job.job_id,
+        "released": True,
+        "source_commit": commit,
+        "role": job.role,
+        "argv": _authority_argv(
+            job,
+            commit,
+            generation_job_receipt=generation_job_receipt,
+            generation_probe=generation_probe,
+        ),
+        "max_wall_seconds": 3600,
+        "publish_log_tail_bytes": 8192,
+    }
+
+
+def build_authority_wave(
+    study_commit: str,
+    *,
+    n3_generation_job_receipt_path: Path,
+    n3_generation_job_receipt_sha256: str,
+) -> dict[str, Any]:
+    """Build the two timing-only jobs after attempt 002 actually passes."""
+
+    commit = _verified_commit(study_commit)
+    n3_generation = validate_n3_generation_job_receipt(
+        n3_generation_job_receipt_path, n3_generation_job_receipt_sha256
+    )
+    return {
+        "schema_version": AUTHORITY_DESCRIPTOR_SCHEMA,
+        "namespace": NAMESPACE,
+        "source_commit": commit,
+        "status": "descriptor_only_not_dispatched_receipt_gate_passed",
+        "generation_requests_issued_by_wave": 0,
+        "behavioral_actions_executed": 0,
+        "safe_to_release_confirmation": False,
+        "evidence_gate": {
+            "n3_generation_attempt": dict(n3_generation["job_receipt"]),
+            "n3_source_audit_job": _prior_receipt_descriptor(N3_SOURCE_AUDIT_JOB),
+            "d1_source_audit_job": _prior_receipt_descriptor(D1_SOURCE_AUDIT_JOB),
+            "d1_generation_normalization_job": _prior_receipt_descriptor(
+                D1_GENERATION_JOB
+            ),
+            "recorder_receipt": {
+                "path": str(RECORDER_RECEIPT),
+                "sha256": RECORDER_RECEIPT_SHA256,
+            },
+        },
+        "jobs": [
+            build_authority_descriptor(job, commit, n3_generation=n3_generation)
+            for job in AUTHORITY_JOBS
+        ],
+        "claim_boundary": (
+            "Two detached source/probe/native-clock timing authority jobs only. They issue no "
+            "new model request or robot action, and confirmation remains held after success."
+        ),
+    }
+
+
 def _normalized_descriptor(value: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "schema_version": QUEUE_JOB_SCHEMA,
@@ -694,6 +1229,224 @@ def _validate_exact_file(path: Path, expected_path: Path, expected_sha256: str, 
     require(identity["sha256"] == _verified_sha(expected_sha256, f"{label} digest"),
             f"{label} hash changed")
     return identity
+
+
+def _validate_prior_timing_job(job: PriorTimingJob) -> dict[str, Any]:
+    receipt_identity = _validate_exact_file(
+        job.receipt_path, job.receipt_path, job.receipt_sha256, f"{job.model} prior job receipt"
+    )
+    receipt = load_json(job.receipt_path, f"{job.model} prior job receipt")
+    verify_signed_document(receipt, f"{job.model} prior job receipt")
+    _validate_timing_receipt_header(
+        receipt,
+        mode=job.mode,
+        job_id=job.job_id,
+        job_dir=job.job_dir,
+        role=job.role,
+        worker_id=job.worker_id,
+        study_commit=job.study_commit,
+    )
+    require(
+        receipt.get("science_counts")
+        == _expected_science_counts(issued=0, referenced=job.referenced_generation_requests),
+        f"{job.model} prior job receipt science counts changed",
+    )
+    _validate_receipt_implementation(
+        receipt, study_commit=job.study_commit, include_n3_runner=False
+    )
+    outputs = receipt.get("outputs")
+    require(isinstance(outputs, Mapping), f"{job.model} prior job outputs are missing")
+    _require_bound_descriptor(
+        outputs.get(job.output_key),
+        expected_path=job.artifact_path,
+        expected_sha256=job.artifact_sha256,
+        expected_bytes=job.artifact_bytes,
+        label=f"{job.model} prior raw artifact",
+    )
+    published_path = job.job_dir / "publish" / job.artifact_name
+    _require_bound_descriptor(
+        outputs.get(job.published_output_key),
+        expected_path=published_path,
+        expected_sha256=job.artifact_sha256,
+        expected_bytes=job.artifact_bytes,
+        label=f"{job.model} prior published artifact",
+    )
+    artifact_identity = _validate_exact_file(
+        job.artifact_path,
+        job.artifact_path,
+        job.artifact_sha256,
+        f"{job.model} prior raw artifact",
+    )
+    require(
+        artifact_identity["bytes"] == job.artifact_bytes,
+        f"{job.model} prior raw artifact byte count changed",
+    )
+    published_identity = _validate_exact_file(
+        published_path,
+        published_path,
+        job.artifact_sha256,
+        f"{job.model} prior published artifact",
+    )
+    require(
+        published_identity["bytes"] == job.artifact_bytes,
+        f"{job.model} prior published artifact byte count changed",
+    )
+    return {
+        "job_receipt": receipt_identity,
+        "artifact": artifact_identity,
+        "published_artifact": published_identity,
+    }
+
+
+def _runtime_authority_descriptor(
+    args: argparse.Namespace,
+) -> tuple[AuthorityJob, dict[str, Any]]:
+    job = AUTHORITY_BY_MODE.get(args.command)
+    require(job is not None, "runtime mode is outside the frozen native-authority wave")
+    require(args.job_id == job.job_id, "runtime authority job ID changed")
+    require(args.expected_role == job.role, "runtime authority queue role changed")
+    require(args.contract_sha256 == CONTRACT_SHA256, "runtime timing contract hash changed")
+    require(args.camera_id == CAMERA_ID, "runtime authority camera changed")
+    require(
+        args.expected_target_count == job.expected_target_count,
+        "runtime authority target count changed",
+    )
+    source_job = N3_SOURCE_AUDIT_JOB if job.model == "N3" else D1_SOURCE_AUDIT_JOB
+    require(
+        Path(args.source_audit_job_receipt) == source_job.receipt_path,
+        "runtime source-audit job receipt path changed",
+    )
+    require(
+        args.source_audit_job_receipt_sha256 == source_job.receipt_sha256,
+        "runtime source-audit job receipt hash changed",
+    )
+    require(Path(args.source_audit) == source_job.artifact_path, "runtime source audit path changed")
+    require(
+        args.source_audit_sha256 == source_job.artifact_sha256,
+        "runtime source audit hash changed",
+    )
+    require(Path(args.recorder_receipt) == RECORDER_RECEIPT, "runtime recorder receipt path changed")
+    require(
+        args.recorder_receipt_sha256 == RECORDER_RECEIPT_SHA256,
+        "runtime recorder receipt hash changed",
+    )
+    if job.model == "N3":
+        require(
+            Path(args.generation_job_receipt) == N3_GENERATION_CLUSTER_JOB_RECEIPT,
+            "runtime N3 generation job receipt path changed",
+        )
+        _verified_sha(args.generation_job_receipt_sha256, "N3 generation job receipt digest")
+        expected_probe = N3_GENERATION_CLUSTER_JOB_DIR / "raw" / "n3_generation_probe.json"
+        require(Path(args.generation_probe) == expected_probe, "runtime N3 generation probe path changed")
+        _verified_sha(args.generation_probe_sha256, "N3 generation probe digest")
+    else:
+        require(
+            Path(args.generation_job_receipt) == D1_GENERATION_JOB.receipt_path,
+            "runtime D1 generation job receipt path changed",
+        )
+        require(
+            args.generation_job_receipt_sha256 == D1_GENERATION_JOB.receipt_sha256,
+            "runtime D1 generation job receipt hash changed",
+        )
+        require(
+            Path(args.generation_probe) == D1_GENERATION_JOB.artifact_path,
+            "runtime D1 generation probe path changed",
+        )
+        require(
+            args.generation_probe_sha256 == D1_GENERATION_JOB.artifact_sha256,
+            "runtime D1 generation probe hash changed",
+        )
+    descriptor = {
+        "job_id": job.job_id,
+        "released": True,
+        "source_commit": _verified_commit(args.study_commit),
+        "role": job.role,
+        "argv": _authority_argv(
+            job,
+            args.study_commit,
+            generation_job_receipt={
+                "path": str(Path(args.generation_job_receipt)),
+                "sha256": args.generation_job_receipt_sha256,
+            },
+            generation_probe={
+                "path": str(Path(args.generation_probe)),
+                "sha256": args.generation_probe_sha256,
+            },
+        ),
+        "max_wall_seconds": 3600,
+        "publish_log_tail_bytes": 8192,
+    }
+    return job, descriptor
+
+
+def _authority_prerequisites(
+    args: argparse.Namespace, job: AuthorityJob
+) -> dict[str, Any]:
+    source_job = N3_SOURCE_AUDIT_JOB if job.model == "N3" else D1_SOURCE_AUDIT_JOB
+    source = _validate_prior_timing_job(source_job)
+    require(
+        source["job_receipt"]["sha256"] == args.source_audit_job_receipt_sha256
+        and source["artifact"]["sha256"] == args.source_audit_sha256,
+        "runtime source-audit inputs differ from their prior receipt",
+    )
+    if job.model == "N3":
+        receipt_identity = _validate_exact_file(
+            Path(args.generation_job_receipt),
+            N3_GENERATION_CLUSTER_JOB_RECEIPT,
+            args.generation_job_receipt_sha256,
+            "N3 generation job receipt",
+        )
+        generation = validate_n3_generation_job_receipt(
+            Path(args.generation_job_receipt), args.generation_job_receipt_sha256
+        )
+        probe = generation["generation_probe"]
+        require(isinstance(probe, Mapping), "N3 generation probe binding is missing")
+        require(
+            Path(args.generation_probe) == Path(str(probe["path"]))
+            and args.generation_probe_sha256 == probe["sha256"],
+            "runtime N3 probe differs from attempt 002 receipt",
+        )
+        probe_identity = _validate_exact_file(
+            Path(args.generation_probe),
+            Path(str(probe["path"])),
+            args.generation_probe_sha256,
+            "N3 generation probe",
+        )
+        require(
+            probe_identity["bytes"] == probe["bytes"],
+            "runtime N3 generation probe byte count changed",
+        )
+        generation_input = {
+            "job_receipt": receipt_identity,
+            "generation_probe": probe_identity,
+            "qualification": dict(generation["qualification"]),
+        }
+    else:
+        generation_input = _validate_prior_timing_job(D1_GENERATION_JOB)
+        require(
+            generation_input["job_receipt"]["sha256"]
+            == args.generation_job_receipt_sha256
+            and generation_input["artifact"]["sha256"] == args.generation_probe_sha256,
+            "runtime D1 probe differs from its normalization receipt",
+        )
+    recorder = _validate_exact_file(
+        Path(args.recorder_receipt),
+        RECORDER_RECEIPT,
+        args.recorder_receipt_sha256,
+        "recorder qualification receipt",
+    )
+    return {
+        "source_audit_job": source["job_receipt"],
+        "source_audit": source["artifact"],
+        "generation_job": generation_input["job_receipt"],
+        "generation_probe": (
+            generation_input["generation_probe"]
+            if job.model == "N3"
+            else generation_input["artifact"]
+        ),
+        "recorder_receipt": recorder,
+        "camera_id": CAMERA_ID,
+    }
 
 
 def _load_module(path: Path, name: str) -> ModuleType:
@@ -1202,6 +1955,96 @@ def run_n3_generation_job(args: argparse.Namespace) -> dict[str, Any]:
         raise
 
 
+def run_authority_job(args: argparse.Namespace) -> dict[str, Any]:
+    """Qualify source-mapped targets against native clocks; issue no requests/actions."""
+
+    job, expected_descriptor = _runtime_authority_descriptor(args)
+    context: QueueContext | None = None
+    try:
+        context = validate_queue_context(
+            source_root=args.source_root,
+            job_dir=args.job_dir,
+            study_commit=args.study_commit,
+            job_id=args.job_id,
+            expected_role=args.expected_role,
+            expected_descriptor=expected_descriptor,
+        )
+        implementation = _validate_staged_implementation(context.source_root)
+        prerequisites = _authority_prerequisites(args, job)
+        timing = _load_module(
+            context.source_root / TOOL_RELATIVE,
+            f"wmf_forecast_authority_{context.job_id.replace('-', '_')}",
+        )
+        raw, publish = _prepare_output_directories(context.job_dir)
+        authority = timing.qualify_timing(
+            model_id=job.model,
+            contract_path=context.source_root / CONTRACT_RELATIVE,
+            contract_sha256=CONTRACT_SHA256,
+            source_audit_path=Path(args.source_audit),
+            source_audit_sha256=args.source_audit_sha256,
+            generation_probe_path=Path(args.generation_probe),
+            generation_probe_sha256=args.generation_probe_sha256,
+            recorder_receipt_path=Path(args.recorder_receipt),
+            recorder_receipt_sha256=args.recorder_receipt_sha256,
+            camera_id=args.camera_id,
+        )
+        targets = authority.get("generated_targets")
+        require(
+            isinstance(targets, list) and len(targets) == job.expected_target_count,
+            f"{job.model} native authority target count changed",
+        )
+        authority_path = raw / f"{job.model.lower()}_timing_authority.json"
+        timing.atomic_json(authority_path, authority)
+        validated = timing.validate_timing_authority(
+            authority_path,
+            sha256_file(authority_path),
+            expected_model=job.model,
+        )
+        require(
+            len(validated.get("generated_targets", [])) == job.expected_target_count,
+            f"{job.model} deep authority validation changed target count",
+        )
+        outputs = {
+            "timing_authority": file_identity(authority_path),
+            "published_timing_authority": _copy_compact(
+                authority_path, publish / authority_path.name
+            ),
+        }
+        receipt = signed_document(
+            {
+                **_receipt_base(context, job.mode, implementation),
+                "status": "passed",
+                "decision": "go",
+                "inputs": prerequisites,
+                "outputs": outputs,
+                "science_counts": _science_counts(referenced_generation_requests=6),
+                "evidence_counts": {
+                    "qualified_generated_targets": job.expected_target_count,
+                    "referenced_recorder_actions": 450,
+                    "referenced_recorder_observations": 451,
+                },
+                "physical_time_qualified": True,
+                "safe_to_release_confirmation": False,
+                "completed_at_utc": utc_now(),
+                "claim_boundary": (
+                    "Source/probe-backed native physical timing authority only. This job issued "
+                    "zero new model requests, executed zero robot actions, evaluated no policy "
+                    "skill, and does not release confirmation."
+                ),
+            }
+        )
+        immutable_json(publish / "timing_job_receipt.json", receipt)
+        return receipt
+    except BaseException as error:
+        _write_failure_receipt(
+            context=context,
+            job_dir=Path(args.job_dir),
+            mode=getattr(args, "command", "native-authority"),
+            error=error,
+        )
+        raise
+
+
 def _write_descriptor_output(path: Path | None, value: Mapping[str, Any]) -> None:
     if path is None:
         print(json.dumps(value, indent=2, sort_keys=True, allow_nan=False))
@@ -1235,6 +2078,15 @@ def _parser() -> argparse.ArgumentParser:
     follow_on.add_argument("--preparation-job-receipt-sha256", required=True)
     follow_on.add_argument("--output", type=Path)
 
+    authority_wave = commands.add_parser(
+        "emit-authority-wave",
+        help="emit two timing-only authority jobs after N3 attempt 002 passes",
+    )
+    authority_wave.add_argument("--study-commit", required=True)
+    authority_wave.add_argument("--n3-generation-job-receipt", type=Path, required=True)
+    authority_wave.add_argument("--n3-generation-job-receipt-sha256", required=True)
+    authority_wave.add_argument("--output", type=Path)
+
     for mode in ("n3-source-audit", "d1-source-audit"):
         command = commands.add_parser(mode)
         _add_runtime_base(command)
@@ -1260,6 +2112,22 @@ def _parser() -> argparse.ArgumentParser:
     generation.add_argument("--preparation-receipt-sha256", required=True)
     generation.add_argument("--observation-manifest", type=Path, required=True)
     generation.add_argument("--observation-manifest-sha256", required=True)
+
+    for mode in ("n3-native-authority", "d1-native-authority"):
+        authority = commands.add_parser(mode)
+        _add_runtime_base(authority)
+        authority.add_argument("--source-audit-job-receipt", type=Path, required=True)
+        authority.add_argument("--source-audit-job-receipt-sha256", required=True)
+        authority.add_argument("--source-audit", type=Path, required=True)
+        authority.add_argument("--source-audit-sha256", required=True)
+        authority.add_argument("--generation-job-receipt", type=Path, required=True)
+        authority.add_argument("--generation-job-receipt-sha256", required=True)
+        authority.add_argument("--generation-probe", type=Path, required=True)
+        authority.add_argument("--generation-probe-sha256", required=True)
+        authority.add_argument("--recorder-receipt", type=Path, required=True)
+        authority.add_argument("--recorder-receipt-sha256", required=True)
+        authority.add_argument("--camera-id", required=True)
+        authority.add_argument("--expected-target-count", type=int, required=True)
     return parser
 
 
@@ -1277,8 +2145,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             _write_descriptor_output(args.output, descriptor)
             return 0
+        if args.command == "emit-authority-wave":
+            wave = build_authority_wave(
+                args.study_commit,
+                n3_generation_job_receipt_path=args.n3_generation_job_receipt,
+                n3_generation_job_receipt_sha256=args.n3_generation_job_receipt_sha256,
+            )
+            _write_descriptor_output(args.output, wave)
+            return 0
         if args.command == "n3-generate":
             receipt = run_n3_generation_job(args)
+        elif args.command in AUTHORITY_BY_MODE:
+            receipt = run_authority_job(args)
         else:
             receipt = run_initial_job(args)
     except BaseException as error:

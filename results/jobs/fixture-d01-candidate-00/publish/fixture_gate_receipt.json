@@ -1,0 +1,80 @@
+{
+  "behavioral_action_count": 0,
+  "candidate_id": "D01__candidate_00",
+  "candidate_payload_sha256": "d2ca914c6ecfbd34129d8d8a121e27d91108e04f1c19daae81b14045aa6de35c",
+  "candidate_pool_sha256": "ec80f4adc5272ec666c94d753241b84c954ef382bd30e1f2907459bff1cdb2b1",
+  "child_exit_code": 0,
+  "child_logs": {
+    "stderr": {
+      "bytes": 551,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/D01/queue_attempts/fixture-d01-candidate-00/child.stderr.log",
+      "sha256": "c96584ee4a260d36160f6a8882021a3218f4099f4c43acbc82685105a0c403dc"
+    },
+    "stdout": {
+      "bytes": 94626,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/D01/queue_attempts/fixture-d01-candidate-00/child.stdout.log",
+      "sha256": "c60596b9680244e0dce8c5111825296a4cad4ca5135d94e18c8174747e6478f0"
+    }
+  },
+  "child_started": true,
+  "claim_boundary": "Model-blind physical fixture qualification only; this receipt releases no model inference or behavioral episode.",
+  "decision": "accepted",
+  "deployment_identity": {
+    "deployment_job": "wmf-forecast-0912-worker-00",
+    "node": "dcwipphhgc223.edc.nam.gm.com",
+    "pod": "wmf-forecast-0912-worker-00-5cq8j",
+    "pod_uid": "629abe8d-c940-49c7-a5e9-dfd40280259e",
+    "pod_uid_attestation_source": "exact_kernel_hostname_and_hash_bound_receipt",
+    "receipt": {
+      "bytes": 6018,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/133578ff3f76cd17e416b392664e3107f30846ba/workshops/corl2026_world_models/execution/20260912/autonomy/worker_pool_transition.json",
+      "sha256": "b14db71d3b6dc90de8761e66ea938010f5a3193a072ef4f5c600b73be6c86ce9"
+    },
+    "receipt_kind": "corrected_worker_pool_transition"
+  },
+  "exit_code": 0,
+  "finished_at_utc": "2026-09-13T03:49:45.728518Z",
+  "fixture_job_ledger": {
+    "bytes": 701,
+    "last_record_sha256": "c64db9c5b21e63e772c1e7542bfe8f7236506b7a6e5ac1d15c7d79cd8c237c2e",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/D01/fixture_job_ledger.jsonl",
+    "record_count": 1,
+    "sha256": "53d381ec5ef9abc07ae760f6e250691f68bffe54d8dfc75a968bf99ac35800a2"
+  },
+  "fixture_job_ledger_record_sha256": "c64db9c5b21e63e772c1e7542bfe8f7236506b7a6e5ac1d15c7d79cd8c237c2e",
+  "gate_evidence": {
+    "failure_count": 0,
+    "gate_attempt_receipt": {
+      "bytes": 272102,
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/D01/attempts/D01/D01__candidate_00/attempt_000/gate_attempt_receipt.json",
+      "sha256": "007cc67f597f60610bdbc45974810ca05cc6f143fa31917ada10eed0f7d29d41"
+    },
+    "gate_record_sha256": "7757565824abb3b3fe86b0e25462490aa0aa011ffce558dc8661bfbf3f8031d8",
+    "raw_attempt_directory": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/D01/attempts/D01/D01__candidate_00/attempt_000"
+  },
+  "gate_ledger": {
+    "bytes": 1076,
+    "last_record_sha256": "7757565824abb3b3fe86b0e25462490aa0aa011ffce558dc8661bfbf3f8031d8",
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/D01/gate_ledger.jsonl",
+    "record_count": 1,
+    "sha256": "3b73fc7ff7fafca0eb68395ec6d9333636d5db785ec89ec11ce1b5c396109117"
+  },
+  "gate_record_count": 1,
+  "gpu_identity": {
+    "driver_version": "580.95.05",
+    "index": 0,
+    "name": "NVIDIA B200",
+    "preexisting_compute_process_count": 0,
+    "uuid": "GPU-1e6dc545-12a1-6021-7ea9-96c638f34bd9"
+  },
+  "job_id": "fixture-d01-candidate-00",
+  "layout_pair_id": "D01",
+  "model_request_count": 0,
+  "reason": null,
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "schema_version": "wmf-forecast-layout-fixture-job-receipt-v1",
+  "source_contract_sha256": "88a1268ae7f27776fd5246a5808c069b2906399e99bb0e7d8b6f09020a6b85d3",
+  "status": "finished",
+  "study_commit": "133578ff3f76cd17e416b392664e3107f30846ba",
+  "study_namespace": "wmf_ablation_001_20260912"
+}

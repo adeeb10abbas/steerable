@@ -15,6 +15,7 @@ import argparse
 from contextlib import contextmanager
 import fcntl
 import json
+import math
 import os
 from pathlib import Path
 import subprocess
@@ -327,7 +328,107 @@ def validate_passed_confirmation_cell(
     )
     prerequisites = receipt.get("confirmation_prerequisites")
     pilot.require(isinstance(prerequisites, Mapping), "confirmation_cell_prerequisites_missing")
+    begin = receipt.get("server_begin_receipt")
+    end = receipt.get("server_end_receipt")
+    pilot.require(isinstance(begin, Mapping) and isinstance(end, Mapping), "confirmation_terminal_context_missing")
+    context_id = begin.get("server_context_id")
+    session_id = begin.get("client_session_id")
+    terminal = receipt.get("server_context_terminal")
+    pilot.require(
+        end.get("server_context_id") == context_id
+        and end.get("episode_context_id") == context_id
+        and end.get("client_session_id") == session_id,
+        "confirmation_end_context_identity_changed",
+    )
+    pilot.require(
+        end.get("server_context_terminal") == terminal,
+        "confirmation_terminal_descriptor_changed",
+    )
+    pilot.validate_server_terminal_receipt(
+        terminal,
+        attempt_root=Path(path).resolve().parents[2],
+        cell_id=block.cell_ids[condition_index],
+        condition_index=condition_index,
+        server_context_id=context_id,
+        client_session_id=session_id,
+        stop_reason="action_cap",
+        actions_executed=pilot.ACTION_CAP,
+        request_count=pilot.REQUEST_COUNT,
+    )
     return receipt, identity
+
+
+def validate_failed_confirmation_cell(
+    path: Path, *, condition_index: int, block: development.DevelopmentBlock,
+) -> dict[str, Any]:
+    path = Path(path).resolve()
+    cell_id = block.cell_ids[condition_index]
+    expected_path = (
+        path.parents[2]
+        / "cells"
+        / f"{condition_index:02d}-{pilot.safe_cell_component(cell_id)}"
+        / "technical_failure.json"
+    ).resolve()
+    pilot.require(path == expected_path, "confirmation_failure_path_changed")
+    failure = pilot.load_json(path, "confirmation_failure_receipt_unreadable")
+    expected = {
+        "schema_version": CELL_RECEIPT_SCHEMA,
+        "study_id": pilot.STUDY_ID,
+        "phase": "confirmation",
+        "block_id": block.block_id,
+        "layout_pair_id": block.layout_pair_id,
+        "model_config": "N3",
+        "cell_id": cell_id,
+        "condition_index": condition_index,
+    }
+    for key, wanted in expected.items():
+        pilot.require(failure.get(key) == wanted, "confirmation_failure_identity_changed", key)
+    status = failure.get("status")
+    stop_reason = failure.get("recorded_stop_reason")
+    pilot.require(status in {"safety_abort", "technical_failure"}, "confirmation_failure_status_invalid")
+    pilot.require(
+        stop_reason in {"action_cap", "safety_abort", "technical_failure"},
+        "confirmation_failure_stop_reason_invalid",
+    )
+    actions = failure.get("actions_executed")
+    requests = failure.get("request_count")
+    pilot.require(type(actions) is int and 0 <= actions <= pilot.ACTION_CAP, "confirmation_failure_actions_invalid")
+    pilot.require(type(requests) is int and 0 <= requests <= pilot.REQUEST_COUNT, "confirmation_failure_requests_invalid")
+    if status == "safety_abort":
+        pilot.require(
+            stop_reason == "safety_abort"
+            and 1 <= actions < pilot.ACTION_CAP
+            and requests == math.ceil(actions / pilot.EXECUTED_CHUNK_HORIZON),
+            "confirmation_safety_abort_prefix_invalid",
+        )
+    terminal = failure.get("server_context_terminal")
+    if terminal is None:
+        pilot.require(status == "technical_failure", "confirmation_safety_abort_terminal_missing")
+    else:
+        pilot.require(
+            failure.get("episode_context_id") == failure.get("server_context_id"),
+            "confirmation_failure_context_identity_changed",
+        )
+        pilot.validate_server_terminal_receipt(
+            terminal,
+            attempt_root=path.parents[2],
+            cell_id=cell_id,
+            condition_index=condition_index,
+            server_context_id=failure.get("server_context_id"),
+            client_session_id=failure.get("client_session_id"),
+            stop_reason=stop_reason,
+            actions_executed=actions,
+            request_count=requests,
+        )
+    pilot.require(
+        status != "safety_abort" or (stop_reason == "safety_abort" and terminal is not None),
+        "confirmation_safety_abort_terminal_invalid",
+    )
+    pilot.require(
+        not (status == "technical_failure" and stop_reason == "safety_abort" and terminal is not None),
+        "confirmation_safety_abort_was_incorrectly_demoted",
+    )
+    return failure
 
 
 def discover_completed_prefix(
@@ -335,6 +436,25 @@ def discover_completed_prefix(
     prerequisites: Mapping[str, Any], study_commit: str,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     raw_root = Path(raw_root).resolve()
+    for failure_path in sorted(raw_root.glob("*/cells/*/technical_failure.json")):
+        raw_failure = pilot.load_json(
+            failure_path, "confirmation_resume_failure_unreadable"
+        )
+        has_terminal_safety_claim = (
+            raw_failure.get("recorded_stop_reason") == "safety_abort"
+            and raw_failure.get("server_context_terminal") is not None
+        )
+        if raw_failure.get("status") != "safety_abort" and not has_terminal_safety_claim:
+            continue
+        index = raw_failure.get("condition_index")
+        pilot.require(type(index) is int and 0 <= index < 4, "confirmation_resume_failure_index_invalid")
+        censored = validate_failed_confirmation_cell(
+            failure_path, condition_index=index, block=block
+        )
+        validate_cells_bind_prerequisites([censored], prerequisites=prerequisites)
+        raise pilot.N3BehavioralPilotError(
+            "confirmation_safety_censored_block_is_terminal"
+        )
     found: dict[int, tuple[dict[str, Any], dict[str, Any], Path]] = {}
     for path in sorted(raw_root.glob("*/cells/*/cell_receipt.json")):
         attempt_root = path.parents[2].resolve()
@@ -375,7 +495,13 @@ def discover_completed_prefix(
     receipts = [found[index][0] for index in indices]
     identities = [found[index][1] for index in indices]
     contexts = [receipt["server_begin_receipt"]["server_context_id"] for receipt in receipts]
-    pilot.require(len(contexts) == len(set(contexts)), "resume_server_context_id_reused")
+    sessions = [receipt["server_begin_receipt"].get("client_session_id") for receipt in receipts]
+    pilot.require(
+        len(contexts) == len(set(contexts))
+        and len(sessions) == len(set(sessions))
+        and not set(contexts).intersection(sessions),
+        "resume_server_context_id_reused",
+    )
     return receipts, identities, {
         "schema_version": RESUME_SCHEMA,
         "status": "passed",
@@ -410,7 +536,9 @@ def _receipt_counts(
             / "technical_failure.json"
         )
         if failure_path.is_file():
-            failure = pilot.load_json(failure_path)
+            failure = validate_failed_confirmation_cell(
+                failure_path, condition_index=index, block=block
+            )
             actions += int(failure.get("actions_executed", 0))
             requests += int(failure.get("request_count", 0))
             if failure.get("status") == "safety_abort":
@@ -758,13 +886,15 @@ def run_cell(args: argparse.Namespace, block: development.DevelopmentBlock) -> i
 
     def immutable(path: Path, value: Mapping[str, Any], *, publish: bool = False) -> None:
         updated = dict(value)
-        if Path(path).name == "cell_receipt.json" and updated.get("schema_version") == CELL_RECEIPT_SCHEMA:
+        if updated.get("schema_version") == CELL_RECEIPT_SCHEMA:
             updated["phase"] = "confirmation"
             updated["confirmation_prerequisites"] = _expected_prerequisite_binding(prerequisites)
             updated["transport_contract"] = dict(NO_REPLAY_TRANSPORT_CONTRACT)
             updated["claim_boundary"] = (
                 "One valid learned-policy N3 behavioral confirmation cell: 450 actual actions, "
                 "451 original observations, and 15 jointly generated action/future requests."
+                if Path(path).name == "cell_receipt.json"
+                else "A failed N3 confirmation cell; safety censoring requires a hash-bound server terminal context receipt."
             )
         original_immutable(path, updated, publish=publish)
 

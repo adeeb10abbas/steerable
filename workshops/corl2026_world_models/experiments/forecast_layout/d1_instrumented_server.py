@@ -45,6 +45,7 @@ SCHEMA_VERSION = "wmf-d1-instrumented-server-v1"
 REQUEST_SCHEMA_VERSION = "wmf-d1-request-receipt-v1"
 EPISODE_SCHEMA_VERSION = "wmf-d1-episode-manifest-v1"
 RESET_SCHEMA_VERSION = "wmf-d1-two-rank-reset-receipt-v1"
+TERMINAL_SCHEMA_VERSION = "wmf-d1-terminal-context-receipt-v1"
 
 OFFICIAL_COMMIT = "ab790c198fbce33503358efbbd4187ce9a89adf3"
 OFFICIAL_TREE = "6b7ba27f1af81e963a6507f1204c05c65a94098c"
@@ -58,6 +59,8 @@ EXPECTED_VISIBLE_GPU_COUNT = 2
 EXPECTED_GPU_NAME_SUBSTRING = "B200"
 EXPECTED_ACTION_SHAPE = (24, 8)
 EXECUTED_ACTION_PREFIX = 8
+FULL_ACTION_CAP = 450
+FULL_REQUEST_COUNT = 57
 VIDEO_GUIDANCE_SCALE = 5.0
 CONFIGURED_INFERENCE_STEPS = 16
 EXPECTED_DIT_STEP_MASK = [
@@ -110,10 +113,44 @@ RESET_FIELDS_TO_NONE = (
 )
 CACHE_FIELDS = RESET_FIELDS_TO_NONE[:4]
 SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
+FINALIZE_CONTROL_KEYS = {
+    "finalize_only",
+    "purpose",
+    "previous_episode_id",
+    "previous_session_id",
+    "model_config",
+    "study_id",
+    "phase",
+    "block_id",
+    "layout_pair_id",
+    "cell_id",
+    "condition_index",
+    "stop_reason",
+    "actions_executed",
+    "request_count",
+    "server_ready_sha256",
+    "simulator_claim_sha256",
+    "simulator_lease_token",
+    "pilot_contract_sha256",
+}
+BEHAVIORAL_PURPOSE_BY_PHASE = {
+    "pilot": "d1_behavioral_pilot",
+    "development": "d1_behavioral_development",
+    "confirmation": "d1_behavioral_confirmation",
+}
 
 
 def utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def parse_utc(value: Any) -> dt.datetime:
+    if not isinstance(value, str) or not value.endswith("Z"):
+        raise ValueError(f"Invalid UTC timestamp: {value!r}")
+    parsed = dt.datetime.fromisoformat(value[:-1] + "+00:00")
+    if parsed.tzinfo is None or parsed.utcoffset() != dt.timedelta(0):
+        raise ValueError(f"Invalid UTC timestamp: {value!r}")
+    return parsed
 
 
 def sha256_file(path: Path, *, block_bytes: int = 4 * 1024 * 1024) -> str:
@@ -126,6 +163,17 @@ def sha256_file(path: Path, *, block_bytes: int = 4 * 1024 * 1024) -> str:
 
 def sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
+
+
+def file_identity(path: Path) -> dict[str, Any]:
+    resolved = Path(path).resolve()
+    if not resolved.is_file():
+        raise FileNotFoundError(f"Evidence file is missing: {resolved}")
+    return {
+        "path": str(resolved),
+        "bytes": resolved.stat().st_size,
+        "sha256": sha256_file(resolved),
+    }
 
 
 def canonical_json_bytes(value: Any) -> bytes:
@@ -159,6 +207,28 @@ def atomic_write_json(path: Path, value: Any) -> None:
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temporary, path)
+        fsync_directory(path.parent)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+def immutable_write_json(path: Path, value: Any) -> None:
+    """Atomically create a JSON receipt without an overwrite path."""
+
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.{uuid.uuid4().hex}.tmp")
+    try:
+        with temporary.open("xb") as handle:
+            handle.write(
+                (json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n").encode(
+                    "utf-8"
+                )
+            )
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.link(temporary, path)
         fsync_directory(path.parent)
     finally:
         if temporary.exists():
@@ -542,6 +612,7 @@ def reset_temporal_state(policy: Any, *, rank: int, reset_id: str) -> dict[str, 
         "after": after,
         "fields_cleared": ["current_start_frame", *RESET_FIELDS_TO_NONE],
         "failures": failures,
+        "completed_at_utc": utc_now(),
     }
     if failures:
         raise RuntimeError("D1 temporal reset failed: " + "; ".join(failures))
@@ -798,6 +869,39 @@ def _validate_episode_id(value: Any) -> str:
     return value
 
 
+def _validate_behavioral_finalize_counts(
+    *,
+    stop_reason: str,
+    actions_executed: Any,
+    request_count: Any,
+    server_request_count: int,
+) -> None:
+    """Validate the exact completed or censored sequential request prefix."""
+
+    if (
+        type(actions_executed) is not int
+        or not 0 <= actions_executed <= FULL_ACTION_CAP
+        or type(request_count) is not int
+        or not 0 <= request_count <= FULL_REQUEST_COUNT
+        or request_count != server_request_count
+        or actions_executed
+        > min(FULL_ACTION_CAP, request_count * EXECUTED_ACTION_PREFIX)
+    ):
+        raise ValueError("D1 finalize control counts do not match the active episode")
+    if stop_reason == "action_cap" and (
+        actions_executed != FULL_ACTION_CAP
+        or request_count != FULL_REQUEST_COUNT
+    ):
+        raise ValueError("D1 completed finalize counts changed")
+    if stop_reason == "safety_abort" and not (
+        0 < actions_executed < FULL_ACTION_CAP
+        and request_count
+        == (actions_executed + EXECUTED_ACTION_PREFIX - 1)
+        // EXECUTED_ACTION_PREFIX
+    ):
+        raise ValueError("D1 safety-abort finalize is not a closed nonempty prefix")
+
+
 def _decode_latent_measurement_only(
     *,
     head: Any,
@@ -904,11 +1008,14 @@ def make_instrumented_policy_class(official_policy_class: type):
             self._measurement_records: list[dict[str, Any]] = []
             self._reset_generation = 0
 
-        def _finalize_episode(self) -> None:
+        def _finalize_episode(self) -> dict[str, Any] | None:
             if self._episode_id is None:
-                return
+                return None
             if self._episode_dir is None or self._reset_receipt is None:
                 raise RuntimeError("D1 episode bookkeeping is incomplete")
+            episode_id = self._episode_id
+            episode_dir = self._episode_dir
+            expected_session_id = self._expected_session_id
             manifest = {
                 "schema_version": EPISODE_SCHEMA_VERSION,
                 "configuration_id": "D1",
@@ -926,19 +1033,135 @@ def make_instrumented_policy_class(official_policy_class: type):
                 "server_contract_sha256": self._server_contract_sha256,
                 "finalized_at_utc": utc_now(),
             }
-            atomic_write_json(self._episode_dir / "episode_manifest.json", manifest)
+            manifest_path = episode_dir / "episode_manifest.json"
+            atomic_write_json(manifest_path, manifest)
+            finalized = {
+                "episode_id": episode_id,
+                "episode_dir": episode_dir,
+                "expected_session_id": expected_session_id,
+                "episode_manifest": file_identity(manifest_path),
+                "server_request_count": len(self._measurement_records),
+                "begin_reset": copy.deepcopy(self._reset_receipt),
+                "manifest_finalized_at_utc": manifest["finalized_at_utc"],
+            }
             self._episode_id = None
             self._episode_dir = None
             self._expected_session_id = None
             self._reset_receipt = None
             self._measurement_records = []
+            return finalized
 
         def reset(self, reset_info: dict) -> None:
             reset_info = copy.deepcopy(reset_info)
             control = reset_info.pop(RESET_KEY, None)
             if not isinstance(control, dict):
                 raise ValueError(f"D1 reset requires a {RESET_KEY} mapping")
-            self._finalize_episode()
+            finalize_only = bool(control.get("finalize_only", False))
+            finalized: dict[str, Any] | None = None
+            active_begin_control = (
+                self._reset_receipt.get("control")
+                if isinstance(self._reset_receipt, Mapping)
+                else None
+            )
+            behavioral_finalize = (
+                finalize_only
+                and isinstance(active_begin_control, Mapping)
+                and active_begin_control.get("model_config") == "D1"
+            )
+            if not finalize_only and control.get("model_config") == "D1":
+                expected_begin_purpose = BEHAVIORAL_PURPOSE_BY_PHASE.get(
+                    control.get("phase")
+                )
+                if (
+                    expected_begin_purpose is None
+                    or control.get("purpose") != expected_begin_purpose
+                ):
+                    raise ValueError("D1 behavioral begin purpose changed")
+            if behavioral_finalize:
+                if set(control) != FINALIZE_CONTROL_KEYS:
+                    raise ValueError("D1 finalize control keys changed")
+                if control.get("finalize_only") is not True:
+                    raise ValueError("D1 behavioral finalize_only must be literal true")
+                previous_episode_id = _validate_episode_id(control.get("previous_episode_id"))
+                previous_session_id = control.get("previous_session_id")
+                if (
+                    self._episode_id is None
+                    or previous_episode_id != self._episode_id
+                    or not isinstance(previous_session_id, str)
+                    or previous_session_id != self._expected_session_id
+                    or previous_session_id == previous_episode_id
+                ):
+                    raise ValueError("D1 finalize control does not match the active episode/session")
+                if control.get("model_config") != "D1":
+                    raise ValueError("D1 finalize control has the wrong model")
+                if self._reset_receipt is None:
+                    raise RuntimeError("D1 active episode is missing its begin reset receipt")
+                begin_control = self._reset_receipt.get("control")
+                if not isinstance(begin_control, Mapping):
+                    raise RuntimeError("D1 begin reset control is unavailable")
+                expected_begin_purpose = BEHAVIORAL_PURPOSE_BY_PHASE.get(
+                    begin_control.get("phase")
+                )
+                if (
+                    expected_begin_purpose is None
+                    or begin_control.get("model_config") != "D1"
+                    or begin_control.get("purpose") != expected_begin_purpose
+                    or control.get("purpose") != f"{expected_begin_purpose}_finalize"
+                ):
+                    raise ValueError("D1 behavioral begin/finalize purpose changed")
+                for key in (
+                    "model_config",
+                    "study_id",
+                    "phase",
+                    "block_id",
+                    "layout_pair_id",
+                    "cell_id",
+                    "condition_index",
+                    "server_ready_sha256",
+                    "simulator_claim_sha256",
+                    "simulator_lease_token",
+                    "pilot_contract_sha256",
+                ):
+                    if control.get(key) != begin_control.get(key):
+                        raise ValueError(f"D1 finalize control changed active episode field {key}")
+                if (
+                    begin_control.get("episode_id") != previous_episode_id
+                    or begin_control.get("expected_session_id") != previous_session_id
+                ):
+                    raise ValueError("D1 finalize IDs differ from the begin reset control")
+                stop_reason = control.get("stop_reason")
+                if stop_reason not in {"action_cap", "safety_abort", "technical_failure"}:
+                    raise ValueError("D1 finalize control has an invalid stop reason")
+                actions_executed = control.get("actions_executed")
+                request_count = control.get("request_count")
+                _validate_behavioral_finalize_counts(
+                    stop_reason=stop_reason,
+                    actions_executed=actions_executed,
+                    request_count=request_count,
+                    server_request_count=len(self._measurement_records),
+                )
+                finalized = self._finalize_episode()
+                if finalized is None:
+                    raise RuntimeError("D1 finalize did not close an active episode")
+            elif finalize_only:
+                # Qualification probes predate the behavioral terminal schema.
+                # Preserve their finalize-only control without promoting their
+                # manifests to behavioral terminal-context evidence.
+                finalized = self._finalize_episode()
+            elif self._episode_id is not None:
+                if (
+                    isinstance(active_begin_control, Mapping)
+                    and active_begin_control.get("model_config") == "D1"
+                ):
+                    raise RuntimeError(
+                        "D1 active behavioral episode requires an explicit "
+                        "finalize-only reset"
+                    )
+                # The frozen six-probe qualification client starts the next
+                # legacy probe with a reset and emits one finalize-only reset
+                # after the loop.  Keep that transition exactly: a new legacy
+                # begin closes the preceding legacy episode before resetting.
+                self._finalize_episode()
             self._reset_generation += 1
             reset_id = f"reset-{self._reset_generation:06d}-{uuid.uuid4().hex}"
 
@@ -984,8 +1207,92 @@ def make_instrumented_policy_class(official_policy_class: type):
                 "control": control,
                 "completed_at_utc": utc_now(),
             }
-            if bool(control.get("finalize_only", False)):
+            if finalize_only:
+                if not behavioral_finalize:
+                    return
+                assert finalized is not None
+                begin_reset = finalized.get("begin_reset")
+                if not isinstance(begin_reset, Mapping):
+                    raise RuntimeError("D1 finalized episode lost its begin reset")
+                begin_rank_ids = {
+                    row.get("reset_id")
+                    for row in begin_reset.get("rank_receipts", [])
+                    if isinstance(row, Mapping)
+                }
+                final_rank_ids = {
+                    row.get("reset_id")
+                    for row in reset_receipt.get("rank_receipts", [])
+                    if isinstance(row, Mapping)
+                }
+                if (
+                    reset_receipt["reset_id"] == begin_reset.get("reset_id")
+                    or begin_rank_ids.intersection(final_rank_ids)
+                ):
+                    raise RuntimeError("D1 terminal reset is not distinct from begin")
                 self._reset_receipt = None
+                bookkeeping_cleared = (
+                    self._episode_id is None
+                    and self._episode_dir is None
+                    and self._expected_session_id is None
+                    and self._reset_receipt is None
+                    and self._measurement_records == []
+                )
+                if not bookkeeping_cleared or self._current_session_id is not None:
+                    raise RuntimeError("D1 terminal reset left active episode state")
+                terminal = {
+                    "schema_version": TERMINAL_SCHEMA_VERSION,
+                    "status": "passed",
+                    "terminal_state": "context_closed",
+                    "model_config": "D1",
+                    "study_id": control.get("study_id"),
+                    "phase": control.get("phase"),
+                    "block_id": control.get("block_id"),
+                    "layout_pair_id": control.get("layout_pair_id"),
+                    "cell_id": control.get("cell_id"),
+                    "condition_index": control.get("condition_index"),
+                    "episode_id": finalized["episode_id"],
+                    "episode_context_id": finalized["episode_id"],
+                    "server_context_id": finalized["episode_id"],
+                    "client_session_id": finalized["expected_session_id"],
+                    "stop_reason": control.get("stop_reason"),
+                    "actions_executed": control.get("actions_executed"),
+                    "request_count": control.get("request_count"),
+                    "server_request_count": finalized["server_request_count"],
+                    "episode_manifest": finalized["episode_manifest"],
+                    "final_two_rank_reset": reset_receipt,
+                    "episode_bookkeeping_cleared": True,
+                    "context_active_after_finalize": False,
+                    "completed_at_utc": utc_now(),
+                }
+                begin_completed = parse_utc(begin_reset.get("completed_at_utc"))
+                manifest_completed = parse_utc(finalized["manifest_finalized_at_utc"])
+                final_reset_completed = parse_utc(reset_receipt["completed_at_utc"])
+                terminal_completed = parse_utc(terminal["completed_at_utc"])
+                begin_rank_completed = [
+                    parse_utc(row.get("completed_at_utc"))
+                    for row in begin_reset.get("rank_receipts", [])
+                    if isinstance(row, Mapping)
+                ]
+                final_rank_completed = [
+                    parse_utc(row.get("completed_at_utc"))
+                    for row in reset_receipt.get("rank_receipts", [])
+                    if isinstance(row, Mapping)
+                ]
+                if not (
+                    len(begin_rank_completed) == len(final_rank_completed) == EXPECTED_WORLD_SIZE
+                    and all(value <= begin_completed for value in begin_rank_completed)
+                    and begin_completed < manifest_completed < final_reset_completed
+                    <= terminal_completed
+                    and all(
+                        manifest_completed < value <= final_reset_completed
+                        for value in final_rank_completed
+                    )
+                ):
+                    raise RuntimeError("D1 terminal evidence timestamps are out of order")
+                immutable_write_json(
+                    finalized["episode_dir"] / "terminal_context_receipt.json",
+                    terminal,
+                )
                 return
             episode_id = _validate_episode_id(control.get("episode_id"))
             expected_session_id = control.get("expected_session_id")

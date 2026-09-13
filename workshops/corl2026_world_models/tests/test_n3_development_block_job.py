@@ -576,6 +576,7 @@ class FrozenScheduleTests(unittest.TestCase):
                     "effective_seed": block.effective_seed,
                     "expected_actions": 450,
                     "expected_requests": 15,
+                    "client_session_id": "development-client-session",
                 },
                 server_context_id="development-context",
                 temporal_reset_evidence={

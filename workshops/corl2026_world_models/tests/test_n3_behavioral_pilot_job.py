@@ -101,6 +101,7 @@ def _begin(index: int, context: str = "context-1") -> tuple[pilot.ServerProtocol
             "effective_seed": pilot.EFFECTIVE_SEED,
             "expected_actions": pilot.ACTION_CAP,
             "expected_requests": pilot.REQUEST_COUNT,
+            "client_session_id": f"client-session-{index}",
         },
         server_context_id=context,
         temporal_reset_evidence={
@@ -129,6 +130,7 @@ def _request(protocol: pilot.ServerProtocol, context: str = "context-1") -> dict
         "request_index": index,
         "action_step_start": index * pilot.ACTION_HORIZON,
         "server_context_id": context,
+        "client_session_id": active["client_session_id"],
         "observation/image": object(),
         "observation/joint_position": object(),
         "observation/gripper_position": object(),
@@ -152,6 +154,7 @@ class ServerProtocolTests(unittest.TestCase):
                     "effective_seed": pilot.EFFECTIVE_SEED,
                     "expected_actions": 450,
                     "expected_requests": 15,
+                    "client_session_id": f"client-session-{condition_index}",
                 },
                 server_context_id=f"context-{condition_index}",
                 temporal_reset_evidence={
@@ -174,7 +177,9 @@ class ServerProtocolTests(unittest.TestCase):
                     "cell_id": pilot.CELL_IDS[condition_index],
                     "condition_index": condition_index,
                     "server_context_id": f"context-{condition_index}",
+                    "client_session_id": f"client-session-{condition_index}",
                     "status": "completed",
+                    "stop_reason": "action_cap",
                     "actions_executed": 450,
                     "request_count": 15,
                     "final_chunk_executed_actions": 2,
@@ -212,7 +217,9 @@ class ServerProtocolTests(unittest.TestCase):
                 "cell_id": pilot.CELL_IDS[0],
                 "condition_index": 0,
                 "server_context_id": "context-1",
+                "client_session_id": "client-session-0",
                 "status": "completed",
+                "stop_reason": "action_cap",
                 "actions_executed": 449,
                 "request_count": 15,
                 "final_chunk_executed_actions": 1,
@@ -220,6 +227,168 @@ class ServerProtocolTests(unittest.TestCase):
         )
         self.assertFalse(end["passed"])
         self.assertEqual(protocol.next_cell_index, 0)
+
+    def test_end_rejects_contradictory_counts_and_fabricated_safety_prefix(self) -> None:
+        protocol, _ = _begin(0)
+        protocol.validate_behavioral(_request(protocol))
+        protocol.complete_behavioral()
+        base = {
+            "study_id": pilot.STUDY_ID,
+            "block_id": pilot.BLOCK_ID,
+            "cell_id": pilot.CELL_IDS[0],
+            "condition_index": 0,
+            "server_context_id": "context-1",
+            "client_session_id": "client-session-0",
+            "status": "safety_abort",
+            "stop_reason": "safety_abort",
+            "actions_executed": 1,
+            "request_count": 1,
+            "final_chunk_executed_actions": None,
+        }
+        with self.assertRaisesRegex(
+            pilot.N3BehavioralPilotError, "server_end_mismatch: request_count"
+        ):
+            protocol.end({**base, "request_count": 0})
+        self.assertIsNotNone(protocol.active)
+        with self.assertRaisesRegex(
+            pilot.N3BehavioralPilotError, "server_end_mismatch: safety_abort_prefix"
+        ):
+            protocol.end({**base, "actions_executed": 31})
+        self.assertIsNotNone(protocol.active)
+
+    def test_terminal_receipt_survives_lost_reply_and_rejects_tampering(self) -> None:
+        protocol, _ = _begin(0)
+        protocol.validate_behavioral(_request(protocol))
+        protocol.complete_behavioral()
+        end = protocol.end(
+            {
+                "study_id": pilot.STUDY_ID,
+                "block_id": pilot.BLOCK_ID,
+                "cell_id": pilot.CELL_IDS[0],
+                "condition_index": 0,
+                "server_context_id": "context-1",
+                "client_session_id": "client-session-0",
+                "status": "safety_abort",
+                "stop_reason": "safety_abort",
+                "actions_executed": 17,
+                "request_count": 1,
+                "final_chunk_executed_actions": None,
+            }
+        )
+        self.assertIsNone(protocol.active)
+        with tempfile.TemporaryDirectory() as temporary:
+            attempt = Path(temporary)
+            descriptor = pilot.persist_server_terminal_receipt(
+                attempt_root=attempt,
+                end_response=end,
+                protocol_context_active=protocol.active is not None,
+                model_capture_active=False,
+            )
+            terminal_path = pilot.server_terminal_path(attempt, pilot.CELL_IDS[0])
+            # Recovery uses the canonical server artifact directly; it does not
+            # need the possibly lost RPC response.
+            observed, identity = pilot.validate_server_terminal_receipt(
+                pilot.file_identity(terminal_path),
+                attempt_root=attempt,
+                cell_id=pilot.CELL_IDS[0],
+                condition_index=0,
+                server_context_id="context-1",
+                client_session_id="client-session-0",
+                stop_reason="safety_abort",
+                actions_executed=17,
+                request_count=1,
+            )
+            self.assertEqual(identity, descriptor)
+            self.assertEqual(observed["terminal_state"], "context_closed")
+            for label, server_context_id, client_session_id in (
+                ("null-server", None, "client-session-0"),
+                ("null-client", "context-1", None),
+                ("aliased", "context-1", "context-1"),
+                ("unsafe-server", "bad/context", "client-session-0"),
+                ("unsafe-client", "context-1", "bad/session"),
+            ):
+                with self.subTest(identity=label), self.assertRaisesRegex(
+                    pilot.N3BehavioralPilotError,
+                    "server_context_terminal_identity_invalid",
+                ):
+                    pilot.validate_server_terminal_receipt(
+                        descriptor,
+                        attempt_root=attempt,
+                        cell_id=pilot.CELL_IDS[0],
+                        condition_index=0,
+                        server_context_id=server_context_id,
+                        client_session_id=client_session_id,
+                        stop_reason="safety_abort",
+                        actions_executed=17,
+                        request_count=1,
+                    )
+            with self.assertRaisesRegex(
+                pilot.N3BehavioralPilotError, "immutable_evidence_exists"
+            ):
+                pilot.persist_server_terminal_receipt(
+                    attempt_root=attempt,
+                    end_response=end,
+                    protocol_context_active=False,
+                    model_capture_active=False,
+                )
+
+            original = json.loads(terminal_path.read_text())
+            for label, mutation, reason in (
+                (
+                    "extra-key",
+                    lambda value: value.update({"injected": True}),
+                    "server_context_terminal_keys_changed",
+                ),
+                (
+                    "context-id",
+                    lambda value: value.update({"server_context_id": "other"}),
+                    "server_context_terminal_mismatch",
+                ),
+                (
+                    "request-count",
+                    lambda value: value.update({"request_count": 2}),
+                    "server_context_terminal_mismatch",
+                ),
+                (
+                    "malformed-time",
+                    lambda value: value.update({"completed_at_utc": "not-utc"}),
+                    "invalid_utc_timestamp",
+                ),
+            ):
+                with self.subTest(label=label):
+                    changed = dict(original)
+                    mutation(changed)
+                    terminal_path.write_text(json.dumps(changed), encoding="utf-8")
+                    with self.assertRaisesRegex(pilot.N3BehavioralPilotError, reason):
+                        pilot.validate_server_terminal_receipt(
+                            pilot.file_identity(terminal_path),
+                            attempt_root=attempt,
+                            cell_id=pilot.CELL_IDS[0],
+                            condition_index=0,
+                            server_context_id="context-1",
+                            client_session_id="client-session-0",
+                            stop_reason="safety_abort",
+                            actions_executed=17,
+                            request_count=1,
+                        )
+                    terminal_path.write_text(json.dumps(original), encoding="utf-8")
+
+            wrong_hash = dict(pilot.file_identity(terminal_path))
+            wrong_hash["sha256"] = "0" * 64
+            with self.assertRaisesRegex(
+                pilot.N3BehavioralPilotError, "file_descriptor_sha_mismatch"
+            ):
+                pilot.validate_server_terminal_receipt(
+                    wrong_hash,
+                    attempt_root=attempt,
+                    cell_id=pilot.CELL_IDS[0],
+                    condition_index=0,
+                    server_context_id="context-1",
+                    client_session_id="client-session-0",
+                    stop_reason="safety_abort",
+                    actions_executed=17,
+                    request_count=1,
+                )
 
     def test_context_identity_cannot_be_reused_after_a_begin(self) -> None:
         protocol, _ = _begin(0, context="one-use-context")
@@ -238,6 +407,7 @@ class ServerProtocolTests(unittest.TestCase):
                     "effective_seed": pilot.EFFECTIVE_SEED,
                     "expected_actions": pilot.ACTION_CAP,
                     "expected_requests": pilot.REQUEST_COUNT,
+                    "client_session_id": "one-use-client-session",
                 },
                 server_context_id="one-use-context",
                 temporal_reset_evidence={

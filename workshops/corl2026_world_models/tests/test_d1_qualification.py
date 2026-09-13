@@ -27,6 +27,10 @@ def load_module(name: str, path: Path):
 
 SERVER = load_module("wmf_d1_server", LAYOUT / "d1_instrumented_server.py")
 PROBE = load_module("wmf_d1_probe", LAYOUT / "d1_probe.py")
+PILOT = load_module(
+    "wmf_d1_behavioral_pilot_for_server_tests",
+    LAYOUT / "d1_behavioral_pilot_jobs.py",
+)
 
 
 class FakeHead:
@@ -147,6 +151,89 @@ class FakeOfficialPolicy:
         return self.action
 
 
+def gathered_two_rank_receipts(local, *, group):
+    del group
+    peer = json.loads(json.dumps(local))
+    peer["rank"] = 1
+    if "before" in peer:
+        peer["before"]["rank"] = 1
+        peer["after"]["rank"] = 1
+    if "temporal_before" in peer:
+        peer["temporal_before"]["rank"] = 1
+        peer["temporal_after"]["rank"] = 1
+    return [local, peer]
+
+
+def behavioral_controls(
+    *, actions_executed: int = 7, request_count: int = 1
+) -> tuple[dict[str, object], dict[str, object]]:
+    index = 0
+    layout_arm, command, _task = PILOT.CONDITIONS[index]
+    episode_id = "d1p00-unit-terminal"
+    session_id = "unit-terminal-session"
+    begin = {
+        "episode_id": episode_id,
+        "expected_session_id": session_id,
+        "purpose": PILOT.BEHAVIORAL_PURPOSE,
+        "model_config": "D1",
+        "study_id": PILOT.STUDY_ID,
+        "phase": PILOT.PHASE,
+        "block_id": PILOT.BLOCK_ID,
+        "layout_pair_id": PILOT.LAYOUT_PAIR_ID,
+        "cell_id": PILOT.CELL_IDS[index],
+        "condition_index": index,
+        "layout_arm": layout_arm,
+        "command": command,
+        "server_ready_sha256": "b" * 64,
+        "simulator_claim_sha256": "c" * 64,
+        "simulator_lease_token": "unit-lease",
+        "pilot_contract_sha256": PILOT.PILOT_CONTRACT_SHA256,
+    }
+    finalize = {
+        "finalize_only": True,
+        "purpose": PILOT.BEHAVIORAL_FINALIZE_PURPOSE,
+        "previous_episode_id": episode_id,
+        "previous_session_id": session_id,
+        "model_config": "D1",
+        "study_id": PILOT.STUDY_ID,
+        "phase": PILOT.PHASE,
+        "block_id": PILOT.BLOCK_ID,
+        "layout_pair_id": PILOT.LAYOUT_PAIR_ID,
+        "cell_id": PILOT.CELL_IDS[index],
+        "condition_index": index,
+        "stop_reason": "safety_abort",
+        "actions_executed": actions_executed,
+        "request_count": request_count,
+        "server_ready_sha256": "b" * 64,
+        "simulator_claim_sha256": "c" * 64,
+        "simulator_lease_token": "unit-lease",
+        "pilot_contract_sha256": PILOT.PILOT_CONTRACT_SHA256,
+    }
+    return begin, finalize
+
+
+def instrumented_request(
+    *, episode_id: str | None, session_id: str, prompt: str,
+    offline_decode: bool, plan_sha256: str,
+) -> dict[str, object]:
+    images = np.zeros((180, 320, 3), dtype=np.uint8)
+    return {
+        "observation/exterior_image_0_left": images,
+        "observation/exterior_image_1_left": images.copy(),
+        "observation/wrist_image_left": images.copy(),
+        "observation/joint_position": np.zeros(7, dtype=np.float64),
+        "observation/cartesian_position": np.zeros(6, dtype=np.float64),
+        "observation/gripper_position": np.zeros(1, dtype=np.float64),
+        "prompt": prompt,
+        "session_id": session_id,
+        SERVER.MEASUREMENT_KEY: {
+            "probe_id": episode_id,
+            "offline_decode": offline_decode,
+            "probe_plan_sha256": plan_sha256,
+        },
+    }
+
+
 class D1ContractTests(unittest.TestCase):
     @staticmethod
     def frame_block_contract(value: int = 2) -> dict[str, object]:
@@ -186,6 +273,50 @@ class D1ContractTests(unittest.TestCase):
             [probe["offline_decode"] for probe in parsed["probes"]],
             [False, False, False, True, True, True],
         )
+
+    def test_behavioral_finalize_accepts_all_safety_prefix_boundaries(self) -> None:
+        for actions_executed, request_count in ((1, 1), (448, 56), (449, 57)):
+            with self.subTest(
+                actions_executed=actions_executed, request_count=request_count
+            ):
+                SERVER._validate_behavioral_finalize_counts(
+                    stop_reason="safety_abort",
+                    actions_executed=actions_executed,
+                    request_count=request_count,
+                    server_request_count=request_count,
+                )
+
+        for actions_executed, request_count, server_request_count in (
+            (1, 0, 0),
+            (448, 57, 57),
+            (449, 56, 56),
+            (449, 57, 56),
+        ):
+            with self.subTest(
+                contradictory_actions=actions_executed,
+                contradictory_requests=request_count,
+                server_requests=server_request_count,
+            ), self.assertRaises(ValueError):
+                SERVER._validate_behavioral_finalize_counts(
+                    stop_reason="safety_abort",
+                    actions_executed=actions_executed,
+                    request_count=request_count,
+                    server_request_count=server_request_count,
+                )
+
+        SERVER._validate_behavioral_finalize_counts(
+            stop_reason="action_cap",
+            actions_executed=450,
+            request_count=57,
+            server_request_count=57,
+        )
+        with self.assertRaises(ValueError):
+            SERVER._validate_behavioral_finalize_counts(
+                stop_reason="action_cap",
+                actions_executed=450,
+                request_count=56,
+                server_request_count=56,
+            )
 
     def test_full_temporal_reset_and_official_head_gate(self) -> None:
         policy = FakePolicy()
@@ -393,6 +524,259 @@ class D1ContractTests(unittest.TestCase):
             self.assertFalse(record["custom_s2_used"])
             self.assertTrue(record["offline_decode"]["performed"])
             self.assertEqual(record["official_returned_action"]["shape"], [24, 8])
+
+    def test_legacy_six_probe_sequence_auto_finalizes_between_resets(self) -> None:
+        Policy = SERVER.make_instrumented_policy_class(FakeOfficialPolicy)
+        plan, plan_sha256 = PROBE.load_probe_plan(LAYOUT / "d1_probe_plan.json")
+        with tempfile.TemporaryDirectory() as temporary:
+            future_root = Path(temporary) / "future"
+            future_root.mkdir()
+            with (
+                mock.patch.object(SERVER.dist, "broadcast"),
+                mock.patch.object(SERVER.dist, "broadcast_object_list"),
+                mock.patch.object(
+                    SERVER,
+                    "_all_gather_object",
+                    side_effect=gathered_two_rank_receipts,
+                ),
+            ):
+                wrapper = Policy(
+                    groot_policy=FakeGrootPolicy(),
+                    signal_group=object(),
+                    future_root=future_root,
+                    server_contract_sha256="a" * 64,
+                )
+                for probe in plan["probes"]:
+                    wrapper.reset(
+                        {
+                            SERVER.RESET_KEY: {
+                                "episode_id": probe["id"],
+                                "expected_session_id": plan["fixed_session_id"],
+                                "purpose": "d1_six_request_qualification",
+                                "probe_plan_sha256": plan_sha256,
+                            }
+                        }
+                    )
+                    wrapper.infer(
+                        instrumented_request(
+                            episode_id=probe["id"],
+                            session_id=plan["fixed_session_id"],
+                            prompt=probe["prompt"],
+                            offline_decode=probe["offline_decode"],
+                            plan_sha256=plan_sha256,
+                        )
+                    )
+                wrapper.reset(
+                    {
+                        SERVER.RESET_KEY: {
+                            "finalize_only": True,
+                            "purpose": "d1_six_request_qualification_finalize",
+                            "probe_plan_sha256": plan_sha256,
+                        }
+                    }
+                )
+
+            manifests = sorted(
+                future_root.glob("episodes/*/episode_manifest.json")
+            )
+            self.assertEqual(len(manifests), 6)
+            self.assertEqual(
+                [json.loads(path.read_text())["episode_id"] for path in manifests],
+                sorted(probe["id"] for probe in plan["probes"]),
+            )
+            self.assertFalse(
+                list(future_root.glob("episodes/*/terminal_context_receipt.json"))
+            )
+
+    def test_behavioral_terminal_is_recoverable_and_deeply_bound(self) -> None:
+        Policy = SERVER.make_instrumented_policy_class(FakeOfficialPolicy)
+        begin, finalize = behavioral_controls(actions_executed=449, request_count=57)
+        with tempfile.TemporaryDirectory() as temporary:
+            future_root = Path(temporary) / "future"
+            future_root.mkdir()
+            with (
+                mock.patch.object(SERVER.dist, "broadcast"),
+                mock.patch.object(SERVER.dist, "broadcast_object_list"),
+                mock.patch.object(
+                    SERVER,
+                    "_all_gather_object",
+                    side_effect=gathered_two_rank_receipts,
+                ),
+            ):
+                wrapper = Policy(
+                    groot_policy=FakeGrootPolicy(),
+                    signal_group=object(),
+                    future_root=future_root,
+                    server_contract_sha256="a" * 64,
+                )
+                with self.assertRaisesRegex(ValueError, "begin purpose changed"):
+                    wrapper.reset(
+                        {
+                            SERVER.RESET_KEY: {
+                                **begin,
+                                "purpose": "d1_behavioral_unbound",
+                            }
+                        }
+                    )
+                self.assertIsNone(wrapper._episode_id)
+                wrapper.reset({SERVER.RESET_KEY: begin})
+                for _ in range(57):
+                    wrapper.infer(
+                        instrumented_request(
+                            episode_id=None,
+                            session_id=str(begin["expected_session_id"]),
+                            prompt=PILOT.PROMPTS[str(begin["command"])],
+                            offline_decode=True,
+                            plan_sha256=PILOT.PILOT_CONTRACT_SHA256,
+                        )
+                    )
+                invalid_finalizes = (
+                    ({**finalize, "finalize_only": 1}, "literal true"),
+                    ({**finalize, "purpose": "wrong-finalize"}, "purpose changed"),
+                    ({**finalize, "injected": True}, "keys changed"),
+                    ({**finalize, "study_id": "other-study"}, "changed active episode field"),
+                    ({**finalize, "actions_executed": 1}, "closed nonempty prefix"),
+                )
+                for changed, reason in invalid_finalizes:
+                    with self.subTest(reason=reason):
+                        with self.assertRaisesRegex(ValueError, reason):
+                            wrapper.reset({SERVER.RESET_KEY: changed})
+                        self.assertEqual(wrapper._episode_id, begin["episode_id"])
+                wrapper.reset({SERVER.RESET_KEY: finalize})
+
+            terminal_path = (
+                future_root
+                / "episodes"
+                / str(begin["episode_id"])
+                / "terminal_context_receipt.json"
+            )
+            self.assertTrue(terminal_path.is_file())
+
+            def validate_current() -> tuple:
+                return PILOT.validate_server_terminal_receipt(
+                    PILOT.file_identity(terminal_path),
+                    future_root=future_root,
+                    episode_id=str(begin["episode_id"]),
+                    session_id=str(begin["expected_session_id"]),
+                    prompt=PILOT.PROMPTS[str(begin["command"])],
+                    expected_begin_control=begin,
+                    expected_finalize_control=finalize,
+                    server_contract_sha256="a" * 64,
+                )
+
+            # This models recovery after the reset reply is lost: the canonical
+            # server artifact is sufficient and hash-bound on its own.
+            terminal, identity, manifest, manifest_identity, requests, reset_scan = (
+                validate_current()
+            )
+            self.assertEqual(terminal["terminal_state"], "context_closed")
+            self.assertEqual(identity, PILOT.file_identity(terminal_path))
+            self.assertEqual(terminal["episode_manifest"], manifest_identity)
+            self.assertEqual(manifest["request_count"], 57)
+            self.assertEqual(len(requests), 57)
+            self.assertEqual(reset_scan["world_size"], 2)
+
+            original = json.loads(terminal_path.read_text())
+            begin_reset = manifest["two_rank_reset"]
+
+            def reuse_begin_reset(value):
+                value["final_two_rank_reset"]["reset_id"] = begin_reset["reset_id"]
+                for row in value["final_two_rank_reset"]["rank_receipts"]:
+                    row["reset_id"] = begin_reset["reset_id"]
+
+            def reverse_time(value):
+                value["final_two_rank_reset"]["completed_at_utc"] = begin_reset[
+                    "completed_at_utc"
+                ]
+
+            tamper_cases = (
+                (
+                    "extra-key",
+                    lambda value: value.update({"injected": True}),
+                    "terminal_keys_changed",
+                ),
+                (
+                    "episode-id",
+                    lambda value: value.update({"episode_id": "other-episode"}),
+                    "terminal_mismatch",
+                ),
+                (
+                    "request-count",
+                    lambda value: value.update({"request_count": 1}),
+                    "terminal_mismatch",
+                ),
+                ("rank-reset-reuse", reuse_begin_reset, "reset_reused_episode_begin_reset"),
+                ("timestamp-order", reverse_time, "reset_not_distinct_and_later"),
+            )
+            for label, mutation, reason in tamper_cases:
+                with self.subTest(label=label):
+                    changed = json.loads(json.dumps(original))
+                    mutation(changed)
+                    SERVER.atomic_write_json(terminal_path, changed)
+                    with self.assertRaisesRegex(PILOT.D1BehavioralPilotError, reason):
+                        validate_current()
+                    SERVER.atomic_write_json(terminal_path, original)
+
+            wrong_hash = PILOT.file_identity(terminal_path)
+            wrong_hash["sha256"] = "0" * 64
+            with self.assertRaisesRegex(
+                PILOT.D1BehavioralPilotError, "file_descriptor_sha_mismatch"
+            ):
+                PILOT.validate_server_terminal_receipt(
+                    wrong_hash,
+                    future_root=future_root,
+                    episode_id=str(begin["episode_id"]),
+                    session_id=str(begin["expected_session_id"]),
+                    prompt=PILOT.PROMPTS[str(begin["command"])],
+                    expected_begin_control=begin,
+                    expected_finalize_control=finalize,
+                    server_contract_sha256="a" * 64,
+                )
+
+    def test_failed_final_two_rank_reset_never_writes_terminal(self) -> None:
+        Policy = SERVER.make_instrumented_policy_class(FakeOfficialPolicy)
+        begin, finalize = behavioral_controls()
+
+        def fail_terminal_reset(local, *, group):
+            gathered = gathered_two_rank_receipts(local, group=group)
+            if str(local.get("reset_id", "")).startswith("reset-000002-"):
+                gathered[1]["status"] = "failed"
+            return gathered
+
+        with tempfile.TemporaryDirectory() as temporary:
+            future_root = Path(temporary) / "future"
+            future_root.mkdir()
+            with (
+                mock.patch.object(SERVER.dist, "broadcast"),
+                mock.patch.object(SERVER.dist, "broadcast_object_list"),
+                mock.patch.object(
+                    SERVER,
+                    "_all_gather_object",
+                    side_effect=fail_terminal_reset,
+                ),
+            ):
+                wrapper = Policy(
+                    groot_policy=FakeGrootPolicy(),
+                    signal_group=object(),
+                    future_root=future_root,
+                    server_contract_sha256="a" * 64,
+                )
+                wrapper.reset({SERVER.RESET_KEY: begin})
+                wrapper.infer(
+                    instrumented_request(
+                        episode_id=None,
+                        session_id=str(begin["expected_session_id"]),
+                        prompt=PILOT.PROMPTS[str(begin["command"])],
+                        offline_decode=True,
+                        plan_sha256=PILOT.PILOT_CONTRACT_SHA256,
+                    )
+                )
+                with self.assertRaisesRegex(RuntimeError, "distributed rank"):
+                    wrapper.reset({SERVER.RESET_KEY: finalize})
+
+            episode_root = future_root / "episodes" / str(begin["episode_id"])
+            self.assertTrue((episode_root / "episode_manifest.json").is_file())
+            self.assertFalse((episode_root / "terminal_context_receipt.json").exists())
 
 
 class D1EvaluatorTests(unittest.TestCase):

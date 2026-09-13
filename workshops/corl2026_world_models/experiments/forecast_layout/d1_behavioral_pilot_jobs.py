@@ -133,9 +133,30 @@ D1_SERVER_CONTRACT_SCHEMA = "wmf-d1-instrumented-server-v1"
 D1_RESET_SCHEMA = "wmf-d1-two-rank-reset-receipt-v1"
 D1_REQUEST_SCHEMA = "wmf-d1-request-receipt-v1"
 D1_EPISODE_SCHEMA = "wmf-d1-episode-manifest-v1"
+D1_TERMINAL_SCHEMA = "wmf-d1-terminal-context-receipt-v1"
 CAPTURE_RECEIPT_SCHEMA = "wmf-forecast-layout-fixed-observation-capture-v1"
 RECORDER_RECEIPT_SCHEMA = "wmf-forecast-recorder-qualification-job-v1"
 CONTEXT_RESET_SCOPE = "full_episode_temporal_and_cache_context"
+D1_FINALIZE_CONTROL_KEYS = {
+    "finalize_only",
+    "purpose",
+    "previous_episode_id",
+    "previous_session_id",
+    "model_config",
+    "study_id",
+    "phase",
+    "block_id",
+    "layout_pair_id",
+    "cell_id",
+    "condition_index",
+    "stop_reason",
+    "actions_executed",
+    "request_count",
+    "server_ready_sha256",
+    "simulator_claim_sha256",
+    "simulator_lease_token",
+    "pilot_contract_sha256",
+}
 
 RESET_FIELDS_TO_NONE = (
     "kv_cache1",
@@ -237,6 +258,17 @@ def connect_websocket_without_keepalive(
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def parse_utc(value: Any) -> datetime:
+    require(isinstance(value, str) and value.endswith("Z"), "invalid_utc_timestamp")
+    try:
+        parsed = datetime.fromisoformat(value[:-1] + "+00:00")
+    except ValueError as error:
+        raise D1BehavioralPilotError("invalid_utc_timestamp") from error
+    require(parsed.tzinfo is not None and parsed.utcoffset() == timezone.utc.utcoffset(parsed),
+            "invalid_utc_timestamp")
+    return parsed
 
 
 def canonical_bytes(value: Any) -> bytes:
@@ -991,6 +1023,15 @@ def _resolve_server_artifact(value: Any, label: str, *, future_root: Path) -> di
     return _verify_descriptor(value, label, allowed_root=future_root)
 
 
+def server_terminal_path(future_root: Path, episode_id: str) -> Path:
+    return (
+        Path(future_root).resolve()
+        / "episodes"
+        / episode_id
+        / "terminal_context_receipt.json"
+    )
+
+
 def _validate_mapping_artifacts(value: Any, label: str, *, future_root: Path) -> None:
     require(isinstance(value, Mapping), "d1_mapping_evidence_missing", label)
     entries = value.get("entries")
@@ -1291,7 +1332,7 @@ def validate_request_receipt(
     return receipt, file_identity(path)
 
 
-def validate_episode_manifest(
+def validate_episode_manifest_prefix(
     path: Path,
     *,
     future_root: Path,
@@ -1300,6 +1341,7 @@ def validate_episode_manifest(
     prompt: str,
     expected_control: Mapping[str, Any],
     server_contract_sha256: str,
+    expected_request_count: int,
 ) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
     expected_path = Path(future_root).resolve() / "episodes" / episode_id / "episode_manifest.json"
     require(Path(path).resolve() == expected_path, "d1_episode_manifest_path_changed")
@@ -1314,7 +1356,7 @@ def validate_episode_manifest(
         "custom_s2_used": False,
         "patched_s1_used": False,
         "effective_official_model_noise_seed": EFFECTIVE_MODEL_NOISE_SEED,
-        "request_count": REQUEST_COUNT,
+        "request_count": expected_request_count,
         "server_contract_sha256": server_contract_sha256,
     }
     for key, wanted in expected.items():
@@ -1324,7 +1366,10 @@ def validate_episode_manifest(
     require(isinstance(reset, Mapping), "d1_episode_reset_missing")
     _validate_temporal_reset(reset, expected_control=expected_control)
     requests = manifest.get("requests")
-    require(isinstance(requests, list) and len(requests) == REQUEST_COUNT, "d1_episode_request_inventory_changed")
+    require(
+        isinstance(requests, list) and len(requests) == expected_request_count,
+        "d1_episode_request_inventory_changed",
+    )
     request_identities: list[dict[str, Any]] = []
     for index, embedded in enumerate(requests):
         request_path = expected_path.parent / f"request_{index:04d}" / "request_receipt.json"
@@ -1340,6 +1385,213 @@ def validate_episode_manifest(
         require(request == embedded, "d1_episode_embedded_request_changed", str(index))
         request_identities.append(identity)
     return manifest, file_identity(path), request_identities
+
+
+def validate_episode_manifest(
+    path: Path,
+    *,
+    future_root: Path,
+    episode_id: str,
+    session_id: str,
+    prompt: str,
+    expected_control: Mapping[str, Any],
+    server_contract_sha256: str,
+) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
+    return validate_episode_manifest_prefix(
+        path,
+        future_root=future_root,
+        episode_id=episode_id,
+        session_id=session_id,
+        prompt=prompt,
+        expected_control=expected_control,
+        server_contract_sha256=server_contract_sha256,
+        expected_request_count=REQUEST_COUNT,
+    )
+
+
+def validate_server_terminal_receipt(
+    value: Any,
+    *,
+    future_root: Path,
+    episode_id: str,
+    session_id: str,
+    prompt: str,
+    expected_begin_control: Mapping[str, Any],
+    expected_finalize_control: Mapping[str, Any],
+    server_contract_sha256: str,
+) -> tuple[
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, Any],
+    list[dict[str, Any]],
+    dict[str, Any],
+]:
+    """Deep-validate the post-finalize server context terminal."""
+
+    identity = _verify_descriptor(
+        value, "d1_server_context_terminal", allowed_root=future_root
+    )
+    path = Path(identity["path"])
+    require(
+        not path.is_symlink()
+        and path.resolve() == server_terminal_path(future_root, episode_id),
+        "d1_server_context_terminal_path_changed",
+    )
+    receipt = load_json(path, "d1_server_context_terminal_unreadable")
+    terminal_keys = {
+        "schema_version",
+        "status",
+        "terminal_state",
+        "model_config",
+        "study_id",
+        "phase",
+        "block_id",
+        "layout_pair_id",
+        "cell_id",
+        "condition_index",
+        "episode_id",
+        "episode_context_id",
+        "server_context_id",
+        "client_session_id",
+        "stop_reason",
+        "actions_executed",
+        "request_count",
+        "server_request_count",
+        "episode_manifest",
+        "final_two_rank_reset",
+        "episode_bookkeeping_cleared",
+        "context_active_after_finalize",
+        "completed_at_utc",
+    }
+    require(set(receipt) == terminal_keys, "d1_server_context_terminal_keys_changed")
+    require(
+        set(expected_finalize_control) == D1_FINALIZE_CONTROL_KEYS,
+        "d1_terminal_expected_finalize_control_keys_changed",
+    )
+    request_count = expected_finalize_control.get("request_count")
+    expected = {
+        "schema_version": D1_TERMINAL_SCHEMA,
+        "status": "passed",
+        "terminal_state": "context_closed",
+        "model_config": MODEL_CONFIG,
+        "study_id": STUDY_ID,
+        "phase": PHASE,
+        "block_id": BLOCK_ID,
+        "layout_pair_id": LAYOUT_PAIR_ID,
+        "cell_id": expected_finalize_control.get("cell_id"),
+        "condition_index": expected_finalize_control.get("condition_index"),
+        "episode_id": episode_id,
+        "episode_context_id": episode_id,
+        "server_context_id": episode_id,
+        "client_session_id": session_id,
+        "stop_reason": expected_finalize_control.get("stop_reason"),
+        "actions_executed": expected_finalize_control.get("actions_executed"),
+        "request_count": request_count,
+        "server_request_count": request_count,
+        "episode_bookkeeping_cleared": True,
+        "context_active_after_finalize": False,
+    }
+    for key, wanted in expected.items():
+        require(receipt.get(key) == wanted, "d1_server_context_terminal_mismatch", key)
+    stop_reason = expected_finalize_control.get("stop_reason")
+    actions_executed = expected_finalize_control.get("actions_executed")
+    require(type(actions_executed) is int and 0 <= actions_executed <= ACTION_CAP,
+            "d1_terminal_action_count_invalid")
+    if stop_reason == "action_cap":
+        require(
+            actions_executed == ACTION_CAP and request_count == REQUEST_COUNT,
+            "d1_terminal_completed_counts_changed",
+        )
+    if stop_reason == "safety_abort":
+        require(
+            1 <= actions_executed < ACTION_CAP
+            and request_count == math.ceil(actions_executed / EXECUTED_PREFIX_HORIZON),
+            "d1_terminal_safety_prefix_invalid",
+        )
+    require(
+        isinstance(receipt.get("completed_at_utc"), str)
+        and bool(receipt["completed_at_utc"]),
+        "d1_server_context_terminal_time_missing",
+    )
+    manifest_identity = _verify_descriptor(
+        receipt.get("episode_manifest"),
+        "d1_terminal_episode_manifest",
+        allowed_root=future_root,
+    )
+    manifest_path = Path(manifest_identity["path"])
+    require(
+        manifest_path.resolve()
+        == Path(future_root).resolve() / "episodes" / episode_id / "episode_manifest.json",
+        "d1_terminal_episode_manifest_path_changed",
+    )
+    require(type(request_count) is int and 0 <= request_count <= REQUEST_COUNT,
+            "d1_terminal_request_count_invalid")
+    manifest, observed_manifest_identity, request_identities = validate_episode_manifest_prefix(
+        manifest_path,
+        future_root=future_root,
+        episode_id=episode_id,
+        session_id=session_id,
+        prompt=prompt,
+        expected_control=expected_begin_control,
+        server_contract_sha256=server_contract_sha256,
+        expected_request_count=request_count,
+    )
+    require(
+        observed_manifest_identity == manifest_identity,
+        "d1_terminal_episode_manifest_descriptor_changed",
+    )
+    final_reset = receipt.get("final_two_rank_reset")
+    require(isinstance(final_reset, Mapping), "d1_terminal_final_reset_missing")
+    final_reset_scan = _validate_temporal_reset(
+        final_reset, expected_control=expected_finalize_control
+    )
+    initial_reset = manifest.get("two_rank_reset")
+    initial_rank_ids = {
+        row.get("reset_id")
+        for row in initial_reset.get("rank_receipts", [])
+        if isinstance(row, Mapping)
+    } if isinstance(initial_reset, Mapping) else set()
+    final_rank_ids = {
+        row.get("reset_id")
+        for row in final_reset.get("rank_receipts", [])
+        if isinstance(row, Mapping)
+    }
+    initial_rank_times = [
+        parse_utc(row.get("completed_at_utc"))
+        for row in initial_reset.get("rank_receipts", [])
+        if isinstance(row, Mapping)
+    ] if isinstance(initial_reset, Mapping) else []
+    final_rank_times = [
+        parse_utc(row.get("completed_at_utc"))
+        for row in final_reset.get("rank_receipts", [])
+        if isinstance(row, Mapping)
+    ]
+    require(
+        isinstance(initial_reset, Mapping)
+        and final_reset.get("reset_id") != initial_reset.get("reset_id"),
+        "d1_terminal_reset_reused_episode_begin_reset",
+    )
+    begin_time = parse_utc(initial_reset.get("completed_at_utc"))
+    manifest_time = parse_utc(manifest.get("finalized_at_utc"))
+    final_reset_time = parse_utc(final_reset.get("completed_at_utc"))
+    terminal_time = parse_utc(receipt.get("completed_at_utc"))
+    require(
+        not initial_rank_ids.intersection(final_rank_ids)
+        and len(initial_rank_times) == len(final_rank_times) == 2
+        and all(value <= begin_time for value in initial_rank_times)
+        and begin_time < manifest_time < final_reset_time <= terminal_time
+        and all(manifest_time < value <= final_reset_time for value in final_rank_times),
+        "d1_terminal_reset_not_distinct_and_later",
+    )
+    return (
+        receipt,
+        identity,
+        manifest,
+        manifest_identity,
+        request_identities,
+        final_reset_scan,
+    )
 
 
 def _wait_for_file(path: Path, *, timeout: float, process: subprocess.Popen[bytes] | None = None) -> None:
@@ -1592,6 +1844,10 @@ def run_cell(args: argparse.Namespace) -> int:
                 self.wmf_episode_manifest_identity: dict[str, Any] | None = None
                 self.wmf_request_identities: list[dict[str, Any]] = []
                 self.wmf_finalize_error: str | None = None
+                self.wmf_terminal_receipt: dict[str, Any] | None = None
+                self.wmf_terminal_identity: dict[str, Any] | None = None
+                self.wmf_terminal_reset_scan: dict[str, Any] | None = None
+                self.wmf_terminal_error: str | None = None
 
             def _connect_with_retries(self) -> None:
                 """Retry only connection setup; never enable protocol pings."""
@@ -1664,8 +1920,11 @@ def run_cell(args: argparse.Namespace) -> int:
                     "episode_id": episode_id,
                     "expected_session_id": session_id,
                     "purpose": BEHAVIORAL_PURPOSE,
+                    "model_config": MODEL_CONFIG,
                     "study_id": STUDY_ID,
+                    "phase": PHASE,
                     "block_id": BLOCK_ID,
+                    "layout_pair_id": LAYOUT_PAIR_ID,
                     "cell_id": cell_id,
                     "condition_index": condition_index,
                     "layout_arm": layout_arm,
@@ -1675,6 +1934,40 @@ def run_cell(args: argparse.Namespace) -> int:
                     "simulator_lease_token": args.lease_token,
                     "pilot_contract_sha256": PILOT_CONTRACT_SHA256,
                 }
+
+            def _capture_terminal(
+                self,
+                *,
+                begin_control: Mapping[str, Any],
+                finalize_control: Mapping[str, Any],
+            ) -> None:
+                assert self.wmf_episode_id is not None
+                assert self.wmf_session_id is not None
+                terminal_path = server_terminal_path(future_root, self.wmf_episode_id)
+                _wait_for_file(terminal_path, timeout=args.evidence_timeout)
+                (
+                    terminal,
+                    terminal_identity,
+                    manifest,
+                    manifest_identity,
+                    request_identities,
+                    terminal_reset_scan,
+                ) = validate_server_terminal_receipt(
+                    file_identity(terminal_path),
+                    future_root=future_root,
+                    episode_id=self.wmf_episode_id,
+                    session_id=self.wmf_session_id,
+                    prompt=PROMPTS[command],
+                    expected_begin_control=begin_control,
+                    expected_finalize_control=finalize_control,
+                    server_contract_sha256=ready["server_contract_sha256"],
+                )
+                self.wmf_terminal_receipt = terminal
+                self.wmf_terminal_identity = terminal_identity
+                self.wmf_terminal_reset_scan = terminal_reset_scan
+                self.wmf_episode_manifest = manifest
+                self.wmf_episode_manifest_identity = manifest_identity
+                self.wmf_request_identities = request_identities
 
             def begin_episode(self) -> Mapping[str, Any]:
                 require(not self.wmf_episode_active, "d1_client_episode_context_overlap")
@@ -1828,10 +2121,27 @@ def run_cell(args: argparse.Namespace) -> int:
                         assert self.wmf_episode_id is not None
                         assert self.wmf_session_id is not None
                         control = self._reset_control(self.wmf_episode_id, self.wmf_session_id)
+                        completion = recorder._final_receipt
+                        stop_reason = (
+                            completion.get("stop_reason")
+                            if isinstance(completion, Mapping)
+                            else "technical_failure"
+                        )
                         finalize = {
                             "finalize_only": True,
                             "purpose": BEHAVIORAL_FINALIZE_PURPOSE,
                             "previous_episode_id": self.wmf_episode_id,
+                            "previous_session_id": self.wmf_session_id,
+                            "model_config": MODEL_CONFIG,
+                            "study_id": STUDY_ID,
+                            "phase": PHASE,
+                            "block_id": BLOCK_ID,
+                            "layout_pair_id": LAYOUT_PAIR_ID,
+                            "cell_id": cell_id,
+                            "condition_index": condition_index,
+                            "stop_reason": stop_reason,
+                            "actions_executed": recorder.actions_executed,
+                            "request_count": len(recorder.requests),
                             "server_ready_sha256": args.server_ready_sha256,
                             "simulator_claim_sha256": args.simulator_claim_sha256,
                             "simulator_lease_token": args.lease_token,
@@ -1839,26 +2149,20 @@ def run_cell(args: argparse.Namespace) -> int:
                         }
                         try:
                             self._send_instrumented_reset(finalize)
-                            manifest_path = future_root / "episodes" / self.wmf_episode_id / "episode_manifest.json"
-                            _wait_for_file(manifest_path, timeout=args.evidence_timeout)
-                            completion = recorder._final_receipt
-                            if isinstance(completion, Mapping) and completion.get("stop_reason") == "action_cap":
-                                manifest, manifest_identity, request_identities = validate_episode_manifest(
-                                    manifest_path,
-                                    future_root=future_root,
-                                    episode_id=self.wmf_episode_id,
-                                    session_id=self.wmf_session_id,
-                                    prompt=PROMPTS[command],
-                                    expected_control=control,
-                                    server_contract_sha256=ready["server_contract_sha256"],
-                                )
-                                self.wmf_episode_manifest = manifest
-                                self.wmf_episode_manifest_identity = manifest_identity
-                                self.wmf_request_identities = request_identities
-                            else:
-                                self.wmf_episode_manifest_identity = file_identity(manifest_path)
+                            self._capture_terminal(
+                                begin_control=control, finalize_control=finalize
+                            )
                         except BaseException as error:
                             self.wmf_finalize_error = f"{type(error).__name__}: {error}"
+                            if self.wmf_terminal_identity is None:
+                                try:
+                                    self._capture_terminal(
+                                        begin_control=control, finalize_control=finalize
+                                    )
+                                except BaseException as terminal_error:
+                                    self.wmf_terminal_error = (
+                                        f"{type(terminal_error).__name__}: {terminal_error}"
+                                    )
                             raise
                         finally:
                             self.wmf_episode_active = False
@@ -1954,6 +2258,8 @@ def run_cell(args: argparse.Namespace) -> int:
         require(isinstance(client.wmf_begin_receipt, Mapping), "d1_server_begin_receipt_missing")
         require(isinstance(client.wmf_temporal_reset_scan, Mapping), "d1_temporal_reset_scan_missing")
         require(isinstance(client.wmf_episode_manifest_identity, Mapping), "d1_episode_manifest_missing")
+        require(isinstance(client.wmf_terminal_identity, Mapping), "d1_server_context_terminal_missing")
+        require(isinstance(client.wmf_terminal_reset_scan, Mapping), "d1_terminal_reset_scan_missing")
         require(len(client.wmf_request_identities) == REQUEST_COUNT, "d1_server_request_receipt_count_changed")
         completion = recorder._final_receipt
         require(isinstance(completion, Mapping), "adapter_completion_missing")
@@ -2018,6 +2324,8 @@ def run_cell(args: argparse.Namespace) -> int:
             "server_reset_receipt": client.wmf_reset_identity,
             "server_temporal_reset_scan": client.wmf_temporal_reset_scan,
             "server_episode_manifest": client.wmf_episode_manifest_identity,
+            "server_context_terminal": client.wmf_terminal_identity,
+            "server_terminal_reset_scan": client.wmf_terminal_reset_scan,
             "server_request_receipts": client.wmf_request_identities,
             "adapter_completion": file_identity(recorder.completion_path),
             "adapter_journal": {**file_identity(recorder.journal_path), **journal},
@@ -2064,17 +2372,53 @@ def run_cell(args: argparse.Namespace) -> int:
                 if recorder is not None and isinstance(recorder._final_receipt, Mapping)
                 else "technical_failure"
             )
+            terminal_identity = getattr(client, "wmf_terminal_identity", None)
+            terminal_proved = isinstance(terminal_identity, Mapping)
+            receipt_status = (
+                "safety_abort"
+                if stop_reason == "safety_abort" and terminal_proved
+                else "technical_failure"
+            )
             immutable_json(
                 failure_path,
                 {
                     "schema_version": CELL_RECEIPT_SCHEMA,
-                    "status": "safety_abort" if stop_reason == "safety_abort" else "technical_failure",
+                    "status": receipt_status,
+                    "recorded_stop_reason": stop_reason,
+                    "study_id": STUDY_ID,
+                    "phase": PHASE,
+                    "block_id": BLOCK_ID,
+                    "layout_pair_id": LAYOUT_PAIR_ID,
+                    "model_config": MODEL_CONFIG,
                     "cell_id": cell_id,
                     "condition_index": condition_index,
+                    "run_id": args.run_id,
+                    "simulator_job_id": attempt_root.name,
+                    "server_job_id": args.server_job_id,
+                    "study_commit": args.study_commit,
                     "actions_executed": getattr(recorder, "actions_executed", 0),
                     "request_count": len(getattr(recorder, "requests", [])),
                     "behavioral_episode_count": 0,
+                    "episode_id": getattr(client, "wmf_episode_id", None),
+                    "episode_context_id": getattr(client, "wmf_episode_id", None),
+                    "server_context_id": getattr(client, "wmf_episode_id", None),
+                    "client_session_id": getattr(client, "wmf_session_id", None),
+                    "server_begin_receipt": getattr(client, "wmf_begin_receipt", None),
+                    "server_ready": (
+                        ready_bundle.get("identity")
+                        if isinstance(ready_bundle, Mapping)
+                        else None
+                    ),
+                    "simulator_claim": claim_identity,
+                    "server_reset_receipt": getattr(client, "wmf_reset_identity", None),
+                    "server_temporal_reset_scan": getattr(client, "wmf_temporal_reset_scan", None),
                     "server_episode_manifest": getattr(client, "wmf_episode_manifest_identity", None),
+                    "server_context_terminal": (
+                        dict(terminal_identity) if terminal_proved else None
+                    ),
+                    "server_terminal_reset_scan": getattr(client, "wmf_terminal_reset_scan", None),
+                    "server_finalize_error": getattr(client, "wmf_finalize_error", None),
+                    "server_terminal_error": getattr(client, "wmf_terminal_error", None),
                     "error_type": type(error).__name__,
                     "reason": getattr(error, "reason", None),
                     "traceback": traceback.format_exc(),
@@ -2217,6 +2561,12 @@ def validate_passed_cell_receipt(
         "simulator_lease_token": claim.get("lease_token"),
         "pilot_contract_sha256": PILOT_CONTRACT_SHA256,
     }
+    if receipt.get("server_context_terminal") is not None:
+        expected_control.update(
+            model_config=MODEL_CONFIG,
+            phase=PHASE,
+            layout_pair_id=LAYOUT_PAIR_ID,
+        )
     manifest_identity = _verify_descriptor(receipt.get("server_episode_manifest"), "resume_episode_manifest")
     manifest_path = Path(manifest_identity["path"])
     future_root = manifest_path.parents[2]
@@ -2246,6 +2596,58 @@ def validate_passed_cell_receipt(
     )
     require(observed_manifest_identity == manifest_identity, "resume_manifest_descriptor_changed")
     require(receipt.get("server_request_receipts") == request_identities, "resume_request_descriptor_inventory_changed")
+    terminal_descriptor = receipt.get("server_context_terminal")
+    if terminal_descriptor is not None:
+        finalize_control = {
+            "finalize_only": True,
+            "purpose": BEHAVIORAL_FINALIZE_PURPOSE,
+            "previous_episode_id": episode_id,
+            "previous_session_id": session_id,
+            "model_config": MODEL_CONFIG,
+            "study_id": STUDY_ID,
+            "phase": PHASE,
+            "block_id": BLOCK_ID,
+            "layout_pair_id": LAYOUT_PAIR_ID,
+            "cell_id": CELL_IDS[condition_index],
+            "condition_index": condition_index,
+            "stop_reason": "action_cap",
+            "actions_executed": ACTION_CAP,
+            "request_count": REQUEST_COUNT,
+            "server_ready_sha256": ready_identity["sha256"],
+            "simulator_claim_sha256": claim_identity["sha256"],
+            "simulator_lease_token": claim.get("lease_token"),
+            "pilot_contract_sha256": PILOT_CONTRACT_SHA256,
+        }
+        (
+            _terminal,
+            observed_terminal_identity,
+            _terminal_manifest,
+            terminal_manifest_identity,
+            terminal_request_identities,
+            terminal_reset_scan,
+        ) = validate_server_terminal_receipt(
+            terminal_descriptor,
+            future_root=future_root,
+            episode_id=episode_id,
+            session_id=session_id,
+            prompt=PROMPTS[command],
+            expected_begin_control=expected_control,
+            expected_finalize_control=finalize_control,
+            server_contract_sha256=server_contract_identity["sha256"],
+        )
+        require(
+            observed_terminal_identity == terminal_descriptor,
+            "resume_terminal_descriptor_changed",
+        )
+        require(
+            terminal_manifest_identity == manifest_identity
+            and terminal_request_identities == request_identities,
+            "resume_terminal_episode_chain_changed",
+        )
+        require(
+            receipt.get("server_terminal_reset_scan") == terminal_reset_scan,
+            "resume_terminal_reset_scan_changed",
+        )
     return receipt, file_identity(path)
 
 
@@ -2645,6 +3047,15 @@ def run_server_job(args: argparse.Namespace) -> int:
             fcntl.flock(lock_handle.fileno(), fcntl.LOCK_UN)
 
 
+def validate_failure_cell_receipt(
+    path: Path, *, condition_index: int
+) -> dict[str, Any]:
+    """Legacy-compatible default; confirmation installs the strict validator."""
+
+    del condition_index
+    return load_json(path, "failure_cell_receipt_unreadable")
+
+
 def _receipt_counts(
     *, start_cell_index: int, launched: int,
     completed: Sequence[Mapping[str, Any]], attempt_root: Path,
@@ -2662,7 +3073,9 @@ def _receipt_counts(
             / "technical_failure.json"
         )
         if failure_path.is_file():
-            value = load_json(failure_path)
+            value = validate_failure_cell_receipt(
+                failure_path, condition_index=index
+            )
             actions += int(value.get("actions_executed", 0))
             requests += int(value.get("request_count", 0))
             if value.get("status") == "safety_abort":

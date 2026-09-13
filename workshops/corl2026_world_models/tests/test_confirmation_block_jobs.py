@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import dataclasses
 import hashlib
 import json
 from pathlib import Path
@@ -319,7 +320,7 @@ class LauncherContractTests(unittest.TestCase):
     def test_d1_metadata_binds_confirmation_contract_fixture_and_no_replay(self) -> None:
         block = d1.load_confirmation_block(SOURCE_ROOT, "C01")
         with tempfile.TemporaryDirectory() as temporary:
-            path = Path(temporary) / "cell.json"
+            path = Path(temporary) / "cell_receipt.json"
             fixture = {"candidate_id": "C01__candidate_01", "execution_prerequisites_sha256": SHA}
             with d1.configured_pilot(block, d1.ALLOWED_SIMULATOR_ROLES[0]):
                 with d1.installed_receipt_metadata(block, fixture=fixture):
@@ -362,6 +363,750 @@ class LauncherContractTests(unittest.TestCase):
             write_json(path, changed)
             with self.assertRaisesRegex(d1.pilot.D1BehavioralPilotError, "evidence_sha256_mismatch"):
                 d1.verify_execution_prerequisites(path, digest, block=block)
+
+
+class TerminalFailureContractTests(unittest.TestCase):
+    @staticmethod
+    def _n3_failure_path(root: Path, block, index: int = 0) -> Path:
+        return (
+            root
+            / "attempt-1"
+            / "cells"
+            / f"{index:02d}-{n3.pilot.safe_cell_component(block.cell_ids[index])}"
+            / "technical_failure.json"
+        )
+
+    @staticmethod
+    def _n3_failure(block, *, status: str, actions: int, requests: int) -> dict:
+        return {
+            "schema_version": n3.CELL_RECEIPT_SCHEMA,
+            "status": status,
+            "recorded_stop_reason": "safety_abort",
+            "study_id": n3.pilot.STUDY_ID,
+            "phase": "confirmation",
+            "block_id": block.block_id,
+            "layout_pair_id": block.layout_pair_id,
+            "model_config": "N3",
+            "cell_id": block.cell_ids[0],
+            "condition_index": 0,
+            "actions_executed": actions,
+            "request_count": requests,
+            "episode_context_id": "n3-terminal-context",
+            "server_context_id": "n3-terminal-context",
+            "client_session_id": "n3-client-session",
+            "server_context_terminal": None,
+        }
+
+    def test_n3_terminal_less_safety_is_technical_and_retryable(self) -> None:
+        block = n3.load_confirmation_block(SOURCE_ROOT, "C01")
+        with tempfile.TemporaryDirectory() as temporary:
+            raw = Path(temporary)
+            path = self._n3_failure_path(raw, block)
+            safety = self._n3_failure(
+                block, status="safety_abort", actions=1, requests=1
+            )
+            write_json(path, safety)
+            with self.assertRaisesRegex(
+                n3.pilot.N3BehavioralPilotError,
+                "confirmation_safety_abort_terminal_missing",
+            ):
+                n3.validate_failed_confirmation_cell(
+                    path, condition_index=0, block=block
+                )
+
+            technical = self._n3_failure(
+                block, status="technical_failure", actions=0, requests=0
+            )
+            write_json(path, technical)
+            observed = n3.validate_failed_confirmation_cell(
+                path, condition_index=0, block=block
+            )
+            self.assertEqual(observed["recorded_stop_reason"], "safety_abort")
+            counts = n3._receipt_counts(
+                block=block,
+                start_cell_index=0,
+                launched=1,
+                completed=[],
+                attempt_root=path.parents[2],
+            )
+            self.assertEqual(counts["technically_invalid_behavioral_cells"], 1)
+            self.assertEqual(counts["right_censored_behavioral_cells"], 0)
+            prerequisites = {
+                "confirmation_release": {"confirmation_freeze": {}},
+                "confirmation_fixture_freeze": {},
+            }
+            receipts, _identities, provenance = n3.discover_completed_prefix(
+                raw,
+                block=block,
+                prerequisites=prerequisites,
+                study_commit=STUDY_COMMIT,
+            )
+            self.assertEqual(receipts, [])
+            self.assertEqual(provenance["start_cell_index"], 0)
+
+    def test_n3_authenticated_safety_terminal_censors_and_stops_resume(self) -> None:
+        block = n3.load_confirmation_block(SOURCE_ROOT, "C01")
+        with tempfile.TemporaryDirectory() as temporary, n3.configured_pilot(block):
+            raw = Path(temporary)
+            failure_path = self._n3_failure_path(raw, block)
+            attempt = failure_path.parents[2]
+            protocol = n3.pilot.ServerProtocol()
+            layout_arm, command, _task = block.conditions[0]
+            begin = protocol.begin(
+                {
+                    "study_id": n3.pilot.STUDY_ID,
+                    "block_id": block.block_id,
+                    "cell_id": block.cell_ids[0],
+                    "condition_index": 0,
+                    "layout_arm": layout_arm,
+                    "command": command,
+                    "prompt": n3.pilot.PROMPTS[command],
+                    "effective_seed": block.effective_seed,
+                    "expected_actions": n3.pilot.ACTION_CAP,
+                    "expected_requests": n3.pilot.REQUEST_COUNT,
+                    "client_session_id": "n3-client-session",
+                },
+                server_context_id="n3-terminal-context",
+                temporal_reset_evidence={
+                    "passed": True,
+                    "unresolved_mutable_temporal_fields": [],
+                },
+            )
+            protocol.complete_behavioral()
+            end = protocol.end(
+                {
+                    "study_id": n3.pilot.STUDY_ID,
+                    "block_id": block.block_id,
+                    "cell_id": block.cell_ids[0],
+                    "condition_index": 0,
+                    "server_context_id": begin["server_context_id"],
+                    "client_session_id": begin["client_session_id"],
+                    "status": "safety_abort",
+                    "stop_reason": "safety_abort",
+                    "actions_executed": 17,
+                    "request_count": 1,
+                    "final_chunk_executed_actions": None,
+                }
+            )
+            terminal = n3.pilot.persist_server_terminal_receipt(
+                attempt_root=attempt,
+                end_response=end,
+                protocol_context_active=False,
+                model_capture_active=False,
+            )
+            failure = self._n3_failure(
+                block, status="safety_abort", actions=17, requests=1
+            )
+            failure["server_context_terminal"] = terminal
+            write_json(failure_path, failure)
+            observed = n3.validate_failed_confirmation_cell(
+                failure_path, condition_index=0, block=block
+            )
+            self.assertEqual(observed["status"], "safety_abort")
+
+            tampered = dict(failure)
+            tampered["server_context_id"] = "other-context"
+            write_json(failure_path, tampered)
+            with self.assertRaisesRegex(
+                n3.pilot.N3BehavioralPilotError,
+                "confirmation_failure_context_identity_changed",
+            ):
+                n3.validate_failed_confirmation_cell(
+                    failure_path, condition_index=0, block=block
+                )
+            write_json(failure_path, failure)
+
+            terminal_path = Path(terminal["path"])
+            original_terminal = json.loads(terminal_path.read_text())
+            for label, client_session_id in (
+                ("null", None),
+                ("alias", begin["server_context_id"]),
+                ("unsafe", "bad/session"),
+            ):
+                with self.subTest(coordinated_failure_session=label):
+                    write_json(
+                        terminal_path,
+                        {
+                            **original_terminal,
+                            "client_session_id": client_session_id,
+                        },
+                    )
+                    changed_failure = {
+                        **failure,
+                        "client_session_id": client_session_id,
+                        "server_context_terminal": n3.pilot.file_identity(
+                            terminal_path
+                        ),
+                    }
+                    write_json(failure_path, changed_failure)
+                    with self.assertRaisesRegex(
+                        n3.pilot.N3BehavioralPilotError,
+                        "server_context_terminal_identity_invalid",
+                    ):
+                        n3.validate_failed_confirmation_cell(
+                            failure_path, condition_index=0, block=block
+                        )
+                    write_json(terminal_path, original_terminal)
+                    failure["server_context_terminal"] = n3.pilot.file_identity(
+                        terminal_path
+                    )
+                    write_json(failure_path, failure)
+
+            prerequisites = {
+                "confirmation_release": {"confirmation_freeze": {}},
+                "confirmation_fixture_freeze": {},
+            }
+            with mock.patch.object(
+                n3, "validate_cells_bind_prerequisites"
+            ), self.assertRaisesRegex(
+                n3.pilot.N3BehavioralPilotError,
+                "confirmation_safety_censored_block_is_terminal",
+            ):
+                n3.discover_completed_prefix(
+                    raw,
+                    block=block,
+                    prerequisites=prerequisites,
+                    study_commit=STUDY_COMMIT,
+                )
+
+    def test_n3_passed_confirmation_rejects_coordinated_unsafe_sessions(self) -> None:
+        block = n3.load_confirmation_block(SOURCE_ROOT, "C01")
+        with tempfile.TemporaryDirectory() as temporary, n3.configured_pilot(block):
+            raw = Path(temporary)
+            cell_path = (
+                raw
+                / "attempt-1"
+                / "cells"
+                / f"00-{n3.pilot.safe_cell_component(block.cell_ids[0])}"
+                / "cell_receipt.json"
+            )
+            write_json(cell_path, {"placeholder": True})
+            attempt = cell_path.parents[2]
+            protocol = n3.pilot.ServerProtocol()
+            layout_arm, command, _task = block.conditions[0]
+            begin = protocol.begin(
+                {
+                    "study_id": n3.pilot.STUDY_ID,
+                    "block_id": block.block_id,
+                    "cell_id": block.cell_ids[0],
+                    "condition_index": 0,
+                    "layout_arm": layout_arm,
+                    "command": command,
+                    "prompt": n3.pilot.PROMPTS[command],
+                    "effective_seed": block.effective_seed,
+                    "expected_actions": n3.pilot.ACTION_CAP,
+                    "expected_requests": n3.pilot.REQUEST_COUNT,
+                    "client_session_id": "n3-passed-client-session",
+                },
+                server_context_id="n3-passed-terminal-context",
+                temporal_reset_evidence={
+                    "passed": True,
+                    "unresolved_mutable_temporal_fields": [],
+                },
+            )
+            for _ in range(n3.pilot.REQUEST_COUNT):
+                protocol.complete_behavioral()
+            end = protocol.end(
+                {
+                    "study_id": n3.pilot.STUDY_ID,
+                    "block_id": block.block_id,
+                    "cell_id": block.cell_ids[0],
+                    "condition_index": 0,
+                    "server_context_id": begin["server_context_id"],
+                    "client_session_id": begin["client_session_id"],
+                    "status": "completed",
+                    "stop_reason": "action_cap",
+                    "actions_executed": n3.pilot.ACTION_CAP,
+                    "request_count": n3.pilot.REQUEST_COUNT,
+                    "final_chunk_executed_actions": n3.pilot.FINAL_EXECUTED_ACTIONS,
+                }
+            )
+            terminal = n3.pilot.persist_server_terminal_receipt(
+                attempt_root=attempt,
+                end_response=end,
+                protocol_context_active=False,
+                model_capture_active=False,
+            )
+            receipt = {
+                "phase": "confirmation",
+                "source_pins": {"study_commit": STUDY_COMMIT},
+                "transport_contract": copy.deepcopy(
+                    n3.NO_REPLAY_TRANSPORT_CONTRACT
+                ),
+                "confirmation_prerequisites": {},
+                "server_begin_receipt": dict(begin),
+                "server_end_receipt": {
+                    **end,
+                    "server_context_terminal": terminal,
+                },
+                "server_context_terminal": terminal,
+            }
+            identity = n3.pilot.file_identity(cell_path)
+
+            def validate(candidate: dict) -> None:
+                with mock.patch.object(
+                    n3.development,
+                    "_validate_cell_receipt",
+                    return_value=(candidate, identity),
+                ):
+                    n3.validate_passed_confirmation_cell(
+                        cell_path,
+                        condition_index=0,
+                        study_commit=STUDY_COMMIT,
+                        block=block,
+                    )
+
+            validate(receipt)
+            changed_end = copy.deepcopy(receipt)
+            changed_end["server_end_receipt"]["client_session_id"] = "other-session"
+            with self.assertRaisesRegex(
+                n3.pilot.N3BehavioralPilotError,
+                "confirmation_end_context_identity_changed",
+            ):
+                validate(changed_end)
+
+            terminal_path = Path(terminal["path"])
+            original_terminal = json.loads(terminal_path.read_text())
+            for label, client_session_id in (
+                ("null", None),
+                ("alias", begin["server_context_id"]),
+                ("unsafe", "bad/session"),
+            ):
+                with self.subTest(coordinated_passed_session=label):
+                    write_json(
+                        terminal_path,
+                        {
+                            **original_terminal,
+                            "client_session_id": client_session_id,
+                        },
+                    )
+                    changed = copy.deepcopy(receipt)
+                    changed["server_begin_receipt"][
+                        "client_session_id"
+                    ] = client_session_id
+                    changed["server_end_receipt"][
+                        "client_session_id"
+                    ] = client_session_id
+                    changed_terminal = n3.pilot.file_identity(terminal_path)
+                    changed["server_end_receipt"][
+                        "server_context_terminal"
+                    ] = changed_terminal
+                    changed["server_context_terminal"] = changed_terminal
+                    with self.assertRaisesRegex(
+                        n3.pilot.N3BehavioralPilotError,
+                        "server_context_terminal_identity_invalid",
+                    ):
+                        validate(changed)
+                    write_json(terminal_path, original_terminal)
+
+    @staticmethod
+    def _d1_failure_path(root: Path, block, index: int = 0) -> Path:
+        return (
+            root
+            / "simulator_attempts"
+            / "sim-1"
+            / "cells"
+            / f"{index:02d}-{d1.pilot.safe_component(block.cell_ids[index])}"
+            / "technical_failure.json"
+        )
+
+    @staticmethod
+    def _d1_failure(block, *, status: str, actions: int, requests: int) -> dict:
+        return {
+            "schema_version": d1.CELL_RECEIPT_SCHEMA,
+            "status": status,
+            "recorded_stop_reason": "safety_abort",
+            "study_id": d1.pilot.STUDY_ID,
+            "phase": "confirmation",
+            "block_id": block.block_id,
+            "layout_pair_id": block.layout_pair_id,
+            "model_config": "D1",
+            "cell_id": block.cell_ids[0],
+            "condition_index": 0,
+            "run_id": "run-1",
+            "simulator_job_id": "sim-1",
+            "server_job_id": "server-1",
+            "study_commit": STUDY_COMMIT,
+            "actions_executed": actions,
+            "request_count": requests,
+            "episode_id": "d1c01-terminal-context",
+            "episode_context_id": "d1c01-terminal-context",
+            "server_context_id": "d1c01-terminal-context",
+            "client_session_id": "d1-client-session",
+            "server_context_terminal": None,
+            "server_episode_manifest": None,
+            "server_terminal_reset_scan": None,
+        }
+
+    def test_d1_terminal_less_safety_is_technical_and_retryable(self) -> None:
+        template = d1.load_confirmation_block(SOURCE_ROOT, "C01")
+        with tempfile.TemporaryDirectory() as temporary:
+            raw = Path(temporary)
+            block = dataclasses.replace(template, raw_root=raw)
+            path = self._d1_failure_path(raw, block)
+            with d1.configured_pilot(block, d1.ALLOWED_SIMULATOR_ROLES[0]):
+                safety = self._d1_failure(
+                    block, status="safety_abort", actions=1, requests=1
+                )
+                write_json(path, safety)
+                with self.assertRaisesRegex(
+                    d1.pilot.D1BehavioralPilotError,
+                    "confirmation_safety_abort_terminal_missing",
+                ):
+                    d1.validate_failed_confirmation_cell(
+                        path, condition_index=0, block=block
+                    )
+
+                technical = self._d1_failure(
+                    block, status="technical_failure", actions=0, requests=0
+                )
+                write_json(path, technical)
+                observed = d1.validate_failed_confirmation_cell(
+                    path, condition_index=0, block=block
+                )
+                self.assertEqual(observed["recorded_stop_reason"], "safety_abort")
+                with d1.development._patched_pilot(
+                    {
+                        "validate_failure_cell_receipt": (
+                            lambda failure_path, *, condition_index:
+                            d1.validate_failed_confirmation_cell(
+                                failure_path,
+                                condition_index=condition_index,
+                                block=block,
+                            )
+                        )
+                    }
+                ):
+                    counts = d1.pilot._receipt_counts(
+                        start_cell_index=0,
+                        launched=1,
+                        completed=[],
+                        attempt_root=path.parents[2],
+                    )
+                self.assertEqual(counts["technically_invalid_behavioral_cells"], 1)
+                self.assertEqual(counts["right_censored_behavioral_cells"], 0)
+
+                prerequisites = {
+                    "confirmation_release": {"confirmation_freeze": {}},
+                    "confirmation_fixture_freeze": {},
+                }
+                with mock.patch.object(d1, "validate_cells_bind_prerequisites"):
+                    receipts, _identities, provenance = d1.discover_completed_prefix(
+                        raw,
+                        block=block,
+                        prerequisites=prerequisites,
+                        study_commit=STUDY_COMMIT,
+                        simulator_worker_role=d1.ALLOWED_SIMULATOR_ROLES[0],
+                    )
+                self.assertEqual(receipts, [])
+                self.assertEqual(provenance["start_cell_index"], 0)
+
+    def _write_d1_ready_bundle(self, raw: Path, block) -> tuple[dict, dict, dict]:
+        future = raw / "server_attempts" / "server-1" / "future"
+        future.mkdir(parents=True)
+        identity_receipt = {
+            "status": "passed",
+            "source": {
+                "commit": d1.pilot.D1_SOURCE_COMMIT,
+                "git_tree": d1.pilot.D1_SOURCE_TREE,
+                "aggregate_sha256": d1.pilot.D1_SOURCE_AGGREGATE_SHA256,
+            },
+            "checkpoint": {
+                "revision": d1.pilot.CHECKPOINT_REVISION,
+                "aggregate_sha256": d1.pilot.CHECKPOINT_AGGREGATE_SHA256,
+            },
+            "tokenizer": {
+                "revision": d1.pilot.TOKENIZER_REVISION,
+                "aggregate_sha256": d1.pilot.TOKENIZER_AGGREGATE_SHA256,
+            },
+        }
+        identity_path = future / "identity_receipt.json"
+        write_json(identity_path, identity_receipt)
+        overlay = FORECAST / "d1_instrumented_server.py"
+        contract = {
+            "schema_version": d1.pilot.D1_SERVER_CONTRACT_SCHEMA,
+            "status": "passed",
+            "configuration_id": "D1",
+            "official_repository_commit": d1.pilot.D1_SOURCE_COMMIT,
+            "official_repository_tree": d1.pilot.D1_SOURCE_TREE,
+            "official_action_path": "GrootSimPolicy.lazy_joint_forward_causal",
+            "custom_s2_used": False,
+            "patched_s1_used": False,
+            "world_size": 2,
+            "port": d1.pilot.SERVICE_PORT,
+            "returned_action_shape": [
+                d1.pilot.RETURNED_ACTION_HORIZON,
+                d1.pilot.ACTION_DIM,
+            ],
+            "executed_action_prefix": d1.pilot.EXECUTED_PREFIX_HORIZON,
+            "effective_official_model_noise_seed": d1.pilot.EFFECTIVE_MODEL_NOISE_SEED,
+            "video_guidance_scale": 5.0,
+            "configured_inference_steps": 16,
+            "evaluated_dit_step_count": 8,
+            "dynamic_cache_schedule": False,
+            "tensorrt_engine_active": False,
+            "enable_dit_cache": True,
+            "future_root": str(future.resolve()),
+            "noise_semantics": "fixed; no request is an independent noise draw",
+            "instrumentation_overlay": {
+                "path": str(overlay.resolve()),
+                "sha256": d1.pilot.sha256_file(overlay),
+                "returned_action_modified": False,
+            },
+            "topology": [
+                {
+                    "rank": rank,
+                    "cuda_device_index": rank,
+                    "cuda_device_name": "NVIDIA B200",
+                }
+                for rank in (0, 1)
+            ],
+            "head_contracts": [
+                {"rank": rank, "status": "passed"} for rank in (0, 1)
+            ],
+            "bounded_loader_receipts": [
+                {
+                    "rank": rank,
+                    "receipt": {"passed": True, "forward_path_modified": False},
+                }
+                for rank in (0, 1)
+            ],
+            "identity_receipt": str(identity_path.resolve()),
+            "identity_receipt_sha256": d1.pilot.sha256_file(identity_path),
+        }
+        contract_path = future / "server_contract.json"
+        write_json(contract_path, contract)
+        execution_path = (
+            raw / "simulator_attempts" / "sim-1" / "execution_prerequisites.json"
+        )
+        execution, execution_sha = d1.write_execution_prerequisites(
+            execution_path, block=block, prerequisites={}
+        )
+        ready = {
+            "schema_version": d1.pilot.SERVER_READY_SCHEMA,
+            "status": "ready",
+            "run_id": "run-1",
+            "server_job_id": "server-1",
+            "paired_simulator_job_id": "sim-1",
+            "study_commit": STUDY_COMMIT,
+            "study_id": d1.pilot.STUDY_ID,
+            "phase": "confirmation",
+            "block_id": block.block_id,
+            "layout_pair_id": block.layout_pair_id,
+            "model_config": "D1",
+            "service_host": d1.pilot.SERVICE_HOST,
+            "service_port": d1.pilot.SERVICE_PORT,
+            "future_root": str(future.resolve()),
+            "server_contract": d1.pilot.file_identity(contract_path),
+            "server_contract_sha256": d1.pilot.sha256_file(contract_path),
+            "runtime_identity": d1.pilot.file_identity(identity_path),
+            "pilot_contract": dict(block.contract),
+            "pilot_contract_sha256": block.contract_sha256,
+            "confirmation_contract_sha256": block.contract_sha256,
+            "confirmation_prerequisites_sha256": execution_sha,
+            "expected_cell_ids": list(block.cell_ids),
+            "returned_action_shape": [
+                d1.pilot.RETURNED_ACTION_HORIZON,
+                d1.pilot.ACTION_DIM,
+            ],
+            "executed_prefix_horizon": d1.pilot.EXECUTED_PREFIX_HORIZON,
+            "effective_model_noise_seed": d1.pilot.EFFECTIVE_MODEL_NOISE_SEED,
+            "global_state_noninterleaving": True,
+        }
+        paths = d1.pilot.coordination_paths(raw, "run-1")
+        write_json(paths["server_ready"], ready)
+        ready_identity = d1.pilot.file_identity(paths["server_ready"])
+        claim = {
+            "schema_version": d1.pilot.SIMULATOR_CLAIM_SCHEMA,
+            "status": "claimed",
+            "run_id": "run-1",
+            "simulator_job_id": "sim-1",
+            "server_job_id": "server-1",
+            "server_ready_sha256": ready_identity["sha256"],
+            "study_commit": STUDY_COMMIT,
+            "block_id": block.block_id,
+            "worker_role": d1.ALLOWED_SIMULATOR_ROLES[0],
+            "pilot_contract_sha256": block.contract_sha256,
+            "lease_token": "lease-1",
+            "start_cell_index": 0,
+        }
+        write_json(paths["simulator_claim"], claim)
+        return ready, execution, claim
+
+    def test_d1_failure_deep_ready_claim_context_and_terminal_stop(self) -> None:
+        template = d1.load_confirmation_block(SOURCE_ROOT, "C01")
+        with tempfile.TemporaryDirectory() as temporary:
+            raw = Path(temporary)
+            block = dataclasses.replace(template, raw_root=raw)
+            role = d1.ALLOWED_SIMULATOR_ROLES[0]
+            with d1.configured_pilot(block, role):
+                ready, execution, claim = self._write_d1_ready_bundle(raw, block)
+                paths = d1.pilot.coordination_paths(raw, "run-1")
+                failure_path = self._d1_failure_path(raw, block)
+                attempt = failure_path.parents[2]
+                write_json(
+                    attempt / "resume.json",
+                    {
+                        "schema_version": d1.RESUME_SCHEMA,
+                        "block_id": block.block_id,
+                        "layout_pair_id": block.layout_pair_id,
+                        "start_cell_index": 0,
+                    },
+                )
+                future = Path(ready["future_root"])
+                episode = "d1c01-terminal-context"
+                terminal_path = (
+                    future / "episodes" / episode / "terminal_context_receipt.json"
+                )
+                manifest_path = future / "episodes" / episode / "episode_manifest.json"
+                write_json(terminal_path, {"server-authored": True})
+                write_json(manifest_path, {"server-authored": True})
+                terminal_identity = d1.pilot.file_identity(terminal_path)
+                manifest_identity = d1.pilot.file_identity(manifest_path)
+                reset_scan = {"passed": True, "world_size": 2}
+                failure = self._d1_failure(
+                    block, status="safety_abort", actions=449, requests=57
+                )
+                failure.update(
+                    {
+                        "server_ready": d1.pilot.file_identity(paths["server_ready"]),
+                        "simulator_claim": d1.pilot.file_identity(
+                            paths["simulator_claim"]
+                        ),
+                        "confirmation_fixture": {
+                            "execution_prerequisites": execution,
+                            "execution_prerequisites_sha256": execution["sha256"],
+                        },
+                        "server_begin_receipt": {
+                            "passed": True,
+                            "episode_context_id": episode,
+                            "client_session_id": "d1-client-session",
+                        },
+                        "server_context_terminal": terminal_identity,
+                        "server_episode_manifest": manifest_identity,
+                        "server_terminal_reset_scan": reset_scan,
+                    }
+                )
+                write_json(failure_path, failure)
+
+                terminal_result = (
+                    {"terminal_state": "context_closed"},
+                    terminal_identity,
+                    {},
+                    manifest_identity,
+                    [],
+                    reset_scan,
+                )
+                with mock.patch.object(
+                    d1.pilot,
+                    "validate_server_terminal_receipt",
+                    return_value=terminal_result,
+                ) as terminal_validator:
+                    observed = d1.validate_failed_confirmation_cell(
+                        failure_path, condition_index=0, block=block
+                    )
+                self.assertEqual(observed["status"], "safety_abort")
+                terminal_validator.assert_called_once()
+                finalize_control = terminal_validator.call_args.kwargs[
+                    "expected_finalize_control"
+                ]
+                self.assertEqual(finalize_control["actions_executed"], 449)
+                self.assertEqual(finalize_control["request_count"], 57)
+
+                original_ready = dict(ready)
+                coordinated_ready = {**ready, "server_job_id": "evil-server"}
+                write_json(paths["server_ready"], coordinated_ready)
+                coordinated_ready_identity = d1.pilot.file_identity(
+                    paths["server_ready"]
+                )
+                coordinated_claim = {
+                    **claim,
+                    "server_job_id": "evil-server",
+                    "server_ready_sha256": coordinated_ready_identity["sha256"],
+                }
+                write_json(paths["simulator_claim"], coordinated_claim)
+                coordinated_failure = {
+                    **failure,
+                    "server_ready": coordinated_ready_identity,
+                    "simulator_claim": d1.pilot.file_identity(
+                        paths["simulator_claim"]
+                    ),
+                }
+                write_json(failure_path, coordinated_failure)
+                with self.assertRaisesRegex(
+                    d1.pilot.D1BehavioralPilotError,
+                    "confirmation_failure_server_ready_changed",
+                ):
+                    d1.validate_failed_confirmation_cell(
+                        failure_path, condition_index=0, block=block
+                    )
+
+                write_json(paths["server_ready"], original_ready)
+                ready_identity = d1.pilot.file_identity(paths["server_ready"])
+                bad_claim = {
+                    **claim,
+                    "server_ready_sha256": ready_identity["sha256"],
+                    "worker_role": "wrong-role",
+                }
+                write_json(paths["simulator_claim"], bad_claim)
+                claim_failure = {
+                    **failure,
+                    "server_ready": ready_identity,
+                    "simulator_claim": d1.pilot.file_identity(
+                        paths["simulator_claim"]
+                    ),
+                }
+                write_json(failure_path, claim_failure)
+                with self.assertRaisesRegex(
+                    d1.pilot.D1BehavioralPilotError, "simulator_claim_mismatch"
+                ):
+                    d1.validate_failed_confirmation_cell(
+                        failure_path, condition_index=0, block=block
+                    )
+
+                write_json(paths["simulator_claim"], claim)
+                restored = {
+                    **failure,
+                    "server_ready": ready_identity,
+                    "simulator_claim": d1.pilot.file_identity(
+                        paths["simulator_claim"]
+                    ),
+                }
+                changed_context = {**restored, "server_context_id": "other-context"}
+                write_json(failure_path, changed_context)
+                with self.assertRaisesRegex(
+                    d1.pilot.D1BehavioralPilotError,
+                    "confirmation_failure_context_ids_changed",
+                ):
+                    d1.validate_failed_confirmation_cell(
+                        failure_path, condition_index=0, block=block
+                    )
+
+                write_json(failure_path, restored)
+                prerequisites = {
+                    "confirmation_release": {"confirmation_freeze": {}},
+                    "confirmation_fixture_freeze": {},
+                }
+                with (
+                    mock.patch.object(
+                        d1.pilot,
+                        "validate_server_terminal_receipt",
+                        return_value=terminal_result,
+                    ),
+                    mock.patch.object(d1, "verify_execution_prerequisites"),
+                    mock.patch.object(d1, "validate_cells_bind_prerequisites"),
+                    self.assertRaisesRegex(
+                        d1.pilot.D1BehavioralPilotError,
+                        "confirmation_safety_censored_block_is_terminal",
+                    ),
+                ):
+                    d1.discover_completed_prefix(
+                        raw,
+                        block=block,
+                        prerequisites=prerequisites,
+                        study_commit=STUDY_COMMIT,
+                        simulator_worker_role=role,
+                    )
 
 
 if __name__ == "__main__":

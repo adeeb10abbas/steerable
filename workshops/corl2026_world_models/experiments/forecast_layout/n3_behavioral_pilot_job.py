@@ -64,6 +64,7 @@ QUEUE_ROLE = "n3"
 EFFECTIVE_SEED = 2026091000
 ACTION_CAP = 450
 ACTION_HORIZON = 32
+EXECUTED_CHUNK_HORIZON = 30
 ACTION_DIM = 8
 REQUEST_COUNT = 15
 OBSERVATION_COUNT = 451
@@ -113,6 +114,7 @@ QUEUE_RECEIPT_SCHEMA = "wmf-n3-behavioral-pilot-job-v1"
 CELL_RECEIPT_SCHEMA = "wmf-n3-behavioral-pilot-cell-v1"
 SERVER_READY_SCHEMA = "wmf-n3-behavioral-server-ready-v1"
 SERVER_REQUEST_SCHEMA = "wmf-n3-behavioral-server-request-v1"
+SERVER_TERMINAL_SCHEMA = "wmf-n3-terminal-context-receipt-v1"
 SERVER_EXIT_SCHEMA = "wmf-n3-behavioral-server-exit-v1"
 TOPOLOGY_SCHEMA = "wmf-n3-two-b200-topology-v1"
 CAPTURE_RECEIPT_SCHEMA = "wmf-forecast-layout-fixed-observation-capture-v1"
@@ -138,6 +140,20 @@ def require(condition: bool, reason: str, detail: str | None = None) -> None:
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def parse_utc(value: Any) -> datetime:
+    require(isinstance(value, str) and value.endswith("Z"), "invalid_utc_timestamp")
+    try:
+        parsed = datetime.fromisoformat(value[:-1] + "+00:00")
+    except ValueError as error:
+        raise N3BehavioralPilotError("invalid_utc_timestamp") from error
+    require(
+        parsed.tzinfo is not None
+        and parsed.utcoffset() == timezone.utc.utcoffset(parsed),
+        "invalid_utc_timestamp",
+    )
+    return parsed
 
 
 def canonical_bytes(value: Any) -> bytes:
@@ -251,6 +267,16 @@ def safe_cell_component(cell_id: str) -> str:
     return cell_id.replace("__", "-").replace("_", "-")
 
 
+def server_terminal_path(attempt_root: Path, cell_id: str) -> Path:
+    return (
+        Path(attempt_root).resolve()
+        / "server"
+        / "context_terminals"
+        / safe_cell_component(cell_id)
+        / "terminal_context_receipt.json"
+    )
+
+
 class ServerProtocol:
     """Pure request-order/reset state machine used by the live server."""
 
@@ -271,7 +297,8 @@ class ServerProtocol:
         require(self.active is None, "server_episode_context_overlap")
         require(self.next_cell_index < len(CELL_IDS), "server_block_already_complete")
         require(
-            isinstance(server_context_id, str) and server_context_id,
+            isinstance(server_context_id, str)
+            and SAFE_ID_RE.fullmatch(server_context_id) is not None,
             "server_context_id_missing",
         )
         require(server_context_id not in self.used_context_ids, "server_context_id_reused")
@@ -300,10 +327,18 @@ class ServerProtocol:
         }
         for key, wanted in expected.items():
             require(request.get(key) == wanted, "server_begin_mismatch", key)
+        client_session_id = request.get("client_session_id")
+        require(
+            isinstance(client_session_id, str)
+            and SAFE_ID_RE.fullmatch(client_session_id) is not None
+            and client_session_id != server_context_id,
+            "server_client_session_id_invalid",
+        )
         self.used_context_ids.add(server_context_id)
         self.active = {
             **expected,
             "server_context_id": server_context_id,
+            "client_session_id": client_session_id,
             "request_count": 0,
             "started_at_utc": utc_now(),
         }
@@ -311,6 +346,8 @@ class ServerProtocol:
             "passed": True,
             "reset_scope": CONTEXT_RESET_SCOPE,
             "server_context_id": server_context_id,
+            "episode_context_id": server_context_id,
+            "client_session_id": client_session_id,
             "cache_reset_evidence": {
                 "exclusive_active_episode": cell_id,
                 "wrapper_request_index_reset_to_zero": True,
@@ -342,6 +379,7 @@ class ServerProtocol:
             "request_index": request_index,
             "action_step_start": request_index * ACTION_HORIZON,
             "server_context_id": active["server_context_id"],
+            "client_session_id": active["client_session_id"],
         }
         for key, wanted in expected.items():
             require(request.get(key) == wanted, "server_behavioral_request_mismatch", key)
@@ -370,8 +408,48 @@ class ServerProtocol:
             "server_end_mismatch",
             "server_context_id",
         )
+        require(
+            request.get("client_session_id") == active["client_session_id"],
+            "server_end_mismatch",
+            "client_session_id",
+        )
+        stop_reason = request.get("stop_reason")
+        require(
+            stop_reason in {"action_cap", "safety_abort", "technical_failure"},
+            "server_end_mismatch",
+            "stop_reason",
+        )
+        require(
+            (request.get("status") == "completed") == (stop_reason == "action_cap"),
+            "server_end_mismatch",
+            "status",
+        )
         actions = request.get("actions_executed")
         requests = request.get("request_count")
+        require(
+            type(actions) is int and 0 <= actions <= ACTION_CAP,
+            "server_end_mismatch",
+            "actions_executed",
+        )
+        require(
+            type(requests) is int
+            and 0 <= requests <= REQUEST_COUNT
+            and requests == active["request_count"],
+            "server_end_mismatch",
+            "request_count",
+        )
+        require(
+            actions <= min(ACTION_CAP, requests * ACTION_HORIZON),
+            "server_end_mismatch",
+            "action_request_prefix",
+        )
+        if stop_reason == "safety_abort":
+            require(
+                1 <= actions < ACTION_CAP
+                and requests == math.ceil(actions / EXECUTED_CHUNK_HORIZON),
+                "server_end_mismatch",
+                "safety_abort_prefix",
+            )
         completed = (
             request.get("status") == "completed"
             and actions == ACTION_CAP
@@ -382,11 +460,14 @@ class ServerProtocol:
         response = {
             "passed": completed,
             "server_context_id": request.get("server_context_id"),
+            "episode_context_id": request.get("server_context_id"),
+            "client_session_id": request.get("client_session_id"),
             "cell_id": active["cell_id"],
             "condition_index": active["condition_index"],
             "server_request_count": active["request_count"],
             "actions_executed": actions,
             "client_request_count": requests,
+            "stop_reason": stop_reason,
             "status": "completed" if completed else "technical_invalid",
             "ended_at_utc": utc_now(),
         }
@@ -430,6 +511,137 @@ def _verify_descriptor(value: Any, label: str) -> dict[str, Any]:
     if "bytes" in value:
         require(observed["bytes"] == value["bytes"], "file_descriptor_size_mismatch", label)
     return observed
+
+
+def validate_server_terminal_receipt(
+    value: Any,
+    *,
+    attempt_root: Path,
+    cell_id: str,
+    condition_index: int,
+    server_context_id: str,
+    client_session_id: str,
+    stop_reason: str,
+    actions_executed: int,
+    request_count: int,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Deep-validate the immutable server-authored episode terminal."""
+
+    require(
+        isinstance(server_context_id, str)
+        and SAFE_ID_RE.fullmatch(server_context_id) is not None
+        and isinstance(client_session_id, str)
+        and SAFE_ID_RE.fullmatch(client_session_id) is not None
+        and server_context_id != client_session_id,
+        "server_context_terminal_identity_invalid",
+    )
+    identity = _verify_descriptor(value, "server_context_terminal")
+    path = Path(identity["path"])
+    require(
+        not path.is_symlink()
+        and path.resolve() == server_terminal_path(attempt_root, cell_id).resolve(),
+        "server_context_terminal_path_changed",
+    )
+    receipt = load_json(path, "server_context_terminal_unreadable")
+    exact_keys = {
+        "schema_version",
+        "status",
+        "terminal_state",
+        "model_config",
+        "study_id",
+        "phase",
+        "block_id",
+        "layout_pair_id",
+        "cell_id",
+        "condition_index",
+        "episode_context_id",
+        "server_context_id",
+        "client_session_id",
+        "stop_reason",
+        "actions_executed",
+        "request_count",
+        "server_request_count",
+        "context_active_after_end",
+        "model_capture_active_after_end",
+        "completed_at_utc",
+    }
+    require(set(receipt) == exact_keys, "server_context_terminal_keys_changed")
+    expected = {
+        "schema_version": SERVER_TERMINAL_SCHEMA,
+        "status": "passed",
+        "terminal_state": "context_closed",
+        "model_config": MODEL_CONFIG,
+        "study_id": STUDY_ID,
+        "phase": PHASE,
+        "block_id": BLOCK_ID,
+        "layout_pair_id": LAYOUT_PAIR_ID,
+        "cell_id": cell_id,
+        "condition_index": condition_index,
+        "episode_context_id": server_context_id,
+        "server_context_id": server_context_id,
+        "client_session_id": client_session_id,
+        "stop_reason": stop_reason,
+        "actions_executed": actions_executed,
+        "request_count": request_count,
+        "server_request_count": request_count,
+        "context_active_after_end": False,
+        "model_capture_active_after_end": False,
+    }
+    for key, wanted in expected.items():
+        require(receipt.get(key) == wanted, "server_context_terminal_mismatch", key)
+    if stop_reason == "safety_abort":
+        require(
+            1 <= actions_executed < ACTION_CAP
+            and request_count == math.ceil(actions_executed / EXECUTED_CHUNK_HORIZON),
+            "server_context_terminal_safety_prefix_invalid",
+        )
+    parse_utc(receipt.get("completed_at_utc"))
+    return receipt, identity
+
+
+def persist_server_terminal_receipt(
+    *,
+    attempt_root: Path,
+    end_response: Mapping[str, Any],
+    protocol_context_active: bool,
+    model_capture_active: bool,
+) -> dict[str, Any]:
+    """Persist only a successfully closed server/model context."""
+
+    require(
+        not protocol_context_active and not model_capture_active,
+        "server_context_remained_active_after_end",
+    )
+    completed_at_utc = utc_now()
+    require(
+        parse_utc(end_response.get("ended_at_utc")) <= parse_utc(completed_at_utc),
+        "server_context_terminal_precedes_end",
+    )
+    terminal = {
+        "schema_version": SERVER_TERMINAL_SCHEMA,
+        "status": "passed",
+        "terminal_state": "context_closed",
+        "model_config": MODEL_CONFIG,
+        "study_id": STUDY_ID,
+        "phase": PHASE,
+        "block_id": BLOCK_ID,
+        "layout_pair_id": LAYOUT_PAIR_ID,
+        "cell_id": end_response["cell_id"],
+        "condition_index": end_response["condition_index"],
+        "episode_context_id": end_response["episode_context_id"],
+        "server_context_id": end_response["server_context_id"],
+        "client_session_id": end_response["client_session_id"],
+        "stop_reason": end_response["stop_reason"],
+        "actions_executed": end_response["actions_executed"],
+        "request_count": end_response["client_request_count"],
+        "server_request_count": end_response["server_request_count"],
+        "context_active_after_end": False,
+        "model_capture_active_after_end": False,
+        "completed_at_utc": completed_at_utc,
+    }
+    path = server_terminal_path(attempt_root, str(end_response["cell_id"]))
+    immutable_json(path, terminal)
+    return file_identity(path)
 
 
 def validate_n3_qualification_payload(n3: Mapping[str, Any]) -> None:
@@ -1003,10 +1215,7 @@ def _reset_temporal_context(
         "official_model_temporal_state_detected_after_reset",
         ",".join(after["unresolved_mutable_temporal_fields"]),
     )
-    context_id = (
-        f"{server_process_context_id}:cell-{protocol.next_cell_index:02d}:"
-        f"{uuid.uuid4().hex}"
-    )
+    context_id = f"n3-cell-{protocol.next_cell_index:02d}-{uuid.uuid4().hex}"
     return context_id, {
         "passed": True,
         "reset_scope": CONTEXT_RESET_SCOPE,
@@ -1123,9 +1332,7 @@ def run_server(args: argparse.Namespace) -> int:
         )
         protocol = ServerProtocol(start_cell_index=args.start_cell_index)
         protocol_lock = threading.Lock()
-        server_process_context_id = (
-            f"n3-behavioral:{socket.gethostname()}:{os.getpid()}:{uuid.uuid4().hex}"
-        )
+        server_process_context_id = f"n3-server-{os.getpid()}-{uuid.uuid4().hex}"
 
         class BehavioralService(server.RobolabPolicyService):
             def _build_setup_args(self, values: Any) -> Any:
@@ -1157,7 +1364,17 @@ def run_server(args: argparse.Namespace) -> int:
                         )
                     if control == "end_episode":
                         require(model_proxy.active is None, "server_capture_not_clear_at_episode_end")
-                        return protocol.end(observation)
+                        response = protocol.end(observation)
+                        terminal_identity = persist_server_terminal_receipt(
+                            attempt_root=attempt_root,
+                            end_response=response,
+                            protocol_context_active=protocol.active is not None,
+                            model_capture_active=model_proxy.active is not None,
+                        )
+                        return {
+                            **response,
+                            "server_context_terminal": terminal_identity,
+                        }
                     if control == "ping":
                         return {
                             "passed": True,
@@ -1429,13 +1646,18 @@ def run_cell(args: argparse.Namespace) -> int:
                 super().__init__(**kwargs)
                 self.wmf_request_index = 0
                 self.wmf_server_context_id: str | None = None
+                self.wmf_client_session_id: str | None = None
                 self.wmf_episode_active = False
                 self.wmf_begin_receipt: dict[str, Any] | None = None
                 self.wmf_end_receipt: dict[str, Any] | None = None
                 self.wmf_end_error: str | None = None
+                self.wmf_terminal_receipt: dict[str, Any] | None = None
+                self.wmf_terminal_identity: dict[str, Any] | None = None
+                self.wmf_terminal_error: str | None = None
 
             def begin_episode(self) -> Mapping[str, Any]:
                 require(not self.wmf_episode_active, "client_episode_context_overlap")
+                client_session_id = f"n3-client-{uuid.uuid4().hex}"
                 request = {
                     "wmf_control": "begin_episode",
                     "study_id": STUDY_ID,
@@ -1448,6 +1670,7 @@ def run_cell(args: argparse.Namespace) -> int:
                     "effective_seed": EFFECTIVE_SEED,
                     "expected_actions": ACTION_CAP,
                     "expected_requests": REQUEST_COUNT,
+                    "client_session_id": client_session_id,
                 }
                 response = self.client.infer(request)
                 require(isinstance(response, Mapping), "server_begin_response_not_mapping")
@@ -1456,6 +1679,12 @@ def run_cell(args: argparse.Namespace) -> int:
                 require(response.get("cell_id") == cell_id, "server_begin_cell_mismatch")
                 context = response.get("server_context_id")
                 require(isinstance(context, str) and context, "server_context_id_missing")
+                require(
+                    response.get("episode_context_id") == context
+                    and response.get("client_session_id") == client_session_id
+                    and client_session_id != context,
+                    "server_client_session_binding_changed",
+                )
                 reset = response.get("cache_reset_evidence")
                 require(isinstance(reset, Mapping), "server_temporal_reset_evidence_missing")
                 require(reset.get("passed") is True, "server_temporal_reset_evidence_missing")
@@ -1464,6 +1693,7 @@ def run_cell(args: argparse.Namespace) -> int:
                     "server_temporal_state_unresolved",
                 )
                 self.wmf_server_context_id = context
+                self.wmf_client_session_id = client_session_id
                 self.wmf_begin_receipt = dict(response)
                 self.wmf_episode_active = True
                 return dict(response)
@@ -1486,6 +1716,7 @@ def run_cell(args: argparse.Namespace) -> int:
                     request_index=self.wmf_request_index,
                     action_step_start=self.wmf_request_index * ACTION_HORIZON,
                     server_context_id=self.wmf_server_context_id,
+                    client_session_id=self.wmf_client_session_id,
                 )
                 return request
 
@@ -1525,7 +1756,9 @@ def run_cell(args: argparse.Namespace) -> int:
                             "cell_id": cell_id,
                             "condition_index": condition_index,
                             "server_context_id": self.wmf_server_context_id,
+                            "client_session_id": self.wmf_client_session_id,
                             "status": "completed" if status == "action_cap" else status,
+                            "stop_reason": status,
                             "actions_executed": recorder.actions_executed,
                             "request_count": len(recorder.requests),
                             "final_chunk_executed_actions": (
@@ -1538,10 +1771,43 @@ def run_cell(args: argparse.Namespace) -> int:
                             response = self.client.infer(request)
                             require(isinstance(response, Mapping), "server_end_response_not_mapping")
                             self.wmf_end_receipt = dict(response)
+                            terminal, terminal_identity = validate_server_terminal_receipt(
+                                response.get("server_context_terminal"),
+                                attempt_root=attempt_root,
+                                cell_id=cell_id,
+                                condition_index=condition_index,
+                                server_context_id=str(self.wmf_server_context_id),
+                                client_session_id=str(self.wmf_client_session_id),
+                                stop_reason=status,
+                                actions_executed=recorder.actions_executed,
+                                request_count=len(recorder.requests),
+                            )
+                            self.wmf_terminal_receipt = terminal
+                            self.wmf_terminal_identity = terminal_identity
                             if status == "action_cap":
                                 require(response.get("passed") is True, "server_rejected_completed_cell")
                         except BaseException as error:
                             self.wmf_end_error = f"{type(error).__name__}: {error}"
+                            if self.wmf_terminal_identity is None:
+                                try:
+                                    terminal_path = server_terminal_path(attempt_root, cell_id)
+                                    terminal, terminal_identity = validate_server_terminal_receipt(
+                                        file_identity(terminal_path),
+                                        attempt_root=attempt_root,
+                                        cell_id=cell_id,
+                                        condition_index=condition_index,
+                                        server_context_id=str(self.wmf_server_context_id),
+                                        client_session_id=str(self.wmf_client_session_id),
+                                        stop_reason=status,
+                                        actions_executed=recorder.actions_executed,
+                                        request_count=len(recorder.requests),
+                                    )
+                                    self.wmf_terminal_receipt = terminal
+                                    self.wmf_terminal_identity = terminal_identity
+                                except BaseException as terminal_error:
+                                    self.wmf_terminal_error = (
+                                        f"{type(terminal_error).__name__}: {terminal_error}"
+                                    )
                             raise
                         finally:
                             self.wmf_episode_active = False
@@ -1627,6 +1893,7 @@ def run_cell(args: argparse.Namespace) -> int:
         require(client.wmf_end_error is None, "client_server_end_failed", client.wmf_end_error)
         require(isinstance(client.wmf_begin_receipt, Mapping), "server_begin_receipt_missing")
         require(isinstance(client.wmf_end_receipt, Mapping), "server_end_receipt_missing")
+        require(isinstance(client.wmf_terminal_identity, Mapping), "server_context_terminal_missing")
         completion = recorder._final_receipt
         require(isinstance(completion, Mapping), "adapter_completion_missing")
         require(completion.get("behavioral_result_valid") is True, "adapter_rejected_behavioral_cell")
@@ -1674,6 +1941,7 @@ def run_cell(args: argparse.Namespace) -> int:
             "native_timing_support": file_identity(timing_path),
             "server_begin_receipt": dict(client.wmf_begin_receipt),
             "server_end_receipt": dict(client.wmf_end_receipt),
+            "server_context_terminal": dict(client.wmf_terminal_identity),
             "viewport_video": file_identity(viewport[0]),
             "fresh_physical_checks": physical_evidence,
             "runner_timing": timing,
@@ -1715,16 +1983,37 @@ def run_cell(args: argparse.Namespace) -> int:
                 if recorder is not None and isinstance(recorder._final_receipt, Mapping)
                 else "technical_failure"
             )
+            terminal_identity = getattr(client, "wmf_terminal_identity", None)
+            terminal_proved = isinstance(terminal_identity, Mapping)
+            receipt_status = (
+                "safety_abort"
+                if stop_reason == "safety_abort" and terminal_proved
+                else "technical_failure"
+            )
             immutable_json(
                 failure_path,
                 {
                     "schema_version": CELL_RECEIPT_SCHEMA,
-                    "status": "safety_abort" if stop_reason == "safety_abort" else "technical_failure",
+                    "status": receipt_status,
+                    "recorded_stop_reason": stop_reason,
+                    "study_id": STUDY_ID,
+                    "phase": PHASE,
+                    "block_id": BLOCK_ID,
+                    "layout_pair_id": LAYOUT_PAIR_ID,
+                    "model_config": MODEL_CONFIG,
                     "cell_id": cell_id,
                     "condition_index": condition_index,
                     "actions_executed": getattr(recorder, "actions_executed", 0),
                     "request_count": len(getattr(recorder, "requests", [])),
                     "behavioral_episode_count": 0,
+                    "episode_context_id": getattr(client, "wmf_server_context_id", None),
+                    "server_context_id": getattr(client, "wmf_server_context_id", None),
+                    "client_session_id": getattr(client, "wmf_client_session_id", None),
+                    "server_context_terminal": (
+                        dict(terminal_identity) if terminal_proved else None
+                    ),
+                    "server_end_error": getattr(client, "wmf_end_error", None),
+                    "server_terminal_error": getattr(client, "wmf_terminal_error", None),
                     "error_type": type(error).__name__,
                     "reason": getattr(error, "reason", None),
                     "traceback": traceback.format_exc(),

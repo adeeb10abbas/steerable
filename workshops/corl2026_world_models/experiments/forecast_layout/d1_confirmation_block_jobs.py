@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 from contextlib import contextmanager
 import json
+import math
 import os
 from pathlib import Path
 import sys
@@ -505,6 +506,10 @@ def validate_passed_confirmation_cell(
         receipt, identity = development._PILOT_VALIDATE_PASSED_CELL(
             Path(path), condition_index=condition_index, study_commit=study_commit
         )
+        pilot.require(
+            isinstance(receipt.get("server_context_terminal"), Mapping),
+            "confirmation_cell_terminal_context_missing",
+        )
         _ready_identity, ready = development._validate_live_ready_descriptor(
             receipt.get("server_ready"), "confirmation_cell_server_ready"
         )
@@ -540,6 +545,267 @@ def validate_passed_confirmation_cell(
     return receipt, identity
 
 
+def validate_failed_confirmation_cell(
+    path: Path, *, condition_index: int, block: development.DevelopmentBlock,
+) -> dict[str, Any]:
+    path = Path(path).resolve()
+    attempt_root = path.parents[2]
+    cell_id = block.cell_ids[condition_index]
+    expected_path = (
+        path.parents[2]
+        / "cells"
+        / f"{condition_index:02d}-{pilot.safe_component(cell_id)}"
+        / "technical_failure.json"
+    ).resolve()
+    pilot.require(path == expected_path, "confirmation_failure_path_changed")
+    failure = pilot.load_json(path, "confirmation_failure_receipt_unreadable")
+    expected = {
+        "schema_version": CELL_RECEIPT_SCHEMA,
+        "study_id": pilot.STUDY_ID,
+        "phase": "confirmation",
+        "block_id": block.block_id,
+        "layout_pair_id": block.layout_pair_id,
+        "model_config": "D1",
+        "cell_id": cell_id,
+        "condition_index": condition_index,
+    }
+    for key, wanted in expected.items():
+        pilot.require(failure.get(key) == wanted, "confirmation_failure_identity_changed", key)
+    run_id = failure.get("run_id")
+    simulator_job_id = failure.get("simulator_job_id")
+    server_job_id = failure.get("server_job_id")
+    study_commit = failure.get("study_commit")
+    for key, value in (
+        ("run_id", run_id),
+        ("simulator_job_id", simulator_job_id),
+        ("server_job_id", server_job_id),
+    ):
+        pilot.require(
+            isinstance(value, str) and pilot.SAFE_ID_RE.fullmatch(value) is not None,
+            "confirmation_failure_runtime_id_invalid",
+            key,
+        )
+    pilot.require(
+        simulator_job_id == attempt_root.name
+        and isinstance(study_commit, str)
+        and pilot.COMMIT_RE.fullmatch(study_commit) is not None,
+        "confirmation_failure_runtime_identity_changed",
+    )
+    status = failure.get("status")
+    stop_reason = failure.get("recorded_stop_reason")
+    actions = failure.get("actions_executed")
+    requests = failure.get("request_count")
+    pilot.require(status in {"safety_abort", "technical_failure"}, "confirmation_failure_status_invalid")
+    pilot.require(
+        stop_reason in {"action_cap", "safety_abort", "technical_failure"},
+        "confirmation_failure_stop_reason_invalid",
+    )
+    pilot.require(type(actions) is int and 0 <= actions <= pilot.ACTION_CAP, "confirmation_failure_actions_invalid")
+    pilot.require(type(requests) is int and 0 <= requests <= pilot.REQUEST_COUNT, "confirmation_failure_requests_invalid")
+    if status == "safety_abort":
+        pilot.require(
+            stop_reason == "safety_abort"
+            and 1 <= actions < pilot.ACTION_CAP
+            and requests == math.ceil(actions / pilot.EXECUTED_PREFIX_HORIZON),
+            "confirmation_safety_abort_prefix_invalid",
+        )
+    terminal_descriptor = failure.get("server_context_terminal")
+    if terminal_descriptor is None:
+        pilot.require(status == "technical_failure", "confirmation_safety_abort_terminal_missing")
+        pilot.require(
+            failure.get("server_episode_manifest") is None
+            and failure.get("server_terminal_reset_scan") is None,
+            "confirmation_terminal_sidecars_without_terminal",
+        )
+        return failure
+
+    ready_identity, ready = development._validate_live_ready_descriptor(
+        failure.get("server_ready"), "confirmation_failure_server_ready"
+    )
+    ready_expected = {
+        "schema_version": pilot.SERVER_READY_SCHEMA,
+        "status": "ready",
+        "study_id": pilot.STUDY_ID,
+        "phase": "confirmation",
+        "block_id": block.block_id,
+        "layout_pair_id": block.layout_pair_id,
+        "model_config": "D1",
+        "run_id": run_id,
+        "server_job_id": server_job_id,
+        "paired_simulator_job_id": simulator_job_id,
+        "study_commit": study_commit,
+        "service_host": pilot.SERVICE_HOST,
+        "service_port": pilot.SERVICE_PORT,
+        "pilot_contract_sha256": block.contract_sha256,
+        "confirmation_contract_sha256": block.contract_sha256,
+        "expected_cell_ids": list(block.cell_ids),
+        "returned_action_shape": [pilot.RETURNED_ACTION_HORIZON, pilot.ACTION_DIM],
+        "executed_prefix_horizon": pilot.EXECUTED_PREFIX_HORIZON,
+        "effective_model_noise_seed": pilot.EFFECTIVE_MODEL_NOISE_SEED,
+        "global_state_noninterleaving": True,
+    }
+    for key, wanted in ready_expected.items():
+        pilot.require(
+            ready.get(key) == wanted,
+            "confirmation_failure_server_ready_changed",
+            key,
+        )
+    paths = pilot.coordination_paths(block.raw_root, str(run_id))
+    pilot.require(
+        Path(ready_identity["path"]).resolve() == paths["server_ready"].resolve(),
+        "confirmation_failure_server_ready_path_changed",
+    )
+    fixture = failure.get("confirmation_fixture")
+    pilot.require(isinstance(fixture, Mapping), "confirmation_failure_fixture_missing")
+    execution = development._verify_descriptor(
+        fixture.get("execution_prerequisites"),
+        "confirmation_failure_execution_prerequisites",
+    )
+    pilot.require(
+        fixture.get("execution_prerequisites_sha256") == execution["sha256"]
+        and ready.get("confirmation_prerequisites_sha256") == execution["sha256"],
+        "confirmation_failure_ready_prerequisites_changed",
+    )
+    verify_execution_prerequisites(
+        Path(execution["path"]), execution["sha256"], block=block
+    )
+    claim_identity = pilot._verify_descriptor(
+        failure.get("simulator_claim"), "confirmation_failure_simulator_claim"
+    )
+    pilot.require(
+        Path(claim_identity["path"]).resolve() == paths["simulator_claim"].resolve(),
+        "confirmation_failure_simulator_claim_path_changed",
+    )
+    claim = pilot.load_json(Path(claim_identity["path"]), "confirmation_failure_claim_unreadable")
+    validated_claim, observed_claim_identity = pilot.validate_simulator_claim(
+        Path(claim_identity["path"]),
+        run_id=str(ready.get("run_id")),
+        simulator_job_id=str(ready.get("paired_simulator_job_id")),
+        server_job_id=str(ready.get("server_job_id")),
+        server_ready_sha256=ready_identity["sha256"],
+        study_commit=str(ready.get("study_commit")),
+    )
+    pilot.require(
+        validated_claim == claim and observed_claim_identity == claim_identity,
+        "confirmation_failure_claim_descriptor_changed",
+    )
+    resume = pilot.load_json(
+        attempt_root / "resume.json", "confirmation_failure_resume_unreadable"
+    )
+    pilot.require(
+        resume.get("schema_version") == RESUME_SCHEMA
+        and resume.get("block_id") == block.block_id
+        and resume.get("layout_pair_id") == block.layout_pair_id
+        and attempt_root.name == claim.get("simulator_job_id")
+        and claim.get("start_cell_index") == resume.get("start_cell_index")
+        and type(claim.get("start_cell_index")) is int
+        and claim["start_cell_index"] <= condition_index,
+        "confirmation_failure_claim_attempt_changed",
+    )
+    begin = failure.get("server_begin_receipt")
+    pilot.require(isinstance(begin, Mapping) and begin.get("passed") is True, "confirmation_failure_begin_missing")
+    episode_id = begin.get("episode_context_id")
+    session_id = begin.get("client_session_id")
+    pilot.require(
+        episode_id == failure.get("episode_id")
+        == failure.get("episode_context_id")
+        == failure.get("server_context_id")
+        and session_id == failure.get("client_session_id")
+        and isinstance(episode_id, str)
+        and isinstance(session_id, str)
+        and episode_id != session_id,
+        "confirmation_failure_context_ids_changed",
+    )
+    layout_arm, command, _task = block.conditions[condition_index]
+    begin_control = {
+        "episode_id": episode_id,
+        "expected_session_id": session_id,
+        "purpose": pilot.BEHAVIORAL_PURPOSE,
+        "model_config": "D1",
+        "study_id": pilot.STUDY_ID,
+        "phase": "confirmation",
+        "block_id": block.block_id,
+        "layout_pair_id": block.layout_pair_id,
+        "cell_id": cell_id,
+        "condition_index": condition_index,
+        "layout_arm": layout_arm,
+        "command": command,
+        "server_ready_sha256": ready_identity["sha256"],
+        "simulator_claim_sha256": claim_identity["sha256"],
+        "simulator_lease_token": claim.get("lease_token"),
+        "pilot_contract_sha256": pilot.PILOT_CONTRACT_SHA256,
+    }
+    finalize_control = {
+        "finalize_only": True,
+        "purpose": pilot.BEHAVIORAL_FINALIZE_PURPOSE,
+        "previous_episode_id": episode_id,
+        "previous_session_id": session_id,
+        "model_config": "D1",
+        "study_id": pilot.STUDY_ID,
+        "phase": "confirmation",
+        "block_id": block.block_id,
+        "layout_pair_id": block.layout_pair_id,
+        "cell_id": cell_id,
+        "condition_index": condition_index,
+        "stop_reason": stop_reason,
+        "actions_executed": actions,
+        "request_count": requests,
+        "server_ready_sha256": ready_identity["sha256"],
+        "simulator_claim_sha256": claim_identity["sha256"],
+        "simulator_lease_token": claim.get("lease_token"),
+        "pilot_contract_sha256": pilot.PILOT_CONTRACT_SHA256,
+    }
+    server_contract = pilot._verify_descriptor(
+        ready.get("server_contract"), "confirmation_failure_server_contract"
+    )
+    future_root_raw = Path(str(ready.get("future_root", "")))
+    pilot.require(
+        future_root_raw.is_absolute()
+        and not future_root_raw.is_symlink(),
+        "confirmation_failure_future_root_invalid",
+    )
+    future_root = future_root_raw.resolve()
+    expected_future_root = (
+        Path(block.raw_root).resolve()
+        / "server_attempts"
+        / str(server_job_id)
+        / "future"
+    ).resolve()
+    pilot.require(
+        future_root == expected_future_root,
+        "confirmation_failure_future_root_changed",
+    )
+    (
+        _terminal,
+        observed_terminal_identity,
+        _manifest,
+        manifest_identity,
+        _request_identities,
+        terminal_reset_scan,
+    ) = pilot.validate_server_terminal_receipt(
+        terminal_descriptor,
+        future_root=future_root,
+        episode_id=episode_id,
+        session_id=session_id,
+        prompt=pilot.PROMPTS[command],
+        expected_begin_control=begin_control,
+        expected_finalize_control=finalize_control,
+        server_contract_sha256=server_contract["sha256"],
+    )
+    pilot.require(observed_terminal_identity == terminal_descriptor, "confirmation_terminal_descriptor_changed")
+    pilot.require(failure.get("server_episode_manifest") == manifest_identity, "confirmation_terminal_manifest_changed")
+    pilot.require(failure.get("server_terminal_reset_scan") == terminal_reset_scan, "confirmation_terminal_reset_scan_changed")
+    pilot.require(
+        status != "safety_abort" or stop_reason == "safety_abort",
+        "confirmation_safety_abort_stop_reason_changed",
+    )
+    pilot.require(
+        not (status == "technical_failure" and stop_reason == "safety_abort"),
+        "confirmation_safety_abort_was_incorrectly_demoted",
+    )
+    return failure
+
+
 def discover_completed_prefix(
     raw_root: Path, *, study_commit: str, block: development.DevelopmentBlock,
     prerequisites: Mapping[str, Any], simulator_worker_role: str | None = None,
@@ -554,6 +820,31 @@ def discover_completed_prefix(
     role = development._cell_simulator_role(receipt_paths[0]) if receipt_paths else simulator_worker_role
     pilot.require(isinstance(role, str) and role in ALLOWED_SIMULATOR_ROLES, "confirmation_resume_simulator_role_missing")
     with _configured_for_validation(block, role):
+        for failure_path in sorted(
+            Path(raw_root).resolve().glob(
+                "simulator_attempts/*/cells/*/technical_failure.json"
+            )
+        ):
+            raw_failure = pilot.load_json(
+                failure_path, "confirmation_resume_failure_unreadable"
+            )
+            has_terminal_safety_claim = (
+                raw_failure.get("recorded_stop_reason") == "safety_abort"
+                and raw_failure.get("server_context_terminal") is not None
+            )
+            if raw_failure.get("status") != "safety_abort" and not has_terminal_safety_claim:
+                continue
+            index = raw_failure.get("condition_index")
+            pilot.require(type(index) is int and 0 <= index < 4, "confirmation_resume_failure_index_invalid")
+            censored = validate_failed_confirmation_cell(
+                failure_path, condition_index=index, block=block
+            )
+            validate_cells_bind_prerequisites(
+                [censored], prerequisites=prerequisites, block=block
+            )
+            raise pilot.D1BehavioralPilotError(
+                "confirmation_safety_censored_block_is_terminal"
+            )
         with development._patched_pilot({"validate_passed_cell_receipt": validator}):
             receipts, identities, provenance = development._PILOT_DISCOVER_COMPLETED_PREFIX(
                 raw_root, study_commit=study_commit
@@ -602,6 +893,9 @@ def installed_receipt_metadata(
             updated["claim_boundary"] = (
                 "One valid learned-policy D1 behavioral confirmation cell: 450 actual actions, "
                 "451 original observations, and 57 official conditional action/future requests."
+                if Path(path).name == "cell_receipt.json"
+                else "A failed D1 confirmation cell; safety censoring requires a "
+                "hash-bound server terminal context receipt."
             )
         if schema == SIMULATOR_RECEIPT_SCHEMA:
             descriptors = updated.get("cell_receipts")
@@ -724,6 +1018,15 @@ def run_simulator_job(args: argparse.Namespace, block: development.DevelopmentBl
             simulator_worker_role=args.simulator_worker_role,
         )
 
+    def failure_validator(path: Path, *, condition_index: int):
+        failure = validate_failed_confirmation_cell(
+            path, condition_index=condition_index, block=block
+        )
+        validate_cells_bind_prerequisites(
+            [failure], prerequisites=prerequisites, block=block
+        )
+        return failure
+
     hooks = {
         "validate_queue_invocation": queue_verifier,
         "validate_schedule": lambda _source_root: {
@@ -734,6 +1037,7 @@ def run_simulator_job(args: argparse.Namespace, block: development.DevelopmentBl
         "validate_server_ready": ready_verifier,
         "build_cell_command": cell_builder,
         "validate_passed_cell_receipt": cell_validator,
+        "validate_failure_cell_receipt": failure_validator,
         "discover_completed_prefix": prefix_discoverer,
     }
     with development._patched_pilot(hooks):

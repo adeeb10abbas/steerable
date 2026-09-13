@@ -1,26 +1,26 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T10:01:00Z",
+  "as_of_utc": "2026-09-13T10:33:00Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
   "requested_host": "GM allocated cluster",
   "authorization": "User requested execution of attached specification on GM with aggressive parallelism. Core 232 episodes selected; optional D2 not selected. No confirmation release before qualification.",
-  "core_episodes_launched": 32,
-  "core_cells_terminally_classified": 32,
-  "core_cells_completed_valid": 28,
+  "core_episodes_launched": 36,
+  "core_cells_terminally_classified": 36,
+  "core_cells_completed_valid": 32,
   "core_cells_completed_technical_invalid": 4,
   "core_cells_active_not_yet_counted": 0,
   "core_cell_arithmetic": {
-    "terminal_valid": 28,
+    "terminal_valid": 32,
     "terminal_technical_invalid": 4,
-    "terminally_classified": 32,
+    "terminally_classified": 36,
     "active_launched_not_counted": 0,
-    "total_launched_including_active": 32,
-    "invariant": "28_terminal_valid + 4_terminal_technical_invalid + 0_active_launched = 32_launched"
+    "total_launched_including_active": 36,
+    "invariant": "32_terminal_valid + 4_terminal_technical_invalid + 0_active_launched = 36_launched"
   },
-  "generation_requests_launched": 776,
-  "generation_requests_completed": 776,
+  "generation_requests_launched": 1004,
+  "generation_requests_completed": 1004,
   "request_breakdown": {
     "nonbehavioral_generation_qualification": 18,
     "valid_N3_pilot": 60,
@@ -28,26 +28,26 @@
     "valid_D1_pilot": 228,
     "valid_N3_development": 240,
     "technical_invalid_N3_development": 1,
-    "valid_D1_development": 228,
+    "valid_D1_development": 456,
     "active_D1_development": 0
   },
   "request_arithmetic": {
     "nonbehavioral_generation_qualification": 18,
-    "terminal_behavioral_valid": 756,
+    "terminal_behavioral_valid": 984,
     "terminal_behavioral_technical_invalid": 2,
-    "terminal_total": 776,
+    "terminal_total": 1004,
     "active_requests_excluded": 0,
-    "invariant": "18_nonbehavioral + 756_valid_behavioral + 2_technical_invalid_behavioral = 776_terminal_requests"
+    "invariant": "18_nonbehavioral + 984_valid_behavioral + 2_technical_invalid_behavioral = 1004_terminal_requests"
   },
-  "phase": "valid28_of_232_N3_development_complete_N3_live_timing_probe_passed_D1_attempt003_D01_pair_claimed_confirmation_inference_held",
-  "cluster_status": "Independent Git/PVC queue remains active without the work Mac. Results commit b3e1d344f5645450757d34bb911c5dcc16db9ce9 records control e5abbafd2a44becd628ccd0b6d1e669d914b6847 at generation 567. N3 timing attempt002 passed and reaped after six generation-only requests and zero actions/resets/episodes/cells. D1 D01 attempt003 server/simulator are both claimed by their exact d1 and worker00 roles with fresh heartbeats; D02/D04 attempt003 pairs are staged behind the serialized admission chain. No new D1 cell, request or action is yet counted. Confirmation inference remains unreleased.",
+  "phase": "valid32_of_232_both_native_timing_authorities_passed_D1_D01_attempt003_passed_D02_pair_claimed_confirmation_inference_held",
+  "cluster_status": "Independent Git/PVC queue remains active without the work Mac. Results commit 1fff8ab6d03d6e5e1e24b31e7e7b50be2548aa09 records control 92429e44cf1cbce285268887769f79e1701bcc21 at generation 620. Both native timing authority002 jobs passed and reaped with zero new requests/actions/cells. D1 D01 attempt003 passed 4/4 cells and both queue plus nested children reaped; D02 attempt003 server/simulator are claimed by their exact d1 and worker00 roles with fresh heartbeats, while D04 remains staged. Confirmation inference remains unreleased.",
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
-    "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_physical_time_still_unqualified",
+    "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_and_live_P00_six_request_timing_probe_with_native_time_authority",
     "runtime_D1": "passed_six_official_conditional_generation_requests_on_exact_two_B200_worker_after_four_preserved_pre_request_technical_invalid_attempts",
     "fixed_450_recorder": "passed_recorder_only_original_left_with_450_actions_451_observations_zero_model_requests",
     "physical_layouts": "P00, D01-D04 and all C01-C24 have accepted model-blind candidates and fixed-observation captures; C01, C17 and C24 retain candidate_00 physical rejections and use accepted candidate_01; the 24-layout confirmation fixture freeze passed with SHA-256 495046b5102bf1813b0c9afd72d57bf1c30243070d7b525faacf53a076a482ac; this is fixture/capture qualification only",
-    "frame_time_camera_mapping": "Both pinned source audits, live P00 input preparation, D1 generation normalization and the fresh live-capture N3 six-request generation-only probe have passed. The N3 probe receipt explicitly reports physical_time_qualified false. Native N3/D1 clock authorities and complete immutable development sidecars remain pending; frame/action ordinals and presentation FPS are rejected substitutes",
+    "frame_time_camera_mapping": "Both pinned source audits, live P00 input preparation, D1 generation normalization, fresh live-capture N3 six-request generation-only probe and the N3/D1 native clock authorities have passed. Complete immutable per-request development sidecars remain pending; frame/action ordinals and presentation FPS are rejected substitutes",
     "annotation_development": "blind_two_rater_workflow_implemented_and_schema_validated; legitimate human development labels, consensus, usability decisions and empirical movement threshold remain pending",
     "confirmation_release": false
   },
@@ -105,9 +105,9 @@
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "e5abbafd2a44becd628ccd0b6d1e669d914b6847",
-    "cluster_staged_control_commit_at_snapshot": "e5abbafd2a44becd628ccd0b6d1e669d914b6847",
-    "cluster_control_generation_at_snapshot": 567,
+    "latest_control_commit": "92429e44cf1cbce285268887769f79e1701bcc21",
+    "cluster_staged_control_commit_at_snapshot": "92429e44cf1cbce285268887769f79e1701bcc21",
+    "cluster_control_generation_at_snapshot": 620,
     "cluster_active_job_ids_at_snapshot": [
       "timing-n3-live-generation-p00-002",
       "d1-development-d01-server-003",
@@ -115,9 +115,14 @@
       "d1-development-d02-server-003",
       "d1-development-d02-simulator-003",
       "d1-development-d04-server-003",
-      "d1-development-d04-simulator-003"
+      "d1-development-d04-simulator-003",
+      "timing-n3-native-authority-001",
+      "timing-d1-native-authority-001",
+      "d1-development-d01-snapshot-001",
+      "timing-n3-native-authority-002",
+      "timing-d1-native-authority-002"
     ],
-    "latest_results_commit_fetched": "b3e1d344f5645450757d34bb911c5dcc16db9ce9",
+    "latest_results_commit_fetched": "1fff8ab6d03d6e5e1e24b31e7e7b50be2548aa09",
     "release_lock_recovery_receipt_sha256": "f985f78cc9a7955d9d038eea7a4da492e7d5f6ed49dfbde8d021806579bf0e8a",
     "release_lock_current_inode": 44796676,
     "post_recovery_detached_diagnostics_passed": 6
@@ -203,8 +208,18 @@
     "n3_live_generation_robot_episodes": 0,
     "n3_live_generation_receipt_sha256": "1ead7d0c58b8abd7c27361ef37c42a4e131354212c490cd019f45918f150ea2a",
     "n3_normalized_probe_sha256": "4282abc44a7cbfec53ad2d6dd04cd6d2c7eade4859c4d6efd2631aac30a472c3",
-    "physical_time_qualified": false,
-    "remaining": "native N3 and D1 physical clock authorities plus immutable sidecars for every valid development request"
+    "native_authority_attempt_001_status": "two preserved zero-science technical-invalid jobs from cross-staged-source absolute contract path comparison",
+    "n3_native_authority_passed_job": "timing-n3-native-authority-002",
+    "n3_native_authority_job_receipt_sha256": "c57866fd5e223e7e893e53aa4e5d05e9b53b8219339eb1ed49fba16c9b570f13",
+    "n3_native_authority_sha256": "fe4bc0056489bbc752824212f7fed96df99a857c84736c767e1cca278f2adb22",
+    "n3_native_generated_targets": 32,
+    "d1_native_authority_passed_job": "timing-d1-native-authority-002",
+    "d1_native_authority_job_receipt_sha256": "36c791a3ca58fb11aa4e9731d5bd0003c5080b6332ab03e76888d2c539713884",
+    "d1_native_authority_sha256": "77265480e4779c6231b90a0f8bdbe91f73846bf7b9c1655656da39400fab76bc",
+    "d1_native_generated_targets": 2,
+    "physical_time_qualified": true,
+    "safe_to_release_confirmation": false,
+    "remaining": "complete immutable sidecars for every valid development request plus legitimate two-rater labels, consensus and the empirical movement threshold"
   },
   "live_fixture_qualification": {
     "P00": {
@@ -286,12 +301,10 @@
     }
   },
   "active_owned_jobs": [
-    "d1-development-d01-server-003",
-    "d1-development-d01-simulator-003"
+    "d1-development-d02-server-003",
+    "d1-development-d02-simulator-003"
   ],
   "staged_owned_jobs": [
-    "d1-development-d02-server-003",
-    "d1-development-d02-simulator-003",
     "d1-development-d04-server-003",
     "d1-development-d04-simulator-003"
   ],
@@ -349,7 +362,7 @@
     },
     "development": {
       "planned_cells": 32,
-      "completed_valid_cells": 20,
+      "completed_valid_cells": 24,
       "N3": {
         "attempts": 6,
         "terminal_attempts": 6,
@@ -425,19 +438,29 @@
         "attempt_002_d03_server_aggregate_sha256": "6ffd934c4d05f815ebc06dfe788f8fbbbd12d755c691654cd05aa64da2346ec0",
         "attempt_002_d03_results_commit": "7862436d10e6dc17997b64810145721d2c2cd885",
         "attempt_002_pairing_state": "D01_D02 mismatch contained by run-bound coordination and exact process-group terminations; matching D03 pair passed all four cells and both queue plus nested children are reaped; D04 pair remains unclaimed and fenced",
-        "attempt_003_queue_jobs_staged": 4,
+        "attempt_003_queue_jobs_staged": 2,
         "attempt_003_queue_jobs_claimed": 2,
-        "attempt_003_queue_jobs_terminal": 0,
-        "attempt_003_active_pair": "D01 server and simulator claimed with fresh exact-role heartbeats; no behavioral cell/request/action counted at snapshot",
+        "attempt_003_queue_jobs_terminal": 2,
+        "attempt_003_active_pair": "D02 server and simulator claimed with fresh exact-role heartbeats; no D02 behavioral cell/request/action counted at snapshot",
         "attempt_003_source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
         "attempt_003_release_commit": "e5abbafd2a44becd628ccd0b6d1e669d914b6847",
-        "completed_valid_cells": 4,
-        "valid_behavioral_model_requests": 228,
-        "valid_behavioral_actions": 1800,
-        "valid_behavioral_observations": 1804,
+        "attempt_003_d01_status": "passed_four_valid_cells_1800_actions_1804_observations_228_requests_zero_invalid_censored_unrun_all_children_reaped",
+        "attempt_003_d01_cell_receipt_sha256s": [
+          "aee559b64e10a8cceb53dc624f604a1d7f73954c0b669fb3190b14e7648645fc",
+          "f4cb1f1a1b38dc99c5505e446a8596417718bc34108142cf88e8adda57eac754",
+          "838675702a1da02fa38481917c0f07c46cbabb878bd86e1a5a5ddd4370b67bc3",
+          "a7ec5e05f368beaa90a19c0a1bd1d768f0d2c1917659b8df25c810aa7f873fdc"
+        ],
+        "attempt_003_d01_simulator_aggregate_sha256": "9b1fd7d7479ad275d4baa943b9d8d6a4ed1d223e2d9ca20b3bff0342711ec5eb",
+        "attempt_003_d01_server_aggregate_sha256": "e64c90d479ff5579114c5631e1a7c975a794640013e721f2daee149ab8c0cb58",
+        "attempt_003_d01_results_commit": "70c335ebef55bfa7cc2a6c618dd161cf6aae8547",
+        "completed_valid_cells": 8,
+        "valid_behavioral_model_requests": 456,
+        "valid_behavioral_actions": 3600,
+        "valid_behavioral_observations": 3608,
         "technically_invalid_behavioral_cells": 1,
         "active_behavioral_cells_not_counted": 0,
-        "unrun_cells": 12,
+        "unrun_cells": 8,
         "attempt_001_failure": "all four server/simulator pairs received the raw fixed-observation capture instead of its enclosing queue receipt and failed prerequisite schema validation before model load/reset/request/action",
         "prerequisite_preflights": {
           "staged": 0,
@@ -452,7 +475,7 @@
             "d1-development-d04-prerequisite-preflight-001": "passed_receipt_sha256_6a51fa6abfa0c1ee1e534aa36fa3429e8c0fcd3077eb68770c6f72400df845a6"
           }
         },
-        "release_gate": "passed_all_four_zero-model_prerequisites; D01 and D02 attempt002 are terminally reconciled; D03 attempt002 passed all four cells; corrected fresh-ID D01/D02/D04 attempt003 pairs are released with transitive pair-admission fencing; D01 pair is claimed while D02/D04 remain staged; D04 attempt002 stays fenced"
+        "release_gate": "passed_all_four_zero-model_prerequisites; D01 and D02 attempt002 are terminally reconciled; D03 attempt002 and D01 attempt003 each passed all four cells; corrected D02/D04 attempt003 pairs remain under transitive pair-admission fencing; D02 pair is claimed while D04 remains staged; D04 attempt002 stays fenced"
       }
     },
     "confirmation": {

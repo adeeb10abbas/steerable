@@ -1,10 +1,17 @@
 {
   "automatic_claim_recovery": false,
   "control": {
-    "active_job_ids": [],
+    "active_job_ids": [
+      "post-d03-worker00-diagnostic-001",
+      "post-d03-d1-diagnostic-001",
+      "timing-worker05-diagnostic-001",
+      "timing-worker06-diagnostic-001",
+      "timing-worker09-diagnostic-001",
+      "timing-n3-diagnostic-001"
+    ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "1753f36617218c1d9462924299cd36e0b8013196",
-    "control_generation": 518,
+    "control_commit": "dbfe68ffec13c97a2f512bcf4e846ee79846cb59",
+    "control_generation": 519,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -3801,6 +3808,18 @@
       "worker_id": "wmf-forecast-0912-worker-n3-00"
     },
     {
+      "descriptor_sha256": "ac87cc7536fd3eda0e2b8a6efabbb97b39ae57029176d67527e9e54ce1c6ff68",
+      "job_id": "post-d03-d1-diagnostic-001",
+      "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "5ef14d4781af638b70698d8e1ef56abcdd349972bf8e1191425a3aed5e6e97ea",
+      "job_id": "post-d03-worker00-diagnostic-001",
+      "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
+      "status": "staged"
+    },
+    {
       "child_pid": 4613,
       "child_reaped": true,
       "descriptor_sha256": "333ac53376701c794f96c9fad6a5373f13151872de36d9f1a4b68bea2f9fbb2c",
@@ -3877,6 +3896,30 @@
       },
       "wall_seconds": 209.7974138588179,
       "worker_id": "wmf-forecast-0912-worker-00"
+    },
+    {
+      "descriptor_sha256": "d9342188119985a0ed143d7f714105eaa95589491180ba2252b06407245ca12f",
+      "job_id": "timing-n3-diagnostic-001",
+      "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "a5af20233e0c5382e3613ceb942fa72834d3280ceffe478d54d64898134355b3",
+      "job_id": "timing-worker05-diagnostic-001",
+      "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "1e0d7de9fda200e3c2758d317416183b829ad781eac2f96e67709a93bdd37b16",
+      "job_id": "timing-worker06-diagnostic-001",
+      "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "8216749056cdf14e3bab4f9fed4f48757d83ac058a0aa83551092df2a0a873d9",
+      "job_id": "timing-worker09-diagnostic-001",
+      "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
+      "status": "staged"
     },
     {
       "child_pid": 39,

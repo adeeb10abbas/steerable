@@ -46,6 +46,7 @@ from fixture_layouts import (
 
 CAPTURE_SCHEMA = "wmf-forecast-layout-live-fixture-capture-v1"
 RECORD_SCHEMA = "wmf-forecast-layout-gate-ledger-record-v1"
+MATCHED_RESET_GATE_SCHEMA = "wmf-forecast-layout-matched-reset-gate-v2"
 DECISIONS = {"accepted", "physical_rejection", "technical_invalid"}
 _SHA_LENGTH = 64
 
@@ -253,6 +254,38 @@ def _validate_one_capture(
             raise GateEvidenceError(f"camera dtype is not uint8: {camera_name}")
         _sha(row.get("rgb_sha256"), f"RGB digest for {camera_name}")
         _sha(row.get("visibility_source_sha256"), f"visibility digest for {camera_name}")
+        camera_configuration = row.get("camera_configuration")
+        if not isinstance(camera_configuration, dict) or set(camera_configuration) != {
+            "camera_center_robot_base_m",
+            "camera_quaternion_world_wxyz_ros",
+            "intrinsic_matrix_3x3",
+            "image_size_wh",
+        }:
+            raise GateEvidenceError(f"camera configuration is incomplete: {camera_name}")
+        _vector(
+            camera_configuration.get("camera_center_robot_base_m"),
+            3,
+            f"camera center for {camera_name}",
+        )
+        _vector(
+            camera_configuration.get("camera_quaternion_world_wxyz_ros"),
+            4,
+            f"camera quaternion for {camera_name}",
+        )
+        intrinsic = camera_configuration.get("intrinsic_matrix_3x3")
+        if not isinstance(intrinsic, list) or len(intrinsic) != 3:
+            raise GateEvidenceError(f"camera intrinsic matrix is invalid: {camera_name}")
+        for index, intrinsic_row in enumerate(intrinsic):
+            _vector(intrinsic_row, 3, f"camera intrinsic row {index} for {camera_name}")
+        image_size = camera_configuration.get("image_size_wh")
+        if image_size != [shape[1], shape[0]]:
+            raise GateEvidenceError(f"camera configuration image size changed: {camera_name}")
+        configuration_sha = _sha(
+            row.get("camera_configuration_sha256"),
+            f"camera configuration digest for {camera_name}",
+        )
+        if canonical_value_sha256(camera_configuration) != configuration_sha:
+            raise GateEvidenceError(f"camera configuration digest mismatch: {camera_name}")
         pixel_range = row.get("pixel_range")
         if type(pixel_range) is not int or not 0 <= pixel_range <= 255:
             raise GateEvidenceError(f"camera pixel range is invalid: {camera_name}")
@@ -354,31 +387,54 @@ def evaluate_candidate_captures(
         raise GateEvidenceError(f"live gate capture matrix is incomplete: {missing}")
 
     matched_reset_checks: dict[str, bool] = {}
+    matched_reset_measurements: dict[str, Any] = {}
     for arm in LAYOUT_ARMS:
         for repeat in range(repeat_count):
-            left = indexed[(arm, "left", repeat)]["reset_fingerprints"]
-            right = indexed[(arm, "right", repeat)]["reset_fingerprints"]
+            left_capture = indexed[(arm, "left", repeat)]
+            right_capture = indexed[(arm, "right", repeat)]
+            left = left_capture["reset_fingerprints"]
+            right = right_capture["reset_fingerprints"]
             prefix = f"{arm}-repeat{repeat}"
             state_equal = left["reset_state_sha256"] == right["reset_state_sha256"]
             observation_equal = left["initial_observation_sha256"] == right["initial_observation_sha256"]
-            cameras_equal = left["initial_camera_rgb_sha256"] == right["initial_camera_rgb_sha256"]
+            camera_rgb_equal = {
+                camera: left["initial_camera_rgb_sha256"][camera]
+                == right["initial_camera_rgb_sha256"][camera]
+                for camera in gate["required_cameras"]
+            }
+            camera_configuration_equal = {
+                camera: left_capture["cameras"][camera]["camera_configuration_sha256"]
+                == right_capture["cameras"][camera]["camera_configuration_sha256"]
+                for camera in gate["required_cameras"]
+            }
             matched_reset_checks[f"{prefix}_reset_state_hash_equal"] = state_equal
-            matched_reset_checks[f"{prefix}_initial_observation_hash_equal"] = observation_equal
-            matched_reset_checks[f"{prefix}_initial_camera_hashes_equal"] = cameras_equal
+            for camera, equal in camera_configuration_equal.items():
+                matched_reset_checks[f"{prefix}_{camera}_configuration_equal"] = equal
+            matched_reset_measurements[prefix] = {
+                "initial_observation_hash_equal": observation_equal,
+                "initial_camera_rgb_hash_equal": camera_rgb_equal,
+                "qualification_gate": False,
+                "interpretation": (
+                    "Lossless RGB fingerprints are retained as diagnostics. Realtime RTX byte "
+                    "identity is not a physical-state gate; exact reset state and camera "
+                    "configuration identities are the matched-command gates."
+                ),
+            }
             if not state_equal:
                 failures.append(f"{prefix}: LEFT/RIGHT reset-state hashes differ")
-            if not observation_equal:
-                failures.append(f"{prefix}: LEFT/RIGHT initial-observation hashes differ")
-            if not cameras_equal:
-                failures.append(f"{prefix}: LEFT/RIGHT initial-camera hashes differ")
+            for camera, equal in camera_configuration_equal.items():
+                if not equal:
+                    failures.append(f"{prefix}: LEFT/RIGHT {camera} configurations differ")
 
     return {
+        "matched_reset_gate_schema": MATCHED_RESET_GATE_SCHEMA,
         "passed": not failures,
         "decision": "accepted" if not failures else "physical_rejection",
         "capture_count": len(indexed),
         "expected_capture_count": len(wanted),
         "condition_checks": all_checks,
         "matched_left_right_checks": matched_reset_checks,
+        "matched_left_right_raster_measurements": matched_reset_measurements,
         "failures": failures,
         "capture_evidence": [
             indexed[key]

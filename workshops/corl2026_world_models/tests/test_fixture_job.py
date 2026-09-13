@@ -100,7 +100,10 @@ ledger.parent.mkdir(parents=True, exist_ok=True)
 with ledger.open("ab") as stream:
     stream.write(json.dumps(record, allow_nan=False, sort_keys=True, separators=(",", ":")).encode() + b"\n")
 print(json.dumps({"candidate_id": args.candidate_id, "decision": mode, "record_sha256": record["record_sha256"]}))
-raise SystemExit({"accepted": 0, "physical_rejection": 2, "technical_invalid": 3}[mode])
+code = {"accepted": 0, "physical_rejection": 2, "technical_invalid": 3}[mode]
+if os.environ.get("FAKE_GATE_NORMALIZE_EXIT") == "1":
+    code = 0
+raise SystemExit(code)
 '''
 
 
@@ -188,7 +191,13 @@ class QueueHarness:
             text=True,
         )
 
-    def execute(self, *, candidate: str = "P00__candidate_00", mode: str = "accepted") -> dict:
+    def execute(
+        self,
+        *,
+        candidate: str = "P00__candidate_00",
+        mode: str = "accepted",
+        normalize_exit: bool = False,
+    ) -> dict:
         real_verify = fixture_job.verify_clean_git
 
         def verify(root: Path, expected: str, label: str) -> None:
@@ -201,7 +210,11 @@ class QueueHarness:
             patch.object(fixture_job, "verify_clean_git", side_effect=verify),
             patch.dict(
                 os.environ,
-                {"FAKE_GATE_MODE": mode, "FAKE_GATE_COUNTER": str(self.counter)},
+                {
+                    "FAKE_GATE_MODE": mode,
+                    "FAKE_GATE_COUNTER": str(self.counter),
+                    "FAKE_GATE_NORMALIZE_EXIT": "1" if normalize_exit else "0",
+                },
                 clear=False,
             ),
         ):
@@ -262,6 +275,18 @@ class FixtureJobTests(unittest.TestCase):
             self.assertEqual(receipt["child_exit_code"], 2)
             self.assertEqual(receipt["gate_evidence"]["failure_count"], 1)
             self.assertTrue(Path(receipt["gate_evidence"]["gate_attempt_receipt"]["path"]).exists())
+
+    def test_authoritative_rejection_survives_runtime_normalized_exit_zero(self):
+        with tempfile.TemporaryDirectory() as directory:
+            harness = QueueHarness(directory)
+            receipt = harness.execute(mode="physical_rejection", normalize_exit=True)
+            self.assertEqual(receipt["decision"], "physical_rejection")
+            self.assertEqual(receipt["exit_code"], 2)
+            self.assertEqual(receipt["child_exit_code"], 0)
+            self.assertEqual(
+                receipt["reason"],
+                "child_exit_normalized_after_authoritative_gate_record",
+            )
 
     def test_unexpected_child_crash_is_published_as_technical_invalid(self):
         with tempfile.TemporaryDirectory() as directory:

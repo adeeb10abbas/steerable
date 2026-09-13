@@ -1,0 +1,58 @@
+{
+  "schema_version": "wmf-p00-renderer-nondeterminism-diagnostic-v1",
+  "study_namespace": "wmf_ablation_001_20260912",
+  "recorded_at_utc": "2026-09-13T03:10:00Z",
+  "source_attempt": {
+    "job_id": "fixture-p00-candidate-00-r5",
+    "candidate_id": "P00__candidate_00",
+    "candidate_decision": "physical_rejection",
+    "gate_record_sha256": "2e0d2a8c56feb8e975f2babb714c3ca7e0f09fed7eedaa55a79b590d8fddfe5b",
+    "gate_attempt_receipt": {
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/P00/attempts/P00/P00__candidate_00/attempt_000/gate_attempt_receipt.json",
+      "sha256": "ca1355cddfa00e7c10b76a03361579d18307f99106cabcf337fe060f429a3c85",
+      "bytes": 236950
+    },
+    "published_outer_receipt_sha256": "0039cc87cf8e344a0aad44c24a1bb81d3ccff9991864ae7ef7a29e160fad5c8d",
+    "results_branch_commit": "f48de8fec9da072ebe27d23c0ca60fabf9555444",
+    "model_request_count": 0,
+    "behavioral_action_count": 0
+  },
+  "model_blind_observations": {
+    "capture_count": 8,
+    "matched_command_pairs": 4,
+    "exact_reset_state_hash_pairs": "4/4",
+    "exact_camera_configuration_pairs": "16/16",
+    "exact_initial_observation_hash_pairs": "0/4",
+    "exact_initial_camera_rgb_hash_pairs": "0/16",
+    "matched_camera_mean_absolute_channel_delta_uint8_range": [
+      0.2757906539351852,
+      0.795515769675926
+    ],
+    "matched_camera_fraction_channels_delta_greater_than_8_range": [
+      0.001527054398148148,
+      0.009638310185185186
+    ],
+    "comparison_to_same_command_repeat_jitter": "The matched-command pixel deltas overlap the independently reset same-command deltas. Exact state, proprioception, camera pose, intrinsics, image size, visibility and collision evidence matched or passed.",
+    "raw_rgb_location": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixture_gates/P00/attempts/P00/P00__candidate_00/attempt_000"
+  },
+  "prospective_gate_semantics": {
+    "applies_beginning_with_candidate": "P00__candidate_01",
+    "hard_matched_command_gates": [
+      "exact reset state and proprioception identity",
+      "exact camera center, quaternion, intrinsics and image-size identity",
+      "fixed camera inventory, shape and dtype",
+      "nonblank RGB",
+      "model-blind object visibility",
+      "model-blind collision clearance"
+    ],
+    "diagnostic_not_gate": [
+      "lossless initial observation SHA-256 equality",
+      "lossless per-camera RGB SHA-256 equality"
+    ],
+    "numeric_pixel_threshold_fitted_from_candidate_00": false,
+    "reason": "Realtime RTX raster byte identity is not a physical-state identity test. Lossless hashes remain recorded; exact state and camera calibration identities remain hard gates."
+  },
+  "prior_decision_preserved": true,
+  "candidate_00_released_or_rerun": false,
+  "claim_boundary": "This is a model-blind runtime-method diagnostic. It changes no model result, contains no policy request or episode, and does not establish forecast/action/camera-time alignment."
+}

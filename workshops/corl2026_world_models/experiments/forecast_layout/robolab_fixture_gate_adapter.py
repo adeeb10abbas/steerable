@@ -292,11 +292,14 @@ class RoboLabFixtureGateAdapter:
                     projections[name] = [0.0, 0.0]
                     unoccluded[name] = False
                     projection_errors[name] = f"{type(error).__name__}: {error}"
-            geometry = {
+            camera_configuration = {
                 "camera_center_robot_base_m": origin,
                 "camera_quaternion_world_wxyz_ros": quaternion,
                 "intrinsic_matrix_3x3": intrinsic,
                 "image_size_wh": [int(frame.shape[1]), int(frame.shape[0])],
+            }
+            geometry = {
+                **camera_configuration,
                 "object_centers_robot_base_m": centers,
                 "object_aabbs_robot_base_m": {
                     name: {"lower": bounds[name][0], "upper": bounds[name][1]} for name in object_names
@@ -319,6 +322,8 @@ class RoboLabFixtureGateAdapter:
                 "visibility_method": "calibrated_projection_and_obb_occlusion",
                 "visibility_source_sha256": geometry_sha,
                 "camera_geometry_source_sha256": geometry_sha,
+                "camera_configuration": camera_configuration,
+                "camera_configuration_sha256": _canonical_sha(camera_configuration),
                 "projected_object_centers_uv": projections,
                 "projected_unoccluded_by_object": unoccluded,
                 "geometry": geometry,

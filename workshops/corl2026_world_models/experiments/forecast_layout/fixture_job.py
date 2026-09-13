@@ -789,20 +789,24 @@ def execute_job(
                     "stderr": file_identity(stderr_path),
                 }
                 context["gate_records"] = _read_gate_ledger(context["gate_ledger"])
-                recognized = child.returncode in (0, 2, 3)
-                if recognized:
-                    require(len(context["gate_records"]) == before_count + 1, "child_gate_record_count_mismatch")
+                if len(context["gate_records"]) == before_count + 1:
                     gate_record = context["gate_records"][-1]
-                    expected_decision = {0: "accepted", 2: "physical_rejection", 3: "technical_invalid"}[child.returncode]
-                    require(gate_record.get("decision") == expected_decision, "child_gate_decision_mismatch")
+                    recorded_decision = gate_record.get("decision")
+                    require(recorded_decision in DECISION_EXIT, "child_gate_decision_invalid")
                     require(gate_record.get("layout_pair_id") == layout_pair_id, "child_gate_layout_mismatch")
                     require(gate_record.get("candidate_id") == candidate["candidate_id"], "child_gate_candidate_mismatch")
                     require(gate_record.get("candidate_payload_sha256") == candidate["candidate_payload_sha256"], "child_gate_candidate_hash_mismatch")
                     require(gate_record.get("candidate_pool_sha256") == CANDIDATE_POOL_SHA256, "child_gate_pool_hash_mismatch")
                     context["gate_record"] = gate_record
-                    decision = expected_decision
-                    reason = None
+                    decision = str(recorded_decision)
+                    expected_exit = DECISION_EXIT[decision]
+                    reason = (
+                        None
+                        if child.returncode == expected_exit
+                        else "child_exit_normalized_after_authoritative_gate_record"
+                    )
                 else:
+                    require(len(context["gate_records"]) == before_count, "child_gate_record_count_mismatch")
                     decision = "technical_invalid"
                     reason = "child_unexpected_exit"
 

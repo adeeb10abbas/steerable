@@ -38,6 +38,16 @@ def passing_capture(candidate, source, arm, command, repeat):
     hash_for = lambda role: gate.sha256_bytes(f"{marker}:{role}".encode())
     cameras = {}
     for camera in source["live_gate"]["required_cameras"]:
+        camera_configuration = {
+            "camera_center_robot_base_m": [0.0, 0.0, 1.0],
+            "camera_quaternion_world_wxyz_ros": [1.0, 0.0, 0.0, 0.0],
+            "intrinsic_matrix_3x3": [
+                [500.0, 0.0, 640.0],
+                [0.0, 500.0, 360.0],
+                [0.0, 0.0, 1.0],
+            ],
+            "image_size_wh": [1280, 720],
+        }
         cameras[camera] = {
             "shape_hwc": [720, 1280, 3],
             "dtype": "uint8",
@@ -46,6 +56,8 @@ def passing_capture(candidate, source, arm, command, repeat):
             "visibility_method": "instance_segmentation",
             "visibility_source_sha256": hash_for(f"segmentation:{camera}"),
             "visible_object_pixels": {name: 100 for name in fixture.MOVABLE_OBJECTS},
+            "camera_configuration": camera_configuration,
+            "camera_configuration_sha256": gate.canonical_value_sha256(camera_configuration),
         }
     configured = {
         name: {
@@ -172,21 +184,37 @@ class LiveGateTests(unittest.TestCase):
         )
         self.assertTrue(result["passed"])
         self.assertEqual(result["decision"], "accepted")
+        self.assertEqual(result["matched_reset_gate_schema"], gate.MATCHED_RESET_GATE_SCHEMA)
         self.assertEqual(result["capture_count"], 8)
         self.assertTrue(all(result["matched_left_right_checks"].values()))
 
-    def test_success_collision_and_left_right_hash_mismatch_are_rejections(self):
+    def test_success_collision_and_left_right_camera_configuration_mismatch_are_rejections(self):
         captures = passing_matrix(self.candidate, self.source)
         captures[0]["success_predicates"]["left"] = True
         first_pair = self.source["live_gate"]["forbidden_collision_pairs"][0]
         captures[1]["collision_checks"]["forbidden_pairs"][first_pair]["clear"] = False
-        captures[3]["reset_fingerprints"]["initial_observation_sha256"] = "f" * 64
+        camera_row = captures[3]["cameras"]["head_camera"]
+        camera_row["camera_configuration"]["camera_center_robot_base_m"][0] = 0.01
+        camera_row["camera_configuration_sha256"] = gate.canonical_value_sha256(
+            camera_row["camera_configuration"]
+        )
         result = gate.evaluate_candidate_captures(self.candidate, captures, self.source)
         self.assertFalse(result["passed"])
         self.assertEqual(result["decision"], "physical_rejection")
         self.assertTrue(any("success predicate" in failure for failure in result["failures"]))
         self.assertTrue(any("forbidden reset collision" in failure for failure in result["failures"]))
-        self.assertTrue(any("initial-observation hashes differ" in failure for failure in result["failures"]))
+        self.assertTrue(any("head_camera configurations differ" in failure for failure in result["failures"]))
+
+    def test_rtx_raster_hash_mismatch_is_retained_but_not_a_physical_gate(self):
+        captures = passing_matrix(self.candidate, self.source)
+        captures[3]["reset_fingerprints"]["initial_observation_sha256"] = "f" * 64
+        captures[3]["reset_fingerprints"]["initial_camera_rgb_sha256"]["head_camera"] = "e" * 64
+        result = gate.evaluate_candidate_captures(self.candidate, captures, self.source)
+        self.assertTrue(result["passed"])
+        measurement = result["matched_left_right_raster_measurements"]["original-repeat1"]
+        self.assertFalse(measurement["initial_observation_hash_equal"])
+        self.assertFalse(measurement["initial_camera_rgb_hash_equal"]["head_camera"])
+        self.assertFalse(measurement["qualification_gate"])
 
     def test_missing_camera_or_changed_configured_pose_is_technical_invalidity(self):
         captures = passing_matrix(self.candidate, self.source)

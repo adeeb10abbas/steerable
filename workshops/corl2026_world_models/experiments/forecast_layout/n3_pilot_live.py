@@ -522,9 +522,9 @@ def validate_prerequisites(
     require(n3.get("effective_seed") == EFFECTIVE_SEED, "n3_qualification_seed_mismatch")
     require(n3.get("generation_request_count") == 6, "n3_qualification_request_count_changed")
     require(n3.get("robot_episode_count") == 0, "n3_qualification_claims_robot_episode")
-    require(n3.get("source_commit") == COSMOS_COMMIT, "n3_source_identity_changed")
-    require(n3.get("checkpoint_revision") == CHECKPOINT_REVISION, "n3_checkpoint_revision_changed")
-    require(n3.get("checkpoint_aggregate_sha256") == CHECKPOINT_AGGREGATE_SHA256, "n3_checkpoint_hash_changed")
+    require(n3.get("source", {}).get("commit") == COSMOS_COMMIT, "n3_source_identity_changed")
+    require(n3.get("checkpoint", {}).get("revision") == CHECKPOINT_REVISION, "n3_checkpoint_revision_changed")
+    require(n3.get("checkpoint", {}).get("payload_aggregate_sha256") == CHECKPOINT_AGGREGATE_SHA256, "n3_checkpoint_hash_changed")
 
     return {
         "gate_receipt": gate["gate_receipt"],

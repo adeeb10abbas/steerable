@@ -893,7 +893,7 @@ class NativeClockSampler:
                 "reason": type(error).__name__,
                 "detail": str(error),
                 "attempted_native_sources": {
-                    "physics_step": ["sim.frame_count", "sim._frame_count"],
+                    "physics_step": ["sim.current_time_step_index", "sim.frame_count", "sim._frame_count"],
                     "physics_time": ["sim.current_time", "sim._current_time"],
                     "control": ["env.common_step_counter", "env._common_step_counter"],
                     "camera_frame": ["sensor.data.frame", "sensor.frame", "sensor._frame"],
@@ -909,7 +909,7 @@ class NativeClockSampler:
     def __call__(self, env: Any, phase: str, expected_step: int) -> dict[str, Any]:
         try:
             physics_step, physics_step_source = _native_value(
-                env.sim, ("frame_count", "_frame_count"), index=None, label="physics frame counter"
+                env.sim, ("current_time_step_index", "frame_count", "_frame_count"), index=None, label="physics frame counter"
             )
             physics_time, physics_time_source = _native_value(
                 env.sim, ("current_time", "_current_time"), index=None, label="physics time"

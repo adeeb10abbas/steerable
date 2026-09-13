@@ -21,6 +21,7 @@ import builtins
 from contextlib import contextmanager
 from dataclasses import dataclass
 import fcntl
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -328,6 +329,99 @@ def installed_no_replay_cosmos_client() -> Iterator[None]:
 
 def _verify_descriptor(value: Any, label: str) -> dict[str, Any]:
     return pilot._verify_descriptor(value, label)
+
+
+def _legacy_payload_canonical_bytes(value: Any) -> bytes:
+    """Match the recorder's payload-descriptor canonicalization exactly."""
+
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        allow_nan=False,
+    ).encode("utf-8")
+
+
+def _thaw_legacy_zero_array_payload(value: Any) -> Any:
+    """Thaw only the recorder's JSON-only payload vocabulary.
+
+    The released P00 context-reset receipts contain no arrays.  Keeping this
+    decoder local lets the queue's deliberately minimal system Python verify
+    those exact descriptors without importing the NumPy-backed recorder.
+    """
+
+    if value is None or isinstance(value, (str, bool, int, float)):
+        return value
+    pilot.require(
+        isinstance(value, Mapping),
+        "legacy_p00_context_reset_payload_node_invalid",
+    )
+    kind = value.get("__type__")
+    if kind == "mapping":
+        pilot.require(
+            set(value) == {"__type__", "items"}
+            and isinstance(value.get("items"), Mapping)
+            and all(isinstance(key, str) for key in value["items"]),
+            "legacy_p00_context_reset_mapping_invalid",
+        )
+        return {
+            key: _thaw_legacy_zero_array_payload(item)
+            for key, item in value["items"].items()
+        }
+    if kind in {"list", "tuple"}:
+        pilot.require(
+            set(value) == {"__type__", "items"}
+            and isinstance(value.get("items"), list),
+            "legacy_p00_context_reset_sequence_invalid",
+        )
+        items = [_thaw_legacy_zero_array_payload(item) for item in value["items"]]
+        return tuple(items) if kind == "tuple" else items
+    if kind == "path":
+        pilot.require(
+            set(value) == {"__type__", "value"}
+            and isinstance(value.get("value"), str),
+            "legacy_p00_context_reset_path_invalid",
+        )
+        return Path(value["value"])
+    # In particular, never accept an ndarray node on this zero-array path.
+    raise pilot.N3BehavioralPilotError(
+        "legacy_p00_context_reset_payload_type_invalid"
+    )
+
+
+def _load_legacy_zero_array_payload(descriptor: Mapping[str, Any]) -> Any:
+    """Authenticate and thaw one released JSON-only recorder payload."""
+
+    pilot.require(
+        set(descriptor)
+        == {"role", "structure", "array_count", "payload_sha256"},
+        "legacy_p00_context_reset_descriptor_shape_invalid",
+    )
+    pilot.require(
+        descriptor.get("role") == "context_reset"
+        and type(descriptor.get("array_count")) is int
+        and descriptor["array_count"] == 0
+        and "artifact" not in descriptor,
+        "legacy_p00_context_reset_descriptor_requires_arrays",
+    )
+    expected_sha256 = descriptor.get("payload_sha256")
+    pilot.require(
+        isinstance(expected_sha256, str)
+        and pilot.SHA256_RE.fullmatch(expected_sha256) is not None,
+        "legacy_p00_context_reset_payload_sha256_invalid",
+    )
+    unsigned = {
+        key: value for key, value in descriptor.items() if key != "payload_sha256"
+    }
+    observed_sha256 = hashlib.sha256(
+        _legacy_payload_canonical_bytes(unsigned)
+    ).hexdigest()
+    pilot.require(
+        observed_sha256 == expected_sha256,
+        "legacy_p00_context_reset_payload_hash_mismatch",
+    )
+    return _thaw_legacy_zero_array_payload(descriptor["structure"])
 
 
 def _load_gate_ledger(path: Path) -> list[dict[str, Any]]:
@@ -676,12 +770,7 @@ def _validate_cell_receipt(
             "legacy_p00_context_reset_artifact_missing",
         )
         try:
-            import recording_adapter
-
-            begin = recording_adapter.load_payload(
-                Path(completion_identity["path"]).parent,
-                context_descriptor,
-            )
+            begin = _load_legacy_zero_array_payload(context_descriptor)
         except BaseException as error:
             raise pilot.N3BehavioralPilotError(
                 "legacy_p00_context_reset_artifact_invalid"

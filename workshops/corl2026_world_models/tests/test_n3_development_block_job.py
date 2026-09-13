@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import builtins
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -751,6 +753,79 @@ class FixtureReleaseTests(unittest.TestCase):
 
 
 class PilotPrerequisiteTests(unittest.TestCase):
+    def test_legacy_zero_array_decoder_authenticates_and_limits_vocabulary(self) -> None:
+        structure = {
+            "__type__": "mapping",
+            "items": {
+                "items": {
+                    "__type__": "list",
+                    "items": [
+                        {"__type__": "tuple", "items": [True, 7, None]},
+                        {"__type__": "path", "value": "/recorded/path"},
+                    ],
+                }
+            },
+        }
+        unsigned = {
+            "role": "context_reset",
+            "structure": structure,
+            "array_count": 0,
+        }
+        descriptor = {
+            **unsigned,
+            "payload_sha256": hashlib.sha256(
+                development._legacy_payload_canonical_bytes(unsigned)
+            ).hexdigest(),
+        }
+        self.assertEqual(
+            development._load_legacy_zero_array_payload(descriptor),
+            {"items": [(True, 7, None), Path("/recorded/path")]},
+        )
+
+        tampered = {**descriptor, "payload_sha256": "0" * 64}
+        with self.assertRaisesRegex(
+            pilot.N3BehavioralPilotError,
+            "legacy_p00_context_reset_payload_hash_mismatch",
+        ):
+            development._load_legacy_zero_array_payload(tampered)
+
+        ndarray_unsigned = {
+            "role": "context_reset",
+            "structure": {
+                "__type__": "ndarray",
+                "key": "array_0000",
+                "shape": [1],
+                "dtype": "|u1",
+            },
+            "array_count": 0,
+        }
+        ndarray_descriptor = {
+            **ndarray_unsigned,
+            "payload_sha256": hashlib.sha256(
+                development._legacy_payload_canonical_bytes(ndarray_unsigned)
+            ).hexdigest(),
+        }
+        with self.assertRaisesRegex(
+            pilot.N3BehavioralPilotError,
+            "legacy_p00_context_reset_payload_type_invalid",
+        ):
+            development._load_legacy_zero_array_payload(ndarray_descriptor)
+
+        artifact_descriptor = {
+            **descriptor,
+            "artifact": {
+                "path": "payloads/0000000_context_reset.npz",
+                "sha256": "1" * 64,
+                "bytes": 1,
+                "encoding": "numpy_npz_zip_stored",
+            },
+        }
+        with self.assertRaisesRegex(
+            pilot.N3BehavioralPilotError,
+            "legacy_p00_context_reset_descriptor_shape_invalid",
+        ):
+            development._load_legacy_zero_array_payload(artifact_descriptor)
+
     def test_only_a_complete_hash_bound_p00_pilot_releases_development(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             receipt, digest = _make_passed_p00_pilot(Path(temporary))
@@ -789,6 +864,39 @@ class PilotPrerequisiteTests(unittest.TestCase):
             verified["validation_profile"]["missing_fields_synthesized"]
         )
         self.assertEqual(verified["pilot_behavioral_cells"], 4)
+
+    def test_exact_b891_validation_needs_no_numpy_or_recorder_import(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            receipt, digest = _make_passed_p00_pilot(
+                Path(temporary), legacy_b891_shape=True
+            )
+            aggregate = json.loads(receipt.read_text())
+            cell_hashes = tuple(
+                descriptor["sha256"] for descriptor in aggregate["cell_receipts"]
+            )
+            ready_hash = aggregate["server_ready"]["sha256"]
+            original_import = builtins.__import__
+
+            def reject_unavailable_queue_dependencies(name, *args, **kwargs):
+                if name == "recording_adapter" or name.split(".", 1)[0] == "numpy":
+                    raise ModuleNotFoundError(
+                        f"system-python dependency intentionally unavailable: {name}"
+                    )
+                return original_import(name, *args, **kwargs)
+
+            with mock.patch.multiple(
+                development,
+                LEGACY_P00_AGGREGATE_SHA256=digest,
+                LEGACY_P00_CELL_RECEIPT_SHA256S=cell_hashes,
+                LEGACY_P00_SERVER_READY_SHA256=ready_hash,
+            ), mock.patch("builtins.__import__", side_effect=reject_unavailable_queue_dependencies):
+                verified = development.verify_passed_p00_pilot(receipt, digest)
+
+        self.assertEqual(verified["pilot_behavioral_cells"], 4)
+        self.assertEqual(
+            verified["validation_profile"]["name"],
+            "exact_b891_p00_attempt004_legacy_success",
+        )
 
     def test_b891_shape_fails_without_the_released_aggregate_hash(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

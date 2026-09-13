@@ -1219,6 +1219,7 @@ def run_live_qualification(args: argparse.Namespace) -> dict[str, Any]:
             RECORDER_ONLY_MODEL_CONFIG,
             FixedDurationEnvProxy,
             ForecastRecordingAdapter,
+            assert_fixed_duration_environment,
             verify_journal,
         )
 
@@ -1271,10 +1272,9 @@ def run_live_qualification(args: argparse.Namespace) -> dict[str, Any]:
             renderer="realtime",
             rendering_mode="balanced",
         )
-        require(not hasattr(env_cfg.terminations, "success"), "constructed task retains success termination")
-        require(getattr(env_cfg, "wmf_action_cap", None) == 450, "constructed task action cap changed")
-        require(getattr(env_cfg, "wmf_stop_on_success", None) is False, "constructed task stops on success")
-        require(getattr(env_cfg, "wmf_success_is_measurement_only", None) is True, "success is not measurement-only")
+        # RoboLab copies runtime fields into env_cfg, not workshop task markers.
+        # Validate the constructed timeout and action limit directly.
+        assert_fixed_duration_environment(env, env_cfg)
         require(env_cfg.instruction == PROMPTS[args.command], "constructed task prompt changed")
         import torch
 

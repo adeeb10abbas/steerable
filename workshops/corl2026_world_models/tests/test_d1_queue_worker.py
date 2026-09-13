@@ -21,6 +21,7 @@ class D1QueueWorkerTests(unittest.TestCase):
         self.assertEqual(container["resources"]["limits"]["nvidia.com/gpu"], 2)
         self.assertEqual(job["spec"]["template"]["spec"]["nodeSelector"]["nvidia.com/gpu.product"], "NVIDIA-B200")
         self.assertFalse(job["spec"]["template"]["spec"]["automountServiceAccountToken"])
+        self.assertNotIn("NVIDIA_VISIBLE_DEVICES", {row["name"] for row in container["env"]})
         self.assertIn("d1", container["args"])
         self.assertIn("1789868932", container["args"])
         self.assertEqual(service["spec"]["selector"]["batch.kubernetes.io/job-name"], d1_worker.NAME)

@@ -1,0 +1,342 @@
+{
+  "schema_version": "wmf-archive-recovery-receipt-v1",
+  "study_id": "wmf_ablation_001_20260912",
+  "observed_at_utc": "2026-09-13T04:44:39Z",
+  "status": "passed_two_selected_archive_episodes_recovered",
+  "selection_scope": "Exactly one preregistered outcome-blind selected cell from H01 and exactly one from H02 were checked. No other archive episode was selected or validated.",
+  "source_authority": {
+    "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+    "target_manifest": "workshops/corl2026_world_models/execution/20260912/archive_recovery_targets.json",
+    "target_manifest_status_before_check": "recovery_targets_only_no_raw_recovery"
+  },
+  "inspection_route": {
+    "origin": "workstation",
+    "hop": "SZ5VJY@ZTMACMP49KLV4LX.local",
+    "kubectl_binary": "/usr/local/bin/kubectl",
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "pod": "211247-ali-b200-1gpu",
+    "pod_observed_state": "Running 1/1",
+    "persistent_mount": "/data",
+    "access_mode": "read_only_stat_hash_and_json_structure_inspection",
+    "raw_files_copied": false
+  },
+  "verification_method": {
+    "source_table": "Stream the pinned Git object with git show and compute SHA-256 over its exact bytes.",
+    "top_level_targets": "For every raw pointer in archive_recovery_targets.json, require an existing regular file, compare stat bytes when declared, and compare SHA-256 when declared.",
+    "recursive_episode_artifacts": "Load the single raw JSONL row and recursively inspect every mapping containing path and sha256. For each unique path, require a regular file, recompute SHA-256, and compare declared bytes when present. No path was duplicated in either selected row.",
+    "unhashed_raw_jsonl": "For a raw_result_jsonl pointer whose integrity_scope is batch_manifest_after_close, locate only the adjacent raw_episode.jsonl.manifest.json and require its row count, cell identity, JSONL byte count, and JSONL SHA-256 to match the file.",
+    "verification_records_aggregate": "Sort the unique recursive verification records by path, JSON-serialize with sorted keys and compact separators, then SHA-256 the serialized bytes. Each record contains JSON pointer, path, expected and actual bytes, expected and actual SHA-256, and passed.",
+    "h02_future_expansion": "Require future_manifest request_count 57, observed request count 57, contiguous request_index values 0 through 56, 57 latent tensors, 57 returned-action arrays, and one official reset decode. Recompute every dependency SHA-256 and declared byte count where supplied."
+  },
+  "cohorts": [
+    {
+      "cohort": "H01",
+      "configuration": "Cosmos3-Nano-Policy-DROID g3 historical V3-B001 position reflection",
+      "selected_cell": "v3b001:nano:seed9400:control:left",
+      "selection_rule": "lowest registered block seed, original layout, LEFT command; no outcome selection",
+      "source_table": {
+        "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl",
+        "bytes": 5822218,
+        "expected_sha256": "ce67aecb2705394e8161fa4b65df7130e62648e2f6d8b6a93408c8da685a7207",
+        "actual_sha256": "ce67aecb2705394e8161fa4b65df7130e62648e2f6d8b6a93408c8da685a7207",
+        "passed": true
+      },
+      "raw_episode": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/raw_episode.jsonl",
+        "bytes": 34858,
+        "sha256": "47f87a8e0bed33eb0a1b224b31570aff03ad002311a73146ec488221de2b8e2f",
+        "row_count": 1,
+        "registered_cell_id": "v3b001:nano:seed9400:control:left",
+        "behavioral_result_valid": true,
+        "actions_executed": 122,
+        "future_request_count": 4,
+        "future_request_indices": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "batch_manifest": {
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/raw_episode.jsonl.manifest.json",
+          "bytes": 491,
+          "sha256": "69c9a583ec32c6f7b20b380c88ea75baf3365a904acfb1b10a9007636b01a5bc",
+          "declared_jsonl_bytes": 34858,
+          "declared_jsonl_sha256": "47f87a8e0bed33eb0a1b224b31570aff03ad002311a73146ec488221de2b8e2f",
+          "declared_row_count": 1,
+          "passed": true
+        }
+      },
+      "recovery_target_summary": {
+        "target_pointer_count": 17,
+        "target_pointers_present": 17,
+        "target_pointers_missing": 0,
+        "target_hash_or_manifest_mismatches": 0
+      },
+      "recursive_verification": {
+        "artifact_references_with_sha256": 16,
+        "unique_hashed_artifact_paths": 16,
+        "duplicate_reference_count": 0,
+        "verified_unique_bytes": 134710593,
+        "failed_or_missing_count": 0,
+        "verification_records_aggregate_sha256": "fc0d33c09ce804de99d9b7e8375f9d1b709f8347855b4acb6e046af98c18ad94",
+        "passed": true
+      },
+      "artifacts": [
+        {
+          "role": "executed_action_trace",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/action_traces/seed9400_left_executed_actions.npy",
+          "bytes": 4032,
+          "sha256": "45be1bc20cf6212f4ff512eba6289489560a8a3974725c2fbc04477412a74aae"
+        },
+        {
+          "role": "viewport_video",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/simulator/V3BNanoControlLeftCalibrationTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+          "bytes": 782006,
+          "sha256": "63f7ed19fc092a4270d003fdfe76360c4bfaf9aa3e0526d7cd1b0aa9bf85826f"
+        },
+        {
+          "role": "decoded_future_request_000",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/decoded_futures/seed9400_left_request000_future.npy",
+          "bytes": 33454208,
+          "sha256": "3292ab574576c68875c0866d67128d0a47f670d7a07639ec4ea02ebedd5d0c9e"
+        },
+        {
+          "role": "returned_action_request_000",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/action_traces/seed9400_left_request000_returned_action.npy",
+          "bytes": 1152,
+          "sha256": "e325b906206c8d0eec4c727520cf4393c74f33e31340b09aa9b10713f01b9253"
+        },
+        {
+          "role": "decoded_future_request_001",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/decoded_futures/seed9400_left_request001_future.npy",
+          "bytes": 33454208,
+          "sha256": "bbc6afb11dd42d528f9f9cd8acb000fc38ade8ada9e3ec48e1afb24067ca06e8"
+        },
+        {
+          "role": "returned_action_request_001",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/action_traces/seed9400_left_request001_returned_action.npy",
+          "bytes": 1152,
+          "sha256": "faa901ea12dd8512df0d96771305ccb592f5e33e36b2913073500434412053ad"
+        },
+        {
+          "role": "decoded_future_request_002",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/decoded_futures/seed9400_left_request002_future.npy",
+          "bytes": 33454208,
+          "sha256": "facdbfcf8f06bfcbe7275902cc81f0d42b29ad8f4d6e08ebf6fc5fcce93d8c68"
+        },
+        {
+          "role": "returned_action_request_002",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/action_traces/seed9400_left_request002_returned_action.npy",
+          "bytes": 1152,
+          "sha256": "63b5bac732b351e844332d8eb0687dfb3af091074da3dadbb6e9c96cbbf89afb"
+        },
+        {
+          "role": "decoded_future_request_003",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/decoded_futures/seed9400_left_request003_future.npy",
+          "bytes": 33454208,
+          "sha256": "b24734e7cac80f887b1ddebd40ebac900979f00efdc3fbb8b88c3bbacf64573d"
+        },
+        {
+          "role": "returned_action_request_003",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/action_traces/seed9400_left_request003_returned_action.npy",
+          "bytes": 1152,
+          "sha256": "9f0a2f4bd0c66a8dea0d1706d97c4f618f7c5163a87a5d662b2dbeb48a26d444"
+        },
+        {
+          "role": "action_future_trace",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/action_traces/seed9400_left_executed_actions.json",
+          "bytes": 9623,
+          "sha256": "cce4894b82e2c025fcdc0f9531094d3e558a2f10e717ba2dd412218c722bc2ee"
+        },
+        {
+          "role": "fixture_candidate",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/calibration_attempt01/fixture_candidate.json",
+          "bytes": 3514,
+          "sha256": "e1799b815da41f9a08a4000a360c4958003269fed27e2abe75b273519e4d1c88"
+        },
+        {
+          "role": "fixture_match_evidence",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/state_capture/v3b001__nano__seed9400__control__left.fixture_match.json",
+          "bytes": 975,
+          "sha256": "5f3b39d6d76921fa8bda8601dc232afe98128d4da2b792376fd21795ff381545"
+        },
+        {
+          "role": "reset_attestation",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/reset_attestation.json",
+          "bytes": 2290,
+          "sha256": "3396a895971b4461a1668a9b42d35f569466ce279b3f844be016d488273de423"
+        },
+        {
+          "role": "simulator_export",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/simulator_export.json",
+          "bytes": 48668,
+          "sha256": "ae7192078a52446e6904668659d467a81e274832da49970ee5134d78e3fa4eff"
+        },
+        {
+          "role": "state_capture",
+          "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt11/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/state_capture/v3b001__nano__seed9400__control__left.capture.json",
+          "bytes": 38045,
+          "sha256": "9bd4e7a3df05e09eba5a5ca7e9137617884c7cc2462924c542469d146efa0974"
+        }
+      ],
+      "complete_episode_recovered": true,
+      "alignment_validated": false,
+      "limitations": [
+        "This historical episode stopped at first success after 122 actions and does not satisfy the new fixed-duration 450-action recorder contract.",
+        "The viewport video and decoded futures do not establish generated-frame-to-action or physical-time alignment.",
+        "Archive recovery is integrity and availability evidence, not new model execution or forecast-accuracy evidence."
+      ]
+    },
+    {
+      "cohort": "H02",
+      "configuration": "DreamZero custom action guidance s2 historical V3-B003 position reflection",
+      "selected_cell": "v3b003:dreamzero:seed9400:control:left",
+      "selection_rule": "lowest registered block seed, original layout, LEFT command; no outcome selection",
+      "source_table": {
+        "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_episodes.jsonl",
+        "bytes": 281813,
+        "expected_sha256": "31f0715c3cbc682f90e5cc6420b9f45f49622f876734d43ba7c8cb6545b80f34",
+        "actual_sha256": "31f0715c3cbc682f90e5cc6420b9f45f49622f876734d43ba7c8cb6545b80f34",
+        "passed": true
+      },
+      "raw_episode": {
+        "source_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_isolated_attempt03/raw/v3b003__dreamzero__seed9400__control__left/attempt01/raw_episode.jsonl",
+        "behavioral_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw/v3b003__dreamzero__seed9400__control__left/attempt01/raw_episode.jsonl",
+        "bytes": 123639,
+        "sha256": "dfabf4167c8c4566e6dddc76110815a54fcd3a60a8e800d00ea21d7816679fd9",
+        "source_and_behavioral_copies_identical": true,
+        "row_count": 1,
+        "registered_cell_id": "v3b003:dreamzero:seed9400:control:left",
+        "behavioral_result_valid": true,
+        "actions_executed": 450,
+        "source_batch_manifest": {
+          "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_isolated_attempt03/raw/v3b003__dreamzero__seed9400__control__left/attempt01/raw_episode.jsonl.manifest.json",
+          "bytes": 273,
+          "sha256": "f7469851153312d9749ddf8738745deb3f4e4ee26e1ec20408614383df4ed1c8"
+        },
+        "behavioral_batch_manifest": {
+          "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw/v3b003__dreamzero__seed9400__control__left/attempt01/raw_episode.jsonl.manifest.json",
+          "bytes": 273,
+          "sha256": "f7469851153312d9749ddf8738745deb3f4e4ee26e1ec20408614383df4ed1c8"
+        },
+        "manifest_declarations": {
+          "jsonl_bytes": 123639,
+          "jsonl_sha256": "dfabf4167c8c4566e6dddc76110815a54fcd3a60a8e800d00ea21d7816679fd9",
+          "registered_cell_id": "v3b003:dreamzero:seed9400:control:left",
+          "row_count": 1,
+          "passed": true
+        }
+      },
+      "recovery_target_summary": {
+        "target_pointer_count": 5,
+        "target_pointers_present": 5,
+        "target_pointers_missing": 0,
+        "target_hash_or_manifest_mismatches": 0
+      },
+      "recursive_verification": {
+        "artifact_references_with_sha256": 122,
+        "unique_hashed_artifact_paths": 122,
+        "duplicate_reference_count": 0,
+        "verified_unique_bytes": 23113265,
+        "failed_or_missing_count": 0,
+        "verification_records_aggregate_sha256": "6c106e5d0fd6f2b19a0372cfb0cd27c780ab784a98f7abb3c70d51c97f124038",
+        "passed": true
+      },
+      "top_level_artifacts": [
+        {
+          "role": "action_trace_manifest",
+          "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw/v3b003__dreamzero__seed9400__control__left/attempt01/action_traces/seed9400_left_executed_actions.json",
+          "bytes": 3155,
+          "sha256": "7d3695640509599560a45562af7d3ccc65187c34897412c284db4e871ad3eb63"
+        },
+        {
+          "role": "executed_action_trace",
+          "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw/v3b003__dreamzero__seed9400__control__left/attempt01/action_traces/seed9400_left_executed_actions.npy",
+          "bytes": 14528,
+          "sha256": "7243e12bd768f9eff3e9141bbd3a2f26097a6c2cbaee06788f515365d6a44c9f"
+        },
+        {
+          "role": "future_manifest",
+          "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_004/future_manifest.json",
+          "bytes": 108059,
+          "sha256": "5760b1af79e33056e945a4c6d1ea716b4e5b5d963918ce73c82bd023faa708c3"
+        },
+        {
+          "role": "reset_attestation",
+          "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw/v3b003__dreamzero__seed9400__control__left/attempt01/reset_attestation.json",
+          "bytes": 981,
+          "sha256": "c3267b5c12bb32ebffdf39404a70c56a3e87fc81f351431c97b2a7da45f7319c"
+        },
+        {
+          "role": "returned_executable_action_chunks",
+          "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw/v3b003__dreamzero__seed9400__control__left/attempt01/action_traces/seed9400_left_returned_executable_chunks.npy",
+          "bytes": 43904,
+          "sha256": "2e8212a46c4b6c257a92326d9eed06ac29eb9987af684ef5a2910c1b67760d4a"
+        },
+        {
+          "role": "returned_raw_action_chunks",
+          "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw/v3b003__dreamzero__seed9400__control__left/attempt01/action_traces/seed9400_left_returned_raw_chunks.npy",
+          "bytes": 43904,
+          "sha256": "39c619791f9a92438b543f18ec32fb38dde623619316a53543adb9ad8efe03ea"
+        },
+        {
+          "role": "viewport_video",
+          "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw/v3b003__dreamzero__seed9400__control__left/attempt01/simulator/V3B002Pi05ControlLeftTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+          "bytes": 2803532,
+          "sha256": "e775fe9b10e60e346ec0a6037bc0597d3b1bbc2f29d9422363ad33ac41a31246"
+        }
+      ],
+      "future_dependencies": {
+        "manifest_episode_index": 4,
+        "request_count_declared": 57,
+        "request_count_observed": 57,
+        "request_indices": "0000-0056 contiguous",
+        "latent_video_count": 57,
+        "latent_video_path_template": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_004/request_{request_index_4_digit}_latent_video.pt",
+        "latent_video_bytes": {
+          "339751": 15,
+          "227111": 42,
+          "total": 14634927
+        },
+        "returned_action_count": 57,
+        "returned_action_path_template": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_004/request_{request_index_4_digit}_official_action.npy",
+        "returned_action_bytes_each": 896,
+        "returned_action_bytes_total": 51072,
+        "official_reset_decode_count": 1,
+        "official_reset_decode": {
+          "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/decoded/000004_08_07_01_23_14_n64.mp4",
+          "bytes": 5409203,
+          "sha256": "1a2841e6e1c854c3098fe6d576cca5d9af09645e8f09346ea672661c16c21f85"
+        },
+        "unique_dependency_paths": 115,
+        "verified_dependency_bytes": 20095202,
+        "missing_or_mismatched_count": 0,
+        "passed": true,
+        "exact_per_dependency_paths_and_sha256_are_bound_by": {
+          "future_manifest_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_004/future_manifest.json",
+          "future_manifest_sha256": "5760b1af79e33056e945a4c6d1ea716b4e5b5d963918ce73c82bd023faa708c3"
+        }
+      },
+      "complete_episode_recovered": true,
+      "alignment_validated": false,
+      "limitations": [
+        "H02 is the disclosed historical custom negative-branch action-guidance s2 configuration, not the official conditional-path D1 configuration.",
+        "The retained latent tensors and concatenated official reset decode do not establish per-request decoded RGB or generated-frame-to-action physical-time alignment.",
+        "Archive recovery is integrity and availability evidence, not new model execution or forecast-accuracy evidence."
+      ]
+    }
+  ],
+  "overall": {
+    "requested_archive_episodes": 2,
+    "recovered_archive_episodes": 2,
+    "unavailable_archive_episodes": 0,
+    "missing_artifacts": 0,
+    "hash_or_size_mismatches": 0,
+    "new_behavioral_episodes": 0,
+    "new_model_requests": 0,
+    "raw_data_remains_on_pvc": true,
+    "raw_data_copied_to_workstation": false,
+    "scientific_gate": "Archive availability and recorded-identity integrity are satisfied for exactly the selected H01 and H02 episodes. Camera and physical-time qualification remain separate requirements."
+  }
+}

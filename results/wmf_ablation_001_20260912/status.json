@@ -48,6 +48,7 @@
       "recorder-qualification-p00-001",
       "d1-first-live-002",
       "recorder-qualification-p00-002",
+      "recorder-qualification-p00-003",
       "fixture-d01-candidate-00",
       "fixture-d02-candidate-00",
       "fixture-d03-candidate-00",
@@ -55,8 +56,8 @@
       "d1-first-live-003"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "6578653ffdc1453d9024e57a99e74a166b868d1f",
-    "control_generation": 164,
+    "control_commit": "8c96ab89b8f3d6fee4b5f178e618b715922db1f2",
+    "control_generation": 165,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -621,9 +622,9 @@
     {
       "descriptor_sha256": "504e9d972bcb5ad61f466d4469874c864f0a562c2b82d9d661cf588de7932792",
       "heartbeat": {
-        "at": "2026-09-13T03:48:28.194515+00:00",
+        "at": "2026-09-13T03:49:22.424352+00:00",
         "child_pid": 2061,
-        "unix": 1789271308.194539,
+        "unix": 1789271362.424375,
         "worker_id": "wmf-forecast-0912-worker-00",
         "worker_pid": 1
       },
@@ -935,6 +936,12 @@
       },
       "wall_seconds": 93.66642034100369,
       "worker_id": "wmf-forecast-0912-worker-00"
+    },
+    {
+      "descriptor_sha256": "5687802c8b8fdc6fa493b63ad8fe0750e800f3c3a11f54cfbaf8283546232d22",
+      "job_id": "recorder-qualification-p00-003",
+      "source_commit": "69517829da3ae1722335039f26a7334f2fd55364",
+      "status": "staged"
     }
   ],
   "maximum_combined_log_tail_bytes_per_job": 8192,

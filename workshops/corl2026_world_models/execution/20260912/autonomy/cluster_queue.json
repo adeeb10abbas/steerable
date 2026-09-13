@@ -2500,6 +2500,19 @@
       "publish_log_tail_bytes": 8192
     },
     {
+      "job_id": "d1-p00-prefix-validation-001",
+      "released": true,
+      "source_commit": "dc6ee449074c1e8acbfda83d6f31caefbac20ff8",
+      "role": "wmf-forecast-0912-worker-00",
+      "argv": [
+        "/usr/bin/python3",
+        "-c",
+        "import sys; from pathlib import Path; sys.path.insert(0, '{source_root}/workshops/corl2026_world_models/experiments/forecast_layout'); import d1_behavioral_pilot_jobs as m; receipts, identities, provenance = m.discover_completed_prefix(Path('/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/behavioral/pilot/D1/P00'), study_commit='dc6ee449074c1e8acbfda83d6f31caefbac20ff8'); m.require(len(receipts) == 1 and len(identities) == 1, 'd1_prefix_validation_count_changed'); m.require(identities[0]['sha256'] == '26cbd67d0087ed555177af6ac78fcf57c9acfcf1adccf148a61b6b8d8cefcb56', 'd1_prefix_validation_identity_changed'); m.require(provenance['start_cell_index'] == 1 and provenance['completed_prefix_cell_ids'] == [m.CELL_IDS[0]], 'd1_prefix_validation_order_changed'); receipt = receipts[0]; m.require(receipt['actions_executed'] == 450 and receipt['observation_count'] == 451 and receipt['behavioral_model_request_count'] == 57, 'd1_prefix_validation_scientific_counts_changed'); output = {'schema_version': 'wmf-d1-prefix-validation-v1', 'status': 'passed', 'validated_source_commit': 'dc6ee449074c1e8acbfda83d6f31caefbac20ff8', 'source_python': sys.executable, 'numpy_imported': 'numpy' in sys.modules, 'start_cell_index': provenance['start_cell_index'], 'completed_prefix_cell_ids': provenance['completed_prefix_cell_ids'], 'prior_study_commits': provenance['prior_study_commits'], 'cell_receipt': identities[0], 'actions_executed': receipt['actions_executed'], 'observation_count': receipt['observation_count'], 'behavioral_model_request_count': receipt['behavioral_model_request_count'], 'validated_at_utc': m.utc_now()}; m.require(output['source_python'] == '/usr/bin/python3' and output['numpy_imported'] is False, 'd1_prefix_validation_interpreter_changed'); m.immutable_json(Path('{job_dir}') / 'publish' / 'd1_prefix_validation.json', output, publish=True); print(m.canonical_bytes(output).decode('utf-8'), end='')"
+      ],
+      "max_wall_seconds": 600,
+      "publish_log_tail_bytes": 8192
+    },
+    {
       "job_id": "n3-development-d01-001",
       "released": true,
       "source_commit": "f982e92f45886ec99ac2ddee4367afe1a87f08ca",

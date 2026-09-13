@@ -1,21 +1,22 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T02:02:28Z",
+  "as_of_utc": "2026-09-13T02:46:43Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
   "requested_host": "GM allocated cluster",
   "authorization": "User requested execution of attached specification on GM with aggressive parallelism. Core 232 episodes selected; optional D2 not selected. No confirmation release before qualification.",
   "core_episodes_launched": 0,
-  "generation_requests_launched": 0,
-  "phase": "cluster_independent_scientific_qualification_implementation",
-  "cluster_status": "Independent Git/PVC queue round trip passed. Coordinator and four one-B200 workers are running; 28 additional workers are scheduler-pending and are not counted as available capacity.",
+  "generation_requests_launched": 6,
+  "generation_requests_completed": 6,
+  "phase": "live_model_and_physical_qualification",
+  "cluster_status": "Independent Git/PVC queue is active. Three corrected one-B200 workers and one corrected two-B200 D1 worker are Running; 27 one-B200 workers are scheduler-pending. Device-plugin isolation was verified live on every running study worker.",
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
-    "runtime_N3": "pending_restore_and_probes",
+    "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_physical_time_still_unqualified",
     "runtime_D1": "pending_official_path_and_probes",
     "fixed_450_recorder": "software_qualified_live_runtime_pending",
-    "physical_layouts": "model_blind_source_and_gate_implemented_live_qualification_pending",
+    "physical_layouts": "P00_live_gate_retry_3_staged_after_two_preserved_zero_action_technical_invalid_attempts",
     "frame_time_camera_mapping": "pending_measured_qualification",
     "annotation_development": "pending_development_recordings",
     "confirmation_release": false
@@ -34,7 +35,7 @@
   "verified_baseline_tests": 23,
   "source_bundle_sha256": "a8cc6b8d393902bd4ea8561ec1236097d02c74c88c500b5477da72df576fde69",
   "automatic_background_execution": true,
-  "verified_workshop_tests": 106,
+  "verified_workshop_tests": 128,
   "prepared_schedule": {
     "path": "parallel_schedule.json",
     "jobs": 58,
@@ -65,10 +66,17 @@
     "control_commit_verified_by_cluster": "84921052b137af79f210157f62396fa56b8062d9",
     "result_commit_verified_by_workstation": "5c7c0ef8de093f10185b31d8b7a869fdb2ba7a83",
     "diagnostic_workers_passed": 4,
-    "diagnostic_workers_pending_capacity": 28,
+    "diagnostic_workers_failed_pre_correction": 6,
+    "diagnostic_workers_controlled_interruption_during_correction": 2,
+    "corrected_one_gpu_workers_running": 3,
+    "corrected_one_gpu_workers_pending_capacity": 27,
+    "corrected_two_gpu_d1_workers_running": 1,
     "scientific_episodes_from_diagnostics": 0,
     "work_mac_required_for_dispatch_or_results": false,
-    "admission_deadline_unix": 1789868932
+    "admission_deadline_unix": 1789868932,
+    "worker_pool_transition": "autonomy/worker_pool_transition.json",
+    "latest_control_commit": "fbd47f774af4730ece850e567fc10c6a55e9f6b6",
+    "latest_results_commit_fetched": "59c89a4102adbccbaf223b6db128f5fb27d65637"
   },
   "archive_source_recovery": {
     "path": "archive_source_recovery.json",
@@ -101,5 +109,39 @@
     },
     "live_runtime_qualified": false
   },
-  "independent_preparation_review": "passed_no_actionable_defects"
+  "generation_qualification": {
+    "planned_requests_per_primary_model": 6,
+    "N3": {
+      "attempts": 2,
+      "technical_invalid_attempts": 1,
+      "generation_requests_completed": 6,
+      "qualified": true,
+      "robot_episode_count": 0,
+      "source_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+      "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+      "raw_receipt_sha256": "6dc6519f45e4974e88851137e30f4199c0d96e374216694c72a8924334d91a96",
+      "claim_boundary": "Fixed historical observation only. This passes runtime seed/reset/decode behavior, not robot skill or generated-frame physical-time alignment."
+    },
+    "D1": {
+      "attempts": 0,
+      "generation_requests_completed": 0,
+      "qualified": false
+    }
+  },
+  "live_fixture_qualification": {
+    "P00": {
+      "attempts_completed": 2,
+      "technical_invalid": 2,
+      "physical_rejections": 0,
+      "accepted": 0,
+      "active_or_staged_attempt": "fixture-p00-candidate-00-r3",
+      "model_requests": 0,
+      "behavioral_actions": 0,
+      "preserved_reasons": [
+        "robolab_checkout_missing",
+        "pod_uid_environment_missing"
+      ]
+    }
+  },
+  "independent_preparation_review": "reviewed_runtime_findings_are_fixed_or_tracked_before_release"
 }

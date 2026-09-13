@@ -33,7 +33,7 @@ SOURCE_CONTRACT_SHA256 = "88a1268ae7f27776fd5246a5808c069b2906399e99bb0e7d8b6f09
 CANDIDATE_POOL_SHA256 = "ec80f4adc5272ec666c94d753241b84c954ef382bd30e1f2907459bff1cdb2b1"
 ROBOLAB_COMMIT = "0aef241fb088ca21bb4ebd24448940ed56620d17"
 WORKER_POOL_TRANSITION_SHA256 = "b14db71d3b6dc90de8761e66ea938010f5a3193a072ef4f5c600b73be6c86ce9"
-ROBOLAB_ROOT = Path("/data/users/ali/vla_wam/external/RoboLab")
+ROBOLAB_ROOT = Path("/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241")
 ROBOLAB_PYTHON = Path("/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python")
 PLANNED_LAYOUT_IDS = (
     "P00",

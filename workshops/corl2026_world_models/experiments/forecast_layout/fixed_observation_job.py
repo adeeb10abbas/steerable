@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Capture one hash-bound P00 observation without contacting either model.
+"""Capture one hash-bound planned-layout observation without contacting either model.
 
 The ``queue`` command is intentionally compatible with the cluster worker's
 system Python.  It validates the accepted fixture evidence, the frozen pose
@@ -46,6 +46,11 @@ sys.dont_write_bytecode = True
 
 NAMESPACE = "wmf_ablation_001_20260912"
 LAYOUT_PAIR_ID = "P00"
+ALLOWED_LAYOUT_PAIR_IDS = (
+    LAYOUT_PAIR_ID,
+    *(f"D{index:02d}" for index in range(1, 5)),
+    *(f"C{index:02d}" for index in range(1, 25)),
+)
 LAYOUT_ARM = "original"
 COMMAND = "left"
 PROMPT = "Put the Rubik's cube to the left of the bowl."
@@ -185,6 +190,65 @@ def require_sha256(value: Any, label: str) -> str:
     return value
 
 
+def validate_layout_request(
+    layout_pair_id: Any,
+    candidate_id: Any = None,
+    *,
+    require_explicit_candidate: bool = False,
+) -> tuple[str, str | None]:
+    """Validate the bounded study layout and its optional exact candidate.
+
+    P00 keeps its historical caller compatibility: an omitted candidate is
+    resolved from the hash-bound accepted gate.  Every development or
+    confirmation request must name its candidate before any evidence is read.
+    """
+
+    require(
+        isinstance(layout_pair_id, str) and layout_pair_id in ALLOWED_LAYOUT_PAIR_IDS,
+        "layout pair is not in the planned P00/D01-D04/C01-C24 inventory",
+    )
+    if candidate_id is None:
+        require(
+            not require_explicit_candidate or layout_pair_id == LAYOUT_PAIR_ID,
+            f"candidate ID is required for {layout_pair_id}",
+        )
+        return layout_pair_id, None
+    require(isinstance(candidate_id, str), "candidate ID is invalid")
+    require(
+        re.fullmatch(rf"{re.escape(layout_pair_id)}__candidate_0[0-3]", candidate_id)
+        is not None,
+        f"candidate ID is not bound to {layout_pair_id}",
+    )
+    return layout_pair_id, candidate_id
+
+
+def frozen_candidate_entry(layout_pair_id: str, candidate_id: str) -> dict[str, Any]:
+    """Return one candidate only from the hash-frozen model-blind pool."""
+
+    pool_path = Path(__file__).resolve().with_name("layout_candidate_pool.json")
+    require(pool_path.is_file() and not pool_path.is_symlink(), "candidate pool file is invalid")
+    pool, payload = load_json(pool_path)
+    require(sha256_bytes(payload) == CANDIDATE_POOL_SHA256, "candidate pool file changed")
+    require(pool.get("study_namespace") == NAMESPACE, "candidate pool namespace changed")
+    require(pool.get("source_contract_sha256") == SOURCE_CONTRACT_SHA256, "candidate pool source changed")
+    require(pool.get("planned_layout_ids") == list(ALLOWED_LAYOUT_PAIR_IDS), "candidate pool layout inventory changed")
+    require(pool.get("candidates_per_layout") == 4, "candidate pool spare count changed")
+    require(pool.get("generation_uses_model_outcomes") is False, "candidate pool is not model-blind")
+    require(pool.get("model_request_count") == 0, "candidate pool contains model requests")
+    require(pool.get("behavioral_episode_count") == 0, "candidate pool contains behavioral episodes")
+    candidates = pool.get("candidates")
+    require(isinstance(candidates, list), "candidate pool rows are missing")
+    matches = [
+        row
+        for row in candidates
+        if isinstance(row, Mapping) and row.get("candidate_id") == candidate_id
+    ]
+    require(len(matches) == 1, "accepted candidate is absent or duplicated in frozen pool")
+    candidate = matches[0]
+    require(candidate.get("layout_pair_id") == layout_pair_id, "candidate pool layout binding changed")
+    return dict(candidate)
+
+
 def verify_file_descriptor(descriptor: Any, *, label: str) -> dict[str, Any]:
     require(isinstance(descriptor, Mapping), f"{label} descriptor is missing")
     path_value = descriptor.get("path")
@@ -234,9 +298,16 @@ def verify_gate_and_pose_manifest(
     gate_receipt_sha256: str,
     pose_manifest_path: Path,
     pose_manifest_sha256: str,
+    layout_pair_id: str = LAYOUT_PAIR_ID,
+    candidate_id: str | None = None,
 ) -> dict[str, Any]:
-    """Verify the entire accepted-gate -> P00 frozen-manifest evidence chain."""
+    """Verify one planned layout's entire accepted-gate -> manifest chain."""
 
+    layout_pair_id, candidate_id = validate_layout_request(
+        layout_pair_id,
+        candidate_id,
+        require_explicit_candidate=True,
+    )
     require_sha256(gate_receipt_sha256, "gate receipt argument")
     require_sha256(pose_manifest_sha256, "pose manifest argument")
     gate_receipt_path = Path(gate_receipt_path).resolve()
@@ -251,15 +322,36 @@ def verify_gate_and_pose_manifest(
     require(gate.get("schema_version") == GATE_RECEIPT_SCHEMA, "fixture gate receipt schema changed")
     require(gate.get("study_namespace") == NAMESPACE, "fixture gate receipt namespace changed")
     require(gate.get("status") == "finished", "fixture gate job is not finished")
-    require(gate.get("layout_pair_id") == LAYOUT_PAIR_ID, "fixture gate receipt is not P00")
-    require(gate.get("decision") == "accepted" and gate.get("exit_code") == 0, "P00 fixture was not accepted")
+    require(
+        gate.get("layout_pair_id") == layout_pair_id,
+        f"fixture gate receipt is not {layout_pair_id}",
+    )
+    require(
+        gate.get("decision") == "accepted" and gate.get("exit_code") == 0,
+        f"{layout_pair_id} fixture was not accepted",
+    )
     require(gate.get("model_request_count") == 0, "fixture gate contacted a model")
     require(gate.get("behavioral_action_count") == 0, "fixture gate contains behavioral actions")
     require(gate.get("source_contract_sha256") == SOURCE_CONTRACT_SHA256, "fixture source contract changed")
     require(gate.get("candidate_pool_sha256") == CANDIDATE_POOL_SHA256, "fixture candidate pool changed")
-    candidate_id = gate.get("candidate_id")
+    gate_candidate_id = gate.get("candidate_id")
     candidate_sha = require_sha256(gate.get("candidate_payload_sha256"), "accepted candidate digest")
-    require(isinstance(candidate_id, str) and candidate_id.startswith("P00__candidate_"), "accepted candidate ID is not P00")
+    require(
+        isinstance(gate_candidate_id, str)
+        and re.fullmatch(
+            rf"{re.escape(layout_pair_id)}__candidate_0[0-3]",
+            gate_candidate_id,
+        )
+        is not None,
+        f"accepted candidate ID is not bound to {layout_pair_id}",
+    )
+    if candidate_id is not None:
+        require(gate_candidate_id == candidate_id, "fixture gate selected another candidate")
+    frozen_candidate = frozen_candidate_entry(layout_pair_id, gate_candidate_id)
+    require(
+        frozen_candidate.get("candidate_payload_sha256") == candidate_sha,
+        "accepted candidate digest differs from frozen pool",
+    )
 
     require(manifest.get("schema_version") == POSE_MANIFEST_SCHEMA, "pose manifest schema changed")
     require(manifest.get("study_namespace") == NAMESPACE, "pose manifest namespace changed")
@@ -279,12 +371,23 @@ def verify_gate_and_pose_manifest(
     require(task_contract.get("success_is_measurement_only") is True, "pose manifest success contract changed")
     require(task_contract.get("success_termination_present") is False, "pose manifest retains success termination")
     layouts = manifest.get("layout_pairs")
-    require(isinstance(layouts, Mapping) and LAYOUT_PAIR_ID in layouts, "pose manifest lacks P00")
-    row = layouts[LAYOUT_PAIR_ID]
-    require(isinstance(row, Mapping), "P00 pose row is invalid")
-    require(row.get("layout_pair_id") == LAYOUT_PAIR_ID, "P00 pose row ID changed")
-    require(row.get("candidate_id") == candidate_id, "pose manifest selected another candidate")
+    require(
+        isinstance(layouts, Mapping) and set(layouts) == {layout_pair_id},
+        f"pose manifest is not isolated to {layout_pair_id}",
+    )
+    require(manifest.get("layout_pair_ids") == [layout_pair_id], "pose manifest layout order changed")
+    require(manifest.get("qualified_layout_count") == 1, "pose manifest layout count changed")
+    row = layouts[layout_pair_id]
+    require(isinstance(row, Mapping), f"{layout_pair_id} pose row is invalid")
+    require(row.get("layout_pair_id") == layout_pair_id, f"{layout_pair_id} pose row ID changed")
+    require(row.get("candidate_id") == gate_candidate_id, "pose manifest selected another candidate")
+    require(row.get("candidate_rank") == frozen_candidate.get("candidate_rank"), "pose manifest candidate rank changed")
     require(row.get("candidate_payload_sha256") == candidate_sha, "pose manifest candidate hash changed")
+    require(row.get("layouts") == frozen_candidate.get("layouts"), "pose manifest candidate geometry changed")
+    require(
+        row.get("object_asset_provenance") == frozen_candidate.get("object_asset_provenance"),
+        "pose manifest object provenance changed",
+    )
 
     gate_evidence = gate.get("gate_evidence")
     require(isinstance(gate_evidence, Mapping), "fixture receipt lacks gate evidence")
@@ -300,12 +403,18 @@ def verify_gate_and_pose_manifest(
         record
         for record in records
         if record.get("record_sha256") == accepted_record_sha
-        and record.get("layout_pair_id") == LAYOUT_PAIR_ID
+        and record.get("layout_pair_id") == layout_pair_id
     ]
-    require(len(accepted) == 1, "accepted P00 gate record is absent or duplicated")
+    require(
+        len(accepted) == 1,
+        f"accepted {layout_pair_id} gate record is absent or duplicated",
+    )
     record = accepted[0]
-    require(record.get("decision") == "accepted" and record.get("passed") is True, "P00 gate record did not pass")
-    require(record.get("candidate_id") == candidate_id, "gate record candidate ID changed")
+    require(
+        record.get("decision") == "accepted" and record.get("passed") is True,
+        f"{layout_pair_id} gate record did not pass",
+    )
+    require(record.get("candidate_id") == gate_candidate_id, "gate record candidate ID changed")
     require(record.get("candidate_payload_sha256") == candidate_sha, "gate record candidate hash changed")
     require(record.get("candidate_pool_sha256") == CANDIDATE_POOL_SHA256, "gate record candidate pool changed")
     require(record.get("model_request_count") == 0 and record.get("behavioral_action_count") == 0, "gate record contains model evidence")
@@ -320,7 +429,7 @@ def verify_gate_and_pose_manifest(
     require(attempt_identity == manifest_attempt_identity, "pose manifest references another gate attempt")
     attempt, _ = load_json(Path(attempt_identity["path"]))
     require(attempt.get("schema_version") == GATE_ATTEMPT_SCHEMA, "gate attempt receipt schema changed")
-    require(attempt.get("candidate_id") == candidate_id, "gate attempt candidate changed")
+    require(attempt.get("candidate_id") == gate_candidate_id, "gate attempt candidate changed")
     require(attempt.get("candidate_payload_sha256") == candidate_sha, "gate attempt candidate hash changed")
     require(attempt.get("candidate_pool_sha256") == CANDIDATE_POOL_SHA256, "gate attempt candidate pool changed")
     require(attempt.get("decision") == "accepted" and attempt.get("passed") is True, "gate attempt is not accepted")
@@ -334,27 +443,35 @@ def verify_gate_and_pose_manifest(
         "gate_ledger": gate_ledger_identity,
         "gate_attempt_receipt": attempt_identity,
         "accepted_gate_record_sha256": accepted_record_sha,
-        "candidate_id": candidate_id,
+        "layout_pair_id": layout_pair_id,
+        "candidate_id": gate_candidate_id,
         "candidate_payload_sha256": candidate_sha,
         "pose_row": dict(row),
     }
 
 
-def freeze_p00_pose_manifest(
+def freeze_pose_manifest(
     *,
     source_root: Path,
     gate_receipt_path: Path,
     gate_receipt_sha256: str,
     pose_manifest_path: Path,
     expected_pose_manifest_sha256: str | None = None,
+    layout_pair_id: str = LAYOUT_PAIR_ID,
+    candidate_id: str | None = None,
 ) -> tuple[Path, str]:
-    """Create the P00-only frozen manifest once, or verify an existing one.
+    """Create one planned layout's frozen manifest, or verify an existing one.
 
     This is deliberately downstream of a hash-pinned accepted gate receipt.  It
     uses the study's existing freeze builder and then re-opens the complete
     gate/ledger/attempt/manifest chain through :func:`verify_gate_and_pose_manifest`.
     """
 
+    layout_pair_id, candidate_id = validate_layout_request(
+        layout_pair_id,
+        candidate_id,
+        require_explicit_candidate=True,
+    )
     source_root = Path(source_root).resolve()
     gate_receipt_path = Path(gate_receipt_path).resolve()
     pose_manifest_path = Path(pose_manifest_path).resolve()
@@ -378,6 +495,8 @@ def freeze_p00_pose_manifest(
                 gate_receipt_sha256=gate_receipt_sha256,
                 pose_manifest_path=pose_manifest_path,
                 pose_manifest_sha256=observed,
+                layout_pair_id=layout_pair_id,
+                candidate_id=candidate_id,
             )
             return pose_manifest_path, observed
 
@@ -390,10 +509,28 @@ def freeze_p00_pose_manifest(
         require(gate.get("schema_version") == GATE_RECEIPT_SCHEMA, "fixture gate receipt schema changed")
         require(gate.get("study_namespace") == NAMESPACE, "fixture gate receipt namespace changed")
         require(gate.get("status") == "finished", "fixture gate job is not finished")
-        require(gate.get("layout_pair_id") == LAYOUT_PAIR_ID, "fixture gate receipt is not P00")
-        require(gate.get("decision") == "accepted" and gate.get("exit_code") == 0, "P00 fixture was not accepted")
+        require(
+            gate.get("layout_pair_id") == layout_pair_id,
+            f"fixture gate receipt is not {layout_pair_id}",
+        )
+        require(
+            gate.get("decision") == "accepted" and gate.get("exit_code") == 0,
+            f"{layout_pair_id} fixture was not accepted",
+        )
         require(gate.get("model_request_count") == 0 and gate.get("behavioral_action_count") == 0, "fixture gate contains model evidence")
         require(gate.get("candidate_pool_sha256") == CANDIDATE_POOL_SHA256, "fixture candidate pool changed")
+        gate_candidate_id = gate.get("candidate_id")
+        require(
+            isinstance(gate_candidate_id, str)
+            and re.fullmatch(
+                rf"{re.escape(layout_pair_id)}__candidate_0[0-3]",
+                gate_candidate_id,
+            )
+            is not None,
+            f"accepted candidate ID is not bound to {layout_pair_id}",
+        )
+        if candidate_id is not None:
+            require(gate_candidate_id == candidate_id, "fixture gate selected another candidate")
         gate_evidence = gate.get("gate_evidence")
         require(isinstance(gate_evidence, Mapping), "fixture receipt lacks gate evidence")
         accepted_record_sha = require_sha256(
@@ -404,10 +541,11 @@ def freeze_p00_pose_manifest(
         matching = [row for row in records if row.get("record_sha256") == accepted_record_sha]
         require(len(matching) == 1, "accepted record is absent from gate ledger")
         require(
-            matching[0].get("layout_pair_id") == LAYOUT_PAIR_ID
+            matching[0].get("layout_pair_id") == layout_pair_id
+            and matching[0].get("candidate_id") == gate_candidate_id
             and matching[0].get("decision") == "accepted"
             and matching[0].get("passed") is True,
-            "accepted gate record is not a passed P00 row",
+            f"accepted gate record is not the passed {layout_pair_id} candidate",
         )
         attempt_identity = verify_file_descriptor(
             matching[0].get("attempt_receipt"), label="accepted gate attempt"
@@ -435,7 +573,7 @@ def freeze_p00_pose_manifest(
             candidate_pool_sha256=CANDIDATE_POOL_SHA256,
             records=records,
             gate_ledger_sha256=ledger_identity["sha256"],
-            layout_pair_ids=[LAYOUT_PAIR_ID],
+            layout_pair_ids=[layout_pair_id],
         )
         _immutable_json(pose_manifest_path, manifest)
         observed = sha256_file(pose_manifest_path)
@@ -444,8 +582,31 @@ def freeze_p00_pose_manifest(
             gate_receipt_sha256=gate_receipt_sha256,
             pose_manifest_path=pose_manifest_path,
             pose_manifest_sha256=observed,
+            layout_pair_id=layout_pair_id,
+            candidate_id=gate_candidate_id,
         )
         return pose_manifest_path, observed
+
+
+def freeze_p00_pose_manifest(
+    *,
+    source_root: Path,
+    gate_receipt_path: Path,
+    gate_receipt_sha256: str,
+    pose_manifest_path: Path,
+    expected_pose_manifest_sha256: str | None = None,
+) -> tuple[Path, str]:
+    """Backward-compatible P00 wrapper for historical callers."""
+
+    return freeze_pose_manifest(
+        source_root=source_root,
+        gate_receipt_path=gate_receipt_path,
+        gate_receipt_sha256=gate_receipt_sha256,
+        pose_manifest_path=pose_manifest_path,
+        expected_pose_manifest_sha256=expected_pose_manifest_sha256,
+        layout_pair_id=LAYOUT_PAIR_ID,
+        candidate_id=None,
+    )
 
 
 def _run_git(root: Path, *arguments: str) -> str:
@@ -621,11 +782,18 @@ def build_child_command(
     gate_receipt_sha256: str,
     study_commit: str,
     environment_seed: int,
+    layout_pair_id: str = LAYOUT_PAIR_ID,
+    candidate_id: str | None = None,
     robolab_root: Path = ROBOLAB_ROOT,
     robolab_python: Path = ROBOLAB_PYTHON,
 ) -> list[str]:
+    layout_pair_id, candidate_id = validate_layout_request(
+        layout_pair_id,
+        candidate_id,
+        require_explicit_candidate=True,
+    )
     script = Path(source_root) / "workshops/corl2026_world_models/experiments/forecast_layout/fixed_observation_job.py"
-    return [
+    command = [
         # Invoke the lexical venv entrypoint.  ``resolve()`` follows its
         # Python symlink to the base interpreter and loses venv site-packages.
         str(Path(os.path.abspath(robolab_python))),
@@ -651,16 +819,59 @@ def build_child_command(
         str(Path(output_dir).resolve()),
         "--environment-seed",
         str(environment_seed),
+        "--layout-pair-id",
+        layout_pair_id,
+        "--layout-arm",
+        LAYOUT_ARM,
+        "--command",
+        COMMAND,
     ]
+    if candidate_id is not None:
+        command.extend(("--candidate-id", candidate_id))
+    return command
 
 
-def _existing_queue_receipt(path: Path, *, job_id: str, source_commit: str) -> dict[str, Any] | None:
+def _existing_queue_receipt(
+    path: Path,
+    *,
+    job_id: str,
+    source_commit: str,
+    layout_pair_id: str,
+    candidate_id: str | None,
+    environment_seed: int,
+    gate_receipt_sha256: str,
+    pose_manifest_sha256: str | None,
+) -> dict[str, Any] | None:
     if not path.exists():
         return None
     value, payload = load_json(path)
     require(len(payload) <= MAX_PUBLISH_BYTES, "existing publish receipt is too large")
     require(value.get("schema_version") == QUEUE_RECEIPT_SCHEMA, "existing publish receipt schema changed")
     require(value.get("job_id") == job_id and value.get("study_commit") == source_commit, "existing publish receipt identity changed")
+    require(value.get("layout_pair_id") == layout_pair_id, "existing publish receipt layout changed")
+    require(value.get("environment_seed") == environment_seed, "existing publish receipt seed changed")
+    require(
+        value.get("gate_receipt_sha256") == gate_receipt_sha256,
+        "existing publish receipt gate changed",
+    )
+    if candidate_id is not None:
+        require(value.get("candidate_id") == candidate_id, "existing publish receipt candidate changed")
+    if pose_manifest_sha256 is not None:
+        require(
+            value.get("pose_manifest_sha256") == pose_manifest_sha256,
+            "existing publish receipt pose manifest changed",
+        )
+    if value.get("status") == "passed":
+        receipt_candidate = value.get("candidate_id")
+        require(
+            isinstance(receipt_candidate, str)
+            and re.fullmatch(
+                rf"{re.escape(layout_pair_id)}__candidate_0[0-3]",
+                receipt_candidate,
+            )
+            is not None,
+            "existing publish receipt candidate is invalid",
+        )
     require(value.get("exit_code") in (0, 3), "existing publish receipt exit code changed")
     return value
 
@@ -675,39 +886,68 @@ def execute_queue_job(
     gate_receipt_path: Path,
     gate_receipt_sha256: str,
     environment_seed: int = 2026091000,
+    layout_pair_id: str = LAYOUT_PAIR_ID,
+    candidate_id: str | None = None,
     raw_root: Path = RAW_ROOT,
     robolab_root: Path = ROBOLAB_ROOT,
     robolab_python: Path = ROBOLAB_PYTHON,
     nvidia_smi: Path | str = "nvidia-smi",
 ) -> dict[str, Any]:
+    layout_pair_id, candidate_id = validate_layout_request(
+        layout_pair_id,
+        candidate_id,
+        require_explicit_candidate=True,
+    )
     source, state, job, descriptor = validate_queue_paths(source_root, state_dir, job_dir)
     source_commit = descriptor["source_commit"]
     publish = job / "publish"
     publish.mkdir(exist_ok=True)
     publish_target = publish / "fixed_observation_job_receipt.json"
-    existing = _existing_queue_receipt(publish_target, job_id=job.name, source_commit=source_commit)
+    existing = _existing_queue_receipt(
+        publish_target,
+        job_id=job.name,
+        source_commit=source_commit,
+        layout_pair_id=layout_pair_id,
+        candidate_id=candidate_id,
+        environment_seed=environment_seed,
+        gate_receipt_sha256=gate_receipt_sha256,
+        pose_manifest_sha256=pose_manifest_sha256,
+    )
     if existing is not None:
         return dict(existing, idempotent_replay=True)
 
-    context: dict[str, Any] = {"gpu": None, "release": None, "child_started": False, "child_exit_code": None, "logs": None}
+    context: dict[str, Any] = {
+        "gpu": None,
+        "release": None,
+        "resolved_pose_manifest_sha256": pose_manifest_sha256,
+        "child_started": False,
+        "child_exit_code": None,
+        "logs": None,
+    }
     try:
         require(type(environment_seed) is int and environment_seed >= 0, "environment seed is invalid")
         verify_clean_git(source, source_commit, "study")
         verify_clean_git(Path(robolab_root), ROBOLAB_COMMIT, "RoboLab")
         require(Path(robolab_python).resolve().is_file(), "pinned RoboLab Python is missing")
-        pose_manifest_path, resolved_pose_manifest_sha256 = freeze_p00_pose_manifest(
+        pose_manifest_path, resolved_pose_manifest_sha256 = freeze_pose_manifest(
             source_root=source,
             gate_receipt_path=gate_receipt_path,
             gate_receipt_sha256=gate_receipt_sha256,
             pose_manifest_path=pose_manifest_path,
             expected_pose_manifest_sha256=pose_manifest_sha256,
+            layout_pair_id=layout_pair_id,
+            candidate_id=candidate_id,
         )
+        context["resolved_pose_manifest_sha256"] = resolved_pose_manifest_sha256
         context["release"] = verify_gate_and_pose_manifest(
             gate_receipt_path=gate_receipt_path,
             gate_receipt_sha256=gate_receipt_sha256,
             pose_manifest_path=pose_manifest_path,
             pose_manifest_sha256=resolved_pose_manifest_sha256,
+            layout_pair_id=layout_pair_id,
+            candidate_id=candidate_id,
         )
+        resolved_candidate_id = context["release"]["candidate_id"]
         context["gpu"] = verify_idle_b200(nvidia_smi)
         raw_root = Path(raw_root).resolve()
         raw_root.mkdir(parents=True, exist_ok=True)
@@ -737,6 +977,8 @@ def execute_queue_job(
             gate_receipt_sha256=gate_receipt_sha256,
             study_commit=source_commit,
             environment_seed=environment_seed,
+            layout_pair_id=layout_pair_id,
+            candidate_id=resolved_candidate_id,
             robolab_root=robolab_root,
             robolab_python=robolab_python,
         )
@@ -762,6 +1004,11 @@ def execute_queue_job(
         capture_identity = file_identity(capture_path)
         require(capture.get("schema_version") == CAPTURE_SCHEMA and capture.get("status") == "passed", "child capture receipt did not pass")
         require(capture.get("study_commit") == source_commit, "child capture used another study commit")
+        require(capture.get("layout_pair_id") == layout_pair_id, "child capture used another layout")
+        require(capture.get("candidate_id") == resolved_candidate_id, "child capture used another candidate")
+        require(capture.get("layout_arm") == LAYOUT_ARM, "child capture used another layout arm")
+        require(capture.get("command_task_used_for_reset") == COMMAND, "child capture used another task command")
+        require(capture.get("environment_seed") == environment_seed, "child capture used another seed")
         require(
             capture.get("pose_manifest", {}).get("sha256")
             == resolved_pose_manifest_sha256,
@@ -776,8 +1023,8 @@ def execute_queue_job(
             "exit_code": 0,
             "job_id": job.name,
             "study_commit": source_commit,
-            "layout_pair_id": LAYOUT_PAIR_ID,
-            "candidate_id": context["release"]["candidate_id"],
+            "layout_pair_id": layout_pair_id,
+            "candidate_id": resolved_candidate_id,
             "environment_seed": environment_seed,
             "gate_receipt_sha256": gate_receipt_sha256,
             "pose_manifest_sha256": resolved_pose_manifest_sha256,
@@ -790,7 +1037,7 @@ def execute_queue_job(
             "model_request_count": 0,
             "behavioral_action_count": 0,
             "finished_at_utc": utc_now(),
-            "claim_boundary": "One current P00 physical observation and exact preprocessing only; no model request or behavioral episode.",
+            "claim_boundary": f"One current {layout_pair_id} physical observation and exact preprocessing only; no model request or behavioral episode.",
         }
     except Exception as error:
         receipt = {
@@ -800,8 +1047,15 @@ def execute_queue_job(
             "exit_code": 3,
             "job_id": job.name,
             "study_commit": source_commit,
-            "layout_pair_id": LAYOUT_PAIR_ID,
+            "layout_pair_id": layout_pair_id,
+            "candidate_id": (
+                context["release"]["candidate_id"]
+                if context["release"] is not None
+                else candidate_id
+            ),
             "environment_seed": environment_seed,
+            "gate_receipt_sha256": gate_receipt_sha256,
+            "pose_manifest_sha256": context["resolved_pose_manifest_sha256"],
             "reason": type(error).__name__,
             "detail": str(error)[:2000],
             "gpu_identity": context["gpu"],
@@ -1134,7 +1388,22 @@ def write_capture_artifacts(
     robolab_commit: str,
     environment_seed: int,
     runtime_identity: Mapping[str, Any],
+    layout_pair_id: str = LAYOUT_PAIR_ID,
+    candidate_id: str | None = None,
+    layout_arm: str = LAYOUT_ARM,
+    command: str = COMMAND,
 ) -> dict[str, Any]:
+    layout_pair_id, candidate_id = validate_layout_request(
+        layout_pair_id,
+        candidate_id,
+        require_explicit_candidate=True,
+    )
+    require(layout_arm == LAYOUT_ARM and command == COMMAND, "fixed observation task identity changed")
+    require(release.get("layout_pair_id") == layout_pair_id, "release used another layout")
+    release_candidate_id = release.get("candidate_id")
+    validate_layout_request(layout_pair_id, release_candidate_id, require_explicit_candidate=True)
+    if candidate_id is not None:
+        require(release_candidate_id == candidate_id, "release used another candidate")
     output_dir = Path(output_dir)
     require(not output_dir.exists(), f"refusing to overwrite capture directory: {output_dir}")
     output_dir.mkdir(parents=True)
@@ -1173,13 +1442,13 @@ def write_capture_artifacts(
         "schema_version": CAPTURE_SCHEMA,
         "study_namespace": NAMESPACE,
         "status": "passed",
-        "capture_id": f"{LAYOUT_PAIR_ID}-{environment_seed}-{sha256_bytes(compact_canonical_bytes(artifact_logical))[:16]}",
+        "capture_id": f"{layout_pair_id}-{environment_seed}-{sha256_bytes(compact_canonical_bytes(artifact_logical))[:16]}",
         "captured_at_utc": utc_now(),
         "study_commit": study_commit,
         "robolab_commit": robolab_commit,
-        "layout_pair_id": LAYOUT_PAIR_ID,
-        "layout_arm": LAYOUT_ARM,
-        "command_task_used_for_reset": COMMAND,
+        "layout_pair_id": layout_pair_id,
+        "layout_arm": layout_arm,
+        "command_task_used_for_reset": command,
         "environment_seed": environment_seed,
         "candidate_id": release["candidate_id"],
         "candidate_payload_sha256": release["candidate_payload_sha256"],
@@ -1193,7 +1462,7 @@ def write_capture_artifacts(
         "fresh_physical_checks": dict(fresh_physical_checks),
         "native_clock": dict(native_clock),
         "source_capture": {
-            "simulator_observation_id": "P00_original_settled_observation_000000",
+            "simulator_observation_id": f"{layout_pair_id}_{layout_arm}_settled_observation_000000",
             "camera_frame_ids": {
                 name: camera_counters[name]["frame_id"] for name in RAW_CAMERAS
             },
@@ -1226,7 +1495,7 @@ def write_capture_artifacts(
             settled_reset_receipt["settle_evidence"]["settle_steps"]
             + settled_reset_receipt["settle_evidence"]["stability_window_steps"]
         ),
-        "claim_boundary": "Current physical P00 reset and client preprocessing evidence only. No model was loaded or queried; no behavioral action was executed; no generated-frame timing is claimed.",
+        "claim_boundary": f"Current physical {layout_pair_id} reset and client preprocessing evidence only. No model was loaded or queried; no behavioral action was executed; no generated-frame timing is claimed.",
     }
     _immutable_json(output_dir / "capture_receipt.json", receipt)
     return receipt
@@ -1286,7 +1555,11 @@ def run_live_capture(args: argparse.Namespace) -> dict[str, Any]:
     source_root = Path(args.source_root).resolve()
     robolab_root = Path(args.robolab_root).resolve()
     forecast_root = source_root / "workshops/corl2026_world_models/experiments/forecast_layout"
-    require(args.layout_pair_id == LAYOUT_PAIR_ID, "fixed observation is restricted to P00")
+    layout_pair_id, candidate_id = validate_layout_request(
+        args.layout_pair_id,
+        getattr(args, "candidate_id", None),
+        require_explicit_candidate=True,
+    )
     require(args.layout_arm == LAYOUT_ARM and args.command == COMMAND, "fixed observation task identity changed")
     verify_clean_git(source_root, args.study_commit, "study")
     require(args.robolab_commit == ROBOLAB_COMMIT, "RoboLab expected commit changed")
@@ -1296,7 +1569,10 @@ def run_live_capture(args: argparse.Namespace) -> dict[str, Any]:
         gate_receipt_sha256=args.gate_receipt_sha256,
         pose_manifest_path=args.pose_manifest,
         pose_manifest_sha256=args.pose_manifest_sha256,
+        layout_pair_id=layout_pair_id,
+        candidate_id=candidate_id,
     )
+    resolved_candidate_id = release["candidate_id"]
     require(not Path(args.output_dir).exists(), "fixed-observation output directory already exists")
 
     if str(forecast_root) not in sys.path:
@@ -1306,7 +1582,7 @@ def run_live_capture(args: argparse.Namespace) -> dict[str, Any]:
     os.environ.update(
         WMF_FORECAST_POSE_MANIFEST=str(Path(args.pose_manifest).resolve()),
         WMF_FORECAST_POSE_MANIFEST_SHA256=args.pose_manifest_sha256,
-        WMF_FORECAST_LAYOUT_PAIR_ID=LAYOUT_PAIR_ID,
+        WMF_FORECAST_LAYOUT_PAIR_ID=layout_pair_id,
     )
 
     import cv2  # noqa: F401 - RoboLab/Isaac import order requires OpenCV first.
@@ -1367,7 +1643,7 @@ def run_live_capture(args: argparse.Namespace) -> dict[str, Any]:
         collision_sampler, visibility_sampler, physical_evidence = _fresh_physical_callbacks(
             output_dir.parent, source_contract
         )
-        reset_identity = f"fixed-observation:{args.study_commit}:{LAYOUT_PAIR_ID}:{args.environment_seed}"
+        reset_identity = f"fixed-observation:{args.study_commit}:{layout_pair_id}:{args.environment_seed}"
         observation, info, settled_receipt = settle_for_recording_reset(
             env,
             observation,
@@ -1399,7 +1675,7 @@ def run_live_capture(args: argparse.Namespace) -> dict[str, Any]:
 
         world = get_world(env)
         state_arrays: dict[str, Any] = {}
-        configured = release["pose_row"]["layouts"][LAYOUT_ARM]
+        configured = release["pose_row"]["layouts"][args.layout_arm]
         tolerance = float(source_contract["live_gate"]["pose_tolerance_m"])
         for name in ("banana", "bowl", "rubiks_cube"):
             position, quaternion = world.get_pose(name, env_id=0)
@@ -1410,7 +1686,10 @@ def run_live_capture(args: argparse.Namespace) -> dict[str, Any]:
             expected_position = np.asarray(configured["positions_robot_base_m"][name], dtype=np.float64)
             observed_position = np.asarray(state_arrays[f"objects/{name}/position_robot_base_m"], dtype=np.float64)
             require(observed_position.shape == (3,), f"settled {name} position shape changed")
-            require(float(np.max(np.abs(observed_position - expected_position))) <= tolerance, f"settled {name} pose left P00 tolerance")
+            require(
+                float(np.max(np.abs(observed_position - expected_position))) <= tolerance,
+                f"settled {name} pose left {layout_pair_id} tolerance",
+            )
         robot = env.scene["robot"]
         for attribute in (
             "root_pos_w",
@@ -1451,6 +1730,10 @@ def run_live_capture(args: argparse.Namespace) -> dict[str, Any]:
             robolab_commit=args.robolab_commit,
             environment_seed=args.environment_seed,
             runtime_identity=runtime_identity,
+            layout_pair_id=layout_pair_id,
+            candidate_id=resolved_candidate_id,
+            layout_arm=args.layout_arm,
+            command=args.command,
         )
     finally:
         if env is not None:
@@ -1502,11 +1785,16 @@ def build_parser() -> argparse.ArgumentParser:
     queue.add_argument("--pose-manifest", type=Path, required=True)
     queue.add_argument(
         "--pose-manifest-sha256",
-        help="required when --pose-manifest already exists; omit to freeze a missing P00 manifest",
+        help="required when --pose-manifest already exists; omit to freeze a missing one-layout manifest",
     )
     queue.add_argument("--gate-receipt", type=Path, required=True)
     queue.add_argument("--gate-receipt-sha256", required=True)
     queue.add_argument("--environment-seed", type=int, default=2026091000)
+    queue.add_argument("--layout-pair-id", default=LAYOUT_PAIR_ID, choices=ALLOWED_LAYOUT_PAIR_IDS)
+    queue.add_argument(
+        "--candidate-id",
+        help="exact accepted candidate; required for D01-D04 and C01-C24 (P00 legacy may omit)",
+    )
     queue.add_argument("--raw-root", type=Path, default=RAW_ROOT)
     queue.add_argument("--robolab-root", type=Path, default=ROBOLAB_ROOT)
     queue.add_argument("--robolab-python", type=Path, default=ROBOLAB_PYTHON)
@@ -1523,7 +1811,11 @@ def build_parser() -> argparse.ArgumentParser:
     capture.add_argument("--gate-receipt-sha256", required=True)
     capture.add_argument("--output-dir", type=Path, required=True)
     capture.add_argument("--environment-seed", type=int, required=True)
-    capture.add_argument("--layout-pair-id", default=LAYOUT_PAIR_ID, choices=[LAYOUT_PAIR_ID])
+    capture.add_argument("--layout-pair-id", default=LAYOUT_PAIR_ID, choices=ALLOWED_LAYOUT_PAIR_IDS)
+    capture.add_argument(
+        "--candidate-id",
+        help="exact accepted candidate; required for D01-D04 and C01-C24 (P00 legacy may omit)",
+    )
     capture.add_argument("--layout-arm", default=LAYOUT_ARM, choices=[LAYOUT_ARM])
     capture.add_argument("--command", default=COMMAND, choices=[COMMAND])
     return parser
@@ -1542,6 +1834,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         gate_receipt_path=args.gate_receipt,
         gate_receipt_sha256=args.gate_receipt_sha256,
         environment_seed=args.environment_seed,
+        layout_pair_id=args.layout_pair_id,
+        candidate_id=args.candidate_id,
         raw_root=args.raw_root,
         robolab_root=args.robolab_root,
         robolab_python=args.robolab_python,

@@ -24,9 +24,15 @@ def write_json(path: Path, value: dict) -> dict:
     return {"path": str(path.resolve()), "bytes": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
 
 
-def accepted_chain(root: Path) -> tuple[Path, str, Path, str]:
+def accepted_chain(
+    root: Path,
+    *,
+    layout_pair_id: str = fixed.LAYOUT_PAIR_ID,
+    candidate_id: str | None = None,
+) -> tuple[Path, str, Path, str]:
     pool = json.loads((FORECAST / "layout_candidate_pool.json").read_text())
-    candidate = next(row for row in pool["candidates"] if row["candidate_id"] == "P00__candidate_00")
+    candidate_id = candidate_id or f"{layout_pair_id}__candidate_00"
+    candidate = next(row for row in pool["candidates"] if row["candidate_id"] == candidate_id)
     candidate_id = candidate["candidate_id"]
     candidate_sha = candidate["candidate_payload_sha256"]
     attempt = {
@@ -49,9 +55,9 @@ def accepted_chain(root: Path) -> tuple[Path, str, Path, str]:
         "sequence": 0,
         "previous_record_sha256": None,
         "recorded_at_utc": "2026-09-13T00:00:00Z",
-        "layout_pair_id": fixed.LAYOUT_PAIR_ID,
+        "layout_pair_id": layout_pair_id,
         "candidate_id": candidate_id,
-        "candidate_rank": 0,
+        "candidate_rank": candidate["candidate_rank"],
         "candidate_payload_sha256": candidate_sha,
         "candidate_pool_sha256": fixed.CANDIDATE_POOL_SHA256,
         "decision": "accepted",
@@ -81,12 +87,12 @@ def accepted_chain(root: Path) -> tuple[Path, str, Path, str]:
         "gate_ledger_sha256": ledger_descriptor["sha256"],
         "gate_ledger_last_record_sha256": record["record_sha256"],
         "qualified_layout_count": 1,
-        "layout_pair_ids": [fixed.LAYOUT_PAIR_ID],
+        "layout_pair_ids": [layout_pair_id],
         "layout_pairs": {
-            fixed.LAYOUT_PAIR_ID: {
-                "layout_pair_id": fixed.LAYOUT_PAIR_ID,
+            layout_pair_id: {
+                "layout_pair_id": layout_pair_id,
                 "candidate_id": candidate_id,
-                "candidate_rank": 0,
+                "candidate_rank": candidate["candidate_rank"],
                 "candidate_payload_sha256": candidate_sha,
                 "accepted_gate_record_sha256": record["record_sha256"],
                 "accepted_gate_attempt_receipt": attempt_descriptor,
@@ -101,14 +107,14 @@ def accepted_chain(root: Path) -> tuple[Path, str, Path, str]:
             "success_termination_present": False,
         },
     }
-    pose_path = root / "p00_pose_manifest.json"
+    pose_path = root / f"{layout_pair_id.lower()}_pose_manifest.json"
     pose_descriptor = write_json(pose_path, pose)
     gate = {
         "schema_version": fixed.GATE_RECEIPT_SCHEMA,
         "study_namespace": fixed.NAMESPACE,
         "status": "finished",
-        "job_id": "fixture-p00",
-        "layout_pair_id": fixed.LAYOUT_PAIR_ID,
+        "job_id": f"fixture-{layout_pair_id.lower()}",
+        "layout_pair_id": layout_pair_id,
         "candidate_id": candidate_id,
         "candidate_payload_sha256": candidate_sha,
         "decision": "accepted",
@@ -223,6 +229,78 @@ class FixedObservationTests(unittest.TestCase):
             )
             self.assertEqual((path2, digest2), (path, digest))
 
+    def test_development_layout_freeze_requires_and_binds_exact_candidate(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate_id = "D01__candidate_00"
+            gate_path, gate_sha, pose_path, pose_sha = accepted_chain(
+                root,
+                layout_pair_id="D01",
+                candidate_id=candidate_id,
+            )
+            with self.assertRaisesRegex(fixed.FixedObservationError, "candidate ID is required"):
+                fixed.verify_gate_and_pose_manifest(
+                    gate_receipt_path=gate_path,
+                    gate_receipt_sha256=gate_sha,
+                    pose_manifest_path=pose_path,
+                    pose_manifest_sha256=pose_sha,
+                    layout_pair_id="D01",
+                )
+            release = fixed.verify_gate_and_pose_manifest(
+                gate_receipt_path=gate_path,
+                gate_receipt_sha256=gate_sha,
+                pose_manifest_path=pose_path,
+                pose_manifest_sha256=pose_sha,
+                layout_pair_id="D01",
+                candidate_id=candidate_id,
+            )
+            self.assertEqual(release["layout_pair_id"], "D01")
+            self.assertEqual(release["candidate_id"], candidate_id)
+            with self.assertRaisesRegex(fixed.FixedObservationError, "selected another candidate"):
+                fixed.verify_gate_and_pose_manifest(
+                    gate_receipt_path=gate_path,
+                    gate_receipt_sha256=gate_sha,
+                    pose_manifest_path=pose_path,
+                    pose_manifest_sha256=pose_sha,
+                    layout_pair_id="D01",
+                    candidate_id="D01__candidate_01",
+                )
+
+            target = root / "released/d01_pose_manifest.json"
+            path, digest = fixed.freeze_pose_manifest(
+                source_root=WORKSHOP.parents[1],
+                gate_receipt_path=gate_path,
+                gate_receipt_sha256=gate_sha,
+                pose_manifest_path=target,
+                layout_pair_id="D01",
+                candidate_id=candidate_id,
+            )
+            self.assertEqual(path, target.resolve())
+            self.assertEqual(digest, fixed.sha256_file(target))
+            frozen = json.loads(target.read_text())
+            self.assertEqual(frozen["layout_pair_ids"], ["D01"])
+            self.assertEqual(frozen["layout_pairs"]["D01"]["candidate_id"], candidate_id)
+            self.assertEqual(frozen["model_request_count"], 0)
+            self.assertEqual(frozen["behavioral_episode_count"], 0)
+
+    def test_layout_inventory_includes_all_and_only_selected_core_pairs(self):
+        expected = (
+            "P00",
+            *(f"D{index:02d}" for index in range(1, 5)),
+            *(f"C{index:02d}" for index in range(1, 25)),
+        )
+        self.assertEqual(fixed.ALLOWED_LAYOUT_PAIR_IDS, expected)
+        self.assertEqual(
+            fixed.validate_layout_request(
+                "C24",
+                "C24__candidate_03",
+                require_explicit_candidate=True,
+            ),
+            ("C24", "C24__candidate_03"),
+        )
+        with self.assertRaisesRegex(fixed.FixedObservationError, "planned"):
+            fixed.validate_layout_request("C25", "C25__candidate_00")
+
     def test_exact_preprocessing_invokes_both_client_paths_without_model(self):
         n3, d1, preprocessing = fixed.extract_exact_model_inputs(
             {"raw": "observation"},
@@ -241,12 +319,19 @@ class FixedObservationTests(unittest.TestCase):
     def test_artifacts_retain_raw_arrays_and_both_strict_wire_fixtures(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            gate_path, gate_sha, pose_path, pose_sha = accepted_chain(root)
+            candidate_id = "D01__candidate_00"
+            gate_path, gate_sha, pose_path, pose_sha = accepted_chain(
+                root,
+                layout_pair_id="D01",
+                candidate_id=candidate_id,
+            )
             release = fixed.verify_gate_and_pose_manifest(
                 gate_receipt_path=gate_path,
                 gate_receipt_sha256=gate_sha,
                 pose_manifest_path=pose_path,
                 pose_manifest_sha256=pose_sha,
+                layout_pair_id="D01",
+                candidate_id=candidate_id,
             )
             raw = {
                 "image_obs": {
@@ -300,6 +385,15 @@ class FixedObservationTests(unittest.TestCase):
                 robolab_commit=fixed.ROBOLAB_COMMIT,
                 environment_seed=2026091000,
                 runtime_identity={"pod": "test"},
+                layout_pair_id="D01",
+                candidate_id=candidate_id,
+            )
+            self.assertEqual(receipt["layout_pair_id"], "D01")
+            self.assertEqual(receipt["candidate_id"], candidate_id)
+            self.assertTrue(receipt["capture_id"].startswith("D01-2026091000-"))
+            self.assertEqual(
+                receipt["source_capture"]["simulator_observation_id"],
+                "D01_original_settled_observation_000000",
             )
             self.assertEqual(receipt["model_request_count"], 0)
             self.assertEqual(receipt["behavioral_action_count"], 0)
@@ -323,6 +417,8 @@ class FixedObservationTests(unittest.TestCase):
                     robolab_commit=fixed.ROBOLAB_COMMIT,
                     environment_seed=2026091000,
                     runtime_identity={},
+                    layout_pair_id="D01",
+                    candidate_id=candidate_id,
                 )
 
     def test_native_clock_requires_real_camera_counter_and_timestamp(self):
@@ -365,16 +461,22 @@ class FixedObservationTests(unittest.TestCase):
         command = fixed.build_child_command(
             source_root=Path("/queue/sources") / ("a" * 40),
             output_dir=Path("/raw/capture"),
-            pose_manifest_path=Path("/raw/p00.json"),
+            pose_manifest_path=Path("/raw/d01.json"),
             pose_manifest_sha256="2" * 64,
             gate_receipt_path=Path("/queue/gate.json"),
             gate_receipt_sha256="3" * 64,
             study_commit="a" * 40,
             environment_seed=2026091000,
+            layout_pair_id="D01",
+            candidate_id="D01__candidate_00",
         )
         self.assertEqual(command[0], str(fixed.ROBOLAB_PYTHON))
         self.assertEqual(command[2], "capture")
         self.assertIn("--pose-manifest-sha256", command)
+        self.assertEqual(command[command.index("--layout-pair-id") + 1], "D01")
+        self.assertEqual(command[command.index("--candidate-id") + 1], "D01__candidate_00")
+        self.assertEqual(command[command.index("--layout-arm") + 1], fixed.LAYOUT_ARM)
+        self.assertEqual(command[command.index("--command") + 1], fixed.COMMAND)
         self.assertNotIn("infer", command)
 
     def test_queue_command_does_not_resolve_venv_python_symlink(self):
@@ -396,6 +498,47 @@ class FixedObservationTests(unittest.TestCase):
             )
             self.assertEqual(command[0], str(venv_python.absolute()))
             self.assertNotEqual(command[0], str(venv_python.resolve()))
+
+    def test_idempotent_receipt_is_bound_to_layout_candidate_gate_pose_and_seed(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "receipt.json"
+            write_json(
+                path,
+                {
+                    "schema_version": fixed.QUEUE_RECEIPT_SCHEMA,
+                    "status": "passed",
+                    "exit_code": 0,
+                    "job_id": "fixed-d01",
+                    "study_commit": "a" * 40,
+                    "layout_pair_id": "D01",
+                    "candidate_id": "D01__candidate_00",
+                    "environment_seed": 17,
+                    "gate_receipt_sha256": "2" * 64,
+                    "pose_manifest_sha256": "3" * 64,
+                },
+            )
+            receipt = fixed._existing_queue_receipt(
+                path,
+                job_id="fixed-d01",
+                source_commit="a" * 40,
+                layout_pair_id="D01",
+                candidate_id="D01__candidate_00",
+                environment_seed=17,
+                gate_receipt_sha256="2" * 64,
+                pose_manifest_sha256="3" * 64,
+            )
+            self.assertEqual(receipt["candidate_id"], "D01__candidate_00")
+            with self.assertRaisesRegex(fixed.FixedObservationError, "seed changed"):
+                fixed._existing_queue_receipt(
+                    path,
+                    job_id="fixed-d01",
+                    source_commit="a" * 40,
+                    layout_pair_id="D01",
+                    candidate_id="D01__candidate_00",
+                    environment_seed=18,
+                    gate_receipt_sha256="2" * 64,
+                    pose_manifest_sha256="3" * 64,
+                )
 
 
 if __name__ == "__main__":

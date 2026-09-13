@@ -594,6 +594,61 @@ class EvidenceFixture:
 
 
 class ForecastTimingQualificationTests(unittest.TestCase):
+    def test_contract_identity_survives_staged_prefix_and_rejects_substitution(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            relative = timing.CONTRACT_REPOSITORY_RELATIVE
+            old = root / "sources" / ("a" * 40) / relative
+            current = root / "sources" / ("b" * 40) / relative
+            old.parent.mkdir(parents=True)
+            current.parent.mkdir(parents=True)
+            old.write_bytes(CONTRACT.read_bytes())
+            current.write_bytes(CONTRACT.read_bytes())
+            timing.require_contract_descriptor_matches(
+                descriptor(old), current, base=root, label="staged contract"
+            )
+
+            wrong_path = root / "same-bytes-wrong-relative-name.json"
+            wrong_path.write_bytes(CONTRACT.read_bytes())
+            with self.assertRaisesRegex(
+                timing.TimingQualificationError, "repository-relative identity"
+            ):
+                timing.require_contract_descriptor_matches(
+                    descriptor(wrong_path), current, base=root, label="staged contract"
+                )
+
+            wrong_content = root / "sources" / ("c" * 40) / relative
+            wrong_content.parent.mkdir(parents=True)
+            wrong_content.write_text("{}\n", encoding="utf-8")
+            with self.assertRaisesRegex(timing.TimingQualificationError, "identity changed"):
+                timing.require_contract_descriptor_matches(
+                    descriptor(wrong_content), current, base=root, label="staged contract"
+                )
+
+    def test_qualification_accepts_identical_contract_from_fresh_staged_commit(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            fixture = EvidenceFixture(root)
+            staged = root / "sources" / ("d" * 40) / timing.CONTRACT_REPOSITORY_RELATIVE
+            staged.parent.mkdir(parents=True)
+            staged.write_bytes(CONTRACT.read_bytes())
+            source = fixture.source_audit("D1")
+            generation = fixture.generation_probe("D1")
+            authority = timing.qualify_timing(
+                model_id="D1",
+                contract_path=staged,
+                contract_sha256=timing.sha256_file(staged),
+                source_audit_path=source,
+                source_audit_sha256=timing.sha256_file(source),
+                generation_probe_path=generation,
+                generation_probe_sha256=timing.sha256_file(generation),
+                recorder_receipt_path=fixture.recorder_path,
+                recorder_receipt_sha256=timing.sha256_file(fixture.recorder_path),
+                camera_id="over_shoulder_left_camera",
+            )
+            self.assertEqual(authority["status"], "qualified_from_source_lineage_and_native_zero_policy_clocks")
+            self.assertEqual(len(authority["generated_targets"]), 2)
+
     def test_production_contract_is_source_only_and_prohibits_shortcuts(self) -> None:
         contract, _ = timing.load_contract(CONTRACT, CONTRACT_SHA)
         self.assertEqual(contract["status"], "source_mapping_frozen_live_clock_probe_required")

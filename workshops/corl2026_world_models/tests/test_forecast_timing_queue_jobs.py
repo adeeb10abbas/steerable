@@ -163,7 +163,7 @@ class ForecastTimingDescriptorTests(unittest.TestCase):
 
         implementation = {
             "timing_validator": descriptor(
-                source / queue_jobs.TOOL_RELATIVE, queue_jobs.TOOL_SHA256
+                source / queue_jobs.TOOL_RELATIVE, queue_jobs.PRIOR_TOOL_SHA256
             ),
             "timing_contract": descriptor(
                 source / queue_jobs.CONTRACT_RELATIVE, queue_jobs.CONTRACT_SHA256
@@ -371,7 +371,7 @@ class ForecastTimingDescriptorTests(unittest.TestCase):
             )
         self.assertEqual(
             [job["job_id"] for job in wave["jobs"]],
-            ["timing-n3-native-authority-001", "timing-d1-native-authority-001"],
+            ["timing-n3-native-authority-002", "timing-d1-native-authority-002"],
         )
         self.assertEqual(
             [job["role"] for job in wave["jobs"]],

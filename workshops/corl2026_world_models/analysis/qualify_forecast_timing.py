@@ -45,6 +45,10 @@ D1_REPORT_SCHEMA = "wmf-d1-six-request-qualification-v1"
 D1_REQUEST_SCHEMA = "wmf-d1-request-receipt-v1"
 N3_REQUEST_SCHEMA = "wmf-n3-behavioral-server-request-v1"
 N3_LIVE_INPUT_SCHEMA = "wmf-n3-live-zero-policy-input-v1"
+CONTRACT_REPOSITORY_RELATIVE = Path(
+    "workshops/corl2026_world_models/experiments/forecast_layout/"
+    "forecast_timing_lineage_contract.json"
+)
 
 NATIVE_RUNTIME_FIELD = "forecast_timing.generated_targets"
 SIDECAR_RUNTIME_FIELD = "request_timing_sidecar.generated_targets"
@@ -265,6 +269,39 @@ def require_descriptor_matches(
     require(path == Path(expected_path).resolve(), f"{label} points to another file")
     require(observed.get("sha256") == expected["sha256"]
             and observed.get("bytes") == expected["bytes"], f"{label} identity changed")
+
+
+def require_contract_descriptor_matches(
+    descriptor: Any,
+    expected_path: Path,
+    *,
+    base: Path,
+    label: str,
+) -> None:
+    """Match immutable contract bytes across different staged source commits.
+
+    Queue staging gives the same repository file a different absolute prefix
+    for every source commit.  Contract provenance is therefore its frozen
+    repository-relative identity plus exact bytes/hash, not the lexical path
+    of one otherwise equivalent staged checkout.
+    """
+
+    observed, path = verify_descriptor(
+        descriptor, base=base, label=label, require_bytes=True
+    )
+    expected_path = Path(expected_path).resolve()
+    expected = file_descriptor(expected_path)
+    suffix = CONTRACT_REPOSITORY_RELATIVE.parts
+    require(
+        tuple(path.parts[-len(suffix):]) == suffix
+        and tuple(expected_path.parts[-len(suffix):]) == suffix,
+        f"{label} repository-relative identity changed",
+    )
+    require(
+        observed.get("sha256") == expected["sha256"]
+        and observed.get("bytes") == expected["bytes"],
+        f"{label} identity changed",
+    )
 
 
 def _read_hashed_json(path: Path, expected_sha256: str, label: str) -> tuple[dict[str, Any], Path]:
@@ -1449,11 +1486,11 @@ def qualify_timing(
     )
     generation = validate_generation_probe(generation_probe_path, generation_probe_sha256,
                                            expected_model=model_id)
-    require_descriptor_matches(
+    require_contract_descriptor_matches(
         source_audit.get("contract"), resolved_contract,
         base=Path(source_audit_path).resolve().parent, label="source-audit timing contract",
     )
-    require_descriptor_matches(
+    require_contract_descriptor_matches(
         generation.get("contract"), resolved_contract,
         base=Path(generation_probe_path).resolve().parent, label="generation-probe timing contract",
     )
@@ -1585,11 +1622,11 @@ def validate_timing_authority(
     generation = validate_generation_probe(
         generation_path, generation_identity["sha256"], expected_model=model_id
     )
-    require_descriptor_matches(
+    require_contract_descriptor_matches(
         source_audit.get("contract"), contract_path,
         base=source_path.parent, label="authority source-audit timing contract",
     )
-    require_descriptor_matches(
+    require_contract_descriptor_matches(
         generation.get("contract"), contract_path,
         base=generation_path.parent, label="authority generation-probe timing contract",
     )

@@ -65,10 +65,11 @@ N3_RUNTIME_CONTRACT_RELATIVE = (
     FORECAST_RELATIVE / "experiments/forecast_layout/n3_first_live_contract.json"
 )
 
-# These hashes identify the reviewed timing implementation at ed0d8694.  A
-# later queue-wrapper commit may add this file but may not silently change the
-# scientific validator, lineage contract, or qualified N3 generation runner.
-TOOL_SHA256 = "805fc1bc5d6eeeb174ac880ba034cc9eb7198292ffacce8fc350ea5bc7ffc262"
+# Prior prerequisite receipts were produced by the original reviewed validator.
+# New authority attempts use the staged-prefix-safe validator while retaining
+# the exact same lineage contract and qualified N3 generation runner.
+PRIOR_TOOL_SHA256 = "805fc1bc5d6eeeb174ac880ba034cc9eb7198292ffacce8fc350ea5bc7ffc262"
+TOOL_SHA256 = "aab99105478b983c0e58fba11642f394d08c09de855367806474452763a5965b"
 CONTRACT_SHA256 = "7a9cca8b2d3c0057ab6022b8ce0612fba0e84e4ccacaa4258f6cad266e48490e"
 N3_RUNNER_SHA256 = "9655047f322e7488d3bbf27839cf5ae6bf0ea91c351bbfe4ec45950883c42f8d"
 N3_RUNTIME_CONTRACT_SHA256 = (
@@ -427,14 +428,14 @@ AUTHORITY_JOBS: tuple[AuthorityJob, ...] = (
     AuthorityJob(
         "N3",
         "n3-native-authority",
-        "timing-n3-native-authority-001",
+        "timing-n3-native-authority-002",
         "wmf-forecast-0912-worker-05",
         32,
     ),
     AuthorityJob(
         "D1",
         "d1-native-authority",
-        "timing-d1-native-authority-001",
+        "timing-d1-native-authority-002",
         "wmf-forecast-0912-worker-06",
         2,
     ),
@@ -709,7 +710,7 @@ def _validate_receipt_implementation(
     implementation = receipt.get("implementation")
     require(isinstance(implementation, Mapping), "timing receipt implementation is missing")
     expected: dict[str, tuple[Path, str]] = {
-        "timing_validator": (TOOL_RELATIVE, TOOL_SHA256),
+        "timing_validator": (TOOL_RELATIVE, PRIOR_TOOL_SHA256),
         "timing_contract": (CONTRACT_RELATIVE, CONTRACT_SHA256),
     }
     if include_n3_runner:

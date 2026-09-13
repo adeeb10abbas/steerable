@@ -1,6 +1,6 @@
 # GM forecast ablation execution — 12 September 2026
 
-**New model episodes: 0 / 232. Generation qualification requests completed: 6 / 12 (N3 6/6, D1 0/6). N3 runtime qualification passed on a historical fixed observation; physical-time mapping and every behavioral stage remain pending.**
+**New model episodes: 0 / 232. Generation qualification requests completed: 6 / 12 (N3 6/6, D1 0/6). N3 runtime qualification passed on a historical fixed observation; P00 spare candidate 01 is in the live gate; physical-time mapping and every behavioral stage remain pending.**
 
 ## Current durable execution state
 
@@ -9,8 +9,8 @@
 - The work Mac is not in the ongoing dispatch or result-return path. Continue through normal commits on `codex/forecast-layout-gm-20260912` and fetch compact receipts from `codex/forecast-layout-gm-20260912-results`.
 - H01/H02 archive pointer closures and the exact N3/D1/RoboLab sources and model payloads are hash-verified in `archive_source_recovery.json`. This is identity/recovery evidence, not a new policy run or frame-time qualification.
 - The fixed-duration recorder, timeout-only task hook and model-blind fixture workflow are implemented and locally tested. Their remaining gates are live Isaac/model execution, measured forecast/action/camera mapping, actual resource cost and accepted physical layouts.
-- Current verified workshop suite before the active runtime edits: 128/128. N3 completed 6/6 generation qualification requests in `n3-first-live-002`; its first serializer-invalid attempt is preserved. Pilot, development and confirmation scientific counts remain zero.
-- P00 live fixture attempts 1 and 2 are preserved as zero-action technical-invalid setup failures. Retry 3 is staged on worker01 after correcting the exact RoboLab checkout and immutable replacement-pod identity handling.
+- Current verified workshop suite: 152/152. N3 completed 6/6 generation qualification requests in `n3-first-live-002`; its first serializer-invalid attempt is preserved. Pilot, development and confirmation scientific counts remain zero.
+- P00 attempts 1–4 are preserved as zero-action technical-invalid setup failures. Attempt 5 completed all eight model-blind reset captures; candidate 00 remains rejected under the original exact-RTX-byte rule. Its exact state and camera configuration identities matched, exposing realtime raster nondeterminism rather than a pose mismatch. The prospective v2 gate keeps those exact physical/configuration gates and records raw RGB hash differences as non-gating diagnostics; candidate 01 is released and candidate 00 will not be rerun.
 
 The user authorized the attached core specification on GM, with aggressive parallel execution. Optional D2 is not selected. The scientific requirements in `../../docs/ABLATION_SPEC.md` remain binding; machine access does not itself qualify a model, recorder, fixture, or confirmation release.
 
@@ -29,7 +29,7 @@ The earlier network failure in `cluster_preflight.json` is historical. The subse
 
 ## Resume sequence
 
-1. Reconcile `fixture-p00-candidate-00-r3`. If it is accepted, freeze the P00-only pose manifest and run the current fixed-observation capture; if it is technically invalid or physically rejected, retain it and continue with the next eligible immutable attempt/candidate.
+1. Reconcile `fixture-p00-candidate-01`. If it is accepted, freeze the P00-only pose manifest and immediately run the current fixed-observation capture; if it is technically invalid or physically rejected, retain it and continue with the next eligible immutable attempt/candidate.
 2. Run the six official conditional D1 qualification requests on the exact two-B200 worker after the live capture is hash-bound. Preserve every attempt and record actual cost. N3 already passed 6/6 on the historical fixed input; do not duplicate that sequence.
 3. Run the 450-action recorder-only simulator qualification and then connect the qualified model clients. Verify the generated-frame to physical-time mapping from native evidence; never assume generated frame number equals executed action number.
 4. Provision the exact policy/simulator GPU separation required by the qualified integrations before the Mac cutoff, then demonstrate real scientific qualification dispatch and result return over the independent queue.

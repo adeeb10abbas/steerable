@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T02:46:43Z",
+  "as_of_utc": "2026-09-13T03:15:43Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -14,9 +14,9 @@
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_physical_time_still_unqualified",
-    "runtime_D1": "pending_official_path_and_probes",
-    "fixed_450_recorder": "software_qualified_live_runtime_pending",
-    "physical_layouts": "P00_live_gate_retry_3_staged_after_two_preserved_zero_action_technical_invalid_attempts",
+    "runtime_D1": "official_two_rank_launcher_ready_waiting_for_current_hash_bound_capture",
+    "fixed_450_recorder": "software_qualified_live_queue_launcher_ready_waiting_for_accepted_P00_manifest",
+    "physical_layouts": "P00_candidate_00_preserved_physical_rejection_after_four_setup_invalid_attempts; prospective_candidate_01_released",
     "frame_time_camera_mapping": "pending_measured_qualification",
     "annotation_development": "pending_development_recordings",
     "confirmation_release": false
@@ -35,7 +35,7 @@
   "verified_baseline_tests": 23,
   "source_bundle_sha256": "a8cc6b8d393902bd4ea8561ec1236097d02c74c88c500b5477da72df576fde69",
   "automatic_background_execution": true,
-  "verified_workshop_tests": 128,
+  "verified_workshop_tests": 152,
   "prepared_schedule": {
     "path": "parallel_schedule.json",
     "jobs": 58,
@@ -75,8 +75,8 @@
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "fbd47f774af4730ece850e567fc10c6a55e9f6b6",
-    "latest_results_commit_fetched": "59c89a4102adbccbaf223b6db128f5fb27d65637"
+    "latest_control_commit": "ff5feab207bc4cae6008b1372eb22110e5e6c900",
+    "latest_results_commit_fetched": "f48de8fec9da072ebe27d23c0ca60fabf9555444"
   },
   "archive_source_recovery": {
     "path": "archive_source_recovery.json",
@@ -93,7 +93,7 @@
   "fixed_duration_recorder": {
     "contract": "../../experiments/forecast_layout/recording_contract.json",
     "implementation": "../../experiments/forecast_layout/recording_adapter.py",
-    "software_tests_passed": 12,
+    "software_tests_passed": 17,
     "n3_synthetic": {
       "actions": 450,
       "observations": 451,
@@ -107,6 +107,7 @@
       "final_executed_actions_from_prefix": 2,
       "returned_actions_outside_executable_prefix_per_full_request": 16
     },
+    "live_queue_launcher": "../../experiments/forecast_layout/recorder_qualification_job.py",
     "live_runtime_qualified": false
   },
   "generation_qualification": {
@@ -130,18 +131,32 @@
   },
   "live_fixture_qualification": {
     "P00": {
-      "attempts_completed": 2,
-      "technical_invalid": 2,
-      "physical_rejections": 0,
+      "attempts_completed": 5,
+      "technical_invalid": 4,
+      "physical_rejections": 1,
       "accepted": 0,
-      "active_or_staged_attempt": "fixture-p00-candidate-00-r3",
+      "active_or_staged_attempt": "fixture-p00-candidate-01",
       "model_requests": 0,
       "behavioral_actions": 0,
       "preserved_reasons": [
         "robolab_checkout_missing",
-        "pod_uid_environment_missing"
-      ]
+        "pod_uid_environment_missing",
+        "isaaclab_module_missing_from_child_path",
+        "venv_entrypoint_resolved_to_base_python_missing_toml",
+        "candidate_00_physical_rejection_under_exact_RTX_byte_identity_gate"
+      ],
+      "candidate_00_gate_record_sha256": "2e0d2a8c56feb8e975f2babb714c3ca7e0f09fed7eedaa55a79b590d8fddfe5b",
+      "renderer_diagnostic": "p00_renderer_nondeterminism.json",
+      "prospective_matched_reset_gate": "wmf-forecast-layout-matched-reset-gate-v2"
     }
   },
+  "active_owned_jobs": [
+    {
+      "job_id": "fixture-p00-candidate-01",
+      "role": "wmf-forecast-0912-worker-01",
+      "source_commit": "ac3072b8babee96ed194f04fb42ce81864f114a1",
+      "state": "released_to_independent_queue"
+    }
+  ],
   "independent_preparation_review": "reviewed_runtime_findings_are_fixed_or_tracked_before_release"
 }

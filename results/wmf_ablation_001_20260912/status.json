@@ -25,7 +25,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "9f4fa7705f0a29956eff8f3497b2c54be5ba7a98",
-    "control_generation": 841,
+    "control_generation": 842,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -1666,17 +1666,29 @@
       "worker_id": "wmf-forecast-0912-worker-05"
     },
     {
+      "child_pid": 366,
+      "child_reaped": true,
       "descriptor_sha256": "cf627bf0b544caa2fc3fce17cff888928ce6b6f6a7665a13dd5f569884143023",
-      "heartbeat": {
-        "at": "2026-09-13T12:55:37.069952+00:00",
-        "child_pid": 366,
-        "unix": 1789304137.06998,
-        "worker_id": "wmf-forecast-0912-worker-05",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T12:55:53.151085+00:00",
+      "error_type": null,
       "job_id": "development-evidence-compiler-formal-001",
+      "log_tails": {
+        "stderr": "{\"detail\": \"wmf1__development__D01__N3__original__left recorder context-reset payload differs from server attestation\", \"error_type\": \"CompilerError\", \"status\": \"technical_failure\"}\nTraceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/experiments/forecast_layout/development_evidence_compiler_jobs.py\", line 1922, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/experiments/forecast_layout/development_evidence_compiler_jobs.py\", line 1915, in main\n    receipt = run_formal_job(args)\n              ^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/experiments/forecast_layout/development_evidence_compiler_jobs.py\", line 1708, in run_formal_job\n    returned = compiler.compile_manifest(\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 3304, in compile_manifest\n    verified_descriptor, cells = _validate_aggregate(\n                                 ^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 3200, in _validate_aggregate\n    compiled.append(_compile_cell(\n                    ^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 2942, in _compile_cell\n    model_chain = _validate_n3_context_chain(\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 2209, in _validate_n3_context_chain\n    context_payload = _validate_context_payload(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 2059, in _validate_context_payload\n    require(\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 209, in require\n    raise CompilerError(message)\nwmf_detached_development_compiler.CompilerError: wmf1__development__D01__N3__original__left recorder context-reset payload differs from server attestation\n",
+        "stdout": ""
+      },
+      "returncode": 1,
       "source_commit": "9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9",
-      "status": "claimed",
+      "started_at": "2026-09-13T12:55:17.906880+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 3084,
+        "sha256": "d5b2f85efbde3b8aeadbd2f71288f3d17b1b8efa49c2fd09c4270948766e4ce5"
+      },
+      "stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "wall_seconds": 35.24475487717427,
       "worker_id": "wmf-forecast-0912-worker-05"
     },
     {

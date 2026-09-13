@@ -1,0 +1,45 @@
+{
+  "behavioral_policy_skill_evaluated": false,
+  "claim_boundary": "Failed CPU-only evidence validation or compilation. No model, simulator, reset, request, action, episode, label, or confirmation job was started.",
+  "completed_at_utc": "2026-09-13T12:55:51.798120Z",
+  "confirmation_released": false,
+  "decision": "no_go",
+  "failure": {
+    "detail": "wmf1__development__D01__N3__original__left recorder context-reset payload differs from server attestation",
+    "error_type": "CompilerError",
+    "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/experiments/forecast_layout/development_evidence_compiler_jobs.py\", line 1708, in run_formal_job\n    returned = compiler.compile_manifest(\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 3304, in compile_manifest\n    verified_descriptor, cells = _validate_aggregate(\n                                 ^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 3200, in _validate_aggregate\n    compiled.append(_compile_cell(\n                    ^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 2942, in _compile_cell\n    model_chain = _validate_n3_context_chain(\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 2209, in _validate_n3_context_chain\n    context_payload = _validate_context_payload(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 2059, in _validate_context_payload\n    require(\n  File \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/sources/9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9/workshops/corl2026_world_models/analysis/compile_development_evidence.py\", line 209, in require\n    raise CompilerError(message)\nwmf_detached_development_compiler.CompilerError: wmf1__development__D01__N3__original__left recorder context-reset payload differs from server attestation\n"
+  },
+  "formal_cohort_complete": false,
+  "job_id": "development-evidence-compiler-formal-001",
+  "mode": "formal_full",
+  "namespace": "wmf_ablation_001_20260912",
+  "payload_sha256": "8217fb72cf257bec6499b5304d6d0221b0650c1b0a126726e3f1c0fcd694b697",
+  "queue_claim": {
+    "bytes": 409,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/development-evidence-compiler-formal-001/claim/owner.json",
+    "sha256": "402b288adf02c1a4bb295f023ea538bbab0d87ef7a4b5ff1e753126e46bb5389"
+  },
+  "queue_descriptor": {
+    "bytes": 4351,
+    "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/development-evidence-compiler-formal-001/descriptor.json",
+    "sha256": "cf627bf0b544caa2fc3fce17cff888928ce6b6f6a7665a13dd5f569884143023"
+  },
+  "queue_role": "wmf-forecast-0912-worker-05",
+  "safe_for_timing_binding": false,
+  "safe_to_release_confirmation": false,
+  "schema_version": "wmf-development-evidence-compiler-queue-job-v1",
+  "science_counts": {
+    "behavioral_actions_executed_by_job": 0,
+    "behavioral_cells_launched_by_job": 0,
+    "labels_created_by_job": 0,
+    "model_requests_issued_by_job": 0,
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0,
+    "simulator_processes_started": 0
+  },
+  "status": "technical_invalid",
+  "study_commit": "9c03a850f9c6b405ea9f4c5debb64bd0d32e65f9",
+  "study_id": "WMF-ABLATION-001"
+}

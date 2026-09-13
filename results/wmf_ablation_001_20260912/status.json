@@ -36,11 +36,12 @@
       "bootstrap-diagnostic-worker-31",
       "n3-first-live-001",
       "fixture-p00-candidate-00",
-      "fixture-p00-candidate-00-r2"
+      "fixture-p00-candidate-00-r2",
+      "n3-first-live-002"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "d895b9ab14f96f7372c833654e39c781ca8debf5",
-    "control_generation": 73,
+    "control_commit": "a50b1158663d07b23e6e3911c8e67c6926fcc7f1",
+    "control_generation": 74,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -505,10 +506,30 @@
       "worker_id": "wmf-forecast-0912-worker-01"
     },
     {
+      "child_pid": 134,
+      "child_reaped": true,
       "descriptor_sha256": "e42dabda617e601e992ec4200d068826ffe652b3e94482747af08d167ba5f4d8",
+      "ended_at": "2026-09-13T02:42:21.656534+00:00",
+      "error_type": null,
       "job_id": "fixture-p00-candidate-00-r2",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"decision\": \"technical_invalid\", \"exit_code\": 3, \"idempotent_replay\": false, \"job_id\": \"fixture-p00-candidate-00-r2\", \"layout_pair_id\": \"P00\", \"published\": true}\n"
+      },
+      "returncode": 3,
       "source_commit": "68c1a5a612a9cad9646784eca72478a9c7fcb1dd",
-      "status": "staged"
+      "started_at": "2026-09-13T02:42:18.549180+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 163,
+        "sha256": "90f7661d6fb5791c04cc1ab66166f9a2e208c55311e4486f349ebda9ac5c5ccd"
+      },
+      "wall_seconds": 3.1075022779987194,
+      "worker_id": "wmf-forecast-0912-worker-01"
     },
     {
       "child_pid": 105,
@@ -535,6 +556,12 @@
       },
       "wall_seconds": 117.70838906988502,
       "worker_id": "wmf-forecast-0912-worker-00"
+    },
+    {
+      "descriptor_sha256": "c7e3395f4998370ae5474c23bd4a023e1833cd0dc39a6952ea615eeee184870e",
+      "job_id": "n3-first-live-002",
+      "source_commit": "b619c9448c27596e6e400981060a50ca2da7d288",
+      "status": "staged"
     }
   ],
   "maximum_combined_log_tail_bytes_per_job": 8192,

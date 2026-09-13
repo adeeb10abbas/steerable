@@ -54,11 +54,12 @@
       "fixture-d03-candidate-00",
       "fixture-d04-candidate-00",
       "d1-first-live-003",
-      "d1-first-live-004"
+      "d1-first-live-004",
+      "n3-p00-pilot-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "b90e462715c728b83fb33d0cde575ac01be986d0",
-    "control_generation": 182,
+    "control_commit": "91b32518f81ff8403f9e8443a0ede6367bb9d494",
+    "control_generation": 183,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -595,17 +596,29 @@
       "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
+      "child_pid": 2110,
+      "child_reaped": true,
       "descriptor_sha256": "792337d8fe2c556fbff2ab5b3dd57abcb4feb0958ae476646b3c0f71061b7075",
-      "heartbeat": {
-        "at": "2026-09-13T04:03:12.310635+00:00",
-        "child_pid": 2110,
-        "unix": 1789272192.3106766,
-        "worker_id": "wmf-forecast-0912-worker-d1-00",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T04:04:06.566403+00:00",
+      "error_type": null,
       "job_id": "d1-first-live-004",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"behavioral_episode_count\": 0, \"decision\": \"technical_invalid\", \"exit_code\": 3, \"generation_request_count\": 0, \"job_id\": \"d1-first-live-004\", \"published\": true}\n"
+      },
+      "returncode": 3,
       "source_commit": "248589137ad0b1a4a6c1fe6ff080ac776740da22",
-      "status": "claimed",
+      "started_at": "2026-09-13T03:56:19.902225+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 162,
+        "sha256": "7e334633b4a1ecce520a2fead649ca58d961903998887aa3b33e0bf4c1630af9"
+      },
+      "wall_seconds": 466.6643968829885,
       "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
@@ -715,9 +728,9 @@
     {
       "descriptor_sha256": "fcc3453ecb5b15332ee4e6646b03ba33b4a850a8af850052e318c1f8a1857a61",
       "heartbeat": {
-        "at": "2026-09-13T04:03:13.567836+00:00",
+        "at": "2026-09-13T04:04:07.824886+00:00",
         "child_pid": 5614,
-        "unix": 1789272193.5678673,
+        "unix": 1789272247.8249092,
         "worker_id": "wmf-forecast-0912-worker-00",
         "worker_pid": 1
       },
@@ -959,6 +972,12 @@
       },
       "wall_seconds": 101.2883534450084,
       "worker_id": "wmf-forecast-0912-worker-00"
+    },
+    {
+      "descriptor_sha256": "fde3900232560dd8b0b0c088dd2dd35b57dfbaf17a1f309c5a5c541a798ac777",
+      "job_id": "n3-p00-pilot-001",
+      "source_commit": "e4df55ede9a12111b3b8e94a4896c4e570a96014",
+      "status": "staged"
     },
     {
       "child_pid": 4613,

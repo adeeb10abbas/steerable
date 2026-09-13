@@ -226,7 +226,7 @@ class D1ContractTests(unittest.TestCase):
             first = SERVER.save_exact_mapping(values, root / "first", prefix="value")
             second = SERVER.save_exact_mapping(values, root / "second", prefix="value")
             self.assertEqual(first["content_sha256"], second["content_sha256"])
-            PROBE._verify_mapping(first, root / "manifest.json")
+            PROBE._verify_mapping(first, root / "manifest.json", allowed_root=root)
 
     def test_wrapper_returns_official_object_and_finalizes_probe(self) -> None:
         Policy = SERVER.make_instrumented_policy_class(FakeOfficialPolicy)
@@ -358,16 +358,20 @@ class D1EvaluatorTests(unittest.TestCase):
                 "port": 8123,
             }
             PROBE.atomic_write_json(server_contract_path, server_contract)
-            run_receipt = {"returned_actions": {}}
+            server_contract_sha256 = SERVER.sha256_file(server_contract_path)
+            run_receipt = {"returned_actions": {}, "future_root": str(future_root)}
+            probe_output_dir = root / "probe_output"
+            probe_output_dir.mkdir()
 
             for probe in plan["probes"]:
                 probe_id = probe["id"]
                 episode_dir = episodes / probe_id
                 request_dir = episode_dir / "request_0000"
                 request_dir.mkdir(parents=True)
-                is_right = probe["relation"] == "right"
-                action = np.full((24, 8), float(is_right), dtype=np.float32)
-                latent = torch.full((1, 4, 5, 2, 2), float(is_right), dtype=torch.bfloat16)
+                # No prompt sensitivity is deliberately observed. That is a
+                # retained scientific measurement, not a runtime gate.
+                action = np.zeros((24, 8), dtype=np.float32)
+                latent = torch.zeros((1, 4, 5, 2, 2), dtype=torch.bfloat16)
                 action_path = request_dir / "action.npy"
                 latent_path = request_dir / "latent.pt"
                 np.save(action_path, action, allow_pickle=False)
@@ -417,6 +421,12 @@ class D1EvaluatorTests(unittest.TestCase):
                     "schema_version": SERVER.REQUEST_SCHEMA_VERSION,
                     "probe_id": probe_id,
                     "prompt": probe["prompt"],
+                    "session_id": plan["fixed_session_id"],
+                    "measurement_control": {
+                        "probe_id": probe_id,
+                        "offline_decode": probe["offline_decode"],
+                        "probe_plan_sha256": plan_hash,
+                    },
                     "effective_official_model_noise_seed": 1140,
                     "official_forward_call_count": 1,
                     "raw_inputs": raw,
@@ -446,11 +456,20 @@ class D1EvaluatorTests(unittest.TestCase):
                     "official_action_path": "GrootSimPolicy.lazy_joint_forward_causal",
                     "custom_s2_used": False,
                     "patched_s1_used": False,
-                    "two_rank_reset": self._reset_receipt(),
+                    "two_rank_reset": {
+                        **self._reset_receipt(),
+                        "control": {
+                            "episode_id": probe_id,
+                            "expected_session_id": plan["fixed_session_id"],
+                            "purpose": "d1_six_request_qualification",
+                            "probe_plan_sha256": plan_hash,
+                        },
+                    },
+                    "server_contract_sha256": server_contract_sha256,
                     "requests": [request],
                 }
                 PROBE.atomic_write_json(episode_dir / "episode_manifest.json", manifest)
-                client_path = root / f"client_{probe_id}.npy"
+                client_path = probe_output_dir / f"client_{probe_id}.npy"
                 np.save(client_path, action, allow_pickle=False)
                 run_receipt["returned_actions"][probe_id] = {
                     "path": str(client_path),
@@ -466,10 +485,40 @@ class D1EvaluatorTests(unittest.TestCase):
                 fixture_path=root / "fixture.npz",
                 fixture_sha256="0" * 64,
                 server_contract_path=server_contract_path,
+                probe_output_dir=probe_output_dir,
             )
             self.assertTrue(report["passed"], report["failed_checks"])
             self.assertEqual(report["generation_request_count"], 6)
             self.assertEqual(report["behavioral_episode_count"], 0)
+            self.assertFalse(
+                report["sensitivity_measurements"]["prompt_sensitivity__no_decode"][
+                    "action_difference_observed"
+                ]
+            )
+            self.assertFalse(
+                report["sensitivity_measurements"]["prompt_sensitivity__no_decode"][
+                    "qualification_gate"
+                ]
+            )
+            first_manifest_path = (
+                future_root / "episodes" / plan["probes"][0]["id"] / "episode_manifest.json"
+            )
+            first_manifest = json.loads(first_manifest_path.read_text())
+            first_manifest["requests"][0]["measurement_control"][
+                "probe_plan_sha256"
+            ] = "f" * 64
+            first_manifest_path.write_text(json.dumps(first_manifest))
+            with self.assertRaisesRegex(ValueError, "measurement/plan binding"):
+                PROBE.evaluate(
+                    plan=plan,
+                    plan_sha256=plan_hash,
+                    future_root=future_root,
+                    run_receipt=run_receipt,
+                    fixture_path=root / "fixture.npz",
+                    fixture_sha256="0" * 64,
+                    server_contract_path=server_contract_path,
+                    probe_output_dir=probe_output_dir,
+                )
 
 
 if __name__ == "__main__":

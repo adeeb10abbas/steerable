@@ -184,6 +184,13 @@ def load_probe_plan(path: Path) -> tuple[dict[str, Any], str]:
         raise ValueError("D1 probe plan is not fixed at noise seed 1140")
     if not isinstance(plan.get("fixed_session_id"), str) or not plan["fixed_session_id"]:
         raise ValueError("D1 probe plan requires one fixed session id")
+    sensitivity = plan.get("input_sensitivity_check", {})
+    if sensitivity.get("qualification_gate") is not False:
+        raise ValueError("D1 prompt sensitivity must remain a measurement, not a gate")
+    if sensitivity.get("retain_action_difference_measurement") is not True:
+        raise ValueError("D1 action sensitivity measurement was removed")
+    if sensitivity.get("retain_latent_difference_measurement") is not True:
+        raise ValueError("D1 latent sensitivity measurement was removed")
     return plan, sha256_file(path)
 
 
@@ -364,17 +371,41 @@ def run_requests(
     }
 
 
-def _resolve_artifact(raw_path: str, manifest_path: Path) -> Path:
+def _resolve_artifact(raw_path: str, manifest_path: Path, *, allowed_root: Path) -> Path:
     path = Path(raw_path)
     if path.is_absolute():
-        return path
-    return (manifest_path.parent / path).resolve()
+        candidate = path
+    else:
+        candidate = manifest_path.parent / path
+    lexical = Path(os.path.abspath(candidate))
+    root = Path(allowed_root).resolve()
+    if not lexical.is_relative_to(root):
+        raise ValueError(f"D1 retained artifact escaped its attempt root: {lexical}")
+    cursor = lexical
+    while cursor != root:
+        if cursor.is_symlink():
+            raise ValueError(f"D1 retained artifact path contains a symlink: {lexical}")
+        cursor = cursor.parent
+    resolved = lexical.resolve()
+    if not resolved.is_relative_to(root):
+        raise ValueError(f"D1 retained artifact escaped its attempt root: {resolved}")
+    if not resolved.is_file():
+        raise ValueError(f"D1 retained artifact is not a regular file: {resolved}")
+    return resolved
 
 
-def _verify_mapping(mapping: Mapping[str, Any], manifest_path: Path) -> None:
+def _verify_mapping(
+    mapping: Mapping[str, Any], manifest_path: Path, *, allowed_root: Path
+) -> None:
     identities = []
-    for entry in mapping.get("entries", []):
-        path = _resolve_artifact(entry["path"], manifest_path)
+    entries = mapping.get("entries", [])
+    if not isinstance(entries, list) or mapping.get("entry_count") != len(entries):
+        raise ValueError("D1 exact input entry count changed")
+    keys = [entry.get("key") for entry in entries if isinstance(entry, Mapping)]
+    if len(keys) != len(entries) or len(set(keys)) != len(keys):
+        raise ValueError("D1 exact input entries are invalid or duplicated")
+    for entry in entries:
+        path = _resolve_artifact(entry["path"], manifest_path, allowed_root=allowed_root)
         if sha256_file(path) != entry["file_sha256"]:
             raise ValueError(f"D1 retained input file mismatch: {path}")
         if entry["kind"] == "numpy_array":
@@ -403,8 +434,10 @@ def _verify_mapping(mapping: Mapping[str, Any], manifest_path: Path) -> None:
         raise ValueError("D1 exact input content aggregate mismatch")
 
 
-def _load_action(entry: Mapping[str, Any], manifest_path: Path) -> np.ndarray:
-    path = _resolve_artifact(entry["path"], manifest_path)
+def _load_action(
+    entry: Mapping[str, Any], manifest_path: Path, *, allowed_root: Path
+) -> np.ndarray:
+    path = _resolve_artifact(entry["path"], manifest_path, allowed_root=allowed_root)
     if sha256_file(path) != entry["file_sha256"]:
         raise ValueError(f"D1 action file mismatch: {path}")
     action = np.load(path, allow_pickle=False)
@@ -416,8 +449,10 @@ def _load_action(entry: Mapping[str, Any], manifest_path: Path) -> np.ndarray:
     return action
 
 
-def _load_latent(entry: Mapping[str, Any], manifest_path: Path) -> torch.Tensor:
-    path = _resolve_artifact(entry["path"], manifest_path)
+def _load_latent(
+    entry: Mapping[str, Any], manifest_path: Path, *, allowed_root: Path
+) -> torch.Tensor:
+    path = _resolve_artifact(entry["path"], manifest_path, allowed_root=allowed_root)
     if sha256_file(path) != entry["file_sha256"]:
         raise ValueError(f"D1 latent file mismatch: {path}")
     latent = torch.load(path, map_location="cpu", weights_only=True)
@@ -426,10 +461,27 @@ def _load_latent(entry: Mapping[str, Any], manifest_path: Path) -> torch.Tensor:
     return latent
 
 
-def _verify_reset_and_cache(manifest: Mapping[str, Any]) -> None:
+def _verify_reset_and_cache(
+    manifest: Mapping[str, Any],
+    *,
+    probe_id: str,
+    session_id: str,
+    plan_sha256: str,
+) -> None:
     reset = manifest.get("two_rank_reset", {})
     if reset.get("status") != "passed" or reset.get("world_size") != 2:
         raise ValueError("D1 episode lacks a passed two-rank reset")
+    control = reset.get("control")
+    if not isinstance(control, Mapping):
+        raise ValueError("D1 episode reset lacks its exact control binding")
+    expected_control = {
+        "episode_id": probe_id,
+        "expected_session_id": session_id,
+        "purpose": "d1_six_request_qualification",
+        "probe_plan_sha256": plan_sha256,
+    }
+    if dict(control) != expected_control:
+        raise ValueError(f"D1 episode reset control changed for {probe_id}")
     rank_receipts = reset.get("rank_receipts", [])
     if sorted(receipt.get("rank") for receipt in rank_receipts) != [0, 1]:
         raise ValueError("D1 reset receipts do not cover exactly ranks 0 and 1")
@@ -491,12 +543,29 @@ def evaluate(
     fixture_path: Path,
     fixture_sha256: str,
     server_contract_path: Path,
+    probe_output_dir: Path,
 ) -> dict[str, Any]:
+    future_root = Path(future_root).resolve()
+    probe_output_dir = Path(probe_output_dir).resolve()
+    server_contract_path = Path(server_contract_path).resolve()
+    if not server_contract_path.is_relative_to(future_root):
+        raise ValueError("D1 server contract escaped the current future root")
+    if server_contract_path.is_symlink() or not server_contract_path.is_file():
+        raise ValueError("D1 server contract is not a regular current-attempt file")
+    if not probe_output_dir.is_dir() or probe_output_dir.is_symlink():
+        raise ValueError("D1 probe output root is not a regular current-attempt directory")
     server_contract_payload = json.loads(server_contract_path.read_text())
     server_port = server_contract_payload.get("port")
     if type(server_port) is not int:
         raise ValueError("D1 server contract lacks an integer port")
     server_contract = validate_server_contract(server_contract_path, remote_port=server_port)
+    server_contract_sha256 = sha256_file(server_contract_path)
+    expected_probe_ids = [probe["id"] for probe in plan["probes"]]
+    returned_actions = run_receipt.get("returned_actions")
+    if not isinstance(returned_actions, Mapping) or set(returned_actions) != set(expected_probe_ids):
+        raise ValueError("D1 client receipt does not contain exactly the six planned actions")
+    if Path(str(run_receipt.get("future_root", ""))).resolve() != future_root:
+        raise ValueError("D1 client receipt is bound to another future root")
     actions: dict[str, np.ndarray] = {}
     latents: dict[str, torch.Tensor] = {}
     records: dict[str, dict[str, Any]] = {}
@@ -505,6 +574,8 @@ def evaluate(
     for probe in plan["probes"]:
         probe_id = probe["id"]
         manifest_path = future_root / "episodes" / probe_id / "episode_manifest.json"
+        if manifest_path.is_symlink() or not manifest_path.is_file():
+            raise ValueError(f"D1 episode manifest is not a regular file: {probe_id}")
         manifest = json.loads(manifest_path.read_text())
         if manifest.get("schema_version") != EPISODE_SCHEMA:
             raise ValueError(f"Unknown D1 episode schema for {probe_id}")
@@ -514,22 +585,42 @@ def evaluate(
             raise ValueError("D1 episode did not use the official conditional path")
         if manifest.get("custom_s2_used") is not False or manifest.get("patched_s1_used") is not False:
             raise ValueError("D1 episode used a forbidden guidance path")
-        _verify_reset_and_cache(manifest)
+        if manifest.get("server_contract_sha256") != server_contract_sha256:
+            raise ValueError(f"D1 episode is not bound to this server contract: {probe_id}")
+        _verify_reset_and_cache(
+            manifest,
+            probe_id=probe_id,
+            session_id=plan["fixed_session_id"],
+            plan_sha256=plan_sha256,
+        )
         request = manifest["requests"][0]
         if request.get("schema_version") != REQUEST_SCHEMA:
             raise ValueError(f"Unknown D1 request schema for {probe_id}")
         if request.get("probe_id") != probe_id or request.get("prompt") != probe["prompt"]:
             raise ValueError(f"D1 probe identity/prompt mismatch: {probe_id}")
+        if request.get("session_id") != plan["fixed_session_id"]:
+            raise ValueError(f"D1 request session changed for {probe_id}")
+        expected_measurement = {
+            "probe_id": probe_id,
+            "offline_decode": probe["offline_decode"],
+            "probe_plan_sha256": plan_sha256,
+        }
+        if request.get("measurement_control") != expected_measurement:
+            raise ValueError(f"D1 request measurement/plan binding changed for {probe_id}")
         if request.get("effective_official_model_noise_seed") != OFFICIAL_NOISE_SEED:
             raise ValueError("D1 request did not use fixed official seed 1140")
         if request.get("official_forward_call_count") != 1:
             raise ValueError("D1 request did not invoke official conditional forward exactly once")
         for mapping_name in ("raw_inputs", "converted_inputs", "normalized_model_inputs"):
-            _verify_mapping(request[mapping_name], manifest_path)
-        action = _load_action(request["official_returned_action"], manifest_path)
-        latent = _load_latent(request["latent_video"], manifest_path)
-        client_entry = run_receipt["returned_actions"][probe_id]
-        client_action = _load_action(client_entry, server_contract_path)
+            _verify_mapping(request[mapping_name], manifest_path, allowed_root=future_root)
+        action = _load_action(
+            request["official_returned_action"], manifest_path, allowed_root=future_root
+        )
+        latent = _load_latent(request["latent_video"], manifest_path, allowed_root=future_root)
+        client_entry = returned_actions[probe_id]
+        client_action = _load_action(
+            client_entry, probe_output_dir / "client_run_receipt.json", allowed_root=probe_output_dir
+        )
         if not np.array_equal(action, client_action):
             raise ValueError(f"D1 instrumentation changed returned action for {probe_id}")
         decode = request.get("offline_decode", {})
@@ -538,9 +629,13 @@ def evaluate(
         if decode.get("performed") is not probe["offline_decode"]:
             raise ValueError(f"D1 decode execution mismatch: {probe_id}")
         if probe["offline_decode"]:
-            decoded_tensor = _load_latent(decode["decoded_tensor"], manifest_path)
+            decoded_tensor = _load_latent(
+                decode["decoded_tensor"], manifest_path, allowed_root=future_root
+            )
             del decoded_tensor
-            decoded_rgb_path = _resolve_artifact(decode["decoded_rgb"]["path"], manifest_path)
+            decoded_rgb_path = _resolve_artifact(
+                decode["decoded_rgb"]["path"], manifest_path, allowed_root=future_root
+            )
             if sha256_file(decoded_rgb_path) != decode["decoded_rgb"]["file_sha256"]:
                 raise ValueError(f"D1 decoded RGB file mismatch: {probe_id}")
             decoded_rgb = np.load(decoded_rgb_path, allow_pickle=False)
@@ -607,20 +702,22 @@ def evaluate(
         )
         checks[key] = equal
 
+    sensitivity_measurements: dict[str, Any] = {}
     for suffix in ("no_decode", "decode"):
         left = "left_no_decode" if suffix == "no_decode" else "left_decode"
         right = "right_no_decode" if suffix == "no_decode" else "right_decode"
         key = f"prompt_sensitivity__{suffix}"
         action_rms = _rms(actions[left], actions[right])
         latent_rms = _tensor_rms(latents[left], latents[right])
-        comparisons[key] = {
+        sensitivity_measurements[key] = {
             "action_array_equal": bool(np.array_equal(actions[left], actions[right])),
             "latent_tensor_equal": bool(torch.equal(latents[left], latents[right])),
             "action_rms": action_rms,
             "latent_rms": latent_rms,
+            "action_difference_observed": action_rms > 0.0,
+            "latent_difference_observed": latent_rms > 0.0,
+            "qualification_gate": False,
         }
-        checks[f"{key}__nonzero_action"] = action_rms > 0.0
-        checks[f"{key}__nonzero_latent"] = latent_rms > 0.0
 
     decode_count = sum(record["offline_decode_performed"] for record in records.values())
     checks["exactly_three_offline_decodes"] = decode_count == 3
@@ -661,12 +758,14 @@ def evaluate(
         ),
         "records": records,
         "comparisons": comparisons,
+        "sensitivity_measurements": sensitivity_measurements,
         "checks": checks,
         "failed_checks": failed,
         "client_run": run_receipt,
         "claim_boundary": (
-            "This report qualifies source/runtime determinism, prompt sensitivity, reset "
-            "isolation, action/latent retention, and measurement-only decoding. It is not a "
+            "This report qualifies source/runtime determinism, reset isolation, action/latent "
+            "retention, and measurement-only decoding. Prompt sensitivity is a measured outcome, "
+            "not a runtime gate. It is not a "
             "robot episode or physical forecast/action/camera alignment result."
         ),
     }
@@ -722,6 +821,7 @@ def main(argv: list[str] | None = None) -> None:
             fixture_path=args.fixture,
             fixture_sha256=args.fixture_sha256,
             server_contract_path=server_contract_path,
+            probe_output_dir=args.output_dir,
         )
         report_path = args.output_dir / "d1_probe_qualification.json"
         atomic_write_json(report_path, report)

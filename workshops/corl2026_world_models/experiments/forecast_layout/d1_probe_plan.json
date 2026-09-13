@@ -71,8 +71,9 @@
   "input_sensitivity_check": {
     "left": "left_no_decode",
     "right": "right_no_decode",
-    "require_nonidentical_actions": true,
-    "require_nonidentical_latents": true,
-    "interpretation": "A failure is a disclosed qualification result, not permission to substitute custom s2."
+    "qualification_gate": false,
+    "retain_action_difference_measurement": true,
+    "retain_latent_difference_measurement": true,
+    "interpretation": "Prompt sensitivity is a measured scientific outcome, not an official-runtime qualification gate. A zero difference is retained as negative evidence and is not permission to substitute custom s2."
   }
 }

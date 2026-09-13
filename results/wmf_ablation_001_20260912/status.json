@@ -2,14 +2,11 @@
   "automatic_claim_recovery": false,
   "control": {
     "active_job_ids": [
-      "timing-n3-source-audit-001",
-      "timing-d1-source-audit-001",
-      "timing-n3-live-input-p00-001",
-      "timing-d1-normalize-generation-001"
+      "timing-n3-live-generation-p00-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "dca69d4a8b1a1993c0c58acfb2e28106115b6d02",
-    "control_generation": 550,
+    "control_commit": "6c03203cd722044e885515aa46b54af7cac12fdd",
+    "control_generation": 551,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -3997,6 +3994,12 @@
       "descriptor_sha256": "d9342188119985a0ed143d7f714105eaa95589491180ba2252b06407245ca12f",
       "job_id": "timing-n3-diagnostic-001",
       "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "3956c43f8dacdbafd89e739a3d2a78bd7f7af8ea959e8639a3485c5577d177fb",
+      "job_id": "timing-n3-live-generation-p00-001",
+      "source_commit": "dca69d4a8b1a1993c0c58acfb2e28106115b6d02",
       "status": "staged"
     },
     {

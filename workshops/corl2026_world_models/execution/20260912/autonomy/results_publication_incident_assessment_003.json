@@ -1,0 +1,83 @@
+{
+  "schema_version": "wmf-results-publication-incident-assessment-v1",
+  "recorded_at": "2026-09-13T16:46:00Z",
+  "status": "external_gm_inspection_required_git_only_recovery_exhausted",
+  "public_state": {
+    "last_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+    "last_results_commit_at": "2026-09-13T14:40:32Z",
+    "last_published_control_generation": 998,
+    "last_published_resource_job_status": "claimed",
+    "last_published_resource_heartbeat_at": "2026-09-13T14:40:29.959470Z",
+    "current_control_branch_reachable": true,
+    "current_control_queue_shutdown": false,
+    "current_control_queue_jobs": 0,
+    "fresh_cluster_snapshot_after_empty_queue": false
+  },
+  "timeline_facts": {
+    "resource_attempt_001_staged_at": "2026-09-13T13:59:57Z",
+    "resource_attempt_001_claimed_at_approx": "2026-09-13T14:00:30Z",
+    "camera_attempt_002_source_commit_at": "2026-09-13T14:48:43Z",
+    "camera_attempt_002_release_at": "2026-09-13T14:53:07Z",
+    "camera_attempt_002_could_have_initiated_publication_stop": false,
+    "admission_cutoff": "2026-09-20T01:48:52Z",
+    "publisher_drain_deadline": "2026-09-22T01:58:52Z",
+    "resource_nominal_child_deadline_approx": "2026-09-14T02:00:30Z",
+    "control_generation_has_a_coded_1000_limit": false
+  },
+  "empty_queue_semantics": {
+    "after_coordinator_uptake_new_claims_allowed": false,
+    "after_coordinator_uptake_existing_claimed_children_interrupted": false,
+    "after_coordinator_uptake_worker_controllers_shutdown": false,
+    "before_coordinator_uptake_pvc_state_changed_by_git_commit": false,
+    "any_complete_coordinator_cycle_would_publish_changed_status": true
+  },
+  "historical_precedent": {
+    "prior_incident": "all queue controllers proved blocked in nlmclnt_block on the shared release.lock inode",
+    "prior_empty_queue_recovered_incident": false,
+    "prior_single_coordinator_restart_recovered_incident": false,
+    "prior_recovery_required": "all controllers offline, every claim terminal and reaped, zero GPU processes, then audited quarantine and replacement of only the stale release.lock inode",
+    "current_incident_is_proved_same_cause": false,
+    "current_incident_is_mechanically_compatible": true
+  },
+  "bounded_hypotheses_not_findings": [
+    "stale NFS release.lock recurrence",
+    "coordinator pod or process loss",
+    "untimed block during control fetch, PVC snapshot, heartbeat fsync, artifact copy, or result publication",
+    "cluster Git worktree or maintenance failure",
+    "resource full-tree hashing contributed to shared-PVC contention"
+  ],
+  "git_only_recovery": {
+    "status": "exhausted_no_safe_further_action",
+    "leave_empty_non_shutdown_queue": true,
+    "release_new_descriptor": false,
+    "release_standby_coordinator_or_self_publisher": false,
+    "push_workstation_content_to_results_branch": false,
+    "set_shutdown_true": false,
+    "reclaim_or_reuse_job_id": false,
+    "revoke_task_deploy_key": false
+  },
+  "required_external_inspection": {
+    "authority": "authorized GM operator or existing approved GM management path",
+    "scope": "ali-owned study coordinator and worker pods plus the task PVC only",
+    "must_reconcile": [
+      "Kubernetes Job and pod phase and restart count",
+      "coordinator_status.json and process stack or wchan",
+      "release.lock inode and current kernel lock owners",
+      "every nonterminal claim and descendant process",
+      "task-owned GPU compute processes",
+      "resource attempt 001 and camera attempt 002 PVC result state"
+    ],
+    "lock_replacement_allowed_without_full_offline_reconciliation": false,
+    "fresh_results_publication_required_before_new_release": true
+  },
+  "scientific_state": {
+    "valid_behavioral_cells": 40,
+    "planned_behavioral_cells": 232,
+    "confirmation_completed": 0,
+    "confirmation_planned": 192,
+    "counts_after_last_results_publication_are_known": false,
+    "safe_to_release_confirmation": false,
+    "study_complete": false,
+    "safe_to_revoke_deploy_key": false
+  }
+}

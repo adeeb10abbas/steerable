@@ -148,11 +148,15 @@
       "d1-development-d03-simulator-001",
       "d1-development-d04-server-001",
       "d1-development-d04-simulator-001",
-      "confirmation-fixture-freeze-001"
+      "confirmation-fixture-freeze-001",
+      "d1-development-d01-prerequisite-preflight-001",
+      "d1-development-d02-prerequisite-preflight-001",
+      "d1-development-d03-prerequisite-preflight-001",
+      "d1-development-d04-prerequisite-preflight-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "64e84d1f7634e2a7fbaaf0e1ffd05bf021614517",
-    "control_generation": 434,
+    "control_commit": "8af275483762374122dfbf1b7084508b7dc3391a",
+    "control_generation": 435,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -617,6 +621,12 @@
       "status": "staged"
     },
     {
+      "descriptor_sha256": "b708685ff93b20ea3e5ef37e6609002642455e7f116706751fc827c5c27c4205",
+      "job_id": "d1-development-d01-prerequisite-preflight-001",
+      "source_commit": "64e84d1f7634e2a7fbaaf0e1ffd05bf021614517",
+      "status": "staged"
+    },
+    {
       "child_pid": 44274,
       "child_reaped": true,
       "descriptor_sha256": "00265eb6e6770904c70fed2654e1741de9b4e3bb36e8baaeae75d4489108dab4",
@@ -667,6 +677,12 @@
       },
       "wall_seconds": 2.4127982589416206,
       "worker_id": "wmf-forecast-0912-worker-00"
+    },
+    {
+      "descriptor_sha256": "4713d15ed334efc4b56f09a06b8d410c588c7481164f71564404284f00a9be1e",
+      "job_id": "d1-development-d02-prerequisite-preflight-001",
+      "source_commit": "64e84d1f7634e2a7fbaaf0e1ffd05bf021614517",
+      "status": "staged"
     },
     {
       "child_pid": 44303,
@@ -721,6 +737,12 @@
       "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
+      "descriptor_sha256": "8e6432914461807fdfed3bc7b74524f0532414ee983e733110d855103c85afd4",
+      "job_id": "d1-development-d03-prerequisite-preflight-001",
+      "source_commit": "64e84d1f7634e2a7fbaaf0e1ffd05bf021614517",
+      "status": "staged"
+    },
+    {
       "child_pid": 44322,
       "child_reaped": true,
       "descriptor_sha256": "d9ba8382ef8fae39e4906b43634cbbbcc1b5f87f376d238694cf8c1b8b7221d8",
@@ -771,6 +793,12 @@
       },
       "wall_seconds": 2.2883461699821055,
       "worker_id": "wmf-forecast-0912-worker-00"
+    },
+    {
+      "descriptor_sha256": "afb9e7b70b011bed3bfbbc460c8dcdd1c20d6ee6b84e5f3a0bf4c9ded03a9e7a",
+      "job_id": "d1-development-d04-prerequisite-preflight-001",
+      "source_commit": "64e84d1f7634e2a7fbaaf0e1ffd05bf021614517",
+      "status": "staged"
     },
     {
       "child_pid": 44349,
@@ -3347,9 +3375,9 @@
     {
       "descriptor_sha256": "4caf24ee91f57a43710320fb648a3dc0e347d9f7c1719b4dae5e2438c3fb1892",
       "heartbeat": {
-        "at": "2026-09-13T08:19:49.377220+00:00",
+        "at": "2026-09-13T08:21:21.853599+00:00",
         "child_pid": 16077,
-        "unix": 1789287589.3772554,
+        "unix": 1789287681.8536308,
         "worker_id": "wmf-forecast-0912-worker-n3-00",
         "worker_pid": 1
       },

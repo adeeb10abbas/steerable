@@ -1,0 +1,65 @@
+{
+  "schema_version": "wmf-forecast-analysis-contract-v1",
+  "study_id": "WMF-ABLATION-001",
+  "analysis_evidence_manifest_schema": "wmf-forecast-analysis-evidence-manifest-v1",
+  "endpoint_trace_receipt_schema": "wmf-forecast-endpoint-trace-receipt-v1",
+  "request_history_receipt_schema": "wmf-forecast-request-history-receipt-v1",
+  "output_schema": "wmf-forecast-final-analysis-v1",
+  "stage": "confirmation",
+  "accepted_cohort_branches": {
+    "full_two_model": ["N3", "D1"],
+    "reduced_n3": ["N3"],
+    "reduced_d1": ["D1"]
+  },
+  "required_hash_bound_sources": [
+    "ablation_spec",
+    "development_release_freeze",
+    "request_selection",
+    "annotation_freeze",
+    "restricted_map",
+    "final_consensus"
+  ],
+  "claim_gate": {
+    "recording_and_action_chain": "must reproduce through forecast_annotation_workflow._selected_requests; endpoint positions must rederive from hash-bound native observation payloads and history intervals from native camera/physics timestamps",
+    "development_release_freeze": "must validate through freeze_development_release.validate_release_freeze and exactly bind the selected alignment contracts, rubric, development label summary and final consensus, exact usability decision, movement threshold, analysis seed, sample rule, and measured resource budget",
+    "confirmation_freeze": "must validate through forecast_annotation_workflow.validate_freeze",
+    "human_consensus": "must reproduce byte-for-byte through forecast_annotation_workflow.merge_adjudication",
+    "failure_mode": "no forecast metric is emitted when any prerequisite is missing, unhashed, inconsistent, or not confirmation-stage"
+  },
+  "analysis": {
+    "analysis_seed": 2026091301,
+    "bootstrap_resamples": 10000,
+    "confidence_level": 0.95,
+    "request_weighting": "mean within episode, equally over four conditions, equally over independent layout pairs",
+    "continuous_missingness": "defined only on layout pairs with all four condition means observable",
+    "win_bounds": "strict forecast wins; unresolved selected requests are non-wins then wins; zero-eligible, invalid, censored-with-no-selection, and unrun cells contribute [0,1]",
+    "models_pooled": false,
+    "between_model_accuracy_ranking": false
+  },
+  "primary": {
+    "forecast_error": "Euclidean distance between executed and predicted cube-minus-bowl image vectors divided by image diagonal",
+    "persistence_error": "Euclidean distance between executed and current cube-minus-bowl image vectors divided by image diagonal",
+    "forecast_skill": "persistence_error - forecast_error",
+    "sign_policy": "retain either sign; positive favors forecast"
+  },
+  "baselines": {
+    "persistence": "current observation",
+    "constant_velocity": "last two timestamped observations only; request zero reduces to persistence",
+    "missing_history": "explicitly unavailable; never inferred from future imagery"
+  },
+  "stopping_control": {
+    "common_endpoint": 450,
+    "alternative_endpoint": "first recorded success, otherwise action 450",
+    "censoring": "never carry a last state forward to action 450"
+  },
+  "movement": {
+    "threshold_source": "exact development duplicate-label q95 from validated confirmation freeze",
+    "moving_rule": "actual normalized relative displacement strictly greater than threshold",
+    "stationary_rule": "actual normalized relative displacement less than or equal to threshold",
+    "decomposition": ["relative_cube_bowl", "cube", "bowl"]
+  },
+  "coverage": "per condition: complete request inventory, timing/camera/action eligibility, ineligibility reasons, zero-eligible episodes, recording status/censor reasons, selected localization and ambiguity coverage",
+  "earlier_horizon": "use only the exact frozen early_horizon object; distinguish no qualified target from qualified but human-consensus-unobservable evidence",
+  "model_sample_size_table": "include the full hash-bound model configuration, frozen alignment fields, and separate planned/valid-complete/valid-censored/technical-invalid/unrun counts",
+  "example_selection": "For each included model and condition, choose the valid-complete cell minimizing SHA256(analysis_seed NUL model NUL condition NUL cell_id); do not use labels, errors, success, or visual outcomes."
+}

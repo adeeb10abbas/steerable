@@ -56,7 +56,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "6578653ffdc1453d9024e57a99e74a166b868d1f",
-    "control_generation": 161,
+    "control_generation": 162,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -567,17 +567,29 @@
       "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
+      "child_pid": 1196,
+      "child_reaped": true,
       "descriptor_sha256": "80e19d2e57125c5a1a1012e3d018db0f0d79c84a5dcdb326680250c546a7caf8",
-      "heartbeat": {
-        "at": "2026-09-13T03:46:25.146259+00:00",
-        "child_pid": 1196,
-        "unix": 1789271185.146281,
-        "worker_id": "wmf-forecast-0912-worker-d1-00",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T03:46:47.271989+00:00",
+      "error_type": null,
       "job_id": "d1-first-live-003",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"behavioral_episode_count\": 0, \"decision\": \"technical_invalid\", \"exit_code\": 3, \"generation_request_count\": 0, \"job_id\": \"d1-first-live-003\", \"published\": true}\n"
+      },
+      "returncode": 3,
       "source_commit": "d585d5d72246136299b67219aa7e88e46bd9201b",
-      "status": "claimed",
+      "started_at": "2026-09-13T03:46:00.096078+00:00",
+      "status": "failed",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 162,
+        "sha256": "22357d52d523185f1a559a997a346bb09432ece4ec7ab890f532bd14da5af0d0"
+      },
+      "wall_seconds": 47.17678762803553,
       "worker_id": "wmf-forecast-0912-worker-d1-00"
     },
     {
@@ -609,9 +621,9 @@
     {
       "descriptor_sha256": "504e9d972bcb5ad61f466d4469874c864f0a562c2b82d9d661cf588de7932792",
       "heartbeat": {
-        "at": "2026-09-13T03:46:25.657404+00:00",
+        "at": "2026-09-13T03:47:07.833062+00:00",
         "child_pid": 2061,
-        "unix": 1789271185.6574297,
+        "unix": 1789271227.833084,
         "worker_id": "wmf-forecast-0912-worker-00",
         "worker_pid": 1
       },

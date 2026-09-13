@@ -1,26 +1,26 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-13T09:06:41Z",
+  "as_of_utc": "2026-09-13T09:24:00Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
   "requested_host": "GM allocated cluster",
   "authorization": "User requested execution of attached specification on GM with aggressive parallelism. Core 232 episodes selected; optional D2 not selected. No confirmation release before qualification.",
-  "core_episodes_launched": 30,
-  "core_cells_terminally_classified": 29,
-  "core_cells_completed_valid": 25,
+  "core_episodes_launched": 32,
+  "core_cells_terminally_classified": 32,
+  "core_cells_completed_valid": 28,
   "core_cells_completed_technical_invalid": 4,
-  "core_cells_active_not_yet_counted": 1,
+  "core_cells_active_not_yet_counted": 0,
   "core_cell_arithmetic": {
-    "terminal_valid": 25,
+    "terminal_valid": 28,
     "terminal_technical_invalid": 4,
-    "terminally_classified": 29,
-    "active_launched_not_counted": 1,
-    "total_launched_including_active": 30,
-    "invariant": "25_terminal_valid + 4_terminal_technical_invalid + 1_active_launched = 30_launched"
+    "terminally_classified": 32,
+    "active_launched_not_counted": 0,
+    "total_launched_including_active": 32,
+    "invariant": "28_terminal_valid + 4_terminal_technical_invalid + 0_active_launched = 32_launched"
   },
-  "generation_requests_launched": 599,
-  "generation_requests_completed": 599,
+  "generation_requests_launched": 770,
+  "generation_requests_completed": 770,
   "request_breakdown": {
     "nonbehavioral_generation_qualification": 12,
     "valid_N3_pilot": 60,
@@ -28,26 +28,26 @@
     "valid_D1_pilot": 228,
     "valid_N3_development": 240,
     "technical_invalid_N3_development": 1,
-    "valid_D1_development": 57,
-    "active_D1_D03_condition_01": "zero_requests_at_snapshot_and_excluded_until_terminal_receipt"
+    "valid_D1_development": 228,
+    "active_D1_development": 0
   },
   "request_arithmetic": {
     "nonbehavioral_generation_qualification": 12,
-    "terminal_behavioral_valid": 585,
+    "terminal_behavioral_valid": 756,
     "terminal_behavioral_technical_invalid": 2,
-    "terminal_total": 599,
+    "terminal_total": 770,
     "active_requests_excluded": 0,
-    "invariant": "12_qualification + 585_valid_behavioral + 2_technical_invalid_behavioral = 599_terminal_requests; active_condition_has_0_requests"
+    "invariant": "12_qualification + 756_valid_behavioral + 2_technical_invalid_behavioral = 770_terminal_requests"
   },
-  "phase": "valid25_of_232_N3_development_complete_D1_D03_condition00_passed_condition01_active_D04_fenced_confirmation_inference_held",
-  "cluster_status": "Independent Git/PVC queue remains active without the work Mac. Results snapshot 00f42227360574fb931f85e194564f168094f315 records control e0b6ba10fc228066e89a40c664bb4070e398e8c2 at generation 484 with queue active_job_ids empty. D01/D02 attempt002 remain terminally reconciled. Matching D03 condition00 has an immutable passed receipt with 450 actions, 451 observations and 57 requests; condition01 completed reset/context-reset and is active with zero requests/actions at the snapshot. D1 development is 1/16 valid. D04 is unclaimed and fenced; confirmation inference remains unreleased.",
+  "phase": "valid28_of_232_N3_development_complete_D1_D03_block_passed_D01_D02_D04_recovery_pending_confirmation_inference_held",
+  "cluster_status": "Independent Git/PVC queue remains active without the work Mac. Results commit 7862436d10e6dc17997b64810145721d2c2cd885 records control ed0d8694cbe24b81d5cd62d544abd6a7022162d5 at generation 510 with queue active_job_ids empty. D03 attempt002 passed its intact four-cell block with 1800 actions, 1804 observations and 228 official requests; simulator/server aggregate SHA-256 values are eb7f4f894b1e56c1b8971ee1155d77e7aeb1b62c9c6cfc41de0483e3baf2dd4f and 6ffd934c4d05f815ebc06dfe788f8fbbbd12d755c691654cd05aa64da2346ec0, and both queue children plus nested children are reaped. D01/D02 attempt002 remain terminally reconciled and D04 attempt002 remains unclaimed/fenced. Confirmation inference remains unreleased.",
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_physical_time_still_unqualified",
     "runtime_D1": "passed_six_official_conditional_generation_requests_on_exact_two_B200_worker_after_four_preserved_pre_request_technical_invalid_attempts",
     "fixed_450_recorder": "passed_recorder_only_original_left_with_450_actions_451_observations_zero_model_requests",
     "physical_layouts": "P00, D01-D04 and all C01-C24 have accepted model-blind candidates and fixed-observation captures; C01, C17 and C24 retain candidate_00 physical rejections and use accepted candidate_01; the 24-layout confirmation fixture freeze passed with SHA-256 495046b5102bf1813b0c9afd72d57bf1c30243070d7b525faacf53a076a482ac; this is fixture/capture qualification only",
-    "frame_time_camera_mapping": "native request/control/physics/camera identities are recorded, but the authoritative generated-index to physical-target-time bridge remains unresolved for N3 and D1; frame/action ordinals and presentation FPS are rejected substitutes",
+    "frame_time_camera_mapping": "source-pinned authority and immutable native-clock sidecar validators are published in control commit ed0d8694cbe24b81d5cd62d544abd6a7022162d5, but the real GM source audits, live-capture N3 six-request generation-only probe, timing authorities and complete development sidecars remain pending; frame/action ordinals and presentation FPS are rejected substitutes",
     "annotation_development": "blind_two_rater_workflow_implemented_and_schema_validated; legitimate human development labels, consensus, usability decisions and empirical movement threshold remain pending",
     "confirmation_release": false
   },
@@ -65,7 +65,7 @@
   "verified_baseline_tests": 23,
   "source_bundle_sha256": "a8cc6b8d393902bd4ea8561ec1236097d02c74c88c500b5477da72df576fde69",
   "automatic_background_execution": true,
-  "verified_workshop_tests": 303,
+  "verified_workshop_tests": 324,
   "prepared_schedule": {
     "path": "parallel_schedule.json",
     "jobs": 58,
@@ -105,11 +105,11 @@
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "e0b6ba10fc228066e89a40c664bb4070e398e8c2",
-    "cluster_staged_control_commit_at_snapshot": "e0b6ba10fc228066e89a40c664bb4070e398e8c2",
-    "cluster_control_generation_at_snapshot": 484,
+    "latest_control_commit": "ed0d8694cbe24b81d5cd62d544abd6a7022162d5",
+    "cluster_staged_control_commit_at_snapshot": "ed0d8694cbe24b81d5cd62d544abd6a7022162d5",
+    "cluster_control_generation_at_snapshot": 510,
     "cluster_active_job_ids_at_snapshot": [],
-    "latest_results_commit_fetched": "00f42227360574fb931f85e194564f168094f315",
+    "latest_results_commit_fetched": "7862436d10e6dc17997b64810145721d2c2cd885",
     "release_lock_recovery_receipt_sha256": "f985f78cc9a7955d9d038eea7a4da492e7d5f6ed49dfbde8d021806579bf0e8a",
     "release_lock_current_inode": 44796676,
     "post_recovery_detached_diagnostics_passed": 6
@@ -258,10 +258,7 @@
       "results_commit": "ebfa748b8ba845c23b60c30c37805349a0c53fac"
     }
   },
-  "active_owned_jobs": [
-    "d1-development-d03-server-002",
-    "d1-development-d03-simulator-002"
-  ],
+  "active_owned_jobs": [],
   "fenced_unclaimed_jobs": [
     "d1-development-d04-server-002",
     "d1-development-d04-simulator-002"
@@ -316,7 +313,7 @@
     },
     "development": {
       "planned_cells": 32,
-      "completed_valid_cells": 17,
+      "completed_valid_cells": 20,
       "N3": {
         "attempts": 6,
         "terminal_attempts": 6,
@@ -361,16 +358,17 @@
         "attempt_001_model_requests": 0,
         "attempt_001_behavioral_actions": 0,
         "attempt_002_queue_jobs_staged": 0,
-        "attempt_002_queue_jobs_claimed": 2,
+        "attempt_002_queue_jobs_claimed": 0,
         "attempt_002_queue_jobs_failed": 4,
         "attempt_002_queue_jobs_fenced_unclaimed": 2,
-        "attempt_002_terminal_behavioral_cells_launched": 2,
-        "attempt_002_active_behavioral_cells_not_counted": 1,
+        "attempt_002_queue_jobs_succeeded": 2,
+        "attempt_002_terminal_behavioral_cells_launched": 5,
+        "attempt_002_active_behavioral_cells_not_counted": 0,
         "attempt_002_technical_invalid_behavioral_cells": 1,
-        "attempt_002_completed_valid_behavioral_cells": 1,
-        "attempt_002_terminal_model_requests": 57,
-        "attempt_002_terminal_behavioral_actions": 450,
-        "attempt_002_terminal_behavioral_observations": 451,
+        "attempt_002_completed_valid_behavioral_cells": 4,
+        "attempt_002_terminal_model_requests": 228,
+        "attempt_002_terminal_behavioral_actions": 1800,
+        "attempt_002_terminal_behavioral_observations": 1804,
         "attempt_002_d01_server_status": "technical_failure_before_server_ready_after_rank1_SIGSEGV_with_no_simulator_claim_or_new_model_request_action_cell",
         "attempt_002_d01_server_receipt_sha256": "4259f247d432feacee31d60c2c680f8a258664a22504c4a5af2baa41cd58c331",
         "attempt_002_d01_simulator_status": "exactly_terminated_zero_launched_cells_zero_requests_zero_actions_four_unrun",
@@ -381,15 +379,23 @@
         "attempt_002_d02_simulator_receipt_sha256": "358605a06b178d44d58b3f3efc5145e37b022806b83c0d7d3539cb15503b0d78",
         "attempt_002_d03_condition_00_status": "passed_450_actions_451_observations_57_requests",
         "attempt_002_d03_condition_00_cell_receipt_sha256": "a755f3f806ea73a395268d7cda38748b1bb6a7cdd60c7d4ee5e9872d7f912e26",
-        "attempt_002_d03_condition_01_status": "active_after_reset_and_context_reset_zero_requests_zero_actions_not_counted",
-        "attempt_002_pairing_state": "D01_D02_mismatch_contained_by_run-bound coordination and exact process-group terminations; matching D03 pair is live on condition01 after one passed cell; D04 pair is unclaimed and fenced",
-        "completed_valid_cells": 1,
-        "valid_behavioral_model_requests": 57,
-        "valid_behavioral_actions": 450,
-        "valid_behavioral_observations": 451,
+        "attempt_002_d03_condition_01_status": "passed_450_actions_451_observations_57_requests",
+        "attempt_002_d03_condition_01_cell_receipt_sha256": "6560cf4ea7b11187e9fd525a2eac722004bf7945283654257d4a4cbd47ee034f",
+        "attempt_002_d03_condition_02_status": "passed_450_actions_451_observations_57_requests",
+        "attempt_002_d03_condition_02_cell_receipt_sha256": "c3af55faf13a6947493435c89f88adb9af71b475ee6f3e1fc24256abd9d7e6fb",
+        "attempt_002_d03_condition_03_status": "passed_450_actions_451_observations_57_requests",
+        "attempt_002_d03_condition_03_cell_receipt_sha256": "f942a38a88d6293a58519594d329089f8f33b86de23f2bcd702b6f20fbd12b03",
+        "attempt_002_d03_simulator_aggregate_sha256": "eb7f4f894b1e56c1b8971ee1155d77e7aeb1b62c9c6cfc41de0483e3baf2dd4f",
+        "attempt_002_d03_server_aggregate_sha256": "6ffd934c4d05f815ebc06dfe788f8fbbbd12d755c691654cd05aa64da2346ec0",
+        "attempt_002_d03_results_commit": "7862436d10e6dc17997b64810145721d2c2cd885",
+        "attempt_002_pairing_state": "D01_D02 mismatch contained by run-bound coordination and exact process-group terminations; matching D03 pair passed all four cells and both queue plus nested children are reaped; D04 pair remains unclaimed and fenced",
+        "completed_valid_cells": 4,
+        "valid_behavioral_model_requests": 228,
+        "valid_behavioral_actions": 1800,
+        "valid_behavioral_observations": 1804,
         "technically_invalid_behavioral_cells": 1,
-        "active_behavioral_cells_not_counted": 1,
-        "unrun_cells": 14,
+        "active_behavioral_cells_not_counted": 0,
+        "unrun_cells": 12,
         "attempt_001_failure": "all four server/simulator pairs received the raw fixed-observation capture instead of its enclosing queue receipt and failed prerequisite schema validation before model load/reset/request/action",
         "prerequisite_preflights": {
           "staged": 0,
@@ -404,7 +410,7 @@
             "d1-development-d04-prerequisite-preflight-001": "passed_receipt_sha256_6a51fa6abfa0c1ee1e534aa36fa3429e8c0fcd3077eb68770c6f72400df845a6"
           }
         },
-        "release_gate": "passed_all_four_zero-model_prerequisites; D01 and D02 attempt002 are terminally reconciled; D03 condition00 is valid and condition01 is active but uncounted; D04 is fenced"
+        "release_gate": "passed_all_four_zero-model_prerequisites; D01 and D02 attempt002 are terminally reconciled; D03 attempt002 passed all four cells; corrected fresh-ID D01/D02/D04 retries remain held for reviewed transitive pair-admission fencing; D04 attempt002 is fenced"
       }
     },
     "confirmation": {

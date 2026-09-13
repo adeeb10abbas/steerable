@@ -135,7 +135,7 @@
     ],
     "admission_deadline_unix": 1789868932.0,
     "control_commit": "597efba761c9b6e915bfbcad744b356ea410914b",
-    "control_generation": 380,
+    "control_generation": 381,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -1062,17 +1062,29 @@
       "worker_id": "wmf-forecast-0912-worker-09"
     },
     {
+      "child_pid": 11162,
+      "child_reaped": true,
       "descriptor_sha256": "d352556d080393db7ef05fe7fad2624da8f98ea72ce0b645d1459234fd8e25eb",
-      "heartbeat": {
-        "at": "2026-09-13T07:27:13.349645+00:00",
-        "child_pid": 11162,
-        "unix": 1789284433.3496857,
-        "worker_id": "wmf-forecast-0912-worker-05",
-        "worker_pid": 1
-      },
+      "ended_at": "2026-09-13T07:27:45.494245+00:00",
+      "error_type": null,
       "job_id": "fixed-observation-c05-001",
+      "log_tails": {
+        "stderr": "",
+        "stdout": "{\"behavioral_action_count\": 0, \"candidate_id\": \"C05__candidate_00\", \"child_exit_code\": 0, \"child_logs\": {\"stderr\": {\"bytes\": 551, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c05-001/child.stderr.log\", \"sha256\": \"d0403ffaa854702c20fe0f90f76cf7e8c390ce8f20a88e6022d56333c8a3cfba\"}, \"stdout\": {\"bytes\": 20042, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c05-001/child.stdout.log\", \"sha256\": \"6a0628d025e77971ba720e1b0677fa5100b8c7de68b2fc7c0f7c2ba2f0d1a9f9\"}}, \"child_started\": true, \"claim_boundary\": \"One current C05 physical observation and exact preprocessing only; no model request or behavioral episode.\", \"environment_seed\": 2026091205, \"exit_code\": 0, \"finished_at_utc\": \"2026-09-13T07:27:44.148094Z\", \"gate_receipt_sha256\": \"d21a89ae20d2480f5b23d04397b92c39b8d64c0221a94f033d9cc65c72cf9f52\", \"gpu_identity\": {\"driver_version\": \"580.95.05\", \"index\": \"0\", \"name\": \"NVIDIA B200\", \"preexisting_compute_process_count\": 0, \"uuid\": \"GPU-1e6dc545-12a1-6021-7ea9-96c638f34bd9\"}, \"job_id\": \"fixed-observation-c05-001\", \"layout_pair_id\": \"C05\", \"model_fixtures\": {\"D1\": {\"array_keys\": [\"observation/exterior_image_0_left\", \"observation/exterior_image_1_left\", \"observation/wrist_image_left\", \"observation/joint_position\", \"observation/cartesian_position\", \"observation/gripper_position\"], \"fixture\": {\"bytes\": 520282, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c05-001/capture/d1_official_wire_observation.npz\", \"sha256\": \"2f4083bd3e88539aaf0d2d9bc66fdd4af0a106af6987be622258719f38d1b4c3\"}, \"interface\": \"official conditional DreamZero six-array request fixture\"}, \"N3\": {\"array_keys\": [\"observation/image\", \"observation/joint_position\", \"observation/gripper_position\"], \"fixture\": {\"bytes\": 1037692, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c05-001/capture/n3_official_wire_observation.npz\", \"sha256\": \"7067f260ed50424d93250d0f47b4c69c4070f086bb9d4922ad0964a744988d4e\"}, \"interface\": \"official packed observation/image plus joint/gripper arrays\"}}, \"model_request_count\": 0, \"pose_manifest_sha256\": \"ebfc63276cf4a4abffcea76d086fbb6765ff81ef385980ce30bd564a4b3c7b22\", \"raw_capture_receipt\": {\"bytes\": 80269, \"path\": \"/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/fixed_observations/fixed-observation-c05-001/capture/capture_receipt.json\", \"sha256\": \"e63ffde57419690017b20eda04c03d4871c9baf9e70510c773de25a1f61b8ce9\"}, \"schema_version\": \"wmf-forecast-layout-fixed-observation-job-v1\", \"status\": \"passed\", \"study_commit\": \"148b0bad38382b32667d7cf2484773c11fa744ad\", \"study_namespace\": \"wmf_ablation_001_20260912\"}\n"
+      },
+      "returncode": 0,
       "source_commit": "148b0bad38382b32667d7cf2484773c11fa744ad",
-      "status": "claimed",
+      "started_at": "2026-09-13T07:26:43.042446+00:00",
+      "status": "succeeded",
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 2743,
+        "sha256": "be329adf6527710a2ea0a2c9d14fc5606e91971fee43c147f2d05cf9111ed4ab"
+      },
+      "wall_seconds": 62.45199914998375,
       "worker_id": "wmf-forecast-0912-worker-05"
     },
     {
@@ -1239,9 +1251,17 @@
     },
     {
       "descriptor_sha256": "b22fde3de90952074132cd1eb92539dcf4419f1563bfe0ac37368a0f7e3d84ee",
+      "heartbeat": {
+        "at": "2026-09-13T07:28:02.671393+00:00",
+        "child_pid": 11750,
+        "unix": 1789284482.6714194,
+        "worker_id": "wmf-forecast-0912-worker-09",
+        "worker_pid": 1
+      },
       "job_id": "fixed-observation-c13-001",
       "source_commit": "148b0bad38382b32667d7cf2484773c11fa744ad",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-09"
     },
     {
       "descriptor_sha256": "8b50c05b0d8e86d888adf55a6b040f023f75eafc20b56d329e0fa2364ee76b88",
@@ -2377,9 +2397,17 @@
     },
     {
       "descriptor_sha256": "3056f4a7484c9edc1fe6aa8c22c82cf513246bd8905b277bdfa78171794c6d23",
+      "heartbeat": {
+        "at": "2026-09-13T07:28:03.791136+00:00",
+        "child_pid": 10926,
+        "unix": 1789284483.791168,
+        "worker_id": "wmf-forecast-0912-worker-06",
+        "worker_pid": 1
+      },
       "job_id": "fixture-c24-candidate-01",
       "source_commit": "471f28ff31e312f86df33c7c9e79d61f010e96cd",
-      "status": "staged"
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-06"
     },
     {
       "child_pid": 2061,
@@ -2696,9 +2724,9 @@
     {
       "descriptor_sha256": "48ab701dcfd44e815ef924797129bed68ec9ba2a8a5f124cea7437474930f7bb",
       "heartbeat": {
-        "at": "2026-09-13T07:27:12.942578+00:00",
+        "at": "2026-09-13T07:28:03.279637+00:00",
         "child_pid": 155,
-        "unix": 1789284432.9425938,
+        "unix": 1789284483.279651,
         "worker_id": "wmf-forecast-0912-worker-n3-00",
         "worker_pid": 1
       },

@@ -2,16 +2,14 @@
   "automatic_claim_recovery": false,
   "control": {
     "active_job_ids": [
-      "post-d03-worker00-diagnostic-001",
-      "post-d03-d1-role-diagnostic-001",
-      "timing-worker05-diagnostic-001",
-      "timing-worker06-diagnostic-001",
-      "timing-worker09-diagnostic-001",
-      "timing-n3-role-diagnostic-002"
+      "timing-n3-source-audit-001",
+      "timing-d1-source-audit-001",
+      "timing-n3-live-input-p00-001",
+      "timing-d1-normalize-generation-001"
     ],
     "admission_deadline_unix": 1789868932.0,
-    "control_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
-    "control_generation": 545,
+    "control_commit": "dca69d4a8b1a1993c0c58acfb2e28106115b6d02",
+    "control_generation": 546,
     "namespace": "wmf_ablation_001_20260912",
     "shutdown": false
   },
@@ -3944,10 +3942,36 @@
       "worker_id": "wmf-forecast-0912-worker-00"
     },
     {
+      "descriptor_sha256": "b13c39eb9109c75e6afafc39c40341fac9332016af4724f353380b561a43dcb8",
+      "job_id": "timing-d1-normalize-generation-001",
+      "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "status": "staged"
+    },
+    {
+      "descriptor_sha256": "5f05f0f66c4c73e38bdd3846de222846b46572cb820e71a69766ff732f7ed944",
+      "job_id": "timing-d1-source-audit-001",
+      "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "status": "staged"
+    },
+    {
       "descriptor_sha256": "d9342188119985a0ed143d7f714105eaa95589491180ba2252b06407245ca12f",
       "job_id": "timing-n3-diagnostic-001",
       "source_commit": "1753f36617218c1d9462924299cd36e0b8013196",
       "status": "staged"
+    },
+    {
+      "descriptor_sha256": "7ae803449c01fb0a3d9ad27f9edba71770db5aba1e6308c6eba140f40f8633e2",
+      "heartbeat": {
+        "at": "2026-09-13T09:45:32.579454+00:00",
+        "child_pid": 15675,
+        "unix": 1789292732.579486,
+        "worker_id": "wmf-forecast-0912-worker-09",
+        "worker_pid": 1
+      },
+      "job_id": "timing-n3-live-input-p00-001",
+      "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "status": "claimed",
+      "worker_id": "wmf-forecast-0912-worker-09"
     },
     {
       "child_pid": 20757,
@@ -4000,6 +4024,12 @@
       },
       "wall_seconds": 2.632468898955267,
       "worker_id": "wmf-forecast-0912-worker-n3-00"
+    },
+    {
+      "descriptor_sha256": "99ddb3e5d85f371a3a46324199533c91a0ffbd9747bfab33795568a7ab8d1a63",
+      "job_id": "timing-n3-source-audit-001",
+      "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8",
+      "status": "staged"
     },
     {
       "child_pid": 150,

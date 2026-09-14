@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-14T01:54:32Z",
+  "as_of_utc": "2026-09-14T02:05:37Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -41,7 +41,7 @@
     "active_requests_launched_excluded": 0,
     "invariant": "18_nonbehavioral + 1440_valid_behavioral + 2_technical_invalid_behavioral = 1460_terminal_requests"
   },
-  "phase": "valid40_of_232_confirmation_ledger_recovery_source_verified_results_publication_stalled_external_gm_inspection_required_confirmation_held",
+  "phase": "valid40_of_232_retained_operational_evidence_audited_results_publication_stalled_external_gm_inspection_required_confirmation_held",
   "cluster_status": "The independent Git/PVC route previously passed after the work-Mac cutoff, but the results branch has not advanced beyond commit 12839900e5c46299e11fff4813e8602949055b86 at 2026-09-13T14:40:32Z. Its generation998 snapshot last published development-resource-compiler-formal-001 as claimed on worker09 with child PID16032 and heartbeat 2026-09-13T14:40:29.959470Z; current resource001 and camera002 states are unknown. The control queue is intentionally empty with shutdown false and SHA-256 9c1bd52373df4308c3954c5b4598d03d66c9d5940182674904b1279d01a7346f. No new job may be released until an authorized GM inspection reconciles owned processes, claims, results and the shared release lock and a fresh result publication succeeds. Confirmation inference remains unreleased.",
   "published_development_coverage_audit": {
     "source_commit": "df576e458e546dcd69c5d676077d16df9b0ae47d",
@@ -122,6 +122,33 @@
     "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
     "current_owned_cluster_process_state": "unknown_unreconciled",
     "continuation": "Use b2cc903c98d4e90295f645cc9b8b7d1b029b1ecc or a reviewed successor for future eligible jobs. Keep the queue empty and non-shutdown; watch the results ref read-only around 02:00 UTC. The resource001 nominal child deadline is not a terminal receipt. An authorized GM management path must reconcile resource001/camera002 and every owned claim/process and restore fresh publication before any queue release; then finish the signed camera/alignment, measured-resource and legitimate human development-label/threshold gates. No terminal supervisor marker is safe while live-job state remains unknown."
+  },
+  "retained_d1_operational_subset": {
+    "source_commit": "ac1b66b8cbfad52e66051516aa3d936a10ad9a4e",
+    "authorized_control_push_verified": true,
+    "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+    "audit_path": "../../analysis/audit_retained_d1_operational_subset.py",
+    "audit_sha256": "99063b1b9a04434c1f06c4f3b1d05e791b7777a14b9b5de94e3c99b3d4a42e85",
+    "report_path": "../../results/retained_d1_operational_subset.json",
+    "report_sha256": "3e7f1bec514ecd12c7e5d16a008064cddc8bbe6283331e7315dffdd5c14ee4ec",
+    "pinned_published_blobs_checked": 5,
+    "embedded_cells_byte_matched_to_final_aggregates": 4,
+    "selection": "Opportunistic four-cell subset of the previously audited 16 D1 development cells; complete compact snapshot receipt availability only, not a representative runtime sample.",
+    "runner_reported_wall_total_seconds_in_report_order": [467.536, 259.777, 460.325, 264.922],
+    "per_retained_cell_actions": 450,
+    "per_retained_cell_observations": 451,
+    "excluded_partial_snapshot_cells": "D01 and D02 each have an additional incomplete snapshot cell; D04 snapshot contains only a partial cell. Exclusion here does not change any later terminal cohort classification.",
+    "root_independent_verification": "GO; exact embedded byte strings and terminal descriptor hashes independently matched, prior full-audit denominator blob rechecked, and reproducible --check passed.",
+    "claim_boundary": "Individual runner-reported values and recoverable raw receipt/completion/journal identities only. No whole-job/model-load timing, cohort resource budget, success-flag interpretation, first-success endpoint, A5 contrast, forecast skill, annotation or current raw-PVC validation is inferred.",
+    "new_behavioral_cells": 0,
+    "new_model_requests": 0,
+    "new_labels": 0,
+    "resource_budget_qualified": false,
+    "confirmation_released": false,
+    "latest_results_ref_check_utc": "2026-09-14T02:05:37Z",
+    "post_nominal_resource_deadline_receipt_seen": false,
+    "current_owned_process_state": "unknown_unreconciled",
+    "next_action": "Continue the existing workstation supervisor and read-only result-ref watch around 02:15 UTC. Do not infer termination from resource001's passed nominal deadline. Require authorized GM process/claim/PVC/lock reconciliation and fresh publication before dispatch, then complete the signed camera/alignment, measured resources and legitimate human-label/threshold gates."
   },
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",

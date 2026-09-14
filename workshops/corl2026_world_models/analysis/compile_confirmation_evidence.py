@@ -83,14 +83,14 @@ ANALYSIS_MANIFEST_SCHEMA = "wmf-forecast-analysis-evidence-manifest-v1"
 REQUEST_INVENTORY_SCHEMA = "wmf-forecast-request-inventory-v1"
 SEAL_JOB_RECEIPT_SCHEMA = "wmf-confirmation-cohort-seal-job-v1"
 SEAL_JOB_RECEIPT_NAME = "confirmation_cohort_seal_job_receipt.json"
-TERMINAL_RUNTIME_SOURCE_COMMIT = "03732d3c6fa37c26a3ab2e8608a80d076fdcc33a"
+TERMINAL_RUNTIME_SOURCE_COMMIT = "aeb0634e522a3fb3aecea1651830782543d7e953"
 TERMINAL_RUNTIME_SHA256 = {
     "d1_pilot_dependency": "2cdeb2fa8008088351fec6d68a75617dad2833367c384ff9aa67d949daf281bf",
-    "d1_confirmation_validator_dependency": "2fb7113fc3cf475d8d3e7c4ef3232012730eadb74f3995e7ae91c04f3fef5a68",
+    "d1_confirmation_validator_dependency": "c9267d20e4a8715903e3e1522d967f3e78368131583d939090e8c19c620e9cb8",
     "d1_server_dependency": "085aec66d7deb06cac2c50e61b3205899476185d70720330cb0c586416532801",
     "resource_qualification_contract_dependency": "dfb203fb2bca8fe89f5c6b9c73f4daa8eb836f37917ecf7f9e8a5aa5f2571803",
     "n3_pilot_dependency": "f116ceb1a3a9022642a735293b5b86188ce83dc4075cc00040a7795642de75a4",
-    "n3_confirmation_validator_dependency": "cf2c4bb31b646a5e601d6dbaeab696d135c3d7593f11c221bebafecb1f3e4beb",
+    "n3_confirmation_validator_dependency": "2154f87e3bf7fcbf7926e2f6d20a339081429bf1580466f8a65f69d956201818",
 }
 
 MODELS_BY_BRANCH = {

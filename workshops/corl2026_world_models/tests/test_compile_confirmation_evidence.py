@@ -768,7 +768,7 @@ class ConfirmationEvidenceCompilerTests(unittest.TestCase):
                 )
             validator.assert_called_once()
             self.assertEqual(observed["schema_version"], compiler.N3_CONTEXT_TERMINAL_SCHEMA)
-            self.assertEqual(observed["terminal_runtime_source_commit"], "03732d3c6fa37c26a3ab2e8608a80d076fdcc33a")
+            self.assertEqual(observed["terminal_runtime_source_commit"], "aeb0634e522a3fb3aecea1651830782543d7e953")
             self.assertEqual(observed["stop_reason"], "safety_abort")
 
     def test_native_d1_terminal_receipt_is_bound_to_selected_pair_and_final_reset(self) -> None:

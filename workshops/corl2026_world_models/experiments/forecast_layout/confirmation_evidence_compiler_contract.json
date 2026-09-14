@@ -21,7 +21,7 @@
     "input_schema": "wmf-confirmation-evidence-compiler-input-v1",
     "output_schema": "wmf-confirmation-evidence-compiler-receipt-v1",
     "source": "workshops/corl2026_world_models/analysis/compile_confirmation_evidence.py",
-    "terminal_runtime_source_commit": "03732d3c6fa37c26a3ab2e8608a80d076fdcc33a",
+    "terminal_runtime_source_commit": "aeb0634e522a3fb3aecea1651830782543d7e953",
     "supported_branches": {
       "full_two_model": {
         "models": [
@@ -104,7 +104,7 @@
   },
   "source_authentication": {
     "aggregate_roster": "one hash-bound terminal receipt for every selected model/layout block, inside an authoritative cohort-close receipt that exactly binds the release, schedule, all queue attempts, and zero live claims/descendants",
-    "censored": "accepted as valid_censored only when the close hash-binds completion, full journal, source video, failure receipt and the model-native server_context_terminal descriptor, and the exact validators pinned to runtime commit 03732d3c6fa37c26a3ab2e8608a80d076fdcc33a deep-validate wmf-n3-terminal-context-receipt-v1 or wmf-d1-terminal-context-receipt-v1. D1 additionally requires the selected queue pair, ready/claim/manifest lineage and a distinct later two-rank final reset. The safety prefix terminates the whole block and forbids a retry.",
+    "censored": "accepted as valid_censored only when the close hash-binds completion, full journal, source video, failure receipt and the model-native server_context_terminal descriptor, and the exact validators pinned to runtime commit aeb0634e522a3fb3aecea1651830782543d7e953 deep-validate wmf-n3-terminal-context-receipt-v1 or wmf-d1-terminal-context-receipt-v1. D1 additionally requires the selected queue pair, ready/claim/manifest lineage and a distinct later two-rank final reset. The safety prefix terminates the whole block and forbids a retry.",
     "not_run": "derived only from close-bound terminal aggregate counts and frozen ordered cell IDs; D1 sparse fallback requires an explicit zero-launch form and paired terminal proof",
     "technical_invalid": "close-bound technical_failure receipt; an explicitly verified missing receipt is permitted only for a zero-action/zero-request child death, and any nonzero prefix requires close-bound completion, full journal and deep retained request/action/pixel artifacts. A technical failure may truthfully contain 0 through 450 executed actions, remains excluded from annotation requests and scientific endpoints, and is never relabeled valid or censored.",
     "valid_complete": "existing model-specific confirmation passed-cell validator plus native completion/journal/request/action/pixel chain"

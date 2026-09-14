@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-09-14T01:12:33Z",
+  "as_of_utc": "2026-09-14T01:25:25Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -41,7 +41,7 @@
     "active_requests_launched_excluded": 0,
     "invariant": "18_nonbehavioral + 1440_valid_behavioral + 2_technical_invalid_behavioral = 1460_terminal_requests"
   },
-  "phase": "valid40_of_232_terminal_confirmation_compiler_paired_A9_authenticated_publication_compiler_and_figure_renderer_ready_results_publication_stalled_external_gm_inspection_required_confirmation_held",
+  "phase": "valid40_of_232_authenticated_confirmation_release_runtime_and_compiler_source_ready_results_publication_stalled_external_gm_inspection_required_confirmation_held",
   "cluster_status": "The independent Git/PVC route previously passed after the work-Mac cutoff, but the results branch has not advanced beyond commit 12839900e5c46299e11fff4813e8602949055b86 at 2026-09-13T14:40:32Z. Its generation998 snapshot last published development-resource-compiler-formal-001 as claimed on worker09 with child PID16032 and heartbeat 2026-09-13T14:40:29.959470Z; current resource001 and camera002 states are unknown. The control queue is intentionally empty with shutdown false and SHA-256 9c1bd52373df4308c3954c5b4598d03d66c9d5940182674904b1279d01a7346f. No new job may be released until an authorized GM inspection reconciles owned processes, claims, results and the shared release lock and a fresh result publication succeeds. Confirmation inference remains unreleased.",
   "published_development_coverage_audit": {
     "source_commit": "df576e458e546dcd69c5d676077d16df9b0ae47d",
@@ -59,6 +59,39 @@
     "fresh_raw_pvc_revalidation": false,
     "forecast_accuracy_or_bounds_estimated": false,
     "independent_review": "GO; exact 11 Git blobs and unique model/layout cell inventory independently replayed"
+  },
+  "confirmation_release_source_20260914": {
+    "runtime_and_release_source_commit": "aeb0634e522a3fb3aecea1651830782543d7e953",
+    "prospective_compiler_source_commit": "c63f5e79675e3e77da896c640e42a599d7a298fb",
+    "authorized_control_push_verified": true,
+    "clean_exact_checkout_tests": 809,
+    "clean_exact_checkout_test_exit_code": 0,
+    "clean_exact_checkout_test_command": "python3 -m unittest discover -s workshops/corl2026_world_models/tests -q",
+    "temporary_verification_checkout_removed": true,
+    "source_files_in_release_runtime_slice": 13,
+    "source_files_in_compiler_successor": 3,
+    "wave_dependency_pins_verified": 21,
+    "terminal_runtime_pins_verified": 5,
+    "source_hashes": {
+      "release_evidence_producer": "50c33a35b132775649ed36ac186194c10aad6e2212e8b24219347259c2a9b59a",
+      "release_evidence_contract": "08a945986c967c784339984d8a13788e0d7e60fc748ccf60c9cda56c3366fa6a",
+      "terminal_identity_producer": "73c66c4b4fe4d45371265639a77439251cdf1917f463974a1f598ecad8efc290",
+      "terminal_identity_contract": "43fe301c23c95d12a65eee17bcf92d8798e9855ccd58d2ea856827e0641d308e",
+      "release_wave": "31681567067cabb7822d3249c7b86bb97c715e4abfad9aa7378808a99b7719aa",
+      "release_wave_contract": "c026af94539db2699ee063dd26624d6643a596bc07a7c800c9230fc3555dadde",
+      "n3_confirmation_runtime": "2154f87e3bf7fcbf7926e2f6d20a339081429bf1580466f8a65f69d956201818",
+      "d1_confirmation_runtime": "c9267d20e4a8715903e3e1522d967f3e78368131583d939090e8c19c620e9cb8",
+      "confirmation_compiler": "0506fbccb83cda879fcd29b5a376fc49738c7fd131e53fedec1082bb88503457",
+      "confirmation_compiler_contract": "5e43b8889dbce7b0d396373e356e5ed117c78485484826e4fc35426100e0de6c"
+    },
+    "runtime_identity_receipts_produced": 0,
+    "queue_descriptors_released": 0,
+    "new_model_requests": 0,
+    "new_behavioral_cells": 0,
+    "new_labels": 0,
+    "live_qualification_of_new_release_source": false,
+    "test_boundary": "Native admission binding uses real-shaped synthetic N3/D1 receipts directly, not a complete ledger-assembler fixture; no software test is experimental evidence.",
+    "continuation": "Use immutable study source c63f5e79675e3e77da896c640e42a599d7a298fb or a prospectively reviewed successor. First reconcile resource001/camera002 and all owned claims/processes through an authorized GM path and obtain fresh results publication. Finish signed camera/alignment, resource qualification and legitimate human development-label/threshold freeze before any confirmation release. Do not create a placeholder runtime identity receipt."
   },
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
@@ -85,7 +118,7 @@
   "source_bundle_sha256": "a8cc6b8d393902bd4ea8561ec1236097d02c74c88c500b5477da72df576fde69",
   "durable_automatic_background_execution_configured": true,
   "automatic_background_execution_current_state": null,
-  "verified_workshop_tests": 714,
+  "verified_workshop_tests": 809,
   "prepared_schedule": {
     "path": "parallel_schedule.json",
     "jobs": 58,
@@ -126,7 +159,7 @@
     "work_mac_required_for_dispatch_or_results": false,
     "admission_deadline_unix": 1789868932,
     "worker_pool_transition": "autonomy/worker_pool_transition.json",
-    "latest_control_commit": "df576e458e546dcd69c5d676077d16df9b0ae47d",
+    "latest_control_commit": "c63f5e79675e3e77da896c640e42a599d7a298fb",
     "cluster_staged_control_commit_at_snapshot": "d45dbbff254ba0f08404c1e544e2fc1098937f56",
     "cluster_control_generation_at_snapshot": 998,
     "cluster_active_job_ids_at_snapshot": [

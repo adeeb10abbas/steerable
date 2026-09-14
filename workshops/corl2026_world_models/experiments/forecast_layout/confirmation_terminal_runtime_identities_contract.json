@@ -1,0 +1,141 @@
+{
+  "authorized_control_source": {
+    "blob_limit_bytes": 1048576,
+    "branch": "codex/forecast-layout-gm-20260912",
+    "commit_requirement": "source_commit_is_ancestor_of_stable_remote_control_head",
+    "git_executable_candidates": [
+      "/usr/bin/git",
+      "/usr/local/bin/git"
+    ],
+    "graph_limit_bytes": 201326592,
+    "read_transport": "literal_public_https_isolated_bare",
+    "ref": "refs/heads/codex/forecast-layout-gm-20260912",
+    "repository_url": "https://github.com/adeeb10abbas/steerable.git"
+  },
+  "claim_boundary": "Published Git blob identities and immutable prerequisite receipt descriptors only; no machine runtime identity, execution release, queue mutation, model request, simulator action, behavioral result, or scientific claim is created.",
+  "namespace": "wmf_ablation_001_20260912",
+  "output": {
+    "exact_fields": [
+      "claim_boundary",
+      "namespace",
+      "payload_sha256",
+      "prerequisite_receipts",
+      "published_at_utc",
+      "runtime_files",
+      "schema_version",
+      "status",
+      "study_commit",
+      "study_id",
+      "terminal_context_schemas"
+    ],
+    "schema_version": "wmf-confirmation-terminal-runtime-identities-v1",
+    "status": "published_terminal_context_runtime"
+  },
+  "prerequisite_receipts": {
+    "d1_pilot_server_receipt": {
+      "bytes": 2382,
+      "expected_fields": {
+        "exit_code": 0,
+        "schema_version": "wmf-d1-behavioral-pilot-server-job-v1",
+        "status": "passed"
+      },
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-server-003/publish/d1_behavioral_server_receipt.json",
+      "sha256": "95ef4351ffa494194ae6d9c4525acd8191b2d35438680f9284cad798d71f3201"
+    },
+    "d1_pilot_simulator_receipt": {
+      "bytes": 8596,
+      "expected_fields": {
+        "exit_code": 0,
+        "layout_pair_id": "P00",
+        "model_config": "D1",
+        "namespace": "wmf_ablation_001_20260912",
+        "phase": "pilot",
+        "schema_version": "wmf-d1-behavioral-pilot-simulator-job-v1",
+        "status": "passed",
+        "study_id": "WMF-ABLATION-001"
+      },
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-p00-simulator-003/publish/d1_behavioral_pilot_receipt.json",
+      "sha256": "20b4068ee9748daad7ae5e8350e8b7cf36d62c686af51a0d4b9653f9cecb2ab0"
+    },
+    "d1_qualification_receipt": {
+      "bytes": 13992,
+      "expected_fields": {
+        "behavioral_episode_count": 0,
+        "decision": "qualified",
+        "exit_code": 0,
+        "generation_request_count": 6,
+        "schema_version": "wmf-d1-qualification-job-receipt-v1",
+        "status": "finished"
+      },
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/d1-first-live-005/publish/d1_qualification_job_receipt.json",
+      "sha256": "3c856549999b9145dc07c30853a4c6d2968d09eb31c2db883f5eb1655d31627b"
+    },
+    "n3_pilot_receipt": {
+      "bytes": 6473,
+      "expected_fields": {
+        "exit_code": 0,
+        "layout_pair_id": "P00",
+        "model_config": "N3",
+        "namespace": "wmf_ablation_001_20260912",
+        "phase": "pilot",
+        "schema_version": "wmf-n3-behavioral-pilot-job-v1",
+        "status": "passed",
+        "study_id": "WMF-ABLATION-001"
+      },
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/n3-p00-pilot-004/publish/n3_behavioral_pilot_receipt.json",
+      "sha256": "5a7a861acc82615b4eb7aa92308f40f7a0c965e65b6edaf12f776cb64b18b0e0"
+    },
+    "recorder_receipt": {
+      "bytes": 4232,
+      "expected_fields": {
+        "actions_executed": 450,
+        "behavioral_episode_count": 0,
+        "exit_code": 0,
+        "layout_pair_id": "P00",
+        "model_request_count": 0,
+        "schema_version": "wmf-forecast-recorder-qualification-job-v1",
+        "status": "passed"
+      },
+      "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/recorder-qualification-p00-003/publish/recorder_qualification_receipt.json",
+      "sha256": "0e3f02f37a2548e36ae3a45a38a1fac63c56cd8798732056f24b03d103991fde"
+    }
+  },
+  "prohibitions": {
+    "caller_selected_prerequisite_identity": false,
+    "caller_selected_runtime_identity": false,
+    "job_released_or_dispatched": false,
+    "machine_runtime_identity_created": false,
+    "model_or_simulator_started": false,
+    "queue_mutated": false,
+    "science_or_labels_created": false
+  },
+  "runtime_files": {
+    "d1_behavioral_pilot_jobs.py": {
+      "path": "workshops/corl2026_world_models/experiments/forecast_layout/d1_behavioral_pilot_jobs.py",
+      "sha256": "2cdeb2fa8008088351fec6d68a75617dad2833367c384ff9aa67d949daf281bf"
+    },
+    "d1_confirmation_block_jobs.py": {
+      "path": "workshops/corl2026_world_models/experiments/forecast_layout/d1_confirmation_block_jobs.py",
+      "sha256": "c9267d20e4a8715903e3e1522d967f3e78368131583d939090e8c19c620e9cb8"
+    },
+    "d1_instrumented_server.py": {
+      "path": "workshops/corl2026_world_models/experiments/forecast_layout/d1_instrumented_server.py",
+      "sha256": "085aec66d7deb06cac2c50e61b3205899476185d70720330cb0c586416532801"
+    },
+    "n3_behavioral_pilot_job.py": {
+      "path": "workshops/corl2026_world_models/experiments/forecast_layout/n3_behavioral_pilot_job.py",
+      "sha256": "f116ceb1a3a9022642a735293b5b86188ce83dc4075cc00040a7795642de75a4"
+    },
+    "n3_confirmation_block_job.py": {
+      "path": "workshops/corl2026_world_models/experiments/forecast_layout/n3_confirmation_block_job.py",
+      "sha256": "2154f87e3bf7fcbf7926e2f6d20a339081429bf1580466f8a65f69d956201818"
+    }
+  },
+  "schema_version": "wmf-confirmation-terminal-runtime-identities-contract-v1",
+  "status": "frozen_for_final_published_control_runtime",
+  "study_id": "WMF-ABLATION-001",
+  "terminal_context_schemas": {
+    "D1": "wmf-d1-terminal-context-receipt-v1",
+    "N3": "wmf-n3-terminal-context-receipt-v1"
+  }
+}

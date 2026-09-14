@@ -1,0 +1,190 @@
+{
+  "schema_version": "wmf-confirmation-release-evidence-contract-v1",
+  "study_id": "WMF-ABLATION-001",
+  "namespace": "wmf_ablation_001_20260912",
+  "status": "source_only_not_deployed",
+  "execution_readiness": {
+    "status": "requires_reviewed_consumer_pending_publication_support",
+    "queue_mutation": false,
+    "results_branch_workstation_write": false,
+    "claim_boundary": "The cluster job produces pending evidence. Only the existing GM coordinator publishes it; a workstation verifier is read-only and may promote the already-built queue fragment to the control branch after authenticating that publication."
+  },
+  "schemas": {
+    "worker_attestation": "wmf-confirmation-fixed-worker-attestation-v1",
+    "result_attempt_ledger": "wmf-confirmation-result-attempt-ledger-v1",
+    "cluster_reconciliation": "wmf-confirmation-cluster-reconciliation-v1",
+    "publication_pending": "wmf-confirmation-release-publication-pending-v1",
+    "publication_verification": "wmf-confirmation-release-publication-verification-v1",
+    "evidence_receipt": "wmf-confirmation-release-evidence-receipt-v1"
+  },
+  "transport_authentication": {
+    "git_executable_policy": "Use only the source-pinned /usr/local/bin/git or /usr/bin/git after root-owner, non-writable file, directory, and confined symlink-chain validation; PATH is never consulted.",
+    "environment_policy": "Git subprocesses receive a fixed minimal environment. Caller Git config, helpers, SSH commands, dynamic-loader variables, HOME, netrc, proxy, and custom CA settings are not inherited.",
+    "remote_policy": "Control and results refs are fetched from the literal source-pinned HTTPS URL into fresh template-free bare repositories with system/global configuration disabled and exact code-generated local configuration. The results graph may retain only a code-generated literal-URL promisor stanza during bounded artifact reads; it is erased afterward. A configured checkout alias is reported but is not the transport trust root.",
+    "claim_source_ancestry_rule": "For every claim, descriptor.source_commit must be an ancestor of claim.control_commit, which must be an ancestor of the twice-observed authorized control head; the exact queue blob and normalized descriptor are read from that fetched history.",
+    "coordinator_credentials_rule": "The child never asserts credential or deploy-key availability. Only an actual authenticated coordinator publication and read-only remote round trip establish the result channel."
+  },
+  "queue": {
+    "state_dir": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control",
+    "queue_path": "workshops/corl2026_world_models/execution/20260912/autonomy/cluster_queue.json",
+    "control_ref": "refs/heads/codex/forecast-layout-gm-20260912",
+    "control_branch": "codex/forecast-layout-gm-20260912",
+    "results_ref": "refs/heads/codex/forecast-layout-gm-20260912-results",
+    "results_branch": "codex/forecast-layout-gm-20260912-results",
+    "allowed_results_urls": [
+      "https://github.com/adeeb10abbas/steerable.git",
+      "git@github.com:adeeb10abbas/steerable.git",
+      "ssh://git@github.com/adeeb10abbas/steerable.git"
+    ],
+    "trusted_fetch_url": "https://github.com/adeeb10abbas/steerable.git",
+    "trusted_git_paths": [
+      "/usr/local/bin/git",
+      "/usr/bin/git"
+    ],
+    "repository_identity": {
+      "host": "github.com",
+      "owner": "adeeb10abbas",
+      "repository": "steerable"
+    },
+    "minimum_control_generation": 999,
+    "forbidden_control_generation": 998,
+    "maximum_job_wall_seconds": 172800,
+    "publication_grace_seconds": 600,
+    "maximum_attestation_age_seconds": 300,
+    "maximum_control_history_commits": 4096,
+    "publish_log_tail_bytes": 0
+  },
+  "producer": {
+    "finalizer_job_id_pattern": "confirmation-release-finalizer-(n3|d1)-a[0-9]{3}",
+    "attestation_job_id_prefix": "confirmation-release-worker-attest-",
+    "attestation_job_id_pattern": "confirmation-release-worker-attest-(n3|d1)-a[0-9]{3}-{fixed_worker_suffix}",
+    "finalizer_roles": {
+      "N3": "n3",
+      "D1": "d1"
+    },
+    "d1_required_simulator_roles": [
+      "wmf-forecast-0912-worker-00",
+      "wmf-forecast-0912-worker-05",
+      "wmf-forecast-0912-worker-06",
+      "wmf-forecast-0912-worker-09"
+    ],
+    "publication_subdir": "confirmation_release_evidence",
+    "minimum_finalizer_remaining_wall_seconds": 300,
+    "published_files": [
+      "result_attempt_ledger.json",
+      "cluster_reconciliation.json",
+      "confirmation_release_plan.json",
+      "confirmation_release_queue_fragment.json",
+      "confirmation_release_wave_receipt.json",
+      "publication_pending.json",
+      "release_evidence_receipt.json"
+    ]
+  },
+  "worker_attestation": {
+    "requires_kernel_or_downward_api_pod_uid": true,
+    "requires_exact_parent_controller_argv": true,
+    "requires_complete_visible_process_inventory": true,
+    "requires_zero_gpu_compute_processes": true,
+    "own_attestation_job_is_not_a_gpu_process": true,
+    "requires_attestation_release_strictly_before_finalizer": true,
+    "requires_exact_shared_admission_deadline": true,
+    "requires_attempt_scoped_job_ids": true,
+    "permits_authenticated_capacity_subset": true,
+    "fixed_deployment_inventory_not_sample_size": true,
+    "selection_rule": "The source-authenticated 32-worker deployment inventory is topology only, never scientific sample size. One bounded selected subset is released and authenticated exactly; omitted or Pending workers grant no capacity, while omission only reduces concurrency.",
+    "attestation_id_rule": "Every attestation job ID binds the lane and finalizer attempt plus one fixed-worker suffix. An expired or failed wave is immutable and a retry must use a new finalizer attempt; cross-attempt mixing is rejected."
+  },
+  "lock_authentication": {
+    "canonical_release_lock_creation_only": true,
+    "daemon_locks_must_preexist": true,
+    "nofollow_regular_fd_validation": true
+  },
+  "path_authentication": {
+    "rejects_symlink_components_before_io": true,
+    "rechecks_existing_component_inode_chain_after_io": true,
+    "runtime_paths_confined_to_state_or_schedule_raw_root": true,
+    "immutable_writes_confined_to_job_output_root": true,
+    "failed_write_cleanup_requires_owned_inode": true,
+    "fd_relative_recursive_inventory": true,
+    "requires_singly_linked_regular_evidence": true,
+    "same_fd_identity_hash_payload_and_parse": true,
+    "strict_json_rejects_duplicate_and_nonfinite_values": true,
+    "containment_precedes_candidate_probe": true
+  },
+  "attempt_inventory": {
+    "models": [
+      "N3",
+      "D1"
+    ],
+    "layout_order": [
+      "C02",
+      "C13",
+      "C11",
+      "C10",
+      "C24",
+      "C12",
+      "C16",
+      "C05",
+      "C17",
+      "C19",
+      "C09",
+      "C06",
+      "C08",
+      "C01",
+      "C04",
+      "C23",
+      "C03",
+      "C20",
+      "C18",
+      "C15",
+      "C14",
+      "C22",
+      "C07",
+      "C21"
+    ],
+    "normal_form": "native_cell_prefix",
+    "zero_launch_form": "zero_launch_technical_failure",
+    "native_prefix_requires_model_native_release_admission": true,
+    "d1_native_prefix_requires_signed_pair_admission_ack": true,
+    "zero_launch_rule": "Aggregate and cleanup may be explicitly absent only when the complete derived runtime-root inventory is empty, every queue job in the attempt is terminal and child-reaped, at least one is non-success, and no native action, request, cell, failure, aggregate, terminal, or coordination artifact exists."
+  },
+  "pending_publication": {
+    "producer_does_not_predict": [
+      "outer_result",
+      "outer_ended_at",
+      "outer_wall_seconds",
+      "outer_stream_hashes",
+      "outer_child_reaped",
+      "cluster_status_sha256",
+      "published_child_commit"
+    ],
+    "sole_active_job_rule": "The semantic control set contains only the finalizer. The H1 verifier requires its observed outer result to be terminal and child-reaped.",
+    "generation_rule": "The claim generation is a lower bound because the coordinator re-stages unchanged control each poll. H1 may use a greater generation only with identical namespace, control commit, admission deadline, shutdown flag, and active job set.",
+    "freshness_rule": "Every worker attestation, reconciliation, pending receipt, and evidence receipt carries an explicit consume-by bound no later than 300 seconds after observation. The H1 verifier has no caller time override and uses its current UTC wall clock.",
+    "ancestry_rule": "The verifier locates the unique first linear descendant of the observed ancestor whose tree contains the exact pending artifact. Intervening and later commits must be authenticated coordinator-only queue snapshots, may not rewrite immutable published artifacts, and the remote head must remain unchanged across two observations."
+  },
+  "deployment_manifests": [
+    "workshops/corl2026_world_models/execution/20260912/autonomy/n3_queue_worker.json",
+    "workshops/corl2026_world_models/execution/20260912/autonomy/d1_queue_worker_v2.json",
+    "workshops/corl2026_world_models/execution/20260912/autonomy/science_queue_workers_v3.json",
+    "workshops/corl2026_world_models/execution/20260912/autonomy/science_queue_workers_pod_uid_050609.json",
+    "workshops/corl2026_world_models/execution/20260912/autonomy/queue_workers_pod_uid_00_d1.json"
+  ],
+  "source_paths": {
+    "producer": "workshops/corl2026_world_models/experiments/forecast_layout/confirmation_release_evidence_jobs.py",
+    "consumer": "workshops/corl2026_world_models/experiments/forecast_layout/confirmation_release_wave_jobs.py",
+    "cluster_queue": "workshops/corl2026_world_models/execution/20260912/autonomy/cluster_queue.py",
+    "prepared_schedule": "workshops/corl2026_world_models/execution/20260912/parallel_schedule.json",
+    "n3_runtime": "workshops/corl2026_world_models/experiments/forecast_layout/n3_confirmation_block_job.py",
+    "d1_runtime": "workshops/corl2026_world_models/experiments/forecast_layout/d1_confirmation_block_jobs.py"
+  },
+  "security": {
+    "uses_kubernetes_api": false,
+    "reads_or_logs_secrets": false,
+    "publishes_log_tails": false,
+    "mutates_queue": false,
+    "mutates_study_worktree_during_remote_fetch": false,
+    "workstation_pushes_results_branch": false,
+    "science_or_labels_emitted": false
+  }
+}

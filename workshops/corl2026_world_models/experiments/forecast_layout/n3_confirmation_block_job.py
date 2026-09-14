@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 from contextlib import contextmanager
 import fcntl
+import importlib.util
 import json
 import math
 import os
@@ -41,6 +42,54 @@ CELL_RECEIPT_SCHEMA = "wmf-n3-behavioral-confirmation-cell-v1"
 RESUME_SCHEMA = "wmf-n3-behavioral-confirmation-resume-v1"
 NO_REPLAY_TRANSPORT_CONTRACT = dict(development.NO_REPLAY_TRANSPORT_CONTRACT)
 _CONFIGURATION_ACTIVE = False
+
+
+def _release_wave_module(source_root: Path):
+    path = (
+        Path(source_root).resolve()
+        / "workshops/corl2026_world_models/experiments/forecast_layout/"
+        "confirmation_release_wave_jobs.py"
+    )
+    pilot.require(path.is_file() and not path.is_symlink(), "release_wave_runtime_missing")
+    spec = importlib.util.spec_from_file_location("wmf_n3_runtime_release_wave", path)
+    pilot.require(spec is not None and spec.loader is not None, "release_wave_runtime_unloadable")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    pilot.require(Path(module.__file__).resolve() == path, "release_wave_runtime_path_changed")
+    return module
+
+
+def validate_release_admission(args: argparse.Namespace) -> dict[str, Any]:
+    release = _release_wave_module(Path(args.source_root))
+    job_dir = Path(args.job_dir).resolve()
+    return release.validate_runtime_release_admission(
+        source_root=Path(args.source_root), state_dir=job_dir.parents[1],
+        job_dir=job_dir, job_id=args.job_id, study_commit=args.study_commit,
+        expected_role=pilot.QUEUE_ROLE,
+        finalizer_job_id=args.confirmation_release_finalizer_job_id,
+        consume_by_utc=args.confirmation_release_consume_by_utc,
+    )
+
+
+def validate_admission_receipt(args: argparse.Namespace) -> dict[str, Any]:
+    attempt_root = Path(args.attempt_root).resolve()
+    admission_path = Path(args.release_admission).resolve()
+    pilot.require(
+        args.queue_job_id == attempt_root.name
+        and admission_path == attempt_root / "release_admission.json",
+        "n3_release_admission_path_or_job_changed",
+    )
+    release = _release_wave_module(Path(args.source_root))
+    return release.validate_runtime_admission_receipt(
+        receipt_path=admission_path,
+        receipt_sha256=args.release_admission_sha256,
+        source_root=Path(args.source_root), study_commit=args.study_commit,
+        expected_job_id=args.queue_job_id, expected_role=pilot.QUEUE_ROLE,
+        expected_finalizer_job_id=args.confirmation_release_finalizer_job_id,
+        expected_consume_by_utc=args.confirmation_release_consume_by_utc,
+        verify_local_worker=True,
+    )
 
 
 def load_confirmation_block(source_root: Path, layout_pair_id: str) -> development.DevelopmentBlock:
@@ -181,6 +230,8 @@ def validate_queue_invocation(
         "--layout-pair-id": block.layout_pair_id,
         "--study-commit": study_commit,
         "--job-id": job_id,
+        "--confirmation-release-finalizer-job-id": args.confirmation_release_finalizer_job_id,
+        "--confirmation-release-consume-by-utc": args.confirmation_release_consume_by_utc,
         "--candidate-id": args.candidate_id,
         "--gate-receipt-sha256": args.gate_receipt_sha256,
         "--pose-manifest-sha256": args.pose_manifest_sha256,
@@ -211,6 +262,8 @@ def build_server_command(
     capture_receipt: Path, capture_receipt_sha256: str,
     confirmation_freeze: Path, confirmation_freeze_sha256: str,
     fixture_freeze_path: Path, fixture_freeze_sha256: str,
+    queue_job_id: str, release_admission: Path, release_admission_sha256: str,
+    release_finalizer_job_id: str, release_consume_by_utc: str,
 ) -> list[str]:
     pilot.require(0 <= start_cell_index < 4, "invalid_start_cell_index")
     script = (
@@ -225,6 +278,11 @@ def build_server_command(
         "--source-root", str(Path(source_root).resolve()),
         "--study-commit", study_commit,
         "--attempt-root", str(Path(attempt_root).resolve()),
+        "--queue-job-id", queue_job_id,
+        "--release-admission", str(Path(release_admission).resolve()),
+        "--release-admission-sha256", release_admission_sha256,
+        "--confirmation-release-finalizer-job-id", release_finalizer_job_id,
+        "--confirmation-release-consume-by-utc", release_consume_by_utc,
         "--port", str(port),
         "--start-cell-index", str(start_cell_index),
         "--candidate-id", candidate_id,
@@ -247,6 +305,8 @@ def build_cell_command(
     pose_manifest_sha256: str, capture_receipt: Path, capture_receipt_sha256: str,
     candidate_id: str, confirmation_freeze: Path, confirmation_freeze_sha256: str,
     fixture_freeze_path: Path, fixture_freeze_sha256: str,
+    queue_job_id: str, release_admission: Path, release_admission_sha256: str,
+    release_finalizer_job_id: str, release_consume_by_utc: str,
     port: int, condition_index: int, block: development.DevelopmentBlock,
 ) -> list[str]:
     pilot.require(0 <= condition_index < 4, "cell_condition_index_invalid")
@@ -263,6 +323,11 @@ def build_cell_command(
         "--source-root", str(Path(source_root).resolve()),
         "--study-commit", study_commit,
         "--attempt-root", str(Path(attempt_root).resolve()),
+        "--queue-job-id", queue_job_id,
+        "--release-admission", str(Path(release_admission).resolve()),
+        "--release-admission-sha256", release_admission_sha256,
+        "--confirmation-release-finalizer-job-id", release_finalizer_job_id,
+        "--confirmation-release-consume-by-utc", release_consume_by_utc,
         "--candidate-id", candidate_id,
         "--gate-receipt", str(Path(gate_receipt).resolve()),
         "--gate-receipt-sha256", gate_receipt_sha256,
@@ -611,6 +676,7 @@ def run_queue(args: argparse.Namespace, block: development.DevelopmentBlock) -> 
     server_process: subprocess.Popen[bytes] | None = None
     server_stdout = server_stderr = None
     topology = server_ready = server_exit = None
+    release_admission_identity: dict[str, Any] | None = None
     failure: BaseException | None = None
 
     raw_root.mkdir(parents=True, exist_ok=True)
@@ -637,6 +703,10 @@ def run_queue(args: argparse.Namespace, block: development.DevelopmentBlock) -> 
             pilot.immutable_json(attempt_root / "resume.json", resume)
             with pilot.installed_signal_handlers():
                 try:
+                    release_admission = validate_release_admission(args)
+                    release_admission_path = attempt_root / "release_admission.json"
+                    pilot.immutable_json(release_admission_path, release_admission)
+                    release_admission_identity = pilot.file_identity(release_admission_path)
                     topology = pilot.verify_two_idle_b200s()
                     pilot.immutable_json(attempt_root / "topology.json", topology)
                     server_command = build_server_command(
@@ -654,6 +724,11 @@ def run_queue(args: argparse.Namespace, block: development.DevelopmentBlock) -> 
                         confirmation_freeze_sha256=args.confirmation_freeze_sha256,
                         fixture_freeze_path=Path(args.fixture_freeze),
                         fixture_freeze_sha256=args.fixture_freeze_sha256,
+                        queue_job_id=args.job_id,
+                        release_admission=release_admission_path,
+                        release_admission_sha256=release_admission_identity["sha256"],
+                        release_finalizer_job_id=args.confirmation_release_finalizer_job_id,
+                        release_consume_by_utc=args.confirmation_release_consume_by_utc,
                     )
                     server_environment = pilot.build_model_environment(
                         source_root=source_root, attempt_root=attempt_root
@@ -696,6 +771,11 @@ def run_queue(args: argparse.Namespace, block: development.DevelopmentBlock) -> 
                             confirmation_freeze_sha256=args.confirmation_freeze_sha256,
                             fixture_freeze_path=Path(args.fixture_freeze),
                             fixture_freeze_sha256=args.fixture_freeze_sha256,
+                            queue_job_id=args.job_id,
+                            release_admission=release_admission_path,
+                            release_admission_sha256=release_admission_identity["sha256"],
+                            release_finalizer_job_id=args.confirmation_release_finalizer_job_id,
+                            release_consume_by_utc=args.confirmation_release_consume_by_utc,
                             port=args.port, condition_index=condition_index, block=block,
                         )
                         cell_id = block.cell_ids[condition_index]
@@ -809,6 +889,7 @@ def run_queue(args: argparse.Namespace, block: development.DevelopmentBlock) -> 
                 "counts": counts,
                 "source_commit": args.study_commit,
                 "queue_descriptor": queue_identity,
+                "release_admission": release_admission_identity,
                 "schedule": {"path": str(block.schedule_path), "sha256": block.schedule_sha256},
                 "prerequisites": prerequisites,
                 "topology": pilot.file_identity(attempt_root / "topology.json") if topology is not None else None,
@@ -842,6 +923,7 @@ def run_queue(args: argparse.Namespace, block: development.DevelopmentBlock) -> 
 
 
 def run_server(args: argparse.Namespace, block: development.DevelopmentBlock) -> int:
+    validate_admission_receipt(args)
     prerequisites = validate_prerequisites(args, block, include_pilot=False)
     original = pilot.immutable_json
 
@@ -861,6 +943,7 @@ def run_server(args: argparse.Namespace, block: development.DevelopmentBlock) ->
 
 
 def run_cell(args: argparse.Namespace, block: development.DevelopmentBlock) -> int:
+    validate_admission_receipt(args)
     prerequisites = validate_prerequisites(args, block, include_pilot=False)
     _verify_ready_binding(Path(args.attempt_root) / "server" / "ready.json", prerequisites)
     forecast = Path(args.source_root).resolve() / "workshops/corl2026_world_models/experiments/forecast_layout"
@@ -925,6 +1008,14 @@ def _add_fixture(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--capture-receipt-sha256", required=True)
 
 
+def _add_release_admission(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--queue-job-id", required=True)
+    parser.add_argument("--release-admission", type=Path, required=True)
+    parser.add_argument("--release-admission-sha256", required=True)
+    parser.add_argument("--confirmation-release-finalizer-job-id", required=True)
+    parser.add_argument("--confirmation-release-consume-by-utc", required=True)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="mode", required=True)
@@ -934,6 +1025,8 @@ def build_parser() -> argparse.ArgumentParser:
     queue.add_argument("--study-commit", required=True)
     queue.add_argument("--job-dir", type=Path, required=True)
     queue.add_argument("--job-id", required=True)
+    queue.add_argument("--confirmation-release-finalizer-job-id", required=True)
+    queue.add_argument("--confirmation-release-consume-by-utc", required=True)
     queue.add_argument("--raw-root", type=Path)
     _add_fixture(queue)
     _add_freezes(queue)
@@ -948,6 +1041,7 @@ def build_parser() -> argparse.ArgumentParser:
     server.add_argument("--source-root", type=Path, required=True)
     server.add_argument("--study-commit", required=True)
     server.add_argument("--attempt-root", type=Path, required=True)
+    _add_release_admission(server)
     server.add_argument("--host", default="0.0.0.0")
     server.add_argument("--port", type=int, default=pilot.DEFAULT_PORT)
     server.add_argument("--start-cell-index", type=int, default=0)
@@ -959,6 +1053,7 @@ def build_parser() -> argparse.ArgumentParser:
     cell.add_argument("--source-root", type=Path, required=True)
     cell.add_argument("--study-commit", required=True)
     cell.add_argument("--attempt-root", type=Path, required=True)
+    _add_release_admission(cell)
     _add_fixture(cell)
     _add_freezes(cell)
     cell.add_argument("--layout-arm", choices=("original", "reflected"), required=True)
@@ -979,6 +1074,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     block = load_confirmation_block(Path(args.source_root), args.layout_pair_id)
     pilot.require(pilot.COMMIT_RE.fullmatch(args.study_commit) is not None, "invalid_study_commit")
+    pilot.require(
+        pilot.SAFE_ID_RE.fullmatch(args.confirmation_release_finalizer_job_id) is not None,
+        "invalid_confirmation_release_finalizer_job_id",
+    )
+    pilot.parse_utc(args.confirmation_release_consume_by_utc)
     _validate_sha_options(args)
     port = getattr(args, "port", getattr(args, "remote_port", 0))
     pilot.require(1 <= port <= 65535, "invalid_port")

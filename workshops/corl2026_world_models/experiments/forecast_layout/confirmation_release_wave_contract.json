@@ -1,0 +1,178 @@
+{
+  "schema_version": "wmf-confirmation-release-wave-contract-v1",
+  "study_id": "WMF-ABLATION-001",
+  "namespace": "wmf_ablation_001_20260912",
+  "status": "source_only_fail_closed",
+  "execution_readiness": {
+    "status": "pending_cluster_coordinator_h1_verification",
+    "builder_synthesizes_evidence": false,
+    "required_external_artifacts": [
+      "wmf-confirmation-result-attempt-ledger-v1",
+      "wmf-confirmation-cluster-reconciliation-v1"
+    ],
+    "claim_boundary": "The cluster finalizer derives the ledger, pending reconciliation, plan, and queue fragment. None is authorized for control-branch release until the existing coordinator publishes them and the read-only H1 verifier accepts that exact publication."
+  },
+  "prepared_schedule": {
+    "path": "workshops/corl2026_world_models/execution/20260912/parallel_schedule.json",
+    "sha256": "9a4a1cce1e980a624ec4161cf4438bfa01a6681dcd8fcb6e2b01150b62409a58",
+    "confirmation_row_count": 48,
+    "layout_count_per_model": 24,
+    "layout_order_source": "order_assignment.confirmation_blocks_in_hash_order",
+    "confirmation_blocks_in_hash_order": [
+      "C02",
+      "C13",
+      "C11",
+      "C10",
+      "C24",
+      "C12",
+      "C16",
+      "C05",
+      "C17",
+      "C19",
+      "C09",
+      "C06",
+      "C08",
+      "C01",
+      "C04",
+      "C23",
+      "C03",
+      "C20",
+      "C18",
+      "C15",
+      "C14",
+      "C22",
+      "C07",
+      "C21"
+    ]
+  },
+  "branch_models": {
+    "full_two_model": [
+      "N3",
+      "D1"
+    ],
+    "reduced_n3": [
+      "N3"
+    ],
+    "reduced_d1": [
+      "D1"
+    ]
+  },
+  "lane_priority": [
+    "N3",
+    "D1"
+  ],
+  "minimum_control_generation": 999,
+  "maximum_reconciliation_age_seconds": 300,
+  "maximum_job_wall_seconds": 172800,
+  "publication_grace_seconds": 600,
+  "publish_log_tail_bytes": 0,
+  "trusted_publication": {
+    "results_remote_aliases": [
+      "publish",
+      "origin"
+    ],
+    "results_ref": "refs/heads/codex/forecast-layout-gm-20260912-results",
+    "allowed_fetch_urls": [
+      "https://github.com/adeeb10abbas/steerable.git",
+      "git@github.com:adeeb10abbas/steerable.git",
+      "ssh://git@github.com/adeeb10abbas/steerable.git"
+    ],
+    "repository_identity": {
+      "host": "github.com",
+      "owner": "adeeb10abbas",
+      "repository": "steerable"
+    },
+    "git_path_prefix": "results/",
+    "cluster_status_schema": "wmf-cluster-status-v1"
+  },
+  "runtime": {
+    "N3": {
+      "role": "n3",
+      "gpu_count_per_worker": 2,
+      "runner": "workshops/corl2026_world_models/experiments/forecast_layout/n3_confirmation_block_job.py",
+      "mode": "queue"
+    },
+    "D1": {
+      "server_role": "d1",
+      "server_gpu_count": 2,
+      "simulator_gpu_count": 1,
+      "simulator_roles": [
+        "wmf-forecast-0912-worker-00",
+        "wmf-forecast-0912-worker-05",
+        "wmf-forecast-0912-worker-06",
+        "wmf-forecast-0912-worker-09"
+      ],
+      "runner": "workshops/corl2026_world_models/experiments/forecast_layout/d1_confirmation_block_jobs.py",
+      "server_mode": "server-job",
+      "simulator_mode": "simulator-job",
+      "service_host": "wmf-forecast-0912-d1",
+      "service_port": 18021,
+      "global_server_concurrency": 1
+    }
+  },
+  "runtime_admission": {
+    "schema": "wmf-confirmation-runtime-release-admission-v1",
+    "d1_pair_ack_schema": "wmf-d1-confirmation-runtime-admission-ack-v1",
+    "fresh_h1_stage": "queue_start",
+    "downstream_replay_allows_consume_by_expiry_after_fresh_admission": true,
+    "required_live_identity": [
+      "published_descriptor",
+      "immutable_queue_claim",
+      "selected_worker_role",
+      "hostname",
+      "pod_uid",
+      "gpu_uuid_name_memory_count",
+      "zero_compute_processes"
+    ],
+    "science_must_not_start_before_gate": true,
+    "active_queue_mutation": false,
+    "jobs_dispatched": 0
+  },
+  "external_evidence_schemas": {
+    "confirmation_freeze": "wmf-development-confirmation-release-freeze-v1",
+    "fixture_freeze": "wmf-confirmation-fixture-freeze-v1",
+    "resource_qualification": "wmf-development-resource-machine-freeze-v1",
+    "result_attempt_ledger": "wmf-confirmation-result-attempt-ledger-v1",
+    "cluster_reconciliation": "wmf-confirmation-cluster-reconciliation-v1",
+    "terminal_runtime_identities": "wmf-confirmation-terminal-runtime-identities-v1",
+    "publication_pending": "wmf-confirmation-release-publication-pending-v1",
+    "publication_verification": "wmf-confirmation-release-publication-verification-v1"
+  },
+  "terminal_context_schemas": {
+    "N3": "wmf-n3-terminal-context-receipt-v1",
+    "D1": "wmf-d1-terminal-context-receipt-v1"
+  },
+  "source_dependencies": {
+    "workshops/corl2026_world_models/analysis/freeze_development_release.py": "1dbba3d3afb736e178782d39e0eaea9b451b2ca196bb6d6a94e80461bcd39e44",
+    "workshops/corl2026_world_models/experiments/forecast_layout/confirmation_release_evidence_contract.json": "08a945986c967c784339984d8a13788e0d7e60fc748ccf60c9cda56c3366fa6a",
+    "workshops/corl2026_world_models/experiments/forecast_layout/confirmation_release_evidence_jobs.py": "50c33a35b132775649ed36ac186194c10aad6e2212e8b24219347259c2a9b59a",
+    "workshops/corl2026_world_models/experiments/forecast_layout/confirmation_terminal_runtime_identities.py": "73c66c4b4fe4d45371265639a77439251cdf1917f463974a1f598ecad8efc290",
+    "workshops/corl2026_world_models/experiments/forecast_layout/confirmation_terminal_runtime_identities_contract.json": "43fe301c23c95d12a65eee17bcf92d8798e9855ccd58d2ea856827e0641d308e",
+    "workshops/corl2026_world_models/experiments/forecast_layout/confirmation_runtime_common.py": "452532719e7a538ba83961d7f23e90afc8e54c7b07d8ae599fd6e1dbd0e2f2a3",
+    "workshops/corl2026_world_models/experiments/forecast_layout/confirmation_fixture_freeze.py": "2b5f5731124e80c21a5911f8d85eca644f554933ed29f9451bc9aac2c849052e",
+    "workshops/corl2026_world_models/experiments/forecast_layout/n3_behavioral_pilot_job.py": "f116ceb1a3a9022642a735293b5b86188ce83dc4075cc00040a7795642de75a4",
+    "workshops/corl2026_world_models/experiments/forecast_layout/n3_confirmation_block_job.py": "2154f87e3bf7fcbf7926e2f6d20a339081429bf1580466f8a65f69d956201818",
+    "workshops/corl2026_world_models/experiments/forecast_layout/d1_behavioral_pilot_jobs.py": "2cdeb2fa8008088351fec6d68a75617dad2833367c384ff9aa67d949daf281bf",
+    "workshops/corl2026_world_models/experiments/forecast_layout/d1_confirmation_block_jobs.py": "c9267d20e4a8715903e3e1522d967f3e78368131583d939090e8c19c620e9cb8",
+    "workshops/corl2026_world_models/experiments/forecast_layout/d1_instrumented_server.py": "085aec66d7deb06cac2c50e61b3205899476185d70720330cb0c586416532801",
+    "workshops/corl2026_world_models/experiments/forecast_layout/development_resource_qualification_jobs.py": "38bb45f5ca0962fe8673070d388de5e70bbb1b272fb020a77ffdb1b95383e0dc",
+    "workshops/corl2026_world_models/experiments/forecast_layout/development_resource_qualification_contract.json": "dfb203fb2bca8fe89f5c6b9c73f4daa8eb836f37917ecf7f9e8a5aa5f2571803",
+    "workshops/corl2026_world_models/experiments/forecast_layout/n3_development_block_job.py": "1a0a13449866116d269314e375c3fe739cbe547f2aea7d6a729b556a9ac01a32",
+    "workshops/corl2026_world_models/experiments/forecast_layout/d1_development_block_jobs.py": "ffc342087f1caf3837da1715d76b3b002eae1a40e709554e71284a4e4e28c632",
+    "workshops/corl2026_world_models/execution/20260912/autonomy/cluster_queue.py": "c9fe3d2da0b889eae2bb6cff4c8c149583e4293b366840134e14dcb07a18ba22",
+    "workshops/corl2026_world_models/execution/20260912/autonomy/n3_queue_worker.json": "27fe8d5d58e57a59790e8ee4c024f280227b14dc72fa01a744bd18d25f310e9e",
+    "workshops/corl2026_world_models/execution/20260912/autonomy/d1_queue_worker_v2.json": "23f1299f58761676742bf639f885051409209b9ca42575f758df641cb3c1d093",
+    "workshops/corl2026_world_models/execution/20260912/autonomy/science_queue_workers_v3.json": "9a8e687b547a2fb97047110fe83cefa373dbb4d9c8660cb2b74ffb1545bac94f",
+    "workshops/corl2026_world_models/execution/20260912/autonomy/science_queue_workers_pod_uid_050609.json": "5d18a9b46f9cda84256e0446abb11c793a555eebf27deecb135af7b02f8a35ce"
+  },
+  "output": {
+    "plan_schema": "wmf-confirmation-release-wave-plan-v1",
+    "queue_schema": "wmf-cluster-queue-v1",
+    "receipt_schema": "wmf-confirmation-release-wave-receipt-v1",
+    "authorization_schema": "wmf-confirmation-release-wave-authorization-v1",
+    "status": "pending_h1_verification",
+    "execution_release_authorized": false,
+    "active_queue_mutation": false,
+    "invented_cluster_evidence": false
+  }
+}

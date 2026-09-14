@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import dataclasses
+from datetime import datetime, timedelta, timezone
 import hashlib
 import json
 from pathlib import Path
@@ -306,6 +307,11 @@ class LauncherContractTests(unittest.TestCase):
             confirmation_freeze_sha256=SHA,
             fixture_freeze_path=Path("/tmp/fixtures.json"),
             fixture_freeze_sha256=SHA,
+            queue_job_id="confirmation-c01-n3-a001",
+            release_admission=Path("/tmp/release-admission.json"),
+            release_admission_sha256=SHA,
+            release_finalizer_job_id="confirmation-release-finalizer-n3-a001",
+            release_consume_by_utc="2026-09-13T16:05:00Z",
         )
         self.assertTrue(command[1].endswith(n3.RUNNER_FILENAME))
         self.assertEqual(common.descriptor_option(command, "--start-cell-index"), "2")
@@ -337,6 +343,8 @@ class LauncherContractTests(unittest.TestCase):
         block = n3.load_confirmation_block(SOURCE_ROOT, "C02")
         args = SimpleNamespace()
         with mock.patch.object(
+            n3, "validate_admission_receipt", return_value={},
+        ), mock.patch.object(
             n3,
             "validate_prerequisites",
             side_effect=common.ConfirmationRuntimeError("confirmation_release_freeze_invalid"),
@@ -344,6 +352,81 @@ class LauncherContractTests(unittest.TestCase):
             with self.assertRaisesRegex(common.ConfirmationRuntimeError, "confirmation_release_freeze_invalid"):
                 n3.run_server(args, block)
         launch.assert_not_called()
+
+    def test_n3_queue_expired_release_is_zero_science_technical_failure(self) -> None:
+        template = n3.load_confirmation_block(SOURCE_ROOT, "C02")
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            raw = root / "raw"
+            job_id = "confirmation-c02-n3-a001"
+            job_dir = root / "control" / "jobs" / job_id
+            block = dataclasses.replace(template, raw_root=raw)
+            args = SimpleNamespace(
+                source_root=SOURCE_ROOT, job_dir=job_dir, raw_root=raw,
+                study_commit=STUDY_COMMIT, job_id=job_id,
+                confirmation_release_finalizer_job_id=(
+                    "confirmation-release-finalizer-n3-a001"
+                ),
+                confirmation_release_consume_by_utc="2026-09-13T16:05:00Z",
+            )
+            resume = {
+                "schema_version": n3.RESUME_SCHEMA,
+                "block_id": block.block_id,
+                "layout_pair_id": block.layout_pair_id,
+                "start_cell_index": 0,
+            }
+            with (
+                mock.patch.object(n3, "validate_queue_invocation", return_value={}),
+                mock.patch.object(n3, "validate_prerequisites", return_value={}),
+                mock.patch.object(
+                    n3, "discover_completed_prefix", return_value=([], [], resume)
+                ),
+                mock.patch.object(
+                    n3, "validate_release_admission",
+                    side_effect=common.ConfirmationRuntimeError(
+                        "runtime release authority is expired"
+                    ),
+                ),
+                mock.patch.object(n3.pilot, "_wait_for_gpu_cleanup", return_value=[]),
+                mock.patch.object(n3.pilot, "verify_two_idle_b200s") as topology,
+                mock.patch.object(n3.pilot, "_launch_logged") as model_launch,
+                mock.patch.object(n3.pilot, "supervised_logged_child") as cell_launch,
+                mock.patch("builtins.print"),
+            ):
+                self.assertEqual(n3.run_queue(args, block), 1)
+            topology.assert_not_called()
+            model_launch.assert_not_called()
+            cell_launch.assert_not_called()
+            aggregate = json.loads(
+                (raw / job_id / "publish" / n3.AGGREGATE_FILENAME).read_text()
+            )
+            self.assertEqual(aggregate["status"], "technical_failure")
+            self.assertIsNone(aggregate["release_admission"])
+            self.assertEqual(aggregate["counts"]["launched_behavioral_cells"], 0)
+            self.assertEqual(aggregate["counts"]["actual_behavioral_actions"], 0)
+            self.assertEqual(aggregate["counts"]["actual_behavioral_model_requests"], 0)
+
+    def test_n3_nested_server_and_cell_reject_substituted_admission_before_science(self) -> None:
+        block = n3.load_confirmation_block(SOURCE_ROOT, "C02")
+        for mode, runner_name in (("server", "run_server"), ("cell", "run_cell")):
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as temporary:
+                attempt = Path(temporary) / "confirmation-c02-n3-a001"
+                attempt.mkdir()
+                substituted = Path(temporary) / "other" / "release_admission.json"
+                args = SimpleNamespace(
+                    attempt_root=attempt,
+                    queue_job_id=attempt.name,
+                    release_admission=substituted,
+                )
+                with (
+                    mock.patch.object(n3.pilot, runner_name) as science,
+                    self.assertRaisesRegex(
+                        n3.pilot.N3BehavioralPilotError,
+                        "n3_release_admission_path_or_job_changed",
+                    ),
+                ):
+                    getattr(n3, runner_name)(args, block)
+                science.assert_not_called()
 
     def test_execution_prerequisite_hash_rejects_mutation(self) -> None:
         block = d1.load_confirmation_block(SOURCE_ROOT, "C02")
@@ -363,6 +446,310 @@ class LauncherContractTests(unittest.TestCase):
             write_json(path, changed)
             with self.assertRaisesRegex(d1.pilot.D1BehavioralPilotError, "evidence_sha256_mismatch"):
                 d1.verify_execution_prerequisites(path, digest, block=block)
+
+
+class RuntimeReleaseAdmissionTests(unittest.TestCase):
+    @staticmethod
+    def _d1_args(raw_root: Path) -> SimpleNamespace:
+        return SimpleNamespace(
+            source_root=SOURCE_ROOT,
+            study_commit=STUDY_COMMIT,
+            run_id="confirmation-c02-d1-a001",
+            simulator_worker_role=d1.ALLOWED_SIMULATOR_ROLES[0],
+            confirmation_release_finalizer_job_id=(
+                "confirmation-release-finalizer-d1-a001"
+            ),
+            confirmation_release_consume_by_utc="2026-09-13T16:05:00Z",
+            raw_root=raw_root,
+        )
+
+    @staticmethod
+    def _d1_admissions(args: SimpleNamespace) -> tuple[dict, dict]:
+        checked = (datetime.now(timezone.utc) - timedelta(seconds=2)).isoformat().replace(
+            "+00:00", "Z"
+        )
+        common_fields = {
+            "queue_job_ids": [
+                "confirmation-c02-d1-a001-server",
+                "confirmation-c02-d1-a001-simulator",
+            ],
+            "release_finalizer_job_id": args.confirmation_release_finalizer_job_id,
+            "consume_by_utc": args.confirmation_release_consume_by_utc,
+            "publication_verification_payload_sha256": "1" * 64,
+            "pending_publication_commit": "2" * 40,
+            "verified_remote_head": "3" * 40,
+            "published_queue_fragment_sha256": "4" * 64,
+            "checked_at_utc": checked,
+        }
+        server = {
+            **common_fields,
+            "job_id": "confirmation-c02-d1-a001-server",
+            "worker_id": "wmf-forecast-0912-worker-d1-00",
+            "role": d1.pilot.SERVER_QUEUE_ROLE,
+            "hostname": "d1-server-host",
+            "pod_uid": "11111111-1111-1111-1111-111111111111",
+            "gpu_identity": [
+                {
+                    "index": index, "uuid": f"GPU-server-{index}",
+                    "name": "NVIDIA B200", "memory_total_mib": 192000,
+                }
+                for index in (0, 1)
+            ],
+        }
+        simulator = {
+            **common_fields,
+            "job_id": "confirmation-c02-d1-a001-simulator",
+            "worker_id": "wmf-forecast-0912-worker-00",
+            "role": args.simulator_worker_role,
+            "hostname": "d1-simulator-host",
+            "pod_uid": "22222222-2222-2222-2222-222222222222",
+            "gpu_identity": [{
+                "index": 0, "uuid": "GPU-simulator-0",
+                "name": "NVIDIA B200", "memory_total_mib": 192000,
+            }],
+        }
+        # Each process performs a separate read-only verification. Its signed
+        # document timestamp/hash and later coordinator-only remote head may
+        # differ even though both authenticate the same immutable H1 commit.
+        simulator["publication_verification_payload_sha256"] = "5" * 64
+        simulator["verified_remote_head"] = "6" * 40
+        return server, simulator
+
+    def test_d1_pair_rejects_same_worker_pod_gpu_or_release_authority(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            args = self._d1_args(Path(temporary))
+            server, simulator = self._d1_admissions(args)
+            d1._admission_pair_common(
+                server, simulator, args=args,
+                server_job_id=server["job_id"], simulator_job_id=simulator["job_id"],
+            )
+            mutations = {
+                "worker": lambda value: value.update(worker_id=server["worker_id"]),
+                "pod": lambda value: value.update(pod_uid=server["pod_uid"]),
+                "gpu": lambda value: value["gpu_identity"][0].update(
+                    uuid=server["gpu_identity"][0]["uuid"]
+                ),
+                "h1": lambda value: value.update(
+                    pending_publication_commit="f" * 40
+                ),
+                "fragment": lambda value: value.update(
+                    published_queue_fragment_sha256="e" * 64
+                ),
+                "finalizer": lambda value: value.update(
+                    release_finalizer_job_id="confirmation-release-finalizer-d1-a999"
+                ),
+                "consume_by": lambda value: value.update(
+                    consume_by_utc="2026-09-13T16:06:00Z"
+                ),
+            }
+            for label, mutate in mutations.items():
+                changed = copy.deepcopy(simulator)
+                mutate(changed)
+                with self.subTest(label=label), self.assertRaisesRegex(
+                    d1.pilot.D1BehavioralPilotError,
+                    "d1_runtime_admission_pair_changed",
+                ):
+                    d1._admission_pair_common(
+                        server, changed, args=args,
+                        server_job_id=server["job_id"],
+                        simulator_job_id=simulator["job_id"],
+                    )
+
+    def test_d1_simulator_claim_binds_authenticated_pod_when_env_uid_is_absent(self) -> None:
+        block = d1.load_confirmation_block(SOURCE_ROOT, "C02")
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "claim.json"
+            admission = {
+                "hostname": "d1-simulator-host",
+                "pod_uid": "22222222-2222-2222-2222-222222222222",
+            }
+            value = {
+                "schema_version": d1.pilot.SIMULATOR_CLAIM_SCHEMA,
+                "process": {
+                    "pid": 123, "hostname": "d1-simulator-host", "pod_uid": None,
+                },
+            }
+            with d1.installed_receipt_metadata(
+                block, release_admission={"value": admission}
+            ):
+                d1.pilot.immutable_json(path, value)
+            observed = json.loads(path.read_text())
+            self.assertEqual(observed["process"]["pod_uid"], admission["pod_uid"])
+
+    def test_d1_ack_is_exact_current_pair_and_ordered_after_both_admissions(self) -> None:
+        template = d1.load_confirmation_block(SOURCE_ROOT, "C02")
+        with tempfile.TemporaryDirectory() as temporary:
+            raw = Path(temporary)
+            block = dataclasses.replace(template, raw_root=raw)
+            args = self._d1_args(raw)
+            server, simulator = self._d1_admissions(args)
+            server_path = raw / "server_attempts" / server["job_id"] / "release_admission.json"
+            simulator_path = (
+                raw / "simulator_attempts" / simulator["job_id"]
+                / "release_admission.json"
+            )
+            write_json(server_path, server)
+            write_json(simulator_path, simulator)
+            server_identity = d1.pilot.file_identity(server_path)
+            simulator_identity = d1.pilot.file_identity(simulator_path)
+            coordination = d1.pilot.coordination_paths(raw, args.run_id)
+            write_json(coordination["server_ready"], {"ready": True})
+            write_json(coordination["simulator_claim"], {"claimed": True})
+            server_ready_identity = d1.pilot.file_identity(coordination["server_ready"])
+            simulator_claim_identity = d1.pilot.file_identity(
+                coordination["simulator_claim"]
+            )
+            ack = d1._build_release_ack(
+                args=args, block=block, server=server, simulator=simulator,
+                server_identity=server_identity,
+                simulator_identity=simulator_identity,
+                server_ready_identity=server_ready_identity,
+                simulator_claim_identity=simulator_claim_identity,
+                server_job_id=server["job_id"],
+                simulator_job_id=simulator["job_id"],
+            )
+            ack_path = d1._release_ack_path(block, args.run_id)
+            ack_sha = write_json(ack_path, ack)
+            observed = d1._validate_release_ack(
+                args=args, block=block, ack_path=ack_path,
+                ack_sha256=ack_sha, server=server, simulator=simulator,
+                server_identity=server_identity,
+                simulator_identity=simulator_identity,
+                server_ready_identity=server_ready_identity,
+                simulator_claim_identity=simulator_claim_identity,
+                server_job_id=server["job_id"],
+                simulator_job_id=simulator["job_id"],
+            )
+            self.assertEqual(observed["server_admission"], server_identity)
+
+            release = d1._release_wave_module(SOURCE_ROOT)
+            changed = {
+                key: value for key, value in ack.items() if key != "payload_sha256"
+            }
+            changed["completed_at_utc"] = (
+                datetime.now(timezone.utc) - timedelta(minutes=1)
+            ).isoformat().replace("+00:00", "Z")
+            changed = release.signed_document(changed)
+            changed_sha = write_json(ack_path, changed)
+            with self.assertRaisesRegex(
+                d1.pilot.D1BehavioralPilotError,
+                "d1_runtime_admission_ack_changed",
+            ):
+                d1._validate_release_ack(
+                    args=args, block=block, ack_path=ack_path,
+                    ack_sha256=changed_sha, server=server, simulator=simulator,
+                    server_identity=server_identity,
+                    simulator_identity=simulator_identity,
+                    server_ready_identity=server_ready_identity,
+                    simulator_claim_identity=simulator_claim_identity,
+                    server_job_id=server["job_id"],
+                    simulator_job_id=simulator["job_id"],
+                )
+
+            with self.assertRaisesRegex(
+                d1.pilot.D1BehavioralPilotError,
+                "missing_release_ack",
+            ):
+                d1._wait_for_regular_file(
+                    raw / "missing-ack.json", timeout=0,
+                    reason="missing_release_ack",
+                )
+
+    def test_d1_queue_start_rejection_precedes_model_or_simulator_science(self) -> None:
+        template = d1.load_confirmation_block(SOURCE_ROOT, "C02")
+        for lane in ("server", "simulator"):
+            with self.subTest(lane=lane), tempfile.TemporaryDirectory() as temporary:
+                raw = Path(temporary) / "raw"
+                block = dataclasses.replace(template, raw_root=raw)
+                args = self._d1_args(raw)
+                args.job_id = f"confirmation-c02-d1-a001-{lane}"
+                args.job_dir = Path(temporary) / "control" / "jobs" / args.job_id
+                args.server_job_id = "confirmation-c02-d1-a001-server"
+                args.simulator_job_id = "confirmation-c02-d1-a001-simulator"
+                marker = mock.Mock()
+
+                def fake_pilot_run(_args):
+                    d1.pilot.validate_queue_invocation()
+                    marker()
+                    return 0
+
+                target = "run_server_job" if lane == "server" else "run_simulator_job"
+                with (
+                    d1.configured_pilot(block, args.simulator_worker_role),
+                    mock.patch.object(d1, "validate_queue_invocation", return_value={}),
+                    mock.patch.object(
+                        d1, "validate_prerequisites",
+                        return_value={"p00_paired_pilot": {}},
+                    ),
+                    mock.patch.object(
+                        d1, "validate_release_admission",
+                        side_effect=d1.pilot.D1BehavioralPilotError(
+                            "runtime_release_expired"
+                        ),
+                    ),
+                    mock.patch.object(d1.pilot, target, side_effect=fake_pilot_run),
+                    self.assertRaisesRegex(
+                        d1.pilot.D1BehavioralPilotError,
+                        "runtime_release_expired",
+                    ),
+                ):
+                    getattr(d1, target)(args, block)
+                marker.assert_not_called()
+
+    def test_d1_cell_rejects_missing_or_stale_ack_before_fixture_or_reset(self) -> None:
+        template = d1.load_confirmation_block(SOURCE_ROOT, "C02")
+        with tempfile.TemporaryDirectory() as temporary:
+            raw = Path(temporary)
+            block = dataclasses.replace(template, raw_root=raw)
+            args = self._d1_args(raw)
+            args.server_job_id = "confirmation-c02-d1-a001-server"
+            args.simulator_job_id = "confirmation-c02-d1-a001-simulator"
+            args.attempt_root = raw / "simulator_attempts" / args.simulator_job_id
+            args.attempt_root.mkdir(parents=True)
+            args.server_release_admission = (
+                raw / "server_attempts" / args.server_job_id / "release_admission.json"
+            )
+            args.simulator_release_admission = args.attempt_root / "release_admission.json"
+            server_sha = write_json(args.server_release_admission, {"server": True})
+            simulator_sha = write_json(
+                args.simulator_release_admission, {"simulator": True}
+            )
+            args.server_release_admission_sha256 = server_sha
+            args.simulator_release_admission_sha256 = simulator_sha
+            args.release_admission_ack = d1._release_ack_path(block, args.run_id)
+            args.release_admission_ack_sha256 = SHA
+            coordination = d1.pilot.coordination_paths(raw, args.run_id)
+            args.server_ready_sha256 = write_json(
+                coordination["server_ready"], {"ready": True}
+            )
+            args.simulator_claim_sha256 = write_json(
+                coordination["simulator_claim"], {"claimed": True}
+            )
+            server, simulator = self._d1_admissions(args)
+            fixture = mock.Mock()
+            reset = mock.Mock()
+
+            def receipt(*, job_id, **_kwargs):
+                return server if job_id == args.server_job_id else simulator
+
+            with (
+                mock.patch.object(d1, "_validate_admission_receipt", side_effect=receipt),
+                mock.patch.object(
+                    d1, "_validate_release_ack",
+                    side_effect=d1.pilot.D1BehavioralPilotError(
+                        "d1_release_admission_ack_missing"
+                    ),
+                ),
+                mock.patch.object(d1, "_fixture_from_args", fixture),
+                mock.patch.object(d1.pilot, "run_cell", reset),
+                self.assertRaisesRegex(
+                    d1.pilot.D1BehavioralPilotError,
+                    "d1_release_admission_ack_missing",
+                ),
+            ):
+                d1.run_cell(args, block)
+            fixture.assert_not_called()
+            reset.assert_not_called()
 
 
 class TerminalFailureContractTests(unittest.TestCase):

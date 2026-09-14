@@ -12,11 +12,13 @@ from __future__ import annotations
 
 import argparse
 from contextlib import contextmanager
+import importlib.util
 import json
 import math
 import os
 from pathlib import Path
 import sys
+import time
 from typing import Any, Iterator, Mapping, Sequence
 
 
@@ -46,6 +48,239 @@ EXECUTION_PREREQUISITES_SCHEMA = "wmf-d1-confirmation-execution-prerequisites-v1
 NO_REPLAY_TRANSPORT_CONTRACT = dict(development.NO_REPLAY_TRANSPORT_CONTRACT)
 ALLOWED_SIMULATOR_ROLES = development.ALLOWED_SIMULATOR_ROLES
 _CONFIGURATION_ACTIVE = False
+D1_RELEASE_ACK_SCHEMA = "wmf-d1-confirmation-runtime-admission-ack-v1"
+D1_RELEASE_ACK_CLAIM_BOUNDARY = (
+    "Both distinct D1 queue processes passed the same H1-bound start-time "
+    "admission before any simulator reset, model request, or action."
+)
+
+
+def _release_wave_module(source_root: Path):
+    path = (
+        Path(source_root).resolve()
+        / "workshops/corl2026_world_models/experiments/forecast_layout/"
+        "confirmation_release_wave_jobs.py"
+    )
+    pilot.require(path.is_file() and not path.is_symlink(), "release_wave_runtime_missing")
+    spec = importlib.util.spec_from_file_location("wmf_d1_runtime_release_wave", path)
+    pilot.require(spec is not None and spec.loader is not None, "release_wave_runtime_unloadable")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    pilot.require(Path(module.__file__).resolve() == path, "release_wave_runtime_path_changed")
+    return module
+
+
+def validate_release_admission(
+    args: argparse.Namespace, *, expected_role: str,
+) -> dict[str, Any]:
+    release = _release_wave_module(Path(args.source_root))
+    job_dir = Path(args.job_dir).resolve()
+    return release.validate_runtime_release_admission(
+        source_root=Path(args.source_root), state_dir=job_dir.parents[1],
+        job_dir=job_dir, job_id=args.job_id, study_commit=args.study_commit,
+        expected_role=expected_role,
+        finalizer_job_id=args.confirmation_release_finalizer_job_id,
+        consume_by_utc=args.confirmation_release_consume_by_utc,
+    )
+
+
+def _validate_admission_receipt(
+    *, args: argparse.Namespace, path: Path, digest: str, job_id: str,
+    role: str, verify_local_worker: bool,
+) -> dict[str, Any]:
+    release = _release_wave_module(Path(args.source_root))
+    return release.validate_runtime_admission_receipt(
+        receipt_path=path, receipt_sha256=digest,
+        source_root=Path(args.source_root), study_commit=args.study_commit,
+        expected_job_id=job_id, expected_role=role,
+        expected_finalizer_job_id=args.confirmation_release_finalizer_job_id,
+        expected_consume_by_utc=args.confirmation_release_consume_by_utc,
+        verify_local_worker=verify_local_worker,
+    )
+
+
+def _admission_pair_common(
+    server: Mapping[str, Any], simulator: Mapping[str, Any],
+    *, args: argparse.Namespace, server_job_id: str, simulator_job_id: str,
+) -> None:
+    pilot.require(
+        server.get("worker_id") != simulator.get("worker_id")
+        and server.get("pod_uid") != simulator.get("pod_uid")
+        and not {
+            row.get("uuid") for row in server.get("gpu_identity", [])
+            if isinstance(row, Mapping)
+        }.intersection({
+            row.get("uuid") for row in simulator.get("gpu_identity", [])
+            if isinstance(row, Mapping)
+        })
+        and server.get("role") == pilot.SERVER_QUEUE_ROLE
+        and simulator.get("role") == args.simulator_worker_role
+        and server.get("queue_job_ids") == [server_job_id, simulator_job_id]
+        and simulator.get("queue_job_ids") == [server_job_id, simulator_job_id]
+        and server.get("release_finalizer_job_id")
+        == simulator.get("release_finalizer_job_id")
+        == args.confirmation_release_finalizer_job_id
+        and server.get("consume_by_utc") == simulator.get("consume_by_utc")
+        == args.confirmation_release_consume_by_utc
+        and server.get("pending_publication_commit")
+        == simulator.get("pending_publication_commit")
+        and server.get("published_queue_fragment_sha256")
+        == simulator.get("published_queue_fragment_sha256"),
+        "d1_runtime_admission_pair_changed",
+    )
+
+
+def _wait_for_regular_file(path: Path, *, timeout: float, reason: str) -> dict[str, Any]:
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if path.exists() or path.is_symlink():
+            pilot.require(path.is_file() and not path.is_symlink(), reason)
+            return pilot.file_identity(path)
+        time.sleep(0.2)
+    raise pilot.D1BehavioralPilotError(reason)
+
+
+def _release_ack_path(block: development.DevelopmentBlock, run_id: str) -> Path:
+    return pilot.coordination_paths(block.raw_root, run_id)["root"] / "release_admission_ack.json"
+
+
+def _build_release_ack(
+    *, args: argparse.Namespace, block: development.DevelopmentBlock,
+    server: Mapping[str, Any], simulator: Mapping[str, Any],
+    server_identity: Mapping[str, Any], simulator_identity: Mapping[str, Any],
+    server_ready_identity: Mapping[str, Any],
+    simulator_claim_identity: Mapping[str, Any],
+    server_job_id: str, simulator_job_id: str,
+) -> dict[str, Any]:
+    _admission_pair_common(
+        server, simulator, args=args, server_job_id=server_job_id,
+        simulator_job_id=simulator_job_id,
+    )
+    release = _release_wave_module(Path(args.source_root))
+    return release.signed_document({
+        "schema_version": D1_RELEASE_ACK_SCHEMA,
+        "status": "distinct_server_simulator_admitted_before_science",
+        "study_id": pilot.STUDY_ID,
+        "namespace": pilot.NAMESPACE,
+        "study_commit": args.study_commit,
+        "run_id": args.run_id,
+        "block_id": block.block_id,
+        "layout_pair_id": block.layout_pair_id,
+        "release_finalizer_job_id": args.confirmation_release_finalizer_job_id,
+        "consume_by_utc": args.confirmation_release_consume_by_utc,
+        "server_job_id": server_job_id,
+        "simulator_job_id": simulator_job_id,
+        "server_worker_id": server["worker_id"],
+        "simulator_worker_id": simulator["worker_id"],
+        "server_admission": dict(server_identity),
+        "simulator_admission": dict(simulator_identity),
+        "server_ready": dict(server_ready_identity),
+        "simulator_claim": dict(simulator_claim_identity),
+        "server_publication_verification_payload_sha256": server[
+            "publication_verification_payload_sha256"
+        ],
+        "simulator_publication_verification_payload_sha256": simulator[
+            "publication_verification_payload_sha256"
+        ],
+        "pending_publication_commit": server["pending_publication_commit"],
+        "server_verified_remote_head": server["verified_remote_head"],
+        "simulator_verified_remote_head": simulator["verified_remote_head"],
+        "published_queue_fragment_sha256": server[
+            "published_queue_fragment_sha256"
+        ],
+        "science_reset_request_action_started": False,
+        "queue_mutated": False,
+        "jobs_dispatched": 0,
+        "completed_at_utc": pilot.utc_now(),
+        "claim_boundary": D1_RELEASE_ACK_CLAIM_BOUNDARY,
+    })
+
+
+def _validate_release_ack(
+    *, args: argparse.Namespace, block: development.DevelopmentBlock,
+    ack_path: Path, ack_sha256: str, server: Mapping[str, Any],
+    simulator: Mapping[str, Any], server_identity: Mapping[str, Any],
+    simulator_identity: Mapping[str, Any],
+    server_ready_identity: Mapping[str, Any],
+    simulator_claim_identity: Mapping[str, Any], server_job_id: str,
+    simulator_job_id: str,
+) -> dict[str, Any]:
+    _admission_pair_common(
+        server, simulator, args=args, server_job_id=server_job_id,
+        simulator_job_id=simulator_job_id,
+    )
+    release = _release_wave_module(Path(args.source_root))
+    identity, ack = release.verify_json_input(
+        ack_path, ack_sha256, "D1 runtime admission ack",
+    )
+    release.exact_keys(
+        ack,
+        {
+            "schema_version", "status", "study_id", "namespace", "study_commit",
+            "run_id", "block_id", "layout_pair_id", "release_finalizer_job_id",
+            "consume_by_utc", "server_job_id", "simulator_job_id",
+            "server_worker_id", "simulator_worker_id", "server_admission",
+            "simulator_admission", "server_ready", "simulator_claim",
+            "server_publication_verification_payload_sha256",
+            "simulator_publication_verification_payload_sha256",
+            "pending_publication_commit", "server_verified_remote_head",
+            "simulator_verified_remote_head",
+            "published_queue_fragment_sha256", "science_reset_request_action_started",
+            "queue_mutated", "jobs_dispatched", "completed_at_utc",
+            "claim_boundary", "payload_sha256",
+        },
+        "D1 runtime admission ack",
+    )
+    release.verify_signed_document(ack, "D1 runtime admission ack")
+    completed_at = release.parse_utc(
+        ack.get("completed_at_utc"), "D1 runtime admission ack time"
+    )
+    server_checked_at = release.parse_utc(
+        server.get("checked_at_utc"), "D1 server admission time"
+    )
+    simulator_checked_at = release.parse_utc(
+        simulator.get("checked_at_utc"), "D1 simulator admission time"
+    )
+    pilot.require(
+        ack.get("schema_version") == D1_RELEASE_ACK_SCHEMA
+        and ack.get("status") == "distinct_server_simulator_admitted_before_science"
+        and ack.get("study_id") == pilot.STUDY_ID
+        and ack.get("namespace") == pilot.NAMESPACE
+        and ack.get("study_commit") == args.study_commit
+        and ack.get("run_id") == args.run_id
+        and ack.get("block_id") == block.block_id
+        and ack.get("layout_pair_id") == block.layout_pair_id
+        and ack.get("release_finalizer_job_id")
+        == args.confirmation_release_finalizer_job_id
+        and ack.get("consume_by_utc") == args.confirmation_release_consume_by_utc
+        and ack.get("server_job_id") == server_job_id
+        and ack.get("simulator_job_id") == simulator_job_id
+        and ack.get("server_worker_id") == server["worker_id"]
+        and ack.get("simulator_worker_id") == simulator["worker_id"]
+        and ack.get("server_worker_id") != ack.get("simulator_worker_id")
+        and ack.get("server_admission") == dict(server_identity)
+        and ack.get("simulator_admission") == dict(simulator_identity)
+        and ack.get("server_ready") == dict(server_ready_identity)
+        and ack.get("simulator_claim") == dict(simulator_claim_identity)
+        and ack.get("server_publication_verification_payload_sha256")
+        == server["publication_verification_payload_sha256"]
+        and ack.get("simulator_publication_verification_payload_sha256")
+        == simulator["publication_verification_payload_sha256"]
+        and ack.get("pending_publication_commit") == server["pending_publication_commit"]
+        and ack.get("server_verified_remote_head") == server["verified_remote_head"]
+        and ack.get("simulator_verified_remote_head")
+        == simulator["verified_remote_head"]
+        and ack.get("published_queue_fragment_sha256")
+        == server["published_queue_fragment_sha256"]
+        and ack.get("science_reset_request_action_started") is False
+        and ack.get("queue_mutated") is False and ack.get("jobs_dispatched") == 0
+        and ack.get("claim_boundary") == D1_RELEASE_ACK_CLAIM_BOUNDARY
+        and max(server_checked_at, simulator_checked_at) <= completed_at
+        <= pilot.parse_utc(pilot.utc_now()),
+        "d1_runtime_admission_ack_changed",
+    )
+    return ack
 
 
 def _confirmation_contract(
@@ -340,6 +575,8 @@ def validate_queue_invocation(
         "--simulator-worker-role": simulator_worker_role,
         "--study-commit": study_commit,
         "--job-id": job_id,
+        "--confirmation-release-finalizer-job-id": args.confirmation_release_finalizer_job_id,
+        "--confirmation-release-consume-by-utc": args.confirmation_release_consume_by_utc,
         "--run-id": run_id,
         "--candidate-id": args.candidate_id,
         "--gate-receipt-sha256": args.gate_receipt_sha256,
@@ -369,6 +606,11 @@ def build_cell_command(
     candidate_id: str, simulator_worker_role: str, run_id: str,
     server_job_id: str, server_ready_sha256: str, simulator_claim_sha256: str,
     lease_token: str, future_root: Path, condition_index: int,
+    simulator_job_id: str, server_release_admission: Path,
+    server_release_admission_sha256: str, simulator_release_admission: Path,
+    simulator_release_admission_sha256: str, release_admission_ack: Path,
+    release_admission_ack_sha256: str, release_finalizer_job_id: str,
+    release_consume_by_utc: str,
     block: development.DevelopmentBlock,
 ) -> list[str]:
     pilot.require(0 <= condition_index < 4, "cell_condition_index_invalid")
@@ -381,6 +623,15 @@ def build_cell_command(
         "--source-root", str(Path(source_root).resolve()),
         "--study-commit", study_commit,
         "--attempt-root", str(Path(attempt_root).resolve()),
+        "--simulator-job-id", simulator_job_id,
+        "--server-release-admission", str(Path(server_release_admission).resolve()),
+        "--server-release-admission-sha256", server_release_admission_sha256,
+        "--simulator-release-admission", str(Path(simulator_release_admission).resolve()),
+        "--simulator-release-admission-sha256", simulator_release_admission_sha256,
+        "--release-admission-ack", str(Path(release_admission_ack).resolve()),
+        "--release-admission-ack-sha256", release_admission_ack_sha256,
+        "--confirmation-release-finalizer-job-id", release_finalizer_job_id,
+        "--confirmation-release-consume-by-utc", release_consume_by_utc,
         "--candidate-id", candidate_id,
         "--gate-receipt", str(Path(gate_receipt).resolve()),
         "--gate-receipt-sha256", gate_receipt_sha256,
@@ -866,6 +1117,7 @@ def installed_receipt_metadata(
     fixture: Mapping[str, Any] | None = None,
     p00: Mapping[str, Any] | None = None,
     prerequisites: Mapping[str, Any] | None = None,
+    release_admission: Mapping[str, Any] | None = None,
 ) -> Iterator[None]:
     def immutable(path: Path, value: Mapping[str, Any], *, publish: bool = False) -> None:
         updated = dict(value)
@@ -882,6 +1134,24 @@ def installed_receipt_metadata(
             )
         if schema in {SERVER_RECEIPT_SCHEMA, SIMULATOR_RECEIPT_SCHEMA} and p00 is not None:
             updated["p00_paired_pilot"] = dict(p00)
+        if schema in {SERVER_RECEIPT_SCHEMA, SIMULATOR_RECEIPT_SCHEMA}:
+            updated["release_admission"] = (
+                None if release_admission is None
+                else release_admission.get("identity")
+            )
+        if schema == pilot.SIMULATOR_CLAIM_SCHEMA:
+            admission = None if release_admission is None else release_admission.get("value")
+            process = updated.get("process")
+            pilot.require(
+                isinstance(admission, Mapping) and isinstance(process, Mapping)
+                and process.get("hostname") == admission.get("hostname")
+                and process.get("pod_uid") in {None, admission.get("pod_uid")}
+                and type(process.get("pid")) is int and process["pid"] > 0,
+                "d1_simulator_claim_release_identity_changed",
+            )
+            updated["process"] = {
+                **dict(process), "pod_uid": admission["pod_uid"],
+            }
         if schema == SERVER_RECEIPT_SCHEMA and prerequisites is not None:
             updated["confirmation_prerequisites"] = dict(prerequisites)
         if schema == pilot.SERVER_READY_SCHEMA and prerequisites is not None:
@@ -952,13 +1222,72 @@ def run_server_job(args: argparse.Namespace, block: development.DevelopmentBlock
         block=block, simulator_worker_role=args.simulator_worker_role, args=args,
     )
     prerequisites = validate_prerequisites(args, block)
+    release_admission: dict[str, Any] = {}
+    original_wait = pilot._wait_for_claim_or_terminal
 
     def queue_verifier(**_kwargs: Any) -> dict[str, Any]:
+        value = validate_release_admission(args, expected_role=pilot.SERVER_QUEUE_ROLE)
+        path = block.raw_root / "server_attempts" / args.job_id / "release_admission.json"
+        pilot.immutable_json(path, value)
+        release_admission["identity"] = pilot.file_identity(path)
+        release_admission["value"] = value
         return dict(queue_identity)
 
-    with development._patched_pilot({"validate_queue_invocation": queue_verifier}):
+    def wait_for_admitted_claim(**kwargs: Any):
+        claim, claim_identity = original_wait(**kwargs)
+        if claim is None:
+            return claim, claim_identity
+        server_identity = release_admission.get("identity")
+        pilot.require(isinstance(server_identity, Mapping), "d1_server_release_admission_missing")
+        simulator_path = (
+            block.raw_root / "simulator_attempts" / args.simulator_job_id
+            / "release_admission.json"
+        )
+        simulator_identity = _wait_for_regular_file(
+            simulator_path, timeout=30.0, reason="d1_simulator_release_admission_missing"
+        )
+        server = _validate_admission_receipt(
+            args=args, path=Path(server_identity["path"]),
+            digest=str(server_identity["sha256"]), job_id=args.job_id,
+            role=pilot.SERVER_QUEUE_ROLE, verify_local_worker=True,
+        )
+        simulator = _validate_admission_receipt(
+            args=args, path=Path(simulator_identity["path"]),
+            digest=str(simulator_identity["sha256"]), job_id=args.simulator_job_id,
+            role=args.simulator_worker_role, verify_local_worker=False,
+        )
+        claim_process = claim.get("process")
+        pilot.require(
+            isinstance(claim_process, Mapping)
+            and claim_process.get("hostname") == simulator.get("hostname")
+            and claim_process.get("pod_uid") == simulator.get("pod_uid")
+            and type(claim_process.get("pid")) is int
+            and claim_process["pid"] > 0,
+            "d1_simulator_claim_release_identity_changed",
+        )
+        server_ready_identity = pilot.file_identity(kwargs["paths"]["server_ready"])
+        pilot.require(
+            server_ready_identity["sha256"] == kwargs["server_ready_sha256"]
+            and claim_identity is not None,
+            "d1_release_handshake_descriptor_changed",
+        )
+        ack = _build_release_ack(
+            args=args, block=block, server=server, simulator=simulator,
+            server_identity=server_identity, simulator_identity=simulator_identity,
+            server_ready_identity=server_ready_identity,
+            simulator_claim_identity=claim_identity,
+            server_job_id=args.job_id, simulator_job_id=args.simulator_job_id,
+        )
+        pilot.immutable_json(_release_ack_path(block, args.run_id), ack)
+        return claim, claim_identity
+
+    with development._patched_pilot({
+        "validate_queue_invocation": queue_verifier,
+        "_wait_for_claim_or_terminal": wait_for_admitted_claim,
+    }):
         with installed_receipt_metadata(
-            block, p00=prerequisites["p00_paired_pilot"], prerequisites=prerequisites
+            block, p00=prerequisites["p00_paired_pilot"], prerequisites=prerequisites,
+            release_admission=release_admission,
         ):
             return pilot.run_server_job(args)
 
@@ -974,8 +1303,14 @@ def run_simulator_job(args: argparse.Namespace, block: development.DevelopmentBl
     )
     prerequisites = validate_prerequisites(args, block)
     prerequisites_sha = execution_prerequisites_sha256(block, prerequisites)
+    release_admission: dict[str, Any] = {}
 
     def queue_verifier(**_kwargs: Any) -> dict[str, Any]:
+        value = validate_release_admission(args, expected_role=args.simulator_worker_role)
+        path = block.raw_root / "simulator_attempts" / args.job_id / "release_admission.json"
+        pilot.immutable_json(path, value)
+        release_admission["identity"] = pilot.file_identity(path)
+        release_admission["value"] = value
         return dict(queue_identity)
 
     def prerequisite_verifier(**_kwargs: Any) -> dict[str, Any]:
@@ -988,6 +1323,50 @@ def run_simulator_job(args: argparse.Namespace, block: development.DevelopmentBl
         )
 
     def cell_builder(**kwargs: Any) -> list[str]:
+        simulator_identity = release_admission.get("identity")
+        pilot.require(
+            isinstance(simulator_identity, Mapping),
+            "d1_simulator_release_admission_missing",
+        )
+        server_path = (
+            block.raw_root / "server_attempts" / args.server_job_id
+            / "release_admission.json"
+        )
+        server_identity = _wait_for_regular_file(
+            server_path, timeout=30.0, reason="d1_server_release_admission_missing"
+        )
+        ack_path = _release_ack_path(block, args.run_id)
+        ack_identity = _wait_for_regular_file(
+            ack_path, timeout=30.0, reason="d1_release_admission_ack_missing"
+        )
+        coordination = pilot.coordination_paths(block.raw_root, args.run_id)
+        server_ready_identity = pilot.file_identity(coordination["server_ready"])
+        simulator_claim_identity = pilot.file_identity(coordination["simulator_claim"])
+        pilot.require(
+            server_ready_identity["sha256"] == kwargs["server_ready_sha256"]
+            and simulator_claim_identity["sha256"]
+            == kwargs["simulator_claim_sha256"],
+            "d1_release_handshake_descriptor_changed",
+        )
+        server = _validate_admission_receipt(
+            args=args, path=Path(server_identity["path"]),
+            digest=str(server_identity["sha256"]), job_id=args.server_job_id,
+            role=pilot.SERVER_QUEUE_ROLE, verify_local_worker=False,
+        )
+        simulator = _validate_admission_receipt(
+            args=args, path=Path(simulator_identity["path"]),
+            digest=str(simulator_identity["sha256"]), job_id=args.job_id,
+            role=args.simulator_worker_role, verify_local_worker=True,
+        )
+        _validate_release_ack(
+            args=args, block=block, ack_path=ack_path,
+            ack_sha256=str(ack_identity["sha256"]), server=server,
+            simulator=simulator, server_identity=server_identity,
+            simulator_identity=simulator_identity,
+            server_ready_identity=server_ready_identity,
+            simulator_claim_identity=simulator_claim_identity,
+            server_job_id=args.server_job_id, simulator_job_id=args.job_id,
+        )
         identity, digest = write_execution_prerequisites(
             Path(kwargs["attempt_root"]) / "execution_prerequisites.json",
             block=block, prerequisites=prerequisites,
@@ -1000,6 +1379,15 @@ def run_simulator_job(args: argparse.Namespace, block: development.DevelopmentBl
             execution_prerequisites_sha256=digest,
             candidate_id=args.candidate_id,
             simulator_worker_role=args.simulator_worker_role,
+            simulator_job_id=args.job_id,
+            server_release_admission=Path(server_identity["path"]),
+            server_release_admission_sha256=str(server_identity["sha256"]),
+            simulator_release_admission=Path(simulator_identity["path"]),
+            simulator_release_admission_sha256=str(simulator_identity["sha256"]),
+            release_admission_ack=Path(ack_identity["path"]),
+            release_admission_ack_sha256=str(ack_identity["sha256"]),
+            release_finalizer_job_id=args.confirmation_release_finalizer_job_id,
+            release_consume_by_utc=args.confirmation_release_consume_by_utc,
             block=block,
         )
 
@@ -1041,11 +1429,67 @@ def run_simulator_job(args: argparse.Namespace, block: development.DevelopmentBl
         "discover_completed_prefix": prefix_discoverer,
     }
     with development._patched_pilot(hooks):
-        with installed_receipt_metadata(block, p00=prerequisites["p00_paired_pilot"]):
+        with installed_receipt_metadata(
+            block, p00=prerequisites["p00_paired_pilot"],
+            release_admission=release_admission,
+        ):
             return pilot.run_simulator_job(args)
 
 
 def run_cell(args: argparse.Namespace, block: development.DevelopmentBlock) -> int:
+    attempt_root = Path(args.attempt_root).resolve()
+    server_admission_path = Path(args.server_release_admission).resolve()
+    simulator_admission_path = Path(args.simulator_release_admission).resolve()
+    ack_path = Path(args.release_admission_ack).resolve()
+    pilot.require(
+        args.simulator_job_id == attempt_root.name,
+        "d1_cell_simulator_job_identity_changed",
+    )
+    pilot.require(
+        attempt_root == block.raw_root.resolve() / "simulator_attempts" / args.simulator_job_id
+        and simulator_admission_path == attempt_root / "release_admission.json"
+        and server_admission_path
+        == block.raw_root.resolve() / "server_attempts" / args.server_job_id
+        / "release_admission.json"
+        and ack_path == _release_ack_path(block, args.run_id).resolve(),
+        "d1_cell_release_admission_path_changed",
+    )
+    server_identity = pilot.file_identity(server_admission_path)
+    simulator_identity = pilot.file_identity(simulator_admission_path)
+    coordination = pilot.coordination_paths(block.raw_root, args.run_id)
+    server_ready_identity = pilot.file_identity(coordination["server_ready"])
+    simulator_claim_identity = pilot.file_identity(coordination["simulator_claim"])
+    pilot.require(
+        server_identity["sha256"] == args.server_release_admission_sha256
+        and simulator_identity["sha256"] == args.simulator_release_admission_sha256,
+        "d1_cell_release_admission_hash_changed",
+    )
+    pilot.require(
+        server_ready_identity["sha256"] == args.server_ready_sha256
+        and simulator_claim_identity["sha256"] == args.simulator_claim_sha256,
+        "d1_release_handshake_descriptor_changed",
+    )
+    server = _validate_admission_receipt(
+        args=args, path=server_admission_path,
+        digest=args.server_release_admission_sha256,
+        job_id=args.server_job_id, role=pilot.SERVER_QUEUE_ROLE,
+        verify_local_worker=False,
+    )
+    simulator = _validate_admission_receipt(
+        args=args, path=simulator_admission_path,
+        digest=args.simulator_release_admission_sha256,
+        job_id=args.simulator_job_id, role=args.simulator_worker_role,
+        verify_local_worker=True,
+    )
+    _validate_release_ack(
+        args=args, block=block, ack_path=ack_path,
+        ack_sha256=args.release_admission_ack_sha256,
+        server=server, simulator=simulator, server_identity=server_identity,
+        simulator_identity=simulator_identity,
+        server_ready_identity=server_ready_identity,
+        simulator_claim_identity=simulator_claim_identity,
+        server_job_id=args.server_job_id, simulator_job_id=args.simulator_job_id,
+    )
     fixture, _prerequisites = _fixture_from_args(args, block)
     forecast = Path(args.source_root).resolve() / "workshops/corl2026_world_models/experiments/forecast_layout"
     if str(forecast) not in sys.path:
@@ -1116,6 +1560,8 @@ def build_parser() -> argparse.ArgumentParser:
     server.add_argument("--study-commit", required=True)
     server.add_argument("--job-dir", type=Path, required=True)
     server.add_argument("--job-id", required=True)
+    server.add_argument("--confirmation-release-finalizer-job-id", required=True)
+    server.add_argument("--confirmation-release-consume-by-utc", required=True)
     server.add_argument("--simulator-job-id", required=True)
     server.add_argument("--run-id", required=True)
     server.add_argument("--raw-root", type=Path)
@@ -1134,6 +1580,8 @@ def build_parser() -> argparse.ArgumentParser:
     simulator.add_argument("--study-commit", required=True)
     simulator.add_argument("--job-dir", type=Path, required=True)
     simulator.add_argument("--job-id", required=True)
+    simulator.add_argument("--confirmation-release-finalizer-job-id", required=True)
+    simulator.add_argument("--confirmation-release-consume-by-utc", required=True)
     simulator.add_argument("--server-job-id", required=True)
     simulator.add_argument("--run-id", required=True)
     simulator.add_argument("--server-ready-sha256")
@@ -1151,6 +1599,15 @@ def build_parser() -> argparse.ArgumentParser:
     cell.add_argument("--source-root", type=Path, required=True)
     cell.add_argument("--study-commit", required=True)
     cell.add_argument("--attempt-root", type=Path, required=True)
+    cell.add_argument("--simulator-job-id", required=True)
+    cell.add_argument("--server-release-admission", type=Path, required=True)
+    cell.add_argument("--server-release-admission-sha256", required=True)
+    cell.add_argument("--simulator-release-admission", type=Path, required=True)
+    cell.add_argument("--simulator-release-admission-sha256", required=True)
+    cell.add_argument("--release-admission-ack", type=Path, required=True)
+    cell.add_argument("--release-admission-ack-sha256", required=True)
+    cell.add_argument("--confirmation-release-finalizer-job-id", required=True)
+    cell.add_argument("--confirmation-release-consume-by-utc", required=True)
     _add_layout_prerequisites(cell)
     cell.add_argument("--execution-prerequisites", type=Path, required=True)
     cell.add_argument("--execution-prerequisites-sha256", required=True)
@@ -1182,6 +1639,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     block = load_confirmation_block(Path(args.source_root), args.layout_pair_id)
     pilot.require(pilot.SAFE_ID_RE.fullmatch(args.run_id) is not None, "invalid_run_id")
     pilot.require(pilot.COMMIT_RE.fullmatch(args.study_commit) is not None, "invalid_study_commit")
+    pilot.require(
+        pilot.SAFE_ID_RE.fullmatch(args.confirmation_release_finalizer_job_id) is not None,
+        "invalid_confirmation_release_finalizer_job_id",
+    )
+    pilot.parse_utc(args.confirmation_release_consume_by_utc)
     _validate_sha_options(args)
     with configured_pilot(block, args.simulator_worker_role):
         if args.mode == "server-job":

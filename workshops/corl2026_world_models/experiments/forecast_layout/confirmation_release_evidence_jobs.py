@@ -3002,6 +3002,15 @@ def assemble_result_attempt_ledger(
                         else:
                             require(native == "technical_invalid" and position == len(cell_paths) - 1, "cell follows technical failure")
                     require(last_state is not None, "native attempt has no native receipts")
+                if terminal_state is None and last_state == "passed":
+                    # A durable passed prefix is retryable only when the
+                    # reaped outer job proves a technical interruption. Match
+                    # the consumer: success cannot explain missing cells.
+                    require(
+                        any(row["result_value"]["status"] != "succeeded" for row in job_rows),
+                        "partial passed prefix has no terminal outer technical failure",
+                    )
+                    last_state = "technical_invalid"
                 if last_state in {"technical_invalid", "safety_censored"}:
                     require(
                         any(row["result_value"]["status"] != "succeeded" for row in job_rows),
@@ -3377,6 +3386,7 @@ def validate_result_attempt_ledger(
                 )
             cells = attempt.get("cells")
             require(isinstance(cells, list), "attempt cells invalid")
+            last_state = "technical_invalid" if zero else None
             if cells:
                 require(cells[0].get("condition_index") == prefix, "retry prefix start changed")
             for index, cell in enumerate(cells):
@@ -3392,6 +3402,7 @@ def validate_result_attempt_ledger(
                 )
                 require(cell.get("state") == state, "ledger promoted a non-native cell state")
                 require(state in {"passed", "technical_invalid", "safety_censored"}, "cell state invalid")
+                last_state = state
                 if state == "passed":
                     prefix += 1
                     if prefix == 4:
@@ -3402,6 +3413,18 @@ def validate_result_attempt_ledger(
             statuses = [all_queue_jobs[job_id]["result_value"]["status"] for job_id in job_ids]
             if zero:
                 require(any(status != "succeeded" for status in statuses), "zero-launch attempt outer results all succeeded")
+            else:
+                if not terminal and last_state == "passed":
+                    require(
+                        any(status != "succeeded" for status in statuses),
+                        "partial passed prefix has no terminal outer technical failure",
+                    )
+                    last_state = "technical_invalid"
+                if last_state in {"technical_invalid", "safety_censored"}:
+                    require(
+                        any(status != "succeeded" for status in statuses),
+                        "failed/censored native attempt has only successful queue results",
+                    )
         expected_state = "passed" if prefix == 4 else (
             "safety_censored" if terminal else ("technical_invalid" if block["attempts"] else "not_run")
         )

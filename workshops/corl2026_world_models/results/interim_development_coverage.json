@@ -1,0 +1,101 @@
+{
+  "bounds_unavailable_reason": "Signed camera/alignment and independent human labels/consensus are not available; timing availability is not prediction correctness.",
+  "confirmation_released": false,
+  "forecast_accuracy_estimated": false,
+  "forecast_error_or_skill_bounds": null,
+  "labels_created": 0,
+  "models": {
+    "D1": {
+      "actions": 7200,
+      "base_layout_pairs": 4,
+      "native_clock_matched_fraction": {
+        "denominator": 912,
+        "numerator": 224
+      },
+      "request_timing_coverage": {
+        "action_prefix_truncated_request_count": 16,
+        "action_prefix_truncated_target_binding_count": 32,
+        "native_clock_matched_request_count": 224,
+        "native_clock_matched_target_binding_count": 448,
+        "source_proven_full_decode_request_count": 240,
+        "source_unmapped_incremental_decode_request_count": 672,
+        "total_request_count": 912,
+        "unmapped_potential_authority_target_count": 1344
+      },
+      "requests": 912,
+      "timing_receipt_referenced_requests": 912,
+      "valid_cells": 16
+    },
+    "N3": {
+      "actions": 7200,
+      "base_layout_pairs": 4,
+      "requests": 240,
+      "target_binding_coverage": "Not quantified by this compact receipt; no inference from request count.",
+      "timing_receipt_referenced_requests": 240,
+      "valid_cells": 16
+    }
+  },
+  "new_behavioral_cells": 0,
+  "new_model_requests": 0,
+  "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+  "schema_version": "wmf-published-development-coverage-audit-v1",
+  "scope": "Eight immutable valid development blocks only; pilot and invalid attempts remain in the execution ledger.",
+  "sources": {
+    "D1": {
+      "bytes": 79824,
+      "git_path": "results/jobs/timing-d1-development-sidecar-002/publish/timing_job_receipt.json",
+      "sha256": "75490aab357d8290afa10f0e1a85437794a37c81f6a9a0524c94c746198da68d"
+    },
+    "D1_D01": {
+      "bytes": 16510,
+      "git_path": "results/jobs/d1-development-d01-simulator-003/publish/d1_behavioral_development_receipt.json",
+      "sha256": "9b1fd7d7479ad275d4baa943b9d8d6a4ed1d223e2d9ca20b3bff0342711ec5eb"
+    },
+    "D1_D02": {
+      "bytes": 16510,
+      "git_path": "results/jobs/d1-development-d02-simulator-003/publish/d1_behavioral_development_receipt.json",
+      "sha256": "d1dc66c57d36cb3e620731c69a6e41fdf52c3cc2a797c2dae7ee36d63d10c6c9"
+    },
+    "D1_D03": {
+      "bytes": 16510,
+      "git_path": "results/jobs/d1-development-d03-simulator-002/publish/d1_behavioral_development_receipt.json",
+      "sha256": "eb7f4f894b1e56c1b8971ee1155d77e7aeb1b62c9c6cfc41de0483e3baf2dd4f"
+    },
+    "D1_D04": {
+      "bytes": 16510,
+      "git_path": "results/jobs/d1-development-d04-simulator-003/publish/d1_behavioral_development_receipt.json",
+      "sha256": "78a9b8b7095e48ce5412a902a7120f3c9ad71e3edb6eeeddb228720fe1b458fa"
+    },
+    "N3": {
+      "bytes": 29935,
+      "git_path": "results/jobs/timing-n3-development-sidecar-001/publish/timing_job_receipt.json",
+      "sha256": "7c4aa556d37f170308ef5529489936e3fd7fbce819909d8e1d5937c16965f9d9"
+    },
+    "N3_D01": {
+      "bytes": 12551,
+      "git_path": "results/jobs/n3-development-d01-002/publish/n3_behavioral_development_receipt.json",
+      "sha256": "a9ca815c6e99b270357220fa5ccb97562c50d667dd3c23745d460e5ec8c053de"
+    },
+    "N3_D02": {
+      "bytes": 12551,
+      "git_path": "results/jobs/n3-development-d02-002/publish/n3_behavioral_development_receipt.json",
+      "sha256": "efd2ea9f2f015c671a9d9d2d9dc22c1c1f9f5f3ffd87e4810acd5e3767b2f73e"
+    },
+    "N3_D03": {
+      "bytes": 12551,
+      "git_path": "results/jobs/n3-development-d03-001/publish/n3_behavioral_development_receipt.json",
+      "sha256": "d3e85f2087d7e24d57974a9344c333408e9769552715d4669e16f1e059082d0e"
+    },
+    "N3_D04": {
+      "bytes": 12551,
+      "git_path": "results/jobs/n3-development-d04-001/publish/n3_behavioral_development_receipt.json",
+      "sha256": "e5f3206c6da2b9caa2ca9cd4c3ed82142157656ac9a1d1744486d14fa6e57318"
+    },
+    "compiler": {
+      "bytes": 12374,
+      "git_path": "results/jobs/development-evidence-compiler-formal-004/publish/development_evidence_compiler_job_receipt.json",
+      "sha256": "00329a3c991ee6eb0c68996ecaca1aed59ea3017329272cd82b4b5bfb5cee434"
+    }
+  },
+  "verification_level": "Published compact Git receipt bytes and cross-receipt arithmetic; no fresh raw-PVC revalidation."
+}

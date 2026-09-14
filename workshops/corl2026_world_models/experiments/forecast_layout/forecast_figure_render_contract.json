@@ -1,0 +1,70 @@
+{
+  "command": "python3 workshops/corl2026_world_models/analysis/render_forecast_publication.py --publication-dir PUBLICATION_BUNDLE --output-dir FIGURE_OUTPUT",
+  "determinism": {
+    "atomicity": "The output parent must already exist and the output directory must not. No parent is created by the renderer. Every parent component is opened from the filesystem root with O_DIRECTORY|O_NOFOLLOW before mutation; the held parent fd is identity-checked before staging, immediately before rename, and after rename. Staging and every output file are exclusively created relative to held directory fds, fsynced, and published with Linux renameat2 RENAME_NOREPLACE within the same held parent fd. A post-rename identity failure is rolled back through that fd before staging cleanup. Parent swaps and symlink ancestors fail without publishing or escaped residue. Random staging identifiers and absolute input/output paths never enter published bytes.",
+    "inventory": "render_receipt.json has a closed top-level and nested schema, signs the exact relative-path, byte-count, and SHA-256 inventory of all SVGs, and uses payload_sha256 as its self-binding. The staged on-disk receipt is reloaded and required to equal the in-memory receipt before publication.",
+    "source_binding": "Let P be the publication_source_commit in the compiler receipt and S be the renderer checkout HEAD. Before import, the renderer requires the canonical compiler to equal both the receipt descriptor and pinned trusted SHA-256 1a76b0b78eb2a5dec74c220865450946f4a07731376fbeb4d80912884368bec8. It then reuses that compiler's pinned-system-Git, sanitized-environment, literal-HTTPS isolated graph to prove P <= S <= stable refs/heads/codex/forecast-layout-gm-20260912. Compiler bytes must match at P and S, and exact renderer plus contract bytes must match their Git blobs at S. S and the authenticated control receipt are signed into render_receipt.json. Authentication and all input hashes repeat immediately before the atomic no-replace rename."
+  },
+  "figures": {
+    "actual_scene_layouts.svg": "All 24 original/reflected layout pairs use one shared x-y projection of the exact robot-base-metre positions. Exact x, y, z and quaternion source values are retained in marker titles; z is also printed beside every marker. No yaw or unrecorded camera geometry is inferred.",
+    "forecast_skill_MODEL.svg": "One file per included model, showing only the signed forecast-skill-versus-persistence estimate, CI, and exact per-layout input values. Excluded layouts remain explicitly not estimable.",
+    "qualified_timing.svg": "For each included model, generated_frame_index, primary_horizon_s, target_executed_action_offset, executed_prefix_cap, camera_id, and timestamp_tolerance_s are printed exactly. The three target domains use separate schematic tracks with no shared numerical scale or inferred conversion.",
+    "reflection_layout_effects_MODEL.svg": "One file per included model, showing signed per-command actual, predicted, and discrepancy contrasts, the combined discrepancy, and exact per-layout discrepancy inputs. Null metrics remain explicitly not estimable."
+  },
+  "input_contract": {
+    "build_receipt_schema": "wmf-forecast-publication-build-receipt-v1",
+    "cross_bindings": [
+      "forecast and scene inputs bind the same final_analysis SHA-256 as build_receipt.json",
+      "scene input binds the same confirmation_fixture_freeze SHA-256 as build_receipt.json",
+      "the build receipt output inventory exactly binds every file in the immutable publication directory",
+      "study, branch, included model order, layout count, bootstrap identity, and source-only boundary agree across inputs"
+    ],
+    "forecast_schema": "wmf-forecast-skill-layout-effects-figure-input-v1",
+    "scene_schema": "wmf-forecast-actual-scene-timing-figure-input-v1",
+    "supported_branches": {
+      "full_two_model": [
+        "N3",
+        "D1"
+      ],
+      "reduced_d1": [
+        "D1"
+      ],
+      "reduced_n3": [
+        "N3"
+      ]
+    }
+  },
+  "namespace": "wmf_ablation_001_20260912",
+  "output_receipt_schema": "wmf-forecast-figure-render-receipt-v1",
+  "provenance_fail_closed": [
+    "renderer_or_contract_not_tracked_at_the_exact_renderer_source_commit",
+    "renderer_checkout_HEAD_not_on_the_authorized_branch_or_detached_exact_commit",
+    "publication_source_commit_not_ancestor_of_renderer_source_commit",
+    "renderer_source_commit_not_published_in_the_stable_authorized_control_ref",
+    "publication_authenticator_differs_between_publication_and_renderer_commits",
+    "coordinated_worktree_source_and_contract_substitution",
+    "unpublished_local_descendant",
+    "top_level_or_nested_render_receipt_extra_claim",
+    "staged_on_disk_receipt_differs_from_the_validated_receipt",
+    "missing_or_symlinked_output_parent",
+    "output_parent_identity_swap_before_staging_or_rename",
+    "raced_in_output_target"
+  ],
+  "presentation_transforms_only": [
+    "finite robot-base x-y coordinates are linearly projected onto a shared SVG display domain",
+    "already-computed estimates, intervals and per-layout values are linearly projected onto SVG display axes",
+    "source scalar values are serialized into visible text or marker titles without changing the underlying input"
+  ],
+  "prohibited_effects": {
+    "behavioral_actions": 0,
+    "cross_model_pooling_or_ranking": 0,
+    "frame_to_action_or_frame_to_time_mapping_inferences": 0,
+    "labels_created": 0,
+    "model_requests": 0,
+    "paper_files_edited_or_generated": 0,
+    "scientific_estimates_recomputed": 0,
+    "simulator_processes": 0
+  },
+  "schema_version": "wmf-forecast-figure-render-contract-v1",
+  "study_id": "WMF-ABLATION-001"
+}

@@ -1,0 +1,66 @@
+"""Concrete native request/future trace-sidecar reader for SGW-01."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+from pathlib import Path
+from typing import Any, Mapping
+
+import numpy as np
+
+from .adapters import AdapterError
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def read_trace_sidecar(
+    *, request: Mapping[str, Any], response: Mapping[str, Any]
+) -> Mapping[str, Any]:
+    """Read one server-written JSONL binding; never synthesize provenance."""
+
+    path_value = os.environ.get("SGW01_TRACE_SIDECAR", "").strip()
+    if not path_value:
+        raise AdapterError("SGW01_TRACE_SIDECAR is required for native attribution")
+    path = Path(path_value)
+    if not path.is_file():
+        raise AdapterError(f"native trace sidecar is missing: {path}")
+    matches: list[dict[str, Any]] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        if isinstance(record, dict) and record.get("request_id") == request["request_id"]:
+            matches.append(record)
+    if len(matches) != 1:
+        raise AdapterError("native trace sidecar does not contain exactly one request binding")
+    record = matches[0]
+    required = (
+        "request_id",
+        "registered_cell_id",
+        "request_index",
+        "reset_id",
+        "camera_id",
+        "camera_name",
+        "reset_fingerprint",
+    )
+    if any(key not in record for key in required):
+        raise AdapterError("native trace sidecar binding is incomplete")
+    if any(record[key] != request[key] for key in required):
+        raise AdapterError("native trace sidecar binding differs from request")
+    future_path = record.get("future_path")
+    if future_path:
+        artifact = Path(str(future_path))
+        if not artifact.is_file() or record.get("future_sha256") != _sha256(artifact):
+            raise AdapterError("native future artifact is missing or hash-mismatched")
+        record["future"] = np.load(artifact, allow_pickle=False)
+    elif record.get("future_status") != "not_exposed":
+        raise AdapterError("native trace must explicitly classify missing future evidence")
+    return record

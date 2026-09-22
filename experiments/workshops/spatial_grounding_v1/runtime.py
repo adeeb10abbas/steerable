@@ -88,6 +88,30 @@ def _launch_owned_server() -> subprocess.Popen[bytes]:
     return subprocess.Popen(argv, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
+def _write_launch_receipt(
+    process: subprocess.Popen[bytes],
+    *,
+    model: str,
+    config: Mapping[str, Any],
+    path: Path,
+    argv: list[str],
+) -> None:
+    if process.pid is None:
+        raise AdapterError("owned policy server did not expose a PID")
+    start_time = Path(f"/proc/{process.pid}/stat").read_text().split(") ", 1)[-1].split()[19]
+    receipt = {
+        "server_pid": process.pid,
+        "server_start_time": start_time,
+        "server_cmdline": argv,
+        "model": model,
+        "config": dict(config),
+        "source_commit": config["source_commit"],
+        "checkpoint_revision": config["revision"],
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
 class _NanoTransport:
     def __init__(self, host: str, port: int, trace_reader: Callable[..., Any]) -> None:
         try:
@@ -219,11 +243,10 @@ def create_runtime(*, model: str, config: Mapping[str, Any]) -> NativeRuntime:
     )
     server_process = _launch_owned_server()
     receipt_path = Path(_required_env("SGW01_RUNTIME_RECEIPT"))
-    deadline = time.monotonic() + 60
-    while not receipt_path.is_file() and time.monotonic() < deadline:
-        if server_process.poll() is not None:
-            raise AdapterError("owned policy server exited before writing its runtime receipt")
-        time.sleep(0.25)
+    argv = json.loads(_required_env("SGW01_SERVER_ARGV"))
+    if not isinstance(argv, list):
+        raise AdapterError("SGW01_SERVER_ARGV must remain an argv list")
+    _write_launch_receipt(server_process, model=model, config=expected, path=receipt_path, argv=argv)
     receipt = _load_receipt()
     if (
         receipt.get("model") != model

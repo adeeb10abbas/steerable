@@ -134,6 +134,15 @@ def _identity(response: Mapping[str, Any], key: str, expected: Any) -> None:
         raise AdapterError(f"model response identity mismatch for {key}")
 
 
+def _sim_time(snapshot: Any) -> float:
+    if not isinstance(snapshot, Mapping):
+        raise AdapterError("scoring snapshot must expose sim_time")
+    value = snapshot.get("sim_time", snapshot.get("time"))
+    if not isinstance(value, (int, float)) or not np.isfinite(value):
+        raise AdapterError("scoring snapshot sim_time must be finite")
+    return float(value)
+
+
 class _BaseAdapter:
     config: Mapping[str, Any]
     returned_horizon: int
@@ -337,6 +346,10 @@ class ProductionAdapter:
             raise AdapterError("production cell must provide Environment.reset()")
         reset_result = environment.reset()
         evidence = getattr(reset_result, "receipt", reset_result)
+        initial_state = getattr(reset_result, "snapshot", None)
+        if initial_state is None:
+            initial_state = environment.snapshot()
+        initial_frame = environment.render_viewport()
         if not isinstance(evidence, Mapping):
             raise AdapterError("Environment.reset() must return ResetResult.receipt")
         required_receipt = ("reset_id", "camera_id", "camera_name", "fingerprint")
@@ -358,10 +371,14 @@ class ProductionAdapter:
             camera_id=camera_name,
         )
         payload = reset.as_dict()
-        if hasattr(recorder, "record_reset"):
-            recorder.record_reset(payload)
-        else:
+        if not hasattr(recorder, "record_reset"):
             raise AdapterError("recorder must expose record_reset()")
+        recorder.record_reset(
+            payload,
+            initial_state=initial_state,
+            initial_sim_time=_sim_time(initial_state),
+            initial_viewport_frame=initial_frame,
+        )
         self.environment = environment
         return payload
 
@@ -411,15 +428,20 @@ class ProductionAdapter:
                 scoring_snapshot = environment.snapshot()
                 viewport_frame = environment.render_viewport()
                 self.policy.commit_executed(1)
-                episode_mapping.append(
-                    {
-                        "action_step": step_index,
-                        "action": np.asarray(action, dtype=np.float32).copy(),
-                        "state": scoring_snapshot,
-                        "viewport_frame": viewport_frame,
-                        "step_result": step_result,
-                    }
+                if not hasattr(recorder, "record_action"):
+                    raise AdapterError("recorder must expose record_action()")
+                record = recorder.record_action(
+                    request_id=prediction.request_id,
+                    action_index=step_index,
+                    sim_time=_sim_time(scoring_snapshot),
+                    action=np.asarray(action, dtype=np.float32).copy(),
+                    state=scoring_snapshot,
+                    viewport_frame=viewport_frame,
+                    step_result=step_result,
                 )
+                if not isinstance(record, Mapping):
+                    raise AdapterError("recorder.record_action() must return an artifact record")
+                episode_mapping.append(dict(record))
                 if isinstance(step_result, Mapping) and step_result.get("safety_terminated") is True:
                     safety_reason = str(step_result.get("termination_reason") or "safety_terminal")
                     break
@@ -433,6 +455,11 @@ class ProductionAdapter:
                 break
         # Semantic outcome classification belongs to the worker/scorer.  The
         # adapter returns execution evidence and never invents success/failure.
+        if not hasattr(recorder, "finalize_viewport"):
+            raise AdapterError("recorder must expose finalize_viewport()")
+        viewport_artifact = recorder.finalize_viewport()
+        if not isinstance(viewport_artifact, Mapping):
+            raise AdapterError("recorder.finalize_viewport() must return an artifact record")
         return {
             "status": "censored" if safety_reason is not None else "valid_model_failure",
             "termination_reason": safety_reason or "action_cap",
@@ -440,6 +467,7 @@ class ProductionAdapter:
             "executed_action_count": self.policy.executed_steps,
             "prediction_count": len(self.policy.predictions),
             "episode_mapping": episode_mapping,
+            "viewport_artifact": dict(viewport_artifact),
         }
 
     def close(self) -> None:

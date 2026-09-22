@@ -60,6 +60,7 @@ def parse_args() -> argparse.Namespace:
     bootstrap.add_argument("--renderer-receipt", type=Path, required=True)
     bootstrap.add_argument("--output", type=Path, required=True)
     bootstrap.add_argument("--environment-seed", type=int, default=20260922)
+    bootstrap.add_argument("--render-warmup-frames", type=int, default=0)
     known, _ = bootstrap.parse_known_args()
     if known.output.exists():
         raise FileExistsError(f"refusing to overwrite workspace receipt: {known.output}")
@@ -81,11 +82,73 @@ def _record(path: Path) -> dict[str, Any]:
     return {"path": str(path.resolve()), "sha256": digest, "bytes": path.stat().st_size}
 
 
+def render_only_warmup(env: Any, observation: dict[str, Any], count: int, output: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+    import numpy as np
+    from .recorder import encode_viewport_video
+
+    if type(count) is not int or not 1 <= count <= 120:
+        raise ValueError("render-only diagnostic requires 1..120 frames")
+    output.mkdir(parents=True, exist_ok=False)
+    cameras = ("over_shoulder_left_camera", "wrist_cam", "over_shoulder_right_camera")
+    initial_time = float(env.sim.current_time)
+    snapshots = []
+    viewport_frames = []
+    for index in range(count + 1):
+        if index:
+            env.sim.render()
+            for camera in cameras:
+                env.scene[camera].update(0.0, force_recompute=True)
+            observation = env.observation_manager.compute()
+        if float(env.sim.current_time) != initial_time:
+            raise RuntimeError("render-only diagnostic advanced physical simulation time")
+        views = {}
+        for camera in cameras:
+            image = np.asarray(observation["image_obs"][camera][0].detach().cpu().numpy())
+            if image.dtype != np.uint8 or image.ndim != 3 or image.shape[-1] != 3 or not np.ptp(image):
+                raise RuntimeError(f"render-only diagnostic has invalid {camera} RGB")
+            if camera == cameras[0] or index in {0, 1, 10, 30, 60, count}:
+                path = output / f"{camera}-{index:04d}.npy"
+                np.save(path, image, allow_pickle=False)
+                views[camera] = _record(path)
+                if camera == cameras[0]:
+                    viewport_frames.append(path)
+        snapshots.append({"render_frame": index, "sim_time_s": initial_time, "views": views})
+    video = encode_viewport_video(viewport_frames, output / "render_only.mp4", fps=30)
+    return observation, {
+        "status": "render_only_diagnostic_not_visual_qualification",
+        "physics_actions": 0, "simulation_time_unchanged": True,
+        "render_frames": count, "snapshots": snapshots,
+        "viewport_video": video, "video_timing": "30_fps_display_only_no_physical_time_advance",
+    }
+
+
+def material_asset_paths(stage: Any) -> list[dict[str, Any]]:
+    from pxr import Sdf
+
+    result = []
+    for prim in stage.Traverse():
+        if not any(name in str(prim.GetPath()).lower() for name in ("rubiks_cube", "bowl", "banana")):
+            continue
+        for attribute in prim.GetAttributes():
+            if attribute.GetTypeName() != Sdf.ValueTypeNames.Asset:
+                continue
+            value = attribute.Get()
+            if value is not None:
+                result.append({
+                    "attribute": str(attribute.GetPath()), "authored_asset": value.path,
+                    "resolved_path": value.resolvedPath,
+                    "resolved_file_exists": Path(value.resolvedPath).is_file() if value.resolvedPath else False,
+                })
+    return result
+
+
 def main() -> None:
     args = parse_args()
     args.enable_cameras = True
     if not args.headless or args.num_envs != 1 or args.renderer != "realtime" or args.rendering_type != "balanced":
         raise ValueError("workspace capture requires one headless realtime/balanced RTX environment")
+    if not 0 <= args.render_warmup_frames <= 120:
+        raise ValueError("render-only diagnostic is bounded to at most 120 frames")
     renderer = json.loads(args.renderer_receipt.read_text(encoding="utf-8"))
     if renderer.get("status") != "passed_zero_model_renderer_preflight" or renderer.get("model_request_count") != 0:
         raise ValueError("workspace capture requires the passed zero-model renderer receipt")
@@ -119,6 +182,13 @@ def main() -> None:
         )
         try:
             obs, _ = env.reset()
+            warmup = None
+            if args.render_warmup_frames:
+                import omni.usd
+                obs, warmup = render_only_warmup(
+                    env, obs, args.render_warmup_frames, args.output.parent / "render_diagnostic",
+                )
+                warmup["material_assets"] = material_asset_paths(omni.usd.get_context().get_stage())
             world = get_world(env)
             origin = env.scene.env_origins[0].detach().cpu().numpy()
             frames = env.scene["frames"]
@@ -215,6 +285,7 @@ def main() -> None:
             "objects": objects,
             "contact_sensor_inventory": contact_inventory,
             "views": views,
+            "render_only_diagnostic": warmup,
             "validated_slots": [],
             "versions": {name: importlib.metadata.version(name) for name in ("isaacsim", "isaaclab", "robolab")},
         }

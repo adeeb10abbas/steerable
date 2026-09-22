@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import hashlib
 import json
 import os
@@ -36,6 +36,7 @@ class RoboLabLatEnvironment:
             raise SimulatorBridgeError("RoboLab must expose a positive physical step_dt")
         self._step_dt_s = float(step_dt)
         self._steps = 0
+        self._observation: Any = None
 
     def _snapshot(self) -> SimulatorSnapshot:
         from robolab.core.task.conditionals import object_grabbed
@@ -90,6 +91,7 @@ class RoboLabLatEnvironment:
             raise SimulatorBridgeError("RoboLab must expose episode_length_buf for a physical reset")
         counter.zero_()
         observation, _ = self._env.reset()
+        self._observation = observation
         self._steps = 0
         snapshot = self._snapshot()
         self._initial = {name: state.pose.position_m for name, state in snapshot.objects.items()}
@@ -112,6 +114,7 @@ class RoboLabLatEnvironment:
                 "camera_name": camera,
                 "fingerprint": fingerprint,
                 "temporal_cache_reset": True,
+                "control_step_dt_s": self._step_dt_s,
             },
         )
 
@@ -121,15 +124,24 @@ class RoboLabLatEnvironment:
         tensor = action if isinstance(action, torch.Tensor) else torch.as_tensor(action, dtype=torch.float32)
         if tuple(tensor.shape) != (1, 8):
             raise SimulatorBridgeError(f"Abs-IK action must have shape (1, 8), got {tuple(tensor.shape)}")
-        self._env.step(tensor.to(self._env.device))
+        observation, _reward, terminated, truncated, _info = self._env.step(tensor.to(self._env.device))
+        self._observation = observation
         self._steps += 1
-        return self._snapshot()
+        snapshot = self._snapshot()
+        if bool(terminated[0]) or bool(truncated[0]):
+            snapshot = replace(snapshot, termination_reason="native_termination_or_truncation")
+        return snapshot
 
     def snapshot(self) -> SimulatorSnapshot:
         return self._snapshot()
 
-    def render_viewport(self) -> bytes:
-        raise SimulatorBridgeError("viewport writing belongs to the recorder, not qualification state extraction")
+    def render_viewport(self) -> np.ndarray:
+        if self._observation is None:
+            raise SimulatorBridgeError("viewport requested before a physical reset")
+        frame = self._observation["image_obs"]["over_shoulder_left_camera"][0].detach().cpu().numpy()
+        if frame.ndim != 3 or frame.shape[-1] != 3 or frame.dtype != np.uint8 or not np.ptp(frame):
+            raise SimulatorBridgeError("qualification viewport is not nonblank uint8 RGB")
+        return frame.copy()
 
     def close(self) -> None:
         self._env.close()

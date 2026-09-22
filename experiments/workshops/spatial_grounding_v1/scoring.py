@@ -208,8 +208,14 @@ def _stable_release(
     if any(not math.isfinite(t) for t in times) or any(b <= a for a, b in zip(times, times[1:])):
         return False
     end = float(states[-1]["sim_time_s"])
-    window = [state for state in states if end - float(state["sim_time_s"]) <= cfg.final_stability_seconds]
-    if not window or end - float(window[0]["sim_time_s"]) < cfg.final_stability_seconds:
+    boundary = end - cfg.final_stability_seconds
+    preceding = [index for index, time in enumerate(times) if time <= boundary + 1e-9]
+    if not preceding:
+        return False
+    # Include the sample at or immediately before the window boundary. A
+    # control period need not divide half a second exactly.
+    window = states[preceding[-1]:]
+    if end - float(window[0]["sim_time_s"]) < cfg.final_stability_seconds - 1e-9:
         return False
     return all(
         bool(state.get("supported", False))

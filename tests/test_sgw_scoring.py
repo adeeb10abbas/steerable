@@ -131,6 +131,17 @@ def test_infrastructure_has_no_model_outcome():
     assert canonical_status(result) == "technical_invalid"
 
 
+def test_stability_window_spans_nondividing_control_period_and_its_boundary():
+    episode = _episode(_state(cube=(0.0, 0.05, 0.14)))
+    for index, state in enumerate(episode["states"]):
+        state["sim_time_s"] = index * 0.2
+    result = score_episode(episode, GoalSpec("LAT", 1))
+    assert result.requested_success is True
+    # The sample preceding the final half-second must also establish stability.
+    episode["states"][-4]["supported"] = False
+    assert score_episode(episode, GoalSpec("LAT", 1)).requested_success is False
+
+
 def test_result_payload_is_json_safe_and_canonical():
     result = score_episode({"infrastructure_reason": "renderer unavailable"}, GoalSpec("LAT", 1))
     payload = result_payload(

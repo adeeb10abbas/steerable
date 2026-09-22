@@ -58,10 +58,35 @@ verification and model loading within the bounded Job deadline.
 
 `runtime_preflight` is a zero-model renderer probe, not a fixture qualification.
 `lat_workspace_capture` records the actual scene after that probe passes;
-`lat_candidate_generator`, `robolab_lat_qualification` and
+`lat_proposals`, `lat_candidate_generator`, `robolab_lat_qualification` and
 `model_blind_qualification` are the model-blind LAT qualification path.
 HEIGHT/DIST have contracts and selection checks, **not qualified physical
 fixtures**. Do not substitute repeated LAT layouts for those branches.
+
+The prospective generator includes geometric rejections within its 100-candidate
+cap, records their reasons, and never refills rejected slots. Its table and
+banana-clearance screen is not robot reachability or physical qualification.
+Candidate qualification order and eventual layout selection use the frozen hash
+order. Robot reachability and every reset must still be verified in the native
+runtime before a family is released.
+
+One selected proposal runs both goals three times in a fresh Isaac process:
+`model_blind_qualification --proposal-file <file> --candidate-id <id>`, with the
+required pinned runtime arguments. Every trial retains 450 issued commands,
+451 observed states and raw RGB frames, plus an actually decoded viewport MP4.
+Physically rejected trials retain the same evidence. Interrupted trials retain
+issued-but-unobserved commands and any observed partial video; they are
+infrastructure-invalid, not model failures. The shared physical scorer consumes
+measured centers directly, without applying root-to-center offsets a second time.
+Local synthetic integration is not a native fixture release.
+
+`lat_workspace_capture --render-warmup-frames 120` is a separately bounded,
+zero-action appearance diagnostic. It refreshes sensors after render-only updates,
+rejects any physical-time advance, retains initial/intermediate/final RGB and a
+viewport video, and records live USD asset-resolution paths. The diagnostic video
+uses 30 FPS only for display; it does not represent advancing simulated time.
+The default capture still performs no added warmup. Neither a nonblank image nor
+successful texture decoding alone qualifies the rendered policy observation.
 
 ## Execution order
 
@@ -82,7 +107,8 @@ The RTX PRO allocation was occupied, but a fresh A40 allocation passed the
 idle guard. A bounded replacement renderer preflight passed with the
 historically proven native-library order and actual three-camera scene
 evidence. Zero-model workspace capture also succeeded, but it contains no
-validated candidate slots; proposal and waypoint validation remain missing.
+validated candidate slots. Prospective proposals and six-trial recording are
+implemented, but native waypoint/reset validation remains outstanding.
 Fixture/runtime qualification and concrete worker resource receipts
 still block behavioral release. The existing B200 workload is not owned by
 this task and must not be stopped. No policy server was started. The source manuscript remains a plan,

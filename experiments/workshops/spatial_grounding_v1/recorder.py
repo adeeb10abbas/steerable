@@ -40,6 +40,37 @@ def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
     _fsync_directory(path.parent)
 
 
+def encode_viewport_video(frames: list[Path], output: Path, *, fps: float) -> dict[str, Any]:
+    """Encode retained frames sequentially and verify the decoded frame count."""
+    import math
+    import imageio.v2 as iio
+    import numpy as np
+
+    if not frames or not math.isfinite(fps) or fps <= 0:
+        raise ContractError("viewport encoding requires frames and a positive physical FPS")
+    if output.exists():
+        raise FileExistsError(f"refusing to overwrite viewport video: {output}")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    shape = None
+    with iio.get_writer(output, fps=fps, macro_block_size=1) as writer:
+        for path in frames:
+            frame = np.load(path, allow_pickle=False)
+            if frame.ndim != 3 or frame.shape[-1] != 3 or frame.dtype != np.uint8:
+                raise ContractError("viewport frame must be HWC uint8 RGB")
+            shape = frame.shape if shape is None else shape
+            if frame.shape != shape:
+                raise ContractError("viewport frame shape changed")
+            writer.append_data(frame)
+    with iio.get_reader(output) as reader:
+        decoded = sum(1 for _ in reader)
+    if decoded != len(frames):
+        raise ContractError(f"viewport frame count mismatch: {decoded} != {len(frames)}")
+    with output.open("rb") as stream:
+        os.fsync(stream.fileno())
+    return {"path": str(output), "sha256": sha256_file(output), "bytes": output.stat().st_size,
+            "frame_count": decoded, "fps": fps}
+
+
 class AttemptRecorder:
     def __init__(self, release: Release, cell: Cell, attempt_id: str):
         self.release = release
@@ -143,12 +174,11 @@ class AttemptRecorder:
         path = self.path / "videos" / "viewport.mp4"
         if not path.exists():
             try:
-                import imageio.v3 as iio
-                import numpy as np
-                frames = [np.load(item, allow_pickle=False) for item in sorted((self.path / "videos").glob("frame-*.npy"))]
-                if not frames:
-                    raise ContractError("no viewport frames recorded")
-                iio.imwrite(path, np.stack(frames), fps=30)
+                frames = sorted((self.path / "videos").glob("frame-*.npy"))
+                if len(frames) != self._video_frames:
+                    raise ContractError("retained viewport frame count differs from recording count")
+                record = encode_viewport_video(frames, path, fps=30)
+                return {**record, "path": path.relative_to(self.path).as_posix()}
             except ImportError as exc:
                 raise ContractError("qualified imageio/ffmpeg video backend is required") from exc
         if not path.is_file() or path.stat().st_size < 32:

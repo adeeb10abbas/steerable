@@ -83,6 +83,9 @@ def main() -> None:
         try:
             obs, _ = env.reset()
             world = get_world(env)
+            origin = env.scene.env_origins[0].detach().cpu().numpy()
+            frames = env.scene["frames"]
+            eef_index = frames.data.target_frame_names.index("eef_frame")
             objects = {}
             for name in ("rubiks_cube", "bowl", "banana", "table"):
                 root_position, quaternion = world.get_pose(name, env_id=0)
@@ -125,6 +128,13 @@ def main() -> None:
             "renderer_receipt": _record(args.renderer_receipt),
             "robolab_commit": subprocess.check_output(["git", "-C", str(args.robolab_root), "rev-parse", "HEAD"], text=True).strip(),
             "environment_seed": args.environment_seed,
+            "environment_origin_world_xyz_m": [float(value) for value in origin],
+            "eef_position_env_local_xyz_m": [
+                float(value) for value in (frames.data.target_pos_w[0, eef_index].detach().cpu().numpy() - origin)
+            ],
+            "eef_quaternion_world_wxyz": [
+                float(value) for value in frames.data.target_quat_w[0, eef_index].detach().cpu().tolist()
+            ],
             "objects": objects,
             "contact_sensor_inventory": contact_inventory,
             "views": views,

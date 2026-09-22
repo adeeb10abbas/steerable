@@ -87,8 +87,24 @@ class FixtureCandidate:
         candidate.validate_neutral_start()
         return candidate
 
+    def scoring_poses(self, roots: Mapping[str, Pose] | None = None) -> Mapping[str, Pose]:
+        roots = self.object_poses if roots is None else roots
+        offsets = self.metadata.get("scoring_center_offsets_root_local_m")
+        if not isinstance(offsets, Mapping) or set(offsets) != set(roots):
+            raise FixtureError("candidate lacks measured scoring-center offsets for every object")
+        result = {}
+        for name, root in roots.items():
+            offset = tuple(float(value) for value in offsets[name])
+            if len(offset) != 3 or not all(math.isfinite(value) for value in offset):
+                raise FixtureError("scoring-center offset must be a finite three-vector")
+            result[name] = Pose(
+                _add(root.position_m, _rotate(root.quaternion_wxyz, offset)),
+                root.quaternion_wxyz,
+            )
+        return result
+
     def relation_m(self, poses: Mapping[str, Pose] | None = None) -> float:
-        positions = self.object_poses if poses is None else poses
+        positions = self.scoring_poses(poses)
         cube = positions["rubiks_cube"].position_m
         bowl = positions["bowl"].position_m
         if self.family == "LAT":
@@ -110,6 +126,7 @@ class FixtureCandidate:
             "asset_manifest_sha256": self.asset_manifest_sha256,
             "task_asset": self.task_asset,
             "object_poses": {name: asdict(pose) for name, pose in sorted(self.object_poses.items())},
+            "scoring_center_offsets_root_local_m": self.metadata.get("scoring_center_offsets_root_local_m"),
         }
         return sha256(_canonical_json(value)).hexdigest()
 
@@ -142,6 +159,20 @@ def _canonical_json(value: Any) -> bytes:
 
 def _distance(left: tuple[float, float, float], right: tuple[float, float, float]) -> float:
     return math.sqrt(sum((a - b) ** 2 for a, b in zip(left, right, strict=True)))
+
+
+def _add(left: tuple[float, float, float], right: tuple[float, float, float]) -> tuple[float, float, float]:
+    return tuple(a + b for a, b in zip(left, right, strict=True))
+
+
+def _rotate(quaternion: tuple[float, float, float, float], vector: tuple[float, float, float]) -> tuple[float, float, float]:
+    w, x, y, z = quaternion
+    vx, vy, vz = vector
+    return (
+        (1 - 2 * (y*y + z*z))*vx + 2*(x*y - z*w)*vy + 2*(x*z + y*w)*vz,
+        2*(x*y + z*w)*vx + (1 - 2*(x*x + z*z))*vy + 2*(y*z - x*w)*vz,
+        2*(x*z - y*w)*vx + 2*(y*z + x*w)*vy + (1 - 2*(x*x + y*y))*vz,
+    )
 
 
 def pose_error(observed: Pose, expected: Pose) -> tuple[float, float]:

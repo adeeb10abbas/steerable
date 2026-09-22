@@ -17,10 +17,11 @@ def candidate(identifier: str, *, family: str = "LAT", side: str | None = None, 
         "rubiks_cube": {"position_m": [x, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
         "bowl": {"position_m": [x + 0.1, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
     }
-    metadata = {}
+    metadata = {"scoring_center_offsets_root_local_m": {"rubiks_cube": [0, 0, 0], "bowl": [0, 0, 0]}}
     if family == "DIST":
         poses["plate"] = {"position_m": [x - 0.1, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]}
         metadata["bowl_side"] = side
+        metadata["scoring_center_offsets_root_local_m"]["plate"] = [0, 0, 0]
     if family == "HEIGHT":
         metadata["upper_support_side"] = side
     return FixtureCandidate.from_json({
@@ -32,7 +33,7 @@ def candidate(identifier: str, *, family: str = "LAT", side: str | None = None, 
 def test_candidate_rejects_non_neutral_pose() -> None:
     value = {
         "candidate_id": "bad", "family": "LAT", "seed": 1, "task_asset": "measured_scene.usda",
-        "asset_manifest_sha256": "a" * 64, "metadata": {},
+        "asset_manifest_sha256": "a" * 64, "metadata": {"scoring_center_offsets_root_local_m": {"rubiks_cube": [0, 0, 0], "bowl": [0, 0, 0]}},
         "object_poses": {
             "rubiks_cube": {"position_m": [0.4, 0.006, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
             "bowl": {"position_m": [0.5, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
@@ -81,6 +82,21 @@ def test_candidates_within_reset_tolerance_are_duplicates() -> None:
         raise AssertionError("near-identical layouts must be rejected")
 
 
+def test_root_reset_and_scoring_center_are_explicitly_separate() -> None:
+    value = {
+        "candidate_id": "offset", "family": "LAT", "seed": 1, "task_asset": "measured.usda",
+        "asset_manifest_sha256": "a" * 64,
+        "object_poses": {
+            "rubiks_cube": {"position_m": [0.4, 0.1, 0.1], "quaternion_wxyz": [0, 0, 0, 1]},
+            "bowl": {"position_m": [0.5, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
+        },
+        "metadata": {"scoring_center_offsets_root_local_m": {"rubiks_cube": [0, 0.1, 0], "bowl": [0, 0, 0]}},
+    }
+    candidate_value = FixtureCandidate.from_json(value)
+    assert candidate_value.object_poses["rubiks_cube"].position_m == (0.4, 0.1, 0.1)
+    assert candidate_value.scoring_poses()["rubiks_cube"].position_m == (0.4, 0.0, 0.1)
+
+
 def test_asset_manifest_resolves_actual_usda_references(tmp_path) -> None:
     root = tmp_path / "robolab"
     scene = root / "assets/scenes/scene.usda"
@@ -112,6 +128,7 @@ def test_lat_candidates_use_only_measured_workspace_slots() -> None:
             "bowl": {"position_m": [0.5, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
         },
         "center_source": "pinned_robolab_geometric_center",
+        "scoring_center_offsets_root_local_m": {"rubiks_cube": [0, 0, 0], "bowl": [0, 0, 0]},
         "abs_ik_waypoints": {"positive": [{"position_world_xyz_m": [0.4, 0.0, 0.2], "gripper_position": 0, "hold_steps": 1}], "negative": [{"position_world_xyz_m": [0.4, 0.0, 0.2], "gripper_position": 0, "hold_steps": 1}]},
     }
     candidates = materialize_lat_candidates({

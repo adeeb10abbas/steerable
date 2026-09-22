@@ -7,28 +7,27 @@ from typing import Sequence
 import numpy as np
 
 
-def physical_center_state(
+def geometric_center_state(
     *,
-    root_position_env_local_xyz_m: Sequence[float],
+    com_position_env_local_xyz_m: Sequence[float],
     geometric_center_env_local_xyz_m: Sequence[float],
-    root_velocity_world: Sequence[float],
+    com_velocity_world: Sequence[float],
 ) -> tuple[tuple[float, float, float], float, float]:
     """Return the geometric-center position and rigid-body center speed norms.
 
-    RoboLab's ``get_pose`` returns an env-local rigid-root pose, while
-    ``get_bbox`` returns the transformed cached-geometry centroid in that same
-    frame.  They are not interchangeable for asymmetric assets.  The velocity
-    API reports rigid-root linear/angular world-axis velocity, so transport the
-    linear component to the geometric center before taking protocol norms.
+    RoboLab's ``get_bbox`` returns the transformed cached-geometry centroid in
+    env-local coordinates. IsaacLab compatibility ``root_vel_w`` is a center
+    of mass (COM) velocity, so transport its linear component from COM to the
+    geometric center before taking protocol norms.
     """
 
-    root = _vector3(root_position_env_local_xyz_m, "root position")
+    com = _vector3(com_position_env_local_xyz_m, "COM position")
     center = _vector3(geometric_center_env_local_xyz_m, "geometric center")
-    velocity = np.asarray(root_velocity_world, dtype=np.float64)
+    velocity = np.asarray(com_velocity_world, dtype=np.float64)
     if velocity.shape != (6,) or not np.isfinite(velocity).all():
-        raise ValueError("root velocity must be a finite six-vector")
+        raise ValueError("COM velocity must be a finite six-vector")
     angular = velocity[3:]
-    center_linear = velocity[:3] + np.cross(angular, center - root)
+    center_linear = velocity[:3] + np.cross(angular, center - com)
     return (
         tuple(float(value) for value in center),
         float(np.linalg.norm(center_linear)),

@@ -53,6 +53,9 @@ def materialize_lat_candidates(workspace: Mapping[str, Any], *, seed: int) -> li
             raise ValueError(
                 "validated LAT slot must explicitly bind the pinned RoboLab geometric-center source"
             )
+        offsets = slot.get("scoring_center_offsets_root_local_m")
+        if not isinstance(offsets, Mapping):
+            raise ValueError("validated LAT slot lacks measured root-to-center offsets")
         candidate = {
             "candidate_id": f"LAT-{index:03d}",
             "family": "LAT",
@@ -64,6 +67,7 @@ def materialize_lat_candidates(workspace: Mapping[str, Any], *, seed: int) -> li
                 "workspace_receipt_sha256": workspace["receipt_sha256"],
                 "source_slot_id": slot["slot_id"],
                 "center_source": slot["center_source"],
+                "scoring_center_offsets_root_local_m": offsets,
                 "abs_ik_waypoints": slot["abs_ik_waypoints"],
                 "historical_layout_fingerprint": None,
             },

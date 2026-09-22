@@ -192,6 +192,34 @@ def test_lat_task_registry_registers_only_scoped_overlay(tmp_path: Path) -> None
     assert calls == [{"task": [str(task)], "cameras": ("camera",)}]
 
 
+def test_native_reset_warms_camera_before_publishing_snapshot(monkeypatch, tmp_path):
+    from experiments.workshops.spatial_grounding_v1 import robolab_lat_qualification as native
+
+    calls = []
+    image = SimpleNamespace()
+    image.detach = lambda: image
+    image.cpu = lambda: image
+    image.numpy = lambda: np.arange(192, dtype=np.uint8).reshape(8, 8, 3)
+    warmed = {"image_obs": {"over_shoulder_left_camera": [image]}}
+    env = SimpleNamespace(
+        step_dt=0.2,
+        episode_length_buf=SimpleNamespace(zero_=lambda: calls.append("clear_counter")),
+        reset=lambda: (calls.append("physical_reset") or {"not_ready": True}, {}),
+    )
+    def warmup(actual_env, observation, count, output):
+        assert actual_env is env and observation == {"not_ready": True}
+        assert count == 120 and output == tmp_path / "reset-01"
+        calls.append("render_only")
+        return warmed, {"physics_actions": 0, "simulation_time_unchanged": True}
+    monkeypatch.setattr(native, "render_only_warmup", warmup)
+    instance = native.RoboLabLatEnvironment(env, fixture(), tmp_path)
+    monkeypatch.setattr(instance, "_snapshot", lambda: calls.append("snapshot") or SimulatorSnapshot(state(0, 0.1), 0))
+    receipt = instance.reset()
+    assert calls == ["clear_counter", "physical_reset", "render_only", "snapshot"]
+    assert instance._observation is warmed
+    assert receipt.receipt["render_only_warmup"]["physics_actions"] == 0
+
+
 def test_physical_center_velocity_uses_geometric_center_and_euclidean_norms() -> None:
     from experiments.workshops.spatial_grounding_v1.robolab_measurements import geometric_center_state
 

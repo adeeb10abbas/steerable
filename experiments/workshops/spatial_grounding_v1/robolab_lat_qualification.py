@@ -23,12 +23,14 @@ from .simulator_bridge import (
 )
 from .task_definitions import RoboLabTaskDefinition
 from .robolab_measurements import geometric_center_state
+from .lat_workspace_capture import render_only_warmup
 
 
 class RoboLabLatEnvironment:
-    def __init__(self, env: Any, candidate: FixtureCandidate) -> None:
+    def __init__(self, env: Any, candidate: FixtureCandidate, evidence_root: Path) -> None:
         self._env = env
         self._candidate = candidate
+        self._evidence_root = evidence_root
         self._reset_index = 0
         self._initial: dict[str, tuple[float, float, float]] | None = None
         step_dt = getattr(env, "step_dt", None)
@@ -91,6 +93,9 @@ class RoboLabLatEnvironment:
             raise SimulatorBridgeError("RoboLab must expose episode_length_buf for a physical reset")
         counter.zero_()
         observation, _ = self._env.reset()
+        observation, warmup = render_only_warmup(
+            self._env, observation, 120, self._evidence_root / f"reset-{self._reset_index + 1:02d}",
+        )
         self._observation = observation
         self._steps = 0
         snapshot = self._snapshot()
@@ -115,6 +120,7 @@ class RoboLabLatEnvironment:
                 "fingerprint": fingerprint,
                 "temporal_cache_reset": True,
                 "control_step_dt_s": self._step_dt_s,
+                "render_only_warmup": warmup,
             },
         )
 
@@ -148,10 +154,11 @@ class RoboLabLatEnvironment:
 
 
 class RoboLabLatBridge:
-    def __init__(self, *, study_root: Path, robolab_root: Path, device: str, renderer: str, rendering_type: str) -> None:
+    def __init__(self, *, study_root: Path, robolab_root: Path, evidence_root: Path, device: str, renderer: str, rendering_type: str) -> None:
         self._study_root = Path(study_root).resolve()
         self._robolab_root = Path(robolab_root).resolve()
         self._device = device
+        self._evidence_root = evidence_root
         if renderer != "realtime" or rendering_type != "balanced":
             raise SimulatorBridgeError("LAT qualification requires realtime/balanced RTX")
 
@@ -170,7 +177,7 @@ class RoboLabLatBridge:
             instruction_type="default", policy="sgw_01_model_blind_lat_controller",
             renderer="realtime", rendering_mode="balanced",
         )
-        return RoboLabLatEnvironment(env, task.candidate)
+        return RoboLabLatEnvironment(env, task.candidate, self._evidence_root)
 
 
 def register_lat_task(registrar: Any, task_path: Path, cameras: Any) -> None:
@@ -221,11 +228,11 @@ def _quat_mul(first: np.ndarray, second: np.ndarray) -> np.ndarray:
     ))
 
 
-def create_bridge(*, robolab_root: Path, assets_manifest: Path, device: str, renderer: str, rendering_type: str, **_: Any) -> RoboLabLatBridge:
+def create_bridge(*, robolab_root: Path, assets_manifest: Path, evidence_root: Path, device: str, renderer: str, rendering_type: str, **_: Any) -> RoboLabLatBridge:
     study_root = Path(__file__).resolve().parents[3]
     if not Path(assets_manifest).is_file():
         raise SimulatorBridgeError("measured asset manifest is required")
-    return RoboLabLatBridge(study_root=study_root, robolab_root=robolab_root, device=device, renderer=renderer, rendering_type=rendering_type)
+    return RoboLabLatBridge(study_root=study_root, robolab_root=robolab_root, evidence_root=evidence_root, device=device, renderer=renderer, rendering_type=rendering_type)
 
 
 def create_controller(**_: Any) -> RoboLabLatScriptedController:

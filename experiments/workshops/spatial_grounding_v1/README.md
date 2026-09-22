@@ -87,6 +87,14 @@ viewport video, and records live USD asset-resolution paths. The diagnostic vide
 uses 30 FPS only for display; it does not represent advancing simulated time.
 The default capture still performs no added warmup. Neither a nonblank image nor
 successful texture decoding alone qualifies the rendered policy observation.
+Actual A40 diagnostic z completed all 120 render-only updates at unchanged
+simulation time and retained 121 decoded video frames. Its final three views
+show the intended colored cube, red bowl, yellow banana and textured table;
+the initial view still had dark surfaces. Every native LAT qualification reset
+therefore performs the same recorded zero-physics warmup before publishing state
+zero. This startup-readiness correction changes no scored action count. A future
+production simulator binding must provide equivalent verified readiness before
+any model observation; no production binding is released by this diagnostic.
 
 ## Execution order
 

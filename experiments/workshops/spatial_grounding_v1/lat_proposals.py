@@ -111,6 +111,7 @@ def propose_lat_layouts(workspace: Mapping[str, Any], *, seed: int, count: int =
             "metadata": {
                 "status": "proposed_unqualified_requires_physical_validation",
                 "workspace_receipt_sha256": workspace["receipt_sha256"],
+                "generator_source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                 "center_source": "pinned_robolab_geometric_center",
                 "scoring_center_offsets_root_local_m": {
                     name: objects[name]["geometric_center_offset_root_local_xyz_m"]

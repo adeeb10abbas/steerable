@@ -243,6 +243,7 @@ def main() -> None:
         bridge = load_factory(args.bridge_factory)(
             robolab_root=args.robolab_root, assets_manifest=args.assets_manifest,
             device=args.device, renderer=args.renderer, rendering_type=args.rendering_type,
+            evidence_root=args.output_root / "reset_warmup",
         )
         controller = load_factory(args.controller_factory)(
             robolab_root=args.robolab_root, assets_manifest=args.assets_manifest, device=args.device,

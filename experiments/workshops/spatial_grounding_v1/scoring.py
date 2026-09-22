@@ -132,8 +132,7 @@ def _pickup_step(
         if initial is not None:
             initial_cube_z = _xyz(initial)[2]
     run = 0
-    for index, state in enumerate(states):
-        held = bool(state.get("gripper_holding", state.get("held", False)))
+    for index, state in enumerate(states[1:], start=1):
         position = state.get("cube", state.get("cube_xyz_m"))
         if position is None or initial_cube_z is None:
             continue
@@ -141,7 +140,7 @@ def _pickup_step(
         reported_height = state.get("cube_height_lift_m", state.get("cube_lift_m"))
         if reported_height is not None and not math.isclose(float(reported_height), height, abs_tol=1e-4):
             raise ValueError("reported pickup height disagrees with cube geometry")
-        if held and height >= cfg.pickup_height_m:
+        if height >= cfg.pickup_height_m:
             run += 1
             if run >= cfg.pickup_consecutive_steps:
                 return index - cfg.pickup_consecutive_steps + 1
@@ -155,10 +154,34 @@ def _first_success(events: Iterable[Mapping[str, Any]]) -> int | None:
     return min(steps) if steps else None
 
 
-def _stable_release(states: Sequence[Mapping[str, Any]], cfg: FrozenScoringConfig) -> bool:
+def _validate_trace(states: Sequence[Mapping[str, Any]], cfg: FrozenScoringConfig) -> None:
+    if len(states) != cfg.action_cap + 1:
+        raise ValueError("trace must contain reset state plus action steps 1..450")
+    indexed = [state.get("action_step") for state in states]
+    if any(step is not None for step in indexed):
+        if indexed != list(range(cfg.action_cap + 1)):
+            raise ValueError("action steps must be contiguous from reset step 0 through action 450")
+    times = [state.get("sim_time_s") for state in states]
+    if any(time is None for time in times):
+        raise ValueError("sim_time_s must be recorded for every timestep")
+    numeric = [float(time) for time in times]
+    if any(not math.isfinite(time) for time in numeric) or any(
+        b <= a for a, b in zip(numeric, numeric[1:])
+    ):
+        raise ValueError("simulated times must be finite and strictly increasing")
+
+
+def _stable_release(
+    states: Sequence[Mapping[str, Any]],
+    goal: GoalSpec,
+    cfg: FrozenScoringConfig,
+) -> bool:
     if not states or not bool(states[-1].get("final_detached_release", states[-1].get("release_detached", False))):
         return False
     if not all("sim_time_s" in state for state in states):
+        return False
+    times = [float(state["sim_time_s"]) for state in states]
+    if any(not math.isfinite(t) for t in times) or any(b <= a for a, b in zip(times, times[1:])):
         return False
     end = float(states[-1]["sim_time_s"])
     window = [state for state in states if end - float(state["sim_time_s"]) <= cfg.final_stability_seconds]
@@ -169,6 +192,12 @@ def _stable_release(states: Sequence[Mapping[str, Any]], cfg: FrozenScoringConfi
         and float(state.get("linear_speed_m_s", math.inf)) < cfg.linear_speed_limit_m_s
         and float(state.get("angular_speed_rad_s", math.inf)) < cfg.angular_speed_limit_rad_s
         and bool(state.get("final_detached_release", state.get("release_detached", False)))
+        and goal.physical_goal_sign * relation_m(
+            goal.family,
+            state.get("cube", state.get("cube_xyz_m")),
+            state.get("bowl", state.get("bowl_xyz_m")),
+            state.get("plate", state.get("plate_xyz_m")),
+        ) >= cfg.relation_margin_m
         for state in window
     )
 
@@ -188,12 +217,20 @@ def score_episode(
     states = list(episode.get("states", ()))
     if not states:
         raise ValueError("valid scoring requires at least one state")
-    terminal_observed = len(states) >= cfg.action_cap and bool(
+    safety = bool(episode.get("termination_reason") == "safety" or episode.get("safety_terminated"))
+    if not safety:
+        try:
+            _validate_trace(states, cfg)
+        except ValueError as error:
+            return EpisodeScore(
+                OutcomeStatus.INFRA_INVALID, None, None, None, None, None, None,
+                None, None, None, "invalid_trace", False, str(error),
+            )
+    terminal_observed = len(states) >= cfg.action_cap + 1 and bool(
         episode.get("terminal_observed", False)
         or episode.get("termination_reason") == "action_cap"
         or len(states) == cfg.action_cap
     )
-    safety = bool(episode.get("termination_reason") == "safety" or episode.get("safety_terminated"))
     required_anchors = ("bowl", "plate") if goal.family == "DIST" else ("bowl",)
     anchor_drift = _max_anchor_drift(states, required_anchors)
     reference_ok = anchor_drift <= cfg.reference_motion_limit_m
@@ -221,7 +258,7 @@ def score_episode(
     rel = relation_m(goal.family, cube, bowl, plate)
     margin = goal.physical_goal_sign * rel
     detached = bool(final.get("final_detached_release", final.get("release_detached", False)))
-    stable = _stable_release(states, cfg)
+    stable = _stable_release(states, goal, cfg)
     success = bool(pickup is not None and margin >= cfg.relation_margin_m and reference_ok and detached and stable)
     if pickup is None:
         stage = "pick_failed"
@@ -237,5 +274,5 @@ def score_episode(
         stage = None
     return EpisodeScore(
         OutcomeStatus.VALID_MODEL, success, margin, rel, pickup, first_success,
-        len(states) - 1, anchor_drift, reference_ok, detached, stage, False,
+        cfg.action_cap, anchor_drift, reference_ok, detached, stage, False,
     )

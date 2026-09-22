@@ -17,7 +17,7 @@ def _episode(final, *, states=None, **extra):
         initial["cube_height_lift_m"] = 0.0
         states = [initial] + [dict(final, sim_time_s=i * 0.01, supported=True,
                                    linear_speed_m_s=0.0, angular_speed_rad_s=0.0)
-                              for i in range(1, 450)]
+                              for i in range(1, 451)]
     return {
         "states": states,
         "terminal_observed": True,
@@ -76,8 +76,8 @@ def test_all_18_prompt_semantics_have_correct_signed_relation():
 
 
 def test_pickup_requires_three_consecutive_steps_and_success_is_not_early_stop():
-    states = [_state(cube=(0.0, 0.0, 0.1),) for _ in range(450)]
-    for i in range(2, 450):
+    states = [_state(cube=(0.0, 0.0, 0.1),) for _ in range(451)]
+    for i in range(2, 451):
         states[i]["cube"] = (0.0, 0.0, 0.14)
         states[i]["cube_height_lift_m"] = 0.04
         states[i]["sim_time_s"] = i * 0.01
@@ -91,12 +91,12 @@ def test_pickup_requires_three_consecutive_steps_and_success_is_not_early_stop()
     result = score_episode(_episode(states[-1], states=states), GoalSpec("LAT", 1))
     assert result.requested_success is False
     assert result.pickup_step == 2
-    assert result.terminal_step == 449
+    assert result.terminal_step == 450
     assert result.first_success_step == 120
 
 
 def test_anchor_drift_fails_success_and_is_retained_as_model_outcome():
-    states = [_state(cube=(0.0, 0.05, 0.1)) for _ in range(450)]
+    states = [_state(cube=(0.0, 0.05, 0.1)) for _ in range(451)]
     for i, state in enumerate(states):
         state["cube"] = (0.0, 0.05, 0.14) if i >= 1 else (0.0, 0.05, 0.1)
         state["cube_height_lift_m"] = 0.04 if i >= 1 else 0.0
@@ -144,9 +144,9 @@ def test_short_trace_is_technical_missingness_even_if_flagged_terminal():
 def test_nonfinite_geometry_and_missing_anchor_fail_closed():
     state = _state()
     state["cube"] = (float("nan"), 0.0, 0.1)
-    with pytest.raises(ValueError):
-        score_episode({"states": [state] * 450, "terminal_observed": True}, GoalSpec("LAT", 1))
+    result = score_episode({"states": [state] * 451, "terminal_observed": True}, GoalSpec("LAT", 1))
+    assert result.status is OutcomeStatus.INFRA_INVALID
     state = _state()
     del state["bowl"]
-    with pytest.raises(ValueError):
-        score_episode({"states": [state] * 450, "terminal_observed": True}, GoalSpec("LAT", 1))
+    result = score_episode({"states": [state] * 451, "terminal_observed": True}, GoalSpec("LAT", 1))
+    assert result.status is OutcomeStatus.INFRA_INVALID

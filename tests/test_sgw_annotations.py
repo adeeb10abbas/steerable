@@ -2,6 +2,7 @@ import pytest
 
 from experiments.workshops.spatial_grounding_v1.prediction_annotations import (
     make_annotation,
+    validate_annotation_panel,
     validate_prediction_alignment,
 )
 
@@ -48,3 +49,19 @@ def test_unobservable_future_cannot_receive_geometry_label():
         executed_action_count=32,
     )
     assert annotation.blind is True
+
+
+def test_annotation_panel_stays_pending_until_two_raters_and_adjudication():
+    one = make_annotation(
+        _prediction(), rater_id="r1", label="positive", observable=True,
+        request_id="req-1", camera_name="front", reset_id="reset-1",
+        executed_action_count=32,
+    )
+    assert validate_annotation_panel([one])["status"] == "pending"
+    two = make_annotation(
+        _prediction(), rater_id="r2", label="unknown", observable=True,
+        request_id="req-1", camera_name="front", reset_id="reset-1",
+        executed_action_count=32,
+    )
+    assert validate_annotation_panel([one, two])["status"] == "pending"
+    assert validate_annotation_panel([one, two], adjudicated_label="positive")["status"] == "complete"

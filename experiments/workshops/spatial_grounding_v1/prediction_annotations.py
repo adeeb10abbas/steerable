@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Literal, Mapping
+from collections.abc import Sequence
 
 AnnotationLabel = Literal["positive", "negative", "moving", "stationary", "unknown"]
 
@@ -66,3 +67,30 @@ def make_annotation(
         target_action_step=step, rater_id=rater_id, label=label,
         observable=observable, blind=True,
     )
+
+
+def validate_annotation_panel(
+    annotations: Sequence[PredictionAnnotation],
+    *,
+    adjudicated_label: AnnotationLabel | None = None,
+) -> dict[str, object]:
+    """Report whether the required two-rater blinded panel is actually complete."""
+    if not annotations:
+        return {"status": "pending", "reason": "no blinded annotations"}
+    if any(not annotation.blind for annotation in annotations):
+        raise ValueError("all annotations must be blind")
+    raters = {annotation.rater_id for annotation in annotations}
+    if len(raters) < 2:
+        return {"status": "pending", "reason": "two independent raters unavailable"}
+    labels = {annotation.label for annotation in annotations}
+    if len(labels) > 1 and adjudicated_label is None:
+        return {"status": "pending", "reason": "disagreement requires adjudication"}
+    if adjudicated_label is not None and not all(
+        annotation.observable or adjudicated_label == "unknown" for annotation in annotations
+    ):
+        raise ValueError("unobservable annotation cannot be adjudicated to a geometry label")
+    return {
+        "status": "complete",
+        "raters": tuple(sorted(raters)),
+        "adjudicated": adjudicated_label is not None,
+    }

@@ -6,6 +6,8 @@ from experiments.workshops.spatial_grounding_v1.compile import (
     censoring_bounds,
     compile_manifests,
     equivalence,
+    compile_registered_queue,
+    render_neutral_coverage_table,
     holm_adjust,
     holm_adjust_primary,
     paired_signflip,
@@ -63,3 +65,12 @@ def test_holm_adjustment_is_monotone():
 def test_primary_holm_always_accounts_for_six_tests():
     adjusted = holm_adjust_primary({"N3-LAT": 0.01})
     assert set(adjusted) == {"N3-LAT", "N3-HEIGHT", "N3-DIST", "D1-LAT", "D1-HEIGHT", "D1-DIST"}
+
+
+def test_registered_queue_preserves_unrun_cells_and_neutral_output():
+    queue = "experiments/workshops/spatial_grounding_v1/spec/planned_cells.csv"
+    compiled = compile_registered_queue(queue, [], expected_release_hashes={})
+    assert len(compiled.ledger) == 1044
+    assert compiled.complete is False
+    assert len(compiled.missing_cell_ids) == 1044
+    assert "not_run" in render_neutral_coverage_table(compiled)

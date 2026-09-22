@@ -1,0 +1,48 @@
+{
+  "schema_version": "sgw-01-infrastructure-attempt-v1",
+  "attempt_id": "a40-20260922f-lat-workspace",
+  "status": "infrastructure_invalid_before_isaac_before_model",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "candidate_qualification_count": 0,
+  "task_boundary": "zero-model LAT measured-workspace capture only",
+  "kubernetes": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "job": "sgw01-ali-lat-workspace-20260922f",
+    "job_uid": "9dd9d13c-408c-41cc-928f-87bd2e6501ce",
+    "pod": "sgw01-ali-lat-workspace-20260922f-6qffb",
+    "pod_uid": "2e8b79f6-f50e-4a9f-b1ce-bb9e41b0f24c",
+    "backoff_limit": 0,
+    "started_at_utc": "2026-09-22T20:09:42Z",
+    "finished_at_utc": "2026-09-22T20:09:49Z",
+    "exit_code": 1,
+    "termination_reason": "Error",
+    "job_reason": "BackoffLimitExceeded"
+  },
+  "runtime": {
+    "study_source_commit": "95e72f04317f786ce87c10c3b84fe279a853ba22",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "renderer_receipt_path": "/data/users/ali/sgw-01/preflight/a40-20260922e/renderer.json",
+    "renderer_receipt_sha256": "e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5",
+    "assets_manifest_path": "/data/users/ali/sgw-01/preflight/a40-20260922e/assets.json",
+    "assets_manifest_sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806",
+    "raw_output_root": "/data/users/ali/sgw-01/qualification/lat-workspace-20260922f"
+  },
+  "observed_progress": {
+    "idle_gpu_guard_passed": true,
+    "selected_gpu_uuid": "GPU-8773b1c9-df29-a37a-e165-8f68986cdb88",
+    "selected_gpu_name": "NVIDIA A40",
+    "selected_gpu_memory_used_mib": 0,
+    "selected_gpu_utilization_percent": 0,
+    "isaac_started": false,
+    "simulator_started": false
+  },
+  "failure": {
+    "type": "ValueError",
+    "message": "workspace capture requires pinned RoboLab plus passed asset/renderer receipts",
+    "source": "experiments.workshops.spatial_grounding_v1.lat_workspace_capture.parse_args",
+    "cause_policy": "The failed condition is a combined pinned-RoboLab/assets-manifest/renderer-receipt precondition. This compact evidence intentionally does not invent which member failed."
+  },
+  "next_action": "Inspect the preserved raw workspace log and receipt paths on the PVC before changing any source or registering a new bounded attempt."
+}

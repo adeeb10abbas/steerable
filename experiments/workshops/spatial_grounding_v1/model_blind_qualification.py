@@ -39,10 +39,10 @@ def _relation(candidate: FixtureCandidate, objects: Mapping[str, ObjectState]) -
     return candidate.relation_m({name: state.pose for name, state in objects.items()})
 
 
-def _validate_final(candidate: FixtureCandidate, initial: Mapping[str, ObjectState], trace: list[Mapping[str, ObjectState]], goal_sign: int) -> dict[str, Any]:
+def _validate_final(candidate: FixtureCandidate, initial: Mapping[str, ObjectState], trace: list[Any], goal_sign: int) -> dict[str, Any]:
     if not trace:
         raise QualificationError("scripted controller emitted no actions")
-    final = trace[-1]
+    final = trace[-1].objects
     if len(trace) > ACTION_CAP:
         raise QualificationError("scripted check exceeded the 450 action cap")
     requested_margin = goal_sign * _relation(candidate, final)
@@ -60,33 +60,56 @@ def _validate_final(candidate: FixtureCandidate, initial: Mapping[str, ObjectSta
     cube = final["rubiks_cube"]
     initial_cube = initial["rubiks_cube"]
     lifted = sum(
-        state["rubiks_cube"].pose.position_m[2] - initial_cube.pose.position_m[2] >= 0.03
-        for state in trace
+        snapshot.objects["rubiks_cube"].pose.position_m[2] - initial_cube.pose.position_m[2] >= 0.03
+        for snapshot in trace
     ) >= 3
     if not lifted:
         raise QualificationError("cube was not raised 30 mm for three recorded control steps")
     if cube.attached_to_gripper or not cube.supported:
         raise QualificationError("final cube is not detached and supported")
-    stable = trace[-1:]
-    if any(item["rubiks_cube"].linear_speed_m_s >= 0.02 or item["rubiks_cube"].angular_speed_rad_s >= 0.2 for item in stable):
+    stable_start: float | None = None
+    for snapshot in trace:
+        current = snapshot.objects["rubiks_cube"]
+        stable_now = (
+            current.supported
+            and not current.attached_to_gripper
+            and current.linear_speed_m_s < 0.02
+            and current.angular_speed_rad_s < 0.2
+        )
+        if stable_now and stable_start is None:
+            stable_start = snapshot.simulated_time_s
+        elif not stable_now:
+            stable_start = None
+    if stable_start is None:
         raise QualificationError("final support state is not stable")
+    stable_for_seconds = trace[-1].simulated_time_s - stable_start
+    if stable_for_seconds < 0.5:
+        raise QualificationError("final detached supported state did not persist for 0.5 simulated seconds")
     return {
         "actions_executed": len(trace),
         "requested_margin_m": requested_margin,
         "cube_supported": cube.supported,
         "cube_detached": not cube.attached_to_gripper,
         "final_detached_release": not cube.attached_to_gripper,
-        "stable_for_seconds": 0.5,
-        "per_step_states": [
+        "stable_for_seconds": stable_for_seconds,
+        "per_step_states": [{
+                "cube_xyz_m": list(initial["rubiks_cube"].pose.position_m),
+                "bowl_xyz_m": list(initial["bowl"].pose.position_m),
+                "plate_xyz_m": list(initial["plate"].pose.position_m) if "plate" in initial else None,
+                "gripper_holding": initial["rubiks_cube"].attached_to_gripper,
+                "cube_height_lift_m": 0.0,
+                "simulated_time_s": 0.0,
+        }, *[
             {
-                "cube_xyz_m": list(item["rubiks_cube"].pose.position_m),
-                "bowl_xyz_m": list(item["bowl"].pose.position_m),
-                "plate_xyz_m": list(item["plate"].pose.position_m) if "plate" in item else None,
-                "gripper_holding": item["rubiks_cube"].attached_to_gripper,
-                "cube_height_lift_m": item["rubiks_cube"].pose.position_m[2] - initial_cube.pose.position_m[2],
+                "cube_xyz_m": list(snapshot.objects["rubiks_cube"].pose.position_m),
+                "bowl_xyz_m": list(snapshot.objects["bowl"].pose.position_m),
+                "plate_xyz_m": list(snapshot.objects["plate"].pose.position_m) if "plate" in snapshot.objects else None,
+                "gripper_holding": snapshot.objects["rubiks_cube"].attached_to_gripper,
+                "cube_height_lift_m": snapshot.objects["rubiks_cube"].pose.position_m[2] - initial_cube.pose.position_m[2],
+                "simulated_time_s": snapshot.simulated_time_s,
             }
-            for item in trace
-        ],
+            for snapshot in trace
+        ]],
     }
 
 
@@ -111,7 +134,7 @@ def qualify_candidate(
                 reset_results.append(reset_result)
                 initial = reset_result.snapshot.objects
                 actions = controller.actions_for_goal(environment, candidate, goal_sign)
-                trace = [environment.step(action).objects for action in actions]
+                trace = [environment.step(action) for action in actions]
                 result = _validate_final(candidate, initial, trace, goal_sign)
                 sign_checks.append({
                     "goal_sign": goal_sign,

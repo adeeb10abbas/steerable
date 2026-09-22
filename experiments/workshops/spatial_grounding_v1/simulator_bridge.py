@@ -28,6 +28,7 @@ class ObjectState:
 @dataclass(frozen=True)
 class SimulatorSnapshot:
     objects: Mapping[str, ObjectState]
+    simulated_time_s: float = 0.0
 
     def reset_snapshot(self) -> ResetSnapshot:
         return ResetSnapshot({name: state.pose for name, state in self.objects.items()})

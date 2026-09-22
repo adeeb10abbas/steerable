@@ -1,0 +1,39 @@
+{
+  "schema_version": "sgw-01-infrastructure-attempt-v1",
+  "j": {
+    "job": "sgw01-ali-lat-measurement-contract-audit-20260922j",
+    "job_uid": "db5bbb83-4aee-468c-96cb-36b804c53194",
+    "pod_uid": "62d31ca6-d013-407e-bd9c-f16afcadd53f",
+    "status": "infrastructure_invalid_before_source_read",
+    "exit_code": 1,
+    "reason": "BackoffLimitExceeded",
+    "failure": "The assumed IsaacLab rigid_object_data.py path did not exist."
+  },
+  "k": {
+    "job": "sgw01-ali-lat-measurement-contract-audit-20260922k",
+    "job_uid": "dd05d92c-d447-4109-88e9-e2a6b0a66af6",
+    "pod_uid": "aff57cf4-73a4-48ee-8b39-4fae7775a3c3",
+    "status": "passed_read_only_pinned_source_audit",
+    "exit_code": 0,
+    "resources": {"cpu": "1", "memory": "1Gi", "nvidia_com_gpu": 0},
+    "sources": {
+      "rigid_object_data.py": {
+        "path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/assets/rigid_object/rigid_object_data.py",
+        "sha256": "e604a34937a97ae2ddd3ff87f29cca4e7a0121f5e61819d7218d6aa036d361ca"
+      },
+      "world_state.py": {
+        "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/core/world/world_state.py",
+        "sha256": "a4c12dc07673b0733c53990244e86577d16fa98888772a6c93934903f9699bbf"
+      }
+    },
+    "findings": {
+      "root_pos_w": "Compatibility alias for actor/link position.",
+      "root_vel_w": "Compatibility alias for center-of-mass velocity.",
+      "geometric_center": "RoboLab get_bbox transforms the cached USD local centroid by the actor/link pose into env-local coordinates.",
+      "velocity_rule": "Transport COM linear velocity to the geometric center with angular_velocity cross (geometric_center - COM_position)."
+    }
+  },
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "candidate_qualification_count": 0
+}

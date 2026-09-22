@@ -1,0 +1,104 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-source-stage-20260922y
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: offline-source-stage}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: stage
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              OUT=/data/users/ali/sgw-01/infrastructure/source-stage-20260922y
+              BASE=/data/users/ali/sgw-01/source/35e627e-q
+              TARGET=/data/users/ali/sgw-01/source/42b26ed-y
+              SOURCE=42b26ed8d2df546340497965d1fc86d47cc14197
+              test ! -e "$OUT"
+              test ! -e "$TARGET"
+              test "$(git -C "$BASE" rev-parse HEAD)" = 35e627eda09f24f00995fc2dce4dbee362c0bc02
+              mkdir "$OUT"
+              exec > >(tee "$OUT/stage.log") 2>&1
+              echo "Waiting for hash-bound offline source and raw-audit transfer."
+              for attempt in {1..180}; do
+                if test -f "$OUT/transfer.complete"; then break; fi
+                sleep 2
+              done
+              test -f "$OUT/transfer.complete"
+              test "$(sha256sum "$OUT/update.bundle" | awk '{print $1}')" = 48c4659c1cce389a9e826315ba0d418e47b9bf5387d1433dce6f5ec7ffb97468
+              test "$(sha256sum "$OUT/audits.tar.gz" | awk '{print $1}')" = 4789fca533ac2e934e2609e17fcfb3ca3716b0a59102216a750d252b686d311c
+              mkdir "$OUT/retained-audits"
+              tar -xzf "$OUT/audits.tar.gz" -C "$OUT/retained-audits"
+              git clone --shared --no-checkout "$BASE" "$TARGET"
+              git -C "$TARGET" bundle verify "$OUT/update.bundle"
+              git -C "$TARGET" fetch --no-tags "$OUT/update.bundle" HEAD
+              git -C "$TARGET" checkout --detach "$SOURCE"
+              test "$(git -C "$TARGET" rev-parse HEAD)" = "$SOURCE"
+              test -z "$(git -C "$TARGET" status --porcelain)"
+              /data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python - "$OUT" "$TARGET" <<'PY'
+              from datetime import datetime, timezone
+              import hashlib
+              import json
+              from pathlib import Path
+              import subprocess
+              import sys
+              output, target = map(Path, sys.argv[1:])
+              def record(path):
+                  return {"path": str(path), "bytes": path.stat().st_size, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+              receipt = {
+                  "status": "passed_exact_offline_source_stage",
+                  "source_commit": subprocess.check_output(["git", "-C", str(target), "rev-parse", "HEAD"], text=True).strip(),
+                  "source_root": str(target),
+                  "bundle": record(output / "update.bundle"),
+                  "audit_archive": record(output / "audits.tar.gz"),
+                  "retained_audits": [record(p) for p in sorted((output / "retained-audits").iterdir()) if p.is_file()],
+                  "object_store_dependencies": ["/data/users/ali/sgw-01/source/35e627e-q", "/data/users/ali/sgw-01/source/b429ddd"],
+                  "completed_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "model_requests": 0, "allocated_gpus": 0,
+              }
+              with (output / "receipt.json").open("x") as stream:
+                  json.dump(receipt, stream, indent=2, sort_keys=True)
+                  stream.write("\n")
+              print(json.dumps(receipt, sort_keys=True))
+              PY
+              sync
+          env:
+            - {name: HOME, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+          resources:
+            requests: {cpu: "1", memory: 2Gi}
+            limits: {cpu: "1", memory: 2Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: tmp
+          emptyDir: {}

@@ -93,6 +93,27 @@ class AttemptRecorder:
         index = getattr(prediction, "request_index", None)
         if type(index) is not int or index < 0:
             raise ContractError("prediction lacks a valid request index")
+        arrays = self.path / "predictions" / f"request-{index:04d}-arrays"
+        arrays.mkdir(parents=True, exist_ok=True)
+        try:
+            import numpy as np
+        except ImportError as exc:
+            raise ContractError("NumPy is required to retain raw prediction arrays") from exc
+
+        def persist(value: Any, name: str) -> Any:
+            if isinstance(value, np.ndarray):
+                path = arrays / f"{name}.npy"
+                np.save(path, value, allow_pickle=False)
+                return {"path": path.relative_to(self.path).as_posix(), "sha256": sha256_file(path),
+                        "shape": list(value.shape), "dtype": str(value.dtype)}
+            if isinstance(value, Mapping):
+                return {str(key): persist(item, f"{name}-{key}") for key, item in value.items()}
+            if isinstance(value, (list, tuple)):
+                return [persist(item, f"{name}-{position}") for position, item in enumerate(value)]
+            if isinstance(value, (str, int, float, bool)) or value is None:
+                return value
+            raise ContractError(f"prediction contains unsupported raw value: {type(value).__name__}")
+
         record = {
             "request_id": getattr(prediction, "request_id", None),
             "request_index": index,
@@ -101,8 +122,8 @@ class AttemptRecorder:
             "reset_id": getattr(prediction, "reset_id", None),
             "camera_name": getattr(prediction, "camera_name", None),
             "future_status": getattr(prediction, "future_status", None),
-            "raw_request": dict(request),
-            "raw_response": dict(response),
+            "raw_request": persist(request, "request"),
+            "raw_response": persist(response, "response"),
         }
         path = self.path / "predictions" / f"request-{index:04d}.json"
         atomic_json(path, record)

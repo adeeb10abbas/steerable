@@ -1,6 +1,6 @@
 {
   "study_id": "SGW-01",
-  "status": "measurement_contract_corrected_v2_capture_pending_no_fixture_or_model_release",
+  "status": "measurement_contract_corrected_v2_capture_failed_before_measurement",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -177,6 +177,44 @@
       "allocated_gpus": 0,
       "receipt": "infrastructure/cpu-20260922j-k-measurement-contract-audits.json",
       "receipt_sha256": "6072495738a2dfe5b50fbc4279ad13c4a0c74fb927cd4437f5ce7f7648712e4b"
+    },
+    {
+      "job": "sgw01-ali-source-stage-20260922l",
+      "job_uid": "0e16a67f-c817-46ee-b4d3-f301efed0f7c",
+      "status": "failed_local_clone_origin_lacked_requested_commit",
+      "allocated_gpus": 0,
+      "receipt": "infrastructure/cpu-20260922l-source-stage.json",
+      "receipt_sha256": "50ed553d9488b5ca84a498be956b84169d6db367b4e4720bb483f7ab5011650f",
+      "preserved_partial_checkout": "/data/users/ali/sgw-01/source/35e627e"
+    },
+    {
+      "job": "sgw01-ali-source-stage-20260922q",
+      "job_uid": "d8bf05b4-ed00-46ee-bb46-4fffdcaa6fef",
+      "status": "passed_exact_offline_source_stage",
+      "completed_at_utc": "2026-09-22T22:36:59Z",
+      "allocated_gpus": 0,
+      "receipt": "infrastructure/cpu-20260922q-source-stage.json",
+      "receipt_sha256": "92b05495d0f0505eb13757c43bd49fd2e0f60d13eb4cfdb00c57b914a58567a3",
+      "source_commit": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
+      "source_root": "/data/users/ali/sgw-01/source/35e627e-q",
+      "object_store_dependency": "/data/users/ali/sgw-01/source/b429ddd"
+    },
+    {
+      "job": "sgw01-ali-lat-workspace-20260922m",
+      "job_uid": "3516c551-cbec-4a7d-85e3-180575e53c8d",
+      "pod": "sgw01-ali-lat-workspace-20260922m-kqjkn",
+      "pod_uid": "d1c07097-615b-4f86-bcb2-8172a83db3b7",
+      "status": "failed_early_detailed_diagnosis_pending",
+      "container_started_at_utc": "2026-09-22T22:37:44Z",
+      "container_finished_at_utc": "2026-09-22T22:37:48Z",
+      "exit_code": 1,
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "requested_gpus": 1,
+      "source_commit": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
+      "source_root": "/data/users/ali/sgw-01/source/35e627e-q",
+      "model_requests": 0,
+      "behavioral_episodes": 0,
+      "automatic_retries": 0
     }
   ],
   "connectivity_event": {
@@ -187,7 +225,7 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "Stage exact source 35e627e on the PVC, then at most one fresh zero-model workspace capture m. Source-stage l was observed Failed; detailed diagnosis is pending. Never retry l or earlier capture Jobs in place.",
+    "fixture_scope": "Offline stage q passed and capture m was launched once but exited 1 after four seconds. Collect its exact failure evidence and diagnose before requesting a fresh attempt. No additional GPU launch authorized; never retry m/l or earlier Jobs in place.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
     "runtime_scope": "CPU-only pinned native-client/server source audits o/p and local concrete reset/trace/lifecycle implementation. No policy server or learned inference authorized.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
@@ -203,7 +241,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Collect the bounded source-stage l diagnosis and any fresh workspace m evidence from the fixture session; preserve attempts and inspect live Job state before authorizing a replacement. Use audited root-reset versus geometric-center/COM semantics. Complete deterministic workspace-to-slot/waypoint qualification and native runtime gates before any behavioral release; never overwrite f/g or count infrastructure work as model evidence.",
+  "next_action": "Collect and verify the early workspace m failure diagnosis from the fixture session before registering any replacement. Source 35e627e is clean and available at /data/users/ali/sgw-01/source/35e627e-q, dependent on the preserved b429ddd object store. Complete prospective measurement, deterministic waypoint qualification and actual native runtime producers before any behavioral release; never overwrite earlier attempts or count infrastructure work as model evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

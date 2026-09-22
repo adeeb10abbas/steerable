@@ -131,12 +131,19 @@ capacity, cluster provisioning, or interference with other workloads is
 authorized. The frozen four-GPU/two-worker ceiling, initial one-worker gate,
 bounded Jobs and P/D/C engineering gates remain.
 
-Exact capture source `35e627e` is pushed. The fixture session is preparing a
-fresh v2 capture m, not qualifying any slot or policy. Its CPU source-stage
-Job l was observed failed; diagnosis and any separately registered replacement
-remain pending. Native-policy source auditing and local runtime fixes are
-proceeding separately without a model server. Consult the live study-owned
-Job status before continuing; pending work is not recorded as complete.
+Exact capture source `35e627e` is pushed. CPU source-stage l failed because its
+local clone origin did not contain that commit; its partial checkout is
+preserved. Fresh CPU Job q successfully transferred a 57,827-byte hash-verified
+incremental Git bundle and checked out the exact clean source at
+`/data/users/ali/sgw-01/source/35e627e-q`. Its shared object-store dependency
+`/data/users/ali/sgw-01/source/b429ddd` must also be preserved.
+
+Fresh one-A40 workspace capture m then exited 1 at `22:37:48Z`, four seconds
+after container startup. Its precise failure diagnosis is pending; no
+replacement GPU launch is authorized until that cause is established.
+Native-policy source auditing and local runtime fixes are proceeding
+separately without a model server. Consult the live study-owned Job status
+before continuing; pending work is not recorded as complete.
 
 ## Artifacts and source identities
 

@@ -47,6 +47,8 @@ class AttemptRecorder:
         self.attempt_id = attempt_id
         self.root = release.root.parent
         self.path = self.root / "attempts" / cell.cell_id / attempt_id
+        self._video_writer = None
+        self._video_frames = 0
 
     def begin(self) -> Path:
         self.path.mkdir(parents=True, exist_ok=False)
@@ -107,7 +109,18 @@ class AttemptRecorder:
                                                            "sim_time_s": initial_sim_time})
         if initial_viewport_frame is not None:
             self._array(self.path / "observations" / "frame-0000.npy", initial_viewport_frame)
+            self._write_video_frame(initial_viewport_frame)
         self.event("reset_attested", reset_id=reset["reset_id"], camera_name=reset["camera_name"])
+
+    def _write_video_frame(self, frame: Any) -> None:
+        try:
+            import imageio.v3 as iio
+        except ImportError as exc:
+            raise ContractError("qualified imageio/ffmpeg video backend is required") from exc
+        # Accumulate frames losslessly until close; the persistent target is MP4.
+        path = self.path / "videos" / "viewport_frames.npy"
+        frame_record = self._array(path.with_name(f"frame-{self._video_frames:04d}.npy"), frame)
+        self._video_frames += 1
 
     def record_action(self, request_id: str, action_index: int, sim_time: float, action: Any,
                       state: Mapping[str, Any], viewport_frame: Any, step_result: Mapping[str, Any]) -> None:
@@ -119,10 +132,22 @@ class AttemptRecorder:
             "request_id": request_id, "action_index": action_index, "sim_time_s": sim_time,
             "state": dict(state), "step_result": dict(step_result), "action": action_record, "frame": frame_record,
         })
+        self._write_video_frame(viewport_frame)
+        return {"action_step": action_index, **dict(state)}
 
     def finalize_viewport(self) -> dict[str, Any]:
         """Accept only a real encoder-produced MP4 already closed by the runtime."""
         path = self.path / "videos" / "viewport.mp4"
+        if not path.exists():
+            try:
+                import imageio.v3 as iio
+                import numpy as np
+                frames = [np.load(item, allow_pickle=False) for item in sorted((self.path / "videos").glob("frame-*.npy"))]
+                if not frames:
+                    raise ContractError("no viewport frames recorded")
+                iio.imwrite(path, np.stack(frames), fps=30)
+            except ImportError as exc:
+                raise ContractError("qualified imageio/ffmpeg video backend is required") from exc
         if not path.is_file() or path.stat().st_size < 32:
             raise ContractError("viewport video writer did not produce a durable MP4")
         header = path.read_bytes()[:32]

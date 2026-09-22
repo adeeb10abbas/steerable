@@ -239,6 +239,14 @@ class _BaseAdapter:
         response = self.transport(request)
         if not isinstance(response, Mapping):
             raise AdapterError("policy transport must return a mapping")
+        # Native servers may return attribution in a separately produced trace
+        # record.  Never overlay that record onto the model payload: doing so
+        # would turn a missing or mismatched native identity into false
+        # provenance.  The trace is only an alternate source for validation.
+        native_trace = response.get("native_trace")
+        if native_trace is not None and not isinstance(native_trace, Mapping):
+            raise AdapterError("native_trace must be a mapping")
+        identity_source = native_trace if isinstance(native_trace, Mapping) else response
         for key, expected in (
             ("request_id", request_id),
             ("registered_cell_id", self.cell_id),
@@ -248,13 +256,15 @@ class _BaseAdapter:
             ("camera_name", state.camera_id),
             ("reset_fingerprint", state.fingerprint),
         ):
-            _identity(response, key, expected)
+            _identity(identity_source, key, expected)
         self._validate_response(response)
         returned = _finite_actions(response.get("actions"), self.returned_horizon, "returned actions")
         remaining = ACTION_CAP - action_step_start
         execute_count = min(self.executed_horizon, remaining)
         executable = returned[:execute_count].copy()
         future = response.get("future")
+        if future is None and isinstance(native_trace, Mapping):
+            future = native_trace.get("future")
         future_status = "exposed_and_retained" if future is not None else "not_exposed"
         executed_action_count = action_step_start + execute_count
         if action_step_start >= executed_action_count:

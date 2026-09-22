@@ -55,6 +55,11 @@ def read_trace_sidecar(
         raise AdapterError("native trace sidecar binding is incomplete")
     if any(record[key] != request[key] for key in required):
         raise AdapterError("native trace sidecar binding differs from request")
+    actions = np.asarray(response.get("actions"), dtype=np.float32)
+    if actions.shape != tuple(record.get("actions_shape", ())):
+        raise AdapterError("native trace action shape differs from returned response")
+    if record.get("actions_sha256") != hashlib.sha256(actions.tobytes()).hexdigest():
+        raise AdapterError("native trace action hash differs from returned response")
     future_path = record.get("future_path")
     if future_path:
         artifact = Path(str(future_path))

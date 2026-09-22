@@ -43,6 +43,19 @@ bounded persistent attempts, locking, completion pointers and finite partitions.
 checks. `scoring`, `compile`, and `prediction_annotations` keep physical outcomes,
 technical missingness, censoring and unobserved predictions separate.
 
+`nano_backend` calls the exact Cosmos `RobolabPolicyService`; `producer` and
+`nano_wrapper_entrypoint` add an SGW-owned HTTP boundary, append-only request
+trace, retained decoded futures and process attestation. The upstream RoboLab
+server is WebSocket-based, not HTTP. Native camera composition is unchanged:
+the service uses its 540 x 640 input defaults and separate `"480"` transform
+resolution. The factory rejects tracked source changes and verifies every file
+in the immutable checkpoint manifest before constructing the model. Published
+`checkpoint.json` contains `{}`; it is not a revision manifest. Historical V2
+checkpoint hashes are reused only for artifact identity, never behavioral data.
+Local full-HTTP synthetic tests do not qualify real model execution or D1.
+Any future launch must explicitly budget `SGW01_READINESS_TIMEOUT` for checkpoint
+verification and model loading within the bounded Job deadline.
+
 `runtime_preflight` is a zero-model renderer probe, not a fixture qualification.
 `lat_workspace_capture` records the actual scene after that probe passes;
 `lat_candidate_generator`, `robolab_lat_qualification` and
@@ -128,7 +141,8 @@ and globally reserved GPU hours. Existing-idle uncapped mode instead requires
 a separate hash-bound `gpu_idle_probe_receipt` from `gpu_idle_probe.py` whose
 status is exactly `passed_idle_snapshot_only`, complete visible/allocation GPU
 UUID inventory, selected UUID, and unoccupied snapshot prove the exact
-allocation before the Job starts; a free-form `passed` flag is rejected. The
+allocation after Job start and before model construction; a free-form `passed`
+flag is rejected. The
 worker compares its
 Job-controller label `JOB_UID` and Downward-API `POD_UID`, verifies
 `reservation_gpu_hours = allocated_gpu_count * activeDeadlineSeconds / 3600`,

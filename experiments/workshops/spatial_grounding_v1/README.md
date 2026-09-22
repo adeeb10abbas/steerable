@@ -29,6 +29,11 @@ uv sync --frozen --extra dev --extra sgw --python 3.12
 The `sgw` extra supplies the real viewport encoder/decoder. Raw arrays are
 retained losslessly; an encoded video does not replace timestamped source
 frames. Production encoder identity must be recorded in the runtime binding.
+The development extra also parses Kubernetes YAML for semantic regression
+checks. Quote comma-separated environment values in flow mappings: attempt m
+silently reduced the NVIDIA capabilities to `compute`, removing `nvidia-smi`.
+Replacement r preserves the complete successful g Pod configuration, and its
+parsed equality is checked before strict Kubernetes manifest validation.
 
 ## Implementation surfaces
 

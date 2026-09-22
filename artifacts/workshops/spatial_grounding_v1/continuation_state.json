@@ -1,6 +1,6 @@
 {
   "study_id": "SGW-01",
-  "status": "measurement_contract_corrected_v2_capture_failed_before_measurement",
+  "status": "v2_workspace_capture_replacement_registered_after_capability_yaml_diagnosis",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -204,7 +204,7 @@
       "job_uid": "3516c551-cbec-4a7d-85e3-180575e53c8d",
       "pod": "sgw01-ali-lat-workspace-20260922m-kqjkn",
       "pod_uid": "d1c07097-615b-4f86-bcb2-8172a83db3b7",
-      "status": "failed_early_detailed_diagnosis_pending",
+      "status": "failed_before_isaac_missing_nvidia_utility_capability",
       "container_started_at_utc": "2026-09-22T22:37:44Z",
       "container_finished_at_utc": "2026-09-22T22:37:48Z",
       "exit_code": 1,
@@ -214,7 +214,9 @@
       "source_root": "/data/users/ali/sgw-01/source/35e627e-q",
       "model_requests": 0,
       "behavioral_episodes": 0,
-      "automatic_retries": 0
+      "automatic_retries": 0,
+      "diagnosis": "Unquoted comma-separated NVIDIA capabilities in a YAML flow mapping became value=compute. The actual Pod lacked utility/graphics/display; gpu_idle_probe failed because nvidia-smi was absent.",
+      "receipt": "infrastructure/a40-20260922m-lat-workspace.json"
     }
   ],
   "connectivity_event": {
@@ -225,7 +227,7 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "Offline stage q passed and capture m was launched once but exited 1 after four seconds. Collect its exact failure evidence and diagnose before requesting a fresh attempt. No additional GPU launch authorized; never retry m/l or earlier Jobs in place.",
+    "fixture_scope": "Child is paused. Parent diagnosed the YAML capability split directly and owns replacement r; no independent child launch authorized.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
     "runtime_scope": "CPU-only pinned native-client/server source audits o/p and local concrete reset/trace/lifecycle implementation. No policy server or learned inference authorized.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
@@ -241,7 +243,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Collect and verify the early workspace m failure diagnosis from the fixture session before registering any replacement. Source 35e627e is clean and available at /data/users/ali/sgw-01/source/35e627e-q, dependent on the preserved b429ddd object store. Complete prospective measurement, deterministic waypoint qualification and actual native runtime producers before any behavioral release; never overwrite earlier attempts or count infrastructure work as model evidence.",
+  "next_action": "Run the newly registered one-A40 zero-model replacement r only once, retaining complete proven driver capabilities and all historical guards. Source 35e627e is clean at /data/users/ali/sgw-01/source/35e627e-q, dependent on preserved b429ddd. Verify actual root/center/COM/EEF/RGB evidence before proposals or waypoint qualification. Native runtime and all behavioral releases remain blocked.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

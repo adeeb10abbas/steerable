@@ -1,0 +1,37 @@
+{
+  "schema_version": "sgw-01-infrastructure-attempt-v1",
+  "job": "sgw01-ali-lat-workspace-20260922m",
+  "job_uid": "3516c551-cbec-4a7d-85e3-180575e53c8d",
+  "pod": "sgw01-ali-lat-workspace-20260922m-kqjkn",
+  "pod_uid": "d1c07097-615b-4f86-bcb2-8172a83db3b7",
+  "node": "dcwipphhgc191.edc.nam.gm.com",
+  "container_started_at_utc": "2026-09-22T22:37:44Z",
+  "container_finished_at_utc": "2026-09-22T22:37:48Z",
+  "status": "failed_before_isaac_missing_nvidia_utility_capability",
+  "exit_code": 1,
+  "source_commit": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
+  "source_root": "/data/users/ali/sgw-01/source/35e627e-q",
+  "requested_gpus": 1,
+  "idle_gpu_qualified": false,
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "candidate_qualifications": 0,
+  "failure": {
+    "exception": "FileNotFoundError: [Errno 2] No such file or directory: 'nvidia-smi'",
+    "location": "gpu_idle_probe.main before simulator import",
+    "live_pod_NVIDIA_DRIVER_CAPABILITIES": "compute",
+    "proven_g_pod_NVIDIA_DRIVER_CAPABILITIES": "compute,utility,graphics,display",
+    "cause": "An unquoted comma-separated value in a YAML flow mapping was parsed as value=compute plus utility/graphics/display null keys, instead of the complete driver-capability string.",
+    "reproduced_with": "PyYAML safe_load and direct scoped reads of the failed m and successful g Pod environment fields",
+    "log": "a40-20260922m.log",
+    "log_sha256": "6e18c96dc81eca69101e3e9910600982dcb223711af6fa7617483b7c10862b80",
+    "log_bytes": 1493
+  },
+  "replacement": {
+    "registered_job": "sgw01-ali-lat-workspace-20260922r",
+    "change": "Restore the complete proven g runtime configuration, explicitly quote the NVIDIA capability value, and change only immutable source/output identities.",
+    "regression": "tests/test_sgw_manifest_contracts.py",
+    "failed_attempt_modified": false,
+    "scientific_protocol_changed": false
+  }
+}

@@ -139,8 +139,13 @@ incremental Git bundle and checked out the exact clean source at
 `/data/users/ali/sgw-01/source/b429ddd` must also be preserved.
 
 Fresh one-A40 workspace capture m then exited 1 at `22:37:48Z`, four seconds
-after container startup. Its precise failure diagnosis is pending; no
-replacement GPU launch is authorized until that cause is established.
+after container startup. The cause is established: an unquoted comma-separated
+value in a YAML flow mapping reduced `NVIDIA_DRIVER_CAPABILITIES` to `compute`.
+The live Pod consequently lacked `nvidia-smi`; the idle guard stopped before
+Isaac. The unchanged m manifest and exact log retain that infrastructure failure.
+Fresh replacement r restores the complete proven g Pod configuration, with
+only source/output identities changed and the capability string explicitly
+quoted. A parsed-manifest regression checks that equivalence before launch.
 Native-policy source auditing and local runtime fixes are proceeding
 separately without a model server. Consult the live study-owned Job status
 before continuing; pending work is not recorded as complete.

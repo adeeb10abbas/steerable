@@ -15,7 +15,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["h5py>=3.10", "pytest>=7.4"]
+dev = [
+    "h5py>=3.10",
+    "pytest>=7.4",
+    "pyyaml>=6.0",
+]
 sgw = [
     "imageio>=2.37",
     "imageio-ffmpeg>=0.6",

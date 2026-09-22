@@ -1,0 +1,45 @@
+{
+  "schema_version": "sgw-01-infrastructure-attempt-v1",
+  "attempt_id": "a40-20260922g-lat-workspace",
+  "status": "zero_model_workspace_capture_completed_pending_pvc_receipt_hash",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "candidate_qualification_count": 0,
+  "task_boundary": "zero-model LAT measured-workspace capture only",
+  "kubernetes": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "job": "sgw01-ali-lat-workspace-20260922g",
+    "job_uid": "1911cb05-6433-4fa3-8c11-bc457ce54cbc",
+    "pod": "sgw01-ali-lat-workspace-20260922g-mphj5",
+    "pod_uid": "80e92e92-79f8-447c-94fb-b4ed0952a5b8",
+    "backoff_limit": 0,
+    "started_at_utc": "2026-09-22T20:15:16Z",
+    "finished_at_utc": "2026-09-22T20:16:33Z",
+    "exit_code": 0,
+    "termination_reason": "Completed",
+    "job_complete": true
+  },
+  "runtime": {
+    "study_source_commit": "b429ddd8c3e7be59f63759c1820e352029e48b8c",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "renderer_receipt_path": "/data/users/ali/sgw-01/preflight/a40-20260922e/renderer.json",
+    "renderer_receipt_sha256": "e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5",
+    "assets_manifest_path": "/data/users/ali/sgw-01/preflight/a40-20260922e/assets.json",
+    "assets_manifest_sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806",
+    "raw_output_root": "/data/users/ali/sgw-01/qualification/lat-workspace-20260922g",
+    "workspace_receipt_sha256": null,
+    "workspace_receipt_hash_status": "not read locally: completed pod disallows exec and no authorized read-only PVC pod remained"
+  },
+  "observed_progress": {
+    "idle_gpu_guard_passed": true,
+    "selected_gpu_uuid": "GPU-8773b1c9-df29-a37a-e165-8f68986cdb88",
+    "selected_gpu_name": "NVIDIA A40",
+    "selected_gpu_memory_used_mib": 0,
+    "selected_gpu_utilization_percent": 0,
+    "isaac_started": true,
+    "simulator_started": true,
+    "workspace_capture_command_exit_zero": true
+  },
+  "next_action": "Extract workspace.json and its SHA-256 from the preserved PVC root before treating this record as a measured workspace receipt or producing candidates."
+}

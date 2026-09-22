@@ -53,7 +53,9 @@ def _sha256(path: Path) -> str:
 def _verify_artifacts(manifest_path: Path, manifest: Mapping[str, Any]) -> None:
     listed = manifest.get("artifacts", {})
     for name, metadata in listed.items():
-        artifact = manifest_path.parent / name
+        artifact = (manifest_path.parent / name).resolve()
+        if not artifact.is_relative_to(manifest_path.parent.resolve()):
+            raise ValueError(f"artifact path escapes attempt: {artifact}")
         if not artifact.is_file() or _sha256(artifact) != metadata.get("sha256"):
             raise ValueError(f"artifact hash mismatch: {artifact}")
 
@@ -67,7 +69,10 @@ def _load_manifest(path: Path, expected_release_hashes: Mapping[str, str]) -> Ma
     if "manifest_path" not in raw:
         raise ValueError(f"compiler input must be a completion pointer: {path}")
     if "manifest_path" in raw:
-        attempt_manifest = (path.parent.parent / raw["manifest_path"]).resolve()
+        release_root = path.parent.parent.resolve()
+        attempt_manifest = (release_root / raw["manifest_path"]).resolve()
+        if not attempt_manifest.is_relative_to(release_root):
+            raise ValueError(f"manifest path escapes release: {path}")
         if not attempt_manifest.is_file():
             raise ValueError(f"completion pointer target is missing: {attempt_manifest}")
         if raw.get("manifest_sha256") != _sha256(attempt_manifest):
@@ -144,8 +149,10 @@ def compile_registered_queue(
             raise ValueError(f"completion pointer is outside registered queue: {pointer}")
         if cell_id in seen:
             duplicate.append(cell_id)
-            continue
+            raise ValueError(f"duplicate completion pointer for cell: {cell_id}")
         result = _load_manifest(pointer, expected_release_hashes)
+        if result.get("cell_id") not in {None, cell_id}:
+            raise ValueError(f"result cell_id mismatch: {pointer}")
         seen.add(cell_id)
         ledger[cell_id] = {**planned_by_id[cell_id], **result, "analysis_status": (
             "complete" if result.get("status") in {"valid_success", "valid_model_failure", "censored"}

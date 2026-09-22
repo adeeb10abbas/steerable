@@ -5,6 +5,7 @@ from experiments.workshops.spatial_grounding_v1.scoring import (
     GoalSpec,
     OutcomeStatus,
     canonical_status,
+    result_payload,
     relation_m,
     score_episode,
 )
@@ -128,6 +129,17 @@ def test_infrastructure_has_no_model_outcome():
     assert result.status is OutcomeStatus.INFRA_INVALID
     assert result.requested_success is None
     assert canonical_status(result) == "technical_invalid"
+
+
+def test_result_payload_is_json_safe_and_canonical():
+    result = score_episode({"infrastructure_reason": "renderer unavailable"}, GoalSpec("LAT", 1))
+    payload = result_payload(
+        result, release_id="r", cell_id="c", attempt_id="a",
+        completed_at_utc="2026-09-22T00:00:00Z",
+    )
+    assert payload["status"] == "technical_invalid"
+    assert payload["outcome_status"] == "infrastructure_invalid"
+    assert payload["cell_id"] == "c"
 
 
 def test_short_trace_is_technical_missingness_even_if_flagged_terminal():

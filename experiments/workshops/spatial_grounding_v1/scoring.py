@@ -8,6 +8,7 @@ endpoint for a missing or safety-censored observation.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from dataclasses import asdict
 from enum import Enum
 import math
 from typing import Any, Iterable, Mapping, Sequence
@@ -76,6 +77,29 @@ def canonical_status(score: EpisodeScore) -> str:
     if score.status is OutcomeStatus.SAFETY_CENSORED:
         return "censored"
     return "valid_success" if score.requested_success else "valid_model_failure"
+
+
+def result_payload(
+    score: EpisodeScore,
+    *,
+    release_id: str,
+    cell_id: str,
+    attempt_id: str,
+    completed_at_utc: str,
+) -> dict[str, Any]:
+    """Build the recorder's JSON-safe result payload without scientific defaults."""
+    payload = asdict(score)
+    payload["status"] = canonical_status(score)
+    payload["completed_at_utc"] = completed_at_utc
+    payload["release_id"] = release_id
+    payload["cell_id"] = cell_id
+    payload["attempt_id"] = attempt_id
+    payload["schema_version"] = "sgw-01-result-v1"
+    payload["status"] = str(payload["status"])
+    payload["outcome_status"] = str(score.status.value)
+    if payload["status"] == "technical_invalid" and not str(payload.get("infrastructure_reason", "")).strip():
+        raise ValueError("technical_invalid result requires infrastructure_reason")
+    return payload
 
 
 def _xyz(value: Any) -> tuple[float, float, float]:

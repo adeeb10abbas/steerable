@@ -18,6 +18,17 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def is_git_worktree(path: Path) -> bool:
+    try:
+        return subprocess.check_output(
+            ["git", "-C", str(path), "rev-parse", "--is-inside-work-tree"],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip() == "true"
+    except subprocess.CalledProcessError:
+        return False
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--robolab-root", type=Path, required=True)
@@ -54,14 +65,7 @@ def referenced_usd_assets(path: Path, root: Path, seen: set[Path] | None = None)
 def main() -> None:
     args = parse_args()
     root = args.robolab_root.resolve()
-    try:
-        is_checkout = subprocess.check_output(
-            ["git", "-C", str(root), "rev-parse", "--is-inside-work-tree"],
-            text=True,
-        ).strip() == "true"
-    except subprocess.CalledProcessError as error:
-        raise ValueError("asset manifest requires the pinned RoboLab checkout") from error
-    if not is_checkout:
+    if not is_git_worktree(root):
         raise ValueError("asset manifest requires the pinned RoboLab checkout")
     scene = root / "assets/scenes" / args.scene
     paths = referenced_usd_assets(scene, root)

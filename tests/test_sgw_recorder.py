@@ -11,10 +11,20 @@ def test_completion_is_no_overwrite_and_model_failure_is_complete(tmp_path: Path
     cell = release.partition("N3", "LAT", "P")[0]
     first = AttemptRecorder(release, cell, "attempt-001")
     first.begin()
-    assert first.complete({"status": "valid_model_failure", "failure_reason": "wrong_side"})
+    for directory in ("actions", "states", "observations", "videos"):
+        path = first.path / directory / "raw"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("retained")
+    assert first.complete({"status": "valid_model_failure", "failure_reason": "wrong_side",
+                           "executed_action_count": 450, "safety_terminated": False})
     second = AttemptRecorder(release, cell, "attempt-002")
     second.begin()
-    assert not second.complete({"status": "valid_success"})
+    for directory in ("actions", "states", "observations", "videos"):
+        path = second.path / directory / "raw"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("retained")
+    assert not second.complete({"status": "valid_success", "executed_action_count": 450,
+                                "safety_terminated": False})
     pointer = json.loads((release.root.parent / "cells" / "cell-0.complete.json").read_text())
     assert pointer["attempt_id"] == "attempt-001"
 

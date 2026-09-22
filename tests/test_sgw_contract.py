@@ -30,6 +30,7 @@ def make_release(tmp_path: Path) -> Path:
         "user_resource_budget": "approved", "budget_source": "owner", "policy_ports": {},
         "cache_reset_receipt": "passed", "frame_time_mapping_hashes": {},
         "stage_authorizations": authorizations,
+        "source_root": "/data/users/ali/sgw-01",
     }
     prompts = {"prompts": []}
     _write(root / "protocol.json", {"study_id": "SGW-01"})

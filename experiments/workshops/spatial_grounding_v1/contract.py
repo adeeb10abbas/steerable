@@ -50,15 +50,19 @@ def load_json(path: Path, label: str) -> dict[str, Any]:
     return value
 
 
-def validate_stage_authorizations(authorizations: Any) -> dict[str, dict[str, str]]:
+def validate_stage_authorizations(authorizations: Any, requested_stage: str) -> dict[str, dict[str, str]]:
     """Require current hash-bound, passed technical receipts; never outcome gates."""
     if not isinstance(authorizations, dict):
         raise ContractError("stage authorizations must contain receipt records")
-    required = {"direct_command_fixed_input_gate", "P", "D", "C"}
-    if set(authorizations) != required:
-        raise ContractError("stage authorizations must bind direct gate and P/D/C receipts only")
+    if requested_stage not in STAGE_EPISODES:
+        raise ContractError(f"invalid requested stage: {requested_stage}")
+    required = {"direct_command_fixed_input_gate", requested_stage}
+    if requested_stage in {"D", "C"}:
+        required.add("P")
+    if not required.issubset(authorizations):
+        raise ContractError(f"stage {requested_stage} lacks its required technical receipts")
     validated: dict[str, dict[str, str]] = {}
-    for name in required:
+    for name in sorted(required):
         receipt = authorizations[name]
         if not isinstance(receipt, dict) or not isinstance(receipt.get("path"), str) or not isinstance(receipt.get("sha256"), str):
             raise ContractError(f"{name} authorization lacks a hash-bound receipt")
@@ -111,7 +115,14 @@ class Release:
         cells = tuple(c for c in self.cells if (c.model, c.family, c.stage) == (model, family, stage))
         if len(cells) != STAGE_EPISODES[stage]:
             raise ContractError(f"partition {model}/{family}/{stage} has {len(cells)}, expected {STAGE_EPISODES[stage]}")
-        return tuple(sorted(cells, key=lambda c: int(c.row["within_block_order"])))
+        ordered_blocks: dict[str, list[Cell]] = {}
+        for cell in cells:  # queue order is the frozen Latin order of blocks
+            ordered_blocks.setdefault(cell.block_id, []).append(cell)
+        return tuple(
+            cell
+            for block in ordered_blocks.values()
+            for cell in sorted(block, key=lambda item: int(item.row["within_block_order"]))
+        )
 
 
 def _load_cells(path: Path, release_id: str) -> tuple[Cell, ...]:
@@ -173,7 +184,9 @@ def load_release(release: Path) -> Release:
 
 def verify_completion_pointer(release: Release, pointer: Path) -> dict[str, Any]:
     value = load_json(pointer, "completion pointer")
-    if value.get("release_id") != release.release_id or not isinstance(value.get("result"), dict):
+    expected_cell = pointer.name.removesuffix(".complete.json")
+    if (value.get("release_id") != release.release_id or value.get("cell_id") != expected_cell
+            or not isinstance(value.get("result"), dict)):
         raise ContractError("completion pointer release identity mismatch")
     result = value["result"]
     result_path = Path(str(result.get("path", "")))
@@ -183,10 +196,21 @@ def verify_completion_pointer(release: Release, pointer: Path) -> dict[str, Any]
     if not manifest_path.is_file() or value.get("manifest_sha256") != sha256_file(manifest_path):
         raise ContractError("completion pointer manifest is absent or corrupt")
     manifest = load_json(manifest_path, "attempt artifact manifest")
-    if (manifest.get("release_id") != release.release_id or manifest.get("complete") is not True
+    if (manifest.get("release_id") != release.release_id or manifest.get("cell_id") != expected_cell
+            or manifest.get("complete") is not True
             or manifest.get("release_hashes") != dict(release.hashes)
             or manifest.get("result") != load_json(result_path, "attempt result")):
         raise ContractError("completion artifact manifest release mismatch")
+    artifacts = manifest.get("artifacts")
+    if not isinstance(artifacts, dict) or not artifacts:
+        raise ContractError("completion artifact manifest has no raw artifacts")
+    attempt_root = manifest_path.parent
+    for relative, record in artifacts.items():
+        path = attempt_root / relative
+        if (not isinstance(relative, str) or Path(relative).is_absolute() or not isinstance(record, dict)
+                or not path.is_file() or record.get("bytes") != path.stat().st_size
+                or record.get("sha256") != sha256_file(path)):
+            raise ContractError("completion artifact is missing or corrupt")
     return value
 
 

@@ -22,7 +22,14 @@ class FakeAdapter:
         recorder.request({"request_id": f"r{self.resets}", "request_index": 0,
                           "started_at_utc": "2026-01-01T00:00:00Z",
                           "prompt_sha256": cell.row["prompt_sha256"], "reset_sha256": "reset"})
-        return {"status": self.status, "failure_reason": "policy failure"}
+        for directory, filename in (("actions", "executed.json"), ("states", "states.json"),
+                                    ("observations", "frames.json"), ("videos", "viewport.mp4")):
+            path = recorder.path / directory / filename
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("retained")
+        return {"status": self.status, "failure_reason": "policy failure",
+                "executed_action_count": 450, "safety_terminated": False,
+                "episode_mapping": {"states": []}}
 
     def close(self):
         pass
@@ -32,10 +39,12 @@ def test_worker_preserves_model_failures_and_skips_them_on_resume(tmp_path: Path
     release = load_release(make_release(tmp_path))
     adapter = FakeAdapter()
     assert run_partition(release, model="N3", family="LAT", stage="P", max_valid=6,
-                         max_attempts=3, worker_id="test", adapter=adapter) == 0
+                         max_attempts=3, worker_id="test", adapter=adapter,
+                         scorer=lambda _trace, _cell: {"status": "valid_model_failure"}) == 0
     assert adapter.resets == 6
     assert run_partition(release, model="N3", family="LAT", stage="P", max_valid=6,
-                         max_attempts=3, worker_id="resume", adapter=adapter) == 0
+                         max_attempts=3, worker_id="resume", adapter=adapter,
+                         scorer=lambda _trace, _cell: {"status": "valid_model_failure"}) == 0
     assert adapter.resets == 6
 
 

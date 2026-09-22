@@ -214,6 +214,8 @@ def _candidate_paths(root: Path, family: str) -> Iterable[Path]:
         raise QualificationError(f"no {family} candidates exist under {root}")
     if len(paths) > 100:
         raise QualificationError("candidate root exceeds the frozen 100-candidate family cap")
+    if len(paths) != 1:
+        raise QualificationError("run exactly one candidate per fresh process because RoboLab task registration is cached")
     return paths
 
 

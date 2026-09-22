@@ -140,13 +140,21 @@ class RoboLabLatBridge:
         os.environ["SGW_LAT_CANDIDATE_JSON"] = payload
         os.environ["SGW_LAT_CANDIDATE_SHA256"] = hashlib.sha256(payload.encode()).hexdigest()
         task_path = self._study_root / "experiments/workshops/spatial_grounding_v1/lat_qualification_task.py"
-        auto_register_droid_abs_ik_envs(task=[str(task_path)], cameras=WRIST_LEFT_RIGHT_HEAD)
+        register_lat_task(auto_register_droid_abs_ik_envs, task_path, WRIST_LEFT_RIGHT_HEAD)
         env, _ = create_env(
             "SGWLatQualificationTask", device=self._device, seed=seed, num_envs=1,
             instruction_type="default", policy="sgw_01_model_blind_lat_controller",
             renderer="realtime", rendering_mode="balanced",
         )
         return RoboLabLatEnvironment(env, task.candidate)
+
+
+def register_lat_task(registrar: Any, task_path: Path, cameras: Any) -> None:
+    """Register only the worktree overlay; never write the pinned RoboLab tree."""
+
+    if task_path.name != "lat_qualification_task.py" or not task_path.is_file():
+        raise SimulatorBridgeError("LAT qualification task overlay is missing")
+    registrar(task=[str(task_path)], cameras=cameras)
 
 
 class RoboLabLatScriptedController:

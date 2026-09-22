@@ -432,10 +432,10 @@ class ProductionAdapter:
             mapping_start = len(episode_mapping)
             for action in prediction.executable_actions:
                 step_result = environment.step(action)
-                step_index = self.policy.executed_steps
                 scoring_snapshot = environment.snapshot()
                 viewport_frame = environment.render_viewport()
                 self.policy.commit_executed(1)
+                step_index = self.policy.executed_steps
                 if not hasattr(recorder, "record_action"):
                     raise AdapterError("recorder must expose record_action()")
                 record = recorder.record_action(

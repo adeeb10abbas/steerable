@@ -324,6 +324,7 @@ class ProductionAdapter:
         self.runtime_handle = runtime_handle
         self.policy: _BaseAdapter | None = None
         self.environment: Any | None = None
+        self._initial_mapping: dict[str, Any] | None = None
 
     @staticmethod
     def _cell_value(cell: Any, key: str) -> Any:
@@ -373,12 +374,17 @@ class ProductionAdapter:
         payload = reset.as_dict()
         if not hasattr(recorder, "record_reset"):
             raise AdapterError("recorder must expose record_reset()")
-        recorder.record_reset(
+        reset_record = recorder.record_reset(
             payload,
             initial_state=initial_state,
             initial_sim_time=_sim_time(initial_state),
             initial_viewport_frame=initial_frame,
         )
+        if not isinstance(reset_record, Mapping):
+            raise AdapterError("recorder.record_reset() must return an artifact record")
+        if reset_record.get("action_step") != 0:
+            raise AdapterError("recorder.reset artifact must be the action_step 0 snapshot")
+        self._initial_mapping = dict(reset_record)
         self.environment = environment
         return payload
 
@@ -389,6 +395,8 @@ class ProductionAdapter:
             raise AdapterError("run_episode requires a verified full reset")
         if self.policy is None or self.policy.reset_state is None:
             raise AdapterError("run_episode requires reset() on the same adapter")
+        if self._initial_mapping is None:
+            raise AdapterError("run_episode requires the recorder reset artifact")
         if reset.get("reset_sha256") != self.policy.reset_state.fingerprint:
             raise AdapterError("run_episode reset identity does not match the policy")
         environment = self.environment
@@ -401,7 +409,7 @@ class ProductionAdapter:
             raise AdapterError("environment must expose policy_observation() separate from snapshot()")
         prompt = str(self._cell_value(cell, "prompt"))
         safety_reason: str | None = None
-        episode_mapping: list[dict[str, Any]] = []
+        episode_mapping: list[dict[str, Any]] = [dict(self._initial_mapping)]
         while self.policy.executed_steps < ACTION_CAP:
             observation = policy_observation()
             request_id = f"{self.policy.cell_id}:request:{self.policy.request_index}"
@@ -475,6 +483,7 @@ class ProductionAdapter:
             self.environment.close()
         self.environment = None
         self.policy = None
+        self._initial_mapping = None
         if self.runtime_handle is not None and hasattr(self.runtime_handle, "close"):
             self.runtime_handle.close()
 

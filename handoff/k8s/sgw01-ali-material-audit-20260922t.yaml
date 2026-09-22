@@ -1,0 +1,149 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-material-audit-20260922t
+  namespace: 211247-prod
+  labels:
+    owner: ali
+    app.kubernetes.io/name: sgw-01
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels:
+        owner: ali
+        app.kubernetes.io/name: sgw-01
+        purpose: zero-model-material-audit
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 20
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: artifactory-ci-pull-secret
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: audit
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              OUT=/evidence/material-audit-20260922t
+              test ! -e "$OUT"
+              mkdir "$OUT"
+              exec > >(tee "$OUT/audit.log") 2>&1
+              /data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python - "$OUT" <<'PY'
+              import hashlib
+              import importlib.util
+              import json
+              from pathlib import Path
+              import re
+              import sys
+
+              manifest_path = Path("/data/users/ali/sgw-01/preflight/a40-20260922e/assets.json")
+              raw = manifest_path.read_bytes()
+              assert hashlib.sha256(raw).hexdigest() == "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806"
+              manifest = json.loads(raw)
+              records = [manifest["scene"], *manifest["assets"]]
+              usd = None
+              usd_error = None
+              try:
+                  from pxr import Sdf
+                  usd = Sdf
+              except ImportError as error:
+                  usd_error = str(error)
+              rows = []
+              for record in records:
+                  path = Path(record["path"])
+                  data = path.read_bytes()
+                  assert hashlib.sha256(data).hexdigest() == record["sha256"], str(path)
+                  row = dict(record)
+                  row["material_properties"] = []
+                  if path.suffix.lower() in {".usd", ".usda", ".usdc"}:
+                      if usd is not None:
+                          layer = usd.Layer.FindOrOpen(str(path))
+                          if layer is None:
+                              raise RuntimeError(f"cannot open USD layer: {path}")
+                          def visit(usd_path):
+                              spec = layer.GetObjectAtPath(usd_path)
+                              if isinstance(spec, usd.AttributeSpec) and re.search(
+                                  r"(?i)(color|texture|mdl|roughness|metallic|info:id|info:implementationSource)",
+                                  spec.name,
+                              ):
+                                  row["material_properties"].append({
+                                      "path": str(usd_path), "value": str(spec.default),
+                                      "connections": [str(value) for value in spec.connectionPathList.GetAppliedItems()],
+                                  })
+                          layer.Traverse(usd.Path.absoluteRootPath, visit)
+                      else:
+                          try:
+                              text = data.decode("utf-8")
+                          except UnicodeDecodeError:
+                              row["inspection_unavailable"] = "binary USD; pxr import unavailable"
+                          else:
+                              row["material_lines"] = [
+                                  {"line": index, "text": line}
+                                  for index, line in enumerate(text.splitlines(), 1)
+                                  if re.search(r"(?i)(color|texture|mdl|roughness|metallic|info:id)", line)
+                              ][:100]
+                  rows.append(row)
+              result = {
+                  "schema_version": "sgw-01-material-source-audit-v1",
+                  "status": "source_inspection_not_renderer_qualification",
+                  "pxr_available": usd is not None,
+                  "pxr_import_error": usd_error,
+                  "asset_manifest": manifest,
+                  "assets": rows,
+                  "model_requests": 0,
+                  "allocated_gpus": 0,
+              }
+              encoded = json.dumps(result, indent=2, sort_keys=True) + "\n"
+              (Path(sys.argv[1]) / "audit.json").write_text(encoded)
+              print(encoded)
+              PY
+              sync
+          env:
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: HOME
+              value: /tmp
+            - name: LD_LIBRARY_PATH
+              value: /data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - name: workspace
+              mountPath: /data
+              readOnly: true
+            - name: evidence
+              mountPath: /evidence
+              subPath: users/ali/sgw-01/infrastructure
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: 211247-prod-pvc
+            readOnly: true
+        - name: evidence
+          persistentVolumeClaim:
+            claimName: 211247-prod-pvc
+        - name: tmp
+          emptyDir: {}

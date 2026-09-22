@@ -14,6 +14,10 @@ BOOTSTRAP_DRAWS = 20_000
 BOOTSTRAP_SEED = 2_0260_922
 SIGNFLIP_DRAWS = 100_000
 SIGNFLIP_SEED = 2_0260_923
+PRIMARY_TEST_NAMES = (
+    "N3-LAT", "N3-HEIGHT", "N3-DIST",
+    "D1-LAT", "D1-HEIGHT", "D1-DIST",
+)
 
 
 @dataclass(frozen=True)
@@ -21,6 +25,8 @@ class CompiledAnalysis:
     rows: tuple[Mapping[str, Any], ...]
     valid_rows: tuple[Mapping[str, Any], ...]
     technical_missing: int
+    incomplete_layouts: tuple[str, ...] = ()
+    complete: bool = True
     bootstrap_seed: int = BOOTSTRAP_SEED
     signflip_seed: int = SIGNFLIP_SEED
 
@@ -86,13 +92,20 @@ def compile_manifests(
     manifest_paths: Iterable[str | Path],
     *,
     expected_release_hashes: Mapping[str, str],
+    expected_layout_ids: Iterable[str] | None = None,
 ) -> CompiledAnalysis:
     paths = [Path(path) for path in manifest_paths]
     if not paths:
         raise ValueError("no durable manifests supplied")
     rows = tuple(_load_manifest(path, expected_release_hashes) for path in paths)
     valid = tuple(row for row in rows if row.get("status") not in {"infrastructure_invalid", "technical_invalid"})
-    return CompiledAnalysis(rows=rows, valid_rows=valid, technical_missing=len(rows) - len(valid))
+    expected = set(expected_layout_ids or ())
+    observed = {str(row["layout_id"]) for row in rows if row.get("layout_id") is not None}
+    incomplete = tuple(sorted(expected - observed))
+    return CompiledAnalysis(
+        rows=rows, valid_rows=valid, technical_missing=len(rows) - len(valid),
+        incomplete_layouts=incomplete, complete=not incomplete,
+    )
 
 
 def bootstrap_mean(values: Sequence[float], *, draws: int = BOOTSTRAP_DRAWS, seed: int = BOOTSTRAP_SEED) -> tuple[float, float]:
@@ -143,6 +156,12 @@ def holm_adjust(p_values: Mapping[str, float]) -> dict[str, float]:
         running = max(running, min(1.0, (len(ordered) - rank) * value))
         adjusted[name] = running
     return adjusted
+
+
+def holm_adjust_primary(p_values: Mapping[str, float]) -> dict[str, float]:
+    """Adjust all six prespecified model-family tests, filling absent tests as 1."""
+    complete = {name: float(p_values.get(name, 1.0)) for name in PRIMARY_TEST_NAMES}
+    return holm_adjust(complete)
 
 
 def censoring_bounds(

@@ -7,6 +7,7 @@ from experiments.workshops.spatial_grounding_v1.compile import (
     compile_manifests,
     equivalence,
     holm_adjust,
+    holm_adjust_primary,
     paired_signflip,
 )
 
@@ -14,7 +15,7 @@ from experiments.workshops.spatial_grounding_v1.compile import (
 def _manifest(tmp_path, *, result, release_hash="release"):
     root = tmp_path / f"release-{len(list(tmp_path.glob('release-*')))}"
     directory = root / "attempts" / "cell-1" / "attempt-1"
-    directory.mkdir()
+    directory.mkdir(parents=True)
     artifact = directory / "result.json"
     artifact.write_text(json.dumps(result, sort_keys=True))
     digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
@@ -57,3 +58,8 @@ def test_reproducible_statistics_and_frozen_bounds():
 def test_holm_adjustment_is_monotone():
     adjusted = holm_adjust({"a": 0.01, "b": 0.02, "c": 0.8})
     assert adjusted["a"] <= adjusted["b"] <= adjusted["c"]
+
+
+def test_primary_holm_always_accounts_for_six_tests():
+    adjusted = holm_adjust_primary({"N3-LAT": 0.01})
+    assert set(adjusted) == {"N3-LAT", "N3-HEIGHT", "N3-DIST", "D1-LAT", "D1-HEIGHT", "D1-DIST"}

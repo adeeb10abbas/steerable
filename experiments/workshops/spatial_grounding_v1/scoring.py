@@ -115,11 +115,26 @@ def _max_anchor_drift(states: Sequence[Mapping[str, Any]]) -> float:
     return max_drift
 
 
-def _pickup_step(states: Sequence[Mapping[str, Any]], cfg: FrozenScoringConfig) -> int | None:
+def _pickup_step(
+    states: Sequence[Mapping[str, Any]],
+    cfg: FrozenScoringConfig,
+    *,
+    initial_cube_z: float | None = None,
+) -> int | None:
+    if initial_cube_z is None and states:
+        initial = states[0].get("cube", states[0].get("cube_xyz_m"))
+        if initial is not None:
+            initial_cube_z = _xyz(initial)[2]
     run = 0
     for index, state in enumerate(states):
         held = bool(state.get("gripper_holding", state.get("held", False)))
-        height = float(state.get("cube_height_lift_m", state.get("cube_lift_m", 0.0)))
+        position = state.get("cube", state.get("cube_xyz_m"))
+        if position is None or initial_cube_z is None:
+            continue
+        height = _xyz(position)[2] - initial_cube_z
+        reported_height = state.get("cube_height_lift_m", state.get("cube_lift_m"))
+        if reported_height is not None and not math.isclose(float(reported_height), height, abs_tol=1e-4):
+            raise ValueError("reported pickup height disagrees with cube geometry")
         if held and height >= cfg.pickup_height_m:
             run += 1
             if run >= cfg.pickup_consecutive_steps:
@@ -132,6 +147,24 @@ def _pickup_step(states: Sequence[Mapping[str, Any]], cfg: FrozenScoringConfig) 
 def _first_success(events: Iterable[Mapping[str, Any]]) -> int | None:
     steps = [int(event["step"]) for event in events if bool(event.get("success", False))]
     return min(steps) if steps else None
+
+
+def _stable_release(states: Sequence[Mapping[str, Any]], cfg: FrozenScoringConfig) -> bool:
+    if not states or not bool(states[-1].get("final_detached_release", states[-1].get("release_detached", False))):
+        return False
+    if not all("sim_time_s" in state for state in states):
+        return False
+    end = float(states[-1]["sim_time_s"])
+    window = [state for state in states if end - float(state["sim_time_s"]) <= cfg.final_stability_seconds]
+    if not window or end - float(window[0]["sim_time_s"]) < cfg.final_stability_seconds:
+        return False
+    return all(
+        bool(state.get("supported", False))
+        and float(state.get("linear_speed_m_s", math.inf)) < cfg.linear_speed_limit_m_s
+        and float(state.get("angular_speed_rad_s", math.inf)) < cfg.angular_speed_limit_rad_s
+        and bool(state.get("final_detached_release", state.get("release_detached", False)))
+        for state in window
+    )
 
 
 def score_episode(
@@ -153,7 +186,9 @@ def score_episode(
     safety = bool(episode.get("termination_reason") == "safety" or episode.get("safety_terminated"))
     anchor_drift = _max_anchor_drift(states)
     reference_ok = anchor_drift <= cfg.reference_motion_limit_m
-    pickup = _pickup_step(states, cfg)
+    initial_cube = episode.get("initial_cube_xyz_m", episode.get("initial_cube"))
+    initial_cube_z = _xyz(initial_cube)[2] if initial_cube is not None else None
+    pickup = _pickup_step(states, cfg, initial_cube_z=initial_cube_z)
     first_success = _first_success(episode.get("success_events", ()))
     if safety or not terminal_observed:
         return EpisodeScore(
@@ -170,7 +205,7 @@ def score_episode(
     rel = relation_m(goal.family, cube, bowl, plate)
     margin = goal.physical_goal_sign * rel
     detached = bool(final.get("final_detached_release", final.get("release_detached", False)))
-    stable = bool(final.get("stable_for_seconds", False) and final.get("supported", True))
+    stable = _stable_release(states, cfg)
     success = bool(pickup is not None and margin >= cfg.relation_margin_m and reference_ok and detached and stable)
     if pickup is None:
         stage = "pick_failed"

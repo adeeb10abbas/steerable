@@ -1,6 +1,6 @@
 {
   "study_id": "SGW-01",
-  "status": "a40_renderer_passed_fixture_and_model_qualification_unreleased",
+  "status": "a40_renderer_passed_zero_model_workspace_capture_running",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -22,8 +22,8 @@
   "behavioral_release_hash": null,
   "synthetic_tests_are_scientific_evidence": false,
   "persistent_study_root": "/data/users/ali/sgw-01",
-  "last_probe_source_commit": "95e72f04317f786ce87c10c3b84fe279a853ba22",
-  "last_probe_source_path": "/data/users/ali/sgw-01/source/95e72f0",
+  "last_probe_source_commit": "b429ddd8c3e7be59f63759c1820e352029e48b8c",
+  "last_probe_source_path": "/data/users/ali/sgw-01/source/b429ddd",
   "verified_simulator_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
   "preflight_image_digest": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
   "infrastructure_attempts": [
@@ -101,9 +101,25 @@
       "receipt_sha256": "c4a5ea9e29bf66c39453958bb80e74df12d290face9510c818b15685b0b27bef",
       "diagnosis": "Bootstrap argparse abbreviated --renderer to --renderer-receipt, replacing the existing receipt path with realtime. Input files and Git identity were independently verified.",
       "corrected_source_commit": "b429ddd8c3e7be59f63759c1820e352029e48b8c"
+    },
+    {
+      "job": "sgw01-ali-lat-workspace-20260922g",
+      "job_uid": "1911cb05-6433-4fa3-8c11-bc457ce54cbc",
+      "pod": "sgw01-ali-lat-workspace-20260922g-mphj5",
+      "pod_uid": "80e92e92-79f8-447c-94fb-b4ed0952a5b8",
+      "status": "running_zero_model_workspace_capture",
+      "source_commit": "b429ddd8c3e7be59f63759c1820e352029e48b8c",
+      "allocated_gpus": 1,
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "gpu_uuid": "GPU-8773b1c9-df29-a37a-e165-8f68986cdb88",
+      "raw_output": "/data/users/ali/sgw-01/qualification/lat-workspace-20260922g",
+      "automatic_retries": 0,
+      "deadline_seconds": 1800,
+      "model_requests": 0,
+      "behavioral_episodes": 0
     }
   ],
-  "active_task_gpu_jobs": [],
+  "active_task_gpu_jobs": ["sgw01-ali-lat-workspace-20260922g"],
   "active_task_model_servers": [],
   "blockers": [
     "The actual A40 renderer and three camera views passed; measured workspace, LAT/DIST/HEIGHT fixtures and full runtime/reset/time-map receipts remain unqualified.",
@@ -112,7 +128,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Stage corrected source b429ddd8c3e7be59f63759c1820e352029e48b8c and launch fresh bounded one-A40 zero-model workspace attempt g using passed attempt-e receipts and native libraries. Never overwrite or rerun f. Then qualify fixtures and finish runtime/worker guards before behavioral release.",
+  "next_action": "Collect the already-running workspace attempt g; do not launch a duplicate or overwrite f/g. Its owner is the SGW fixture qualification session. Diagnose any failure before a fresh attempt. Fixture and runtime/worker gates still precede behavioral release.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

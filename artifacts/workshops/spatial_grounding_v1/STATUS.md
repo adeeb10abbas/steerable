@@ -1,6 +1,6 @@
 # SGW-01 status
 
-**Fresh A40 renderer preflight passed; fixture qualification and model inference remain unreleased.**
+**A40 renderer passed; fresh zero-model workspace capture is running. Fixture qualification and model inference remain unreleased.**
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
@@ -89,6 +89,13 @@ overwriting the receipt path. Source commit
 adds a full two-stage CLI regression. Attempt f remains an immutable
 infrastructure failure; it is not a fixture or model failure.
 
+Fresh Job `sgw01-ali-lat-workspace-20260922g` is running exactly once on
+one A40 with corrected source `b429ddd`. Its pod is
+`sgw01-ali-lat-workspace-20260922g-mphj5` on `dcwipphhgc191.edc.nam.gm.com`.
+It passed bootstrap parsing and initialized Vulkan. Its workspace measurement
+receipt remains pending; the fixture-qualification session owns collection.
+The Job has a 1,800-second deadline and no automatic retry.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure
@@ -101,20 +108,21 @@ logs and receipts remain in:
 /data/users/ali/sgw-01/preflight/a40-20260922d/
 /data/users/ali/sgw-01/preflight/a40-20260922e/
 /data/users/ali/sgw-01/qualification/lat-workspace-20260922f/
+/data/users/ali/sgw-01/qualification/lat-workspace-20260922g/
 ```
 
 The source used by the last probe was
-`95e72f04317f786ce87c10c3b84fe279a853ba22`, staged as a clean independent
-checkout at `/data/users/ali/sgw-01/source/95e72f0`. The verified RoboLab
+`b429ddd8c3e7be59f63759c1820e352029e48b8c`, staged as a clean independent
+checkout at `/data/users/ali/sgw-01/source/b429ddd`. The verified RoboLab
 checkout is pinned to `0aef241fb088ca21bb4ebd24448940ed56620d17`. The image
 digest and all probe/receipt hashes are recorded in the adjacent JSON state
 and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Stage corrected source `b429ddd8c3e7be59f63759c1820e352029e48b8c` and use
-the passed attempt-e renderer/assets receipts for fresh bounded one-A40
-workspace attempt g, then qualify the physical fixtures. Do not rerun f.
+Collect the already-running workspace attempt g, then qualify the physical
+fixtures only after its receipt passes. Do not launch a duplicate, rerun f,
+or overwrite either attempt's evidence.
 **Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**
 

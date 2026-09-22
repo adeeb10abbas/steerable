@@ -1,0 +1,31 @@
+[
+  {
+    "op": "replace",
+    "path": "/metadata/name",
+    "value": "sgw01-ali-rtx-preflight-20260922b"
+  },
+  {
+    "op": "add",
+    "path": "/spec/template/spec/affinity/nodeAffinity/requiredDuringSchedulingIgnoredDuringExecution/nodeSelectorTerms/0/matchExpressions/-",
+    "value": {
+      "key": "kubernetes.io/hostname",
+      "operator": "NotIn",
+      "values": [
+        "dcwipphrtx0005.edc.nam.gm.com"
+      ]
+    }
+  },
+  {
+    "op": "add",
+    "path": "/spec/template/spec/containers/0/env/-",
+    "value": {
+      "name": "SGW_PROBE_ATTEMPT",
+      "value": "rtx-20260922b"
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/0/args/0",
+    "value": "set -euo pipefail\nSTUDY=/data/users/ali/sgw-01/source/c2aac12\nROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241\nPY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python\nOUT=/data/users/ali/sgw-01/preflight/rtx-20260922b\ntest ! -e \"$OUT/renderer.log\"\nmkdir -p \"$OUT\" \"$HOME/.cache\"\nexec > >(tee \"$OUT/renderer.log\") 2>&1\ntest \"$(git -C \"$STUDY\" rev-parse HEAD)\" = c2aac12b5923e45d11197e4dd96309327bfb80b3\ntest -z \"$(git -C \"$STUDY\" status --porcelain)\"\ntest \"$(git -C \"$ROBOLAB\" rev-parse HEAD)\" = 0aef241fb088ca21bb4ebd24448940ed56620d17\ntest -z \"$(git -C \"$ROBOLAB\" status --porcelain --untracked-files=no)\"\ncd \"$STUDY\"\n\"$PY\" tools/validate_vla_wam_v3_protocol.py --quiet\n\"$PY\" tools/validate_vla_wam_v2_protocol.py > \"$OUT/v2_validation.json\"\nnvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total,memory.used,utilization.gpu --format=csv,noheader | tee \"$OUT/gpu_identity.csv\"\nnvidia-smi --query-compute-apps=pid,process_name --format=csv,noheader > \"$OUT/gpu_processes_before.csv\"\ntest ! -s \"$OUT/gpu_processes_before.csv\"\nused=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits)\nif ! [ \"$used\" -le 1024 ]; then\n  echo 'BLOCKED: allocated GPU has more than 1024 MiB already occupied; no simulator or model imported.' >&2\n  exit 46\nfi\ntest -r \"$VK_ICD_FILENAMES\"\nexport PYTHONPATH=\"$STUDY:$ROBOLAB\"\n\"$PY\" -m experiments.workshops.spatial_grounding_v1.build_asset_manifest --robolab-root \"$ROBOLAB\" --output \"$OUT/assets.json\"\ncd \"$ROBOLAB\"\nexec \"$PY\" -m experiments.workshops.spatial_grounding_v1.runtime_preflight --study-root \"$STUDY\" --robolab-root \"$ROBOLAB\" --assets-manifest \"$OUT/assets.json\" --output \"$OUT/renderer.json\" --headless --num-envs 1 --device cuda:0 --renderer realtime --rendering-type balanced\n"
+  }
+]

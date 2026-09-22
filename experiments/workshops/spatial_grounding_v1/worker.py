@@ -176,6 +176,13 @@ def _canonical_outcome(outcome: Mapping[str, Any], cell: Cell, scorer: ScoreFn |
     trace = value.get("episode_mapping")
     if not isinstance(trace, Mapping):
         raise ContractError("nontechnical execution lacks the raw episode mapping required for scoring")
+    trace = dict(trace)
+    trace.update({
+        "release_id": cell.row["release_id"],
+        "cell_id": cell.cell_id,
+        "attempt_id": value.get("attempt_id", "pending"),
+        "completed_at_utc": utc_now(),
+    })
     scored = dict((scorer or _load_scorer())(trace, cell))
     status = scored.get("status")
     if status not in {"valid_success", "valid_model_failure", "censored", "technical_invalid"}:
@@ -228,6 +235,7 @@ def run_partition(release: Release, *, model: str, family: str, stage: str, max_
                         outcome = _run_with_deadline(
                             episode_deadline, "episode", lambda: adapter.run_episode(cell, recorder, reset)
                         )
+                        outcome = {**outcome, "attempt_id": recorder.attempt_id}
                         outcome = _canonical_outcome(outcome, cell, scorer)
                         published = recorder.complete(outcome)
                     except DeadlineExceeded as exc:

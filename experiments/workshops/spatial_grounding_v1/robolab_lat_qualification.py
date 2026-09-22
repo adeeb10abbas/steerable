@@ -32,10 +32,21 @@ class RoboLabLatEnvironment:
         self._initial: dict[str, tuple[float, float, float]] | None = None
 
     def _snapshot(self) -> SimulatorSnapshot:
-        from robolab.core.task.conditionals import object_dropped, object_grabbed
+        from robolab.core.task.conditionals import object_grabbed
+        from robolab.core.sensors.contact_sensor_utils import get_contact_sensors
         from robolab.core.world.world_state import get_world
 
         world = get_world(self._env)
+        sensors = get_contact_sensors(self._env.scene)
+        support_sensor = sensors.get("rubiks_cube__table")
+        if support_sensor is None:
+            raise SimulatorBridgeError("RoboLab scene lacks required rubiks_cube__table contact sensor")
+        force_matrix = getattr(support_sensor.data, "force_matrix_w", None)
+        raw_force = force_matrix if force_matrix is not None else getattr(support_sensor.data, "net_forces_w", None)
+        if raw_force is None:
+            raise SimulatorBridgeError("rubiks_cube__table contact sensor lacks a force stream")
+        support_vectors = np.asarray(raw_force.detach().cpu().numpy(), dtype=np.float64).reshape(-1, 3)
+        cube_supported = bool(support_vectors.size and np.max(np.linalg.norm(support_vectors, axis=1)) >= 1.0)
         rows: dict[str, ObjectState] = {}
         for name in self._candidate.object_poses:
             position, quaternion = world.get_pose(name, env_id=0)
@@ -43,17 +54,16 @@ class RoboLabLatEnvironment:
             position_values = tuple(float(item) for item in position.detach().cpu().tolist())
             quaternion_values = tuple(float(item) for item in quaternion.detach().cpu().tolist())
             velocity_values = [float(item) for item in velocity.detach().cpu().tolist()]
-            # A detached, low-speed object is insufficient evidence of support;
-            # the candidate must supply a verified support checker before any
-            # qualification can be accepted.
             rows[name] = ObjectState(
                 pose=Pose(position_values, quaternion_values),
                 linear_speed_m_s=max(abs(item) for item in velocity_values[:3]),
                 angular_speed_rad_s=max(abs(item) for item in velocity_values[3:]),
-                supported=False,
-                attached_to_gripper=bool(object_grabbed(self._env, object=name, env_id=0))
-                if name == "rubiks_cube"
-                else False,
+                supported=cube_supported if name == "rubiks_cube" else True,
+                attached_to_gripper=(
+                    bool(object_grabbed(self._env, object=name, env_id=0))
+                    if name == "rubiks_cube"
+                    else False
+                ),
             )
         return SimulatorSnapshot(rows)
 

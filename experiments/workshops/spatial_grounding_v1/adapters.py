@@ -381,6 +381,7 @@ class ProductionAdapter:
             raise AdapterError("environment must expose policy_observation() separate from snapshot()")
         prompt = str(self._cell_value(cell, "prompt"))
         safety_reason: str | None = None
+        episode_mapping: list[dict[str, Any]] = []
         while self.policy.executed_steps < ACTION_CAP:
             observation = policy_observation()
             request_id = f"{self.policy.cell_id}:request:{self.policy.request_index}"
@@ -400,16 +401,28 @@ class ProductionAdapter:
             prediction = self.policy.predict(
                 observation, prompt, action_step_start=self.policy.executed_steps
             )
+            mapping_start = len(episode_mapping)
             for action in prediction.executable_actions:
                 step_result = environment.step(action)
+                step_index = self.policy.executed_steps
+                scoring_snapshot = environment.snapshot()
+                viewport_frame = environment.render_viewport()
                 self.policy.commit_executed(1)
+                episode_mapping.append(
+                    {
+                        "action_step": step_index,
+                        "action": np.asarray(action, dtype=np.float32).copy(),
+                        "state": scoring_snapshot,
+                        "viewport_frame": viewport_frame,
+                        "step_result": step_result,
+                    }
+                )
                 if isinstance(step_result, Mapping) and step_result.get("safety_terminated") is True:
                     safety_reason = str(step_result.get("termination_reason") or "safety_terminal")
                     break
             if not hasattr(recorder, "prediction"):
                 raise AdapterError("recorder must expose prediction()")
-            prediction.raw_request["viewport_frame"] = environment.render_viewport()
-            prediction.raw_request["scoring_snapshot"] = environment.snapshot()
+            prediction.raw_request["episode_mapping"] = episode_mapping[mapping_start:]
             recorder.prediction(prediction)
             if safety_reason is not None:
                 break
@@ -423,6 +436,7 @@ class ProductionAdapter:
             "safety_terminated": safety_reason is not None,
             "executed_action_count": self.policy.executed_steps,
             "prediction_count": len(self.policy.predictions),
+            "episode_mapping": episode_mapping,
         }
 
     def close(self) -> None:

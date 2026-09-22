@@ -30,6 +30,11 @@ class RoboLabLatEnvironment:
         self._candidate = candidate
         self._reset_index = 0
         self._initial: dict[str, tuple[float, float, float]] | None = None
+        step_dt = getattr(env, "step_dt", None)
+        if step_dt is None or float(step_dt) <= 0:
+            raise SimulatorBridgeError("RoboLab must expose a positive physical step_dt")
+        self._step_dt_s = float(step_dt)
+        self._steps = 0
 
     def _snapshot(self) -> SimulatorSnapshot:
         from robolab.core.task.conditionals import object_grabbed
@@ -65,7 +70,7 @@ class RoboLabLatEnvironment:
                     else False
                 ),
             )
-        return SimulatorSnapshot(rows)
+        return SimulatorSnapshot(rows, simulated_time_s=self._steps * self._step_dt_s)
 
     def reset(self) -> ResetResult:
         counter = getattr(self._env, "episode_length_buf", None)
@@ -73,6 +78,7 @@ class RoboLabLatEnvironment:
             raise SimulatorBridgeError("RoboLab must expose episode_length_buf for a physical reset")
         counter.zero_()
         observation, _ = self._env.reset()
+        self._steps = 0
         snapshot = self._snapshot()
         self._initial = {name: state.pose.position_m for name, state in snapshot.objects.items()}
         self._reset_index += 1
@@ -104,6 +110,7 @@ class RoboLabLatEnvironment:
         if tuple(tensor.shape) != (1, 8):
             raise SimulatorBridgeError(f"Abs-IK action must have shape (1, 8), got {tuple(tensor.shape)}")
         self._env.step(tensor.to(self._env.device))
+        self._steps += 1
         return self._snapshot()
 
     def snapshot(self) -> SimulatorSnapshot:

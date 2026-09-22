@@ -34,7 +34,7 @@ class FakeEnvironment:
     def reset(self) -> ResetResult:
         self.steps = 0
         return ResetResult(
-            SimulatorSnapshot(state(0.0, 0.1)),
+            SimulatorSnapshot(state(0.0, 0.1), 0.0),
             {
                 "reset_id": f"reset-{id(self)}",
                 "camera_id": "head-v1",
@@ -47,14 +47,14 @@ class FakeEnvironment:
     def step(self, _action: list[float]) -> SimulatorSnapshot:
         self.steps += 1
         if self.steps <= 3:
-            return SimulatorSnapshot(state(0.0, 0.14, supported=False, attached=True))
-        return SimulatorSnapshot(state(0.04 * self.goal, 0.1))
+            return SimulatorSnapshot(state(0.0, 0.14, supported=False, attached=True), self.steps * 0.2)
+        return SimulatorSnapshot(state(0.04 * self.goal, 0.1), self.steps * 0.2)
 
     def close(self) -> None:
         pass
 
     def snapshot(self) -> SimulatorSnapshot:
-        return SimulatorSnapshot(state(0.0, 0.1))
+        return SimulatorSnapshot(state(0.0, 0.1), 0.0)
 
     def render_viewport(self) -> bytes:
         return b"fake-viewport"
@@ -68,7 +68,7 @@ class FakeBridge:
 class FakeController:
     def actions_for_goal(self, environment: FakeEnvironment, _candidate, goal_sign: int):
         environment.goal = goal_sign
-        return [[0.0] for _ in range(4)]
+        return [[0.0] for _ in range(7)]
 
 
 def test_qualification_runs_exactly_six_model_blind_checks() -> None:
@@ -77,6 +77,7 @@ def test_qualification_runs_exactly_six_model_blind_checks() -> None:
     assert receipt["model_request_count"] == 0
     assert len(receipt["checks"]) == 6
     assert {check["goal_sign"] for check in receipt["checks"]} == {-1, 1}
+    assert all(len(check["per_step_states"]) == check["actions_executed"] + 1 for check in receipt["checks"])
 
 
 def test_task_definition_cannot_enable_goal_termination() -> None:

@@ -1,0 +1,183 @@
+"""Concrete scoped RoboLab Abs-IK bridge and controller for SGW-01 LAT."""
+
+from __future__ import annotations
+
+from dataclasses import asdict
+import hashlib
+import json
+import os
+from pathlib import Path
+from typing import Any, Sequence
+
+import numpy as np
+
+from .fixtures import FixtureCandidate, Pose
+from .simulator_bridge import (
+    Environment,
+    ObjectState,
+    ResetResult,
+    ScriptedController,
+    SimulatorBridge,
+    SimulatorBridgeError,
+    SimulatorSnapshot,
+)
+from .task_definitions import RoboLabTaskDefinition
+
+
+class RoboLabLatEnvironment:
+    def __init__(self, env: Any, candidate: FixtureCandidate) -> None:
+        self._env = env
+        self._candidate = candidate
+        self._reset_index = 0
+        self._initial: dict[str, tuple[float, float, float]] | None = None
+
+    def _snapshot(self) -> SimulatorSnapshot:
+        from robolab.core.task.conditionals import object_dropped, object_grabbed
+        from robolab.core.world.world_state import get_world
+
+        world = get_world(self._env)
+        rows: dict[str, ObjectState] = {}
+        for name in self._candidate.object_poses:
+            position, quaternion = world.get_pose(name, env_id=0)
+            velocity = world.get_velocity(name, env_id=0)
+            position_values = tuple(float(item) for item in position.detach().cpu().tolist())
+            quaternion_values = tuple(float(item) for item in quaternion.detach().cpu().tolist())
+            velocity_values = [float(item) for item in velocity.detach().cpu().tolist()]
+            # A detached, low-speed object is insufficient evidence of support;
+            # the candidate must supply a verified support checker before any
+            # qualification can be accepted.
+            rows[name] = ObjectState(
+                pose=Pose(position_values, quaternion_values),
+                linear_speed_m_s=max(abs(item) for item in velocity_values[:3]),
+                angular_speed_rad_s=max(abs(item) for item in velocity_values[3:]),
+                supported=False,
+                attached_to_gripper=bool(object_grabbed(self._env, object=name, env_id=0))
+                if name == "rubiks_cube"
+                else False,
+            )
+        return SimulatorSnapshot(rows)
+
+    def reset(self) -> ResetResult:
+        counter = getattr(self._env, "episode_length_buf", None)
+        if counter is None or not hasattr(counter, "zero_"):
+            raise SimulatorBridgeError("RoboLab must expose episode_length_buf for a physical reset")
+        counter.zero_()
+        observation, _ = self._env.reset()
+        snapshot = self._snapshot()
+        self._initial = {name: state.pose.position_m for name, state in snapshot.objects.items()}
+        self._reset_index += 1
+        camera = "over_shoulder_left_camera"
+        image = observation["image_obs"][camera][0].detach().cpu().numpy()
+        if image.ndim != 3 or image.shape[-1] != 3 or not np.ptp(image):
+            raise SimulatorBridgeError("RoboLab reset did not expose a nonblank stable camera")
+        fingerprint = hashlib.sha256(
+            json.dumps(
+                {name: asdict(state.pose) for name, state in snapshot.objects.items()},
+                sort_keys=True, separators=(",", ":"),
+            ).encode()
+        ).hexdigest()
+        return ResetResult(
+            snapshot,
+            {
+                "reset_id": f"{self._candidate.candidate_id}:{self._reset_index}",
+                "camera_id": camera,
+                "camera_name": camera,
+                "fingerprint": fingerprint,
+                "temporal_cache_reset": True,
+            },
+        )
+
+    def step(self, action: Sequence[float]) -> SimulatorSnapshot:
+        import torch
+
+        tensor = action if isinstance(action, torch.Tensor) else torch.as_tensor(action, dtype=torch.float32)
+        if tuple(tensor.shape) != (1, 8):
+            raise SimulatorBridgeError(f"Abs-IK action must have shape (1, 8), got {tuple(tensor.shape)}")
+        self._env.step(tensor.to(self._env.device))
+        return self._snapshot()
+
+    def snapshot(self) -> SimulatorSnapshot:
+        return self._snapshot()
+
+    def render_viewport(self) -> bytes:
+        raise SimulatorBridgeError("viewport writing belongs to the recorder, not qualification state extraction")
+
+    def close(self) -> None:
+        self._env.close()
+
+
+class RoboLabLatBridge:
+    def __init__(self, *, study_root: Path, robolab_root: Path, device: str, renderer: str, rendering_type: str) -> None:
+        self._study_root = Path(study_root).resolve()
+        self._robolab_root = Path(robolab_root).resolve()
+        self._device = device
+        if renderer != "realtime" or rendering_type != "balanced":
+            raise SimulatorBridgeError("LAT qualification requires realtime/balanced RTX")
+
+    def create_environment(self, task: RoboLabTaskDefinition, seed: int) -> Environment:
+        from robolab.core.environments.runtime import create_env
+        from robolab.registrations.droid.auto_env_registrations_abs_ik import auto_register_droid_abs_ik_envs
+        from robolab.registrations.droid.camera_presets import WRIST_LEFT_RIGHT_HEAD
+
+        payload = json.dumps(task.bridge_config(), sort_keys=True, separators=(",", ":"))
+        os.environ["SGW_LAT_CANDIDATE_JSON"] = payload
+        os.environ["SGW_LAT_CANDIDATE_SHA256"] = hashlib.sha256(payload.encode()).hexdigest()
+        task_path = self._study_root / "experiments/workshops/spatial_grounding_v1/lat_qualification_task.py"
+        auto_register_droid_abs_ik_envs(task=[str(task_path)], cameras=WRIST_LEFT_RIGHT_HEAD)
+        env, _ = create_env(
+            "SGWLatQualificationTask", device=self._device, seed=seed, num_envs=1,
+            instruction_type="default", policy="sgw_01_model_blind_lat_controller",
+            renderer="realtime", rendering_mode="balanced",
+        )
+        return RoboLabLatEnvironment(env, task.candidate)
+
+
+class RoboLabLatScriptedController:
+    """Execute candidate-recorded world-frame Abs-IK waypoints without a policy."""
+
+    def actions_for_goal(self, environment: Environment, candidate: FixtureCandidate, goal_sign: int) -> Sequence[Sequence[float]]:
+        if not isinstance(environment, RoboLabLatEnvironment):
+            raise SimulatorBridgeError("LAT controller requires RoboLabLatEnvironment")
+        key = "positive" if goal_sign == 1 else "negative"
+        waypoints = candidate.metadata.get("abs_ik_waypoints", {}).get(key)
+        if not isinstance(waypoints, list) or not waypoints:
+            raise SimulatorBridgeError("candidate lacks measured Abs-IK waypoints for the requested LAT goal")
+        from robolab.robots.droid import EEF_OFFSET_ROT
+
+        frames = environment._env.scene["frames"]
+        index = frames.data.target_frame_names.index("eef_frame")
+        eef_quaternion = np.asarray(frames.data.target_quat_w[0, index].detach().cpu().numpy(), dtype=np.float64)
+        offset_inverse = np.asarray([EEF_OFFSET_ROT[0], -EEF_OFFSET_ROT[1], -EEF_OFFSET_ROT[2], -EEF_OFFSET_ROT[3]], dtype=np.float64)
+        command_quaternion = _quat_mul(eef_quaternion, offset_inverse)
+        actions: list[np.ndarray] = []
+        for waypoint in waypoints:
+            position = np.asarray(waypoint["position_world_xyz_m"], dtype=np.float64)
+            hold_steps = int(waypoint["hold_steps"])
+            gripper = float(waypoint["gripper_position"])
+            if position.shape != (3,) or hold_steps < 1 or len(actions) + hold_steps > 450:
+                raise SimulatorBridgeError("invalid measured LAT waypoint sequence")
+            command = np.concatenate((position, command_quaternion, [gripper])).astype(np.float32).reshape(1, 8)
+            actions.extend(command.copy() for _ in range(hold_steps))
+        return actions
+
+
+def _quat_mul(first: np.ndarray, second: np.ndarray) -> np.ndarray:
+    w1, x1, y1, z1 = first
+    w2, x2, y2, z2 = second
+    return np.asarray((
+        w1*w2 - x1*x2 - y1*y2 - z1*z2,
+        w1*x2 + x1*w2 + y1*z2 - z1*y2,
+        w1*y2 - x1*z2 + y1*w2 + z1*x2,
+        w1*z2 + x1*y2 - y1*x2 + z1*w2,
+    ))
+
+
+def create_bridge(*, robolab_root: Path, assets_manifest: Path, device: str, renderer: str, rendering_type: str, **_: Any) -> RoboLabLatBridge:
+    study_root = Path(__file__).resolve().parents[3]
+    if not Path(assets_manifest).is_file():
+        raise SimulatorBridgeError("measured asset manifest is required")
+    return RoboLabLatBridge(study_root=study_root, robolab_root=robolab_root, device=device, renderer=renderer, rendering_type=rendering_type)
+
+
+def create_controller(**_: Any) -> RoboLabLatScriptedController:
+    return RoboLabLatScriptedController()

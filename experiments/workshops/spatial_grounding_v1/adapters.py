@@ -285,10 +285,12 @@ class ProductionAdapter:
         *,
         transport: Transport,
         transport_factory: Callable[..., Transport],
+        environment_factory: Callable[..., Any] | None = None,
     ) -> None:
         self.policy_type = policy_type
         self.transport = transport
         self.transport_factory = transport_factory
+        self.environment_factory = environment_factory
         self.policy: _BaseAdapter | None = None
 
     @staticmethod
@@ -306,13 +308,11 @@ class ProductionAdapter:
         """Reset the environment and policy temporal state for one attempt."""
 
         environment = getattr(cell, "environment", None)
+        if environment is None and self.environment_factory is not None:
+            environment = self.environment_factory(cell=cell)
         if environment is None or not hasattr(environment, "reset"):
             raise AdapterError("production cell must provide Environment.reset()")
         reset_id = str(self._cell_value(cell, "reset_id"))
-        camera_name_value = str(evidence["camera_name"])
-        if str(evidence["camera_id"]) != str(self._cell_value(cell, "camera_id")):
-            raise AdapterError("reset receipt camera_id differs from released cell")
-        camera_name = str(camera_name_value)
         reset_result = environment.reset()
         evidence = getattr(reset_result, "receipt", reset_result)
         if not isinstance(evidence, Mapping):
@@ -322,6 +322,9 @@ class ProductionAdapter:
             raise AdapterError("reset receipt lacks required physical/camera identity fields")
         if evidence.get("temporal_cache_reset") is not True:
             raise AdapterError("reset receipt lacks temporal_cache_reset=true")
+        if str(evidence["camera_id"]) != str(self._cell_value(cell, "camera_id")):
+            raise AdapterError("reset receipt camera_id differs from released cell")
+        camera_name = str(evidence["camera_name"])
         self.policy = self.policy_type(
             cell_id=str(self._cell_value(cell, "cell_id")),
             prompt=str(self._cell_value(cell, "prompt")),
@@ -377,16 +380,15 @@ class ProductionAdapter:
                 recorder.prediction(prediction)
             if self.policy.executed_steps >= ACTION_CAP:
                 break
-        if not hasattr(recorder, "finish"):
-            raise AdapterError("recorder must classify the completed episode")
-        outcome = recorder.finish()
-        if not isinstance(outcome, Mapping) or outcome.get("status") not in {
-            "valid_success", "valid_model_failure", "technical_invalid", "censored"
-        }:
-            raise AdapterError("recorder.finish() returned no canonical episode status")
-        if outcome.get("status") == "technical_invalid" and not outcome.get("technical_cause"):
-            raise AdapterError("technical_invalid episode requires technical_cause")
-        return dict(outcome)
+        # Semantic outcome classification belongs to the worker/scorer.  The
+        # adapter returns execution evidence and never invents success/failure.
+        return {
+            "status": "censored",
+            "termination_reason": "action_cap",
+            "safety_terminated": True,
+            "executed_action_count": self.policy.executed_steps,
+            "prediction_count": len(self.policy.predictions),
+        }
 
     def _validate_response(self, response: Mapping[str, Any]) -> None:
         """Hook for model-specific response identity checks."""
@@ -461,10 +463,13 @@ def load_production_adapter(model: str) -> ProductionAdapter:
     if model not in {"N3", "D1"}:
         raise AdapterError(f"unsupported SGW-01 model: {model}")
     factory = _load_transport_factory()
+    config = dict(NANO_CONFIG if model == "N3" else DREAMZERO_CONFIG)
     try:
-        transport = factory(model=model, config=dict(NANO_CONFIG if model == "N3" else DREAMZERO_CONFIG))
+        runtime = factory(model=model, config=config)
     except TypeError as exc:
         raise AdapterError("pinned runtime factory must accept model and config") from exc
+    environment_factory = getattr(runtime, "environment_factory", None)
+    transport = getattr(runtime, "transport", runtime)
     if not callable(transport):
         raise AdapterError("pinned runtime factory did not return a callable transport")
     policy_type = NanoPolicyAdapter if model == "N3" else DreamZeroPolicyAdapter
@@ -472,4 +477,5 @@ def load_production_adapter(model: str) -> ProductionAdapter:
         policy_type,
         transport=transport,
         transport_factory=factory,
+        environment_factory=environment_factory,
     )

@@ -80,6 +80,15 @@ Those records are not scientific evidence. Global pilot-derived storage
 accounting and GPU-hour budget enforcement are still missing from the worker;
 the configurable disk floor alone does not satisfy the runbook.
 
+The first zero-model LAT workspace Job, `sgw01-ali-lat-workspace-20260922f`,
+passed the idle guard but failed before Isaac at `20:09:49Z`. The input
+receipts and Git identity were intact. A reproduced bootstrap-parser bug
+interpreted `--renderer realtime` as an abbreviation of `--renderer-receipt`,
+overwriting the receipt path. Source commit
+`b429ddd8c3e7be59f63759c1820e352029e48b8c` disables that abbreviation and
+adds a full two-stage CLI regression. Attempt f remains an immutable
+infrastructure failure; it is not a fixture or model failure.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure
@@ -91,6 +100,7 @@ logs and receipts remain in:
 /data/users/ali/sgw-01/preflight/rtx-20260922c/
 /data/users/ali/sgw-01/preflight/a40-20260922d/
 /data/users/ali/sgw-01/preflight/a40-20260922e/
+/data/users/ali/sgw-01/qualification/lat-workspace-20260922f/
 ```
 
 The source used by the last probe was
@@ -102,8 +112,9 @@ and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Use the passed attempt-e renderer/assets receipts for a fresh bounded
-one-A40 zero-model workspace capture, then qualify the physical fixtures.
+Stage corrected source `b429ddd8c3e7be59f63759c1820e352029e48b8c` and use
+the passed attempt-e renderer/assets receipts for fresh bounded one-A40
+workspace attempt g, then qualify the physical fixtures. Do not rerun f.
 **Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**
 

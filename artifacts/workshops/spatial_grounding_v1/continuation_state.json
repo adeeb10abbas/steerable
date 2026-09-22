@@ -90,6 +90,17 @@
       "receipt_sha256": "e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5",
       "log": "infrastructure/a40-20260922e.log",
       "log_sha256": "fc42d826adc9be4ffde5ac3911739c753b008498504b9f15d06df26f4a436780"
+    },
+    {
+      "job": "sgw01-ali-lat-workspace-20260922f",
+      "pod": "sgw01-ali-lat-workspace-20260922f-6qffb",
+      "status": "failed_before_isaac_bootstrap_argument_abbreviation",
+      "source_commit": "95e72f04317f786ce87c10c3b84fe279a853ba22",
+      "peak_allocated_gpus": 1,
+      "receipt": "infrastructure/a40-20260922f-lat-workspace.json",
+      "receipt_sha256": "c4a5ea9e29bf66c39453958bb80e74df12d290face9510c818b15685b0b27bef",
+      "diagnosis": "Bootstrap argparse abbreviated --renderer to --renderer-receipt, replacing the existing receipt path with realtime. Input files and Git identity were independently verified.",
+      "corrected_source_commit": "b429ddd8c3e7be59f63759c1820e352029e48b8c"
     }
   ],
   "active_task_gpu_jobs": [],
@@ -101,7 +112,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Launch fresh bounded one-A40 zero-model workspace capture using the passed attempt-e renderer/assets receipts and proven native-library order. Then qualify fixtures and complete runtime/worker guards before any behavioral release. Do not rerun a completed historical cell.",
+  "next_action": "Stage corrected source b429ddd8c3e7be59f63759c1820e352029e48b8c and launch fresh bounded one-A40 zero-model workspace attempt g using passed attempt-e receipts and native libraries. Never overwrite or rerun f. Then qualify fixtures and finish runtime/worker guards before behavioral release.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

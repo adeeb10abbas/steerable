@@ -84,6 +84,53 @@ class AttemptRecorder:
         atomic_json(self.path / "states" / "reset.json", dict(reset))
         self.event("reset_attested", reset_id=reset["reset_id"], camera_name=reset["camera_name"])
 
+    def _array(self, path: Path, value: Any) -> dict[str, Any]:
+        try:
+            import numpy as np
+        except ImportError as exc:
+            raise ContractError("NumPy is required to retain raw arrays") from exc
+        array = np.asarray(value)
+        if array.dtype == object or not np.isfinite(array).all():
+            raise ContractError("raw array must be finite and non-object")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        np.save(path, array, allow_pickle=False)
+        return {"path": path.relative_to(self.path).as_posix(), "sha256": sha256_file(path),
+                "bytes": path.stat().st_size, "shape": list(array.shape), "dtype": str(array.dtype)}
+
+    def record_reset(self, payload: Mapping[str, Any], initial_state: Mapping[str, Any] | None = None,
+                     initial_sim_time: float | None = None, initial_viewport_frame: Any = None) -> None:
+        reset = payload
+        required = {"full_reset", "reset_id", "camera_name", "camera_fingerprint", "reset_sha256"}
+        if not required.issubset(reset) or reset.get("full_reset") is not True:
+            raise ContractError("reset record lacks full physical/cache-reset identity")
+        atomic_json(self.path / "states" / "reset.json", {"reset": dict(reset), "state": initial_state,
+                                                           "sim_time_s": initial_sim_time})
+        if initial_viewport_frame is not None:
+            self._array(self.path / "observations" / "frame-0000.npy", initial_viewport_frame)
+        self.event("reset_attested", reset_id=reset["reset_id"], camera_name=reset["camera_name"])
+
+    def record_action(self, request_id: str, action_index: int, sim_time: float, action: Any,
+                      state: Mapping[str, Any], viewport_frame: Any, step_result: Mapping[str, Any]) -> None:
+        if not request_id or action_index < 1 or sim_time < 0:
+            raise ContractError("action telemetry identity is invalid")
+        action_record = self._array(self.path / "actions" / f"action-{action_index:04d}.npy", action)
+        frame_record = self._array(self.path / "observations" / f"frame-{action_index:04d}.npy", viewport_frame)
+        atomic_json(self.path / "states" / f"state-{action_index:04d}.json", {
+            "request_id": request_id, "action_index": action_index, "sim_time_s": sim_time,
+            "state": dict(state), "step_result": dict(step_result), "action": action_record, "frame": frame_record,
+        })
+
+    def finalize_viewport(self) -> dict[str, Any]:
+        """Accept only a real encoder-produced MP4 already closed by the runtime."""
+        path = self.path / "videos" / "viewport.mp4"
+        if not path.is_file() or path.stat().st_size < 32:
+            raise ContractError("viewport video writer did not produce a durable MP4")
+        header = path.read_bytes()[:32]
+        if b"ftyp" not in header:
+            raise ContractError("viewport artifact is not an ISO BMFF video stream")
+        return {"path": path.relative_to(self.path).as_posix(), "sha256": sha256_file(path),
+                "bytes": path.stat().st_size}
+
     def prediction(self, prediction: Any) -> None:
         """Persist the adapter's raw request/response envelope without decoding it."""
         request = getattr(prediction, "raw_request", None)

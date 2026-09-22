@@ -1,0 +1,41 @@
+{
+  "schema_version": "sgw-01-infrastructure-attempt-v1",
+  "attempt_id": "cpu-20260922i-lat-measurement-api-audit",
+  "status": "passed_read_only_pinned_api_audit",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "candidate_qualification_count": 0,
+  "task_boundary": "CPU-only read-only source inspection; no simulator initialization",
+  "kubernetes": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "job": "sgw01-ali-lat-measurement-api-audit-20260922i",
+    "job_uid": "55ed024b-c8d3-4c7a-a379-fce5acc4c082",
+    "pod": "sgw01-ali-lat-measurement-api-audit-20260922i-fbvqx",
+    "pod_uid": "1df3946a-cb3b-431d-a102-5cb1ceded7fb",
+    "backoff_limit": 0,
+    "active_deadline_seconds": 180,
+    "exit_code": 0,
+    "termination_reason": "Completed"
+  },
+  "runtime": {
+    "study_source_commit": "b429ddd8c3e7be59f63759c1820e352029e48b8c",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "pvc_mounted_read_only": true,
+    "resource_limits": {
+      "cpu": "1",
+      "memory": "1Gi",
+      "nvidia_com_gpu": 0
+    }
+  },
+  "pinned_api_findings": {
+    "get_pose": "WorldState.get_pose defaults is_relative=True and returns an AssetBase rigid-root pose minus scene.env_origins.",
+    "get_bbox": "WorldState.get_bbox transforms cached local geometry using that pose and returns corners plus a transformed geometric centroid in the same env-local frame.",
+    "get_velocity": "WorldState.get_velocity returns AssetBase root_vel_w; a geometric-center linear velocity requires rigid-body transport from the root.",
+    "prohibited_substitutions": [
+      "AABB midpoint is not a geometric centroid.",
+      "Rigid-root position is not assumed to be the physical scoring center."
+    ]
+  },
+  "next_action": "Use a newly captured geometric-center-aware zero-model workspace receipt before any deterministic proposal or waypoint-validation attempt."
+}

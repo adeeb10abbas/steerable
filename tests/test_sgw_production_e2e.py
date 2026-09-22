@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 
 from experiments.workshops.spatial_grounding_v1.adapters import NanoPolicyAdapter, ProductionAdapter
+from experiments.workshops.spatial_grounding_v1.compile import compile_manifests
 from experiments.workshops.spatial_grounding_v1.contract import Cell, load_release, verify_completion_pointer
 from experiments.workshops.spatial_grounding_v1.recorder import AttemptRecorder
 from experiments.workshops.spatial_grounding_v1.worker import _canonical_outcome, _load_scorer
@@ -85,6 +86,9 @@ def test_production_adapter_recorder_scorer_wrong_side_publishes_real_evidence(t
     assert recorder.complete(outcome)
     pointer = release.root.parent / "cells" / f"{cell.cell_id}.complete.json"
     verify_completion_pointer(release, pointer)
+    compiled = compile_manifests([pointer], expected_release_hashes=release.hashes)
+    assert len(compiled.valid_rows) == 1
+    assert compiled.rows[0]["status"] == "valid_model_failure"
     assert (recorder.path / "videos" / "viewport.mp4").is_file()
     assert len(list((recorder.path / "actions").glob("*.npy"))) == 450
     assert len(list((recorder.path / "observations").glob("*.npy"))) == 451

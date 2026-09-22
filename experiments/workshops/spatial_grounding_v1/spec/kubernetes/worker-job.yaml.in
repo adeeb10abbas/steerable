@@ -1,0 +1,63 @@
+# TEMPLATE ONLY: the SGW-01 release tool must resolve and validate every field.
+# The worker module is an implementation deliverable, not supplied by this spec.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${JOB_NAME}
+  namespace: ${VERIFIED_NAMESPACE}
+  labels:
+    app.kubernetes.io/name: sgw-01
+    app.kubernetes.io/managed-by: ali-research
+    sgw-release: ${RELEASE_LABEL}
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 2
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sgw-01
+        sgw-release: ${RELEASE_LABEL}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 180
+      automountServiceAccountToken: false
+      containers:
+        - name: worker
+          image: ${VERIFIED_IMAGE_AT_SHA256_DIGEST}
+          workingDir: ${VERIFIED_SOURCE_ROOT}
+          command: ["python", "-m", "experiments.workshops.spatial_grounding_v1.worker"]
+          args:
+            - --release
+            - ${IMMUTABLE_RELEASE_PATH}
+            - --model
+            - ${MODEL_ID}
+            - --family
+            - ${FAMILY_ID}
+            - --stage
+            - ${STAGE_ID}
+            - --resume
+            - --max-valid-episodes
+            - "${PARTITION_EPISODES}"
+            - --max-cell-attempts
+            - "3"
+            - --heartbeat-seconds
+            - "60"
+          resources:
+            requests:
+              cpu: "${VERIFIED_CPU_REQUEST}"
+              memory: "${VERIFIED_MEMORY_REQUEST}"
+              nvidia.com/gpu: ${VERIFIED_GPU_COUNT}
+            limits:
+              cpu: "${VERIFIED_CPU_LIMIT}"
+              memory: "${VERIFIED_MEMORY_LIMIT}"
+              nvidia.com/gpu: ${VERIFIED_GPU_COUNT}
+          volumeMounts:
+            - name: study-data
+              mountPath: ${VERIFIED_PVC_MOUNT}
+      volumes:
+        - name: study-data
+          persistentVolumeClaim:
+            claimName: ${VERIFIED_PVC_NAME}
+# Merge only required, already-qualified renderer/runtime mounts and node settings.
+# Do not add privileged mode, host paths, secrets, or broad RBAC speculatively.

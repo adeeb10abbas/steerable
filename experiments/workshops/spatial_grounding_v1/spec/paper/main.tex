@@ -1,0 +1,213 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,booktabs,tabularx,longtable,array,enumitem,xcolor,needspace}
+\usepackage[hidelinks]{hyperref}
+\definecolor{ink}{RGB}{24,65,80}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.35em}
+\setlist[itemize]{nosep,leftmargin=*}
+\newcommand{\cube}{Rubik's cube}
+\newcommand{\status}{\textbf{Research plan --- SGW-01, version 1.1.} No new SGW-01 experiments have run. Historical findings and proposed experiments are identified separately.}
+\title{Spatial Instruction Robustness in World--Action Models:\newline Comparing Predicted and Executed Motion}
+\author{Ali-Adeeb Abbas}
+\date{22 September 2026}
+\begin{document}
+\maketitle
+\begin{center}\small\color{ink}\status\end{center}
+
+\begin{abstract}
+World--action models produce actions together with predictions of future observations. Those predictions could help reveal failures that a final task score alone does not explain, but only if they remain faithful to execution when instructions change. We propose a controlled study of spatial instruction robustness in Cosmos3 Nano and DreamZero. Lateral position, relative height, and relative distance each have two opposing goals and three descriptions: direct wording, a subject-first relational clause, and an equivalent reference-inverted clause. We will measure goal preservation in executed placements, prediction accuracy against persistence at aligned physical times, and disagreement between predicted and executed relations. Existing WAM wording experiments motivate the study; the new experiments have not run. The intended contribution is evidence about what generated futures reveal and miss in language-conditioned control. The design does not isolate a causal benefit of world modeling or establish that generated video is an internal plan.
+\end{abstract}
+
+\section{Question and motivation}
+A failed placement can have several explanations. The robot may act on the wrong object, use the wrong reference, fail to preserve a spatial relation under a different sentence, or lose an otherwise appropriate movement during grasping or release. Final task success records whether the goal was achieved but does not uniquely identify the explanation.
+
+Our motivating language test preserves the intended placement and the object being manipulated. ``Put the Rubik's cube to the left of the bowl'' and ``Place the Rubik's cube so that the bowl is to the right of the Rubik's cube'' describe the same physical goal. The latter exchanges the arguments of the relational clause and reverses the relation word. It does not change the robot's physical coordinate frame or ask the robot to move the bowl.
+
+The proposed question is: \textbf{which spatial goals are preserved across equivalent descriptions in world--action models, and where are failures visible in their predictions and executed behavior?} A useful answer requires more than a larger vocabulary test. We will separate the effect of sentence construction from relational inversion, retain opposite-goal controls, and measure both the manipulated object and its references.
+
+\textbf{Workshop focus.} Our proposed fit is primarily Motion 6 of \emph{Do Robots Need World Models?} (benchmark design), with a narrower connection to Motion 4 (reliable model-based evaluation)~\cite{workshop}. We examine each WAM's own jointly generated predictions and actions. We do not test arbitrary-policy simulation, policy rankings, or safe deployment. The prediction--execution comparison is central; wording sensitivity alone would not establish the intended contribution.
+
+This question builds on existing counterfactual instruction-following research. LIBERO-CF evaluates conflicting instructions under controlled visual contexts~\cite{liberocf}. STAGE studies the relationship between recoverable semantics and native actions~\cite{stage}. The general distinction between semantics and action is therefore not a novelty claim. Our proposed focus is goal preservation across spatial descriptions in WAMs, together with physically aligned comparisons of their generated futures and execution. Its added diagnostic value must be demonstrated empirically.
+
+\section{What the existing experiments establish}
+Table~\ref{tab:existing} summarizes completed evidence from the pinned steerability archive~\cite{archive}. None of these observations is a new result of the proposed study.
+
+\begin{table}[ht]
+\centering\small
+\caption{Completed evidence motivating SGW-01. Wording forms share reset/sampling blocks. Historical cohorts use their original scoring and are not pooled with the new study.}
+\label{tab:existing}
+\begin{tabularx}{\linewidth}{@{}p{0.24\linewidth}X@{}}
+\toprule
+Experiment & Observation \\
+\midrule
+Cosmos Nano wording & 20 seeds, four forms, two goals, 160 episodes. Direct wording: 39/40 successes; short: 39/40; outcome: 35/40; desired plus negated opposite: 21/40. \\
+Cosmos Edge wording & 160 episodes. LEFT success changes from 18/20 under direct wording to 5/20 under short wording; RIGHT changes from 20/20 to 19/20. \\
+WAM layout interventions & Nano and custom-guidance DreamZero were each evaluated in 108 episodes over two fixed layouts. These motivate scene controls, not a general account of language understanding. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+These completed WAM experiments motivate controlled wording comparisons, but they do not contain the new syntax-matched reference-inversion test. The proposed C condition separates a change in sentence construction from the additional change in relational arguments. The earlier canonical-grasp intervention failed its state-validity checks before model inference and supplies no stage-localization result. Historical $\pi_{0.5}$ results are retained only in Appendix~\ref{app:pi05}; they are not a matched control for this study.
+
+\Needspace{14\baselineskip}
+\section{Proposed experiment}
+\subsection{Three descriptions of each physical goal}
+Every block contains two opposite physical goals and three instruction forms:
+\begin{description}[font=\normalfont\bfseries]
+\item[D: direct.] Put the Rubik's cube to the left of the bowl.
+\item[C: subject-first clause.] Place the Rubik's cube so that the Rubik's cube is to the left of the bowl.
+\item[I: inverted clause.] Place the Rubik's cube so that the bowl is to the right of the Rubik's cube.
+\end{description}
+The primary comparison is I versus C. C versus D measures sensitivity to the change in construction. Both physical goals appear in each form, allowing us to check whether a model changes its behavior appropriately when the requested goal changes. Preservation concerns the requested outcome, not identical action traces.
+
+\subsection{Relations and physical scoring}
+Let $c,b,p$ denote the centers of the cube, bowl, and plate. Robot-left is positive $y$ and world-up is positive $z$. We define signed relations
+\begin{align}
+r_{\mathrm{LAT}} &= c_y-b_y,\\
+r_{\mathrm{HEIGHT}} &= c_z-b_z,\\
+r_{\mathrm{DIST}} &= \lVert c-p\rVert_2-\lVert c-b\rVert_2.
+\end{align}
+Positive goals are left of the bowl, higher than the bowl, and closer to the bowl than the plate. Negative goals reverse these relations. All prompts explicitly retain the cube as the object to move. The complete 18-string registry appears in Appendix~\ref{app:prompts} and in the execution package.
+
+HEIGHT tests relative height, not image-up/down or directly-overhead stacking. Both goals require a released placement on a reachable support, with lower and upper surfaces around an intermediate-height reference. Which lateral side contains the upper support is counterbalanced. DIST tests distance to two visible anchors, not change from an unstated initial distance. Bowl/plate side is counterbalanced. Swapping the arguments of a distance does not itself invert near and far; the inverted prompts preserve the comparative inequality explicitly.
+
+Initial states must satisfy $|r(0)|\leq5$ mm, so neither requested relation is already satisfied. Success requires $q r\geq30$ mm for physical goal sign $q\in\{-1,+1\}$, a recorded pickup, detached release, and stable supported placement during the final 0.5 simulated seconds. Pickup requires a cube-center rise of at least 30 mm for three recorded steps. Final cube speed must be below 0.02 m/s and angular speed below 0.2 rad/s. If any reference center moves more than 5 mm from its initial position at any recorded step, success is zero; the trial and measured margins remain in the analysis. Simulator state is used for reset qualification and scoring, not language coaching or additional policy input.
+
+\subsection{Fixtures, models, and sample}
+All new trials use DROID/RoboLab. A model-blind fixture procedure must demonstrate both goals with a scripted controller, verify stable resets within 3 mm and 2 degrees, and save asset/pose/camera hashes. Scripted successes establish fixture feasibility only. We will freeze at most 100 candidates per family and allocate 29 qualifying candidates in seeded hash order to pilot, development, and confirmation, respecting the declared side balance: two per side in development and 12 per side in confirmation for HEIGHT and DIST. No candidate is selected by policy success. HEIGHT or DIST remain unrun if valid fixtures cannot be constructed; qualification of one family does not depend on the others.
+
+The two primary configurations are Cosmos3 Nano Policy DROID with guidance 3 (N3) and DreamZero DROID's official conditional-action path (D1). Nano uses the pinned four-step, shift-5, history-1 configuration and executes up to 32 actions per request. D1 uses video guidance 5, 16 configured inference steps with actual cache behavior recorded, and eight executed actions per request. Its effective noise seed remains 1140. Historical custom s2 guidance is not substituted for the official path. Exact checkpoint revisions and required runtime identities are in the specification.
+
+\begin{table}[ht]
+\centering
+\caption{Planned new episodes. Each layout has six conditions per model. No row has run.}
+\label{tab:matrix}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Stage & Layouts/family & Families & Models & Episodes \\
+\midrule
+Recording pilot & 1 & 3 & 2 & 36 \\
+Development & 4 & 3 & 2 & 144 \\
+Confirmation & 24 & 3 & 2 & 864 \\
+\midrule
+Maximum total & 29 & 3 & 2 & \textbf{1,044} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+There are 174 six-episode blocks. Confirmation conditions use balanced execution positions within each family/model. Every condition in a block shares its physical reset and a matched effective model draw where supported. DreamZero's fixed noise is not counted as independent sampling. The independent unit for inference is the layout; frames, requests, and repeated conditions do not increase that sample size. Twenty-four layouts per family is a bounded initial study, not a demonstrated power guarantee for small equivalence margins.
+
+Every episode runs for 450 controller actions with goal-triggered stopping disabled. First success is logged as an event. Safety-truncated trajectories remain censored; their final state is not carried forward. Physical durations are reported because equal action counts across models need not imply equal time. Prompts remain static, and model temporal state is fully reset between episodes.
+
+\section{Predictions and executed motion}
+The recorder must retain model inputs, original decoded futures, returned and executed actions, per-step object/reference states, original camera images, viewport video, and physical timestamps. A generated frame receives a fidelity score only if its target time is documented and lies within the action prefix actually executed before replanning. Unexecuted predicted futures have no observed ground truth. Presentation videos with padding or stitched horizons cannot serve as timing evidence.
+
+On development data we will select the largest supported positive forecast horizon $H$ inside the unchanged executed prefix, separately for each model, then freeze it across that model's forms and families. We select requests at relative indices 0.25 and 0.75 using metadata alone, deduplicating when necessary; unclear images are not replaced with easier cases. First requests are retained for matched-input checks. Later requests see different closed-loop states, so their differences are not prompt-only effects.
+
+For visible target/reference pairs, two blinded annotators locate centers in current, predicted, and actual images. Relative position errors are normalized by image diagonal. The required baseline is persistence: does the prediction improve on assuming the relation remains unchanged? Object and reference trajectories are also reported separately. The maximum initial confirmation workload is 1,728 selected requests and 10,368 frame judgments before adjudication.
+
+Semantic forecast labels require additional validation. A monocular height ordering is not automatically world-height ordering, and pixel distance is not automatically physical distance. A family-specific procedure must identify the relation from the available views/supports on held-out rendered reference states; otherwise the semantic label is unknown. The execution branch can remain valid even if semantic prediction scoring is unavailable. We will report missingness and condition-specific coverage rather than convert unknown predictions to errors or successes.
+
+Prediction--execution categories distinguish agreement, disagreement, and unobservability at the measured horizon. A correct generated relation with an incorrect executed relation demonstrates a disagreement between outputs. It does not prove that the model understood the sentence or that the generated video caused the action. Stationary pickup phases are not classified as ignored instructions simply because neither output yet shows directional transport.
+
+\section{Planned analysis and interpretation}
+For layout $l$, form $k$, and goal sign $q$, let $S_{lkq}$ be fixed-endpoint task success and $M_{lkq}=q r_{lkq}$ the requested-side margin. Within each model and relation family, the primary execution contrast is
+\begin{equation}
+\Delta_S = \frac{1}{L}\sum_l\frac{1}{2}\sum_q(S_{lIq}-S_{lCq}).
+\end{equation}
+The key continuous secondary replaces $S$ with $M$. We will report each goal separately, C--D construction effects, directional endpoint separation within each form, and distributions of positive, negative, and tied responses. An average near zero can conceal opposing strategies.
+
+Uncertainty uses 20,000 layout-cluster bootstrap resamples, retaining all six conditions together. Six primary model--family comparisons use Holm correction for paired sign-flip tests with 100,000 fixed-seed draws; the exchangeability assumption will be stated. Safety terminations count as unsuccessful for the all-trial binary endpoint but leave continuous terminal margins censored. Continuous complete-case estimates are explicitly conditional; full-cohort bounds use the frozen fixture workspace. Incomplete technical blocks are reported rather than silently omitted.
+
+Prediction skill and disagreement rates use the same layout unit, averaging requests within episodes. Binary missingness bounds treat unknown cases as zero and one. Continuous prediction accuracy is conditional on valid localization. Equivalence is not inferred from nonsignificance: a claim requires the 90\% paired intervals to lie within both $\pm0.10$ success probability and $\pm0.02$ m requested margin, including missingness/censoring. Those criteria concern the specified endpoints only.
+
+We will examine the following explanations without presuming their outcomes:
+\begin{itemize}
+\item If C loses performance relative to D and I adds little, the longer construction is a sufficient observed source of difficulty in that setting.
+\item If I loses performance relative to C, relational argument reversal adds a cost beyond the matched construction.
+\item If predicted and executed relations disagree, the model's generated output is not a faithful description of its action outcome at that horizon.
+\item If transport is appropriate but release loses the relation, the failure becomes observable at release. This identifies a stage, not a unique internal cause.
+\end{itemize}
+
+\section{Execution plan and current status}
+The agent package specifies a persistent Kubernetes queue for pilot, development, and confirmation. Completed trials survive worker restarts. Valid failures remain observations; only technical interruptions permit retry, with at most three attempts per cell. Exclusive worker ownership prevents duplicate model requests. Raw recordings and immutable manifests reside on a verified persistent volume.
+
+Before launch, agents must implement and test the worker, qualify fixtures and recording, and bind current user-owned resources and budget. The ceiling is two workers and four GPUs, subject to that existing budget. No cluster has been contacted or inference launched for SGW-01 while preparing this plan.
+
+Qualified agents may consume the finite released queue without permission for each block. They stop on exhausted retries, runtime drift, storage/budget limits, or invalid fixtures, while independent qualified branches can continue. Every handoff records completed and remaining cells, raw locations, runtime identities, owned Jobs, and a verified restart command. Progress requires recent model requests and durable artifacts, not merely a running pod.
+
+\section{Scope and intended paper}
+The main proposed results are per-family execution effects and aligned prediction--execution disagreement, with persistence skill and measurement coverage. Failure-stage/object trajectories provide supporting diagnostic detail. The completed study should establish which observed failures are reproducible and what the additional prediction output reveals. It may find that prediction inspection adds little; that outcome must be reported as clearly as a useful diagnostic result.
+
+The design does not establish a universal theory of spatial understanding, a causal advantage of world modeling, or generalization to hardware and arbitrary natural language. The three families have different physical requirements; their raw scores are not a ranking of abstract concept difficulty. Extra wording forms, camera-frame tests, anchor substitution, validated stable-grasp interventions, and custom guidance are separate extensions and are not in the released scientific matrix. The final workshop submission targets the research-paper track and its four-page CoRL format, with the currently listed October 12, 2026 deadline~\cite{workshop}. This longer document is the working plan, not the submission. Reference and supplementary-material allowances must be checked against the final rules.
+
+\begingroup\footnotesize\raggedright
+\begin{thebibliography}{9}
+\bibitem{workshop} \emph{Do Robots Need World Models?} CoRL 2026 workshop. \url{https://do-robots-need-world-models.github.io/}. Accessed 22 September 2026.
+\bibitem{archive} A.-A. Abbas et al. \emph{Steerability study: committed experiment artifacts}. \href{https://github.com/adeeb10abbas/steerable/tree/ce561e66f82e95055e39d3d7711691982f6b2086}{Source revision \texttt{ce561e66f82e}}.
+\bibitem{oldpaper} A.-A. Abbas, E. Seraj, B. Toghi, and T. Padir. \emph{Move the Objects, Move the Score: Understanding Directional Success Gaps in Language-conditioned Manipulation}. \href{https://www.overleaf.com/project/6a82672ecde49ed541431887}{Working manuscript (Overleaf)}.
+\bibitem{liberocf} \emph{When Vision Overrides Language: Evaluating and Mitigating Counterfactual Failures in VLAs}. 2026. \url{https://arxiv.org/abs/2602.17659}.
+\bibitem{stage} B. Jin, Y. Liang, and H. Shen. \emph{STAGE: Diagnosing Semantic Transfer at Grounded Execution in Embodied Agents}. 2026. \url{https://arxiv.org/abs/2609.13458}.
+\end{thebibliography}
+\endgroup
+
+\clearpage\appendix
+\section{Exact instruction registry}\label{app:prompts}
+The physical goal, rather than the literal direction word, determines scoring. Each sentence below explicitly asks to move the cube. Strings are stored with SHA-256 hashes in the agent package. D denotes direct wording, C the subject-first clause, and I the equivalent inverted clause.
+
+\subsection*{LAT}
+\textbf{Positive physical goal.}\par
+\begin{description}[font=\normalfont\bfseries]
+\item[D] Put the Rubik's cube to the left of the bowl.
+\item[C] Place the Rubik's cube so that the Rubik's cube is to the left of the bowl.
+\item[I] Place the Rubik's cube so that the bowl is to the right of the Rubik's cube.
+\end{description}
+\textbf{Negative physical goal.}\par
+\begin{description}[font=\normalfont\bfseries]
+\item[D] Put the Rubik's cube to the right of the bowl.
+\item[C] Place the Rubik's cube so that the Rubik's cube is to the right of the bowl.
+\item[I] Place the Rubik's cube so that the bowl is to the left of the Rubik's cube.
+\end{description}
+\subsection*{HEIGHT}
+\textbf{Positive physical goal.}\par
+\begin{description}[font=\normalfont\bfseries]
+\item[D] Put the Rubik's cube higher than the bowl.
+\item[C] Place the Rubik's cube so that the Rubik's cube is higher than the bowl.
+\item[I] Place the Rubik's cube so that the bowl is lower than the Rubik's cube.
+\end{description}
+\textbf{Negative physical goal.}\par
+\begin{description}[font=\normalfont\bfseries]
+\item[D] Put the Rubik's cube lower than the bowl.
+\item[C] Place the Rubik's cube so that the Rubik's cube is lower than the bowl.
+\item[I] Place the Rubik's cube so that the bowl is higher than the Rubik's cube.
+\end{description}
+\Needspace{19\baselineskip}
+\subsection*{DIST}
+\textbf{Positive physical goal.}\par
+\begin{description}[font=\normalfont\bfseries]
+\item[D] Put the Rubik's cube closer to the bowl than to the plate.
+\item[C] Place the Rubik's cube so that the Rubik's cube is closer to the bowl than to the plate.
+\item[I] Place the Rubik's cube so that the plate is farther from the Rubik's cube than the bowl is.
+\end{description}
+\textbf{Negative physical goal.}\par
+\begin{description}[font=\normalfont\bfseries]
+\item[D] Put the Rubik's cube farther from the bowl than from the plate.
+\item[C] Place the Rubik's cube so that the Rubik's cube is farther from the bowl than from the plate.
+\item[I] Place the Rubik's cube so that the plate is closer to the Rubik's cube than the bowl is.
+\end{description}
+
+\section{Items still requiring implementation}
+The specification fixes the scientific comparisons, counts, scoring requirements, and analysis. It does not claim that robot-valid coordinates, image/time mappings, storage binding, model wrappers, or restart recovery have already been implemented. Receiving agents must produce and validate those artifacts, record their hashes in a new immutable release, and keep pilot/development observations separate from confirmation. A blocked family remains explicitly unrun. No planned cell is treated as an observation.
+
+\section{Historical VLA evidence and an optional baseline}\label{app:pi05}
+This material is background for planning, not part of the core WAM evidence or an already-qualified control. The earlier $\pi_{0.5}$ experiment used 341 matched blocks in one scene (1,364 episodes). Physical-left minus physical-right endpoint separation changed from 23.28 cm to 0.19 cm under reference inversion; LEFT successes changed from 210 to 151 and RIGHT from 297 to 240, each out of 341~\cite{archive,oldpaper}.
+
+The $\pi_{0.5}$ inversion result concerns an action-only VLA, not a WAM. Its canonical separation has a 95\% interval of $[21.89,24.56]$ cm; the inverted interval is $[-0.88,1.27]$ cm. A small signed average does not imply identical trajectories or zero response in every trial. All 682 same-goal comparisons between forms had distinct action traces. The result shows a failure to preserve the measured directional behavior under the tested reformulation.
+
+These historical runs are not a matched SGW-01 control. Keep them out of the submission's abstract and main results.
+
+An optional new $\pi_{0.5}$ baseline would use the same 29 LAT layouts and six conditions: 174 additional episodes (6 pilot, 24 development, 144 confirmation). Match the physical evaluation, pin and qualify its runtime, and disclose remaining observation, timing and compute differences. Compare within-model I--C and C--D effects. This unqueued baseline tests whether a wording effect also appears in an action-output policy. Architecture and training differences prevent attributing between-model differences to world modeling; that requires a separate controlled ablation.
+
+\end{document}

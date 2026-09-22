@@ -7,7 +7,10 @@ from experiments.workshops.spatial_grounding_v1.compile import (
     compile_manifests,
     equivalence,
     compile_registered_queue,
+    compile_primary_statistics,
     render_neutral_coverage_table,
+    render_paper_export_plan,
+    marginal_sign_bounds,
     holm_adjust,
     holm_adjust_primary,
     paired_signflip,
@@ -74,3 +77,17 @@ def test_registered_queue_preserves_unrun_cells_and_neutral_output():
     assert compiled.complete is False
     assert len(compiled.missing_cell_ids) == 1044
     assert "not_run" in render_neutral_coverage_table(compiled)
+    assert compiled.confirmation_estimates
+    assert all(row["status"] == "incomplete" for row in compiled.confirmation_estimates)
+    assert all(row["status"] == "unavailable" for row in compile_primary_statistics(compiled))
+    plan = render_paper_export_plan(compiled)
+    assert plan["status"] == "not_run_or_incomplete"
+    assert plan["figures"] == []
+
+
+def test_sign_bounds_and_strict_ninety_percent_equivalence():
+    assert marginal_sign_bounds([1.0], 1, lower=-1.0, upper=1.0)["sign"] == "undetermined"
+    assert marginal_sign_bounds([2.0], 0, lower=-1.0, upper=1.0)["sign"] == "positive"
+    assert not equivalence((-0.10, 0.05), (-0.01, 0.01))
+    assert not equivalence((-0.01, 0.01), (-0.02, 0.02))
+    assert equivalence((-0.09, 0.09), (-0.019, 0.019))

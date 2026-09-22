@@ -332,6 +332,25 @@ def censoring_bounds(
     return ((base + missing_count * lower) / denominator, (base + missing_count * upper) / denominator)
 
 
+def marginal_sign_bounds(
+    observed: Sequence[float],
+    missing_count: int,
+    *,
+    lower: float,
+    upper: float,
+) -> dict[str, float | str]:
+    """Return a censoring-aware sign conclusion without forcing an indeterminate sign."""
+    bound_lower, bound_upper = censoring_bounds(
+        observed, missing_count, lower=lower, upper=upper
+    )
+    sign = (
+        "positive" if bound_lower > 0 else
+        "negative" if bound_upper < 0 else
+        "undetermined"
+    )
+    return {"lower": bound_lower, "upper": bound_upper, "sign": sign}
+
+
 def equivalence(
     success_ci: tuple[float, float],
     margin_ci: tuple[float, float],
@@ -343,6 +362,21 @@ def equivalence(
         -success_margin < success_ci[0] and success_ci[1] < success_margin
         and -relation_margin < margin_ci[0] and margin_ci[1] < relation_margin
     )
+
+
+def render_paper_export_plan(compiled: RegisteredCompilation) -> dict[str, Any]:
+    """Describe exportable paper artifacts without creating claims or figures."""
+    has_valid_confirmation = any(
+        row.get("status") == "complete" for row in compiled.confirmation_estimates
+    )
+    return {
+        "status": "validated_results" if has_valid_confirmation else "not_run_or_incomplete",
+        "source": "registered SGW-01 compiler output only",
+        "tables": ["coverage_ledger", "primary_statistics"] if has_valid_confirmation else [],
+        "figures": [],
+        "claims": [] if not has_valid_confirmation else ["export only validated C-layout estimates"],
+        "paper_plan_unchanged": True,
+    }
 
 
 def render_neutral_coverage_table(compiled: RegisteredCompilation) -> str:
@@ -389,6 +423,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "ledger": compiled.ledger,
         "confirmation_estimates": compiled.confirmation_estimates,
         "primary_statistics": primary,
+        "paper_export_plan": render_paper_export_plan(compiled),
         "coverage_table": render_neutral_coverage_table(compiled),
     }, indent=2, sort_keys=True) + "\n")
     return 0

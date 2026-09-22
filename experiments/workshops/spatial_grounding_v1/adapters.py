@@ -29,6 +29,7 @@ NANO_CONFIG = {
     "model": "N3",
     "asset": "nvidia/Cosmos3-Nano-Policy-DROID",
     "revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+    "source_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
     "guidance": 3,
     "denoising_steps": 4,
     "shift": 5,
@@ -305,11 +306,13 @@ class ProductionAdapter:
         transport: Transport,
         transport_factory: Callable[..., Transport],
         environment_factory: Callable[..., Any] | None = None,
+        runtime_handle: Any | None = None,
     ) -> None:
         self.policy_type = policy_type
         self.transport = transport
         self.transport_factory = transport_factory
         self.environment_factory = environment_factory
+        self.runtime_handle = runtime_handle
         self.policy: _BaseAdapter | None = None
         self.environment: Any | None = None
 
@@ -444,6 +447,8 @@ class ProductionAdapter:
             self.environment.close()
         self.environment = None
         self.policy = None
+        if self.runtime_handle is not None and hasattr(self.runtime_handle, "close"):
+            self.runtime_handle.close()
 
 
 class NanoPolicyAdapter(_BaseAdapter):
@@ -531,4 +536,5 @@ def load_production_adapter(model: str) -> ProductionAdapter:
         transport=transport,
         transport_factory=factory,
         environment_factory=environment_factory,
+        runtime_handle=runtime if hasattr(runtime, "close") else None,
     )

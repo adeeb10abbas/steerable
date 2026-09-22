@@ -63,7 +63,9 @@ fixtures**. Do not substitute repeated LAT layouts for those branches.
 The RTX PRO allocation was occupied, but a fresh A40 allocation passed the
 idle guard. A bounded replacement renderer preflight passed with the
 historically proven native-library order and actual three-camera scene
-evidence. Fixture/runtime qualification and worker storage/budget guards
+evidence. Zero-model workspace capture also succeeded, but it contains no
+validated candidate slots; proposal and waypoint validation remain missing.
+Fixture/runtime qualification and worker storage/budget guards
 still block behavioral release. The existing B200 workload is not owned by
 this task and must not be stopped. No policy server was started. The source manuscript remains a plan,
 and Overleaf synchronization also requires an authenticated connection.

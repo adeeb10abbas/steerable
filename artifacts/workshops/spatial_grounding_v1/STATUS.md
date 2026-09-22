@@ -1,6 +1,6 @@
 # SGW-01 status
 
-**A40 renderer passed; fresh zero-model workspace capture is running. Fixture qualification and model inference remain unreleased.**
+**A40 rendering and zero-model workspace measurement passed. No fixture or learned-policy episode is qualified yet.**
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
@@ -89,12 +89,25 @@ overwriting the receipt path. Source commit
 adds a full two-stage CLI regression. Attempt f remains an immutable
 infrastructure failure; it is not a fixture or model failure.
 
-Fresh Job `sgw01-ali-lat-workspace-20260922g` is running exactly once on
-one A40 with corrected source `b429ddd`. Its pod is
+Fresh Job `sgw01-ali-lat-workspace-20260922g` completed exactly once on
+one A40 with corrected source `b429ddd`, at `20:16:36Z`. Its pod was
 `sgw01-ali-lat-workspace-20260922g-mphj5` on `dcwipphhgc191.edc.nam.gm.com`.
-It passed bootstrap parsing and initialized Vulkan. Its workspace measurement
-receipt remains pending; the fixture-qualification session owns collection.
-The Job has a 1,800-second deadline and no automatic retry.
+It measured object poses and bounding boxes, ten contact-sensor names including
+`rubiks_cube__table`, and all three nonblank views. The exact workspace file
+hash is `17386e85b528c45b218e9e8f1906622a2f7039652ecc8fb21b187cada564c76a`.
+
+The previous B200 transfer pod was no longer available. A bounded CPU-only
+Job, `sgw01-ali-workspace-export-20260922h`, extracted the receipt and logs
+from a **read-only** PVC mount, preserving their exact bytes and hashes.
+It completed at `20:19:37Z`, with no GPU or model. All study GPU Jobs are now
+terminal or suspended.
+
+The measured workspace has **zero validated slots**. The current candidate
+materializer correctly refuses it: it still needs deterministic proposal and
+scripted waypoint-validation machinery. Pose origins and bounding-box centers
+also differ in this raw snapshot; their live API/frame semantics must be
+resolved before treating either as the protocol's object centers. Do not
+invent slot coordinates or mark this workspace as a qualified fixture.
 
 ## Artifacts and source identities
 
@@ -120,9 +133,9 @@ and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Collect the already-running workspace attempt g, then qualify the physical
-fixtures only after its receipt passes. Do not launch a duplicate, rerun f,
-or overwrite either attempt's evidence.
+Complete the missing model-blind workspace-to-slot/waypoint stage, including
+live pose/geometry consistency, then qualify physical fixtures from measured
+evidence. Do not rerun f/g or overwrite their evidence.
 **Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**
 

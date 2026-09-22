@@ -1,0 +1,142 @@
+{
+  "attempts": [
+    {
+      "container_state": {
+        "terminated": {
+          "containerID": "containerd://16d41b233b71e1dd3bf0c6abd8dee6eacdadcf09ae1bf2400e1dec5a48f65d75",
+          "exitCode": 0,
+          "finishedAt": "2026-09-22T23:41:19Z",
+          "reason": "Completed",
+          "startedAt": "2026-09-22T23:40:02Z"
+        }
+      },
+      "job": "sgw01-ali-render-diagnostic-20260922z",
+      "job_uid": "ec5b5fe0-3199-4cab-b372-e70b4e997df8",
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "pod": "sgw01-ali-render-diagnostic-20260922z-4rrqs",
+      "pod_uid": "a999c926-8ccf-4507-b535-196511761f35",
+      "status": {
+        "completionTime": "2026-09-22T23:41:21Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T23:41:21Z",
+            "lastTransitionTime": "2026-09-22T23:41:21Z",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-22T23:40:00Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "container_state": {
+        "terminated": {
+          "containerID": "containerd://62bff89ffbedd120ed468f8c09d10003ab54c41f81626193fecbc6e834833be5",
+          "exitCode": 0,
+          "finishedAt": "2026-09-22T23:42:46Z",
+          "reason": "Completed",
+          "startedAt": "2026-09-22T23:42:38Z"
+        }
+      },
+      "job": "sgw01-ali-render-export-20260922aa",
+      "job_uid": "b4c722cb-fa87-41e3-b4a0-dd177a60c98d",
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "pod": "sgw01-ali-render-export-20260922aa-cjpqw",
+      "pod_uid": "9279305a-5317-4179-bb43-c835d969705c",
+      "status": {
+        "completionTime": "2026-09-22T23:42:49Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T23:42:49Z",
+            "lastTransitionTime": "2026-09-22T23:42:49Z",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-22T23:42:37Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    }
+  ],
+  "behavioral_episodes": 0,
+  "decoded_video_frames_verified": 121,
+  "local_export": {
+    "bytes": 43652119,
+    "sha256": "17e06eb4ca7bad2703a5e3f9c2d47e726a5a9199db7d3a95cfb287abac722d4b"
+  },
+  "material_assets": [
+    {
+      "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+      "authored_asset": "OmniPBR.mdl",
+      "resolved_file_exists": true,
+      "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+    },
+    {
+      "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.inputs:diffuse_texture",
+      "authored_asset": "./textures/obj_000013.png",
+      "resolved_file_exists": true,
+      "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000013.png"
+    },
+    {
+      "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+      "authored_asset": "OmniPBR.mdl",
+      "resolved_file_exists": true,
+      "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+    },
+    {
+      "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.inputs:diffuse_texture",
+      "authored_asset": "./textures/obj_000030.png",
+      "resolved_file_exists": true,
+      "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/textures/obj_000030.png"
+    },
+    {
+      "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+      "authored_asset": "OmniPBR.mdl",
+      "resolved_file_exists": true,
+      "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+    },
+    {
+      "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.inputs:diffuse_texture",
+      "authored_asset": "./textures/obj_000010.png",
+      "resolved_file_exists": true,
+      "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000010.png"
+    }
+  ],
+  "model_requests": 0,
+  "next_gate": "Record the same zero-physics warmup for every native fixture reset before state zero; physically qualify candidates and all production bindings independently.",
+  "raw_root": "/data/users/ali/sgw-01/qualification/render-diagnostic-20260922z",
+  "render_updates": 120,
+  "schema_version": "sgw-01-render-readiness-diagnostic-v1",
+  "scripted_physics_actions": 0,
+  "simulated_time_s_all_samples": [
+    0.01666666753590107
+  ],
+  "source_commit": "42b26ed8d2df546340497965d1fc86d47cc14197",
+  "source_root": "/data/users/ali/sgw-01/source/42b26ed-y",
+  "status": "completed_warmup_restored_textured_appearance_not_fixture_or_behavioral_release",
+  "viewport_video": {
+    "bytes": 225169,
+    "fps": 30,
+    "frame_count": 121,
+    "path": "/data/users/ali/sgw-01/qualification/render-diagnostic-20260922z/render_diagnostic/render_only.mp4",
+    "sha256": "b02242322d0c7ca77810fdb46152e1f453feb9bc03795fb783c05c15d1bc9c25"
+  },
+  "visual_inspection": {
+    "claim_boundary": "The actual render-only readiness intervention restores intended appearance for this exact runtime; no material replacement, cache deletion, physics advance or learned request occurred.",
+    "final": "Colored Rubiks cube, red bowl, yellow banana and wood table are visible in all three camera arrays.",
+    "initial": "Table and bowl/banana surfaces remain dark; the cube texture has begun appearing.",
+    "method": "Decoded exact lossless initial/final RGB at render frames 0 and 120, plus independent full MP4 decode."
+  },
+  "workspace": {
+    "bytes": 69072,
+    "file": "a40-20260922z-workspace.json",
+    "sha256": "4490b1a7ba6cb3fb9174798bd6559a188edb01f609a7041ee88447c8e3314f45"
+  }
+}

@@ -1,6 +1,6 @@
 # SGW-01 status
 
-**A40 rendering and zero-model workspace measurement passed. No fixture or learned-policy episode is qualified yet.**
+**Recorded render-only warmup restores the intended textures. No physical fixture or learned-policy episode is qualified yet.**
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
@@ -167,7 +167,60 @@ Cosmos service is WebSocket-based (the new HTTP endpoint is an SGW-owned
 wrapper), and its published `checkpoint.json` is `{}`, not a repository/revision
 manifest. Read-only s confirmed that empty file and the exact revision in HF's
 download metadata. Full live payload verification and runtime qualification
-remain outstanding; adapter-child corrections are not yet integrated.
+remain outstanding. The adapter corrections and parent source/checkpoint-identity
+repairs are integrated in `aadb5b9`; no live model was loaded.
+
+The parent completed the prospective qualification implementation in `42b26ed`.
+Geometric rejections count toward the 100-candidate ceiling and retain explicit
+reasons; no rejected slot is refilled. The measured-r screen yields 40 geometric
+passes and 60 rejections, none physically qualified. A selected candidate now
+records both goals three times, with exactly 450 commands, 451 states/frames,
+and a decoded MP4 per complete trial. Rejected and interrupted evidence is
+retained. Local verification includes a measured-proposal-to-synthetic-recorder
+round trip; the 109 passing local checks and one Linux-only skip are engineering
+evidence only. Native reachability, contact, reset and controller execution are
+still unqualified. The fixture child is paused; the parent owns all launches.
+
+CPU material audit t never started before its deadline. Replacement u exposed
+`CreateContainerConfigError` while preparing the PVC `subPath`; it also reached
+its deadline before the later suspension patch. Fresh v used the proven single
+PVC mount and completed, but its standalone Python lacked `pxr`, so it could not
+inspect binary USD materials. Read-only exporter w then preserved the exact USD
+bytes for local `usd-core==25.5.1` inspection. Read-only audit x verified the
+three referenced diffuse PNGs: all exist, decode and contain non-gray pixels.
+The native environment also has imageio 2.37.0 and imageio-ffmpeg 0.6.0.
+These findings do not establish why rendered capture r appears dark.
+
+CPU source stage y completed at `23:38:23Z`, staging exact clean source
+`42b26ed8d2df546340497965d1fc86d47cc14197` at
+`/data/users/ali/sgw-01/source/42b26ed-y`. It also preserved all raw material
+exports on the PVC under its `retained-audits` directory, with matching hashes.
+Both prior source object stores remain required dependencies.
+
+Fresh one-A40 diagnostic z completed at `23:41:21Z` with the complete proven
+r runtime configuration. All 120 render-only updates occurred at simulated
+time `0.01666666753590107`, with zero controller actions or policy requests.
+The initial frame still had dark surfaces; the final three views show the
+colored cube, red bowl, yellow banana and wood table. All six live PNG/MDL
+references resolved to existing files. CPU exporter aa retrieved the exact
+workspace, selected RGB arrays and complete video; independent decoding verified
+all 121 video frames. All diagnostic raw frames and footage remain on the PVC.
+The diagnostic allocated one A40, completed within its 1,800-second bound and
+released it. No shared cache or material source was modified.
+
+**Disclosed operational amendment SGW-ENG-001:** after this zero-model result,
+and before learned inference, native fixture resets now perform and record the
+same zero-physics warmup before publishing state zero. Source `177e7dd` contains
+the correction; 110 local checks pass with one Linux-only skip. Scored action
+counts, scientific thresholds and the original freeze are unchanged. Equivalent
+readiness is still required for any future production simulator binding.
+
+The prospective `proposals/lat-20260922.json` binds measured workspace z and
+generator source hashes. It preserves all 100 candidates, including 60 geometric
+rejections; 40 remain eligible for native feasibility checks. The first
+hash-ordered eligible candidate is `LAT-CANDIDATE-032`. None is physically
+qualified, and historical-layout deduplication remains a release gate. This
+file is not a fixture release and contains no model outcomes.
 
 ## Artifacts and source identities
 
@@ -186,20 +239,20 @@ logs and receipts remain in:
 /data/users/ali/sgw-01/qualification/lat-workspace-20260922r/
 ```
 
-The source used by the last probe was
-`35e627eda09f24f00995fc2dce4dbee362c0bc02`, staged as a clean checkout at
-`/data/users/ali/sgw-01/source/35e627e-q` using the preserved b429ddd object
-store. The verified RoboLab
+The source used by the last completed diagnostic was
+`42b26ed8d2df546340497965d1fc86d47cc14197`, staged as a clean checkout at
+`/data/users/ali/sgw-01/source/42b26ed-y` using the preserved 35e627e-q and
+b429ddd object stores. The verified RoboLab
 checkout is pinned to `0aef241fb088ca21bb4ebd24448940ed56620d17`. The image
 digest and all probe/receipt hashes are recorded in the adjacent JSON state
 and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Resolve the material-appearance issue and complete the missing deterministic
-model-blind workspace-to-proposal/waypoint stage from measured capture r.
-Then qualify physical fixtures with recorded trajectories. Do not rerun completed
-captures or overwrite their evidence.
+Stage the committed native-reset warmup source and unqualified proposal artifact,
+then run candidate `LAT-CANDIDATE-032` in one bounded fresh Isaac process with
+all six recorded scripted trials. Preserve geometric and physical rejections.
+Do not rerun completed captures or overwrite evidence.
 **Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**
 

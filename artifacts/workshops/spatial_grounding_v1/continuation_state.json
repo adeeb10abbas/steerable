@@ -1,6 +1,6 @@
 {
   "study_id": "SGW-01",
-  "status": "v2_workspace_captured_geometry_and_rgb_verified_appearance_and_fixtures_unqualified",
+  "status": "render_readiness_verified_native_model_blind_fixture_qualification_next",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -31,12 +31,16 @@
   "implementation_slices": {
     "measurement_contract_and_prospective_capture": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
     "worker_resource_guards": "49c2023",
-    "local_sgw_tests_passed": 89,
+    "owned_nano_runtime": "aadb5b9",
+    "recorded_fixture_and_render_diagnostics": "42b26ed8d2df546340497965d1fc86d47cc14197",
+    "native_reset_readiness": "177e7dd064f41401b58c6c3491bde2b8af13ec34",
+    "local_sgw_tests_passed": 110,
+    "local_sgw_tests_skipped_linux_identity": 1,
     "live_model_runtime_qualified": false,
     "concrete_behavioral_allocation_receipt_exists": false
   },
-  "last_probe_source_commit": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
-  "last_probe_source_path": "/data/users/ali/sgw-01/source/35e627e-q",
+  "last_probe_source_commit": "42b26ed8d2df546340497965d1fc86d47cc14197",
+  "last_probe_source_path": "/data/users/ali/sgw-01/source/42b26ed-y",
   "verified_simulator_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
   "preflight_image_digest": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
   "infrastructure_attempts": [
@@ -241,6 +245,60 @@
       "allocated_gpus": 0,
       "pvc_read_only": true,
       "receipt": "infrastructure/a40-20260922r-lat-workspace.json"
+    },
+    {
+      "jobs": [
+        "sgw01-ali-material-audit-20260922t",
+        "sgw01-ali-material-audit-20260922u",
+        "sgw01-ali-material-audit-20260922v",
+        "sgw01-ali-material-export-20260922w",
+        "sgw01-ali-texture-audit-20260922x"
+      ],
+      "status": "t_u_startup_failures_v_w_x_completed_source_audits_not_renderer_qualification",
+      "allocated_gpus": 0,
+      "model_requests": 0,
+      "receipt": "infrastructure/cpu-20260922t-x-material-audits.json",
+      "raw_persistent_root": "/data/users/ali/sgw-01/infrastructure/source-stage-20260922y/retained-audits",
+      "conclusion": "All three exact PNG diffuse textures exist, decode, and have non-gray pixels. Runtime material resolution and renderer readiness remain unqualified."
+    },
+    {
+      "job": "sgw01-ali-source-stage-20260922y",
+      "status": "passed_exact_offline_source_and_raw_audit_stage",
+      "source_commit": "42b26ed8d2df546340497965d1fc86d47cc14197",
+      "source_root": "/data/users/ali/sgw-01/source/42b26ed-y",
+      "completed_at_utc": "2026-09-22T23:38:23.545606+00:00",
+      "bundle_sha256": "48c4659c1cce389a9e826315ba0d418e47b9bf5387d1433dce6f5ec7ffb97468",
+      "raw_audit_archive_sha256": "4789fca533ac2e934e2609e17fcfb3ca3716b0a59102216a750d252b686d311c",
+      "object_store_dependencies": [
+        "/data/users/ali/sgw-01/source/35e627e-q",
+        "/data/users/ali/sgw-01/source/b429ddd"
+      ],
+      "allocated_gpus": 0,
+      "model_requests": 0
+    },
+    {
+      "job": "sgw01-ali-render-diagnostic-20260922z",
+      "pod": "sgw01-ali-render-diagnostic-20260922z-4rrqs",
+      "pod_uid": "a999c926-8ccf-4507-b535-196511761f35",
+      "job_uid": "ec5b5fe0-3199-4cab-b372-e70b4e997df8",
+      "status": "completed_render_only_warmup_restored_textured_appearance",
+      "completed_at_utc": "2026-09-22T23:41:21Z",
+      "receipt": "infrastructure/a40-20260922z-render-readiness.json",
+      "workspace": "infrastructure/a40-20260922z-workspace.json",
+      "workspace_sha256": "4490b1a7ba6cb3fb9174798bd6559a188edb01f609a7041ee88447c8e3314f45",
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "source_commit": "42b26ed8d2df546340497965d1fc86d47cc14197",
+      "source_root": "/data/users/ali/sgw-01/source/42b26ed-y",
+      "raw_output": "/data/users/ali/sgw-01/qualification/render-diagnostic-20260922z",
+      "requested_gpus": 1,
+      "automatic_retries": 0,
+      "deadline_seconds": 1800,
+      "render_only_updates": 120,
+      "decoded_video_frames_verified": 121,
+      "scripted_physics_actions": 0,
+      "simulation_time_s_all_samples": 0.01666666753590107,
+      "model_requests": 0,
+      "behavioral_episodes": 0
     }
   ],
   "connectivity_event": {
@@ -251,24 +309,45 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "No independent child launch authorized. Parent completed and verified r; prospective candidate and waypoint machinery remains incomplete.",
+    "fixture_scope": "Child paused, no independent launch authorized. Parent implemented measured proposals with geometric rejection accounting and six full recorded scripted trials. Native qualification remains outstanding.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
-    "runtime_scope": "CPU-only pinned native-client/server source audits o/p and local concrete reset/trace/lifecycle implementation. No policy server or learned inference authorized.",
+    "runtime_scope": "Owned N3 native factory and HTTP wrapper corrections integrated. Child paused; no policy server or learned inference authorized. D1 and both live runtime releases remain outstanding.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
     "worker_scope": "Local guard work integrated; idle, no cluster operations."
   },
   "active_task_gpu_jobs": [],
   "active_task_model_servers": [],
+  "prospective_lat_proposals": {
+    "path": "proposals/lat-20260922.json",
+    "sha256": "5b47860f6eac16e318515534a918d9460677b58d6174b4b76a29f7cc6be34eb9",
+    "status": "proposed_unqualified_before_native_trials",
+    "total_candidates_including_geometric_rejections": 100,
+    "geometric_passes": 40,
+    "geometric_rejections": 60,
+    "physically_qualified": 0,
+    "first_hash_ordered_geometric_pass": "LAT-CANDIDATE-032",
+    "reachability_and_historical_deduplication_release": false
+  },
+  "disclosed_operational_amendments": [
+    {
+      "id": "SGW-ENG-001",
+      "timing": "After zero-model diagnostic z; before any learned request or behavioral episode.",
+      "evidence": "infrastructure/a40-20260922z-render-readiness.json",
+      "change": "Require the recorded 120-frame zero-physics render warmup before native fixture reset state zero. Production simulator readiness remains independently gated.",
+      "reason": "The first reset image can be nonblank while materials remain unready. Warmup restored intended textures at unchanged physical time, with all MDL/PNG paths resolving.",
+      "unchanged": "Scientific prompts, models, queue, thresholds, candidate cap and 450 scored actions; no cache deletion or material replacement."
+    }
+  ],
   "blockers": [
-    "Workspace r proves root/center/COM/EEF/robot measurements and three exact RGB arrays, but validated_slots is empty. Deterministic proposal/waypoint validation and LAT/DIST/HEIGHT fixture qualification remain outstanding.",
-    "Decoded capture r shows dark or gray object materials. The cause is not established; actual material appearance and render warmup require qualification before visual policy input.",
+    "Workspace r proves root/center/COM/EEF/robot measurements and three exact RGB arrays, but validated_slots is empty. Prospective proposals and six-trial raw/video recording are implemented. Actual robot reachability, waypoints, resets and LAT/DIST/HEIGHT physical qualification remain outstanding.",
+    "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Native model runtime/reset/time-map receipts and actual server-side trace/future production remain unqualified; local scaffolding is not live proof.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Do not rerun completed r/s. Preserve their exact evidence. Resolve the observed material-appearance issue, implement deterministic model-blind proposals from measured workspace r, and physically validate waypoints and reset semantics. Review the unintegrated native runtime corrections before any source staging or model launch. All behavioral releases remain blocked.",
+  "next_action": "Commit and stage the native-reset warmup source plus the frozen unqualified proposal artifact. Run LAT-CANDIDATE-032 first in hash order in one bounded fresh Isaac process, retaining all six scripted traces and reset warmup videos. No family or learned runtime is released. Do not rerun r/z or overwrite existing evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

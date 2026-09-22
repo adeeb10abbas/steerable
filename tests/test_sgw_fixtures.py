@@ -6,6 +6,7 @@ from experiments.workshops.spatial_grounding_v1.fixtures import (
     candidate_order,
     select_qualified_layouts,
 )
+from experiments.workshops.spatial_grounding_v1.build_asset_manifest import referenced_usd_assets
 
 
 def candidate(identifier: str, *, family: str = "LAT", side: str | None = None, x: float = 0.4) -> FixtureCandidate:
@@ -75,3 +76,17 @@ def test_candidates_within_reset_tolerance_are_duplicates() -> None:
         assert "within the reset tolerance" in str(error)
     else:
         raise AssertionError("near-identical layouts must be rejected")
+
+
+def test_asset_manifest_resolves_actual_usda_references(tmp_path) -> None:
+    root = tmp_path / "robolab"
+    scene = root / "assets/scenes/scene.usda"
+    object_usd = root / "assets/objects/cube.usd"
+    texture = root / "assets/textures/cube.png"
+    scene.parent.mkdir(parents=True)
+    object_usd.parent.mkdir(parents=True)
+    texture.parent.mkdir(parents=True)
+    scene.write_text('@../objects/cube.usd@\n', encoding="utf-8")
+    object_usd.write_text('@../textures/cube.png@\n', encoding="utf-8")
+    texture.write_bytes(b"texture")
+    assert referenced_usd_assets(scene, root) == [scene.resolve(), object_usd.resolve(), texture.resolve()]

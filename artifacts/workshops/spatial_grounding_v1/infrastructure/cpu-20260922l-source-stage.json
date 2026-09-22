@@ -1,0 +1,34 @@
+{
+  "schema_version": "sgw-01-infrastructure-attempt-v1",
+  "attempt_id": "cpu-20260922l-source-stage",
+  "status": "infrastructure_invalid_before_gpu_or_simulator",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "candidate_qualification_count": 0,
+  "task_boundary": "CPU-only immutable source staging",
+  "kubernetes": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "job": "sgw01-ali-source-stage-20260922l",
+    "job_uid": "0e16a67f-c817-46ee-b4d3-f301efed0f7c",
+    "pod": "sgw01-ali-source-stage-20260922l-8ll5c",
+    "pod_uid": "6c314c40-f320-4b9b-96d9-a1f5c6748b5b",
+    "backoff_limit": 0,
+    "exit_code": 128,
+    "termination_reason": "Error",
+    "job_reason": "BackoffLimitExceeded"
+  },
+  "runtime": {
+    "base_checkout": "/data/users/ali/sgw-01/source/b429ddd",
+    "requested_commit": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
+    "partial_checkout_path": "/data/users/ali/sgw-01/source/35e627e",
+    "resources": {"cpu": "1", "memory": "2Gi", "nvidia_com_gpu": 0}
+  },
+  "failure": {
+    "cause": "The cloned local b429 source's origin did not advertise the pushed requested commit.",
+    "log_sha256": "9e54650d10dfa7e0509686e0b3327c2a8df8b4d3ab5e021e9d015919a09baa2d",
+    "log_bytes": 226,
+    "log_source": "kubectl logs job/sgw01-ali-source-stage-20260922l",
+    "next_action": "Preserve this partial checkout and stage from the coordinator-provided immutable incremental bundle into a new path."
+  }
+}

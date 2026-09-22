@@ -9,7 +9,7 @@ from experiments.workshops.spatial_grounding_v1.fixtures import (
     select_qualified_layouts,
 )
 from experiments.workshops.spatial_grounding_v1.build_asset_manifest import is_git_worktree, referenced_usd_assets
-from experiments.workshops.spatial_grounding_v1.lat_candidate_generator import materialize_lat_candidates
+from experiments.workshops.spatial_grounding_v1.lat_candidate_generator import materialize_lat_candidates, workspace_digest
 
 
 def candidate(identifier: str, *, family: str = "LAT", side: str | None = None, x: float = 0.4) -> FixtureCandidate:
@@ -123,3 +123,10 @@ def test_lat_candidates_use_only_measured_workspace_slots() -> None:
         "validated_slots": [slot],
     }, seed=4)
     assert candidates[0]["metadata"]["source_slot_id"] == "actual-slot-1"
+
+
+def test_workspace_digest_excludes_its_self_reference() -> None:
+    receipt = {"schema_version": "sgw-01-lat-measured-workspace-v1", "receipt_sha256": "wrong", "validated_slots": []}
+    first = workspace_digest(receipt)
+    receipt["receipt_sha256"] = first
+    assert workspace_digest(receipt) == first

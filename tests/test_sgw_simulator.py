@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import numpy as np
 
 from experiments.workshops.spatial_grounding_v1.fixtures import FixtureCandidate, Pose
 from experiments.workshops.spatial_grounding_v1.model_blind_qualification import qualify_candidate
@@ -59,7 +60,7 @@ class FakeEnvironment:
         return SimulatorSnapshot(state(0.0, 0.1), 0.0)
 
     def render_viewport(self) -> bytes:
-        return b"fake-viewport"
+        return np.full((8, 8, 3), 127, dtype=np.uint8)
 
 
 class FakeBridge:

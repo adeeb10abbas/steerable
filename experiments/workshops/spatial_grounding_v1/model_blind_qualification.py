@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import time
 import traceback
+import numpy as np
 from typing import Any, Iterable, Mapping
 
 from .fixtures import (
@@ -114,7 +115,8 @@ def _validate_final(candidate: FixtureCandidate, initial: Mapping[str, ObjectSta
 
 
 def qualify_candidate(
-    candidate: FixtureCandidate, bridge: SimulatorBridge, controller: ScriptedController, *, seed: int
+    candidate: FixtureCandidate, bridge: SimulatorBridge, controller: ScriptedController, *, seed: int,
+    video_root: Path | None = None,
 ) -> dict[str, Any]:
     """Run exactly three resets for each sign and one scripted path per reset."""
 
@@ -134,12 +136,21 @@ def qualify_candidate(
                 reset_results.append(reset_result)
                 initial = reset_result.snapshot.objects
                 actions = controller.actions_for_goal(environment, candidate, goal_sign)
-                trace = [environment.step(action) for action in actions]
+                frames = [_viewport(environment)]
+                trace = []
+                for action in actions:
+                    trace.append(environment.step(action))
+                    frames.append(_viewport(environment))
                 result = _validate_final(candidate, initial, trace, goal_sign)
+                video = None
+                if video_root is not None:
+                    video = video_root / candidate.candidate_id / f"{goal_sign:+d}-{reset_index}.mp4"
+                    _encode_video(frames, video)
                 sign_checks.append({
                     "goal_sign": goal_sign,
                     "reset_index": reset_index,
                     "reset_receipt": dict(reset_result.receipt),
+                    "viewport_video": str(video) if video else None,
                     **result,
                 })
             reset_rows = validate_reset(
@@ -166,6 +177,35 @@ def qualify_candidate(
         "action_cap": ACTION_CAP,
         "checks": checks,
     }
+
+
+def _viewport(environment: Environment) -> np.ndarray:
+    data = environment.render_viewport()
+    frame = np.asarray(data)
+    if frame.ndim != 3 or frame.shape[-1] != 3:
+        raise QualificationError("environment did not provide an RGB viewport frame")
+    return frame.astype(np.uint8, copy=False)
+
+
+def _encode_video(frames: list[np.ndarray], path: Path) -> None:
+    try:
+        import cv2
+    except ImportError as error:
+        raise QualificationError("pinned qualification runtime lacks OpenCV video encoding") from error
+    if not frames:
+        raise QualificationError("cannot encode an empty viewport recording")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    height, width = frames[0].shape[:2]
+    writer = cv2.VideoWriter(str(path), cv2.VideoWriter_fourcc(*"mp4v"), 20, (width, height))
+    if not writer.isOpened():
+        raise QualificationError("failed to open viewport video writer")
+    try:
+        for frame in frames:
+            if frame.shape != frames[0].shape:
+                raise QualificationError("viewport frame shape changed during trial")
+            writer.write(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+    finally:
+        writer.release()
 
 
 def _candidate_paths(root: Path, family: str) -> Iterable[Path]:
@@ -216,7 +256,7 @@ def main() -> None:
         if output.exists():
             raise QualificationError(f"refusing to overwrite receipt {output}")
         try:
-            receipt = qualify_candidate(candidate, bridge, controller, seed=args.seed)
+            receipt = qualify_candidate(candidate, bridge, controller, seed=args.seed, video_root=args.output_root / "videos")
         except Exception as error:
             receipt = {
                 "schema_version": "sgw-01-model-blind-fixture-qualification-v1",

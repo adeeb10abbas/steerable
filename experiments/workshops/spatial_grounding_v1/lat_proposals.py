@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import argparse
+from pathlib import Path
 import math
 from typing import Any, Mapping
 
@@ -59,6 +61,70 @@ def propose_lat_layouts(workspace: Mapping[str, Any], *, seed: int, count: int =
             },
         })
     return rows
+
+
+def proposal_to_candidate(proposal: Mapping[str, Any], workspace: Mapping[str, Any], *, seed: int) -> dict[str, Any]:
+    """Make an explicitly unqualified proposal startable by physical validation."""
+    poses = proposal["object_root_poses"]
+    cube_center = _center(poses["rubiks_cube"], proposal["scoring_center_offsets_root_local_m"]["rubiks_cube"])
+    bowl_center = _center(poses["bowl"], proposal["scoring_center_offsets_root_local_m"]["bowl"])
+    paths = {}
+    for sign, name in ((1, "positive"), (-1, "negative")):
+        target = [bowl_center[0], bowl_center[1] + sign * .04, cube_center[2]]
+        paths[name] = [
+            _waypoint([cube_center[0], cube_center[1], cube_center[2] + .12], 0.0),
+            _waypoint([cube_center[0], cube_center[1], cube_center[2] + .025], 0.0),
+            _waypoint([cube_center[0], cube_center[1], cube_center[2] + .025], .785398),
+            _waypoint([cube_center[0], cube_center[1], cube_center[2] + .12], .785398),
+            _waypoint([target[0], target[1], target[2] + .12], .785398),
+            _waypoint([target[0], target[1], target[2] + .04], .785398),
+            _waypoint([target[0], target[1], target[2] + .04], 0.0),
+        ]
+    return {
+        "candidate_id": proposal["proposal_id"].replace("PROPOSAL", "CANDIDATE"),
+        "family": "LAT", "seed": seed, "task_asset": workspace["task_asset"],
+        "asset_manifest_sha256": workspace["asset_manifest_sha256"], "object_poses": poses,
+        "metadata": {
+            "status": "unqualified_proposal_starting_physical_validation",
+            "workspace_receipt_sha256": workspace["receipt_sha256"],
+            "center_source": proposal["center_source"],
+            "scoring_center_offsets_root_local_m": proposal["scoring_center_offsets_root_local_m"],
+            "abs_ik_waypoints": paths, "historical_layout_fingerprint": None,
+        },
+    }
+
+
+def _waypoint(position: list[float], gripper: float) -> dict[str, Any]:
+    return {"position_world_xyz_m": position, "gripper_position": gripper, "hold_steps": 20}
+
+
+def _center(pose: Mapping[str, Any], offset: list[float]) -> list[float]:
+    q, p = pose["quaternion_wxyz"], pose["position_m"]
+    w, x, y, z = q; vx, vy, vz = offset
+    return [p[0] + (1-2*(y*y+z*z))*vx + 2*(x*y-z*w)*vy + 2*(x*z+y*w)*vz,
+            p[1] + 2*(x*y+z*w)*vx + (1-2*(x*x+z*z))*vy + 2*(y*z-x*w)*vz,
+            p[2] + 2*(x*z-y*w)*vx + 2*(y*z+x*w)*vy + (1-2*(x*x+y*y))*vz]
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--workspace-receipt", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--seed", type=int, default=20260922)
+    parser.add_argument("--count", type=int, default=100)
+    args = parser.parse_args()
+    if args.output.exists():
+        raise FileExistsError(f"refusing to overwrite {args.output}")
+    workspace = json.loads(args.workspace_receipt.read_text())
+    proposals = propose_lat_layouts(workspace, seed=args.seed, count=args.count)
+    value = {"schema_version": "sgw-01-lat-proposals-v1", "status": "proposed_unqualified",
+             "workspace_receipt_sha256": workspace["receipt_sha256"], "proposals": proposals,
+             "candidates": [proposal_to_candidate(row, workspace, seed=args.seed) for row in proposals]}
+    args.output.write_text(json.dumps(value, sort_keys=True, indent=2) + "\n")
+
+
+if __name__ == "__main__":
+    main()
 
 
 def _half_extent(row: Mapping[str, Any]) -> list[float]:

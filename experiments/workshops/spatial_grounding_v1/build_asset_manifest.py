@@ -54,7 +54,14 @@ def referenced_usd_assets(path: Path, root: Path, seen: set[Path] | None = None)
 def main() -> None:
     args = parse_args()
     root = args.robolab_root.resolve()
-    if not (root / ".git").is_dir():
+    try:
+        is_checkout = subprocess.check_output(
+            ["git", "-C", str(root), "rev-parse", "--is-inside-work-tree"],
+            text=True,
+        ).strip() == "true"
+    except subprocess.CalledProcessError as error:
+        raise ValueError("asset manifest requires the pinned RoboLab checkout") from error
+    if not is_checkout:
         raise ValueError("asset manifest requires the pinned RoboLab checkout")
     scene = root / "assets/scenes" / args.scene
     paths = referenced_usd_assets(scene, root)

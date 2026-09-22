@@ -30,7 +30,14 @@ def main() -> None:
     known, _ = bootstrap.parse_known_args()
     if known.output.exists():
         raise FileExistsError(f"refusing to overwrite renderer receipt: {known.output}")
-    if not (known.robolab_root / ".git").is_dir() or not known.assets_manifest.is_file():
+    try:
+        is_checkout = subprocess.check_output(
+            ["git", "-C", str(known.robolab_root), "rev-parse", "--is-inside-work-tree"],
+            text=True,
+        ).strip() == "true"
+    except subprocess.CalledProcessError:
+        is_checkout = False
+    if not is_checkout or not known.assets_manifest.is_file():
         raise ValueError("preflight requires a pinned RoboLab checkout and measured asset manifest")
     if str(known.study_root.resolve()) not in sys.path:
         sys.path.insert(0, str(known.study_root.resolve()))

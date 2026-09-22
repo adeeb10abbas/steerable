@@ -7,6 +7,7 @@ from experiments.workshops.spatial_grounding_v1.fixtures import (
     select_qualified_layouts,
 )
 from experiments.workshops.spatial_grounding_v1.build_asset_manifest import referenced_usd_assets
+from experiments.workshops.spatial_grounding_v1.lat_candidate_generator import materialize_lat_candidates
 
 
 def candidate(identifier: str, *, family: str = "LAT", side: str | None = None, x: float = 0.4) -> FixtureCandidate:
@@ -90,3 +91,24 @@ def test_asset_manifest_resolves_actual_usda_references(tmp_path) -> None:
     object_usd.write_text('@../textures/cube.png@\n', encoding="utf-8")
     texture.write_bytes(b"texture")
     assert referenced_usd_assets(scene, root) == [scene.resolve(), object_usd.resolve(), texture.resolve()]
+
+
+def test_lat_candidates_use_only_measured_workspace_slots() -> None:
+    slot = {
+        "slot_id": "actual-slot-1",
+        "object_poses": {
+            "rubiks_cube": {"position_m": [0.4, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
+            "bowl": {"position_m": [0.5, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
+        },
+        "abs_ik_waypoints": {"positive": [{"position_world_xyz_m": [0.4, 0.0, 0.2], "gripper_position": 0, "hold_steps": 1}], "negative": [{"position_world_xyz_m": [0.4, 0.0, 0.2], "gripper_position": 0, "hold_steps": 1}]},
+    }
+    candidates = materialize_lat_candidates({
+        "schema_version": "sgw-01-lat-measured-workspace-v1",
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "asset_manifest_sha256": "a" * 64,
+        "task_asset": "rubiks_cube_banana_bowl.usda",
+        "receipt_sha256": "b" * 64,
+        "validated_slots": [slot],
+    }, seed=4)
+    assert candidates[0]["metadata"]["source_slot_id"] == "actual-slot-1"

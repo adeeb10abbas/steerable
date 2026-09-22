@@ -26,6 +26,7 @@ def make_transport(model: str, *, bad: dict | None = None):
             "request_index": request["request_index"],
             "reset_id": request["reset_id"],
             "camera_id": request["camera_id"],
+            "camera_name": request["camera_name"],
             "reset_fingerprint": request["reset_fingerprint"],
             "actions": np.zeros((horizon, 8), dtype=np.float32),
             "future": {"frames": 1},

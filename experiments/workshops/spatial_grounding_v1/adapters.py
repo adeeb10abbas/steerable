@@ -8,7 +8,7 @@ ownership without importing either model's heavyweight runtime.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 import hashlib
 import importlib
@@ -146,6 +146,7 @@ class _BaseAdapter:
         transport: Transport,
         runtime: Any | None = None,
         action_cap: int = ACTION_CAP,
+        sampling_seed: int | None = None,
     ) -> None:
         if not cell_id or not prompt or not callable(transport):
             raise AdapterError("cell_id, static prompt, and callable transport are required")
@@ -155,6 +156,7 @@ class _BaseAdapter:
         self.prompt = prompt
         self.transport = transport
         self.runtime = runtime
+        self.sampling_seed = sampling_seed
         self.request_index = 0
         self.executed_steps = 0
         self.reset_state: ResetState | None = None
@@ -212,6 +214,7 @@ class _BaseAdapter:
             "request_id": request_id,
             "registered_cell_id": self.cell_id,
             "request_index": self.request_index,
+            "sampling_seed": self.sampling_seed,
             "prompt": prompt,
             "observation": observation,
             "action_step_start": action_step_start,
@@ -267,8 +270,24 @@ class _BaseAdapter:
         self.request_records.append({"request": dict(request), "response": dict(response)})
         self.predictions.append(prediction)
         self.request_index += 1
-        self.executed_steps += execute_count
         return prediction
+
+    def commit_executed(self, count: int) -> None:
+        if type(count) is not int or count < 0:
+            raise AdapterError("executed action count must be a non-negative integer")
+        if count > self.executed_horizon or self.executed_steps + count > ACTION_CAP:
+            raise AdapterError("executed action count exceeds the released horizon/cap")
+        self.executed_steps += count
+        if self.predictions:
+            last = self.predictions[-1]
+            self.predictions[-1] = replace(
+                last,
+                executed_horizon=self.executed_steps - last.action_step_start,
+                executed_action_count=self.executed_steps,
+            )
+
+    def _validate_response(self, response: Mapping[str, Any]) -> None:
+        """Hook for model-specific response identity checks."""
 
 
 class ProductionAdapter:
@@ -292,6 +311,7 @@ class ProductionAdapter:
         self.transport_factory = transport_factory
         self.environment_factory = environment_factory
         self.policy: _BaseAdapter | None = None
+        self.environment: Any | None = None
 
     @staticmethod
     def _cell_value(cell: Any, key: str) -> Any:
@@ -312,7 +332,6 @@ class ProductionAdapter:
             environment = self.environment_factory(cell=cell)
         if environment is None or not hasattr(environment, "reset"):
             raise AdapterError("production cell must provide Environment.reset()")
-        reset_id = str(self._cell_value(cell, "reset_id"))
         reset_result = environment.reset()
         evidence = getattr(reset_result, "receipt", reset_result)
         if not isinstance(evidence, Mapping):
@@ -322,13 +341,13 @@ class ProductionAdapter:
             raise AdapterError("reset receipt lacks required physical/camera identity fields")
         if evidence.get("temporal_cache_reset") is not True:
             raise AdapterError("reset receipt lacks temporal_cache_reset=true")
-        if str(evidence["camera_id"]) != str(self._cell_value(cell, "camera_id")):
-            raise AdapterError("reset receipt camera_id differs from released cell")
+        reset_id = str(evidence["reset_id"])
         camera_name = str(evidence["camera_name"])
         self.policy = self.policy_type(
             cell_id=str(self._cell_value(cell, "cell_id")),
             prompt=str(self._cell_value(cell, "prompt")),
             transport=self.transport,
+            sampling_seed=int(self._cell_value(cell, "sampling_seed")),
         )
         reset = self.policy.reset(
             reset_fn=lambda: evidence,
@@ -338,6 +357,9 @@ class ProductionAdapter:
         payload = reset.as_dict()
         if hasattr(recorder, "record_reset"):
             recorder.record_reset(payload)
+        else:
+            raise AdapterError("recorder must expose record_reset()")
+        self.environment = environment
         return payload
 
     def run_episode(self, cell: Any, recorder: Any, reset: Mapping[str, Any]) -> dict[str, Any]:
@@ -349,14 +371,18 @@ class ProductionAdapter:
             raise AdapterError("run_episode requires reset() on the same adapter")
         if reset.get("reset_sha256") != self.policy.reset_state.fingerprint:
             raise AdapterError("run_episode reset identity does not match the policy")
-        environment = getattr(cell, "environment", None)
+        environment = self.environment
         if environment is None or not all(
             hasattr(environment, name) for name in ("step", "snapshot", "render_viewport")
         ):
-            raise AdapterError("production cell environment lacks required execution methods")
+            raise AdapterError("production environment lacks required execution methods")
+        policy_observation = getattr(environment, "policy_observation", None)
+        if not callable(policy_observation):
+            raise AdapterError("environment must expose policy_observation() separate from snapshot()")
         prompt = str(self._cell_value(cell, "prompt"))
+        safety_reason: str | None = None
         while self.policy.executed_steps < ACTION_CAP:
-            observation = environment.snapshot()
+            observation = policy_observation()
             request_id = f"{self.policy.cell_id}:request:{self.policy.request_index}"
             metadata = {
                 "request_id": request_id,
@@ -375,23 +401,35 @@ class ProductionAdapter:
                 observation, prompt, action_step_start=self.policy.executed_steps
             )
             for action in prediction.executable_actions:
-                environment.step(action)
-            if hasattr(recorder, "prediction"):
-                recorder.prediction(prediction)
+                step_result = environment.step(action)
+                self.policy.commit_executed(1)
+                if isinstance(step_result, Mapping) and step_result.get("safety_terminated") is True:
+                    safety_reason = str(step_result.get("termination_reason") or "safety_terminal")
+                    break
+            if not hasattr(recorder, "prediction"):
+                raise AdapterError("recorder must expose prediction()")
+            prediction.raw_request["viewport_frame"] = environment.render_viewport()
+            prediction.raw_request["scoring_snapshot"] = environment.snapshot()
+            recorder.prediction(prediction)
+            if safety_reason is not None:
+                break
             if self.policy.executed_steps >= ACTION_CAP:
                 break
         # Semantic outcome classification belongs to the worker/scorer.  The
         # adapter returns execution evidence and never invents success/failure.
         return {
-            "status": "censored",
-            "termination_reason": "action_cap",
-            "safety_terminated": True,
+            "status": "censored" if safety_reason is not None else "valid_model_failure",
+            "termination_reason": safety_reason or "action_cap",
+            "safety_terminated": safety_reason is not None,
             "executed_action_count": self.policy.executed_steps,
             "prediction_count": len(self.policy.predictions),
         }
 
-    def _validate_response(self, response: Mapping[str, Any]) -> None:
-        """Hook for model-specific response identity checks."""
+    def close(self) -> None:
+        if self.environment is not None and hasattr(self.environment, "close"):
+            self.environment.close()
+        self.environment = None
+        self.policy = None
 
 
 class NanoPolicyAdapter(_BaseAdapter):
@@ -443,10 +481,11 @@ def make_adapter(model: str, **kwargs: Any) -> NanoPolicyAdapter | DreamZeroPoli
 
 def _load_transport_factory() -> Callable[..., Transport]:
     spec = os.environ.get("SGW01_RUNTIME_FACTORY", "")
+    if not spec:
+        from .runtime import create_runtime
+        return create_runtime
     if ":" not in spec:
-        raise AdapterError(
-            "SGW01_RUNTIME_FACTORY must name a pinned runtime factory as module:function"
-        )
+        raise AdapterError("SGW01_RUNTIME_FACTORY must use module:function syntax")
     module_name, function_name = spec.split(":", 1)
     try:
         factory = getattr(importlib.import_module(module_name), function_name)

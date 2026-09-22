@@ -50,6 +50,7 @@ def test_action_cap_truncates_executed_prefix_without_padding():
     assert prediction.returned_horizon == 32
     assert prediction.executed_horizon == 2
     assert prediction.executable_actions.shape == (2, 8)
+    adapter.commit_executed(2)
     assert adapter.executed_steps == 450
 
 

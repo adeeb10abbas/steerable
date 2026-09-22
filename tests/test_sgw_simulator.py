@@ -96,3 +96,13 @@ def test_lat_runtime_requires_measured_table_contact() -> None:
     assert '"rubiks_cube__table"' in source
     assert "force_matrix_w" in source
     assert ">= 1.0" in source
+
+
+def test_lat_task_registry_registers_only_scoped_overlay(tmp_path: Path) -> None:
+    from experiments.workshops.spatial_grounding_v1.robolab_lat_qualification import register_lat_task
+
+    task = tmp_path / "lat_qualification_task.py"
+    task.write_text("# scoped task overlay\n", encoding="utf-8")
+    calls = []
+    register_lat_task(lambda **kwargs: calls.append(kwargs), task, cameras=("camera",))
+    assert calls == [{"task": [str(task)], "cameras": ("camera",)}]

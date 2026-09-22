@@ -1,0 +1,76 @@
+{
+  "schema_version": "sgw-01-workspace-capture-lifecycle-v1",
+  "status": "captured_and_hash_verified_not_fixture_qualified",
+  "job": "sgw01-ali-lat-workspace-20260922r",
+  "job_uid": "18b4a41f-9e61-4812-a97c-35a481981ee1",
+  "pod": "sgw01-ali-lat-workspace-20260922r-cqkvm",
+  "pod_uid": "50c88961-1966-45ab-a26c-7923cb7ab8e9",
+  "node": "dcwipphhgc191.edc.nam.gm.com",
+  "job_started_at_utc": "2026-09-22T22:46:21Z",
+  "container_started_at_utc": "2026-09-22T22:46:23Z",
+  "container_finished_at_utc": "2026-09-22T22:47:31Z",
+  "job_completed_at_utc": "2026-09-22T22:47:34Z",
+  "exit_code": 0,
+  "peak_allocated_gpus": 1,
+  "automatic_retries": 0,
+  "deadline_seconds": 1800,
+  "source_commit": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
+  "source_root": "/data/users/ali/sgw-01/source/35e627e-q",
+  "raw_root": "/data/users/ali/sgw-01/qualification/lat-workspace-20260922r",
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "validated_slot_count": 0,
+  "workspace": {
+    "path": "a40-20260922r-workspace.json",
+    "bytes": 10809,
+    "sha256": "1ef79d38f5004c40b2c5161a8c42aca2298dcbbf60d67ff3e48a19642c567e0e",
+    "content_digest": "3766dd5b9ed08f7fc60525077ba96df0d98b67e980ff453ee7d19559932b8239"
+  },
+  "log": {
+    "path": "a40-20260922r.log",
+    "bytes": 15113,
+    "sha256": "2df9268d1285497f75155a4e4724b9f1a0b2ef9c495af167decac56ec84832eb"
+  },
+  "gpu_selection": {
+    "path": "a40-20260922r-gpu_selection.json",
+    "sha256": "15cade7e0436e7d202675a0f8ffe90e1d85a9855457c34d383ac11e9c3fc34aa"
+  },
+  "read_only_export": {
+    "job": "sgw01-ali-workspace-export-20260922s",
+    "job_uid": "d73cb7e3-49b5-412a-8df7-0b41629d70f5",
+    "pod": "sgw01-ali-workspace-export-20260922s-wp8ck",
+    "pod_uid": "d18ce8c0-e216-4bed-b274-4943b7b357ba",
+    "job_started_at_utc": "2026-09-22T22:51:14Z",
+    "job_completed_at_utc": "2026-09-22T22:51:20Z",
+    "exit_code": 0,
+    "allocated_gpus": 0,
+    "pvc_read_only": true,
+    "export_bytes": 3512229,
+    "export_sha256": "ba142da0dfd588bc902f898bf3db52ad81258e54ae1386d4867e6ded45d276bf",
+    "export_storage": "Session evidence directory; raw capture and RGB arrays remain on the PVC."
+  },
+  "verified_properties": {
+    "workspace_exact_bytes_and_self_digest": true,
+    "rgb_arrays_exact_hashes_and_shapes": true,
+    "rgb_array_count": 3,
+    "rgb_array_shape": [720, 1280, 3],
+    "rgb_array_dtype": "uint8",
+    "root_offset_center_closure_max_error_m": 0.0,
+    "cube_and_bowl_com_position_and_velocity_present": true,
+    "eef_environment_origin_and_robot_state_present": true
+  },
+  "appearance_review": {
+    "status": "unqualified",
+    "observation": "All three decoded cameras show the scene, but the cube, bowl and banana appear dark or gray. Nonblank pixels alone do not establish correct material appearance.",
+    "next_gate": "Audit the actual material assets and render warmup before accepting visual observations for a policy. Preserve the raw captures; do not alter shared Kit caches.",
+    "cause_established": false
+  },
+  "checkpoint_metadata_observation": {
+    "path": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid/checkpoint.json",
+    "bytes": 2,
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "decoded_content": {},
+    "hf_download_metadata_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+    "claim_boundary": "Read-only metadata inspection, not a fresh verification of all weight files or a model load."
+  }
+}

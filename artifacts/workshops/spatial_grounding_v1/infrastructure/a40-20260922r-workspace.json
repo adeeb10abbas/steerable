@@ -1,0 +1,415 @@
+{
+  "asset_manifest_sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806",
+  "behavioral_episode_count": 0,
+  "contact_sensor_inventory": [
+    "banana__bowl",
+    "banana__table",
+    "bowl__table",
+    "gripper__banana",
+    "gripper__bowl",
+    "gripper__rubiks_cube",
+    "gripper__table",
+    "rubiks_cube__banana",
+    "rubiks_cube__bowl",
+    "rubiks_cube__table"
+  ],
+  "eef_position_env_local_xyz_m": [
+    0.3597031235694885,
+    3.300374373793602e-08,
+    0.47176671028137207
+  ],
+  "eef_quaternion_world_wxyz": [
+    -2.980232238769531e-07,
+    -0.7071067690849304,
+    0.70710688829422,
+    2.980232238769531e-07
+  ],
+  "environment_origin_world_xyz_m": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment_seed": 20260922,
+  "measurement_schema_version": "sgw-01-lat-measured-workspace-v2",
+  "model_request_count": 0,
+  "native_observation_proprio": {
+    "available": true,
+    "fields": {
+      "arm_joint_pos": [
+        0.0,
+        -0.6283185482025146,
+        0.0,
+        -2.5132741928100586,
+        0.0,
+        1.884955644607544,
+        0.0
+      ],
+      "ee_pos": [
+        0.3597031235694885,
+        3.300374373793602e-08,
+        0.47176671028137207
+      ],
+      "ee_quat": [
+        0.7071064710617065,
+        1.2300273510845727e-07,
+        0.7071071267127991,
+        -4.332177994115227e-08
+      ],
+      "eef_pos": [
+        0.3597031235694885,
+        3.300374373793602e-08,
+        0.47176671028137207
+      ],
+      "eef_quat": [
+        -2.980232238769531e-07,
+        -0.7071067690849304,
+        0.70710688829422,
+        2.980232238769531e-07
+      ],
+      "gripper_pos": [
+        0.0
+      ]
+    }
+  },
+  "objects": {
+    "banana": {
+      "bbox_env_local_max_xyz_m": [
+        0.5935638546943665,
+        0.013764336705207825,
+        0.08789607882499695
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.4841938614845276,
+        -0.16487568616867065,
+        0.048960234969854355
+      ],
+      "com_position_env_local_xyz_m": [
+        0.5172730088233948,
+        -0.06404724717140198,
+        0.06713490188121796
+      ],
+      "com_velocity_world_xyz_rad_s": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.538878858089447,
+        -0.07555567473173141,
+        0.0684281587600708
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "geometric_center_reconstructed_env_local_xyz_m": [
+        0.538878858089447,
+        -0.07555567473173141,
+        0.0684281587600708
+      ],
+      "measurement_semantics": {
+        "geometric_center": "RoboLab WorldState.get_bbox transformed cached-geometry centroid",
+        "root_pose": "RoboLab WorldState.get_pose default is_relative=True",
+        "scoring_center": "unvalidated: a later waypoint-validation receipt must explicitly bind the physical-center source"
+      },
+      "root_position_env_local_xyz_m": [
+        0.538878858089447,
+        -0.07555567473173141,
+        0.0684281587600708
+      ],
+      "root_quaternion_world_wxyz": [
+        0.9999781250953674,
+        -0.0026648887433111668,
+        -0.006051987875252962,
+        0.0001454032608307898
+      ]
+    },
+    "bowl": {
+      "bbox_env_local_max_xyz_m": [
+        0.5233402252197266,
+        0.2071588784456253,
+        0.10487455129623413
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.3618268370628357,
+        0.046005502343177795,
+        0.049781154841184616
+      ],
+      "com_position_env_local_xyz_m": [
+        0.44269508123397827,
+        0.12524406611919403,
+        0.07872255146503448
+      ],
+      "com_velocity_world_xyz_rad_s": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "geometric_center_reconstructed_env_local_xyz_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "measurement_semantics": {
+        "geometric_center": "RoboLab WorldState.get_bbox transformed cached-geometry centroid",
+        "root_pose": "RoboLab WorldState.get_pose default is_relative=True",
+        "scoring_center": "unvalidated: a later waypoint-validation receipt must explicitly bind the physical-center source"
+      },
+      "root_position_env_local_xyz_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "root_quaternion_world_wxyz": [
+        0.9999999403953552,
+        -5.8753543271450326e-05,
+        -0.00032362030469812453,
+        -0.00010501052747713402
+      ]
+    },
+    "rubiks_cube": {
+      "bbox_env_local_max_xyz_m": [
+        0.44969120621681213,
+        -0.039562635123729706,
+        0.10779157280921936
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.3912752866744995,
+        -0.09744829684495926,
+        0.04960235580801964
+      ],
+      "com_position_env_local_xyz_m": [
+        0.4205675721168518,
+        -0.06842388957738876,
+        0.07869884371757507
+      ],
+      "com_velocity_world_xyz_rad_s": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.42048323154449463,
+        -0.06850546598434448,
+        0.07869696617126465
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        -0.010159748785479001,
+        0.028928753250246277,
+        -0.002403985183700452
+      ],
+      "geometric_center_reconstructed_env_local_xyz_m": [
+        0.42048323154449463,
+        -0.06850546598434448,
+        0.07869696617126465
+      ],
+      "measurement_semantics": {
+        "geometric_center": "RoboLab WorldState.get_bbox transformed cached-geometry centroid",
+        "root_pose": "RoboLab WorldState.get_pose default is_relative=True",
+        "scoring_center": "unvalidated: a later waypoint-validation receipt must explicitly bind the physical-center source"
+      },
+      "root_position_env_local_xyz_m": [
+        0.4306528866291046,
+        -0.09742811322212219,
+        0.08113233000040054
+      ],
+      "root_quaternion_world_wxyz": [
+        0.9999990463256836,
+        -0.0009071399690583348,
+        0.001037940033711493,
+        8.44117093947716e-05
+      ]
+    },
+    "table": {
+      "bbox_env_local_max_xyz_m": [
+        0.8985843658447266,
+        0.5220682621002197,
+        0.05000072345137596
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.19858434796333313,
+        -0.4779317378997803,
+        -0.6499992609024048
+      ],
+      "com_position_env_local_xyz_m": [
+        0.5485843420028687,
+        0.02206825464963913,
+        -0.01337156817317009
+      ],
+      "com_velocity_world_xyz_rad_s": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.5485843420028687,
+        0.02206825464963913,
+        -0.29999926686286926
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.3499999940395355,
+        0.0,
+        -0.3499999903142452
+      ],
+      "geometric_center_reconstructed_env_local_xyz_m": [
+        0.5485843420028687,
+        0.02206825464963913,
+        -0.29999926686286926
+      ],
+      "measurement_semantics": {
+        "geometric_center": "RoboLab WorldState.get_bbox transformed cached-geometry centroid",
+        "root_pose": "RoboLab WorldState.get_pose default is_relative=True",
+        "scoring_center": "unvalidated: a later waypoint-validation receipt must explicitly bind the physical-center source"
+      },
+      "root_position_env_local_xyz_m": [
+        0.19858434796333313,
+        0.02206825464963913,
+        0.05000072345137596
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "receipt_sha256": "3766dd5b9ed08f7fc60525077ba96df0d98b67e980ff453ee7d19559932b8239",
+  "renderer_receipt": {
+    "bytes": 1764,
+    "path": "/data/users/ali/sgw-01/preflight/a40-20260922e/renderer.json",
+    "sha256": "e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5"
+  },
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "robot": {
+    "base_position_env_local_xyz_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "base_quaternion_world_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "joint_names": [
+      "panda_joint1",
+      "panda_joint2",
+      "panda_joint3",
+      "panda_joint4",
+      "panda_joint5",
+      "panda_joint6",
+      "panda_joint7",
+      "finger_joint",
+      "right_outer_knuckle_joint",
+      "left_inner_finger_joint",
+      "right_inner_finger_joint",
+      "left_inner_finger_knuckle_joint",
+      "right_inner_finger_knuckle_joint"
+    ],
+    "joint_position_rad": [
+      0.0,
+      -0.6283185482025146,
+      0.0,
+      -2.5132741928100586,
+      0.0,
+      1.884955644607544,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "joint_velocity_rad_s": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "schema_version": "sgw-01-lat-measured-workspace-v1",
+  "status": "measured_zero_model_workspace_not_candidate_qualified",
+  "task_asset": "rubiks_cube_banana_bowl.usda",
+  "validated_slots": [],
+  "versions": {
+    "isaaclab": "2.2.0",
+    "isaacsim": "5.0.0.0",
+    "robolab": "0.2.1"
+  },
+  "views": {
+    "over_shoulder_left_camera": {
+      "lossless_array": {
+        "bytes": 2764928,
+        "path": "/data/users/ali/sgw-01/qualification/lat-workspace-20260922r/views/over_shoulder_left_camera.npy",
+        "sha256": "2c26f46ec3019b1e48efbbd0ab71f02762729bfe423c578a293cf7cfbdcb0aa8"
+      },
+      "pixel_range": 255,
+      "shape": [
+        720,
+        1280,
+        3
+      ]
+    },
+    "over_shoulder_right_camera": {
+      "lossless_array": {
+        "bytes": 2764928,
+        "path": "/data/users/ali/sgw-01/qualification/lat-workspace-20260922r/views/over_shoulder_right_camera.npy",
+        "sha256": "8c53995fd1b88cadde6882eaadf883cd5dc0ec13afc882f718566ca7d29afab1"
+      },
+      "pixel_range": 255,
+      "shape": [
+        720,
+        1280,
+        3
+      ]
+    },
+    "wrist_cam": {
+      "lossless_array": {
+        "bytes": 2764928,
+        "path": "/data/users/ali/sgw-01/qualification/lat-workspace-20260922r/views/wrist_cam.npy",
+        "sha256": "8a755e0fe2c240c02e621f9abf9d77cdb467cc0dcbc2d8f82493e1c32573d670"
+      },
+      "pixel_range": 250,
+      "shape": [
+        720,
+        1280,
+        3
+      ]
+    }
+  }
+}

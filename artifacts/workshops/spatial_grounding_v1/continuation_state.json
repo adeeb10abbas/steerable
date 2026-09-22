@@ -1,6 +1,6 @@
 {
   "study_id": "SGW-01",
-  "status": "v2_workspace_capture_replacement_registered_after_capability_yaml_diagnosis",
+  "status": "v2_workspace_captured_geometry_and_rgb_verified_appearance_and_fixtures_unqualified",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -31,12 +31,12 @@
   "implementation_slices": {
     "measurement_contract_and_prospective_capture": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
     "worker_resource_guards": "49c2023",
-    "local_sgw_tests_passed": 87,
+    "local_sgw_tests_passed": 89,
     "live_model_runtime_qualified": false,
     "concrete_behavioral_allocation_receipt_exists": false
   },
-  "last_probe_source_commit": "b429ddd8c3e7be59f63759c1820e352029e48b8c",
-  "last_probe_source_path": "/data/users/ali/sgw-01/source/b429ddd",
+  "last_probe_source_commit": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
+  "last_probe_source_path": "/data/users/ali/sgw-01/source/35e627e-q",
   "verified_simulator_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
   "preflight_image_digest": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
   "infrastructure_attempts": [
@@ -217,6 +217,30 @@
       "automatic_retries": 0,
       "diagnosis": "Unquoted comma-separated NVIDIA capabilities in a YAML flow mapping became value=compute. The actual Pod lacked utility/graphics/display; gpu_idle_probe failed because nvidia-smi was absent.",
       "receipt": "infrastructure/a40-20260922m-lat-workspace.json"
+    },
+    {
+      "job": "sgw01-ali-lat-workspace-20260922r",
+      "job_uid": "18b4a41f-9e61-4812-a97c-35a481981ee1",
+      "status": "captured_and_hash_verified_not_fixture_qualified",
+      "completed_at_utc": "2026-09-22T22:47:34Z",
+      "peak_allocated_gpus": 1,
+      "source_commit": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
+      "validated_slot_count": 0,
+      "model_requests": 0,
+      "behavioral_episodes": 0,
+      "receipt": "infrastructure/a40-20260922r-lat-workspace.json",
+      "workspace": "infrastructure/a40-20260922r-workspace.json",
+      "workspace_sha256": "1ef79d38f5004c40b2c5161a8c42aca2298dcbbf60d67ff3e48a19642c567e0e",
+      "appearance_status": "dark_materials_observed_cause_not_established"
+    },
+    {
+      "job": "sgw01-ali-workspace-export-20260922s",
+      "job_uid": "d73cb7e3-49b5-412a-8df7-0b41629d70f5",
+      "status": "completed_read_only_exact_capture_and_rgb_export",
+      "completed_at_utc": "2026-09-22T22:51:20Z",
+      "allocated_gpus": 0,
+      "pvc_read_only": true,
+      "receipt": "infrastructure/a40-20260922r-lat-workspace.json"
     }
   ],
   "connectivity_event": {
@@ -227,7 +251,7 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "Child is paused. Parent diagnosed the YAML capability split directly and owns replacement r; no independent child launch authorized.",
+    "fixture_scope": "No independent child launch authorized. Parent completed and verified r; prospective candidate and waypoint machinery remains incomplete.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
     "runtime_scope": "CPU-only pinned native-client/server source audits o/p and local concrete reset/trace/lifecycle implementation. No policy server or learned inference authorized.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
@@ -236,14 +260,15 @@
   "active_task_gpu_jobs": [],
   "active_task_model_servers": [],
   "blockers": [
-    "A40 rendering and raw workspace measurement passed, but validated_slots is empty. Root/center/COM source semantics are now audited and code-corrected; prospective v2 capture, deterministic proposal/waypoint validation, and LAT/DIST/HEIGHT fixture qualification remain outstanding.",
+    "Workspace r proves root/center/COM/EEF/robot measurements and three exact RGB arrays, but validated_slots is empty. Deterministic proposal/waypoint validation and LAT/DIST/HEIGHT fixture qualification remain outstanding.",
+    "Decoded capture r shows dark or gray object materials. The cause is not established; actual material appearance and render warmup require qualification before visual policy input.",
     "Native model runtime/reset/time-map receipts and actual server-side trace/future production remain unqualified; local scaffolding is not live proof.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Run the newly registered one-A40 zero-model replacement r only once, retaining complete proven driver capabilities and all historical guards. Source 35e627e is clean at /data/users/ali/sgw-01/source/35e627e-q, dependent on preserved b429ddd. Verify actual root/center/COM/EEF/RGB evidence before proposals or waypoint qualification. Native runtime and all behavioral releases remain blocked.",
+  "next_action": "Do not rerun completed r/s. Preserve their exact evidence. Resolve the observed material-appearance issue, implement deterministic model-blind proposals from measured workspace r, and physically validate waypoints and reset semantics. Review the unintegrated native runtime corrections before any source staging or model launch. All behavioral releases remain blocked.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

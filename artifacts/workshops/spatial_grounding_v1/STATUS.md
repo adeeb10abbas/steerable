@@ -146,9 +146,28 @@ Isaac. The unchanged m manifest and exact log retain that infrastructure failure
 Fresh replacement r restores the complete proven g Pod configuration, with
 only source/output identities changed and the capability string explicitly
 quoted. A parsed-manifest regression checks that equivalence before launch.
-Native-policy source auditing and local runtime fixes are proceeding
-separately without a model server. Consult the live study-owned Job status
-before continuing; pending work is not recorded as complete.
+
+Replacement r completed on one A40 at `22:47:34Z`, exit 0. CPU-only,
+read-only exporter s completed at `22:51:20Z`. The exact 10,809-byte v2
+workspace hash is
+`1ef79d38f5004c40b2c5161a8c42aca2298dcbbf60d67ff3e48a19642c567e0e`.
+Root/center reconstruction closes for all four objects; cube/bowl COM,
+environment origin, EEF and robot state are present. Three lossless
+`720 x 1280 x 3` uint8 arrays were transferred and independently hash-checked.
+There are still **zero validated slots** and zero learned requests.
+
+Visual inspection of the decoded arrays revealed dark or gray cube, bowl and
+banana materials. The cause is not established. The nonblank-camera gate was
+insufficient to establish correct visual appearance; material assets and
+render warmup must be checked before accepting policy observations. No shared
+Kit cache should be deleted or changed. All study GPU Pods are terminal.
+
+Native-policy auditing also corrected two assumptions: the pinned RoboLab
+Cosmos service is WebSocket-based (the new HTTP endpoint is an SGW-owned
+wrapper), and its published `checkpoint.json` is `{}`, not a repository/revision
+manifest. Read-only s confirmed that empty file and the exact revision in HF's
+download metadata. Full live payload verification and runtime qualification
+remain outstanding; adapter-child corrections are not yet integrated.
 
 ## Artifacts and source identities
 
@@ -163,21 +182,24 @@ logs and receipts remain in:
 /data/users/ali/sgw-01/preflight/a40-20260922e/
 /data/users/ali/sgw-01/qualification/lat-workspace-20260922f/
 /data/users/ali/sgw-01/qualification/lat-workspace-20260922g/
+/data/users/ali/sgw-01/qualification/lat-workspace-20260922m/
+/data/users/ali/sgw-01/qualification/lat-workspace-20260922r/
 ```
 
 The source used by the last probe was
-`b429ddd8c3e7be59f63759c1820e352029e48b8c`, staged as a clean independent
-checkout at `/data/users/ali/sgw-01/source/b429ddd`. The verified RoboLab
+`35e627eda09f24f00995fc2dce4dbee362c0bc02`, staged as a clean checkout at
+`/data/users/ali/sgw-01/source/35e627e-q` using the preserved b429ddd object
+store. The verified RoboLab
 checkout is pinned to `0aef241fb088ca21bb4ebd24448940ed56620d17`. The image
 digest and all probe/receipt hashes are recorded in the adjacent JSON state
 and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Collect the source-stage diagnosis and prospective workspace v2 evidence.
-Then complete the missing deterministic model-blind workspace-to-slot/waypoint
-stage and qualify physical fixtures from measured evidence. Do not rerun f/g
-or overwrite their evidence.
+Resolve the material-appearance issue and complete the missing deterministic
+model-blind workspace-to-proposal/waypoint stage from measured capture r.
+Then qualify physical fixtures with recorded trajectories. Do not rerun completed
+captures or overwrite their evidence.
 **Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**
 

@@ -153,8 +153,15 @@ class AttemptRecorder:
         header = path.read_bytes()[:32]
         if b"ftyp" not in header:
             raise ContractError("viewport artifact is not an ISO BMFF video stream")
+        try:
+            import imageio.v3 as iio
+            decoded = sum(1 for _ in iio.imiter(path))
+        except Exception as exc:
+            raise ContractError(f"viewport MP4 cannot be decoded: {exc}") from exc
+        if decoded != self._video_frames:
+            raise ContractError(f"viewport MP4 frame count mismatch: decoded {decoded}, expected {self._video_frames}")
         return {"path": path.relative_to(self.path).as_posix(), "sha256": sha256_file(path),
-                "bytes": path.stat().st_size}
+                "bytes": path.stat().st_size, "frame_count": decoded}
 
     def prediction(self, prediction: Any) -> None:
         """Persist the adapter's raw request/response envelope without decoding it."""

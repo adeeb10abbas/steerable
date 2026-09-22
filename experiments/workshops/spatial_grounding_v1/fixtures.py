@@ -175,9 +175,21 @@ def candidate_order(seed: int, candidates: Iterable[FixtureCandidate]) -> list[F
         raise FixtureError("candidate generator exceeded the frozen 100-candidate family maximum")
     if len({candidate.candidate_id for candidate in values}) != len(values):
         raise FixtureError("candidate IDs must be unique")
-    if len({candidate.fingerprint() for candidate in values}) != len(values):
-        raise FixtureError("duplicate candidate layouts are prohibited")
+    for index, first in enumerate(values):
+        for second in values[index + 1:]:
+            if _duplicate_layout(first, second):
+                raise FixtureError("candidates duplicate a layout within the reset tolerance")
     return sorted(values, key=lambda item: sha256(f"{seed}|{item.fingerprint()}".encode()).hexdigest())
+
+
+def _duplicate_layout(first: FixtureCandidate, second: FixtureCandidate) -> bool:
+    if first.family != second.family or set(first.object_poses) != set(second.object_poses):
+        return False
+    return all(
+        pose_error(first.object_poses[name], second.object_poses[name])[0] <= RESET_POSITION_TOLERANCE_M
+        and pose_error(first.object_poses[name], second.object_poses[name])[1] <= RESET_ANGLE_TOLERANCE_DEGREES
+        for name in first.object_poses
+    )
 
 
 def select_qualified_layouts(

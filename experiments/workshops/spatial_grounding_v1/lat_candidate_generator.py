@@ -15,8 +15,12 @@ def _canonical(value: Any) -> bytes:
     return (json.dumps(value, allow_nan=False, sort_keys=True, separators=(",", ":")) + "\n").encode()
 
 
-def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def workspace_digest(workspace: Mapping[str, Any]) -> str:
+    """Digest a receipt excluding its self-referential digest field."""
+
+    value = dict(workspace)
+    value.pop("receipt_sha256", None)
+    return hashlib.sha256(_canonical(value)).hexdigest()
 
 
 def materialize_lat_candidates(workspace: Mapping[str, Any], *, seed: int) -> list[dict[str, Any]]:
@@ -78,7 +82,7 @@ def main() -> None:
         raise FileExistsError(f"refusing to overwrite candidate directory: {args.output_dir}")
     workspace = json.loads(args.workspace_receipt.read_text(encoding="utf-8"))
     expected = workspace.get("receipt_sha256")
-    observed = _sha256(args.workspace_receipt)
+    observed = workspace_digest(workspace)
     if expected != observed:
         raise ValueError("workspace receipt self-hash does not match its bytes")
     candidates = materialize_lat_candidates(workspace, seed=args.seed)

@@ -16,6 +16,13 @@
     "status": "passed_read_only_pinned_source_audit",
     "exit_code": 0,
     "resources": {"cpu": "1", "memory": "1Gi", "nvidia_com_gpu": 0},
+    "raw_log": {
+      "kubernetes_source": "kubectl logs job/sgw01-ali-lat-measurement-contract-audit-20260922k",
+      "local_capture_path": "/var/folders/jg/qt1qbbz100nfj79ctdff236c0000gp/T/1790115654140-copilot-tool-output-19435-9830bd22-5376-4a8c-b0af-e0fc4e634ed4.txt",
+      "bytes": 60242,
+      "sha256": "ab8fc88b584c2a1afe448470ebbf43da0f8fe79412f372ed8f89233d846db4fe",
+      "retention": "The source log is retrievable from the completed Kubernetes Job; this local tool capture is ephemeral and not committed."
+    },
     "sources": {
       "rigid_object_data.py": {
         "path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/assets/rigid_object/rigid_object_data.py",

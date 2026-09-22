@@ -43,3 +43,17 @@ def test_renderer_argument_does_not_abbreviate_renderer_receipt(tmp_path, monkey
     assert args.assets_manifest == assets
     assert args.renderer == "realtime"
     assert args.rendering_type == args.rendering_mode == "balanced"
+
+
+def test_geometric_center_offset_round_trips_through_rotated_root() -> None:
+    root = [1.0, 2.0, 3.0]
+    quaternion = [0.0, 0.0, 0.0, 1.0]
+    center = [1.0, 1.8, 3.3]
+
+    offset = lat_workspace_capture._root_local_offset(root, quaternion, center)
+    reconstructed = [
+        root[index] + lat_workspace_capture._rotate_wxyz(quaternion, offset)[index]
+        for index in range(3)
+    ]
+
+    assert reconstructed == center

@@ -100,7 +100,7 @@ class AttemptRecorder:
                 "bytes": path.stat().st_size, "shape": list(array.shape), "dtype": str(array.dtype)}
 
     def record_reset(self, payload: Mapping[str, Any], initial_state: Mapping[str, Any] | None = None,
-                     initial_sim_time: float | None = None, initial_viewport_frame: Any = None) -> None:
+                     initial_sim_time: float | None = None, initial_viewport_frame: Any = None) -> dict[str, Any]:
         reset = payload
         required = {"full_reset", "reset_id", "camera_name", "camera_fingerprint", "reset_sha256"}
         if not required.issubset(reset) or reset.get("full_reset") is not True:
@@ -111,6 +111,9 @@ class AttemptRecorder:
             self._array(self.path / "observations" / "frame-0000.npy", initial_viewport_frame)
             self._write_video_frame(initial_viewport_frame)
         self.event("reset_attested", reset_id=reset["reset_id"], camera_name=reset["camera_name"])
+        if not isinstance(initial_state, Mapping) or initial_sim_time is None:
+            raise ContractError("reset scorer state and simulated time are required")
+        return {"action_step": 0, "sim_time_s": initial_sim_time, **dict(initial_state)}
 
     def _write_video_frame(self, frame: Any) -> None:
         try:

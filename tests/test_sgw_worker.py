@@ -29,7 +29,7 @@ class FakeAdapter:
             path.write_text("retained")
         return {"status": self.status, "failure_reason": "policy failure",
                 "executed_action_count": 450, "safety_terminated": False,
-                "episode_mapping": {"states": []}}
+                "episode_mapping": [{"action_step": step} for step in range(451)]}
 
     def close(self):
         pass

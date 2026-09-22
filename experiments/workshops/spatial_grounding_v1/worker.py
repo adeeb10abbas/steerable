@@ -173,10 +173,16 @@ def _canonical_outcome(outcome: Mapping[str, Any], cell: Cell, scorer: ScoreFn |
         if not isinstance(value.get("technical_cause"), str):
             raise ContractError("technical invalid execution lacks a technical cause")
         return value
-    trace = value.get("episode_mapping")
-    if not isinstance(trace, Mapping):
+    mapping = value.get("episode_mapping")
+    if not isinstance(mapping, list):
         raise ContractError("nontechnical execution lacks the raw episode mapping required for scoring")
-    trace = dict(trace)
+    trace = {
+        "states": mapping,
+        "terminal_observed": value.get("safety_terminated") is not True,
+        "termination_reason": value.get("termination_reason"),
+        "safety_terminated": value.get("safety_terminated") is True,
+        "success_events": value.get("success_events", []),
+    }
     trace.update({
         "release_id": cell.row["release_id"],
         "cell_id": cell.cell_id,

@@ -1,0 +1,75 @@
+{
+  "study_id": "SGW-01",
+  "status": "blocked_before_physical_qualification_and_model_inference",
+  "branch": "sz5vjy-gme-spatial-grounding-experiments",
+  "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
+  "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
+  "planned_episodes": {
+    "P": 36,
+    "D": 144,
+    "C": 864,
+    "total": 1044
+  },
+  "model_requests": 0,
+  "released_behavioral_cells": 0,
+  "valid_behavioral_episodes": 0,
+  "invalid_behavioral_attempts": 0,
+  "partial_behavioral_episodes": 0,
+  "censored_behavioral_episodes": 0,
+  "qualified_model_family_branches": [],
+  "prediction_coverage": null,
+  "scientific_results": null,
+  "behavioral_release_hash": null,
+  "synthetic_tests_are_scientific_evidence": false,
+  "persistent_study_root": "/data/users/ali/sgw-01",
+  "last_probe_source_commit": "432796d9b04e69febd4bf6adb764d859ef8fe58f",
+  "last_probe_source_path": "/data/users/ali/sgw-01/source/432796d",
+  "verified_simulator_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "preflight_image_digest": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+  "infrastructure_attempts": [
+    {
+      "job": "sgw01-ali-pvc-lock-20260922",
+      "status": "passed_cpu_only_cross_node_lock_and_sigkill_recovery",
+      "receipt": "infrastructure/pvc_lock_receipt.json",
+      "receipt_sha256": "701ee4d64e6fbaf86fb06bd961afd65c4d67d347d9c6679bd478a18861b3fa57"
+    },
+    {
+      "job": "sgw01-ali-rtx-preflight-20260922a",
+      "pod": "sgw01-ali-rtx-preflight-20260922a-vcd4s",
+      "status": "failed_before_isaac_import_git_worktree_precondition",
+      "source_commit": "cfd54d8563d2d14bcf7623e9001dbb3439eceee5",
+      "log": "infrastructure/rtx-20260922a.log",
+      "log_sha256": "370bf012e356bcd388d5135aa89a74ac128b590437fc8aa5d207973ed22ccaef"
+    },
+    {
+      "job": "sgw01-ali-rtx-preflight-20260922b",
+      "pod": "sgw01-ali-rtx-preflight-20260922b-mbzwm",
+      "status": "suspended_unschedulable_no_other_matching_rtx_node",
+      "source_commit": "c2aac12b5923e45d11197e4dd96309327bfb80b3",
+      "allocated_gpus": 0
+    },
+    {
+      "job": "sgw01-ali-rtx-preflight-20260922c",
+      "pod": "sgw01-ali-rtx-preflight-20260922c-gwwhv",
+      "status": "failed_before_isaac_import_no_idle_allocated_gpu",
+      "source_commit": "432796d9b04e69febd4bf6adb764d859ef8fe58f",
+      "peak_allocated_gpus": 4,
+      "gpu_receipt": "infrastructure/rtx-20260922c-gpu_selection.json",
+      "gpu_receipt_sha256": "4c3372d97c81376d52cbec2ae838b450c2e518a82eebc15bb6b586bf08ec9ee0",
+      "log": "infrastructure/rtx-20260922c.log",
+      "log_sha256": "167575c3120f127a97bb66add3c4a11e59ad94b2cfc350e5fc6fc95e05dd5649"
+    }
+  ],
+  "active_task_gpu_jobs": [],
+  "active_task_model_servers": [],
+  "blockers": [
+    "No verified idle RTX/Vulkan-capable lane; four allocated RTX GPUs had only 2522-3194 MiB free.",
+    "Actual renderer, workspace, LAT/DIST/HEIGHT fixtures and full runtime/reset/time-map receipts are not qualified.",
+    "Pilot-derived request/episode deadlines, storage estimate and confirmation budget are not frozen.",
+    "No authenticated Overleaf connection is available."
+  ],
+  "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
+  "next_action": "Obtain a verified idle authorized RTX/Vulkan lane, then register a fresh immutable zero-model renderer attempt; do not rerun a completed historical cell or launch a behavioral partition.",
+  "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
+  "overleaf_modified": false
+}

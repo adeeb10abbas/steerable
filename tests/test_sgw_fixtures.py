@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from experiments.workshops.spatial_grounding_v1.fixtures import (
     FixtureCandidate,
     FixtureError,
     candidate_order,
     select_qualified_layouts,
 )
-from experiments.workshops.spatial_grounding_v1.build_asset_manifest import referenced_usd_assets
+from experiments.workshops.spatial_grounding_v1.build_asset_manifest import is_git_worktree, referenced_usd_assets
 from experiments.workshops.spatial_grounding_v1.lat_candidate_generator import materialize_lat_candidates
 
 
@@ -91,6 +93,15 @@ def test_asset_manifest_resolves_actual_usda_references(tmp_path) -> None:
     object_usd.write_text('@../textures/cube.png@\n', encoding="utf-8")
     texture.write_bytes(b"texture")
     assert referenced_usd_assets(scene, root) == [scene.resolve(), object_usd.resolve(), texture.resolve()]
+
+
+def test_git_worktree_identity_accepts_dot_git_file_and_rejects_plain_directory(tmp_path) -> None:
+    repository_root = Path(__file__).parents[1]
+    assert (repository_root / ".git").is_file()
+    assert is_git_worktree(repository_root)
+    plain_directory = tmp_path / "not-a-checkout"
+    plain_directory.mkdir()
+    assert not is_git_worktree(plain_directory)
 
 
 def test_lat_candidates_use_only_measured_workspace_slots() -> None:

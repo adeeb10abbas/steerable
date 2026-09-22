@@ -6,6 +6,8 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
+import subprocess
 
 
 def sha256(path: Path) -> str:
@@ -24,25 +26,40 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def referenced_usd_assets(path: Path, root: Path, seen: set[Path] | None = None) -> list[Path]:
+    """Resolve direct USDA ``@asset@`` references inside the pinned checkout."""
+
+    seen = set() if seen is None else seen
+    path = path.resolve()
+    if path in seen:
+        return []
+    seen.add(path)
+    if path.suffix.lower() not in {".usd", ".usda"}:
+        return [path]
+    try:
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return [path]
+    children: list[Path] = [path]
+    for reference in re.findall(r"@([^@]+)@", text):
+        candidate = (path.parent / reference).resolve()
+        if not candidate.is_relative_to(root):
+            raise ValueError(f"scene reference escapes pinned RoboLab checkout: {reference}")
+        if not candidate.is_file():
+            raise FileNotFoundError(f"scene reference is missing: {candidate}")
+        children.extend(referenced_usd_assets(candidate, root, seen))
+    return children
+
+
 def main() -> None:
     args = parse_args()
     root = args.robolab_root.resolve()
     if not (root / ".git").is_dir():
         raise ValueError("asset manifest requires the pinned RoboLab checkout")
-    paths = [
-        root / "assets/scenes" / args.scene,
-        root / "assets/objects/ycb/bowl.usd",
-        root / "assets/objects/ycb/banana.usd",
-        root / "assets/objects/hot3d/rubiks_cube.usd",
-        root / "assets/objects/ycb/textures/obj_000013.png",
-        root / "assets/objects/ycb/textures/obj_000010.png",
-        root / "assets/objects/hot3d/textures/obj_000030.png",
-        root / "assets/fixtures/franka_table.usd",
-        root / "assets/fixtures/table_maple.usd",
-        root / "assets/fixtures/Props/instaceable_meshes.usd",
-        root / "assets/backgrounds/default/home_office.exr",
-        root / "assets/robots/franka_robotiq_2f_85_flattened.usd",
-    ]
+    scene = root / "assets/scenes" / args.scene
+    paths = referenced_usd_assets(scene, root)
+    if not paths:
+        raise ValueError("scene dependency resolution produced no assets")
     records = []
     for path in paths:
         path = path.resolve()
@@ -53,6 +70,9 @@ def main() -> None:
         "schema_version": "sgw-01-robolab-asset-manifest-v1",
         "status": "measured_asset_files_not_fixture_qualified",
         "robolab_root": str(root),
+        "robolab_commit": subprocess.check_output(
+            ["git", "-C", str(root), "rev-parse", "HEAD"], text=True
+        ).strip(),
         "scene": records[0],
         "assets": records[1:],
     }

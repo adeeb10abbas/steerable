@@ -152,7 +152,7 @@ def _stage_authorized(release: Release, stage: str) -> None:
 def _load_scorer() -> ScoreFn:
     """Resolve the scorer lazily so production cannot fall back to a fake."""
     try:
-        from .scoring import FrozenScoringConfig, GoalSpec, canonical_status, score_episode
+        from .scoring import FrozenScoringConfig, GoalSpec, result_payload, score_episode
     except ImportError as exc:
         raise ContractError("production scorer is unavailable") from exc
 
@@ -162,7 +162,13 @@ def _load_scorer() -> ScoreFn:
             form=str(cell.row["form"]),
         )
         scored = score_episode(trace, goal, FrozenScoringConfig())
-        return {"status": canonical_status(scored), "score": scored}
+        return result_payload(
+            scored,
+            release_id=str(trace["release_id"]),
+            cell_id=cell.cell_id,
+            attempt_id=str(trace["attempt_id"]),
+            completed_at_utc=str(trace["completed_at_utc"]),
+        )
     return score
 
 

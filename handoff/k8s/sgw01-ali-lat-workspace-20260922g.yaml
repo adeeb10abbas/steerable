@@ -1,0 +1,153 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-lat-workspace-20260922g
+  namespace: 211247-prod
+  labels:
+    owner: ali
+    app.kubernetes.io/name: sgw-01
+    app.kubernetes.io/managed-by: ali-research
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 0
+  activeDeadlineSeconds: 1800
+  template:
+    metadata:
+      labels:
+        owner: ali
+        app.kubernetes.io/name: sgw-01
+        purpose: zero-model-lat-workspace
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 180
+      automountServiceAccountToken: false
+      nodeSelector:
+        node-role.kubernetes.io/worker-gpu: ""
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: nvidia.com/gpu.product
+                    operator: In
+                    values: [NVIDIA-A40]
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Equal
+          value: present
+          effect: NoSchedule
+      imagePullSecrets:
+        - name: artifactory-ci-pull-secret
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: workspace
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              STUDY=/data/users/ali/sgw-01/source/b429ddd
+              ROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              PREFLIGHT=/data/users/ali/sgw-01/preflight/a40-20260922e
+              OUT=/data/users/ali/sgw-01/qualification/lat-workspace-20260922g
+              test ! -e "$OUT/workspace.json"
+              test -f "$PREFLIGHT/renderer.json"
+              test -f "$PREFLIGHT/assets.json"
+              test "$(sha256sum "$PREFLIGHT/renderer.json" | awk '{print $1}')" = e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5
+              test "$(sha256sum "$PREFLIGHT/assets.json" | awk '{print $1}')" = 3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806
+              export XDG_CACHE_HOME="$OUT/cache/xdg" WARP_CACHE_PATH="$OUT/cache/warp" MPLCONFIGDIR="$OUT/cache/matplotlib"
+              mkdir -p "$OUT" "$HOME/.cache" "$XDG_CACHE_HOME" "$WARP_CACHE_PATH" "$MPLCONFIGDIR" "$OUT/kit"
+              exec > >(tee "$OUT/workspace.log") 2>&1
+              test "$(git -C "$STUDY" rev-parse HEAD)" = b429ddd8c3e7be59f63759c1820e352029e48b8c
+              test -z "$(git -C "$STUDY" status --porcelain)"
+              test "$(git -C "$ROBOLAB" rev-parse HEAD)" = 0aef241fb088ca21bb4ebd24448940ed56620d17
+              test -z "$(git -C "$ROBOLAB" status --porcelain --untracked-files=no)"
+              cd "$STUDY"
+              "$PY" tools/validate_vla_wam_v3_protocol.py --quiet
+              "$PY" tools/validate_vla_wam_v2_protocol.py > "$OUT/v2_validation.json"
+              export PYTHONPATH="$STUDY:$ROBOLAB"
+              export CUDA_VISIBLE_DEVICES
+              CUDA_VISIBLE_DEVICES=$("$PY" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output "$OUT/gpu_selection.json")
+              echo "Verified idle allocated GPU: $CUDA_VISIBLE_DEVICES"
+              nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total,memory.used,utilization.gpu --format=csv,noheader | tee "$OUT/gpu_identity.csv"
+              cd "$ROBOLAB"
+              exec "$PY" -m experiments.workshops.spatial_grounding_v1.lat_workspace_capture --study-root "$STUDY" --robolab-root "$ROBOLAB" --assets-manifest "$PREFLIGHT/assets.json" --renderer-receipt "$PREFLIGHT/renderer.json" --output "$OUT/workspace.json" --headless --num-envs 1 --device cuda:0 --renderer realtime --rendering-type balanced --rendering_mode balanced --kit_args="--portable-root=$OUT/kit --/rtx/verifyDriverVersion/enabled=false"
+          env:
+            - name: HOME
+              value: /home/ali
+            - name: USER
+              value: ali
+            - name: LOGNAME
+              value: ali
+            - name: TMPDIR
+              value: /tmp
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: compute,utility,graphics,display
+            - name: OMNI_KIT_ACCEPT_EULA
+              value: "YES"
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: VK_ICD_FILENAMES
+              value: /etc/vulkan/icd.d/nvidia_icd.json
+            - name: LD_LIBRARY_PATH
+              value: /data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu
+          resources:
+            requests:
+              cpu: "16"
+              memory: 64Gi
+              nvidia.com/gpu: "1"
+            limits:
+              cpu: "32"
+              memory: 128Gi
+              nvidia.com/gpu: "1"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - name: workspace
+              mountPath: /data
+            - name: dshm
+              mountPath: /dev/shm
+            - name: tmp
+              mountPath: /tmp
+            - name: vartmp
+              mountPath: /var/tmp
+            - name: home
+              mountPath: /home/ali
+            - name: userdb
+              mountPath: /etc/passwd
+              subPath: passwd
+              readOnly: true
+            - name: userdb
+              mountPath: /etc/group
+              subPath: group
+              readOnly: true
+      volumes:
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: 211247-prod-pvc
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 32Gi
+        - name: tmp
+          emptyDir: {}
+        - name: vartmp
+          emptyDir: {}
+        - name: home
+          emptyDir: {}
+        - name: userdb
+          configMap:
+            name: 211247-ali-b200-1gpu-userdb

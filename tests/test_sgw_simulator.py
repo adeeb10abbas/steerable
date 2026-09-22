@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 from experiments.workshops.spatial_grounding_v1.fixtures import FixtureCandidate, Pose
 from experiments.workshops.spatial_grounding_v1.model_blind_qualification import qualify_candidate
@@ -87,3 +88,10 @@ def test_task_definition_cannot_enable_goal_termination() -> None:
         assert "goal-independent" in str(error)
     else:
         raise AssertionError("task must always run the fixed 450-action cap")
+
+
+def test_lat_runtime_requires_measured_table_contact() -> None:
+    source = (Path(__file__).parents[1] / "experiments/workshops/spatial_grounding_v1/robolab_lat_qualification.py").read_text(encoding="utf-8")
+    assert '"rubiks_cube__table"' in source
+    assert "force_matrix_w" in source
+    assert ">= 1.0" in source

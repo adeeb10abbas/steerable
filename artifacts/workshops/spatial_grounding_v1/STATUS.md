@@ -77,8 +77,12 @@ The local synthetic integration now exercises the real production adapter,
 recorder, strict scorer and compiler for six genuine recorded synthetic
 cells, including real decoded viewport video and a zero-request resume.
 Those records are not scientific evidence. Global pilot-derived storage
-accounting and GPU-hour budget enforcement are still missing from the worker;
-the configurable disk floor alone does not satisfy the runbook.
+accounting and owner-scoped allocation guards are now implemented. They require
+a non-lowerable 100 GiB floor, conservative whole-study P95 storage allowance,
+hash-bound resource evidence, real Job timing and a fresh idle check of every
+allocated GPU. Every unfinished attempt rechecks resource gates; completed
+resumes construct no model. Concrete behavioral allocation/runtime receipts
+remain absent, so this is not a live release.
 
 The first zero-model LAT workspace Job, `sgw01-ali-lat-workspace-20260922f`,
 passed the idle guard but failed before Isaac at `20:09:49Z`. The input
@@ -109,6 +113,31 @@ also differ in this raw snapshot; their live API/frame semantics must be
 resolved before treating either as the protocol's object centers. Do not
 invent slot coordinates or mark this workspace as a qualified fixture.
 
+CPU-only source audits i/k now establish the exact measurement contract:
+RoboLab's default root pose and cached-geometry centroid are environment-local,
+whereas Isaac's compatibility `root_vel_w` is a COM velocity. Audit j failed
+before reading source because its package path was incorrect; its failure is
+retained, not rerun. The intervening Kubernetes connection error recovered.
+The corrected implementation keeps actor-root spawn/reset poses distinct from
+scoring centers and transports velocity from the measured COM. Prospective
+capture v2 also retains environment/EEF/robot state, explicit center transforms,
+and actual lossless RGB arrays. The earlier g receipt is unchanged; its original
+`world` labels must not be taken as a corrected coordinate contract.
+
+The user explicitly authorized **no aggregate GPU-hour cap for idle existing
+cluster capacity**. The exact response and bounded interpretation are in
+[`operational_authorization.json`](operational_authorization.json). No new paid
+capacity, cluster provisioning, or interference with other workloads is
+authorized. The frozen four-GPU/two-worker ceiling, initial one-worker gate,
+bounded Jobs and P/D/C engineering gates remain.
+
+Exact capture source `35e627e` is pushed. The fixture session is preparing a
+fresh v2 capture m, not qualifying any slot or policy. Its CPU source-stage
+Job l was observed failed; diagnosis and any separately registered replacement
+remain pending. Native-policy source auditing and local runtime fixes are
+proceeding separately without a model server. Consult the live study-owned
+Job status before continuing; pending work is not recorded as complete.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure
@@ -133,9 +162,10 @@ and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Complete the missing model-blind workspace-to-slot/waypoint stage, including
-live pose/geometry consistency, then qualify physical fixtures from measured
-evidence. Do not rerun f/g or overwrite their evidence.
+Collect the source-stage diagnosis and prospective workspace v2 evidence.
+Then complete the missing deterministic model-blind workspace-to-slot/waypoint
+stage and qualify physical fixtures from measured evidence. Do not rerun f/g
+or overwrite their evidence.
 **Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**
 
@@ -150,8 +180,8 @@ Preserve each failed attempt and diagnose its specific failure before
 registering a fresh attempt. The passed renderer receipt now permits
 workspace capture and model-blind fixture qualification. Then qualify
 the real Nano/official DreamZero interfaces, raw recorder, resets and time
-maps, and finish worker storage/budget guards before any direct fixed-input
-or P/D/C release.
+maps, and issue genuine runtime-bound worker resource receipts before any
+direct fixed-input or P/D/C release.
 
 Overleaf web access returned 403 and noninteractive Git access had no stored
 password. The live project was not modified. Authenticate through an approved

@@ -1,6 +1,6 @@
 {
   "study_id": "SGW-01",
-  "status": "a40_renderer_and_workspace_measured_no_fixture_or_model_release",
+  "status": "measurement_contract_corrected_v2_capture_pending_no_fixture_or_model_release",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -22,6 +22,19 @@
   "behavioral_release_hash": null,
   "synthetic_tests_are_scientific_evidence": false,
   "persistent_study_root": "/data/users/ali/sgw-01",
+  "operational_authorization": {
+    "path": "operational_authorization.json",
+    "sha256": "be524c776d84d78b487b4b356065752104065c88fe087ebb9bcd115dc15c4b85",
+    "budget_mode": "existing_idle_capacity_no_aggregate_hour_cap",
+    "scope": "Verified idle existing authorized cluster capacity only; no new paid capacity or cluster provisioning; frozen four-GPU/two-worker ceiling and all technical gates remain."
+  },
+  "implementation_slices": {
+    "measurement_contract_and_prospective_capture": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
+    "worker_resource_guards": "49c2023",
+    "local_sgw_tests_passed": 87,
+    "live_model_runtime_qualified": false,
+    "concrete_behavioral_allocation_receipt_exists": false
+  },
   "last_probe_source_commit": "b429ddd8c3e7be59f63759c1820e352029e48b8c",
   "last_probe_source_path": "/data/users/ali/sgw-01/source/b429ddd",
   "verified_simulator_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
@@ -138,19 +151,59 @@
       "pvc_read_only": true,
       "model_requests": 0,
       "exported_attempt": "sgw01-ali-lat-workspace-20260922g"
+    },
+    {
+      "job": "sgw01-ali-lat-measurement-api-audit-20260922i",
+      "job_uid": "55ed024b-c8d3-4c7a-a379-fce5acc4c082",
+      "status": "passed_read_only_api_audit_velocity_reference_initially_unresolved",
+      "completed_at_utc": "2026-09-22T20:27:00Z",
+      "allocated_gpus": 0,
+      "receipt": "infrastructure/cpu-20260922i-measurement-api-audit.json",
+      "receipt_sha256": "17a16cb6dc9f5ba97e7347c1c8e946ed44be3a89dde0b963264d08b84369dc95"
+    },
+    {
+      "job": "sgw01-ali-lat-measurement-contract-audit-20260922j",
+      "job_uid": "db5bbb83-4aee-468c-96cb-36b804c53194",
+      "status": "failed_before_source_read_incorrect_isaac_package_path",
+      "failed_at_utc": "2026-09-22T20:32:07Z",
+      "allocated_gpus": 0,
+      "receipt": "infrastructure/cpu-20260922j-k-measurement-contract-audits.json",
+      "receipt_sha256": "6072495738a2dfe5b50fbc4279ad13c4a0c74fb927cd4437f5ce7f7648712e4b"
+    },
+    {
+      "job": "sgw01-ali-lat-measurement-contract-audit-20260922k",
+      "job_uid": "dd05d92c-d447-4109-88e9-e2a6b0a66af6",
+      "status": "passed_read_only_pinned_root_com_geometry_contract_audit",
+      "allocated_gpus": 0,
+      "receipt": "infrastructure/cpu-20260922j-k-measurement-contract-audits.json",
+      "receipt_sha256": "6072495738a2dfe5b50fbc4279ad13c4a0c74fb927cd4437f5ce7f7648712e4b"
     }
   ],
+  "connectivity_event": {
+    "status": "recovered",
+    "error": "dial tcp 10.120.200.169:6443: connect: can't assign requested address",
+    "recovery_evidence": "A later scoped read retrieved the actual failed j Job, followed by successful k and study-owned Job listing.",
+    "denominator_effect": "none"
+  },
+  "ongoing_work": {
+    "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
+    "fixture_scope": "Stage exact source 35e627e on the PVC, then at most one fresh zero-model workspace capture m. Source-stage l was observed Failed; detailed diagnosis is pending. Never retry l or earlier capture Jobs in place.",
+    "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
+    "runtime_scope": "CPU-only pinned native-client/server source audits o/p and local concrete reset/trace/lifecycle implementation. No policy server or learned inference authorized.",
+    "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
+    "worker_scope": "Local guard work integrated; idle, no cluster operations."
+  },
   "active_task_gpu_jobs": [],
   "active_task_model_servers": [],
   "blockers": [
-    "A40 rendering and raw workspace measurement passed, but validated_slots is empty. Deterministic proposal/waypoint validation, center-versus-pose/bounding-box agreement, and LAT/DIST/HEIGHT fixture qualifications remain outstanding.",
-    "Native model runtime/reset/time-map receipts remain unqualified.",
-    "Worker global pilot-derived storage accounting and GPU-hour budget enforcement are not yet implemented; the configurable disk floor alone is insufficient.",
-    "Pilot-derived request/episode deadlines, storage estimate and confirmation budget are not frozen.",
+    "A40 rendering and raw workspace measurement passed, but validated_slots is empty. Root/center/COM source semantics are now audited and code-corrected; prospective v2 capture, deterministic proposal/waypoint validation, and LAT/DIST/HEIGHT fixture qualification remain outstanding.",
+    "Native model runtime/reset/time-map receipts and actual server-side trace/future production remain unqualified; local scaffolding is not live proof.",
+    "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
+    "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Implement and verify the missing model-blind workspace-to-slot/waypoint qualification stage using the immutable measured workspace. Resolve pose/geometry semantics before candidate qualification. Finish runtime/worker gates before behavioral release; never rerun or overwrite f/g.",
+  "next_action": "Collect the bounded source-stage l diagnosis and any fresh workspace m evidence from the fixture session; preserve attempts and inspect live Job state before authorizing a replacement. Use audited root-reset versus geometric-center/COM semantics. Complete deterministic workspace-to-slot/waypoint qualification and native runtime gates before any behavioral release; never overwrite f/g or count infrastructure work as model evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

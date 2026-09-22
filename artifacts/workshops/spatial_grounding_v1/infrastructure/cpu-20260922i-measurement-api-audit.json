@@ -1,0 +1,28 @@
+{
+  "schema_version": "sgw-01-infrastructure-attempt-v1",
+  "job": "sgw01-ali-lat-measurement-api-audit-20260922i",
+  "job_uid": "55ed024b-c8d3-4c7a-a379-fce5acc4c082",
+  "pod": "sgw01-ali-lat-measurement-api-audit-20260922i-fbvqx",
+  "pod_uid": "1df3946a-cb3b-431d-a102-5cb1ceded7fb",
+  "completed_at_utc": "2026-09-22T20:27:00Z",
+  "status": "passed_read_only_pinned_source_audit",
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "resources": {"cpu": "1", "memory": "1Gi", "allocated_gpus": 0},
+  "pvc_read_only": true,
+  "log": {
+    "retrieval": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod logs job/sgw01-ali-lat-measurement-api-audit-20260922i",
+    "bytes": 57711,
+    "sha256": "237093f505e116d83fe53f7dfe5266f4f47cd08e76e4c433e0ea6011a46b24df",
+    "contains_third_party_source": true,
+    "committed_in_full": false
+  },
+  "verified_findings": {
+    "get_pose": "Default is_relative=True returns rigid-root position minus environment origin, with world-axis quaternion.",
+    "get_bbox": "Transforms cached local geometry by that pose; geometric-center coordinates are environment-local.",
+    "get_velocity": "Returns root_vel_w, whose reference point was not established by this audit."
+  },
+  "follow_up": "Audit k in cpu-20260922j-k-measurement-contract-audits.json establishes the pinned Isaac COM velocity contract. Do not interpret the compatibility root_vel_w name as root-link linear velocity.",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "candidate_qualification_count": 0
+}

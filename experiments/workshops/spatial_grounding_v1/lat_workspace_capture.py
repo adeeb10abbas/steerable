@@ -16,7 +16,7 @@ from .lat_candidate_generator import workspace_digest
 
 
 def parse_args() -> argparse.Namespace:
-    bootstrap = argparse.ArgumentParser(add_help=False)
+    bootstrap = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
     bootstrap.add_argument("--study-root", type=Path, required=True)
     bootstrap.add_argument("--robolab-root", type=Path, required=True)
     bootstrap.add_argument("--assets-manifest", type=Path, required=True)

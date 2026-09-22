@@ -1,3 +1,5 @@
+import pytest
+
 from experiments.workshops.spatial_grounding_v1.scoring import (
     FrozenScoringConfig,
     GoalSpec,
@@ -126,3 +128,25 @@ def test_infrastructure_has_no_model_outcome():
     assert result.status is OutcomeStatus.INFRA_INVALID
     assert result.requested_success is None
     assert canonical_status(result) == "technical_invalid"
+
+
+def test_short_trace_is_technical_missingness_even_if_flagged_terminal():
+    state = _state(cube=(0.0, 0.05, 0.14))
+    state["cube_height_lift_m"] = 0.0
+    result = score_episode(
+        {"states": [state], "terminal_observed": True},
+        GoalSpec("LAT", 1),
+    )
+    assert result.status is OutcomeStatus.INFRA_INVALID
+    assert result.requested_success is None
+
+
+def test_nonfinite_geometry_and_missing_anchor_fail_closed():
+    state = _state()
+    state["cube"] = (float("nan"), 0.0, 0.1)
+    with pytest.raises(ValueError):
+        score_episode({"states": [state] * 450, "terminal_observed": True}, GoalSpec("LAT", 1))
+    state = _state()
+    del state["bowl"]
+    with pytest.raises(ValueError):
+        score_episode({"states": [state] * 450, "terminal_observed": True}, GoalSpec("LAT", 1))

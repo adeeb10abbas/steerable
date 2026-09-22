@@ -80,10 +80,14 @@ def canonical_status(score: EpisodeScore) -> str:
 
 def _xyz(value: Any) -> tuple[float, float, float]:
     if isinstance(value, Mapping):
-        return (float(value["x"]), float(value["y"]), float(value["z"]))
-    if len(value) != 3:
-        raise ValueError("position must contain x, y, z")
-    return tuple(float(v) for v in value)  # type: ignore[return-value]
+        result = (float(value["x"]), float(value["y"]), float(value["z"]))
+    else:
+        if len(value) != 3:
+            raise ValueError("position must contain x, y, z")
+        result = tuple(float(v) for v in value)  # type: ignore[assignment]
+    if not all(math.isfinite(v) for v in result):
+        raise ValueError("position must contain finite coordinates")
+    return result  # type: ignore[return-value]
 
 
 def relation_m(family: str, cube: Any, bowl: Any, plate: Any | None = None) -> float:
@@ -101,7 +105,7 @@ def relation_m(family: str, cube: Any, bowl: Any, plate: Any | None = None) -> f
     raise ValueError(f"unknown family: {family}")
 
 
-def _max_anchor_drift(states: Sequence[Mapping[str, Any]]) -> float:
+def _max_anchor_drift(states: Sequence[Mapping[str, Any]], required: Sequence[str]) -> float:
     if not states:
         return 0.0
     first = states[0]
@@ -110,6 +114,8 @@ def _max_anchor_drift(states: Sequence[Mapping[str, Any]]) -> float:
         for name in ("bowl", "plate"):
             first_value = first.get(name, first.get(f"{name}_xyz_m"))
             state_value = state.get(name, state.get(f"{name}_xyz_m"))
+            if name in required and (first_value is None or state_value is None):
+                raise ValueError(f"missing {name} position in timestep")
             if first_value is not None and state_value is not None:
                 max_drift = max(max_drift, math.dist(_xyz(state_value), _xyz(first_value)))
     return max_drift
@@ -182,18 +188,28 @@ def score_episode(
     states = list(episode.get("states", ()))
     if not states:
         raise ValueError("valid scoring requires at least one state")
-    terminal_observed = bool(episode.get("terminal_observed", len(states) >= cfg.action_cap))
+    terminal_observed = len(states) >= cfg.action_cap and bool(
+        episode.get("terminal_observed", False)
+        or episode.get("termination_reason") == "action_cap"
+        or len(states) == cfg.action_cap
+    )
     safety = bool(episode.get("termination_reason") == "safety" or episode.get("safety_terminated"))
-    anchor_drift = _max_anchor_drift(states)
+    required_anchors = ("bowl", "plate") if goal.family == "DIST" else ("bowl",)
+    anchor_drift = _max_anchor_drift(states, required_anchors)
     reference_ok = anchor_drift <= cfg.reference_motion_limit_m
     initial_cube = episode.get("initial_cube_xyz_m", episode.get("initial_cube"))
     initial_cube_z = _xyz(initial_cube)[2] if initial_cube is not None else None
     pickup = _pickup_step(states, cfg, initial_cube_z=initial_cube_z)
     first_success = _first_success(episode.get("success_events", ()))
-    if safety or not terminal_observed:
+    if safety:
         return EpisodeScore(
             OutcomeStatus.SAFETY_CENSORED, False, None, None, pickup, first_success,
             None, anchor_drift, reference_ok, None, "safety_censored", True,
+        )
+    if not terminal_observed:
+        return EpisodeScore(
+            OutcomeStatus.INFRA_INVALID, None, None, None, pickup, first_success,
+            None, anchor_drift, reference_ok, None, "missing_action_450_endpoint", False,
         )
     final = states[-1]
     required = ("cube", "bowl")

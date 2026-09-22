@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import argparse
 from contextlib import contextmanager
+from datetime import datetime, timedelta, timezone
 import fcntl
+import hashlib
 import importlib
 import json
+import math
 import os
 from pathlib import Path
 import shutil
@@ -17,15 +20,22 @@ import time
 from typing import Any, Callable, Mapping, Protocol
 
 from .contract import Cell, ContractError, Release, load_release, validate_stage_authorizations, verify_completion_pointer
+from .gpu_idle_probe import select_idle
 from .recorder import AttemptRecorder, atomic_json, next_attempt_number, utc_now
 
 EXIT_RELEASE_INVALID, EXIT_ATTEMPTS_EXHAUSTED, EXIT_STORAGE_BUDGET_BLOCKED = 42, 43, 44
+SOURCE_QUEUE_EPISODE_COUNT = 1044
+MAX_IDLE_PROBE_AGE_SECONDS = 300
 STOP_REQUESTED = False
 STOP_GRACE_EXPIRED = False
 
 
 class DeadlineExceeded(RuntimeError):
     pass
+
+
+class ResourceBlocked(OSError):
+    """Raised before model construction when a fixed resource gate fails."""
 
 
 class Adapter(Protocol):
@@ -102,11 +112,274 @@ def _completion(release: Release, cell: Cell) -> bool:
     return True
 
 
-def _space_check(release: Release) -> None:
-    required = int(release.binding.get("minimum_free_bytes", 100 * 1024**3))
+def _receipt(value: Any, label: str) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping) or not isinstance(value.get("path"), str) or not isinstance(value.get("sha256"), str):
+        raise ResourceBlocked(f"{label} receipt is absent or unhashed")
+    path = Path(value["path"])
+    if not path.is_file():
+        raise ResourceBlocked(f"{label} receipt is unavailable: {path}")
+    from .contract import load_json, sha256_file
+    try:
+        if sha256_file(path) != value["sha256"]:
+            raise ResourceBlocked(f"{label} receipt hash changed: {path}")
+        return load_json(path, label)
+    except (ContractError, OSError, UnicodeError) as exc:
+        raise ResourceBlocked(f"{label} receipt is unreadable or malformed: {exc}") from exc
+
+
+def _expiry(receipt: Mapping[str, Any], label: str) -> datetime:
+    value = receipt.get("expires_at_utc")
+    if not isinstance(value, str):
+        raise ResourceBlocked(f"{label} receipt lacks expires_at_utc")
+    try:
+        expiry = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ResourceBlocked(f"{label} receipt has invalid expires_at_utc") from exc
+    if expiry.tzinfo is None or expiry <= datetime.now(timezone.utc):
+        raise ResourceBlocked(f"{label} receipt is expired")
+    return expiry
+
+
+def _unexpired(receipt: Mapping[str, Any], label: str) -> None:
+    _expiry(receipt, label)
+
+
+def _source_queue_hash(release: Release) -> str:
+    receipt = json.loads((release.root / "release_receipt.json").read_text(encoding="utf-8"))
+    value = receipt.get("source_queue_sha256")
+    if not isinstance(value, str):
+        raise ResourceBlocked("release lacks source queue provenance")
+    return value
+
+
+def _runtime_identity_sha256(release: Release) -> str:
+    """Hash the execution identity without receipt references, avoiding a hash cycle."""
+    binding = release.binding
+    identity = {
+        "worker_image_digest": binding["worker_image_digest"],
+        "source_commit": binding["source_commit"],
+        "simulator_commit": binding["simulator_commit"],
+        "model_code_commits": binding["model_code_commits"],
+        "checkpoint_hashes": binding["checkpoint_hashes"],
+        "node_gpu_type": binding["node_gpu_type"],
+    }
+    return hashlib.sha256(json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def _receipt_identity(release: Release, receipt: Mapping[str, Any], label: str) -> None:
+    binding = release.binding
+    expected = {
+        "release_id": release.release_id,
+        "source_queue_sha256": _source_queue_hash(release),
+        "source_queue_episode_count": SOURCE_QUEUE_EPISODE_COUNT,
+        "pvc_name": binding["pvc_name"],
+        "pvc_mount_path": binding["pvc_mount_path"],
+        "study_root": binding["source_root"],
+        "runtime_identity_sha256": _runtime_identity_sha256(release),
+    }
+    if any(receipt.get(field) != value for field, value in expected.items()):
+        raise ResourceBlocked(f"{label} receipt is not bound to this release, PVC, study root, and runtime")
+
+
+def _positive_finite_number(value: Any) -> bool:
+    return type(value) in {int, float} and value > 0 and math.isfinite(value)
+
+
+def _authorization_check(release: Release, *, model: str) -> str:
+    authorization = _receipt(release.binding.get("operational_authorization_receipt"), "operational authorization")
+    if authorization.get("schema_version") != "sgw-01-operational-authorization-v1" or authorization.get("status") != "approved":
+        raise ResourceBlocked("operational authorization receipt is not approved")
+    mode = authorization.get("budget_mode")
+    if mode not in {"numeric_global_gpu_hour_cap", "existing_idle_capacity_no_aggregate_hour_cap"}:
+        raise ResourceBlocked("operational authorization has an unsupported budget mode")
+    scope = authorization.get("scope")
+    constraints = authorization.get("constraints")
+    if not isinstance(scope, Mapping) or not isinstance(constraints, Mapping):
+        raise ResourceBlocked("operational authorization lacks bounded scope and constraints")
+    models = scope.get("models")
+    authorized_workers = constraints.get("max_concurrent_model_workers")
+    authorized_gpus = constraints.get("max_total_allocated_gpus")
+    if (not isinstance(authorization.get("owner_approval_reference"), Mapping)
+            or authorization.get("source_protocol_sha256") != release.hashes["protocol.json"]
+            or authorization.get("source_queue_sha256") != _source_queue_hash(release)
+            or scope.get("context") != release.binding["context"]
+            or scope.get("namespace") != release.binding["namespace"]
+            or scope.get("pvc") != release.binding["pvc_name"]
+            or scope.get("persistent_study_root") != release.binding["source_root"]
+            or not isinstance(models, list) or model not in models
+            or scope.get("maximum_registered_behavioral_episodes") != SOURCE_QUEUE_EPISODE_COUNT
+            or scope.get("maximum_attempts_per_behavioral_cell") != 3
+            or type(authorized_workers) is not int or type(authorized_gpus) is not int
+            or not 1 <= release.binding["max_concurrent_model_workers"] <= authorized_workers <= 2
+            or not 1 <= release.binding["max_total_allocated_gpus"] <= authorized_gpus <= 4
+            or constraints.get("existing_authorized_cluster_capacity_only") is not True
+            or constraints.get("fresh_idle_allocation_check_required") is not True
+            or constraints.get("new_paid_capacity_allowed") is not False
+            or constraints.get("new_cluster_provisioning_allowed") is not False
+            or constraints.get("preempt_or_stop_unowned_workloads_allowed") is not False
+            or constraints.get("bounded_job_deadline_required") is not True):
+        raise ResourceBlocked("operational authorization does not cover this bounded existing-capacity launch")
+    if mode == "numeric_global_gpu_hour_cap" and not _positive_finite_number(authorization.get("approved_global_gpu_hours")):
+        raise ResourceBlocked("numeric operational authorization lacks a finite global GPU-hour cap")
+    return mode
+
+
+def _allocation_check(release: Release, *, model: str, minimum_runtime_seconds: int,
+                      verify_idle_probe: bool = True) -> int:
+    """Validate the coordinator-owned Job reservation; this is not a local ledger."""
+    receipt = _receipt(release.binding.get("external_allocation_receipt"), "external allocation")
+    if receipt.get("schema") != "sgw-01-external-allocation-v1" or receipt.get("status") != "approved":
+        raise ResourceBlocked("external allocation receipt is not approved")
+    mode = _authorization_check(release, model=model)
+    _receipt_identity(release, receipt, "external allocation")
+    required_strings = ("owner_approval_reference", "reservation_id", "context", "namespace", "job_name", "job_uid", "pod_uid", "model")
+    if any(not isinstance(receipt.get(field), str) or not receipt[field] for field in required_strings):
+        raise ResourceBlocked("external allocation receipt lacks concrete reservation identity")
+    if receipt["context"] != release.binding["context"] or receipt["namespace"] != release.binding["namespace"]:
+        raise ResourceBlocked("external allocation receipt has a different Kubernetes scope")
+    if receipt["model"] != model or receipt["job_uid"] != os.environ.get("JOB_UID") or receipt["pod_uid"] != os.environ.get("POD_UID"):
+        raise ResourceBlocked("external allocation receipt does not bind this Job UID, pod UID, and model")
+    gpu_count = receipt.get("allocated_gpu_count")
+    active = receipt.get("activeDeadlineSeconds")
+    if type(gpu_count) is not int or gpu_count != release.binding["model_gpu_counts"].get(model) or type(active) is not int or active <= 0:
+        raise ResourceBlocked("external allocation receipt lacks the exact GPU allocation/deadline")
+    start_value = receipt.get("startTime")
+    deadline_value = receipt.get("deadline_utc")
+    if not isinstance(start_value, str) or not isinstance(deadline_value, str):
+        raise ResourceBlocked("external allocation receipt lacks Job timing")
+    try:
+        start = datetime.fromisoformat(start_value.replace("Z", "+00:00"))
+        deadline = datetime.fromisoformat(deadline_value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ResourceBlocked("external allocation receipt has invalid Job timing") from exc
+    if (start.tzinfo is None or deadline.tzinfo is None or start > datetime.now(timezone.utc)
+            or deadline != start + timedelta(seconds=active)):
+        raise ResourceBlocked("external allocation receipt has invalid Job timing")
+    reservation = receipt.get("reservation_gpu_hours")
+    expected = gpu_count * active / 3600
+    if receipt.get("budget_mode") != mode or not _positive_finite_number(reservation) or abs(reservation - expected) > 1e-9:
+        raise ResourceBlocked("external allocation receipt has invalid per-Job worst-case GPU-hour accounting")
+    if mode == "numeric_global_gpu_hour_cap":
+        approved = receipt.get("approved_global_gpu_hours")
+        reserved = receipt.get("globally_reserved_gpu_hours")
+        authorization = _receipt(release.binding["operational_authorization_receipt"], "operational authorization")
+        if (not _positive_finite_number(approved) or not _positive_finite_number(reserved)
+                or approved != authorization["approved_global_gpu_hours"]
+                or not reservation <= reserved <= approved):
+            raise ResourceBlocked("external allocation receipt has invalid capped global reservation accounting")
+    if verify_idle_probe:
+        idle = _receipt(receipt.get("gpu_idle_probe_receipt"), "GPU idle probe")
+        allocated = receipt.get("allocated_gpu_uuids")
+        observed = idle.get("observed_at_unix")
+        gpus = idle.get("gpus")
+        occupied = idle.get("compute_occupied_uuids")
+        selected = idle.get("selected_gpu")
+        now = datetime.now(timezone.utc).timestamp()
+        if (idle.get("study_id") != "SGW-01"
+                or idle.get("status") != "passed_idle_snapshot_only"
+                or not _positive_finite_number(observed)
+                or not start.timestamp() <= observed <= now
+                or now - observed > MAX_IDLE_PROBE_AGE_SECONDS
+                or type(idle.get("expected_visible_gpu_count")) is not int
+                or idle["expected_visible_gpu_count"] != gpu_count
+                or type(idle.get("model_requests")) is not int or idle["model_requests"] != 0
+                or not isinstance(allocated, list) or len(allocated) != gpu_count
+                or not all(isinstance(item, str) and item for item in allocated)
+                or len(set(allocated)) != gpu_count
+                or not isinstance(gpus, list) or not isinstance(occupied, list) or not isinstance(selected, Mapping)
+                or len(gpus) != gpu_count
+                or not all(isinstance(item, Mapping) and isinstance(item.get("uuid"), str) for item in gpus)
+                or not all(isinstance(item, str) for item in occupied)
+                or selected.get("uuid") not in allocated
+                or set(allocated) != {item["uuid"] for item in gpus}
+                or selected not in gpus
+                or set(allocated) & set(occupied)
+        ):
+            raise ResourceBlocked("GPU idle probe does not prove this exact pre-launch allocation")
+        for gpu in gpus:
+            if any(type(gpu.get(field)) is not int or gpu[field] < 0 for field in (
+                "index", "memory_used_mib", "memory_free_mib", "utilization_percent",
+            )):
+                raise ResourceBlocked("GPU idle probe has malformed device measurements")
+            try:
+                select_idle([gpu], set(occupied), 1)
+            except (ValueError, RuntimeError) as exc:
+                raise ResourceBlocked("not every allocated GPU passed the idle guard") from exc
+    remaining = int((deadline - datetime.now(timezone.utc)).total_seconds())
+    if remaining < minimum_runtime_seconds:
+        raise ResourceBlocked("external allocation expires before one bounded operation can finish")
+    return remaining
+
+
+def _space_check(release: Release, *, stage: str) -> None:
+    floor = 100 * 1024**3
+    configured = release.binding.get("minimum_free_bytes")
+    if configured is not None and (type(configured) is not int or configured < floor):
+        raise ResourceBlocked("minimum_free_bytes cannot lower the immutable 100 GiB floor")
+    required = max(floor, configured or floor)
+    storage_ref = release.binding.get("storage_budget_receipt")
+    if stage in {"D", "C"} and storage_ref is None:
+        raise ResourceBlocked(f"{stage} requires a measured pilot storage receipt")
+    if storage_ref is not None:
+        storage = _receipt(storage_ref, "storage budget")
+        _unexpired(storage, "storage budget")
+        if storage.get("status") != "approved":
+            raise ResourceBlocked("storage budget receipt is not approved")
+        _receipt_identity(release, storage, "storage budget")
+        p95 = storage.get("pilot_p95_episode_bytes")
+        remaining = storage.get("global_remaining_episode_count")
+        if (type(p95) is not int or p95 <= 0 or type(remaining) is not int
+                or remaining < SOURCE_QUEUE_EPISODE_COUNT):
+            raise ResourceBlocked("storage receipt lacks conservative global remaining/pilot-P95 accounting")
+        required = max(required, (3 * p95 * remaining + 1) // 2)
     free = shutil.disk_usage(release.root.parent).free
     if free < required:
-        raise OSError(f"persistent storage blocked: {free} < {required} free bytes")
+        raise ResourceBlocked(f"persistent storage blocked: {free} < {required} free bytes")
+
+
+def _budget_check(release: Release, *, stage: str, model: str, minimum_runtime_seconds: int) -> None:
+    budget = _receipt(release.binding.get("resource_budget_receipt"), "resource budget")
+    expiry = _expiry(budget, "resource budget")
+    if budget.get("status") != "approved":
+        raise ResourceBlocked("resource budget receipt is not approved")
+    _receipt_identity(release, budget, "resource budget")
+    if budget.get("model") not in {model, "all_models"}:
+        raise ResourceBlocked("resource budget receipt does not cover this model")
+    mode = _authorization_check(release, model=model)
+    approved = budget.get("approved_gpu_hours")
+    estimated = budget.get("estimated_remaining_gpu_hours")
+    if not _positive_finite_number(estimated):
+        raise ResourceBlocked("resource budget receipt lacks a finite conservative GPU-hour estimate")
+    if mode == "numeric_global_gpu_hour_cap" and (
+            not _positive_finite_number(approved) or estimated > approved):
+        raise ResourceBlocked("numeric resource budget receipt lacks approved conservative GPU-hour coverage")
+    if mode == "numeric_global_gpu_hour_cap":
+        authorization = _receipt(release.binding["operational_authorization_receipt"], "operational authorization")
+        if approved > authorization["approved_global_gpu_hours"]:
+            raise ResourceBlocked("resource budget exceeds the owner-approved global GPU-hour cap")
+    if (expiry - datetime.now(timezone.utc)).total_seconds() < minimum_runtime_seconds:
+        raise ResourceBlocked("resource budget approval expires before one bounded episode can finish")
+    if stage in {"D", "C"}:
+        runtime = _receipt(budget.get("measured_runtime_receipt"), "measured runtime")
+        _unexpired(runtime, "measured runtime")
+        if runtime.get("status") != "measured":
+            raise ResourceBlocked(f"{stage} requires a measured pilot runtime receipt")
+        _receipt_identity(release, runtime, "measured runtime")
+        if (runtime.get("model") not in {model, "all_models"}
+                or runtime.get("max_cell_attempts") != 3
+                or runtime.get("request_deadline_seconds") != release.binding.get("request_deadline_seconds", 300)
+                or runtime.get("episode_deadline_seconds") != release.binding.get("episode_deadline_seconds", 900)
+                or not _positive_finite_number(runtime.get("estimated_remaining_gpu_hours"))):
+            raise ResourceBlocked(f"{stage} runtime estimate does not cover this model, deadlines, and retry allowance")
+        if estimated < runtime["estimated_remaining_gpu_hours"]:
+            raise ResourceBlocked(f"{stage} budget estimate is below the measured remaining GPU-hour bound")
+    workers = release.binding.get("max_concurrent_model_workers")
+    total_gpus = release.binding.get("max_total_allocated_gpus")
+    if (type(workers) is not int or type(total_gpus) is not int or not 1 <= workers <= 2
+            or not 1 <= total_gpus <= 4
+            or any(type(value) is not int or value < 1 for value in release.binding["model_gpu_counts"].values())
+            or sum(release.binding["model_gpu_counts"].values()) > total_gpus):
+        raise ResourceBlocked("runtime binding exceeds frozen two-worker/four-GPU ceiling")
 
 
 def _status(release: Release, worker_id: str, **values: Any) -> None:
@@ -217,22 +490,43 @@ def run_partition(release: Release, *, model: str, family: str, stage: str, max_
     _stage_authorized(release, stage)
     request_deadline = int(release.binding.get("request_deadline_seconds", 300))
     episode_deadline = int(release.binding.get("episode_deadline_seconds", 900))
+    bounded_operation_seconds = request_deadline + episode_deadline
     valid = 0
     heartbeat = _Heartbeat(release, worker_id, heartbeat_seconds)
     heartbeat.start()
     try:
         with model_lock(release, model):
+            pending = [cell for cell in cells if not _completion(release, cell)]
+            if not pending:
+                _status(release, worker_id, state="complete", valid=len(cells), expected=len(cells))
+                return 0
+            try:
+                _space_check(release, stage=stage)
+                _budget_check(release, stage=stage, model=model, minimum_runtime_seconds=bounded_operation_seconds)
+                _allocation_check(release, model=model, minimum_runtime_seconds=bounded_operation_seconds)
+            except ResourceBlocked as exc:
+                _status(release, worker_id, state="blocked", reason=str(exc), valid=valid)
+                return EXIT_STORAGE_BUDGET_BLOCKED
             # The global lock must cover model-server/factory construction, not
             # merely requests, so a duplicate Job cannot load a second policy.
             adapter = adapter or load_adapter(model)
             for cell in cells:
                 heartbeat.current_cell = cell.cell_id
                 heartbeat.valid = valid
-                _space_check(release)
                 if _completion(release, cell):
                     valid += 1
                     continue
                 while not STOP_REQUESTED:
+                    try:
+                        _space_check(release, stage=stage)
+                        _budget_check(release, stage=stage, model=model, minimum_runtime_seconds=bounded_operation_seconds)
+                        allocation_remaining = _allocation_check(
+                            release, model=model, minimum_runtime_seconds=bounded_operation_seconds,
+                            verify_idle_probe=False,
+                        )
+                    except ResourceBlocked as exc:
+                        _status(release, worker_id, state="blocked", reason=str(exc), valid=valid)
+                        return EXIT_STORAGE_BUDGET_BLOCKED
                     number = next_attempt_number(release, cell)
                     if number > max_attempts:
                         _status(release, worker_id, state="blocked", cell_id=cell.cell_id,
@@ -241,11 +535,19 @@ def run_partition(release: Release, *, model: str, family: str, stage: str, max_
                     recorder = AttemptRecorder(release, cell, f"attempt-{number:03d}")
                     recorder.begin()
                     try:
-                        reset = _run_with_deadline(request_deadline, "reset", lambda: adapter.reset(cell, recorder))
+                        reset = _run_with_deadline(
+                            min(request_deadline, allocation_remaining), "reset",
+                            lambda: adapter.reset(cell, recorder),
+                        )
                         if not isinstance(reset, dict) or not reset.get("full_reset"):
                             raise ContractError("adapter did not attest a full reset")
+                        remaining_after_reset = _allocation_check(
+                            release, model=model, minimum_runtime_seconds=episode_deadline,
+                            verify_idle_probe=False,
+                        )
                         outcome = _run_with_deadline(
-                            episode_deadline, "episode", lambda: adapter.run_episode(cell, recorder, reset)
+                            min(episode_deadline, remaining_after_reset), "episode",
+                            lambda: adapter.run_episode(cell, recorder, reset)
                         )
                         outcome = {**outcome, "attempt_id": recorder.attempt_id}
                         outcome = _canonical_outcome(outcome, cell, scorer)

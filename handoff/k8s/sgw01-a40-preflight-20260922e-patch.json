@@ -1,0 +1,22 @@
+[
+  {
+    "op": "replace",
+    "path": "/metadata/name",
+    "value": "sgw01-ali-a40-preflight-20260922e"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/affinity/nodeAffinity/requiredDuringSchedulingIgnoredDuringExecution/nodeSelectorTerms/0/matchExpressions/0/values",
+    "value": ["NVIDIA-A40"]
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/0/env/9/value",
+    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/0/args/0",
+    "value": "set -euo pipefail\nSTUDY=/data/users/ali/sgw-01/source/95e72f0\nROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241\nPY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python\nOUT=/data/users/ali/sgw-01/preflight/a40-20260922e\ntest ! -e \"$OUT/renderer.log\"\nexport XDG_CACHE_HOME=\"$OUT/cache/xdg\" WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nmkdir -p \"$OUT\" \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\" \"$OUT/kit\"\nexec > >(tee \"$OUT/renderer.log\") 2>&1\ntest \"$(git -C \"$STUDY\" rev-parse HEAD)\" = 95e72f04317f786ce87c10c3b84fe279a853ba22\ntest -z \"$(git -C \"$STUDY\" status --porcelain)\"\ntest \"$(git -C \"$ROBOLAB\" rev-parse HEAD)\" = 0aef241fb088ca21bb4ebd24448940ed56620d17\ntest -z \"$(git -C \"$ROBOLAB\" status --porcelain --untracked-files=no)\"\ncd \"$STUDY\"\n\"$PY\" tools/validate_vla_wam_v3_protocol.py --quiet\n\"$PY\" tools/validate_vla_wam_v2_protocol.py > \"$OUT/v2_validation.json\"\nexport PYTHONPATH=\"$STUDY:$ROBOLAB\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/gpu_selection.json\")\necho \"Verified idle allocated GPU: $CUDA_VISIBLE_DEVICES\"\nnvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total,memory.used,utilization.gpu --format=csv,noheader | tee \"$OUT/gpu_identity.csv\"\ntest -r \"$VK_ICD_FILENAMES\"\n\"$PY\" -m experiments.workshops.spatial_grounding_v1.build_asset_manifest --robolab-root \"$ROBOLAB\" --output \"$OUT/assets.json\"\ncd \"$ROBOLAB\"\nexec \"$PY\" -m experiments.workshops.spatial_grounding_v1.runtime_preflight --study-root \"$STUDY\" --robolab-root \"$ROBOLAB\" --assets-manifest \"$OUT/assets.json\" --output \"$OUT/renderer.json\" --headless --num-envs 1 --device cuda:0 --renderer realtime --rendering-type balanced --rendering_mode balanced --kit_args=\"--portable-root=$OUT/kit --/rtx/verifyDriverVersion/enabled=false\"\n"
+  }
+]

@@ -1,6 +1,6 @@
 {
   "study_id": "SGW-01",
-  "status": "blocked_before_physical_qualification_and_model_inference",
+  "status": "a40_renderer_passed_fixture_and_model_qualification_unreleased",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -22,8 +22,8 @@
   "behavioral_release_hash": null,
   "synthetic_tests_are_scientific_evidence": false,
   "persistent_study_root": "/data/users/ali/sgw-01",
-  "last_probe_source_commit": "432796d9b04e69febd4bf6adb764d859ef8fe58f",
-  "last_probe_source_path": "/data/users/ali/sgw-01/source/432796d",
+  "last_probe_source_commit": "95e72f04317f786ce87c10c3b84fe279a853ba22",
+  "last_probe_source_path": "/data/users/ali/sgw-01/source/95e72f0",
   "verified_simulator_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
   "preflight_image_digest": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
   "infrastructure_attempts": [
@@ -58,18 +58,50 @@
       "gpu_receipt_sha256": "4c3372d97c81376d52cbec2ae838b450c2e518a82eebc15bb6b586bf08ec9ee0",
       "log": "infrastructure/rtx-20260922c.log",
       "log_sha256": "167575c3120f127a97bb66add3c4a11e59ad94b2cfc350e5fc6fc95e05dd5649"
+    },
+    {
+      "job": "sgw01-ali-a40-preflight-20260922d",
+      "pod": "sgw01-ali-a40-preflight-20260922d-flhkt",
+      "status": "suspended_after_vulkan_initialization_failure_pod_terminated",
+      "source_commit": "95e72f04317f786ce87c10c3b84fe279a853ba22",
+      "peak_allocated_gpus": 1,
+      "gpu_receipt": "infrastructure/a40-20260922d-gpu_selection.json",
+      "gpu_receipt_sha256": "3984d1d933596664e6ad08aed0fed19e9eebbb2b6d690246a32ac4e31a610dc5",
+      "log": "infrastructure/a40-20260922d.log",
+      "log_sha256": "c245b0d9413990bd35e1d723c7403b150333ac7c87775dcac76b3e2774e1dfbe"
+    },
+    {
+      "job": "sgw01-ali-a40-preflight-20260922e",
+      "pod": "sgw01-ali-a40-preflight-20260922e-xbz9l",
+      "status": "passed_zero_model_renderer_preflight",
+      "completed_at_utc": "2026-09-22T20:04:57Z",
+      "source_commit": "95e72f04317f786ce87c10c3b84fe279a853ba22",
+      "peak_allocated_gpus": 1,
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "gpu_uuid": "GPU-8773b1c9-df29-a37a-e165-8f68986cdb88",
+      "gpu_type": "NVIDIA A40",
+      "driver": "580.95.05",
+      "idle_memory_free_mib": 46068,
+      "native_library_binding": "proven_V3E006_order",
+      "raw_output": "/data/users/ali/sgw-01/preflight/a40-20260922e",
+      "gpu_receipt": "infrastructure/a40-20260922e-gpu_selection.json",
+      "gpu_receipt_sha256": "d297c9086a017db8e07e30be26de350cbc1ecd61b9c12fda438d3898c249cdcf",
+      "receipt": "infrastructure/a40-20260922e-renderer.json",
+      "receipt_sha256": "e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5",
+      "log": "infrastructure/a40-20260922e.log",
+      "log_sha256": "fc42d826adc9be4ffde5ac3911739c753b008498504b9f15d06df26f4a436780"
     }
   ],
   "active_task_gpu_jobs": [],
   "active_task_model_servers": [],
   "blockers": [
-    "No verified idle RTX/Vulkan-capable lane; four allocated RTX GPUs had only 2522-3194 MiB free.",
-    "Actual renderer, workspace, LAT/DIST/HEIGHT fixtures and full runtime/reset/time-map receipts are not qualified.",
+    "The actual A40 renderer and three camera views passed; measured workspace, LAT/DIST/HEIGHT fixtures and full runtime/reset/time-map receipts remain unqualified.",
+    "Worker global pilot-derived storage accounting and GPU-hour budget enforcement are not yet implemented; the configurable disk floor alone is insufficient.",
     "Pilot-derived request/episode deadlines, storage estimate and confirmation budget are not frozen.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Obtain a verified idle authorized RTX/Vulkan lane, then register a fresh immutable zero-model renderer attempt; do not rerun a completed historical cell or launch a behavioral partition.",
+  "next_action": "Launch fresh bounded one-A40 zero-model workspace capture using the passed attempt-e renderer/assets receipts and proven native-library order. Then qualify fixtures and complete runtime/worker guards before any behavioral release. Do not rerun a completed historical cell.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

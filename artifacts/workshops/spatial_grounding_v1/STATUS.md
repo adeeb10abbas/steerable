@@ -1,6 +1,6 @@
 # SGW-01 status
 
-**Blocked before physical qualification or model inference.**
+**Fresh A40 renderer preflight passed; fixture qualification and model inference remain unreleased.**
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
@@ -46,8 +46,39 @@ list was empty from the container, so it did not establish ownership of that
 memory. The probe failed closed **before any simulator or model import**.
 Its Job terminated and released the allocation. No other workload was stopped.
 
-The only observed matching RTX node has eight GPUs and reports sharing
-strategy `none`. Allocatable device count did not imply idle memory.
+The original selector matched only the RTX PRO 6000 node, which has eight
+GPUs and reports sharing strategy `none`. Allocatable device count did not
+imply idle memory. Broader product discovery found 21 existing A40 nodes;
+the earlier selector did not test this ray-tracing-capable pool.
+
+After the user requested fresh resources, `sgw01-ali-a40-preflight-20260922d`
+scheduled one A40 on `dcwipphhgc191.edc.nam.gm.com`. Its idle guard measured
+zero MiB used and 46,068 MiB free. Isaac then failed Vulkan initialization
+with the original native-library search path. This Job was suspended and its
+pod terminated; its raw evidence remains intact.
+
+The fresh one-GPU `sgw01-ali-a40-preflight-20260922e` uses the native-library
+order from the historically successful V3-E006 A40 runtime, the same pinned
+source and simulator, and new cache/output paths. It passed the idle guard and
+initialized Vulkan on GPU `GPU-8773b1c9-df29-a37a-e165-8f68986cdb88`
+(driver `580.95.05`). Its
+1,800-second Job deadline and zero automatic retries remained in force.
+These are new Jobs in the existing authorized cluster, not newly provisioned
+Kubernetes clusters.
+
+Attempt e completed at `2026-09-22T20:04:57Z`. The actual RoboLab scene reset
+and produced nonblank left-shoulder, right-shoulder and wrist RGB views, each
+`720 x 1280 x 3`, on Isaac Sim 5.0.0.0 / Isaac Lab 2.2.0. The receipt records
+measured default-scene cube/bowl centers and bound source/asset hashes.
+The Job completed and released its GPU. This is a renderer qualification,
+not a valid SGW layout or behavioral episode.
+
+The local synthetic integration now exercises the real production adapter,
+recorder, strict scorer and compiler for six genuine recorded synthetic
+cells, including real decoded viewport video and a zero-request resume.
+Those records are not scientific evidence. Global pilot-derived storage
+accounting and GPU-hour budget enforcement are still missing from the worker;
+the configurable disk floor alone does not satisfy the runbook.
 
 ## Artifacts and source identities
 
@@ -58,19 +89,22 @@ logs and receipts remain in:
 /data/users/ali/sgw-01/infrastructure/lock-20260922/
 /data/users/ali/sgw-01/preflight/rtx-20260922a/
 /data/users/ali/sgw-01/preflight/rtx-20260922c/
+/data/users/ali/sgw-01/preflight/a40-20260922d/
+/data/users/ali/sgw-01/preflight/a40-20260922e/
 ```
 
 The source used by the last probe was
-`432796d9b04e69febd4bf6adb764d859ef8fe58f`, staged as a clean independent
-checkout at `/data/users/ali/sgw-01/source/432796d`. The verified RoboLab
+`95e72f04317f786ce87c10c3b84fe279a853ba22`, staged as a clean independent
+checkout at `/data/users/ali/sgw-01/source/95e72f0`. The verified RoboLab
 checkout is pinned to `0aef241fb088ca21bb4ebd24448940ed56620d17`. The image
 digest and all probe/receipt hashes are recorded in the adjacent JSON state
 and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Obtain an authorized, verified idle RTX/Vulkan-capable lane, or have its owner
-resolve the occupied framebuffer memory. **Do not kill unidentified processes,
+Use the passed attempt-e renderer/assets receipts for a fresh bounded
+one-A40 zero-model workspace capture, then qualify the physical fixtures.
+**Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**
 
 The exact safe cluster-status command is:
@@ -80,11 +114,12 @@ kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s \
   -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01
 ```
 
-After an idle lane is verified, create a new immutable preflight attempt using
-the corrected source and recorded runtime settings. A renderer receipt must
-precede workspace capture and model-blind fixture qualification. Then qualify
+Preserve each failed attempt and diagnose its specific failure before
+registering a fresh attempt. The passed renderer receipt now permits
+workspace capture and model-blind fixture qualification. Then qualify
 the real Nano/official DreamZero interfaces, raw recorder, resets and time
-maps before any direct fixed-input or P/D/C release.
+maps, and finish worker storage/budget guards before any direct fixed-input
+or P/D/C release.
 
 Overleaf web access returned 403 and noninteractive Git access had no stored
 password. The live project was not modified. Authenticate through an approved

@@ -60,8 +60,10 @@ fixtures**. Do not substitute repeated LAT layouts for those branches.
 5. Run the finite released worker partition and regenerate analysis only from
    verified completion records. Do not promote synthetic records to a release.
 
-The current preflight is blocked on occupied RTX framebuffer memory. The
-existing B200 workload is not owned by this task and must not be stopped.
-All SGW-created GPU Jobs are terminated or suspended; no policy server was
-started. The source manuscript remains a plan, and Overleaf synchronization
-also requires an authenticated connection.
+The RTX PRO allocation was occupied, but a fresh A40 allocation passed the
+idle guard. A bounded replacement renderer preflight passed with the
+historically proven native-library order and actual three-camera scene
+evidence. Fixture/runtime qualification and worker storage/budget guards
+still block behavioral release. The existing B200 workload is not owned by
+this task and must not be stopped. No policy server was started. The source manuscript remains a plan,
+and Overleaf synchronization also requires an authenticated connection.

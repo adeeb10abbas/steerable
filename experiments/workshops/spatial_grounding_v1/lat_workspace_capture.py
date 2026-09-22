@@ -85,17 +85,23 @@ def main() -> None:
             world = get_world(env)
             objects = {}
             for name in ("rubiks_cube", "bowl", "banana", "table"):
-                position, quaternion = world.get_pose(name, env_id=0)
-                corners, _ = world.get_bbox(name, env_id=0)
+                root_position, quaternion = world.get_pose(name, env_id=0)
+                corners, geometric_center = world.get_bbox(name, env_id=0)
                 corners = np.asarray(
                     [[float(corner[index]) for index in range(3)] for corner in corners],
                     dtype=np.float64,
                 )
                 objects[name] = {
-                    "position_world_xyz_m": [float(value) for value in position.detach().cpu().tolist()],
-                    "quaternion_world_wxyz": [float(value) for value in quaternion.detach().cpu().tolist()],
-                    "bbox_world_min_xyz_m": corners.min(axis=0).tolist(),
-                    "bbox_world_max_xyz_m": corners.max(axis=0).tolist(),
+                    "root_position_env_local_xyz_m": [float(value) for value in root_position.detach().cpu().tolist()],
+                    "root_quaternion_world_wxyz": [float(value) for value in quaternion.detach().cpu().tolist()],
+                    "geometric_center_env_local_xyz_m": [float(value) for value in geometric_center.tolist()],
+                    "bbox_env_local_min_xyz_m": corners.min(axis=0).tolist(),
+                    "bbox_env_local_max_xyz_m": corners.max(axis=0).tolist(),
+                    "measurement_semantics": {
+                        "root_pose": "RoboLab WorldState.get_pose default is_relative=True",
+                        "geometric_center": "RoboLab WorldState.get_bbox transformed cached-geometry centroid",
+                        "scoring_center": "unvalidated: a later waypoint-validation receipt must explicitly bind the physical-center source",
+                    },
                 }
             sensors = get_contact_sensors(env.scene)
             contact_inventory = sorted(name for name in sensors if not name.endswith("__all_objs"))

@@ -22,6 +22,7 @@ from .simulator_bridge import (
     SimulatorSnapshot,
 )
 from .task_definitions import RoboLabTaskDefinition
+from .robolab_measurements import physical_center_state
 
 
 class RoboLabLatEnvironment:
@@ -54,15 +55,22 @@ class RoboLabLatEnvironment:
         cube_supported = bool(support_vectors.size and np.max(np.linalg.norm(support_vectors, axis=1)) >= 1.0)
         rows: dict[str, ObjectState] = {}
         for name in self._candidate.object_poses:
-            position, quaternion = world.get_pose(name, env_id=0)
+            root_position, quaternion = world.get_pose(name, env_id=0)
+            _corners, geometric_center = world.get_bbox(name, env_id=0)
             velocity = world.get_velocity(name, env_id=0)
-            position_values = tuple(float(item) for item in position.detach().cpu().tolist())
+            root_position_values = tuple(float(item) for item in root_position.detach().cpu().tolist())
+            geometric_center_values = tuple(float(item) for item in geometric_center.tolist())
             quaternion_values = tuple(float(item) for item in quaternion.detach().cpu().tolist())
-            velocity_values = [float(item) for item in velocity.detach().cpu().tolist()]
+            velocity_values = tuple(float(item) for item in velocity.detach().cpu().tolist())
+            center_position, linear_speed, angular_speed = physical_center_state(
+                root_position_env_local_xyz_m=root_position_values,
+                geometric_center_env_local_xyz_m=geometric_center_values,
+                root_velocity_world=velocity_values,
+            )
             rows[name] = ObjectState(
-                pose=Pose(position_values, quaternion_values),
-                linear_speed_m_s=max(abs(item) for item in velocity_values[:3]),
-                angular_speed_rad_s=max(abs(item) for item in velocity_values[3:]),
+                pose=Pose(center_position, quaternion_values),
+                linear_speed_m_s=linear_speed,
+                angular_speed_rad_s=angular_speed,
                 supported=cube_supported if name == "rubiks_cube" else True,
                 attached_to_gripper=(
                     bool(object_grabbed(self._env, object=name, env_id=0))

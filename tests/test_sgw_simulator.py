@@ -106,3 +106,32 @@ def test_lat_task_registry_registers_only_scoped_overlay(tmp_path: Path) -> None
     calls = []
     register_lat_task(lambda **kwargs: calls.append(kwargs), task, cameras=("camera",))
     assert calls == [{"task": [str(task)], "cameras": ("camera",)}]
+
+
+def test_physical_center_velocity_uses_geometric_center_and_euclidean_norms() -> None:
+    from experiments.workshops.spatial_grounding_v1.robolab_measurements import physical_center_state
+
+    center, linear_speed, angular_speed = physical_center_state(
+        root_position_env_local_xyz_m=(0.4, 0.0, 0.1),
+        geometric_center_env_local_xyz_m=(0.4, 0.1, 0.1),
+        root_velocity_world=(0.0, 0.0, 0.0, 0.0, 0.0, 2.0),
+    )
+
+    assert center == (0.4, 0.1, 0.1)
+    assert linear_speed == 0.2
+    assert angular_speed == 2.0
+
+
+def test_physical_center_rejects_malformed_rigid_body_measurements() -> None:
+    from experiments.workshops.spatial_grounding_v1.robolab_measurements import physical_center_state
+
+    try:
+        physical_center_state(
+            root_position_env_local_xyz_m=(0.0, 0.0, 0.0),
+            geometric_center_env_local_xyz_m=(0.0, 0.0, 0.0),
+            root_velocity_world=(0.0,) * 5,
+        )
+    except ValueError as error:
+        assert "six-vector" in str(error)
+    else:
+        raise AssertionError("malformed rigid-body velocity must fail closed")

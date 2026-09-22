@@ -1,0 +1,106 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-workspace-export-20260922s
+  namespace: 211247-prod
+  labels:
+    owner: ali
+    app.kubernetes.io/name: sgw-01
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 0
+  activeDeadlineSeconds: 120
+  template:
+    metadata:
+      labels:
+        owner: ali
+        app.kubernetes.io/name: sgw-01
+        purpose: read-only-workspace-evidence-export
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 20
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: artifactory-ci-pull-secret
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: export
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              exec /data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python - <<'PY'
+              import base64
+              import gzip
+              import hashlib
+              import json
+              from pathlib import Path
+
+              root = Path("/data/users/ali/sgw-01/qualification/lat-workspace-20260922r")
+              files = {}
+              def export(path, limit):
+                  if path.stat().st_size > limit:
+                      raise ValueError(f"export exceeds bounded file size: {path}")
+                  raw = path.read_bytes()
+                  return {
+                      "bytes": len(raw),
+                      "sha256": hashlib.sha256(raw).hexdigest(),
+                      "encoding": "gzip_base64",
+                      "data": base64.b64encode(gzip.compress(raw, mtime=0)).decode("ascii"),
+                  }
+              for name in ("workspace.json", "gpu_selection.json", "gpu_identity.csv", "workspace.log"):
+                  files[name] = export(root / name, 1024 * 1024)
+              workspace = json.loads((root / "workspace.json").read_text())
+              for camera, view in workspace["views"].items():
+                  path = Path(view["lossless_array"]["path"]).resolve()
+                  if not path.is_relative_to(root.resolve()):
+                      raise ValueError("camera artifact escapes the registered attempt")
+                  item = export(path, 4 * 1024 * 1024)
+                  if item["sha256"] != view["lossless_array"]["sha256"]:
+                      raise ValueError(f"camera hash differs from capture receipt: {camera}")
+                  files[str(path.relative_to(root))] = item
+              checkpoint = Path("/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid")
+              metadata = {}
+              for name in ("checkpoint.json", ".cache/huggingface/download/checkpoint.json.metadata"):
+                  path = checkpoint / name
+                  metadata[name] = export(path, 16384) if path.is_file() else {
+                      "available": False, "reason": "not present at the registered checkpoint path"
+                  }
+              print(json.dumps({
+                  "schema_version": "sgw-01-read-only-evidence-export-v2",
+                  "raw_root": str(root), "files": files,
+                  "nano_checkpoint_metadata_root": str(checkpoint),
+                  "nano_checkpoint_metadata": metadata,
+              }))
+              PY
+          env:
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+          resources:
+            requests:
+              cpu: "1"
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - name: workspace
+              mountPath: /data
+              readOnly: true
+      volumes:
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: 211247-prod-pvc
+            readOnly: true

@@ -29,9 +29,12 @@ class ObjectState:
 class SimulatorSnapshot:
     objects: Mapping[str, ObjectState]
     simulated_time_s: float = 0.0
+    reset_root_poses: Mapping[str, Pose] | None = None
 
     def reset_snapshot(self) -> ResetSnapshot:
-        return ResetSnapshot({name: state.pose for name, state in self.objects.items()})
+        if self.reset_root_poses is None:
+            raise SimulatorBridgeError("snapshot lacks explicit root reset poses")
+        return ResetSnapshot(self.reset_root_poses)
 
 
 @dataclass(frozen=True)

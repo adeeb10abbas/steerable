@@ -15,6 +15,43 @@ from .build_asset_manifest import is_git_worktree
 from .lat_candidate_generator import workspace_digest
 
 
+def _vector(values: Any) -> list[float]:
+    if hasattr(values, "detach"):
+        values = values.detach()
+    if hasattr(values, "cpu"):
+        values = values.cpu()
+    if hasattr(values, "tolist"):
+        values = values.tolist()
+    return [float(value) for value in values]
+
+
+def _rotate_wxyz(quaternion: list[float], vector: list[float]) -> list[float]:
+    w, x, y, z = quaternion
+    vx, vy, vz = vector
+    return [
+        (1 - 2 * (y*y + z*z))*vx + 2*(x*y - z*w)*vy + 2*(x*z + y*w)*vz,
+        2*(x*y + z*w)*vx + (1 - 2*(x*x + z*z))*vy + 2*(y*z - x*w)*vz,
+        2*(x*z - y*w)*vx + 2*(y*z + x*w)*vy + (1 - 2*(x*x + y*y))*vz,
+    ]
+
+
+def _root_local_offset(root: list[float], quaternion: list[float], center: list[float]) -> list[float]:
+    w, x, y, z = quaternion
+    return _rotate_wxyz([w, -x, -y, -z], [center[i] - root[i] for i in range(3)])
+
+
+def _native_observation(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        return {"available": False, "reason": "observation lacks a native proprio_obs mapping"}
+    fields: dict[str, list[float]] = {}
+    for name, row in value.items():
+        try:
+            fields[str(name)] = _vector(row[0])
+        except (IndexError, TypeError, ValueError):
+            return {"available": False, "reason": f"proprio field {name!r} is not a single-environment numeric vector"}
+    return {"available": True, "fields": fields}
+
+
 def parse_args() -> argparse.Namespace:
     bootstrap = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
     bootstrap.add_argument("--study-root", type=Path, required=True)
@@ -83,34 +120,85 @@ def main() -> None:
         try:
             obs, _ = env.reset()
             world = get_world(env)
+            origin = env.scene.env_origins[0].detach().cpu().numpy()
+            frames = env.scene["frames"]
+            eef_index = frames.data.target_frame_names.index("eef_frame")
+            eef_position_env_local = _vector(frames.data.target_pos_w[0, eef_index].detach().cpu().numpy() - origin)
+            eef_quaternion_world = _vector(frames.data.target_quat_w[0, eef_index])
+            robot = env.scene["robot"].data
+            robot_snapshot = {
+                "base_position_env_local_xyz_m": _vector(robot.root_pos_w[0].detach().cpu().numpy() - origin),
+                "base_quaternion_world_wxyz": _vector(robot.root_quat_w[0]),
+                "joint_names": [str(name) for name in env.scene["robot"].joint_names],
+                "joint_position_rad": _vector(robot.joint_pos[0]),
+                "joint_velocity_rad_s": _vector(robot.joint_vel[0]),
+            }
             objects = {}
             for name in ("rubiks_cube", "bowl", "banana", "table"):
-                position, quaternion = world.get_pose(name, env_id=0)
-                corners, _ = world.get_bbox(name, env_id=0)
+                root_position, quaternion = world.get_pose(name, env_id=0)
+                corners, geometric_center = world.get_bbox(name, env_id=0)
                 corners = np.asarray(
                     [[float(corner[index]) for index in range(3)] for corner in corners],
                     dtype=np.float64,
                 )
-                objects[name] = {
-                    "position_world_xyz_m": [float(value) for value in position.detach().cpu().tolist()],
-                    "quaternion_world_wxyz": [float(value) for value in quaternion.detach().cpu().tolist()],
-                    "bbox_world_min_xyz_m": corners.min(axis=0).tolist(),
-                    "bbox_world_max_xyz_m": corners.max(axis=0).tolist(),
+                root = _vector(root_position)
+                rotation = _vector(quaternion)
+                center = _vector(geometric_center)
+                offset = _root_local_offset(root, rotation, center)
+                object_row = {
+                    "root_position_env_local_xyz_m": root,
+                    "root_quaternion_world_wxyz": rotation,
+                    "geometric_center_env_local_xyz_m": center,
+                    "geometric_center_offset_root_local_xyz_m": offset,
+                    "geometric_center_reconstructed_env_local_xyz_m": [
+                        root[i] + _rotate_wxyz(rotation, offset)[i] for i in range(3)
+                    ],
+                    "bbox_env_local_min_xyz_m": corners.min(axis=0).tolist(),
+                    "bbox_env_local_max_xyz_m": corners.max(axis=0).tolist(),
+                    "measurement_semantics": {
+                        "root_pose": "RoboLab WorldState.get_pose default is_relative=True",
+                        "geometric_center": "RoboLab WorldState.get_bbox transformed cached-geometry centroid",
+                        "scoring_center": "unvalidated: a later waypoint-validation receipt must explicitly bind the physical-center source",
+                    },
                 }
+                asset = env.scene[name]
+                data = getattr(asset, "data", None)
+                if hasattr(data, "root_com_pos_w") and hasattr(data, "root_com_vel_w"):
+                    object_row["com_position_env_local_xyz_m"] = _vector(
+                        data.root_com_pos_w[0].detach().cpu().numpy() - origin
+                    )
+                    object_row["com_velocity_world_xyz_rad_s"] = _vector(data.root_com_vel_w[0])
+                else:
+                    object_row["com_measurement"] = {
+                        "available": False,
+                        "reason": "scene object does not expose IsaacLab RigidObjectData root_com_pos_w/root_com_vel_w",
+                    }
+                if name in {"rubiks_cube", "bowl"} and "com_position_env_local_xyz_m" not in object_row:
+                    raise RuntimeError(f"{name} lacks mandatory rigid-body COM measurements")
+                objects[name] = object_row
             sensors = get_contact_sensors(env.scene)
             contact_inventory = sorted(name for name in sensors if not name.endswith("__all_objs"))
             if "rubiks_cube__table" not in contact_inventory:
                 raise RuntimeError("workspace scene lacks rubiks_cube__table contact evidence")
             views = {}
+            view_root = args.output.parent / "views"
+            view_root.mkdir(parents=True, exist_ok=False)
             for camera in ("over_shoulder_left_camera", "wrist_cam", "over_shoulder_right_camera"):
                 frame = np.asarray(obs["image_obs"][camera][0].detach().cpu().numpy(), dtype=np.uint8)
                 if frame.ndim != 3 or frame.shape[-1] != 3 or not np.ptp(frame):
                     raise RuntimeError(f"workspace capture has invalid {camera} frame")
-                views[camera] = {"shape": list(frame.shape), "pixel_range": int(np.ptp(frame))}
+                path = view_root / f"{camera}.npy"
+                np.save(path, frame, allow_pickle=False)
+                views[camera] = {
+                    "shape": list(frame.shape),
+                    "pixel_range": int(np.ptp(frame)),
+                    "lossless_array": _record(path),
+                }
         finally:
             env.close()
         receipt = {
             "schema_version": "sgw-01-lat-measured-workspace-v1",
+            "measurement_schema_version": "sgw-01-lat-measured-workspace-v2",
             "status": "measured_zero_model_workspace_not_candidate_qualified",
             "model_request_count": 0,
             "behavioral_episode_count": 0,
@@ -119,6 +207,11 @@ def main() -> None:
             "renderer_receipt": _record(args.renderer_receipt),
             "robolab_commit": subprocess.check_output(["git", "-C", str(args.robolab_root), "rev-parse", "HEAD"], text=True).strip(),
             "environment_seed": args.environment_seed,
+            "environment_origin_world_xyz_m": _vector(origin),
+            "eef_position_env_local_xyz_m": eef_position_env_local,
+            "eef_quaternion_world_wxyz": eef_quaternion_world,
+            "robot": robot_snapshot,
+            "native_observation_proprio": _native_observation(obs.get("proprio_obs")),
             "objects": objects,
             "contact_sensor_inventory": contact_inventory,
             "views": views,

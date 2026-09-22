@@ -12,6 +12,7 @@ def fixture() -> FixtureCandidate:
     return FixtureCandidate.from_json({
         "candidate_id": "lat-001", "family": "LAT", "seed": 1, "task_asset": "measured.usda",
         "asset_manifest_sha256": "b" * 64,
+        "metadata": {"scoring_center_offsets_root_local_m": {"rubiks_cube": [0, 0, 0], "bowl": [0, 0, 0]}},
         "object_poses": {
             "rubiks_cube": {"position_m": [0.4, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
             "bowl": {"position_m": [0.5, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
@@ -33,8 +34,9 @@ class FakeEnvironment:
 
     def reset(self) -> ResetResult:
         self.steps = 0
+        initial = state(0.0, 0.1)
         return ResetResult(
-            SimulatorSnapshot(state(0.0, 0.1), 0.0),
+            SimulatorSnapshot(initial, 0.0, reset_root_poses={name: row.pose for name, row in initial.items()}),
             {
                 "reset_id": f"reset-{id(self)}",
                 "camera_id": "head-v1",
@@ -106,3 +108,32 @@ def test_lat_task_registry_registers_only_scoped_overlay(tmp_path: Path) -> None
     calls = []
     register_lat_task(lambda **kwargs: calls.append(kwargs), task, cameras=("camera",))
     assert calls == [{"task": [str(task)], "cameras": ("camera",)}]
+
+
+def test_physical_center_velocity_uses_geometric_center_and_euclidean_norms() -> None:
+    from experiments.workshops.spatial_grounding_v1.robolab_measurements import geometric_center_state
+
+    center, linear_speed, angular_speed = geometric_center_state(
+        com_position_env_local_xyz_m=(0.4, 0.0, 0.1),
+        geometric_center_env_local_xyz_m=(0.4, 0.1, 0.1),
+        com_velocity_world=(0.0, 0.0, 0.0, 0.0, 0.0, 2.0),
+    )
+
+    assert center == (0.4, 0.1, 0.1)
+    assert linear_speed == 0.2
+    assert angular_speed == 2.0
+
+
+def test_physical_center_rejects_malformed_rigid_body_measurements() -> None:
+    from experiments.workshops.spatial_grounding_v1.robolab_measurements import geometric_center_state
+
+    try:
+        geometric_center_state(
+            com_position_env_local_xyz_m=(0.0, 0.0, 0.0),
+            geometric_center_env_local_xyz_m=(0.0, 0.0, 0.0),
+            com_velocity_world=(0.0,) * 5,
+        )
+    except ValueError as error:
+        assert "six-vector" in str(error)
+    else:
+        raise AssertionError("malformed rigid-body velocity must fail closed")

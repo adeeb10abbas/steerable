@@ -4,6 +4,8 @@ from pathlib import Path
 import sys
 from types import ModuleType, SimpleNamespace
 
+import numpy as np
+
 from experiments.workshops.spatial_grounding_v1 import lat_workspace_capture
 
 
@@ -57,3 +59,15 @@ def test_geometric_center_offset_round_trips_through_rotated_root() -> None:
     ]
 
     assert reconstructed == center
+
+
+def test_native_proprio_snapshot_retains_vectors_or_unavailability() -> None:
+    observed = lat_workspace_capture._native_observation({
+        "arm_joint_pos": np.asarray([[1.0, 2.0]]),
+        "gripper_pos": np.asarray([[3.0]]),
+    })
+    assert observed == {
+        "available": True,
+        "fields": {"arm_joint_pos": [1.0, 2.0], "gripper_pos": [3.0]},
+    }
+    assert lat_workspace_capture._native_observation(None)["available"] is False

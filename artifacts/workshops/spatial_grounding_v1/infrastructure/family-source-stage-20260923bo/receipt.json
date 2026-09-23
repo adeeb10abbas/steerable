@@ -1,0 +1,96 @@
+{
+  "actual_capture_materialization_replay": [
+    {
+      "candidate": {
+        "bytes": 3732,
+        "path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bo/replayed-candidate-0.json",
+        "sha256": "cc90aa7f265dca4b732bf8d321638b25bbb8ac1d2402e456bcb982590cc84dfd"
+      },
+      "contact_order_preserved": true,
+      "slot": {
+        "design_id": "SGW-HEIGHT-DESIGN-000",
+        "family": "HEIGHT",
+        "side": "left",
+        "slot_index": 0
+      }
+    },
+    {
+      "candidate": {
+        "bytes": 3734,
+        "path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bo/replayed-candidate-1.json",
+        "sha256": "34e87da241b51af6b03cd8bdfde263a36d68a6ca91c795fa5e2b8c99c750f38d"
+      },
+      "contact_order_preserved": true,
+      "slot": {
+        "design_id": "SGW-HEIGHT-DESIGN-001",
+        "family": "HEIGHT",
+        "side": "right",
+        "slot_index": 1
+      }
+    },
+    {
+      "candidate": {
+        "bytes": 4117,
+        "path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bo/replayed-candidate-2.json",
+        "sha256": "6a46f889ac5e48b91eb097749b5b11002648520d8ecc5a5a72bb3e26dc9c9d98"
+      },
+      "contact_order_preserved": true,
+      "slot": {
+        "design_id": "SGW-DIST-DESIGN-000",
+        "family": "DIST",
+        "side": "left",
+        "slot_index": 0
+      }
+    },
+    {
+      "candidate": {
+        "bytes": 4114,
+        "path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bo/replayed-candidate-3.json",
+        "sha256": "1b534cd0efa4435375b539debeac34392b15e98ff09cb5294d9db988e863030d"
+      },
+      "contact_order_preserved": true,
+      "slot": {
+        "design_id": "SGW-DIST-DESIGN-003",
+        "family": "DIST",
+        "side": "right",
+        "slot_index": 3
+      }
+    }
+  ],
+  "allocated_gpus": 0,
+  "behavioral_episodes": 0,
+  "job_uid": "b76545c7-fec9-44ec-8712-da22564a18c7",
+  "model_requests": 0,
+  "native_job_template": {
+    "bytes": 12686,
+    "path": "/data/users/ali/sgw-01/source/c3c976db-bo/handoff/k8s/sgw01-ali-family-native-smoke-20260923bn.yaml",
+    "sha256": "6e3520f9fa0e87c636f8b793ad2879faacefb3dd363a10cac754f7ae764012ef"
+  },
+  "native_repair_job": {
+    "bytes": 14626,
+    "path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bo/native-smoke-bp.json",
+    "sha256": "f20bcf4d63edec587f0143d1d1f914bf80f2e828a9cf31b722ce4d106d0d0c5d"
+  },
+  "pod_uid": "41993e38-612a-4ce4-8c15-1cab06d2cd29",
+  "release_permitted": false,
+  "schema_version": "sgw-01-contact-order-repair-stage-v1",
+  "source_bundle": {
+    "bytes": 8649335,
+    "path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bo/update.bundle",
+    "sha256": "4cc96d2229da30f3ef20f5c08cc2a488e670ad581863338d45a248cc78fec3b0"
+  },
+  "source_commit": "c3c976db56fd694d2c5498a8409b08f9a510a41c",
+  "source_root": "/data/users/ali/sgw-01/source/c3c976db-bo",
+  "staged_at_utc": "2026-09-23T07:26:03.183909+00:00",
+  "substitutions": {
+    "\"source_commit\": registry[\"source_commit\"],": "\"source_commit\": \"c3c976db56fd694d2c5498a8409b08f9a510a41c\", \"plan_source_commit\": registry[\"source_commit\"],",
+    "/source/cdb7a55b-bm": "/source/c3c976db-bo",
+    "cdb7a55b6cc71ac34828c96368850623102e7137": "c3c976db56fd694d2c5498a8409b08f9a510a41c",
+    "family-native-smoke-20260923bn": "family-native-smoke-20260923bp"
+  },
+  "unchanged_freeze": {
+    "bytes": 18672,
+    "path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/receipt.json",
+    "sha256": "55b2dbbce2376b1c297180630238b09a83e8f226697f8da6a1814d748eebefd3"
+  }
+}

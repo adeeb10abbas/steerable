@@ -1,6 +1,7 @@
 {
   "study_id": "SGW-01",
-  "status": "remaining_lat_batch_running_four_verified_model_blind_simulators",
+  "status": "lat_batch_running_four_simulators_corrected_cpu_verifier_first_candidate_verified",
+  "updated_at_utc": "2026-09-23T02:17:07Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -34,7 +35,10 @@
     "owned_nano_runtime": "aadb5b9",
     "recorded_fixture_and_render_diagnostics": "42b26ed8d2df546340497965d1fc86d47cc14197",
     "native_reset_readiness": "177e7dd064f41401b58c6c3491bde2b8af13ec34",
-    "local_sgw_tests_passed": 124,
+    "calibrated_height_dist_plumbing": "6dcf154",
+    "d1_source_backed_cadence_and_independent_verifier": "f678e34e8cd570563dfb00b934b794ae75bb6d84",
+    "frozen_warmup_sampling_verifier_correction": "042d235cbd95104c940ac8982566d039643459f6",
+    "local_sgw_tests_passed": 160,
     "local_sgw_tests_skipped_linux_identity": 1,
     "live_model_runtime_qualified": false,
     "concrete_behavioral_allocation_receipt_exists": false
@@ -375,11 +379,13 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "Child is correcting HEIGHT/DIST native integration against the current parent implementation; actual measured family scenes remain absent. No independent cluster launch authorized.",
+    "fixture_scope": "Calibrated family plumbing integrated. Prospective real USD scene/capture implementation is under parent review; no actual HEIGHT/DIST scene capture or candidate freeze exists. No independent cluster launch authorized.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
-    "runtime_scope": "Owned N3 corrections integrated. Child is resolving D1 source-backed cache cadence and identity locally; no policy server, cluster operations or learned inference authorized. Both live runtime releases remain outstanding.",
+    "runtime_scope": "D1 exact official client cadence/identity tests integrated. Child is implementing the actual 14B conditional server using CPU-exported pinned source/config; local synthetic wrappers are not native qualification. No model construction, live server or cluster operations authorized.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
-    "worker_scope": "Implementing independent CPU qualification-batch verification locally; no cluster operations or learned requests authorized."
+    "worker_scope": "Old child verifier is paused and not integrated. Parent owns corrected CPU verifier ao. Child is implementing the actual native joint-position Environment; remote A40/B200 boundary and runtime release remain absent.",
+    "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
+    "historical_coverage_scope": "Source-backed exhaustive DROID layout inventory and explicit unresolved raw paths; no historical reruns or release from incomplete coverage."
   },
   "active_task_gpu_jobs": [
     {
@@ -396,6 +402,46 @@
       "behavioral_episodes": 0
     }
   ],
+  "active_task_cpu_jobs": [
+    {
+      "job": "sgw01-ali-lat-verify-20260923ao",
+      "job_uid": "1de130fb-6fd4-4c10-94d5-6fcc6e1e4c1c",
+      "pod": "sgw01-ali-lat-verify-20260923ao-d4dzz",
+      "pod_uid": "0806ed9d-2d61-43bd-a460-4743a3d53edc",
+      "started_at_utc": "2026-09-23T02:13:47Z",
+      "source_commit": "042d235cbd95104c940ac8982566d039643459f6",
+      "source_root": "/data/users/ali/sgw-01/source/042d235-ap",
+      "raw_output": "/data/users/ali/sgw-01/verification/lat-batch-20260923ao",
+      "wait_until_utc": "2026-09-23T06:29:09Z",
+      "allocated_gpus": 0,
+      "automatic_retries": 0,
+      "release_permitted": false,
+      "receipt": "infrastructure/cpu-20260923ao-first-verified-results.json"
+    }
+  ],
+  "verification_recovery": {
+    "am": {
+      "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
+      "receipt": "infrastructure/cpu-20260923am-warmup-verifier-mismatch.json",
+      "reason": "Verifier expected all three warmup views every frame; frozen recorder retains all121 left-shoulder frames and other views only at0,1,10,30,60,120.",
+      "raw_trials_reexecuted": 0
+    },
+    "an": {
+      "status": "failed_cpu_source_stage_git_alternate_store_nesting_limit",
+      "receipt": "infrastructure/cpu-20260923an-source-stage-failure.json",
+      "preserved_partial_checkout": "/data/users/ali/sgw-01/source/042d235-an"
+    },
+    "ap": {
+      "status": "passed_exact_source_native_cpu_cli_and_registration",
+      "job_uid": "bb3c837e-cb73-43a8-9bc2-a822d55f726f",
+      "completed_at_utc": "2026-09-23T02:13:28Z",
+      "source_root": "/data/users/ali/sgw-01/source/042d235-ap",
+      "object_store_dependency": "/data/users/ali/sgw-01/source/b429ddd",
+      "alternate_store_depth": 1,
+      "receipt": "infrastructure/cpu-20260923ao-first-verified-results.json"
+    },
+    "future_staging_rule": "Clone the original b429ddd store (which has no alternates) and bundle all subsequent commits, not the ever-deepening shared-clone chain. Preserve every prior source store."
+  },
   "last_completed_qualification": {
     "job": "sgw01-ali-lat-qualification-20260923ai",
     "job_uid": "fe60a7a3-0f16-46b0-ab1a-b38c78ee52a5",
@@ -427,10 +473,19 @@
     "plan_sha256": "f5007f84d26f27946b38f2053ca7d640b56e50e92ae3d09a0261feb45f88275e",
     "job": "sgw01-ali-lat-batch-20260923ak",
     "manifest": "handoff/k8s/sgw01-ali-lat-batch-20260923ak.yaml",
-    "status": "running_first_four_indices_verified_physical_progress",
+    "status": "running_twelve_producer_completions_one_independently_verified_candidate",
     "job_uid": "f31bfbca-f4e3-4919-af8a-3fd92ec515a2",
     "started_at_utc": "2026-09-23T01:24:09Z",
     "progress_receipt": "infrastructure/a40-20260923ak-launch-progress.json",
+    "latest_progress_receipt": "infrastructure/kubernetes-20260923ao-progress.json",
+    "latest_observed_at_utc": "2026-09-23T02:17:07Z",
+    "producer_completed_indices": "0-11",
+    "producer_completed_candidates": 12,
+    "independently_verified_all_six_pass": ["LAT-CANDIDATE-082"],
+    "independently_verified_physical_rejections_in_batch": [],
+    "verified_files_for_candidate_082": 11628,
+    "decoded_frames_for_candidate_082": 3432,
+    "verified_snapshot_is_not_family_release": true,
     "remaining_candidates": 39,
     "max_parallel_gpu_pods": 4,
     "concurrent_model_workers": 0,
@@ -506,7 +561,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Inspect existing batch ak by its exact name and UID; it is already launched and four distinct locked A40 simulators have verified physical progress. Supervise and independently verify completed indices, preserving partial attempts and every rejection. Do not recreate ak, launch additional GPUs while all four are allocated, relaunch ac/af/ai, overwrite outputs, relax thresholds or issue a learned-policy release.",
+  "next_action": "Inspect existing GPU producer ak and corrected durable CPU verifier ao by exact UID. Both are already running; ao has verified candidate082's complete six trials,11628 files and3432 decoded frames. Read newly persisted report.candidates outputs; am's eight technical reports were a verifier bug and are not raw physical failures. Do not recreate ak/ao, resume faulty am, relaunch failed an, allocate additional GPUs while four are occupied, rerun candidate032, overwrite outputs, relax thresholds or issue learned-policy release. Continue CPU-only native family/runtime/historical-coverage integration while the finite batch runs.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

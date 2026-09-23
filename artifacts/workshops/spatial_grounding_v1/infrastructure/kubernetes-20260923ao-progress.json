@@ -1,0 +1,99 @@
+{
+  "behavioral_episodes": 0,
+  "jobs": [
+    {
+      "name": "sgw01-ali-lat-batch-20260923ak",
+      "status": {
+        "active": 4,
+        "completedIndexes": "0-11",
+        "failedIndexes": "",
+        "ready": 4,
+        "startTime": "2026-09-23T01:24:09Z",
+        "succeeded": 12,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "suspended": false,
+      "uid": "f31bfbca-f4e3-4919-af8a-3fd92ec515a2"
+    },
+    {
+      "name": "sgw01-ali-lat-verify-20260923am",
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-23T02:00:32Z",
+            "lastTransitionTime": "2026-09-23T02:00:32Z",
+            "message": "Job suspended",
+            "reason": "JobSuspended",
+            "status": "True",
+            "type": "Suspended"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-23T01:56:29Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "suspended": true,
+      "uid": "97c3e331-ff9b-4ea1-8a20-8f689616cd1e"
+    },
+    {
+      "name": "sgw01-ali-source-stage-20260923an",
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-23T02:06:22Z",
+            "lastTransitionTime": "2026-09-23T02:06:22Z",
+            "message": "Job has reached the specified backoff limit",
+            "reason": "BackoffLimitExceeded",
+            "status": "True",
+            "type": "Failed"
+          }
+        ],
+        "failed": 1,
+        "ready": 0,
+        "startTime": "2026-09-23T02:06:06Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "suspended": false,
+      "uid": "6d97c8e4-266e-4cb0-8bef-7f2cf380e22b"
+    },
+    {
+      "name": "sgw01-ali-source-stage-20260923ap",
+      "status": {
+        "completionTime": "2026-09-23T02:13:28Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-23T02:13:28Z",
+            "lastTransitionTime": "2026-09-23T02:13:28Z",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-23T02:12:21Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "suspended": false,
+      "uid": "bb3c837e-cb73-43a8-9bc2-a822d55f726f"
+    },
+    {
+      "name": "sgw01-ali-lat-verify-20260923ao",
+      "status": {
+        "active": 1,
+        "ready": 1,
+        "startTime": "2026-09-23T02:13:47Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "suspended": false,
+      "uid": "1de130fb-6fd4-4c10-94d5-6fcc6e1e4c1c"
+    }
+  ],
+  "model_requests": 0,
+  "observed_at_utc": "2026-09-23T02:17:07.321799+00:00",
+  "scope": "known_SGW_jobs_only"
+}

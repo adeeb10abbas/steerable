@@ -1,6 +1,6 @@
 # SGW-01 status
 
-**The corrected controller passed five of six physical checks; candidate 032 remains rejected under the frozen stability limit. The remaining 39 LAT candidates are registered; learned-policy episodes remain at zero.**
+**The four-GPU LAT batch is running durably. At 02:17 UTC, twelve candidates had producer receipts and candidate 082 independently passed all six physical checks. Learned-policy episodes remain at zero.**
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
@@ -305,6 +305,41 @@ records exact Pods, UUIDs and observed state counts. This is progress evidence,
 not fixture acceptance or batch completion. Kubernetes owns the finite queue;
 closing the laptop does not stop the Job. **Do not launch ak again.**
 
+At `2026-09-23T02:17:07Z`, ak had completed indices `0-11` and retained four
+active simulators. Corrected CPU verifier `sgw01-ali-lat-verify-20260923ao`
+independently verified candidate 082: six of six physical checks, all 11,628
+trial/warmup files, and 3,432 decoded video frames. Its
+[first native report](infrastructure/cpu-20260923ao-first-verified-results.json)
+and [Job snapshot](infrastructure/kubernetes-20260923ao-progress.json) are
+partial evidence, not a family release. Other producer outcomes must not be
+promoted until their full verification reports exist.
+
+CPU verifier am was suspended after a recorder-contract bug: it demanded
+three warmup views at every frame. The frozen recorder actually retains the
+left-shoulder view at all 121 frames and all three views at frames
+0, 1, 10, 30, 60 and 120 (133 arrays plus one video per reset).
+[Its eight reports](infrastructure/cpu-20260923am-warmup-verifier-mismatch.json)
+remain verifier failures, not physical candidate failures. Source `042d235`
+fixes the assertion and tests the actual warmup producer; no raw trial changed
+or was rerun.
+
+CPU source stage an then failed at Git bundle verification because the chain
+of shared-clone alternate object stores exceeded Git's nesting limit.
+[The failure and partial checkout](infrastructure/cpu-20260923an-source-stage-failure.json)
+are preserved. Fresh stage ap completed using the original `b429ddd` store
+with no alternate dependencies. New source is
+`/data/users/ali/sgw-01/source/042d235-ap`; preserve its original-store
+dependency and every earlier store. Future staging must use that shallow
+base rather than extend the old chain.
+
+Verifier ao started at `02:13:47Z`, has no GPU allocation or automatic retry,
+and writes each completed candidate report to persistent storage while ak
+continues. It waits until `06:29:09Z`, bounded by its Job deadline, never
+reruns a trial, and never releases a family. Both Jobs survive laptop closure.
+Calibrated HEIGHT/DIST plumbing and source-executed official D1 client cadence
+checks are integrated; actual family scene captures, native policy servers
+and joint-position runtime qualification remain outstanding.
+
 Historical layout coverage is still incomplete. The new diagnostic comparator
 cannot release a family based on an arbitrary subset, empty registry or
 unverified hash strings. Its source inventory identifies the precise missing
@@ -339,9 +374,10 @@ and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Supervise the existing finite Job `sgw01-ali-lat-batch-20260923ak` and
-independently verify each completed candidate's raw records and videos.
-Do not recreate the Job or allocate additional GPUs while its four slots are
+Supervise existing finite Job `sgw01-ali-lat-batch-20260923ak` and CPU verifier
+`sgw01-ali-lat-verify-20260923ao`; inspect the latter's persistent
+`report.candidates/` files for independently verified results.
+Do not recreate either Job or allocate additional GPUs while ak's four slots are
 occupied. Preserve all earlier outcomes and all 100 candidate poses; no
 learned-policy release exists.
 Do not rerun completed captures or overwrite evidence.

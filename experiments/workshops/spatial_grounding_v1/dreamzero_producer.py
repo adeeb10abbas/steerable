@@ -55,6 +55,8 @@ class DreamZeroEvidenceProducer:
         self._camera_name = ""
         self._cell_id = ""
         self._fingerprint = ""
+        self._physical_reset_id = ""
+        self._sampling_seed: int | None = None
         self._prompt: str | None = None
         self._session_id: str | None = None
         self.native_metadata = dict(getattr(backend, "native_metadata", {
@@ -83,6 +85,8 @@ class DreamZeroEvidenceProducer:
             self._camera_name = camera
             self._cell_id = ""
             self._fingerprint = ""
+            self._physical_reset_id = ""
+            self._sampling_seed = None
             self._prompt = None
             self._session_id = None
             self._request_index = 0
@@ -107,23 +111,37 @@ class DreamZeroEvidenceProducer:
                 self._prompt = prompt
             elif prompt != self._prompt:
                 raise AdapterError("D1 prompt changed within an episode")
-            if packet.get("request_index") != self._request_index:
+            if type(packet.get("request_index")) is not int or packet["request_index"] != self._request_index:
                 raise AdapterError("D1 request_index is stale or non-contiguous")
             for field, current in (
                 ("wrapper_reset_id", self._reset_id),
                 ("camera_name", self._camera_name),
             ):
-                supplied = packet.get(field, packet.get("reset_id"))
+                supplied = packet.get(field)
                 if supplied != current:
                     raise AdapterError(f"D1 packet {field} does not match reset binding")
-            for field in ("registered_cell_id", "reset_fingerprint", "request_id"):
+            for field in ("registered_cell_id", "reset_fingerprint", "request_id", "reset_id"):
                 if not isinstance(packet.get(field), str) or not packet[field]:
                     raise AdapterError(f"D1 packet lacks {field}")
+            if packet.get("camera_id") != self._camera_name:
+                raise AdapterError("D1 packet camera_id differs from reset camera")
+            session_id = observation.get("session_id")
+            if not isinstance(session_id, str) or not session_id:
+                raise AdapterError("D1 packet lacks the official client session_id")
             if not self._cell_id:
                 self._cell_id = packet["registered_cell_id"]
                 self._fingerprint = packet["reset_fingerprint"]
-            elif (packet["registered_cell_id"], packet["reset_fingerprint"]) != (self._cell_id, self._fingerprint):
-                raise AdapterError("D1 packet changed cell or reset fingerprint")
+                self._physical_reset_id = packet["reset_id"]
+                self._sampling_seed = seed
+                self._session_id = session_id
+            elif (
+                packet["registered_cell_id"], packet["reset_fingerprint"],
+                packet["reset_id"], seed, session_id,
+            ) != (
+                self._cell_id, self._fingerprint, self._physical_reset_id,
+                self._sampling_seed, self._session_id,
+            ):
+                raise AdapterError("D1 packet changed cell, reset, seed or native session")
             started = time.time_ns()
             result = self.backend.predict(
                 observation,
@@ -135,16 +153,18 @@ class DreamZeroEvidenceProducer:
                 session_id=self._session_id,
             )
             actions, future = validate_dreamzero_result(result)
-            if isinstance(result.get("session_id"), str):
-                self._session_id = result["session_id"]
+            if result.get("session_id", self._session_id) != self._session_id:
+                raise AdapterError("D1 native response changed the official client session")
             finished = time.time_ns()
             wrapper_request_id = f"sgw-d1-request-{uuid.uuid4().hex}"
             record: dict[str, Any] = {
                 "request_id": packet["request_id"],
                 "wrapper_request_id": wrapper_request_id,
                 "request_index": self._request_index,
-                "reset_id": self._reset_id,
-                "physical_reset_id": packet.get("reset_id"),
+                "reset_id": self._physical_reset_id,
+                "wrapper_reset_id": self._reset_id,
+                "session_id": self._session_id,
+                "camera_id": self._camera_name,
                 "camera_name": self._camera_name,
                 "registered_cell_id": self._cell_id,
                 "reset_fingerprint": self._fingerprint,
@@ -155,26 +175,34 @@ class DreamZeroEvidenceProducer:
                 "request_finished_ns": finished,
                 "actions_shape": list(actions.shape),
                 "actions_sha256": _sha(actions.tobytes()),
+                "actions_hash_domain": "raw_server_actions",
                 "provenance": "sgw_wrapper_generated",
             }
             if future is None:
                 record["future_status"] = "not_exposed"
             else:
                 if hasattr(future, "detach"):
-                    future_array = future.detach().cpu().numpy()
+                    future_cpu = future.detach().cpu()
+                    if str(future_cpu.dtype) == "torch.bfloat16":
+                        future_cpu = future_cpu.float()
+                    future_array = future_cpu.numpy()
                     future_encoding = "native_latent_tensor_cpu"
                 else:
                     future_array = np.asarray(future)
                     future_encoding = "native_latent_array"
-                if future_array.ndim < 1:
-                    raise AdapterError("D1 native future must be an array")
+                if (
+                    future_array.ndim < 1
+                    or not np.issubdtype(future_array.dtype, np.number)
+                    or not np.isfinite(future_array).all()
+                ):
+                    raise AdapterError("D1 native future must be a finite numeric array")
                 self.future_dir.mkdir(parents=True, exist_ok=True)
                 path = self.future_dir / f"{wrapper_request_id}.npy"
                 np.save(path, future_array, allow_pickle=False)
                 with path.open("rb") as handle:
                     os.fsync(handle.fileno())
                 record.update({
-                    "future_status": "exposed_and_retained",
+                    "future_status": "latent_only_retained",
                     "future_path": str(path),
                     "future_shape": list(future_array.shape),
                     "future_sha256": _sha(path.read_bytes()),
@@ -207,6 +235,8 @@ def make_dreamzero_http_server(producer: DreamZeroEvidenceProducer, *, host: str
         def do_POST(self) -> None:  # noqa: N802
             try:
                 packet = json.loads(self.rfile.read(int(self.headers.get("Content-Length", "0"))).decode())
+                if not isinstance(packet, Mapping):
+                    raise AdapterError("D1 HTTP packet must be an object")
                 if self.path == "/reset":
                     self._json(200, producer.reset(packet))
                 elif self.path == "/predict":

@@ -77,6 +77,7 @@ class _FactoryBackend:
         self.source_root = config.source_root
         self.checkpoint_path = config.checkpoint_path
         self.resolved_config = dict(native_config)
+        self.native_metadata = dict(getattr(native, "native_metadata", {}))
 
     def predict(self, observation: Mapping[str, Any], prompt: str, sampling_seed: int, **kwargs: Any) -> Mapping[str, Any]:
         result = self.native.predict(
@@ -203,6 +204,27 @@ class OfficialDreamZero14BBackend:
     def predict(self, observation: Mapping[str, Any], prompt: str, sampling_seed: int, **kwargs: Any) -> Mapping[str, Any]:
         del sampling_seed, kwargs
         native_observation = dict(observation)
+        for key in (
+            "observation/exterior_image_0_left",
+            "observation/exterior_image_1_left",
+            "observation/wrist_image_left",
+        ):
+            image = np.asarray(observation.get(key))
+            if (
+                image.ndim != 3 or image.shape[-1] != 3
+                or not np.issubdtype(image.dtype, np.integer)
+                or np.any(image < 0) or np.any(image > 255)
+            ):
+                raise AdapterError(f"D1 native image is not uint8-compatible RGB: {key}")
+            native_observation[key] = image.astype(np.uint8)
+        for key, shape in (
+            ("observation/joint_position", (7,)),
+            ("observation/gripper_position", (1,)),
+        ):
+            state = np.asarray(observation.get(key), dtype=np.float32)
+            if state.shape != shape or not np.isfinite(state).all():
+                raise AdapterError(f"D1 native proprioception has invalid shape/values: {key}")
+            native_observation[key] = state
         native_observation["prompt"] = prompt
         actions = np.asarray(self.policy.infer(native_observation), dtype=np.float32)
         output: dict[str, Any] = {"actions": actions}
@@ -219,9 +241,21 @@ class OfficialDreamZero14BBackend:
         return {"evicted_session_id": session_id, "route": "ARDroidRoboarenaPolicy.reset"}
 
 
-def build_official_14b_dreamzero_backend() -> OfficialDreamZero14BBackend:
+def build_official_14b_dreamzero_backend(
+    config: DreamZeroServerConfig | None = None,
+) -> OfficialDreamZero14BBackend:
     """Construct the exact AR 14B route after identity and config checks."""
     identity = _verify_dreamzero_identity()
+    if config is not None and (
+        Path(config.checkpoint_path).resolve() != Path(identity["checkpoint_path"]).resolve()
+        or Path(config.source_root).resolve() != Path(identity["source_root"]).resolve()
+        or config.source_commit != identity["source_commit"]
+        or config.checkpoint_revision != identity["checkpoint_revision"]
+        or (config.action_guidance, config.video_guidance, config.steps,
+            config.returned_horizon, config.executed_horizon, config.effective_noise_seed)
+        != (1, 5, 16, 24, 8, 1140)
+    ):
+        raise AdapterError("D1 factory configuration differs from the verified identity")
     source_root = Path(identity["source_root"])
     _verify_exported_server_surface(source_root)
     _verify_14b_entrypoint(source_root)

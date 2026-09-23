@@ -580,6 +580,8 @@ class _OfficialDreamZeroClient:
             raise AdapterError("DreamZero checkpoint revision is not pinned")
 
         http_url = os.environ.get("SGW01_D1_HTTP_URL", "").strip().rstrip("/")
+        if http_url and http_url != f"http://{host}:{port}":
+            raise AdapterError("D1 HTTP URL differs from the owned runtime endpoint")
 
         class Client(DreamZeroClient):
             def __init__(self, **kwargs: Any) -> None:
@@ -619,13 +621,14 @@ class _OfficialDreamZeroClient:
                 observation = {
                     key: value
                     for key, value in request.items()
-                    if key.startswith("observation/")
+                    if key.startswith("observation/") or key == "session_id"
                 }
                 packet = {
                     "request_id": context["request_id"],
                     "request_index": context["request_index"],
                     "reset_id": context["reset_id"],
                     "wrapper_reset_id": self._sgw_reset,
+                    "camera_id": context["camera_id"],
                     "camera_name": context["camera_name"],
                     "registered_cell_id": context["registered_cell_id"],
                     "reset_fingerprint": context["reset_fingerprint"],
@@ -635,18 +638,18 @@ class _OfficialDreamZeroClient:
                 }
                 return self._owned_http("predict", packet)
 
-            def reset(self, *, env_id: int | None = None) -> None:
+            def _send_recv(self, payload: bytes) -> Any:
                 if not http_url:
-                    return super().reset(env_id=env_id)
+                    return super()._send_recv(payload)
+                packet = self._packer.unpack(payload)
+                if packet.get("endpoint") != "reset":
+                    raise AdapterError("D1 HTTP send/receive boundary accepts only native reset")
                 response = self._owned_http(
                     "reset",
                     {"camera_name": os.environ.get("SGW01_D1_CAMERA_NAME", "over_shoulder_left_camera")},
                 )
                 self._sgw_reset = response["reset_id"]
-                self._env_session_id.clear()
-                super(DreamZeroClient, self).reset(env_id=env_id)
-                self.returned_chunks.clear()
-                self.processed_chunks.clear()
+                return response
 
             def _query_server(self, request: dict[str, Any]) -> Any:
                 self.raw_response = (

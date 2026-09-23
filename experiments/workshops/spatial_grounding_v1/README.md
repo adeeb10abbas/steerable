@@ -301,6 +301,24 @@ nonzero while preserving every report.
 
 ## Owned D1 server binding
 
+The owned HTTP path is now exercised through the actual hash-verified RoboLab
+constructor, image extraction/padding, request packing, eight-action cache,
+gripper postprocessing and reset, followed by the concrete trace reader and
+prediction recorder. Only simulator tensors, model computation and filesystem
+identity are substituted in this offline test; it is not native-runtime
+qualification. Set `SGW01_D1_SOURCE_AUDIT`, `SGW01_D1_IMAGE_SOURCE_AUDIT` and
+`SGW01_D1_AR_SOURCE_AUDIT` to the authorized source exports to run these tests.
+The image utility SHA-256 is
+`aead0c246b696ce5feabbbc63df93f42762365cc6315269fa08ad5c98e1a3d94`.
+
+Physical reset, wrapper reset and native session IDs remain distinct. Server
+action hashes cover the raw chunk, while executed actions retain the official
+gripper conversion. Registered sampling seeds are recorded separately from
+the effective native seed. Retained latent tensors are explicitly
+`latent_only_retained`, never decoded predictions or scored zeros. Native
+distributed-worker startup, official video decode/time mapping and live
+runtime release still require qualification.
+
 The owned D1 HTTP boundary is implemented by `dreamzero_producer.py` and
 `dreamzero_wrapper_entrypoint.py`. Its native binding is deliberately not
 guessed: `dreamzero_backend.py` requires a reviewed

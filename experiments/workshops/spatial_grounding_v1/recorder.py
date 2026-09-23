@@ -212,16 +212,22 @@ class AttemptRecorder:
         except ImportError as exc:
             raise ContractError("NumPy is required to retain raw prediction arrays") from exc
 
-        def persist(value: Any, name: str) -> Any:
+        array_index = 0
+
+        def persist(value: Any) -> Any:
+            nonlocal array_index
+            if hasattr(value, "detach"):
+                value = value.detach().cpu().numpy()
             if isinstance(value, np.ndarray):
-                path = arrays / f"{name}.npy"
+                path = arrays / f"array-{array_index:05d}.npy"
+                array_index += 1
                 np.save(path, value, allow_pickle=False)
                 return {"path": path.relative_to(self.path).as_posix(), "sha256": sha256_file(path),
                         "shape": list(value.shape), "dtype": str(value.dtype)}
             if isinstance(value, Mapping):
-                return {str(key): persist(item, f"{name}-{key}") for key, item in value.items()}
+                return {str(key): persist(item) for key, item in value.items()}
             if isinstance(value, (list, tuple)):
-                return [persist(item, f"{name}-{position}") for position, item in enumerate(value)]
+                return [persist(item) for item in value]
             if isinstance(value, (str, int, float, bool)) or value is None:
                 return value
             raise ContractError(f"prediction contains unsupported raw value: {type(value).__name__}")
@@ -234,8 +240,8 @@ class AttemptRecorder:
             "reset_id": getattr(prediction, "reset_id", None),
             "camera_name": getattr(prediction, "camera_name", None),
             "future_status": getattr(prediction, "future_status", None),
-            "raw_request": persist(request, "request"),
-            "raw_response": persist(response, "response"),
+            "raw_request": persist(request),
+            "raw_response": persist(response),
         }
         path = self.path / "predictions" / f"request-{index:04d}.json"
         atomic_json(path, record)

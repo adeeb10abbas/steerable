@@ -55,7 +55,11 @@ def read_trace_sidecar(
         raise AdapterError("native trace sidecar binding is incomplete")
     if any(record[key] != request[key] for key in required):
         raise AdapterError("native trace sidecar binding differs from request")
-    actions = np.asarray(response.get("actions"), dtype=np.float32)
+    domain = record.get("actions_hash_domain", "returned_actions")
+    if domain not in {"returned_actions", "raw_server_actions"}:
+        raise AdapterError("native trace action hash domain is unknown")
+    action_key = "raw_actions" if domain == "raw_server_actions" else "actions"
+    actions = np.asarray(response.get(action_key), dtype=np.float32)
     if actions.shape != tuple(record.get("actions_shape", ())):
         raise AdapterError("native trace action shape differs from returned response")
     if record.get("actions_sha256") != hashlib.sha256(actions.tobytes()).hexdigest():
@@ -65,7 +69,15 @@ def read_trace_sidecar(
         artifact = Path(str(future_path))
         if not artifact.is_file() or record.get("future_sha256") != _sha256(artifact):
             raise AdapterError("native future artifact is missing or hash-mismatched")
-        record["future"] = np.load(artifact, allow_pickle=False)
+        value = np.load(artifact, allow_pickle=False)
+        if record.get("future_status") == "latent_only_retained":
+            record["future_latents"] = value
+        elif record.get("future_status") == "exposed_and_retained":
+            if str(record.get("future_encoding", "")).startswith("native_latent"):
+                raise AdapterError("native latent evidence cannot be treated as decoded future")
+            record["future"] = value
+        else:
+            raise AdapterError("native retained future has no recognized evidence classification")
     elif record.get("future_status") != "not_exposed":
         raise AdapterError("native trace must explicitly classify missing future evidence")
     return record

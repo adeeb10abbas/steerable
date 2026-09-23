@@ -1,0 +1,32 @@
+{
+  "schema_version": "sgw-01-main-p-admission-recovery-v1",
+  "id": "SGW-MAIN-N3-LAT-P-20260923DO",
+  "execution_plan": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dn/execution-plan.json",
+  "execution_plan_sha256": "4504ea1524e44580437d48aabfcc07fe7c279ae702079e57e2dcef47408b0a09",
+  "native_source_commit": "77cdac5a402dc076b12fd2c65ee1da602510c871",
+  "known_infrastructure_result": "DN policy-00 is Running and waiting for the simulator owner. DN simulator-00 was rejected before container start: requested one device, available zero on node188.",
+  "scope": "Four finite simulator-only placements on previously used owned lanes, after retaining and deleting our already-terminated BT1/BT2/BT3/CT1 Pods. No new policy worker, model requests, cell allocation or scientific retry.",
+  "supersedes": "DN's two-placement operational restriction only; experiment content and request ceilings are unchanged.",
+  "terminal_pods_preserved_before_cleanup": [
+    "sgw01-ali-family-partition-20260923bt-1-4jkhg",
+    "sgw01-ali-family-partition-20260923bt-2-szmmf",
+    "sgw01-ali-family-partition-20260923bt-3-xxw54",
+    "sgw01-ali-paper-engineering-20260923ct-1-vrcg4"
+  ],
+  "terminal_parent_jobs_verified_inactive": [
+    "sgw01-ali-family-partition-20260923bt",
+    "sgw01-ali-paper-engineering-20260923ct-1"
+  ],
+  "simulator_nodes": [
+    "dcwipphhgc188.edc.nam.gm.com",
+    "dcwipphhgc191.edc.nam.gm.com",
+    "dcwipphhgc189.edc.nam.gm.com",
+    "dcwipphhgc171.edc.nam.gm.com"
+  ],
+  "single_simulator_claim": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dn/claims/simulator",
+  "maximum_native_simulator_owners": 1,
+  "fresh_gpu_idle_probe_required": true,
+  "no_preemption_or_unowned_workload_changes": true,
+  "pending_DIST_slots_remain_pending": 7,
+  "protected_smolvla_modified": false
+}

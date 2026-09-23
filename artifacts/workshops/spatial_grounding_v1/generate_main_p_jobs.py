@@ -3,6 +3,7 @@ import argparse
 import copy
 import json
 from pathlib import Path
+import subprocess
 
 import yaml
 
@@ -14,7 +15,15 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--batch", default="20260923dm")
     parser.add_argument("--owned-lanes-only", action="store_true")
+    parser.add_argument("--simulator-only", action="store_true")
+    parser.add_argument("--simulator-nodes", nargs="+")
+    parser.add_argument("--first-index", type=int, default=0)
     args = parser.parse_args()
+    actual_commit = subprocess.check_output(
+        ["git", "rev-parse", "--verify", f"{args.source_commit}^{{commit}}"], text=True,
+    ).strip()
+    if actual_commit != args.source_commit:
+        parser.error("--source-commit requires the exact existing commit SHA")
     simulator_base = yaml.safe_load(Path("handoff/k8s/sgw01-ali-family-native-smoke-20260923bn.yaml").read_text())
     policy_base = yaml.safe_load(Path("handoff/k8s/sgw01-ali-n3-fixedinput-20260923di.yaml").read_text())
     nodes = [
@@ -72,8 +81,12 @@ cd "$NATIVE_SOURCE"
             "simulator": ["dcwipphhgc188.edc.nam.gm.com"],
             "policy": ["dcwipphai0061.edc.nam.gm.com"],
         }
+    if args.simulator_nodes:
+        placements["simulator"] = args.simulator_nodes
+    if args.simulator_only:
+        placements.pop("policy")
     for role, targets in placements.items():
-        for index, node in enumerate(targets):
+        for index, node in enumerate(targets, start=args.first_index):
             name = f"sgw01-ali-main-p-{args.batch}-{role}-{index:02d}"
             base = simulator_base if role == "simulator" else policy_base
             job = {
@@ -119,7 +132,8 @@ cd "$NATIVE_SOURCE"
         json.dump({"apiVersion": "v1", "kind": "List", "items": items}, stream, indent=2)
         stream.write("\n")
     print(json.dumps({"admission_candidates": len(items), "maximum_simulator_owners": 1,
-                      "maximum_policy_owners": 1, "main_episodes": 6}))
+                      "maximum_policy_owners": 1,
+                      "main_scope": "original six cells; immutable plan selects remaining suffix"}))
 
 
 if __name__ == "__main__":

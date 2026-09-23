@@ -1,0 +1,94 @@
+{
+  "behavioral_episodes": 0,
+  "complete_configs_differ_only_in": "recorders.dataset_export_dir_path",
+  "config_phase": "After environment construction; before the recorded construction-only horizon extension.",
+  "dist_no_plate_exclusion_status": "unresolved_not_excluded",
+  "failure_report": {
+    "bytes": 25614537,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/state_construction_failure.json",
+    "sha256": "e858a4431bd0451a1e380d66c8c5d05c5486718f5b23388f874d24a7d271ae8e"
+  },
+  "hash_verified_native_configs": 20,
+  "historical_population_coverage_complete": false,
+  "inventory_completeness_boundary": "These are complete serialized configs, not a composed USD-stage inventory. The pinned importer uses an explicit objects_of_interest allowlist and also spawns the complete USD scene. Registered rigid-object absence alone does not prove absence throughout transitive payloads. No independent historical imported-importer byte attestation or complete historical transitive asset closure is added.",
+  "inventory_sha256": "232096d3819cf7d77a25f12bd0984759c71efefc365d4c6fc5f74fea57f1deb9",
+  "materialization_bound_boundary": "At the exact producer revision, _finalize_unchanged_gates returns the state even when state['passed'] is false; normal materialization completion does not imply those gates passed. Completed-reset bounds cannot be extended to missing later constructed states.",
+  "missing_materialization_states_recovered": false,
+  "model_requests": 0,
+  "native_config_has_registered_plate": false,
+  "native_scene_entry_count": 37,
+  "native_success_reference": "bowl",
+  "observed_pose_rows_added": 0,
+  "pinned_robolab_source": {
+    "boundary": "Exact Git blobs, not an independent historical imported-module byte attestation.",
+    "checkout": "/data/users/ali/vla_wam/external/RoboLab-11142d4",
+    "files": {
+      "robolab/core/environments/runtime.py": {
+        "bytes": 12644,
+        "functions": {
+          "create_env": {
+            "first_line": 76,
+            "last_line": 253
+          }
+        },
+        "sha256": "ffa43f43b3e3d1f3c87a8b1da34addbfc9279209fe17209a0eb187b0904e145b"
+      },
+      "robolab/core/scenes/utils.py": {
+        "bytes": 14640,
+        "functions": {
+          "_scrape_scene_cached": {
+            "first_line": 71,
+            "last_line": 189
+          },
+          "import_scene": {
+            "first_line": 225,
+            "last_line": 269
+          }
+        },
+        "sha256": "6562517740be7c60e24e964afced5eac63bd00b4c5de0b6fee92295b87c81110"
+      }
+    },
+    "revision": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+  },
+  "producer_sha256": "4dbfd548da8b3e7c4e9f246b06c1e251f52d2cdd3541410b9d6e5655801b5f02",
+  "registered_rigid_objects": [
+    "banana",
+    "banana_right",
+    "bowl",
+    "rubiks_cube",
+    "table"
+  ],
+  "release_permitted": false,
+  "runtime_contract": {
+    "bytes": 9131,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/exact_pi05_runtime_contract.json",
+    "sha256": "df0b126fdf3ad3919a7074d04c1a539dc1ddd28f8bd780fe934ed30001f7d6c4"
+  },
+  "schema_version": "sgw-01-r005-native-object-inventory-audit-v1",
+  "serialization_contract": "The hash-bound native runtime serializes env_cfg.to_dict() after successful gym.make/RobolabEnv construction and check_scene_valid. All twenty configs match their lifecycle and output directory. Every lifecycle retains the same before/after termination config.",
+  "source_bindings": {
+    "fixture": {
+      "bytes": 5032,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/fixture_tasks.py",
+      "sha256": "a82746edfdf2efcff52d91c30b8e67757de19e69b5d1329e8512f89b3ef6af0e"
+    },
+    "left_task": {
+      "bytes": 827,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/task_files/left.py",
+      "sha256": "ab9888a6d503df883a94f07d22a4f902f6113b11767b104d43962f2a406393da"
+    },
+    "paired_scene_asset": {
+      "bytes": 6021,
+      "path": "experiments/v3/phase_e/bilateral_symmetry_null_control_v3e003/scene_assets/rubiks_cube_banana_pair_bowl.usda",
+      "sha256": "73ac533ccf505f9d71124b3da9aee328d3ebd32fffbd75bc88f32f0d15b20eec"
+    },
+    "producer": {
+      "bytes": 115451,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r005/state_repair_gate.py",
+      "sha256": "ac6ae458accaa1428e4f51cb44fb07115b5ad746bc746c33970221519477ea3b"
+    }
+  },
+  "source_commit": "98f0234cd124d24004fd0053bc8f61f71e8dd50b",
+  "source_config_bytes_verified": 1031942,
+  "unique_complete_configs": 20
+}

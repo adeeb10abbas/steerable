@@ -6,9 +6,9 @@ behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
 have verified receipts, views and complete videos. Native smoke br has completed
 24 full physical trials: two candidates pass all six trials and two are valid
 physical rejections. All four raw evidence chains passed independent rechecks.
-Including the first twenty subsequent candidates, 24 HEIGHT/DIST candidates
-have completed 144 full trials: nine all-six passes and fifteen physical
-rejections. Four durable GPU workers continue the remaining 97 frozen slots.
+Including the first twenty-four subsequent candidates, 28 HEIGHT/DIST candidates
+have completed 168 full trials: eleven all-six passes and seventeen physical
+rejections. Four durable GPU workers continue the remaining 93 frozen slots.
 Historical coverage and all learned-runtime release gates remain open.
 Learned-policy requests and episodes remain at zero.**
 
@@ -296,6 +296,40 @@ The newly retained controller verification also records the historical
 pre-AppLauncher hash check for the entire `basic_recorders.py`, including
 initial/post-step recorders. Historical imported IsaacLab getter bytes remain
 separately unattested. No fixture or learned-policy gate changes.
+
+At 10:42 UTC, the sixth remaining-slot wave was retained: HEIGHT 034/036
+passed all six trials; HEIGHT 035/037 passed four/three and remain valid
+physical rejections. Including smoke, 28 candidates now have 168 full recorded
+trials and 75,600 scripted actions: eleven all-six passes and seventeen
+rejections. All 24 new raw score/video projections and canonical worker digests
+agree. The compact evidence is in
+[`infrastructure/family-partition-20260923bt-prefix-cb/`](infrastructure/family-partition-20260923bt-prefix-cb/)
+and on the PVC. At the 10:42 worker check, HEIGHT 039/040/041/044 were active,
+with no shared stop, terminal launcher receipt, collector error or final receipt.
+The pending independent final raw compilation is still required.
+
+The cb historical recovery rehashed **all twenty** native `env_cfg.json`
+files bound by R005 attempt01's failure report, one per recorded lifecycle.
+Their 1,031,942 source bytes are preserved losslessly using one complete
+51,615-byte configuration plus byte deltas; only recorder output directories
+differ. The complete configurations, lifecycle matches, pinned serializer and
+importer sources, runtime bindings and reproducible audit are in
+[`infrastructure/historical-r005-inventory-20260923cb/`](infrastructure/historical-r005-inventory-20260923cb/)
+and on the PVC. The persisted exporter reproduced both compact inputs
+byte-identically.
+
+Every configuration registers the cube, bowl, two bananas and table, with
+the bowl as the success reference. Serialization occurs after native
+environment construction and before the recorded construction-only horizon
+extension; before/after termination contracts agree in all twenty lifecycles.
+This recovers complete configurations, **not** missing measured materialization
+poses. Registered-object absence alone is not a physical no-plate proof:
+the native importer filters its registered objects while spawning the complete
+USD scene, and complete historical transitive asset identity remains unproven.
+DIST historical exclusion therefore remains unresolved. The exact historical
+materialization finalizer also returns normally when its gates fail; its
+completion cannot justify extending the fresh-reset bounds to later states.
+No measured pose, global historical coverage or learned release is added.
 
 ## Scientific accounting
 

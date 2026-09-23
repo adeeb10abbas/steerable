@@ -1,0 +1,203 @@
+{
+  "base_scene": {
+    "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+    "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+  },
+  "base_workspace_receipt": {
+    "asset_manifest_sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806",
+    "path": "/data/users/ali/sgw-01/source/ff2c361-aq/artifacts/workshops/spatial_grounding_v1/infrastructure/a40-20260922r-workspace.json",
+    "receipt_sha256": "3766dd5b9ed08f7fc60525077ba96df0d98b67e980ff453ee7d19559932b8239",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "sha256": "1ef79d38f5004c40b2c5161a8c42aca2298dcbbf60d67ff3e48a19642c567e0e"
+  },
+  "behavioral_episode_count": 0,
+  "design_id": "SGW-HEIGHT-DESIGN-036",
+  "design_sha256": "8591b9a8d653debefb642b037b587566444eeaf1e33c8bd2c00200b35204a341",
+  "family": "HEIGHT",
+  "inherited_overlay_dependencies": [
+    {
+      "bytes": 3631,
+      "real_path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective/height-left.usda",
+      "sha256": "629859e5aa09fce65f63963d72f36ec54d53a65c256bde080af19e41fced829a"
+    },
+    {
+      "bytes": 17794512,
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+      "sha256": "b7827de44e5051d8d7803507b9362dbf8521181996449a88934b59ceb0d54db6"
+    },
+    {
+      "bytes": 3569,
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+      "sha256": "f5a00da4c05db6dd0441f8c76a886a898435e61890dd1f445ff7e8f79e1e2495"
+    },
+    {
+      "bytes": 7318,
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+      "sha256": "46fd4ea678f0ced8f620f2a8ceb045d779e412bca881d5ec584ce4cadf18133a"
+    },
+    {
+      "bytes": 682045,
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+      "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+    },
+    {
+      "bytes": 419223,
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+      "sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9"
+    },
+    {
+      "bytes": 342393,
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+      "sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e"
+    },
+    {
+      "bytes": 5373,
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+      "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+    }
+  ],
+  "manifest_sha256": "9f6eb3f8bd0bb0e3567e482abac76ed1ed3444b75833734a40edd8f54f2d313a",
+  "model_request_count": 0,
+  "native_import_contract": {
+    "banana_contact_bodies": [
+      "table",
+      "height_reference_support",
+      "height_neutral_cube_support",
+      "height_lower_support",
+      "height_upper_support"
+    ],
+    "dynamic_bodies": [],
+    "kinematic_bodies": [
+      "height_reference_support",
+      "height_neutral_cube_support",
+      "height_lower_support",
+      "height_upper_support"
+    ],
+    "kinematic_or_static_bodies": [
+      "height_reference_support",
+      "height_neutral_cube_support",
+      "height_lower_support",
+      "height_upper_support"
+    ],
+    "objects_of_interest": [
+      "rubiks_cube",
+      "bowl",
+      "banana",
+      "table",
+      "height_reference_support",
+      "height_neutral_cube_support",
+      "height_lower_support",
+      "height_upper_support"
+    ],
+    "robolab_utils_sha256": "6562517740be7c60e24e964afced5eac63bd00b4c5de0b6fee92295b87c81110"
+  },
+  "overlay_usda": {
+    "bytes": 1388,
+    "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-036/candidate-overlay.usda",
+    "sha256": "8bfc9d8a1cbd21982bcfcf6dacf38b56ee34d26e79fd3687f3262d1391c6952a"
+  },
+  "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+  "required_next_step": "run a fresh zero-model native capture using this exact overlay manifest",
+  "schema_version": "sgw-01-prospective-family-candidate-overlay-v1",
+  "source_baseline": {
+    "asset_manifest_sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806",
+    "base_scene": {
+      "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+      "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+    },
+    "base_workspace_receipt": {
+      "asset_manifest_sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806",
+      "path": "/data/users/ali/sgw-01/source/ff2c361-aq/artifacts/workshops/spatial_grounding_v1/infrastructure/a40-20260922r-workspace.json",
+      "receipt_sha256": "3766dd5b9ed08f7fc60525077ba96df0d98b67e980ff453ee7d19559932b8239",
+      "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "sha256": "1ef79d38f5004c40b2c5161a8c42aca2298dcbbf60d67ff3e48a19642c567e0e"
+    },
+    "capture": {
+      "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/0-height-left/capture.json",
+      "receipt_sha256": "9777442be1a57be446ef6d609bc47a6b78ce70f3aa1bb4001361611069805a0c",
+      "sha256": "d8c961be41b65d4d6860f550466a2a0b000d44bd147f631901f6de31d98b9148"
+    },
+    "native_import_contract": {
+      "banana_contact_bodies": [
+        "table",
+        "height_reference_support",
+        "height_neutral_cube_support",
+        "height_lower_support",
+        "height_upper_support"
+      ],
+      "dynamic_bodies": [],
+      "kinematic_bodies": [
+        "height_reference_support",
+        "height_neutral_cube_support",
+        "height_lower_support",
+        "height_upper_support"
+      ],
+      "kinematic_or_static_bodies": [
+        "height_reference_support",
+        "height_neutral_cube_support",
+        "height_lower_support",
+        "height_upper_support"
+      ],
+      "objects_of_interest": [
+        "rubiks_cube",
+        "bowl",
+        "banana",
+        "table",
+        "height_reference_support",
+        "height_neutral_cube_support",
+        "height_lower_support",
+        "height_upper_support"
+      ],
+      "robolab_utils_sha256": "6562517740be7c60e24e964afced5eac63bd00b4c5de0b6fee92295b87c81110"
+    },
+    "overlay_manifest": {
+      "manifest_sha256": "948314a38b08ade0c4a7187d437a72dbc74fe3912bd4da5246d183860673b6ab",
+      "path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective/height-left.manifest.json",
+      "sha256": "7c2a5628eaf1a18fe5ed097c074105437ddfb3826d52dc765e76a1bcc801e12d"
+    },
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "used_layer_dependencies": [
+      {
+        "bytes": 3631,
+        "real_path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective/height-left.usda",
+        "sha256": "629859e5aa09fce65f63963d72f36ec54d53a65c256bde080af19e41fced829a"
+      },
+      {
+        "bytes": 17794512,
+        "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+        "sha256": "b7827de44e5051d8d7803507b9362dbf8521181996449a88934b59ceb0d54db6"
+      },
+      {
+        "bytes": 3569,
+        "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+        "sha256": "f5a00da4c05db6dd0441f8c76a886a898435e61890dd1f445ff7e8f79e1e2495"
+      },
+      {
+        "bytes": 7318,
+        "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+        "sha256": "46fd4ea678f0ced8f620f2a8ceb045d779e412bca881d5ec584ce4cadf18133a"
+      },
+      {
+        "bytes": 682045,
+        "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+        "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+      },
+      {
+        "bytes": 419223,
+        "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+        "sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9"
+      },
+      {
+        "bytes": 342393,
+        "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+        "sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e"
+      },
+      {
+        "bytes": 5373,
+        "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+        "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+      }
+    ]
+  },
+  "status": "prospective_candidate_design_requires_zero_model_capture"
+}

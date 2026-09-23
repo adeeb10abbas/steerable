@@ -219,6 +219,25 @@ The recovered pre-AppLauncher controller verification also binds the whole
 historical `basic_recorders.py`; it does not attest the historical imported
 IsaacLab getter bytes.
 
+All twenty R005 attempt01 native `env_cfg.json` files are now retained
+losslessly as one complete config plus byte deltas, including the environments
+whose later materialization poses were lost. Replay their hashes, lifecycle
+identities, exact source bindings and unchanged scored-reference contracts:
+
+```bash
+.venv/bin/python -m tools.audit_sgw_r005_object_inventory \
+  --output /tmp/sgw-r005-object-inventory.json
+```
+
+Only recorder output directories differ between these configs. Each registers
+the cube, bowl, two bananas and table, with the bowl as the success reference.
+This does **not** establish a physical no-plate exclusion: the native importer
+filters registered objects by an allowlist while spawning the complete USD
+scene. Complete historical transitive asset identity remains unproven.
+Configured initial poses are not recovered measured states. Moreover, the
+historical materialization finalizer returns even when its gates fail, so
+normal completion cannot extend the settled-reset bounds to constructed states.
+
 ## Execution order
 
 1. Obtain a genuinely idle, authorized RTX/Vulkan-capable allocation. A

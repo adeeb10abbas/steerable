@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_height_dist_remaining_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T10:22:47Z",
+  "updated_at_utc": "2026-09-23T10:47:30Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -61,6 +61,8 @@
     "historical_root_bound_primitive": "experiments/workshops/spatial_grounding_v1/historical_root_bounds.py",
     "historical_reset_bound_proof": "tools/prove_sgw_r005_reset_bounds.py",
     "historical_extraction_lineage_root_and_bound_targeted_tests_passed": 70,
+    "historical_object_inventory_audit": "tools/audit_sgw_r005_object_inventory.py",
+    "historical_object_inventory_and_reset_bound_targeted_tests_passed": 44,
     "family_capture_materializer_and_six_trial_verifier": "5b21c8af",
     "finite_family_slot_executor": "e1f8a212",
     "preaction_guard_persisted_before_controller_planning": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
@@ -701,14 +703,29 @@
       "including_native_smoke_and_all_prefixes": {"completed_candidates": 24, "all_six_pass": 9, "physical_rejected": 15, "completed_trials": 144, "controller_actions": 64800},
       "claim_boundary": "Worker verification and hash-bound qualification projections, not final independent raw compilation."
     },
+    "verified_sixth_prefix": {
+      "observed_at_utc": "2026-09-23T10:42:51.377098+00:00",
+      "manifest": "infrastructure/family-partition-20260923bt-prefix-cb/manifest.json",
+      "manifest_sha256": "57f5de8d0182ed7508c763f6bdb6bb29dd0cffc32b9f7c8bc311a80848b7714a",
+      "completed_remaining_slots_including_prior_prefixes": 24,
+      "remaining_slots_not_yet_terminal": 93,
+      "completed_trials_this_prefix": 24,
+      "all_six_pass_slots": ["HEIGHT-034", "HEIGHT-036"],
+      "valid_physical_rejections": [
+        {"slot": "HEIGHT-035", "passed_trials": 4},
+        {"slot": "HEIGHT-037", "passed_trials": 3}
+      ],
+      "including_native_smoke_and_all_prefixes": {"completed_candidates": 28, "all_six_pass": 11, "physical_rejected": 17, "completed_trials": 168, "controller_actions": 75600},
+      "claim_boundary": "Worker verification and hash-bound raw score/video projections, not final independent raw compilation."
+    },
     "latest_worker_monitor": {
-      "observed_at_utc": "2026-09-23T10:21:06.352399+00:00",
-      "active_slots": ["HEIGHT-034", "HEIGHT-035", "HEIGHT-036", "HEIGHT-037"],
+      "observed_at_utc": "2026-09-23T10:42:21.982824+00:00",
+      "active_slots": ["HEIGHT-039", "HEIGHT-040", "HEIGHT-041", "HEIGHT-044"],
       "shared_infrastructure_stop_present": false,
       "terminal_launcher_receipts": 0
     },
     "last_read_only_monitor": {
-      "observed_at_utc": "2026-09-23T10:17:30.390678+00:00",
+      "observed_at_utc": "2026-09-23T10:42:21.982824+00:00",
       "shared_infrastructure_stop_present": false,
       "collector_terminal_or_error_record_present": false
     },
@@ -938,6 +955,28 @@
     "byte_identical_target_replay": true,
     "release_permitted": false
   },
+  "failed_attempt_native_config_inventory": {
+    "manifest": "infrastructure/historical-r005-inventory-20260923cb/manifest.json",
+    "manifest_sha256": "8dbd79f69267090c4b8cf235b1a1f4c51bca7f7c44fa99415c517c842fc4aa20",
+    "inventory": "infrastructure/historical-r005-inventory-20260923cb/inventory.json",
+    "inventory_sha256": "232096d3819cf7d77a25f12bd0984759c71efefc365d4c6fc5f74fea57f1deb9",
+    "audit": "infrastructure/historical-r005-inventory-20260923cb/audit.json",
+    "audit_sha256": "25b93bbcf611855fa13080306ceb06890be2b30d9adabea0dcf7c16280df8fe0",
+    "persistent_root": "/data/users/ali/sgw-01/infrastructure/historical-r005-inventory-20260923cb",
+    "source_export_reproduced_byte_identically_on_target": true,
+    "recorded_lifecycles_with_complete_hash_verified_configs": 20,
+    "source_config_bytes_verified": 1031942,
+    "complete_configs_differ_only_in": "recorders.dataset_export_dir_path",
+    "native_scene_entries_per_config": 37,
+    "registered_rigid_objects": ["banana", "banana_right", "bowl", "rubiks_cube", "table"],
+    "native_success_reference": "bowl",
+    "dist_no_plate_exclusion_status": "unresolved_not_excluded",
+    "boundary": "Complete serialized configs are not composed USD-stage inventories: the importer applies an object allowlist while spawning the entire scene. Historical transitive asset identity is not established. Configured poses are not measured later states. Normal materialization completion does not imply its returned gates passed.",
+    "missing_materialization_states_recovered": false,
+    "observed_pose_rows_added": 0,
+    "historical_population_coverage_complete": false,
+    "release_permitted": false
+  },
   "named_historical_root_nonmatches": {
     "native_frame_manifest": "infrastructure/native-root-frames-20260923bw/manifest.json",
     "native_frame_manifest_sha256": "9252c331fa8b3bd7553117818107884a7a8a2ab8cb6ae8761010cc2bc3ec01ee",
@@ -973,9 +1012,9 @@
     "historical_population_coverage_complete": false,
     "release_permitted": false
   },
-  "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. At the retained fifth prefix,24 HEIGHT/DIST candidates have144 full recorded trials,9 all-six passes and15 valid rejections;97 slots remain not terminal. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. bx accounts for149 snapshots/101 recorded lifecycles in seven named later executions; ca additionally gives source-bound exclusions for20 completed resets from earlier R005 attempt01, not missing later materializations or complete historical coverage. The400 prior point comparisons and80 new bound comparisons retain separate scopes.",
+  "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. At the retained sixth prefix,28 HEIGHT/DIST candidates have168 full recorded trials,11 all-six passes and17 valid rejections;93 slots remain not terminal. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. bx accounts for149 snapshots/101 recorded lifecycles in seven named later executions; ca additionally gives source-bound exclusions for20 completed resets from earlier R005 attempt01, not missing later materializations or complete historical coverage. cb recovers all20 native configs but not physical no-plate exclusion. The400 prior point comparisons and80 bound comparisons retain separate scopes.",
   "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu -o wide",
-  "next_historical_trace": "ca proves80 specific reset nonmatches using the exact clean-source launcher and historical5mm Euclidean full-reset gate, without changing SGW3mm tolerance or reconstructing coordinates. It also retains the historical pre-AppLauncher hash verification of the entire basic_recorders.py. Missing rank1-3 materialization states and other historical populations remain unresolved; neither these reset bounds nor IK-only HDF5 substitute for later constructed states. The pinned camera writer saves PNGs but not separate numerical pose files. Investigate bound raw artifacts or source-specific exclusions without treating unavailable evidence as a match, nonmatch or zero.",
+  "next_historical_trace": "cb recovers all20 complete native configs and matches their lifecycle/scored-reference contracts. They register no plate, but the importer filters registered actors while spawning the full USD scene; a physical no-plate exclusion still needs complete historical asset identity and prospective comparator identity. Missing rank1-3 materialization poses and other historical populations remain unresolved. The exact materialization finalizer returns failed gates normally, so ca's80 completed-reset nonmatches cannot be extended to constructed states by lifecycle completion. Investigate transitive hash-bound assets or other source-specific exclusions without inventing states or global coverage.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -1238,13 +1277,13 @@
     "Historical-layout coverage remains incomplete. The recovered 24-layout cohort now has independently hash-bound roots, AABB-derived centers and separate reset displacement in infrastructure/historical-droid-layout-evidence-registry-v1.json. This does not establish exhaustive coverage or release.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Both native client paths now run complete 450-action engineering integrations through joint-position measurements, HTTP producers, trace readers, recorder and scorer with simulated physics/model computation. Native AppLauncher/RPC, D1 distributed startup, official decode/time mapping and all live model runtimes remain unqualified.",
-    "Native smoke integrity passed and bt is processing the remaining frozen HEIGHT/DIST candidates. The retained24-candidate prefix contains9 all-six passes and15 valid physical rejections across144 full recorded trials;97 remaining slots are not yet terminal. No29-layout family pool or historical/runtime release is established.",
+    "Native smoke integrity passed and bt is processing the remaining frozen HEIGHT/DIST candidates. The retained28-candidate prefix contains11 all-six passes and17 valid physical rejections across168 full recorded trials;93 remaining slots are not yet terminal. No29-layout family pool or historical/runtime release is established.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Inspect bu final-receipt.json/collector-error.json and bt infrastructure-stop.json without interrupting trials. Twenty remaining slots are retained in five prefixes through ca; no valid rejection may be retried. Reproduce tools/prove_sgw_r005_reset_bounds.py for80 bound-based exclusions of completed settled resets, separately from tools/prove_sgw_observed_root_nonmatches.py and its400 observed-point comparisons. Continue accounting for missing constructed states and other historical populations. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
+  "next_action": "Inspect bu final-receipt.json/collector-error.json and bt infrastructure-stop.json without interrupting trials. Twenty-four remaining slots are retained in six prefixes through cb; no valid rejection may be retried. Reproduce tools/audit_sgw_r005_object_inventory.py for complete configuration recovery with unresolved physical no-plate exclusion. Keep the80 source-bound completed-reset exclusions separate from400 observed-point comparisons. Continue accounting for missing constructed states and other historical populations. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

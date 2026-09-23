@@ -3,7 +3,7 @@ import hashlib
 import pytest
 
 from experiments.workshops.spatial_grounding_v1.native_geometry_measurements import (
-    aabb_separation, camera_extrinsics, robot_snapshot,
+    aabb_separation, camera_extrinsics, clearance_to_objects, project_collision_aabbs, robot_snapshot,
 )
 
 
@@ -60,3 +60,29 @@ def test_conservative_aabb_overlap_is_not_labeled_collision():
         {"minimum_xyz_m": [2, 1, 1], "maximum_xyz_m": [3, 2, 2]},
     )
     assert separated["aabb_euclidean_separation_m"] == pytest.approx(1)
+
+
+def test_projected_collision_bounds_use_matrix_and_native_body_pose():
+    inventory = {
+        "available": True,
+        "rows": [{
+            "body_name": "finger", "local_min_xyz_m": [0, 0, 0], "local_max_xyz_m": [1, 1, 1],
+            "geometry_to_body_matrix_gf": [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [1, 2, 3, 1]],
+        }],
+    }
+    frames = {"bodies": {"finger": {"position_world_xyz_m": [10, 0, 0], "quaternion_world_wxyz": [1, 0, 0, 0]}}}
+    projected = project_collision_aabbs(inventory, frames)
+    assert projected["body_world_aabbs"]["finger"]["minimum_xyz_m"] == [11, 2, 3]
+    assert projected["body_world_aabbs"]["finger"]["maximum_xyz_m"] == [12, 3, 4]
+    clearance = clearance_to_objects(projected, {
+        "bowl": {"minimum_xyz_m": [14, 2, 3], "maximum_xyz_m": [15, 3, 4]},
+    })
+    assert clearance["separations"]["finger__bowl"]["aabb_euclidean_separation_m"] == pytest.approx(2)
+
+
+@pytest.mark.parametrize("inventory,frames", [
+    ({"available": True, "rows": [{"body_name": "missing", "local_min_xyz_m": [0, 0, 0], "local_max_xyz_m": [1, 1, 1], "geometry_to_body_matrix_gf": [[1, 0, 0, 0]] * 4}]}, {"bodies": {}}),
+    ({"available": True, "rows": [{"body_name": "finger", "local_min_xyz_m": [0, 0, float("nan")], "local_max_xyz_m": [1, 1, 1], "geometry_to_body_matrix_gf": [[1, 0, 0, 0]] * 4}]}, {"bodies": {"finger": {"position_world_xyz_m": [0, 0, 0], "quaternion_world_wxyz": [1, 0, 0, 0]}}}),
+])
+def test_collision_projection_reports_unavailable_for_missing_or_nonfinite_inputs(inventory, frames):
+    assert project_collision_aabbs(inventory, frames)["available"] is False

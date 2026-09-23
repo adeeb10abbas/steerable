@@ -24,7 +24,7 @@ from .simulator_bridge import (
 from .task_definitions import RoboLabTaskDefinition
 from .robolab_measurements import articulation_body_frames, geometric_center_state
 from .lat_workspace_capture import _vector, render_only_warmup
-from .native_geometry_measurements import robot_snapshot
+from .native_geometry_measurements import clearance_to_objects, project_collision_aabbs, robot_snapshot
 
 
 class RoboLabLatEnvironment:
@@ -42,6 +42,7 @@ class RoboLabLatEnvironment:
         self._steps = 0
         self._observation: Any = None
         self._explicit_support_sensor_names = support_sensor_names
+        self._robot_asset_identity: dict[str, Any] | None = None
 
     def _snapshot(self) -> SimulatorSnapshot:
         from robolab.core.task.conditionals import object_grabbed
@@ -69,7 +70,7 @@ class RoboLabLatEnvironment:
         origin = self._env.scene.env_origins[0].detach().cpu().numpy()
         for name in self._candidate.object_poses:
             root_position, quaternion = world.get_pose(name, env_id=0)
-            _corners, geometric_center = world.get_bbox(name, env_id=0)
+            corners, geometric_center = world.get_bbox(name, env_id=0)
             root_position_values = tuple(float(item) for item in root_position.detach().cpu().tolist())
             geometric_center_values = tuple(float(item) for item in geometric_center.tolist())
             quaternion_values = tuple(float(item) for item in quaternion.detach().cpu().tolist())
@@ -93,6 +94,15 @@ class RoboLabLatEnvironment:
                     else False
                 ),
             )
+            if corners is not None:
+                corners_values = np.asarray(corners.detach().cpu().numpy(), dtype=np.float64).reshape(-1, 3)
+                context_measurements[name] = {
+                    "root_position_env_local_xyz_m": root_position_values,
+                    "root_quaternion_world_wxyz": quaternion_values,
+                    "geometric_center_env_local_xyz_m": geometric_center_values,
+                    "bbox_env_local_min_xyz_m": tuple(float(item) for item in np.min(corners_values, axis=0)),
+                    "bbox_env_local_max_xyz_m": tuple(float(item) for item in np.max(corners_values, axis=0)),
+                }
         for name in self._candidate.metadata.get("native_scene", {}).get("object_names", ()):
             if name in rows:
                 continue
@@ -107,7 +117,24 @@ class RoboLabLatEnvironment:
                 "bbox_env_local_max_xyz_m": tuple(float(item) for item in np.max(corners_values, axis=0)),
             }
         try:
-            current_robot_snapshot = robot_snapshot(self._env.scene, origin)
+            current_robot_snapshot = robot_snapshot(
+                self._env.scene, origin, asset_identity=self._robot_asset_identity,
+            )
+            self._robot_asset_identity = current_robot_snapshot.get("asset_usd")
+            if self._candidate.metadata.get("engineering_geometry_measurements") is True:
+                inventory = self._candidate.metadata.get("collision_geometry_local_bounds")
+                projected = project_collision_aabbs(inventory, current_robot_snapshot["body_frames"]) if isinstance(inventory, dict) else {
+                    "available": False, "reason": "candidate lacks bound collision geometry inventory",
+                }
+                objects = {
+                    name: {
+                        "minimum_xyz_m": value["bbox_env_local_min_xyz_m"],
+                        "maximum_xyz_m": value["bbox_env_local_max_xyz_m"],
+                    }
+                    for name, value in context_measurements.items()
+                    if name in {"bowl", "plate", "banana", "table"} and "bbox_env_local_min_xyz_m" in value
+                }
+                current_robot_snapshot["engineering_clearance"] = clearance_to_objects(projected, objects)
         except (AttributeError, KeyError, RuntimeError) as error:
             current_robot_snapshot = {
                 "available": False,

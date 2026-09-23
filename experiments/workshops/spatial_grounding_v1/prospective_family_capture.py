@@ -413,7 +413,11 @@ def main() -> None:
             cameras = camera_extrinsics(
                 env.scene, ("over_shoulder_left_camera", "wrist_cam", "over_shoulder_right_camera"),
             )
-            collision_geometry = collision_geometry_local_bounds(omni.usd.get_context().get_stage())
+            collision_geometry = collision_geometry_local_bounds(
+                omni.usd.get_context().get_stage(),
+                articulation_path=getattr(getattr(env.scene["robot"], "cfg", None), "prim_path", None),
+                body_names=list(env.scene["robot"].data.body_names),
+            )
             names = manifest["native_import_contract"]["objects_of_interest"]
             object_rows = _capture_object_rows(world, names)
             contacts = _contact_inventory(get_contact_sensors, env.scene)

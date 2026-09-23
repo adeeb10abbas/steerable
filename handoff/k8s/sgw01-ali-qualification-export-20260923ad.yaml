@@ -1,0 +1,104 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-qualification-export-20260923ad
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1200
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: read-only-qualification-verification}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 20
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: export
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              exec /data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python - <<'PY'
+              import base64
+              import gzip
+              import hashlib
+              import json
+              from pathlib import Path
+              import imageio.v3 as iio
+              root = Path("/data/users/ali/sgw-01/qualification/lat-032-20260922ac")
+              result = json.loads((root / "result/qualification.json").read_text())
+              if result["model_request_count"] != 0 or result["behavioral_episode_count"] != 0 or len(result["checks"]) != 6:
+                  raise ValueError("qualification lacks six model-blind checks")
+              def digest(path):
+                  h = hashlib.sha256()
+                  with path.open("rb") as stream:
+                      for block in iter(lambda: stream.read(1024 * 1024), b""):
+                          h.update(block)
+                  return h.hexdigest()
+              def scoped(path):
+                  path = Path(path).resolve()
+                  if not path.is_relative_to(root.resolve()):
+                      raise ValueError("qualification evidence escapes its root")
+                  return path
+              paths = {root / name for name in ("qualification.log", "gpu_selection.json", "gpu_identity.csv", "storage_preflight.json", "result/qualification.json")}
+              verification = []
+              for check in result["checks"]:
+                  trial = root / "result/trials" / f'goal-{check["goal_sign"]:+d}' / f'reset-{check["reset_index"]}'
+                  if check["observed_actions"] != 450 or len(check["per_step_states"]) != 451:
+                      raise ValueError("qualification trial is incomplete")
+                  for name, record in check["files"].items():
+                      path = scoped(trial / name)
+                      if path.stat().st_size != record["bytes"] or digest(path) != record["sha256"]:
+                          raise ValueError(f"trial file hash mismatch: {path}")
+                  states = sorted(trial.glob("state-*.json"))
+                  if len(states) != 451 or len(list(trial.glob("action-*.npy"))) != 450:
+                      raise ValueError("raw trial inventory is incomplete")
+                  for path, expected in zip(states, check["per_step_states"], strict=True):
+                      if json.loads(path.read_text())["state"] != expected:
+                          raise ValueError(f"raw state differs from scored trace: {path}")
+                  video = scoped(check["viewport_video"]["path"])
+                  decoded = sum(1 for _ in iio.imiter(video))
+                  if decoded != 451:
+                      raise ValueError("trial video does not decode all 451 frames")
+                  paths.update((video, trial / "trial.json", trial / "reset.json"))
+                  warmup = check["reset_receipt"]["render_only_warmup"]
+                  warmup_video = scoped(warmup["viewport_video"]["path"])
+                  if digest(warmup_video) != warmup["viewport_video"]["sha256"] or sum(1 for _ in iio.imiter(warmup_video)) != 121:
+                      raise ValueError("reset warmup video verification failed")
+                  paths.add(warmup_video)
+                  verification.append({"goal_sign": check["goal_sign"], "reset_index": check["reset_index"], "verified_trial_files": len(check["files"]), "decoded_trial_frames": decoded, "decoded_warmup_frames": 121, "scripted_status": check["status"]})
+              files = {}
+              for path in sorted(paths):
+                  if path.stat().st_size > 128 * 1024 * 1024:
+                      raise ValueError("export exceeds bounded file size")
+                  raw = path.read_bytes()
+                  files[str(path.relative_to(root))] = {"bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest(), "encoding": "gzip_base64", "data": base64.b64encode(gzip.compress(raw, mtime=0)).decode("ascii")}
+              print(json.dumps({"schema_version": "sgw-01-native-qualification-export-v1", "raw_root": str(root), "files": files, "verification": verification, "model_requests": 0, "allocated_gpus": 0}))
+              PY
+          env:
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+          resources:
+            requests: {cpu: "2", memory: 4Gi}
+            limits: {cpu: "2", memory: 4Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data, readOnly: true}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc, readOnly: true}

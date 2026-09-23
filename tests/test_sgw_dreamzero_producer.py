@@ -44,7 +44,7 @@ class _Backend:
         self.predict_calls.append((observation, prompt, sampling_seed, kwargs))
         return {
             "actions": np.full((24, 8), len(self.predict_calls), dtype=np.float32),
-            "future": np.arange(6, dtype=np.float32),
+            "future": np.arange(6, dtype=np.uint8),
             "session_id": observation["session_id"],
         }
 
@@ -184,6 +184,124 @@ def test_prediction_array_names_do_not_interpret_observation_keys_as_paths(tmp_p
             path = tmp_path / item["path"]
             assert path.parent == tmp_path / "predictions/request-0000-arrays"
             assert path.is_file()
+
+
+def test_dreamzero_future_missing_and_decode_error_are_explicit(tmp_path: Path) -> None:
+    class FutureBackend(_Backend):
+        def __init__(self, result):
+            super().__init__()
+            self.result = result
+
+        def predict(self, observation, prompt, sampling_seed, **kwargs):
+            return {
+                "actions": np.zeros((24, 8), dtype=np.float32),
+                **self.result,
+            }
+
+    cases = [
+        ({"future_status": "not_exposed"}, "not_exposed", False),
+        (
+            {
+                "future_status": "decode_error",
+                "future_latent": np.zeros((1, 16, 3, 44, 80), dtype=np.float32),
+                "future_metadata": {
+                    "decoded": False,
+                    "time_mapping_status": "unmapped",
+                    "decode_error": "synthetic failure",
+                },
+            },
+            "decode_error",
+            True,
+        ),
+    ]
+    for index, (result, status, has_latent) in enumerate(cases):
+        root = tmp_path / str(index)
+        backend = FutureBackend(result)
+        producer = DreamZeroEvidenceProducer(
+            backend,
+            trace_path=root / "trace.jsonl",
+            future_dir=root / "future",
+            attestation_path=root / "attestation.json",
+        )
+        reset = producer.reset({"camera_name": "over_shoulder_left_camera"})
+        producer.predict(_packet(reset["reset_id"], 0, f"r{index}"))
+        record = json.loads((root / "trace.jsonl").read_text())
+        assert record["future_status"] == status
+        assert record["future_metadata"].get("time_mapping_status") == (
+            "unmapped" if has_latent else None
+        )
+        assert ("future_latent_path" in record) is has_latent
+
+
+def test_dreamzero_source_uses_official_vae_decode_boundary() -> None:
+    export = Path(
+        "/Users/SZ5VJY/.copilot/session-state/"
+        "c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/"
+        "sgw-native-d1-ar-server-ak.json"
+    )
+    if not export.exists():
+        pytest.skip("authorized D1 source export is not present")
+    source = json.loads(export.read_text())["files"]["socket_test_optimized_AR.py"]["text"]
+    assert "torch.cat(self.video_across_time, dim=2)" in source
+    assert "action_head.vae.decode(" in source
+    assert 'rearrange(frames, "B C T H W -> B T H W C")' in source
+    assert "((frames.float() + 1) * 127.5).clip(0, 255)" in source
+
+
+def test_dreamzero_synthetic_official_decode_retains_rgb_and_latent() -> None:
+    class Tensor:
+        def __init__(self, value):
+            self.value = np.asarray(value)
+
+        def permute(self, *order):
+            return Tensor(np.transpose(self.value, order))
+
+        def __getitem__(self, item):
+            return Tensor(self.value[item])
+
+        def float(self):
+            return self
+
+        def __add__(self, value):
+            return Tensor(self.value + value)
+
+        def __mul__(self, value):
+            return Tensor(self.value * value)
+
+        def clamp(self, low, high):
+            return Tensor(np.clip(self.value, low, high))
+
+        def to(self, device):
+            return self
+
+        def cpu(self):
+            return self
+
+        def numpy(self):
+            return self.value
+
+        def detach(self):
+            return self
+
+    class VAE:
+        def decode(self, latent, **kwargs):
+            assert kwargs["tiled"] is False
+            return Tensor(np.zeros((1, 3, 2, 2, 2), dtype=np.float32))
+
+    head = types.SimpleNamespace(
+        vae=VAE(), tiled=False, tile_size_height=34, tile_size_width=34,
+        tile_stride_height=18, tile_stride_width=16,
+    )
+    policy = types.SimpleNamespace(
+        video_across_time=[Tensor(np.zeros((1, 16, 1, 2, 2), dtype=np.float32))],
+        _policy=types.SimpleNamespace(trained_model=types.SimpleNamespace(action_head=head)),
+    )
+    decoded = dreamzero_backend.decode_official_future(policy)
+    assert decoded["future_status"] == "decoded_unmapped"
+    assert decoded["future"].dtype == np.uint8
+    assert decoded["future"].shape == (2, 2, 2, 3)
+    assert decoded["future_metadata"]["time_mapping_status"] == "unmapped"
+    assert decoded["future_latent"].value.shape == (1, 16, 1, 2, 2)
 
 
 def test_dreamzero_http_watchdog_fails_when_rank_dies(tmp_path: Path) -> None:

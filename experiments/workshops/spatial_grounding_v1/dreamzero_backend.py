@@ -286,9 +286,8 @@ class OfficialDreamZero14BBackend:
         native_observation["prompt"] = prompt
         actions = np.asarray(self.policy.infer(native_observation), dtype=np.float32)
         output: dict[str, Any] = {"actions": actions}
-        futures = getattr(self.policy, "video_across_time", [])
-        if futures:
-            output["future"] = futures[-1]
+        future = decode_official_future(self.policy)
+        output.update(future)
         session_id = observation.get("session_id")
         if isinstance(session_id, str):
             output["session_id"] = session_id
@@ -297,6 +296,55 @@ class OfficialDreamZero14BBackend:
     def reset(self, session_id: str | None) -> Mapping[str, Any]:
         self.policy.reset({"session_id": session_id})
         return {"evicted_session_id": session_id, "route": "ARDroidRoboarenaPolicy.reset"}
+
+
+def decode_official_future(policy: Any) -> dict[str, Any]:
+    """Decode the official accumulated latent stream without guessing timing."""
+    latents = list(getattr(policy, "video_across_time", []) or [])
+    if not latents:
+        return {"future_status": "not_exposed", "future": None, "future_latent": None}
+    try:
+        latent = latents[0]
+        if len(latents) > 1:
+            import torch
+
+            latent = torch.cat(latents, dim=2)
+        action_head = policy._policy.trained_model.action_head
+        decoded = action_head.vae.decode(
+            latent,
+            tiled=action_head.tiled,
+            tile_size=(action_head.tile_size_height, action_head.tile_size_width),
+            tile_stride=(action_head.tile_stride_height, action_head.tile_stride_width),
+        )
+        frames = decoded.permute(0, 2, 3, 4, 1)[0]
+        frames = ((frames.float() + 1) * 127.5).clamp(0, 255).to("cpu").numpy().astype(np.uint8)
+        latent_cpu = latent.detach().to("cpu")
+        return {
+            "future_status": "decoded_unmapped",
+            "future": frames,
+            "future_latent": latent_cpu,
+            "future_metadata": {
+                "decoded": True,
+                "future_encoding": "decoded_rgb_uint8",
+                "latent_encoding": "native_latent_tensor_cpu",
+                "time_mapping_status": "unmapped",
+            },
+        }
+    except Exception as exc:
+        latent = latents[-1]
+        if hasattr(latent, "detach"):
+            latent = latent.detach().to("cpu")
+        return {
+            "future_status": "decode_error",
+            "future": None,
+            "future_latent": latent,
+            "future_metadata": {
+                "decoded": False,
+                "latent_encoding": "native_latent_tensor_cpu",
+                "time_mapping_status": "unmapped",
+                "decode_error": f"{type(exc).__name__}: {exc}",
+            },
+        }
 
 
 def build_official_14b_dreamzero_backend(

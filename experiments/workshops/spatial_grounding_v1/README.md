@@ -419,9 +419,14 @@ the action-head source constructs `num_inference_steps=16`, `seed=1140`, and
 the AR unnormalizer and wrapper expose 8-dimensional joint-plus-gripper
 actions. The binding therefore observes the constructed action-head fields
 after construction, retains padded width as native metadata, and validates the
-actual returned action shape rather than overlaying protocol values. Latent
-futures remain latents; decoded RGB evidence requires the official decoder
-path and is never fabricated.
+actual returned action shape rather than overlaying protocol values. The
+official AR route decodes accumulated latent chunks only through
+`trained_model.action_head.vae.decode` with its native tiling parameters. The
+producer retains separate decoded-`uint8` RGB and CPU-latent artifacts with
+independent hashes and encodings. Missing futures are `not_exposed`; decode
+failures retain the latent and record `decode_error`. Decoded futures currently
+carry `time_mapping_status=unmapped`, so they are unscorable until the released
+interface proves physical target time and action-prefix mapping.
 
 For release wiring, set `SGW01_D1_HTTP_URL` to the loopback URL owned by
 `dreamzero_wrapper_entrypoint.py`. The official RoboLab client class remains

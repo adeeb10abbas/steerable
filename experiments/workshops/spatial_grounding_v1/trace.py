@@ -72,12 +72,25 @@ def read_trace_sidecar(
         value = np.load(artifact, allow_pickle=False)
         if record.get("future_status") == "latent_only_retained":
             record["future_latents"] = value
+        elif record.get("future_status") == "decoded_unmapped":
+            if record.get("future_encoding") != "decoded_rgb_uint8":
+                raise AdapterError("native future artifact is not declared decoded RGB")
+            record["future"] = value
         elif record.get("future_status") == "exposed_and_retained":
             if str(record.get("future_encoding", "")).startswith("native_latent"):
                 raise AdapterError("native latent evidence cannot be treated as decoded future")
             record["future"] = value
         else:
             raise AdapterError("native retained future has no recognized evidence classification")
-    elif record.get("future_status") != "not_exposed":
+    latent_path = record.get("future_latent_path")
+    if latent_path:
+        latent_artifact = Path(str(latent_path))
+        if (
+            not latent_artifact.is_file()
+            or record.get("future_latent_sha256") != _sha256(latent_artifact)
+        ):
+            raise AdapterError("native future latent artifact is missing or hash-mismatched")
+        record["future_latent"] = np.load(latent_artifact, allow_pickle=False)
+    elif record.get("future_status") not in {"not_exposed", "decode_error"}:
         raise AdapterError("native trace must explicitly classify missing future evidence")
     return record

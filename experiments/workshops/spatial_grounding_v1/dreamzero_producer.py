@@ -178,35 +178,51 @@ class DreamZeroEvidenceProducer:
                 "actions_hash_domain": "raw_server_actions",
                 "provenance": "sgw_wrapper_generated",
             }
-            if future is None:
-                record["future_status"] = "not_exposed"
-            else:
+            future_metadata = result.get("future_metadata", {})
+            if not isinstance(future_metadata, Mapping):
+                raise AdapterError("D1 future metadata must be a mapping")
+            record["future_metadata"] = dict(future_metadata)
+            future_status = str(
+                result.get("future_status", "decoded_unmapped" if future is not None else "not_exposed")
+            )
+            record["future_status"] = future_status
+            if future is not None:
                 if hasattr(future, "detach"):
-                    future_cpu = future.detach().cpu()
-                    if str(future_cpu.dtype) == "torch.bfloat16":
-                        future_cpu = future_cpu.float()
-                    future_array = future_cpu.numpy()
-                    future_encoding = "native_latent_tensor_cpu"
+                    future_array = future.detach().cpu().numpy()
                 else:
                     future_array = np.asarray(future)
-                    future_encoding = "native_latent_array"
-                if (
-                    future_array.ndim < 1
-                    or not np.issubdtype(future_array.dtype, np.number)
-                    or not np.isfinite(future_array).all()
-                ):
-                    raise AdapterError("D1 native future must be a finite numeric array")
+                if future_array.ndim < 1 or future_array.dtype != np.uint8:
+                    raise AdapterError("D1 decoded future must be a non-empty uint8 array")
                 self.future_dir.mkdir(parents=True, exist_ok=True)
                 path = self.future_dir / f"{wrapper_request_id}.npy"
                 np.save(path, future_array, allow_pickle=False)
                 with path.open("rb") as handle:
                     os.fsync(handle.fileno())
                 record.update({
-                    "future_status": "latent_only_retained",
+                    "future_status": "decoded_unmapped",
                     "future_path": str(path),
                     "future_shape": list(future_array.shape),
                     "future_sha256": _sha(path.read_bytes()),
-                    "future_encoding": future_encoding,
+                    "future_encoding": "decoded_rgb_uint8",
+                })
+            latent = result.get("future_latent")
+            if latent is not None:
+                if hasattr(latent, "detach"):
+                    latent_array = latent.detach().cpu().numpy()
+                else:
+                    latent_array = np.asarray(latent)
+                if latent_array.ndim < 1:
+                    raise AdapterError("D1 native future latent must be an array")
+                self.future_dir.mkdir(parents=True, exist_ok=True)
+                latent_path = self.future_dir / f"{wrapper_request_id}.latent.npy"
+                np.save(latent_path, latent_array, allow_pickle=False)
+                with latent_path.open("rb") as handle:
+                    os.fsync(handle.fileno())
+                record.update({
+                    "future_latent_path": str(latent_path),
+                    "future_latent_shape": list(latent_array.shape),
+                    "future_latent_sha256": _sha(latent_path.read_bytes()),
+                    "future_latent_encoding": "native_latent_array_cpu",
                 })
             self.trace_path.parent.mkdir(parents=True, exist_ok=True)
             with self.trace_path.open("a", encoding="utf-8") as handle:

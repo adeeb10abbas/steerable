@@ -1,0 +1,32 @@
+{
+  "schema_version": "sgw-01-zero-request-recovery-placement-v1",
+  "status": "prospective_return_to_validated_prebound_admission_on_drained_owned_lane",
+  "registration_id": "SGW-N3-FIXED-20260923CW",
+  "prior_job": {
+    "name": "sgw01-ali-n3-fixedinput-20260923de",
+    "uid": "ab13833e-d808-48e6-ba23-4052dcc3268d",
+    "pod_created": false,
+    "reason": "Priority admission rejects explicit Never because its unnamed class computes PreemptLowerPriority. Reading configured priority classes is forbidden; no class or cluster policy was changed.",
+    "retirement": "Suspend this task-owned zero-Pod Job before replacement so it cannot create a competing owner."
+  },
+  "replacement": {
+    "job": "sgw01-ali-n3-fixedinput-20260923df",
+    "manifest": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923df.yaml",
+    "generated_from": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923dc.yaml",
+    "json_patch": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923df-placement.json",
+    "node": "dcwipphhgc185.edc.nam.gm.com",
+    "nonpreemption": "Use the already validated pre-bound Pod path with a dedicated unscheduled schedulerName and priority0. No scheduler chooses victims; kubelet admission may reject if no device is available.",
+    "lane": "Original BT rank0 node; that owned worker completed its current candidate, acknowledged its boundary and terminated at19:25:58Z.",
+    "requested_gpus": 1,
+    "automatic_retries": 0,
+    "deadline_seconds": 7200,
+    "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-df",
+    "exclusive_successor_claim_unchanged": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/request-owner/successor",
+    "native_source_inputs_config_and_six_request_limit": "unchanged",
+    "actual_idle_storage_and_prior_owner_gates": "unchanged"
+  },
+  "model_requests_at_registration": 0,
+  "additional_request_allocation": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false
+}

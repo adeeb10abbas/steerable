@@ -89,3 +89,38 @@ def test_d1_rejects_non_official_response():
     adapter.reset(reset_fn=reset_evidence, reset_id="reset-1", camera_id="cam-1")
     with pytest.raises(AdapterError):
         adapter.predict({}, PROMPT, action_step_start=0)
+
+
+@pytest.mark.parametrize("status,decoded", [
+    ("decoded_unmapped", True),
+    ("decode_error", False),
+    ("latent_only_retained", False),
+])
+def test_d1_preserves_native_future_classification(status, decoded):
+    def transport(request):
+        response = make_transport("D1", bad={"future": {"frames": 1} if decoded else None})(request)
+        response["native_trace"] = {**response, "future_status": status}
+        return response
+
+    adapter = DreamZeroPolicyAdapter(cell_id="cell-1", prompt=PROMPT, transport=transport)
+    adapter.reset(reset_fn=reset_evidence, reset_id="reset-1", camera_id="cam-1")
+    prediction = adapter.predict({}, PROMPT, action_step_start=0)
+    assert prediction.future_status == status
+    assert prediction.decoded is decoded
+
+
+@pytest.mark.parametrize("status,future", [
+    ("decoded_unmapped", None),
+    ("decode_error", {"frames": 1}),
+    ("latent_only_retained", {"frames": 1}),
+])
+def test_d1_rejects_contradictory_native_future_classification(status, future):
+    def transport(request):
+        response = make_transport("D1", bad={"future": future})(request)
+        response["native_trace"] = {**response, "future_status": status}
+        return response
+
+    adapter = DreamZeroPolicyAdapter(cell_id="cell-1", prompt=PROMPT, transport=transport)
+    adapter.reset(reset_fn=reset_evidence, reset_id="reset-1", camera_id="cam-1")
+    with pytest.raises(AdapterError, match="contradicts"):
+        adapter.predict({}, PROMPT, action_step_start=0)

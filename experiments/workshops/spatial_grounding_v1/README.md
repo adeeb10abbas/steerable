@@ -375,7 +375,7 @@ The image utility SHA-256 is
 Physical reset, wrapper reset and native session IDs remain distinct. Server
 action hashes cover the raw chunk, while executed actions retain the official
 gripper conversion. Registered sampling seeds are recorded separately from
-the effective native seed. Retained latent tensors are explicitly
+the effective native seed. Historical latent-only traces remain explicitly
 `latent_only_retained`, never decoded predictions or scored zeros. Native
 distributed-worker startup, official video decode/time mapping and live
 runtime release still require qualification.
@@ -430,7 +430,9 @@ accumulated latent stream and record `decode_error`. BF16 latents are widened
 losslessly to float32 storage with their original dtype recorded. Decoded
 futures currently carry `time_mapping_status=unmapped`, so they are unscorable
 until the released interface proves physical target time and action-prefix
-mapping.
+mapping. The adapter and episode recorder preserve `decoded_unmapped` and
+`decode_error` rather than relabeling them as mapped predictions or absent
+evidence.
 
 For release wiring, set `SGW01_D1_HTTP_URL` to the loopback URL owned by
 `dreamzero_wrapper_entrypoint.py`. The official RoboLab client class remains

@@ -79,7 +79,7 @@ def test_dreamzero_owned_http_producer_records_actions_future_and_native_reset(t
     first = producer.predict(_packet(reset["reset_id"], 0, "r0"))
     second = producer.predict(_packet(reset["reset_id"], 1, "r1"))
     assert np.asarray(first["actions"]).shape == (24, 8)
-    assert second["future_status"] == "latent_only_retained"
+    assert second["future_status"] == "decoded_unmapped"
     assert backend.predict_calls[0][3] == {
         "action_guidance": 1,
         "video_guidance": 5,
@@ -90,7 +90,8 @@ def test_dreamzero_owned_http_producer_records_actions_future_and_native_reset(t
     records = [json.loads(line) for line in (tmp_path / "trace.jsonl").read_text().splitlines()]
     assert len(records) == 2
     assert records[0]["actions_shape"] == [24, 8]
-    assert records[0]["future_status"] == "latent_only_retained"
+    assert records[0]["future_status"] == "decoded_unmapped"
+    assert records[0]["future_metadata"]["time_mapping_status"] == "unmapped"
     assert records[0]["reset_id"] == "physical-reset"
     assert records[0]["wrapper_reset_id"] == reset["reset_id"]
     assert (tmp_path / "future" / f"{records[0]['wrapper_request_id']}.npy").is_file()
@@ -161,6 +162,18 @@ def test_latent_trace_stays_undecoded_and_raw_hash_is_checked(tmp_path: Path, mo
     packet = _packet(reset["reset_id"], 0, "r0")
     result = producer.predict(packet)
     response = {"raw_actions": result["actions"], "actions": np.zeros((24, 8))}
+    saved = json.loads((tmp_path / "trace.jsonl").read_text())
+    path = Path(saved["future_path"])
+    latent = np.arange(6, dtype=np.float32)
+    np.save(path, latent, allow_pickle=False)
+    saved.update({
+        "future_status": "latent_only_retained",
+        "future_encoding": "native_latent_array",
+        "future_shape": list(latent.shape),
+        "future_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+    })
+    saved.pop("future_metadata")
+    (tmp_path / "trace.jsonl").write_text(json.dumps(saved) + "\n")
     record = read_trace_sidecar(request=packet, response=response)
     assert "future_latents" in record and "future" not in record
     with pytest.raises(AdapterError, match="hash differs"):
@@ -704,10 +717,11 @@ def test_exported_official_client_runs_owned_http_cache_postprocess_and_reset(
         np.testing.assert_array_equal(first.executable_actions[:, -1], [0, 1] * 4)
         assert np.all(second.executable_actions[:, :7] == 2)
         assert first.future is None and first.decoded is False
-        assert first.future_status == "latent_only_retained"
+        assert first.future_status == second.future_status == "decode_error"
         assert first.raw_response["native_trace"]["sampling_seed"] == 8301
         assert first.raw_response["native_trace"]["effective_noise_seed"] == 1140
-        assert first.raw_response["native_trace"]["future_latents"].shape == (2, 3)
+        assert first.raw_response["native_trace"]["future_latent"].shape == (2, 3)
+        assert len(second.raw_response["native_trace"]["future_latent_chunks"]) == 2
         session = policy.calls[0]["session_id"]
         assert policy.calls[1]["session_id"] == session
         packed_image = policy.calls[0]["observation/exterior_image_0_left"]
@@ -718,9 +732,9 @@ def test_exported_official_client_runs_owned_http_cache_postprocess_and_reset(
         recorder.path = tmp_path / "episode"
         recorder.prediction(first)
         recorded = json.loads((recorder.path / "predictions/request-0000.json").read_text())
-        assert recorded["future_status"] == "latent_only_retained"
+        assert recorded["future_status"] == "decode_error"
         assert "future" not in recorded["raw_response"]["native_trace"]
-        assert (recorder.path / recorded["raw_response"]["native_trace"]["future_latents"]["path"]).is_file()
+        assert (recorder.path / recorded["raw_response"]["native_trace"]["future_latent"]["path"]).is_file()
         transport.reset()
         assert transport.client._chunks == transport.client._counters == transport.client._env_session_id == {}
         assert policy.resets[-1] == {"session_id": session}

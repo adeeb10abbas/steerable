@@ -266,9 +266,12 @@ class _BaseAdapter:
         if future is None and isinstance(native_trace, Mapping):
             future = native_trace.get("future")
         future_status = "exposed_and_retained" if future is not None else "not_exposed"
-        if future is None and isinstance(native_trace, Mapping):
-            if native_trace.get("future_status") == "latent_only_retained":
-                future_status = "latent_only_retained"
+        if isinstance(native_trace, Mapping):
+            native_status = native_trace.get("future_status")
+            if native_status in {"decoded_unmapped", "decode_error", "latent_only_retained"}:
+                if (native_status == "decoded_unmapped") != (future is not None):
+                    raise AdapterError("native future status contradicts decoded artifact availability")
+                future_status = native_status
         executed_action_count = action_step_start + execute_count
         if action_step_start >= executed_action_count:
             raise AdapterError("prediction target_action_step is not before executed prefix")

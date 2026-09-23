@@ -20,11 +20,15 @@ def _payload():
     return {
         "attempts": [
             {"stages": {"canonical_carry": {"fresh_reset": {"objects": {
-                "rubiks_cube": {"position_world_m": [1, 2, 3]},
+                "a/b~c": {"position_world_m": [1.25, 2.5, 3.75]},
             }, "e004_full_reset_comparison": {"passed": True}},
             "candidate_state": {"objects": {
                 "rubiks_cube": {"position_world_m": [4, 5, 6]},
             }}}}},
+            {"stages": {"canonical_carry": {"fresh_reset": {"objects": {
+                "second": {"position_world_m": [7.125, 8.25, 9.5]},
+            }, "e004_full_reset_comparison": {"passed": True}},
+            "candidate_state": {"objects": {}}}}},
         ],
         "execution_evidence": {
             "last_reference_bounds_evidence": {"center_world_m": [0, 0, 0]},
@@ -42,6 +46,14 @@ def test_nested_arrays_and_pointer_groups(tmp_path):
     assert result["fresh_reset_objects"][0]["json_pointer"].startswith(
         "/attempts/0/stages/canonical_carry/fresh_reset/objects/"
     )
+    assert any(
+        row["json_pointer"].endswith("/a~1b~0c")
+        for row in result["fresh_reset_objects"]
+    )
+    assert any(
+        row["json_pointer"].startswith("/attempts/1/")
+        for row in result["fresh_reset_objects"]
+    )
     assert result["full_reset_comparisons"][0]["value"]["passed"] is True
     assert result["reference_bounds"][0]["value"]["center_world_m"] == [0, 0, 0]
     assert result["missing_pointer_groups"] == []
@@ -50,9 +62,11 @@ def test_nested_arrays_and_pointer_groups(tmp_path):
 def test_tail_mutation_is_rejected(tmp_path):
     path = tmp_path / "state.json"
     digest, size = _write(path, _payload())
-    path.write_bytes(path.read_bytes() + b" ")
-    with pytest.raises(ValueError, match="size mismatch"):
-        verify_source(path, digest, size)
+    mutated = bytearray(path.read_bytes())
+    mutated[-1] = ord(" ")
+    path.write_bytes(mutated)
+    with pytest.raises(ValueError, match="sha256 mismatch"):
+        extract_state_payload(path, expected_sha256=digest, expected_bytes=size)
 
 
 def test_wrong_source_and_limits_fail_closed(tmp_path):

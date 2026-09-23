@@ -1,0 +1,177 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-lat-batch-20260923ak
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01, app.kubernetes.io/managed-by: ali-research}
+  annotations:
+    sgw-plan-sha256: f5007f84d26f27946b38f2053ca7d640b56e50e92ae3d09a0261feb45f88275e
+spec:
+  completionMode: Indexed
+  completions: 39
+  parallelism: 4
+  backoffLimitPerIndex: 0
+  maxFailedIndexes: 0
+  podReplacementPolicy: Failed
+  activeDeadlineSeconds: 18000
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: finite-model-blind-lat-qualification}
+    spec:
+      restartPolicy: Never
+      activeDeadlineSeconds: 3600
+      terminationGracePeriodSeconds: 180
+      automountServiceAccountToken: false
+      nodeSelector:
+        node-role.kubernetes.io/worker-gpu: ""
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: nvidia.com/gpu.product
+                    operator: In
+                    values: [NVIDIA-A40]
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: workspace
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              STUDY=/data/users/ali/sgw-01/source/f177db3-ah
+              ROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              PREFLIGHT=/data/users/ali/sgw-01/preflight/a40-20260922e
+              PROPOSALS="$STUDY/artifacts/workshops/spatial_grounding_v1/proposals/lat-20260922.json"
+              CALIBRATION="$STUDY/artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json"
+              test "$(sha256sum "$PROPOSALS" | awk '{print $1}')" = 5b47860f6eac16e318515534a918d9460677b58d6174b4b76a29f7cc6be34eb9
+              test "$(sha256sum "$CALIBRATION" | awk '{print $1}')" = 107442ccca01c4ac44ec6e1cb9674d51dbcd8663288a851dc54fa91a124f93d7
+              CANDIDATE=$("$PY" - "$PROPOSALS" "$JOB_COMPLETION_INDEX" <<'PY'
+              import json
+              import re
+              import sys
+              from pathlib import Path
+              value = json.loads(Path(sys.argv[1]).read_text())
+              rows = {row["candidate_id"]: row for row in value["candidates"]}
+              names = [name for name in value["qualification_order"] if rows[name]["metadata"]["geometric_screen_status"] == "passed" and name != "LAT-CANDIDATE-032"]
+              index = int(sys.argv[2])
+              if len(rows) != 100 or len(names) != 39 or not 0 <= index < 39:
+                  raise ValueError("batch differs from the frozen remaining 39-candidate plan")
+              if not re.fullmatch(r"LAT-CANDIDATE-\d{3}", names[index]):
+                  raise ValueError("invalid frozen candidate identifier")
+              print(names[index])
+              PY
+              )
+              BASE=/data/users/ali/sgw-01/qualification/lat-batch-20260923ak
+              mkdir -p "$BASE"
+              OUT="$BASE/$JOB_COMPLETION_INDEX-$CANDIDATE"
+              mkdir "$OUT"
+              exec > >(tee "$OUT/qualification.log") 2>&1
+              export OUT CANDIDATE
+              "$PY" - <<'PY'
+              from datetime import datetime, timezone
+              import json
+              import os
+              from pathlib import Path
+              import shutil
+              free = shutil.disk_usage(os.environ["OUT"]).free
+              required = (100 + 39 * 16) * 1024**3
+              receipt = {
+                  "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "job": "sgw01-ali-lat-batch-20260923ak", "pod": os.environ["POD_NAME"], "pod_uid": os.environ["POD_UID"],
+                  "index": int(os.environ["JOB_COMPLETION_INDEX"]), "candidate_id": os.environ["CANDIDATE"],
+                  "plan_sha256": "f5007f84d26f27946b38f2053ca7d640b56e50e92ae3d09a0261feb45f88275e",
+                  "free_bytes": free, "required_free_bytes": required,
+                  "model_requests": 0, "behavioral_episodes": 0,
+                  "status": "passed_conservative_batch_space_check" if free >= required else "insufficient_space",
+              }
+              with (Path(os.environ["OUT"]) / "storage_preflight.json").open("x") as stream:
+                  json.dump(receipt, stream, indent=2, sort_keys=True)
+                  stream.write("\n")
+              if free < required:
+                  raise RuntimeError("need 100 GiB reserve plus 16 GiB for each of all 39 candidates")
+              PY
+              test "$(sha256sum "$PREFLIGHT/renderer.json" | awk '{print $1}')" = e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5
+              test "$(sha256sum "$PREFLIGHT/assets.json" | awk '{print $1}')" = 3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806
+              test "$(git -C "$STUDY" rev-parse HEAD)" = f177db308d34687a30b18f388519f999fc88e483
+              test -z "$(git -C "$STUDY" status --porcelain)"
+              test "$(git -C "$ROBOLAB" rev-parse HEAD)" = 0aef241fb088ca21bb4ebd24448940ed56620d17
+              test -z "$(git -C "$ROBOLAB" status --porcelain --untracked-files=no)"
+              export XDG_CACHE_HOME="$OUT/cache/xdg" WARP_CACHE_PATH="$OUT/cache/warp" MPLCONFIGDIR="$OUT/cache/matplotlib"
+              mkdir -p "$HOME/.cache" "$XDG_CACHE_HOME" "$WARP_CACHE_PATH" "$MPLCONFIGDIR" "$OUT/kit"
+              cd "$STUDY"
+              "$PY" tools/validate_vla_wam_v3_protocol.py --quiet
+              "$PY" tools/validate_vla_wam_v2_protocol.py > "$OUT/v2_validation.json"
+              export PYTHONPATH="$STUDY:$ROBOLAB"
+              export CUDA_VISIBLE_DEVICES
+              CUDA_VISIBLE_DEVICES=$("$PY" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output "$OUT/gpu_selection.json")
+              mkdir -p /data/users/ali/sgw-01/locks
+              exec 9>"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock"
+              if ! flock --nonblock 9; then
+                echo "Exclusive study GPU lock is unavailable: $CUDA_VISIBLE_DEVICES" >&2
+                exit 1
+              fi
+              echo "Verified idle allocated GPU: $CUDA_VISIBLE_DEVICES; candidate: $CANDIDATE"
+              nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total,memory.used,utilization.gpu --format=csv,noheader | tee "$OUT/gpu_identity.csv"
+              cd "$ROBOLAB"
+              exec "$PY" -m experiments.workshops.spatial_grounding_v1.model_blind_qualification --family LAT --proposal-file "$PROPOSALS" --candidate-id "$CANDIDATE" --output-root "$OUT/result" --bridge-factory experiments.workshops.spatial_grounding_v1.robolab_lat_qualification:create_bridge --controller-factory experiments.workshops.spatial_grounding_v1.robolab_lat_qualification:create_controller --controller-calibration "$CALIBRATION" --robolab-root "$ROBOLAB" --assets-manifest "$PREFLIGHT/assets.json" --headless --num-envs 1 --device cuda:0 --renderer realtime --rendering-type balanced --rendering_mode balanced --kit_args="--portable-root=$OUT/kit --/rtx/verifyDriverVersion/enabled=false"
+          env:
+            - name: JOB_COMPLETION_INDEX
+              valueFrom:
+                fieldRef: {fieldPath: "metadata.annotations['batch.kubernetes.io/job-completion-index']"}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef: {fieldPath: metadata.name}
+            - name: POD_UID
+              valueFrom:
+                fieldRef: {fieldPath: metadata.uid}
+            - {name: HOME, value: /home/ali}
+            - {name: USER, value: ali}
+            - {name: LOGNAME, value: ali}
+            - {name: TMPDIR, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: NVIDIA_DRIVER_CAPABILITIES, value: "compute,utility,graphics,display"}
+            - {name: OMNI_KIT_ACCEPT_EULA, value: "YES"}
+            - {name: ACCEPT_EULA, value: "Y"}
+            - {name: VK_ICD_FILENAMES, value: /etc/vulkan/icd.d/nvidia_icd.json}
+            - name: LD_LIBRARY_PATH
+              value: /data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu
+          resources:
+            requests: {cpu: "16", memory: 64Gi, nvidia.com/gpu: "1"}
+            limits: {cpu: "32", memory: 128Gi, nvidia.com/gpu: "1"}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: dshm, mountPath: /dev/shm}
+            - {name: tmp, mountPath: /tmp}
+            - {name: vartmp, mountPath: /var/tmp}
+            - {name: home, mountPath: /home/ali}
+            - {name: userdb, mountPath: /etc/passwd, subPath: passwd, readOnly: true}
+            - {name: userdb, mountPath: /etc/group, subPath: group, readOnly: true}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: dshm
+          emptyDir: {medium: Memory, sizeLimit: 32Gi}
+        - name: tmp
+          emptyDir: {}
+        - name: vartmp
+          emptyDir: {}
+        - name: home
+          emptyDir: {}
+        - name: userdb
+          configMap: {name: 211247-ali-b200-1gpu-userdb}

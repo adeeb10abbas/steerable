@@ -1,6 +1,6 @@
 # SGW-01 status
 
-**Gripper geometry is measured and a corrected static controller is bound. Its physical qualification is pending; learned-policy episodes remain at zero.**
+**The corrected controller passed five of six physical checks; candidate 032 remains rejected under the frozen stability limit. The remaining 39 LAT candidates are registered; learned-policy episodes remain at zero.**
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
@@ -277,6 +277,29 @@ Seven 20-action phases plus 310 retreat-and-settle actions retain the exact
 remain unchanged. This corrected recipe has not yet passed physical checks.
 The complete local suite has 124 passing checks and one Linux-only skip.
 
+Corrected Job ai completed at `2026-09-23T01:13:51Z`; CPU verifier aj checked
+all 10,824 trial files, all reset comparisons and all 3,432 frames in twelve
+videos. All six trials achieved pickup at action 62 and detached requested-side
+placement with bowl drift below 0.374 mm. Five checks passed. Positive reset 2
+exceeded the unchanged angular-speed limit in the terminal window:
+`0.2013388084 rad/s` versus the strict `<0.2 rad/s` requirement. **Candidate 032
+is rejected.** Its original ac failures and this complete corrected attempt
+remain evidence; no threshold is relaxed and ai will not be repeated.
+
+**Disclosed operational amendment SGW-ENG-004:** test the other 39 geometrically
+eligible candidates from the same frozen 100-pose file with the identical
+corrected controller. Batch ak is finite, uses at most four single-GPU
+simulators and zero model workers, and retains six checks/videos per candidate.
+Every pod rechecks idle hardware, obtains an exclusive GPU lock and has a
+one-hour deadline; the whole batch has a five-hour deadline and zero retries.
+The first technical failure stops intake and preserves partial evidence.
+The 60 geometric rejections remain counted and are never refilled.
+
+Historical layout coverage is still incomplete. The new diagnostic comparator
+cannot release a family based on an arbitrary subset, empty registry or
+unverified hash strings. Its source inventory identifies the precise missing
+historical root/center bindings; model-family release remains blocked.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure
@@ -306,12 +329,10 @@ and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Corrected six-trial Job `sgw01-ali-lat-qualification-20260923ai` started at
-`2026-09-23T00:57:20Z` on one freshly verified-idle A40, with a 3,600-second
-deadline and no automatic retry. Collect its terminal result and run the
-registered read-only verifier aj before claiming physical qualification.
-Preserve ac's six rejections and all 100 candidate poses; no learned-policy
-release exists.
+Launch registered finite Job `sgw01-ali-lat-batch-20260923ak` once after
+checking that all earlier study GPU Jobs are terminal. Verify its actual
+GPU identities and durable per-index progress. Preserve all earlier outcomes
+and all 100 candidate poses; no learned-policy release exists.
 Do not rerun completed captures or overwrite evidence.
 **Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**

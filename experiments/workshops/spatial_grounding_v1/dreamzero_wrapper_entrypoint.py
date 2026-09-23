@@ -9,10 +9,10 @@ the reviewed native binding is supplied.
 from __future__ import annotations
 
 import asyncio
-import datetime
 import hashlib
 import importlib
 import json
+import logging
 import os
 from pathlib import Path
 import sys
@@ -21,6 +21,7 @@ from .dreamzero_backend import (
     _find_action_head,
     _observe_action_head,
     build_pinned_dreamzero_backend,
+    collective_timeout,
     configure_official_startup,
     verify_pinned_dreamzero_prerequisites,
 )
@@ -56,6 +57,20 @@ def _write_ready(payload: dict[str, object]) -> None:
         os.fsync(stream.fileno())
 
 
+def _install_bounded_init_process_group(module: object, timeout: object) -> None:
+    original = module.dist.init_process_group
+
+    def bounded_init_process_group(*args: object, **kwargs: object) -> object:
+        kwargs.setdefault("timeout", timeout)
+        return original(*args, **kwargs)
+
+    module.dist.init_process_group = bounded_init_process_group
+
+
+def _new_bounded_signal_group(module: object, timeout: object) -> object:
+    return module.dist.new_group(backend="gloo", timeout=timeout)
+
+
 def run_native_rank_worker() -> None:
     """Run the exact exported non-zero-rank conditional worker loop."""
     if os.environ.get("RANK") == "0":
@@ -71,11 +86,10 @@ def run_native_rank_worker() -> None:
         origin.relative_to(source_root)
     except ValueError as exc:
         raise RuntimeError("D1 rank worker imported AR source outside pinned checkout") from exc
+    timeout = collective_timeout()
+    _install_bounded_init_process_group(module, timeout)
     device_mesh = module.init_mesh()
-    signal_group = module.dist.new_group(
-        backend="gloo",
-        timeout=datetime.timedelta(seconds=int(os.environ.get("SGW01_D1_COLLECTIVE_TIMEOUT", "50000"))),
-    )
+    signal_group = _new_bounded_signal_group(module, timeout)
     policy = module.GrootSimPolicy(
         embodiment_tag=module.EmbodimentTag("oxe_droid"),
         model_path=model_path,
@@ -103,14 +117,28 @@ def run_native_rank_worker() -> None:
         "pid": os.getpid(),
         "start_time": _proc_start_time(os.getpid()),
         "run_nonce": os.environ["SGW01_D1_RUN_NONCE"],
-        "source_commit": os.environ["SGW01_D1_SOURCE_COMMIT"],
-        "checkpoint_revision": os.environ["SGW01_D1_CHECKPOINT_REVISION"],
+        "source_commit": identity["source_commit"],
+        "checkpoint_revision": identity["checkpoint_revision"],
         "native_config": native_config,
         "native_config_sha256": hashlib.sha256(
             (json.dumps(native_config, sort_keys=True, separators=(",", ":")) + "\n").encode()
         ).hexdigest(),
     })
-    asyncio.run(server._worker_loop())
+    worker_errors: list[str] = []
+
+    class WorkerErrorHandler(logging.Handler):
+        def emit(self, record: logging.LogRecord) -> None:
+            if record.getMessage().startswith("Worker loop error"):
+                worker_errors.append(record.getMessage())
+
+    error_handler = WorkerErrorHandler()
+    logging.getLogger().addHandler(error_handler)
+    try:
+        asyncio.run(server._worker_loop())
+    finally:
+        logging.getLogger().removeHandler(error_handler)
+    if worker_errors:
+        raise RuntimeError(worker_errors[-1])
 
 
 def main() -> None:
@@ -124,7 +152,7 @@ def main() -> None:
     if host not in {"127.0.0.1", "localhost", "::1"}:
         raise RuntimeError("SGW01 D1 HTTP host must be loopback")
     port = int(_required("SGW01_D1_PORT"))
-    verify_pinned_dreamzero_prerequisites()
+    identity = verify_pinned_dreamzero_prerequisites()
     worker_spec = os.environ.get("SGW01_D1_RANK_WORKER_ARGV", "").strip()
     if not worker_spec:
         worker_spec = json.dumps([
@@ -144,14 +172,15 @@ def main() -> None:
             world_size=world_size,
             log_dir=Path(_required("SGW01_D1_RANK_LOG_DIR")),
             ready_dir=Path(_required("SGW01_D1_RANK_READY_DIR")),
-            source_commit=os.environ.get("SGW01_D1_SOURCE_COMMIT", ""),
-            checkpoint_revision=os.environ.get("SGW01_D1_CHECKPOINT_REVISION", ""),
+            source_commit=identity["source_commit"],
+            checkpoint_revision=identity["checkpoint_revision"],
             master_port=int(os.environ.get("SGW01_D1_MASTER_PORT", "29591")),
         )
         lifecycle.configure_rank_zero()
         lifecycle.install_signal_cleanup()
     with lifecycle:
-        backend = build_pinned_dreamzero_backend()
+        with lifecycle.startup_guard():
+            backend = build_pinned_dreamzero_backend()
         lifecycle.await_ready()
         producer = DreamZeroEvidenceProducer(
             backend,

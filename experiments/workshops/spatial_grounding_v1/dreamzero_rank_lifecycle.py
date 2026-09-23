@@ -9,12 +9,15 @@ cleans them up on every exit path.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from contextlib import contextmanager
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import signal
 import subprocess
+import threading
 import time
 from typing import Mapping, Sequence
 
@@ -110,6 +113,10 @@ class OwnedD1RankLifecycle:
             raise AdapterError("D1 rank lifecycle requires pinned source and checkpoint identities")
         if master_addr not in {"127.0.0.1", "localhost", "::1"}:
             raise AdapterError("D1 rank workers require a loopback rendezvous address")
+        if not math.isfinite(startup_timeout) or startup_timeout <= 0:
+            raise AdapterError("D1 startup timeout must be a finite positive number")
+        if not math.isfinite(shutdown_timeout) or shutdown_timeout <= 0:
+            raise AdapterError("D1 shutdown timeout must be a finite positive number")
         self.worker_argv = tuple(worker_argv)
         self.world_size = world_size
         self.log_dir = Path(log_dir)
@@ -125,6 +132,7 @@ class OwnedD1RankLifecycle:
         self.workers: list[RankWorker] = []
         self._stopped = False
         self._previous_handlers: dict[int, object] = {}
+        self._startup_deadline: float | None = None
 
     def configure_rank_zero(self) -> None:
         os.environ.update({
@@ -148,6 +156,7 @@ class OwnedD1RankLifecycle:
 
     def start(self) -> None:
         self.configure_rank_zero()
+        self._startup_deadline = time.monotonic() + self.startup_timeout
         self.log_dir.mkdir(parents=True, exist_ok=True)
         self.ready_dir.mkdir(parents=True, exist_ok=True)
         try:
@@ -195,7 +204,7 @@ class OwnedD1RankLifecycle:
             raise
 
     def await_ready(self) -> None:
-        deadline = time.monotonic() + self.startup_timeout
+        deadline = self._startup_deadline or (time.monotonic() + self.startup_timeout)
         expected = set(range(1, self.world_size))
         workers_by_rank = {worker.rank: worker for worker in self.workers}
         while time.monotonic() < deadline:
@@ -233,6 +242,27 @@ class OwnedD1RankLifecycle:
             time.sleep(0.05)
         missing = sorted(expected - ready)
         raise AdapterError(f"D1 rank worker startup timed out; missing ready ranks {missing}")
+
+    @contextmanager
+    def startup_guard(self):
+        """Bound rank-zero construction as part of the same startup budget."""
+        if os.name != "posix" or threading.current_thread() is not threading.main_thread():
+            yield
+            return
+        previous = signal.getsignal(signal.SIGALRM)
+
+        def alarm_handler(signum: int, frame: object) -> None:
+            del signum, frame
+            raise AdapterError("D1 rank-zero native construction exceeded startup timeout")
+
+        remaining = max(0.001, (self._startup_deadline or time.monotonic()) - time.monotonic())
+        signal.signal(signal.SIGALRM, alarm_handler)
+        signal.setitimer(signal.ITIMER_REAL, remaining)
+        try:
+            yield
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            signal.signal(signal.SIGALRM, previous)
 
     def assert_healthy(self) -> None:
         for worker in self.workers:

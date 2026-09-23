@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import datetime
 from pathlib import Path
 import socket
 import subprocess
 import sys
+import types
 import time
 
 import pytest
@@ -14,6 +16,7 @@ from experiments.workshops.spatial_grounding_v1.dreamzero_rank_lifecycle import 
     OwnedD1RankLifecycle,
 )
 from experiments.workshops.spatial_grounding_v1 import dreamzero_wrapper_entrypoint as entrypoint
+from experiments.workshops.spatial_grounding_v1.dreamzero_backend import collective_timeout
 
 
 SOURCE = "ab790c198fbce33503358efbbd4187ce9a89adf3"
@@ -108,6 +111,117 @@ def test_owned_rank_lifecycle_rejects_non_loopback_rendezvous(tmp_path: Path) ->
             checkpoint_revision=CHECKPOINT,
             master_addr="0.0.0.0",
         )
+
+
+@pytest.mark.parametrize("value", ["nan", "inf", "0", "-1", "not-a-number"])
+def test_collective_timeout_rejects_invalid_deadlines(monkeypatch: pytest.MonkeyPatch, value: str) -> None:
+    monkeypatch.setenv("SGW01_D1_COLLECTIVE_TIMEOUT", value)
+    with pytest.raises(AdapterError, match="finite positive"):
+        collective_timeout()
+
+
+def test_native_init_mesh_receives_bounded_timeout() -> None:
+    calls: list[object] = []
+
+    class Dist:
+        def init_process_group(self, *args: object, **kwargs: object) -> None:
+            calls.append((args, kwargs))
+
+    module = types.SimpleNamespace(dist=Dist())
+    entrypoint._install_bounded_init_process_group(module, datetime.timedelta(seconds=7))
+    module.dist.init_process_group("nccl")
+    assert calls == [(("nccl",), {"timeout": datetime.timedelta(seconds=7)})]
+
+
+def test_native_signal_group_receives_bounded_timeout() -> None:
+    calls: list[object] = []
+
+    class Dist:
+        def new_group(self, **kwargs: object) -> str:
+            calls.append(kwargs)
+            return "signal-group"
+
+    module = types.SimpleNamespace(dist=Dist())
+    result = entrypoint._new_bounded_signal_group(module, datetime.timedelta(seconds=7))
+    assert result == "signal-group"
+    assert calls == [{"backend": "gloo", "timeout": datetime.timedelta(seconds=7)}]
+
+
+def test_rank_zero_startup_guard_bounds_native_construction(tmp_path: Path) -> None:
+    lifecycle = OwnedD1RankLifecycle(
+        worker_argv=["true"],
+        world_size=2,
+        log_dir=tmp_path / "logs",
+        ready_dir=tmp_path / "ready",
+        source_commit=SOURCE,
+        checkpoint_revision=CHECKPOINT,
+        startup_timeout=0.05,
+        shutdown_timeout=1,
+    )
+    lifecycle.start()
+    try:
+        with pytest.raises(AdapterError, match="native construction exceeded"):
+            with lifecycle.startup_guard():
+                time.sleep(0.2)
+    finally:
+        lifecycle.stop()
+
+
+def test_main_propagates_verified_identity_to_lifecycle(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setenv("SGW01_D1_WORLD_SIZE", "2")
+    monkeypatch.setenv("SGW01_D1_HOST", "127.0.0.1")
+    monkeypatch.setenv("SGW01_D1_PORT", "8123")
+    monkeypatch.setenv("SGW01_D1_RANK_LOG_DIR", str(tmp_path / "logs"))
+    monkeypatch.setenv("SGW01_D1_RANK_READY_DIR", str(tmp_path / "ready"))
+    monkeypatch.setenv("SGW01_TRACE_SIDECAR", str(tmp_path / "trace"))
+    monkeypatch.setenv("SGW01_FUTURE_DIR", str(tmp_path / "future"))
+    monkeypatch.setenv("SGW01_SERVER_ATTESTATION", str(tmp_path / "attestation"))
+    monkeypatch.setenv("SGW01_D1_SOURCE_COMMIT", "caller-string")
+    monkeypatch.setenv("SGW01_D1_CHECKPOINT_REVISION", "caller-string")
+    verified = {
+        "source_root": str(tmp_path),
+        "checkpoint_path": str(tmp_path / "checkpoint"),
+        "source_commit": SOURCE,
+        "checkpoint_revision": CHECKPOINT,
+    }
+    captured: dict[str, object] = {}
+    monkeypatch.setattr(entrypoint, "verify_pinned_dreamzero_prerequisites", lambda: verified)
+
+    class SpyLifecycle:
+        def __init__(self, **kwargs: object) -> None:
+            captured.update(kwargs)
+
+        def configure_rank_zero(self) -> None:
+            pass
+
+        def install_signal_cleanup(self) -> None:
+            pass
+
+        def __enter__(self) -> "SpyLifecycle":
+            return self
+
+        def __exit__(self, *args: object) -> None:
+            pass
+
+        def startup_guard(self):
+            from contextlib import nullcontext
+            return nullcontext()
+
+        def await_ready(self) -> None:
+            raise AdapterError("stop after lifecycle construction")
+
+    monkeypatch.setattr(entrypoint, "OwnedD1RankLifecycle", SpyLifecycle)
+    monkeypatch.setattr(
+        entrypoint,
+        "build_pinned_dreamzero_backend",
+        lambda: (_ for _ in ()).throw(AdapterError("stop before native construction")),
+    )
+    with pytest.raises(AdapterError, match="stop before native construction"):
+        entrypoint.main()
+    assert captured["source_commit"] == SOURCE
+    assert captured["checkpoint_revision"] == CHECKPOINT
 
 
 def test_owned_rank_lifecycle_synchronizes_cpu_inference_barrier(tmp_path: Path) -> None:

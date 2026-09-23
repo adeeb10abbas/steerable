@@ -13,6 +13,7 @@ import datetime
 import importlib
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 from typing import Any, Callable, Mapping, Protocol
@@ -31,6 +32,17 @@ D1_SERVER_SURFACE = {
 D1_14B_ENTRYPOINT_SHA256 = "7ef17f66064bac8defafc1a84551089b124546729a98be8c0515b33d2e159d48"
 
 
+def collective_timeout() -> datetime.timedelta:
+    raw = os.environ.get("SGW01_D1_COLLECTIVE_TIMEOUT", "300").strip()
+    try:
+        seconds = float(raw)
+    except ValueError as exc:
+        raise AdapterError("SGW01_D1_COLLECTIVE_TIMEOUT must be a finite positive number") from exc
+    if not math.isfinite(seconds) or seconds <= 0:
+        raise AdapterError("SGW01_D1_COLLECTIVE_TIMEOUT must be a finite positive number")
+    return datetime.timedelta(seconds=seconds)
+
+
 def configure_official_startup() -> None:
     """Apply the exact AR entrypoint flags before any native construction."""
     os.environ["ENABLE_DIT_CACHE"] = "true"
@@ -39,9 +51,7 @@ def configure_official_startup() -> None:
         import torch
 
         torch._dynamo.config.recompile_limit = 800
-        torch.distributed.default_pg_timeout = datetime.timedelta(
-            seconds=int(os.environ.get("SGW01_D1_COLLECTIVE_TIMEOUT", "300"))
-        )
+        torch.distributed.default_pg_timeout = collective_timeout()
     except ImportError:
         return
 
@@ -302,7 +312,7 @@ def build_official_14b_dreamzero_backend(
         device_mesh = module.init_mesh()
         signal_group = module.dist.new_group(
             backend="gloo",
-            timeout=module.datetime.timedelta(seconds=50000),
+            timeout=collective_timeout(),
         )
         policy = module.GrootSimPolicy(
             embodiment_tag=module.EmbodimentTag("oxe_droid"),

@@ -149,26 +149,33 @@ class MailboxReceiver:
         self.last = 0; self.closed = False
 
     def serve_one(self, request_path: Path) -> None:
-        request = _read(request_path); command = request.get("command_id")
-        if self.closed or type(command) is not int or command != self.last + 1 or request.get("identity") != self.identity:
-            raise MailboxError("stale, duplicate, or identity-mismatched mailbox command")
-        operation = request.get("operation")
-        if operation == "reset":
-            reset = self.environment.reset()
-            reset = {"snapshot": asdict(reset.snapshot) if is_dataclass(reset.snapshot) else reset.snapshot,
-                     "receipt": dict(reset.receipt)}
-            result = {"reset": reset, "step_result": None}
-        elif operation == "step":
-            action = _load_array(request_path.parent, request["payload"]["action"])
-            result = {"reset": None, "step_result": self.environment.step(action)}
-            reset = None
-        elif operation == "close": self.environment.close(); self.closed = True; reset = None; result = {"reset": None, "step_result": None}
-        else: raise MailboxError("unsupported mailbox operation")
-        snapshot, viewport, policy = self.environment.snapshot(), self.environment.render_viewport(), self.environment.policy_observation()
-        out = self.root / "responses"; token = request_path.stem
-        arrays = {"viewport": _array(out / f"{token}.viewport.npy", viewport)}
-        policy_arrays = {key: _array(out / f"{token}.policy.{key.replace('/', '_')}.npy", value) for key, value in policy.items()}
-        payload = {"command_id": command, "identity": self.identity, "status": "ok",
-                   "data": {**result, "snapshot": asdict(snapshot) if is_dataclass(snapshot) else snapshot,
-                            "viewport": arrays["viewport"], "policy_arrays": policy_arrays}}
-        _write(out / f"{token}.json", payload); self.last = command
+        try:
+            request = _read(request_path); command = request.get("command_id")
+            if self.closed or type(command) is not int or command != self.last + 1 or request.get("identity") != self.identity:
+                raise MailboxError("stale, duplicate, or identity-mismatched mailbox command")
+            operation = request.get("operation")
+            if operation == "reset":
+                reset = self.environment.reset()
+                reset = {"snapshot": asdict(reset.snapshot) if is_dataclass(reset.snapshot) else reset.snapshot,
+                         "receipt": dict(reset.receipt)}
+                result = {"reset": reset, "step_result": None}
+            elif operation == "step":
+                action = _load_array(request_path.parent, request["payload"]["action"])
+                result = {"reset": None, "step_result": self.environment.step(action)}
+            elif operation == "close":
+                self.environment.close(); self.closed = True; result = {"reset": None, "step_result": None}
+            else: raise MailboxError("unsupported mailbox operation")
+            snapshot, viewport, policy = self.environment.snapshot(), self.environment.render_viewport(), self.environment.policy_observation()
+            out = self.root / "responses"; token = request_path.stem
+            arrays = {"viewport": _array(out / f"{token}.viewport.npy", viewport)}
+            policy_arrays = {key: _array(out / f"{token}.policy.{key.replace('/', '_')}.npy", value) for key, value in policy.items()}
+            payload = {"command_id": command, "identity": self.identity, "status": "ok",
+                       "data": {**result, "snapshot": asdict(snapshot) if is_dataclass(snapshot) else snapshot,
+                                "viewport": arrays["viewport"], "policy_arrays": policy_arrays}}
+            _write(out / f"{token}.json", payload); self.last = command
+        except Exception as exc:
+            fault = self.root / "faults" / f"{request_path.stem}.json"
+            if not fault.exists():
+                _write(fault, {"request": request_path.name, "error_type": type(exc).__name__, "error": str(exc),
+                               "identity": self.identity})
+            raise

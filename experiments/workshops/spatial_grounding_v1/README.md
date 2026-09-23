@@ -226,6 +226,24 @@ coordinator receipts. A changed pod requires a newly issued allocation
 receipt. Without a genuine coordinator-issued reservation, all learned-policy
 launches remain blocked with exit code 44.
 
+## Native simulator mailbox
+
+`native_mailbox_receiver` is prospective A40-side infrastructure for one
+registered attempt, not a behavioral release. A coordinator must create the
+immutable identity and release-cell JSON records, bind their SHA-256 values,
+and invoke the receiver with a new RWX PVC directory and finite deadline. It
+validates those records before creating `AppLauncher`, then starts the
+hash-bound joint-position environment. The B200 policy worker uses
+`MailboxClient` with the same identity. Requests and responses are
+exclusive-create, fsynced JSON manifests plus lossless NumPy arrays.
+
+The mailbox never starts a model, provides a network listener, retries an
+action, or attests the remote simulator as a local policy process. A timeout,
+duplicate command, identity/hash mismatch, malformed array, receiver fault, or
+partial response closes the client attempt. Production use still requires the
+existing fixture, release, resource, native-renderer, and remote ownership
+qualification gates.
+
 Both budget modes require the real hash-bound idle probe for the complete
 allocated UUID inventory. Every device, not merely the selected simulator GPU,
 must satisfy the same memory/utilization/process guard. The snapshot must be

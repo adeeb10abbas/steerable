@@ -2,6 +2,7 @@ import multiprocessing
 from pathlib import Path
 import time
 from types import SimpleNamespace
+import json
 
 import numpy as np
 import pytest
@@ -32,15 +33,27 @@ def _receiver(root: str):
         time.sleep(.001)
 
 
-def test_exchange_caches_response_and_rejects_timeout(tmp_path: Path) -> None:
+def test_450_action_exchange_caches_response_and_rejects_timeout(tmp_path: Path) -> None:
     root = tmp_path / "mail"; (root / "requests").mkdir(parents=True); (root / "responses").mkdir()
     process = multiprocessing.Process(target=_receiver, args=(str(root),)); process.start()
     client = MailboxClient(root=root, identity=IDENTITY, timeout_s=2)
     reset = client.reset()
     assert reset.receipt["reset_id"] == "r"
-    assert client.step(np.zeros(8, dtype=np.float32))["count"] == 1
-    assert client.snapshot()["action_step"] == 1
+    for index in range(450):
+        assert client.step(np.zeros(8, dtype=np.float32))["count"] == index + 1
+    assert client.snapshot()["action_step"] == 450
     assert client.render_viewport().shape == (2, 2, 3)
     client.close(); process.join(2); assert process.exitcode == 0
     with pytest.raises(MailboxError):
         MailboxClient(root=root, identity=IDENTITY, timeout_s=.01).reset()
+
+
+def test_receiver_rejects_duplicate_command_and_preserves_fault(tmp_path: Path) -> None:
+    root = tmp_path / "mail"; (root / "requests").mkdir(parents=True); (root / "responses").mkdir()
+    receiver = MailboxReceiver(root=root, identity=IDENTITY, environment=FakeEnvironment())
+    request = root / "requests" / "0001-reset.json"
+    request.write_text(json.dumps({"command_id": 1, "identity": IDENTITY, "operation": "reset"}))
+    receiver.serve_one(request)
+    with pytest.raises(MailboxError):
+        receiver.serve_one(request)
+    assert (root / "faults" / "0001-reset.json").is_file()

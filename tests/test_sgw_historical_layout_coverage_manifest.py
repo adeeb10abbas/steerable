@@ -12,11 +12,16 @@ def test_manifest_accounts_for_all_45_inventory_sources():
         result["counts"][key]
         for key in (
             "already_covered",
-            "locally_recoverable",
+            "source_inspection_needed",
             "requires_named_hash_anchored_pvc_payloads",
         )
     ) == 45
     assert result["release_authorization"] is False
+    assert result["counts"]["already_covered"] == 0
+    assert all(
+        record["source_hash_status"] == "verified_against_inventory"
+        for record in result["records"]
+    )
 
 
 def test_payload_requests_are_source_anchored_and_centers_not_promoted():
@@ -31,6 +36,11 @@ def test_payload_requests_are_source_anchored_and_centers_not_promoted():
     assert all(
         payload["expected_sha256"] is None
         or len(payload["expected_sha256"]) == 64
+        for payload in requests
+    )
+    assert all(
+        payload["hash_binding_status"]
+        in {"hash_anchored", "unanchored_path_only"}
         for payload in requests
     )
     assert result["prospective_neutral_centers"]["conservative_exclusion_candidates"] == []

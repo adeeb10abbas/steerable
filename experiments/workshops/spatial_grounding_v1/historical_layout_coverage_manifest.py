@@ -23,13 +23,13 @@ def _sha256(path: Path) -> str:
 def _status(cohort: dict[str, Any]) -> tuple[str, str]:
     cid = cohort["cohort_id"]
     paths = cohort.get("relevant_path_evidence", [])
-    if cid == "V3-E004":
-        return "already_covered", "covered by the integrated 6484f244 forecast/E004 geometry registry; source itself remains root/layout metadata"
     if cid.startswith("V3-E006"):
         return "requires_named_hash_anchored_pvc_payloads", "committed registration/result source exists, but physical reset/layout payload is external"
-    if paths:
+    if any(item.get("expected_sha256") for item in paths):
         return "requires_named_hash_anchored_pvc_payloads", "committed source names external raw evidence with a hash anchor"
-    return "locally_recoverable", "committed source is available locally; it contains no hash-bound measured reset geometry"
+    if paths:
+        return "source_inspection_needed", "source names external paths, but those paths have no hash anchor"
+    return "source_inspection_needed", "source is locally inspectable, but no exact source-to-registry geometry binding is established"
 
 
 def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
@@ -39,6 +39,12 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
     for cohort in inventory["cohorts"]:
         source = repo_root / cohort["source_path"]
         status, reason = _status(cohort)
+        actual_sha256 = _sha256(source) if source.is_file() else None
+        hash_status = (
+            "verified_against_inventory"
+            if actual_sha256 == cohort["source_sha256"]
+            else "missing_or_mismatched"
+        )
         record = {
             "cohort_id": cohort["cohort_id"],
             "source_path": cohort["source_path"],
@@ -47,11 +53,18 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
             "reason": reason,
             "arena": cohort["arena"],
             "known_source_file": source.is_file(),
+            "source_hash_status": hash_status,
+            "actual_source_sha256": actual_sha256,
             "required_pvc_payloads": [
                 {
                     "path": item["path"],
                     "source_json_pointer": item["source_json_pointer"],
                     "expected_sha256": item["expected_sha256"],
+                    "hash_binding_status": (
+                        "hash_anchored"
+                        if item["expected_sha256"]
+                        else "unanchored_path_only"
+                    ),
                 }
                 for item in cohort.get("relevant_path_evidence", [])
             ],
@@ -76,7 +89,7 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
         "counts": {
             "total": len(records),
             "already_covered": sum(r["coverage_status"] == "already_covered" for r in records),
-            "locally_recoverable": sum(r["coverage_status"] == "locally_recoverable" for r in records),
+            "source_inspection_needed": sum(r["coverage_status"] == "source_inspection_needed" for r in records),
             "requires_named_hash_anchored_pvc_payloads": sum(
                 r["coverage_status"] == "requires_named_hash_anchored_pvc_payloads" for r in records
             ),
@@ -93,6 +106,7 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
             "external reset/layout payloads for the V3-E006 registration and repair lineage",
             "hash-anchored payloads named by V2/V3 evidence manifests",
             "raw reset geometry for locally committed sources lacking a payload locator",
+            "exact source-to-6484f244 registry bindings for any proposed already-covered record",
         ],
         "coverage_status": "incomplete_unresolved_historical_layout_coverage",
         "release_authorization": False,

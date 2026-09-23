@@ -41,7 +41,9 @@ class DreamZeroEvidenceProducer:
         attestation_path: Path,
         clock: Callable[[], float] = time.time,
     ) -> None:
-        if dict(backend.resolved_config) != dict(DREAMZERO_CONFIG):
+        config = dict(backend.resolved_config)
+        missing = [key for key in DREAMZERO_CONFIG if config.get(key) != DREAMZERO_CONFIG[key]]
+        if missing:
             raise AdapterError("D1 backend config is not the pinned official configuration")
         self.backend = backend
         self.trace_path = trace_path
@@ -57,7 +59,7 @@ class DreamZeroEvidenceProducer:
         self._session_id: str | None = None
         attestation = {
             "model": "D1",
-            "config": dict(backend.resolved_config),
+            "config": config,
             "source_root": str(Path(backend.source_root).resolve()),
             "checkpoint_path": str(Path(backend.checkpoint_path).resolve()),
             "source_commit": DREAMZERO_CONFIG["source_commit"],

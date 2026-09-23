@@ -579,6 +579,8 @@ class _OfficialDreamZeroClient:
         if self.identity["checkpoint_revision"] != DREAMZERO_CONFIG["revision"]:
             raise AdapterError("DreamZero checkpoint revision is not pinned")
 
+        http_url = os.environ.get("SGW01_D1_HTTP_URL", "").strip().rstrip("/")
+
         class Client(DreamZeroClient):
             def __init__(self, **kwargs: Any) -> None:
                 self.returned_chunks: list[np.ndarray] = []
@@ -587,8 +589,65 @@ class _OfficialDreamZeroClient:
                 self.raw_response: Any | None = None
                 super().__init__(**kwargs)
 
+            def _owned_http(self, endpoint: str, packet: Mapping[str, Any]) -> Any:
+                payload = json.dumps(
+                    dict(packet),
+                    default=lambda value: np.asarray(value).tolist(),
+                ).encode("utf-8")
+                request = urllib.request.Request(
+                    f"{http_url}/{endpoint}",
+                    data=payload,
+                    headers={"Content-Type": "application/json"},
+                    method="POST",
+                )
+                try:
+                    with urllib.request.urlopen(request, timeout=180) as response:
+                        result = json.loads(response.read().decode("utf-8"))
+                except (OSError, urllib.error.URLError, json.JSONDecodeError) as exc:
+                    raise AdapterError(f"owned D1 HTTP transport failed: {exc}") from exc
+                if not isinstance(result, Mapping) or result.get("error"):
+                    raise AdapterError("owned D1 HTTP transport returned an error")
+                return result
+
+            def _query_server_owned(self, request: dict[str, Any]) -> Any:
+                context = getattr(self, "_sgw_context", {})
+                observation = {
+                    key: value
+                    for key, value in request.items()
+                    if key.startswith("observation/")
+                }
+                packet = {
+                    "request_id": context["request_id"],
+                    "request_index": context["request_index"],
+                    "reset_id": context["reset_id"],
+                    "camera_name": context["camera_name"],
+                    "registered_cell_id": context["registered_cell_id"],
+                    "reset_fingerprint": context["reset_fingerprint"],
+                    "prompt": request["prompt"],
+                    "sampling_seed": DREAMZERO_CONFIG["effective_noise_seed"],
+                    "observation": observation,
+                }
+                return self._owned_http("predict", packet)
+
+            def reset(self, *, env_id: int | None = None) -> None:
+                if not http_url:
+                    return super().reset(env_id=env_id)
+                response = self._owned_http(
+                    "reset",
+                    {"camera_name": os.environ.get("SGW01_D1_CAMERA_NAME", "over_shoulder_left_camera")},
+                )
+                self._sgw_reset = response["reset_id"]
+                self._env_session_id.clear()
+                super(DreamZeroClient, self).reset(env_id=env_id)
+                self.returned_chunks.clear()
+                self.processed_chunks.clear()
+
             def _query_server(self, request: dict[str, Any]) -> Any:
-                self.raw_response = super()._query_server(request)
+                self.raw_response = (
+                    self._query_server_owned(request)
+                    if http_url
+                    else super()._query_server(request)
+                )
                 if isinstance(self.raw_response, Mapping):
                     self.returned_future = self.raw_response.get(
                         "future", self.raw_response.get("video")
@@ -631,6 +690,7 @@ class _OfficialDreamZeroClient:
         self.client.returned_chunks.clear()
         self.client.processed_chunks.clear()
         self.client.returned_future = None
+        self.client._sgw_context = dict(request)
         started_ns = time.time_ns()
         # RoboLab BaseClient.infer returns one action per call. With the
         # pinned open_loop_horizon=8, eight calls consume the native cache:

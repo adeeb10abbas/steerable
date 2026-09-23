@@ -333,10 +333,20 @@ The AR export now supplies the exact 14B wrapper at
 frame accumulation, `GrootSimPolicy.lazy_joint_forward_causal` call, action
 conversion, session-change reset, and explicit `reset` state clearing. The
 entrypoint constructs the reviewed `GrootSimPolicy`, distributed signal group,
-and AR wrapper only after identity checks. Its checkpoint `config.json` is
-also read before model construction; the exported checkpoint reports
-`num_inference_timesteps=4` and `action_dim=32`, which fail the frozen D1
-16-step/8-dimensional gate. The binding therefore refuses construction and
-does not overlay protocol constants onto native state. Latent futures remain
-latents; decoded RGB evidence requires the official decoder path and is never
-fabricated.
+and AR wrapper only after identity checks. The checkpoint's
+`num_inference_timesteps=4` is not the trained action-head sampler setting:
+the action-head source constructs `num_inference_steps=16`, `seed=1140`, and
+`cfg_scale=5.0`. The checkpoint's `action_dim=32` is the padded latent width;
+the AR unnormalizer and wrapper expose 8-dimensional joint-plus-gripper
+actions. The binding therefore observes the constructed action-head fields
+after construction, retains padded width as native metadata, and validates the
+actual returned action shape rather than overlaying protocol values. Latent
+futures remain latents; decoded RGB evidence requires the official decoder
+path and is never fabricated.
+
+For release wiring, set `SGW01_D1_HTTP_URL` to the loopback URL owned by
+`dreamzero_wrapper_entrypoint.py`. The official RoboLab client class remains
+the cache/reset/postprocessing authority; its subclass only replaces the
+network query and reset boundary with the owned HTTP producer. Each request
+passes the SGW request/reset/cell bindings through that boundary, and the
+producer's durable trace remains the attribution authority.

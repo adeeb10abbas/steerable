@@ -151,6 +151,19 @@ def test_dreamzero_14b_binding_executes_policy_boundary_and_reset() -> None:
     assert policy.resets == [{"session_id": "s1"}]
 
 
+def test_dreamzero_native_sampler_fields_are_observed_not_checkpoint_overlaid() -> None:
+    head = type(
+        "ActionHead",
+        (),
+        {"num_inference_steps": 16, "seed": 1140, "cfg_scale": 5.0},
+    )()
+    assert dreamzero_backend._observe_action_head(head) == {
+        "num_inference_steps": 16,
+        "seed": 1140,
+        "cfg_scale": 5.0,
+    }
+
+
 def test_exported_14b_ar_policy_executes_infer_and_session_reset() -> None:
     export = Path(
         "/Users/SZ5VJY/.copilot/session-state/"

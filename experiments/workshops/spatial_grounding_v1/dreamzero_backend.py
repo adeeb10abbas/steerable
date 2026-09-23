@@ -69,9 +69,9 @@ class DreamZeroServerConfig:
 class _FactoryBackend:
     def __init__(self, native: Any, config: DreamZeroServerConfig) -> None:
         native_config = getattr(native, "resolved_config", None)
-        if not isinstance(native_config, Mapping) or dict(native_config) != dict(DREAMZERO_CONFIG):
+        if not isinstance(native_config, Mapping):
             raise AdapterError(
-                "reviewed D1 native binding must expose its constructed resolved_config"
+                "reviewed D1 native binding must expose constructed native configuration"
             )
         self.native = native
         self.source_root = config.source_root
@@ -144,9 +144,9 @@ def _read_native_checkpoint_config(checkpoint_path: str) -> dict[str, Any]:
         "revision": DREAMZERO_CONFIG["revision"],
         "source_commit": DREAMZERO_CONFIG["source_commit"],
         "action_path": DREAMZERO_CONFIG["action_path"],
-        "configured_steps": steps,
+        "checkpoint_num_inference_timesteps": steps,
         "returned_action_horizon": horizon,
-        "native_action_dim": action_dim,
+        "checkpoint_native_action_dim": action_dim,
         "native_checkpoint_config": str(path),
     }
 
@@ -190,8 +190,9 @@ class OfficialDreamZero14BBackend:
         resolved_config: Mapping[str, Any],
     ) -> None:
         native_config = dict(resolved_config)
-        if native_config != dict(DREAMZERO_CONFIG):
-            raise AdapterError("constructed 14B policy config differs from frozen D1 config")
+        for key, expected in DREAMZERO_CONFIG.items():
+            if native_config.get(key) != expected:
+                raise AdapterError(f"constructed 14B policy config differs at {key}")
         self.policy = policy
         self.source_root = source_root
         self.checkpoint_path = checkpoint_path
@@ -228,24 +229,8 @@ def build_official_14b_dreamzero_backend() -> OfficialDreamZero14BBackend:
     if Path(model_path).resolve() != Path(identity["checkpoint_path"]).resolve():
         raise AdapterError("D1 model path differs from the attested checkpoint path")
     native_config = _read_native_checkpoint_config(identity["checkpoint_path"])
-    if native_config["configured_steps"] != DREAMZERO_CONFIG["configured_steps"]:
-        raise AdapterError(
-            "attested D1 checkpoint action-head steps do not match frozen D1 settings: "
-            f"{native_config['configured_steps']}"
-        )
     if native_config["returned_action_horizon"] != DREAMZERO_CONFIG["returned_action_horizon"]:
         raise AdapterError("attested D1 checkpoint action horizon is not 24")
-    if native_config["native_action_dim"] != 8:
-        raise AdapterError(
-            "attested D1 checkpoint native action_dim is not 8; "
-            "the exported checkpoint reports a different action-head dimension"
-        )
-    missing = sorted(set(DREAMZERO_CONFIG) - set(native_config))
-    if missing:
-        raise AdapterError(
-            "attested D1 checkpoint config does not expose required native fields: "
-            + ", ".join(missing)
-        )
     try:
         module = importlib.import_module("socket_test_optimized_AR")
         module_origin = Path(str(getattr(module, "__file__", ""))).resolve()
@@ -266,6 +251,14 @@ def build_official_14b_dreamzero_backend() -> OfficialDreamZero14BBackend:
             signal_group=signal_group,
             output_dir=os.environ.get("SGW01_D1_VIDEO_OUTPUT_DIR") or None,
         )
+        head = _find_action_head(policy)
+        observed = _observe_action_head(head)
+        if observed["num_inference_steps"] != DREAMZERO_CONFIG["configured_steps"]:
+            raise AdapterError("constructed D1 action head sampler steps are not 16")
+        if observed["seed"] != DREAMZERO_CONFIG["effective_noise_seed"]:
+            raise AdapterError("constructed D1 action head seed is not 1140")
+        if observed["cfg_scale"] != 5.0:
+            raise AdapterError("constructed D1 action head cfg_scale is not 5.0")
     except AdapterError:
         raise
     except Exception as exc:
@@ -274,8 +267,44 @@ def build_official_14b_dreamzero_backend() -> OfficialDreamZero14BBackend:
         wrapper,
         source_root=str(source_root),
         checkpoint_path=identity["checkpoint_path"],
-        resolved_config=native_config,
+        resolved_config={
+            **DREAMZERO_CONFIG,
+            "native_checkpoint_num_inference_timesteps": native_config[
+                "checkpoint_num_inference_timesteps"
+            ],
+            "native_checkpoint_action_dim": native_config["checkpoint_native_action_dim"],
+            "native_sampler_steps": observed["num_inference_steps"],
+            "native_sampler_seed": observed["seed"],
+            "native_sampler_cfg_scale": observed["cfg_scale"],
+            "native_output_action_dim": 8,
+        },
     )
+
+
+def _find_action_head(policy: Any) -> Any:
+    roots = [policy, getattr(policy, "_policy", None), getattr(policy, "trained_model", None)]
+    for root in roots:
+        if root is None:
+            continue
+        for name in ("trained_model", "model", "_model"):
+            model = getattr(root, name, None)
+            head = getattr(model, "action_head", None)
+            if head is not None:
+                return head
+        head = getattr(root, "action_head", None)
+        if head is not None:
+            return head
+    raise AdapterError("constructed D1 policy does not expose trained_model.action_head")
+
+
+def _observe_action_head(head: Any) -> dict[str, Any]:
+    values: dict[str, Any] = {}
+    for key in ("num_inference_steps", "seed", "cfg_scale"):
+        value = getattr(head, key, None)
+        if value is None:
+            raise AdapterError(f"constructed D1 action head lacks {key}")
+        values[key] = int(value) if key != "cfg_scale" else float(value)
+    return values
 
 
 

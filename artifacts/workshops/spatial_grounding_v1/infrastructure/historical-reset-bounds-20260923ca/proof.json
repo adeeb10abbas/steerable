@@ -1,0 +1,306 @@
+{
+  "behavioral_episodes": 0,
+  "bounds": {
+    "bowl": {
+      "lower_m": [
+        0.43755998730659124,
+        -0.004979619984518565,
+        0.07235115289687753
+      ],
+      "reference_root_position_m": [
+        0.44255998730659485,
+        2.038001548498869e-05,
+        0.0773511528968811
+      ],
+      "upper_m": [
+        0.44755998730659846,
+        0.005020380015488542,
+        0.08235115289688467
+      ]
+    },
+    "rubiks_cube": {
+      "lower_m": [
+        0.29872101068496343,
+        -0.005236118212345816,
+        0.07610499382018686
+      ],
+      "reference_root_position_m": [
+        0.30372101068496704,
+        -0.00023611821234226227,
+        0.08110499382019043
+      ],
+      "upper_m": [
+        0.30872101068497065,
+        0.004763881787661291,
+        0.086104993820194
+      ]
+    }
+  },
+  "candidates": [
+    {
+      "candidate_id": "HEIGHT-CANDIDATE-SGW-HEIGHT-DESIGN-003",
+      "capture_sha256": "3805592d0f5ce36feba417b944b45ee3657ed5de24c31b19e7684082a942c355",
+      "completed_fresh_reset_lifecycles_compared": 20,
+      "minimum_component_separations_m": {
+        "bowl": 0.11195961386430653,
+        "rubiks_cube": 0.13670651696622016
+      },
+      "reason": "minimum root-position separation from the bound exceeds tolerance",
+      "status": "nonmatch"
+    },
+    {
+      "candidate_id": "HEIGHT-CANDIDATE-SGW-HEIGHT-DESIGN-004",
+      "capture_sha256": "f79e108408977e92a99a4209dc1f3972f0b84a420d82415d03b4da72ca901285",
+      "completed_fresh_reset_lifecycles_compared": 20,
+      "minimum_component_separations_m": {
+        "bowl": 0.10568561405408772,
+        "rubiks_cube": 0.14298051677643897
+      },
+      "reason": "minimum root-position separation from the bound exceeds tolerance",
+      "status": "nonmatch"
+    },
+    {
+      "candidate_id": "HEIGHT-CANDIDATE-SGW-HEIGHT-DESIGN-005",
+      "capture_sha256": "c2f1758c7aeef756ee0627a378f229f74b0c34a72a58f03e0332d0b86cc93358",
+      "completed_fresh_reset_lifecycles_compared": 20,
+      "minimum_component_separations_m": {
+        "bowl": 0.109763614838008,
+        "rubiks_cube": 0.13890251599251868
+      },
+      "reason": "minimum root-position separation from the bound exceeds tolerance",
+      "status": "nonmatch"
+    },
+    {
+      "candidate_id": "HEIGHT-CANDIDATE-SGW-HEIGHT-DESIGN-006",
+      "capture_sha256": "1ee50ac08b2cbdec38eca85623864d22656d06726c805cd891bc6a683f3b3ccf",
+      "completed_fresh_reset_lifecycles_compared": 20,
+      "minimum_component_separations_m": {
+        "bowl": 0.12670461833942326,
+        "rubiks_cube": 0.12196151994168403
+      },
+      "reason": "minimum root-position separation from the bound exceeds tolerance",
+      "status": "nonmatch"
+    }
+  ],
+  "claim_boundary": "These are source-implied intervals for 20 completed settled fresh resets, not 20 recovered point snapshots. They overlap previously retained rank4 reset evidence and are not additive population counts. They say nothing about later constructed states, initialization transients, missing rank1-3 materialization payloads, or unaccounted historical cohorts. No historical result is relabeled or released.",
+  "common_frame_id": "robolab_environment_local_world_axes_m",
+  "comparison_count": 80,
+  "completed_fresh_reset_lifecycles": [
+    {
+      "candidate_rank": 0,
+      "environment_ordinal": 1,
+      "label": "rank00__canonical_grasp__known_reachable_diagnostic_01_left",
+      "role": "known_reachable_diagnostic_01_left",
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 0,
+      "environment_ordinal": 2,
+      "label": "rank00__canonical_grasp__known_reachable_diagnostic_02_right",
+      "role": "known_reachable_diagnostic_02_right",
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 0,
+      "environment_ordinal": 3,
+      "label": "rank00__canonical_carry__known_reachable_diagnostic_03_left",
+      "role": "known_reachable_diagnostic_03_left",
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 0,
+      "environment_ordinal": 4,
+      "label": "rank00__canonical_carry__known_reachable_diagnostic_04_right",
+      "role": "known_reachable_diagnostic_04_right",
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 1,
+      "environment_ordinal": 5,
+      "label": "rank01__canonical_grasp__ik_solve",
+      "role": "ik_solve",
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 1,
+      "environment_ordinal": 6,
+      "label": "rank01__canonical_grasp__materialization",
+      "role": "materialization",
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 1,
+      "environment_ordinal": 7,
+      "label": "rank01__canonical_carry__ik_solve",
+      "role": "ik_solve",
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 1,
+      "environment_ordinal": 8,
+      "label": "rank01__canonical_carry__materialization",
+      "role": "materialization",
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 2,
+      "environment_ordinal": 9,
+      "label": "rank02__canonical_grasp__ik_solve",
+      "role": "ik_solve",
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 2,
+      "environment_ordinal": 10,
+      "label": "rank02__canonical_grasp__materialization",
+      "role": "materialization",
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 2,
+      "environment_ordinal": 11,
+      "label": "rank02__canonical_carry__ik_solve",
+      "role": "ik_solve",
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 2,
+      "environment_ordinal": 12,
+      "label": "rank02__canonical_carry__materialization",
+      "role": "materialization",
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 3,
+      "environment_ordinal": 13,
+      "label": "rank03__canonical_grasp__ik_solve",
+      "role": "ik_solve",
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 3,
+      "environment_ordinal": 14,
+      "label": "rank03__canonical_grasp__materialization",
+      "role": "materialization",
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 3,
+      "environment_ordinal": 15,
+      "label": "rank03__canonical_carry__ik_solve",
+      "role": "ik_solve",
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 3,
+      "environment_ordinal": 16,
+      "label": "rank03__canonical_carry__materialization",
+      "role": "materialization",
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 4,
+      "environment_ordinal": 17,
+      "label": "rank04__canonical_grasp__ik_solve",
+      "role": "ik_solve",
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 4,
+      "environment_ordinal": 18,
+      "label": "rank04__canonical_grasp__materialization",
+      "role": "materialization",
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 4,
+      "environment_ordinal": 19,
+      "label": "rank04__canonical_carry__ik_solve",
+      "role": "ik_solve",
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 4,
+      "environment_ordinal": 20,
+      "label": "rank04__canonical_carry__materialization",
+      "role": "materialization",
+      "stage": "canonical_carry"
+    }
+  ],
+  "failure_report": {
+    "bytes": 25614537,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/state_construction_failure.json",
+    "sha256": "e858a4431bd0451a1e380d66c8c5d05c5486718f5b23388f874d24a7d271ae8e"
+  },
+  "frame_basis": "Historical bounds are on world-root values by the producer's comparison, without using HDF5. The prerequisite native proof checks the relative getter and zero origins for these four captures, placing their roots in the same world axes.",
+  "historical_controller_verification_sha256": "6a82d78d2c85221e0f23dcf73a63ee980c1c078770979a292770c364ab65465c",
+  "historical_euclidean_position_bound_m": 0.005,
+  "historical_population_coverage_complete": false,
+  "historical_recorder_binding": {
+    "bytes": 15427,
+    "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/core/events/basic_recorders.py",
+    "sha256": "84944e9eedb664ba8f34eee40e2b0efe064d5460a942eecb68ad7d491a5ffacd"
+  },
+  "inventory_sha256": "1bfdfba81f1b177a080ccc73ad99366a8c3bc924f3343e3a74b28b443e4539de",
+  "launch_sha256": "8781e2bff1b04162b4b72f1129f70e2862a40525c53e12e5235cbc3b404e3e10",
+  "model_requests": 0,
+  "nonmatch_count": 80,
+  "outward_numeric_guard_m": 3.552713678800501e-15,
+  "point_primitive_sha256": "438bc7263bdbedca7803dfdb5c28f2b2eda4c10a206c45a381616b5b94d979c4",
+  "primitive_sha256": "67dc73939fa2d43d11419f00beb8f52d7165794768e0fc01a1b2e3286999de04",
+  "producer_sha256": "9a2b4acd752b84143a0699db9582b6107759cc5c76fd708203636f916eef3b97",
+  "recorder_attestation_boundary": "The recorded pre-AppLauncher check rehashed the entire basic_recorders.py, including InitialStateRecorder and PostStepStatesRecorder, not just the named EEF recorder. It does not attest historical IsaacLab get_state implementation bytes or recover missing materialization records.",
+  "release_permitted": false,
+  "reset_bound_implication": "_capture_state reads every MOVABLE object's native root_pos_w. _fresh_reset_and_gate raises unless the full reset comparison passes. The lifecycle completion marker is set only after that function returns. The inclusive Euclidean 5 mm object bound therefore encloses each coordinate of that completed settled reset.",
+  "schema_version": "sgw-01-r005-gate-bounded-reset-exclusions-v1",
+  "sgw_componentwise_reset_tolerance_m": 0.003,
+  "source_bindings": {
+    "candidate_schedule": {
+      "bytes": 118513,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/gates/candidate_schedule.json",
+      "sha256": "f730c91987451d32f0a8814d27d9ec7bfad1a455bf3adae6a8381df7d62f5709"
+    },
+    "producer": {
+      "bytes": 115451,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r005/state_repair_gate.py",
+      "sha256": "ac6ae458accaa1428e4f51cb44fb07115b5ad746bc746c33970221519477ea3b"
+    },
+    "reset_reference": {
+      "bytes": 17364,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+      "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+    },
+    "source_push_gate": {
+      "bytes": 4392,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/source_push_gate.json",
+      "sha256": "a3d08989ff1cddba6af1a692384110ae045996d4018552da4b8a15e6bde504a0"
+    },
+    "state_contract": {
+      "bytes": 12944,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_contract.py",
+      "sha256": "2476b28d2867c1b87f477fd5f89e545616be00d860d4144f8cbdb70af10f3c18"
+    },
+    "wrapper": {
+      "bytes": 16923,
+      "path": "tools/run_v3e006_r005_state_repair.py",
+      "sha256": "b95166ddc0ca7e3e618d7315bbad438e32fea9d55a0e443e30a5c9cf4f0e61cd"
+    }
+  },
+  "source_commit": "98f0234cd124d24004fd0053bc8f61f71e8dd50b",
+  "source_control_flow": {
+    "_capture_state": {
+      "first_line": 988,
+      "last_line": 1046
+    },
+    "_fresh_reset_and_gate": {
+      "first_line": 1239,
+      "last_line": 1305
+    },
+    "_open_exact_stage_environment": {
+      "first_line": 2087,
+      "last_line": 2157
+    }
+  },
+  "state_contract_enforcement": "The hash-bound outer launcher checks exact HEAD and clean git status before launch. The helper is tracked at that revision and imported through the recorded study-first PYTHONPATH. It is named in unchanged_gate_bindings, not individually rehashed in the 11-entry source-push implementation inventory. This is a clean pinned source contract, not an independent imported-module byte attestation.",
+  "target_validation_sha256": "d72a0cde9145ea63c7f6c9def06ca2e91d3b665812677d0c6d126c2a29db8841"
+}

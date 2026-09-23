@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_height_dist_remaining_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T10:03:19Z",
+  "updated_at_utc": "2026-09-23T10:22:47Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -58,6 +58,9 @@
     "historical_root_and_lineage_targeted_tests_passed": 33,
     "opt_in_historical_population_extractor": "c9d8517d452285af24f43d98316c1dd871aa368f",
     "historical_population_lineage_root_targeted_tests_passed": 43,
+    "historical_root_bound_primitive": "experiments/workshops/spatial_grounding_v1/historical_root_bounds.py",
+    "historical_reset_bound_proof": "tools/prove_sgw_r005_reset_bounds.py",
+    "historical_extraction_lineage_root_and_bound_targeted_tests_passed": 70,
     "family_capture_materializer_and_six_trial_verifier": "5b21c8af",
     "finite_family_slot_executor": "e1f8a212",
     "preaction_guard_persisted_before_controller_planning": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
@@ -682,14 +685,30 @@
       "including_native_smoke_and_all_prefixes": {"completed_candidates": 20, "all_six_pass": 8, "physical_rejected": 12, "completed_trials": 120, "controller_actions": 54000},
       "claim_boundary": "Worker verification and hash-bound qualification projections, not final independent raw compilation."
     },
+    "verified_fifth_prefix": {
+      "observed_at_utc": "2026-09-23T10:22:47.109444+00:00",
+      "manifest": "infrastructure/family-partition-20260923bt-prefix-ca/manifest.json",
+      "manifest_sha256": "7749cae896e4b16373df30fc58d4b36b0ddf57a125710dc50542e598c004d8ed",
+      "completed_remaining_slots_including_prior_prefixes": 20,
+      "remaining_slots_not_yet_terminal": 97,
+      "completed_trials_this_prefix": 24,
+      "all_six_pass_slots": ["HEIGHT-032"],
+      "valid_physical_rejections": [
+        {"slot": "HEIGHT-026", "passed_trials": 5},
+        {"slot": "HEIGHT-027", "passed_trials": 4},
+        {"slot": "HEIGHT-033", "passed_trials": 5}
+      ],
+      "including_native_smoke_and_all_prefixes": {"completed_candidates": 24, "all_six_pass": 9, "physical_rejected": 15, "completed_trials": 144, "controller_actions": 64800},
+      "claim_boundary": "Worker verification and hash-bound qualification projections, not final independent raw compilation."
+    },
     "latest_worker_monitor": {
-      "observed_at_utc": "2026-09-23T10:03:19.380950+00:00",
-      "active_slots": ["HEIGHT-026", "HEIGHT-027", "HEIGHT-032", "HEIGHT-033"],
+      "observed_at_utc": "2026-09-23T10:21:06.352399+00:00",
+      "active_slots": ["HEIGHT-034", "HEIGHT-035", "HEIGHT-036", "HEIGHT-037"],
       "shared_infrastructure_stop_present": false,
       "terminal_launcher_receipts": 0
     },
     "last_read_only_monitor": {
-      "observed_at_utc": "2026-09-23T09:40:09.133125+00:00",
+      "observed_at_utc": "2026-09-23T10:17:30.390678+00:00",
       "shared_infrastructure_stop_present": false,
       "collector_terminal_or_error_record_present": false
     },
@@ -913,6 +932,9 @@
     "historical_expected_robolab_revision": "0aef241fb088ca21bb4ebd24448940ed56620d17",
     "recorder_semantics": "Both initial_state and states call scene.get_state(is_relative=True); current IsaacLab2.2.0 distribution-verified getter subtracts environment origins from actor-root positions and leaves quaternion world axes unchanged.",
     "historical_imported_getter_bytes_independently_attested": false,
+    "historical_recorder_prelaunch_hash_verification": "infrastructure/historical-reset-bounds-20260923ca/controller-verification.json",
+    "historical_recorder_prelaunch_hash_verification_sha256": "6a82d78d2c85221e0f23dcf73a63ee980c1c078770979a292770c364ab65465c",
+    "new_attestation_scope": "Captured pre-AppLauncher rehash of entire basic_recorders.py, including initial/post-step state recorders; not independent imported IsaacLab getter-byte attestation.",
     "byte_identical_target_replay": true,
     "release_permitted": false
   },
@@ -932,9 +954,28 @@
     "historical_population_coverage_complete": false,
     "release_permitted": false
   },
-  "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. CPU-only historical work must account for earlier infrastructure attempts, including R005 98f0234 attempt01 and its missing rank1-3 state payloads. bx now accounts for149 snapshots/101 recorded lifecycles in seven named later executions, not complete historical coverage. The400 prior nonmatches remain limited to their original100 snapshots.",
+  "gate_bounded_historical_reset_nonmatches": {
+    "manifest": "infrastructure/historical-reset-bounds-20260923ca/manifest.json",
+    "manifest_sha256": "7ea3bf722cf63fc7ff672765ae44e8333f1b0d26aae3463b3cbba28bc6de8de1",
+    "proof": "infrastructure/historical-reset-bounds-20260923ca/proof.json",
+    "proof_sha256": "9b14906d20f8fdbcbd98e0eeae20166ed585750e447312c873325ba0770056fa",
+    "persistent_root": "/data/users/ali/sgw-01/infrastructure/historical-reset-bounds-20260923ca",
+    "source_receipt_export_reproduced_byte_identically_on_target": true,
+    "historical_attempt_id": "98f0234-a40r06-attempt01",
+    "completed_settled_fresh_reset_lifecycles": 20,
+    "native_candidates": ["HEIGHT-003", "HEIGHT-004", "HEIGHT-005", "HEIGHT-006"],
+    "historical_euclidean_position_bound_m": 0.005,
+    "sgw_componentwise_reset_tolerance_m": 0.003,
+    "comparisons": 80,
+    "nonmatches": 80,
+    "unresolved_comparisons": 0,
+    "scope": "Source-implied outward-rounded reset intervals, not recovered point observations. The exact clean-source launcher, helper, reference and completion-marker control flow are bound. Counts overlap rank4 reset evidence and are not additive to observed-snapshot counts. No later constructed-state or rank1-3 materialization recovery.",
+    "historical_population_coverage_complete": false,
+    "release_permitted": false
+  },
+  "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. At the retained fifth prefix,24 HEIGHT/DIST candidates have144 full recorded trials,9 all-six passes and15 valid rejections;97 slots remain not terminal. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. bx accounts for149 snapshots/101 recorded lifecycles in seven named later executions; ca additionally gives source-bound exclusions for20 completed resets from earlier R005 attempt01, not missing later materializations or complete historical coverage. The400 prior point comparisons and80 new bound comparisons retain separate scopes.",
   "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu -o wide",
-  "next_historical_trace": "The R005 attempt01 failure report and all8 native HDF5 files are hash-bound in by; bz identifies the pinned recorder's environment-local world-axis source contract, not independent historical import-byte attestation. IK telemetry cannot substitute for missing rank1-3 materialization states. The exact producer's _save_camera_evidence writes PNGs but returns numerical geometry in memory, so camera files alone are not recovered root measurements. Investigate other bound raw artifacts or rigorous source-specific exclusions; keep all unaccounted cohorts and earlier attempts unresolved.",
+  "next_historical_trace": "ca proves80 specific reset nonmatches using the exact clean-source launcher and historical5mm Euclidean full-reset gate, without changing SGW3mm tolerance or reconstructing coordinates. It also retains the historical pre-AppLauncher hash verification of the entire basic_recorders.py. Missing rank1-3 materialization states and other historical populations remain unresolved; neither these reset bounds nor IK-only HDF5 substitute for later constructed states. The pinned camera writer saves PNGs but not separate numerical pose files. Investigate bound raw artifacts or source-specific exclusions without treating unavailable evidence as a match, nonmatch or zero.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -1197,13 +1238,13 @@
     "Historical-layout coverage remains incomplete. The recovered 24-layout cohort now has independently hash-bound roots, AABB-derived centers and separate reset displacement in infrastructure/historical-droid-layout-evidence-registry-v1.json. This does not establish exhaustive coverage or release.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Both native client paths now run complete 450-action engineering integrations through joint-position measurements, HTTP producers, trace readers, recorder and scorer with simulated physics/model computation. Native AppLauncher/RPC, D1 distributed startup, official decode/time mapping and all live model runtimes remain unqualified.",
-    "Native smoke integrity passed and bt is processing the remaining frozen HEIGHT/DIST candidates. The retained twelve-candidate prefix contains five all-six passes and seven valid physical rejections;109 remaining slots are not yet terminal. No29-layout family pool or historical/runtime release is established.",
+    "Native smoke integrity passed and bt is processing the remaining frozen HEIGHT/DIST candidates. The retained24-candidate prefix contains9 all-six passes and15 valid physical rejections across144 full recorded trials;97 remaining slots are not yet terminal. No29-layout family pool or historical/runtime release is established.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Inspect bu final-receipt.json/collector-error.json and bt infrastructure-stop.json without interrupting trials. Eight remaining slots are retained in the bv/bw prefixes; no valid rejection may be retried. Reproduce tools/prove_sgw_observed_root_nonmatches.py for the bounded400-comparison proof: the source-verified native getter returns world actor roots minus environment origins, and both sides record zero origins. Trace complete source populations or rigorous further exclusions next; root separation already disproves a duplicate of a named snapshot without needing its centroid, but cannot establish that all historical snapshots were supplied. No historical SGW identity, learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
+  "next_action": "Inspect bu final-receipt.json/collector-error.json and bt infrastructure-stop.json without interrupting trials. Twenty remaining slots are retained in five prefixes through ca; no valid rejection may be retried. Reproduce tools/prove_sgw_r005_reset_bounds.py for80 bound-based exclusions of completed settled resets, separately from tools/prove_sgw_observed_root_nonmatches.py and its400 observed-point comparisons. Continue accounting for missing constructed states and other historical populations. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

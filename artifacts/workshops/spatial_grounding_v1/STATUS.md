@@ -6,9 +6,9 @@ behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
 have verified receipts, views and complete videos. Native smoke br has completed
 24 full physical trials: two candidates pass all six trials and two are valid
 physical rejections. All four raw evidence chains passed independent rechecks.
-Including the first sixteen subsequent candidates, 20 HEIGHT/DIST candidates
-have completed 120 full trials: eight all-six passes and twelve physical
-rejections. Four durable GPU workers continue the remaining 101 frozen slots.
+Including the first twenty subsequent candidates, 24 HEIGHT/DIST candidates
+have completed 144 full trials: nine all-six passes and fifteen physical
+rejections. Four durable GPU workers continue the remaining 97 frozen slots.
 Historical coverage and all learned-runtime release gates remain open.
 Learned-policy requests and episodes remain at zero.**
 
@@ -261,6 +261,41 @@ This establishes the source contract, not an independent attestation of
 historically imported getter bytes. It does not recover missing materialization
 states or release a fixture/model. The pinned camera writer stores PNGs;
 its numerical geometry is returned in memory, not a separately saved pose file.
+
+At 10:22 UTC, the fifth remaining-slot wave was retained: HEIGHT 032 passed
+all six trials, while HEIGHT 026/027/033 passed five/four/five and remain valid
+physical rejections. Including smoke, the 24 completed candidates comprise
+nine all-six passes and fifteen rejections, with 144 full recorded trials and
+64,800 scripted actions. All 24 new score/video projections and canonical
+worker digests agree. The fifth prefix is in
+[`infrastructure/family-partition-20260923bt-prefix-ca/`](infrastructure/family-partition-20260923bt-prefix-ca/).
+At 10:21 UTC, HEIGHT 034/035/036/037 were active, the shared stop was absent,
+and no terminal launcher receipt existed. The CPU collector had no terminal
+or error record at its 10:17 UTC check. These prefixes are not its pending
+independent final raw compilation.
+
+The source-bound ca proof recovers an implication rather than missing
+coordinates. R005 attempt01's hash-bound launcher enforces the exact clean
+study checkout; its producer sets a completed-reset marker only after the
+frozen full-reset comparison passes. That comparison bounds every object
+root within **5 mm Euclidean distance** of its reference. Outward-rounded
+intervals for its 20 completed settled resets exclude each of the four
+already frame-qualified HEIGHT 003--006 captures, yielding 80 scoped
+nonmatches under SGW's unchanged **3 mm componentwise** tolerance.
+The actual minimum root separations exceed 10 cm. Inputs, source checks and
+the reproducible proof are in
+[`infrastructure/historical-reset-bounds-20260923ca/`](infrastructure/historical-reset-bounds-20260923ca/)
+and on the PVC; the finite receipt export reproduced byte-for-byte there.
+All 70 targeted historical extraction, lineage, point/bound and source-proof
+checks pass.
+
+These intervals are not 20 recovered point observations, overlap the existing
+rank4 reset evidence, and do not cover later constructed states or recover
+rank1--3 materialization payloads. Historical coverage remains incomplete.
+The newly retained controller verification also records the historical
+pre-AppLauncher hash check for the entire `basic_recorders.py`, including
+initial/post-step recorders. Historical imported IsaacLab getter bytes remain
+separately unattested. No fixture or learned-policy gate changes.
 
 ## Scientific accounting
 

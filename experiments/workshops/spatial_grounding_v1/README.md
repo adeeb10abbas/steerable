@@ -194,6 +194,31 @@ strictly separated actor root rules out that specific within-tolerance layout
 match even when centroid offsets are unavailable; it does not prove that the
 historical snapshot population is complete.
 
+`historical_root_bounds` compares each prospective root with the nearest point
+in an independently justified historical position interval. It retains the
+fixed 3 mm componentwise threshold and validates every required actor before
+returning a nonmatch. Its reported distances are conservative lower bounds,
+not measured historical displacements; overlap remains unresolved.
+
+The R005 attempt01 proof binds the exact clean-source launcher, producer,
+comparison helper, frozen reference and 20 completed-reset lifecycle markers.
+The historical gate was **5 mm Euclidean**, not SGW's 3 mm deduplication
+tolerance. Its outward-rounded intervals rule out each of HEIGHT 003--006
+against those 20 settled resets, without recovering missing point observations:
+
+```bash
+.venv/bin/python -m tools.prove_sgw_r005_reset_bounds \
+  --output /tmp/sgw-r005-reset-bounds.json
+```
+
+This proof is separate from the earlier 400 observed-point comparisons.
+It overlaps the retained rank4 reset evidence and does not cover later
+constructed states, initialization transients or missing rank1--3
+materialization payloads. Neither primitive is wired into fixture release.
+The recovered pre-AppLauncher controller verification also binds the whole
+historical `basic_recorders.py`; it does not attest the historical imported
+IsaacLab getter bytes.
+
 ## Execution order
 
 1. Obtain a genuinely idle, authorized RTX/Vulkan-capable allocation. A

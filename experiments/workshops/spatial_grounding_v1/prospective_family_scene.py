@@ -18,7 +18,7 @@ from .lat_candidate_generator import workspace_digest
 from .lat_workspace_capture import _rotate_wxyz
 
 SCHEMA = "sgw-01-prospective-family-overlay-v1"
-BASE_WORKSPACE_SCHEMA = "sgw-01-lat-measured-workspace-v1"
+BASE_WORKSPACE_SCHEMA = "sgw-01-lat-measured-workspace-v2"
 
 
 def sha256(path: Path) -> str:
@@ -52,7 +52,10 @@ def build_overlay(
         specs, overrides = _dist_specs(side, workspace)
         counterbalance = {"bowl_side": side}
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(_usda(base_scene.resolve(), specs, overrides), encoding="utf-8")
+    orientations = {
+        name: workspace["objects"][name]["root_quaternion_world_wxyz"] for name in overrides
+    }
+    output.write_text(_usda(base_scene.resolve(), specs, overrides, orientations), encoding="utf-8")
     manifest = {
         "schema_version": SCHEMA,
         "status": "prospective_scene_design_not_measured_or_qualified",
@@ -75,6 +78,7 @@ def build_overlay(
             "units": "meters",
             "dimensions_and_poses": specs,
             "authored_actor_root_overrides_env_local_xyz_m": overrides,
+            "authored_actor_quaternion_overrides_wxyz": orientations,
             "claim_boundary": "Authoring values are prospective design inputs. Native capture must measure root poses, centers, offsets, contacts, and rendered views before any candidate proposal.",
         },
         "counterbalance": counterbalance,
@@ -155,8 +159,20 @@ def _dist_specs(bowl_side: str, workspace: Mapping[str, Any]) -> tuple[list[dict
     cube_root = _root_for_center(cube, cube_center)
     return [
         _disc("plate", tuple(plate_center), radius_m=0.11, thickness_m=0.012, color=(0.95, 0.75, 0.15), rigid=True),
-        _box("dist_bowl_landing_support", (bowl_center[0], bowl_center[1], _bottom_z(bowl, bowl_root) - 0.02), (0.14, 0.14, 0.04), (0.25, 0.70, 0.35)),
-        _box("dist_plate_landing_support", (plate_center[0], plate_center[1], plate_center[2] - 0.012 - 0.02), (0.24, 0.24, 0.04), (0.95, 0.70, 0.30)),
+        _box("dist_bowl_support", (bowl_center[0], bowl_center[1], _bottom_z(bowl, bowl_root) - 0.02), (0.18, 0.18, 0.04), (0.25, 0.70, 0.35)),
+        _box("dist_plate_support", (plate_center[0], plate_center[1], plate_center[2] - 0.012 / 2 - 0.02), (0.24, 0.24, 0.04), (0.95, 0.70, 0.30)),
+        _box("dist_neutral_cube_support", tuple(cube_center[:2] + [_bottom_z(cube, cube_root) - 0.02]), (0.08, 0.08, 0.04), (0.35, 0.85, 0.45)),
+        *[
+            _box(
+                f"dist_{name}_landing_support",
+                (center[0], center[1], _bottom_z(cube, _root_for_center(cube, center)) - 0.02),
+                (0.08, 0.08, 0.04), color,
+            )
+            for name, center, color in (
+                ("bowl", [0.30, 0.16 * sign, 0.12], (0.25, 0.70, 0.35)),
+                ("plate", [0.66, -0.34 * sign, 0.12], (0.95, 0.70, 0.30)),
+            )
+        ],
     ], {"bowl": bowl_root, "rubiks_cube": cube_root}
 
 
@@ -194,7 +210,12 @@ def _bottom_z(object_row: Mapping[str, Any], root: list[float]) -> float:
     )
 
 
-def _usda(base_scene: Path, specs: list[dict[str, Any]], overrides: Mapping[str, list[float]]) -> str:
+def _usda(
+    base_scene: Path,
+    specs: list[dict[str, Any]],
+    overrides: Mapping[str, list[float]],
+    orientations: Mapping[str, list[float]],
+) -> str:
     def prim(spec: Mapping[str, Any]) -> str:
         center, color = spec["center_m"], spec["display_color_rgb"]
         rigid = '        prepend apiSchemas = ["PhysicsRigidBodyAPI"]\n' if spec["rigid_body"] else ""
@@ -202,8 +223,8 @@ def _usda(base_scene: Path, specs: list[dict[str, Any]], overrides: Mapping[str,
             geometry = f'''        def Cylinder "geometry" (
             prepend apiSchemas = ["PhysicsCollisionAPI"]
         ) {{
-                uniform token axis = "Z"
-                double height = {spec["thickness_m"]}
+            uniform token axis = "Z"
+            double height = {spec["thickness_m"]}
             double radius = {spec["radius_m"]}
             color3f[] primvars:displayColor = [({color[0]}, {color[1]}, {color[2]})]
         }}'''
@@ -226,7 +247,12 @@ def _usda(base_scene: Path, specs: list[dict[str, Any]], overrides: Mapping[str,
     }}'''
     escaped = str(base_scene).replace("\\", "\\\\")
     authored = "\n".join(
-        f'    over "{name}" {{\n        double3 xformOp:translate = ({pose[0]}, {pose[1]}, {pose[2]})\n    }}'
+        f'    over "{name}" {{\n'
+        f'        double3 xformOp:translate = ({pose[0]}, {pose[1]}, {pose[2]})\n'
+        f'        quatf xformOp:orient = ({orientations[name][0]}, {orientations[name][1]}, '
+        f'{orientations[name][2]}, {orientations[name][3]})\n'
+        '        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]\n'
+        '    }'
         for name, pose in overrides.items()
     )
     return "#usda 1.0\n(\n    defaultPrim = \"World\"\n    subLayers = [@" + escaped + "@]\n)\n\nover \"World\" {\n" + authored + "\n" + "\n".join(prim(item) for item in specs) + "\n}\n"

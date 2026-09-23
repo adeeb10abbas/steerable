@@ -1,5 +1,6 @@
 import json
 import math
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -20,7 +21,7 @@ from experiments.workshops.spatial_grounding_v1.prospective_family_capture impor
 
 def _workspace():
     value = {
-        "measurement_schema_version": "sgw-01-lat-measured-workspace-v1",
+        "measurement_schema_version": "sgw-01-lat-measured-workspace-v2",
         "model_request_count": 0,
         "behavioral_episode_count": 0,
         "receipt_sha256": "",
@@ -126,6 +127,62 @@ def test_dist_overlay_has_visual_plate_and_counterbalance(tmp_path):
     cube_center = _center(workspace["objects"]["rubiks_cube"], overrides["rubiks_cube"])
     plate_center = list(plate.GetAttribute("xformOp:translate").Get())
     assert math.dist(cube_center, bowl_center) == pytest.approx(math.dist(cube_center, plate_center))
+
+
+@pytest.mark.parametrize("family,side", [
+    ("HEIGHT", "left"), ("HEIGHT", "right"), ("DIST", "left"), ("DIST", "right"),
+])
+def test_real_measured_receipt_authors_supported_poses_and_goal_clearance(tmp_path, family, side):
+    from pxr import Usd
+
+    receipt = Path(__file__).parents[1] / (
+        "artifacts/workshops/spatial_grounding_v1/infrastructure/a40-20260922r-workspace.json"
+    )
+    workspace = json.loads(receipt.read_text())
+    manifest = build_overlay(
+        family=family, base_scene=_base_scene(tmp_path), workspace_receipt=receipt,
+        output=tmp_path / "scene.usda", **{("upper_side" if family == "HEIGHT" else "bowl_side"): side},
+    )
+    stage = Usd.Stage.Open(manifest["overlay_usda"]["path"])
+    specs = {row["name"]: row for row in manifest["prospective_design"]["dimensions_and_poses"]}
+    roots = manifest["prospective_design"]["authored_actor_root_overrides_env_local_xyz_m"]
+    centers = {}
+    for name in ("rubiks_cube", "bowl"):
+        prim = stage.GetPrimAtPath(f"/World/{name}")
+        quat = prim.GetAttribute("xformOp:orient").Get()
+        assert [quat.GetReal(), *quat.GetImaginary()] == pytest.approx(
+            workspace["objects"][name]["root_quaternion_world_wxyz"], abs=1e-7,
+        )
+        centers[name] = _center(workspace["objects"][name], roots[name])
+        support_name = (
+            "height_neutral_cube_support" if name == "rubiks_cube" else "height_reference_support"
+        ) if family == "HEIGHT" else (
+            "dist_neutral_cube_support" if name == "rubiks_cube" else "dist_bowl_support"
+        )
+        support = specs[support_name]
+        lowest = roots[name][2] + (
+            workspace["objects"][name]["bbox_env_local_min_xyz_m"][2]
+            - workspace["objects"][name]["root_position_env_local_xyz_m"][2]
+        )
+        assert lowest == pytest.approx(support["center_m"][2] + support["size_m"][2] / 2)
+        assert centers[name][:2] == pytest.approx(support["center_m"][:2])
+    _assert_non_overlapping_supports(list(specs.values()))
+    if family == "DIST":
+        plate = specs["plate"]
+        support = specs["dist_plate_support"]
+        assert plate["center_m"][2] - plate["thickness_m"] / 2 == pytest.approx(
+            support["center_m"][2] + support["size_m"][2] / 2,
+        )
+        assert math.dist(centers["rubiks_cube"], centers["bowl"]) == pytest.approx(
+            math.dist(centers["rubiks_cube"], plate["center_m"]),
+        )
+        cube = workspace["objects"]["rubiks_cube"]
+        center_bottom = cube["geometric_center_env_local_xyz_m"][2] - cube["bbox_env_local_min_xyz_m"][2]
+        for name, sign in (("bowl", 1), ("plate", -1)):
+            goal = specs[f"dist_{name}_landing_support"]
+            target = goal["center_m"][:2] + [goal["center_m"][2] + goal["size_m"][2] / 2 + center_bottom]
+            margin = math.dist(target, plate["center_m"]) - math.dist(target, centers["bowl"])
+            assert sign * margin >= 0.03
 
 
 def test_overlay_refuses_non_model_blind_or_wrong_workspace_receipt(tmp_path):

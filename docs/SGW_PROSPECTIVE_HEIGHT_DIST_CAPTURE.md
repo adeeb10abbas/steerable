@@ -14,6 +14,13 @@ whose receipt SHA-256 is
 the base asset manifest hash is
 `3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806`.
 
+The builder requires that receipt's **v2 measurement schema** and authors the
+measured cube/bowl orientations as well as their translated actor roots.
+Both families have a separate neutral cube support. DIST uses a circular plate,
+with its support top at the disc's bottom, and separate landing supports clear
+of the anchors. Both counterbalances are checked against the actual committed
+workspace geometry; these are authoring checks, not physical qualification.
+
 Parent must use the pinned RoboLab `0aef241` base USD path below on the assigned
 lane only after reviewing the generated manifest:
 

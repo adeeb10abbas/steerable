@@ -1,6 +1,10 @@
 # SGW-01 status
 
-**LAT behavioral release is blocked by the frozen 29-layout requirement. At 03:33 UTC, 13 independently verified batch rejections leave at most 26 possible passes. The four-GPU qualification batch is finishing; four zero-model HEIGHT/DIST captures remain queued for automatic handoff. Learned-policy episodes remain at zero.**
+**LAT qualification is complete: 20 all-six passes and 20 physical rejections,
+including candidate 032, plus 60 geometric rejections. The frozen 29-layout
+behavioral gate cannot pass. All four HEIGHT/DIST capture Pods exited zero
+without required receipts or media; these are preserved infrastructure-invalid
+attempts, not captures. Learned-policy episodes remain at zero.**
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
@@ -410,6 +414,33 @@ The full local SGW suite has 202 passing checks and one Linux-only identity
 skip. No live runtime is qualified: AppLauncher/RPC, distributed D1 startup,
 decoded-future time mapping and the remaining release gates are still open.
 
+### Final qualification and capture recovery
+
+Batch ak completed all 39 indexes at `04:00:09Z`; verifier ao completed at
+`04:05:50Z`. Its [final report](infrastructure/lat-20260923ao-final-verification.json)
+independently closes every candidate: 20 all-six passes, 19 physical rejections,
+zero missing/partial reports and zero technically invalid evidence. Candidate
+032 adds the twentieth physical rejection. The finite LAT campaign is closed;
+there is no refill, rejected-pose retry or reduced layout requirement.
+
+Sequencer as correctly waited for ak's GPU release and activated ar. Both Jobs
+completed, but [all four ar attempts](infrastructure/a40-20260923ar-missing-capture-evidence.json)
+lack `capture.json`, original view arrays and diagnostic video/arrays despite
+exit code zero. The raw logs, GPU/storage records and Pod identities remain
+preserved. Native cleanup masking an exception is a hypothesis, not a proven
+root cause. New capture code persists and flushes exceptions before cleanup
+and provides an independent post-process artifact validator. Recovery must
+use the same baseline design bytes, fresh output roots and a bounded diagnostic
+first; Kubernetes completion alone cannot release evidence.
+
+Prospective HEIGHT/DIST campaign preparation is integrated through `1b6dcf92`,
+without freezing any real candidate plan. Historical compiler `6484f244`
+recovers 23 source tuples and 144 object-geometry rows from 24 layouts, keeping
+settled actor roots, AABB centers and reset displacement distinct. This is not
+exhaustive historical deduplication. The full source-backed local SGW suite now
+has 224 passing checks and one Linux-only skip; no learned runtime is qualified.
+The single independent scene reviewer still awaits actual verified media.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure
@@ -439,14 +470,15 @@ and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Supervise existing finite Job `sgw01-ali-lat-batch-20260923ak` and CPU verifier
-`sgw01-ali-lat-verify-20260923ao`; inspect the latter's persistent
-`report.candidates/` files for independently verified results.
-Controller `sgw01-ali-capture-sequencer-20260923as` now owns the automatic
-handoff to `sgw01-ali-prospective-capture-20260923ar`. Do not recreate these
-Jobs, manually unsuspend ar, or launch any other study GPU phase concurrently.
-Preserve all earlier outcomes and all 100 candidate poses; no
-learned-policy release exists.
+ak, ao, ar and as are terminal and must not be recreated. Stage the capture
+diagnostic repair through a new bounded CPU Job using the original `b429ddd`
+object store. After checking study-owned allocations, run one fresh bounded
+zero-model diagnostic against the **unchanged height-left baseline**. Persist
+the underlying exception before cleanup and require complete receipt/video
+verification outside native Python. Do not count a zero exit as valid capture.
+Only genuine complete media can go to the existing independent scene reviewer.
+Preserve all earlier outcomes and all 100 candidate poses; no learned-policy
+release exists.
 LAT's frozen minimum-layout gate cannot pass; do not start LAT behavior or
 generate replacement LAT candidates.
 Do not rerun completed captures or overwrite evidence.
@@ -457,9 +489,7 @@ The exact safe cluster-status command is:
 
 ```bash
 kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s \
-  -n 211247-prod get jobs sgw01-ali-lat-batch-20260923ak \
-  sgw01-ali-lat-verify-20260923ao sgw01-ali-prospective-capture-20260923ar \
-  sgw01-ali-capture-sequencer-20260923as
+  -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01
 ```
 
 Preserve each failed attempt and diagnose its specific failure before

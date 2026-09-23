@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
+from datetime import datetime, timezone
 import hashlib
 import importlib.metadata
 import json
@@ -10,6 +12,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import traceback
 from typing import Any, Mapping
 
 from .build_asset_manifest import is_git_worktree
@@ -189,6 +192,78 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+@contextmanager
+def _capture_failure_guard(output: Path):
+    failure = output.with_suffix(".failure.json")
+    if failure.exists():
+        raise FileExistsError(f"refusing to reuse a failed capture attempt: {failure}")
+    try:
+        yield
+    except BaseException as error:
+        value = {
+            "status": "infrastructure_invalid_capture",
+            "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
+            "error_type": type(error).__name__,
+            "error": str(error),
+            "traceback": traceback.format_exc(),
+            "model_request_count": 0,
+            "behavioral_episode_count": 0,
+        }
+        failure.parent.mkdir(parents=True, exist_ok=True)
+        with failure.open("x", encoding="utf-8") as stream:
+            json.dump(value, stream, indent=2, sort_keys=True)
+            stream.write("\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        print(value["traceback"], file=sys.stderr, flush=True)
+        raise
+
+
+def verify_capture_artifacts(path: Path) -> dict[str, Any]:
+    """Verify retained output outside Isaac's potentially process-ending cleanup."""
+    from .qualification_batch_verifier import _file, _frame, _scoped, _warmup
+
+    if any(path.with_suffix(suffix).exists() for suffix in (".failure.json", ".cleanup.failure.json")):
+        raise ValueError("capture attempt has a retained infrastructure failure")
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    if (
+        receipt.get("schema_version") != "sgw-01-prospective-family-native-capture-v1"
+        or receipt.get("status") != "prospective_native_capture_not_candidate_qualified"
+        or receipt.get("receipt_sha256") != workspace_digest(receipt)
+        or receipt.get("model_request_count") != 0
+        or receipt.get("behavioral_episode_count") != 0
+    ):
+        raise ValueError("prospective capture receipt identity or zero-model boundary differs")
+    root = path.parent.resolve()
+    cameras = {"over_shoulder_left_camera", "wrist_cam", "over_shoulder_right_camera"}
+    if set(receipt["views"]) != cameras:
+        raise ValueError("prospective capture lacks all three original views")
+    shape = None
+    for camera, view in receipt["views"].items():
+        record = view["lossless_array"]
+        frame_path = _scoped(root, record["path"])
+        _file(frame_path, record)
+        frame = _frame(frame_path)
+        if list(frame.shape) != view["shape"]:
+            raise ValueError("prospective original view shape differs from receipt")
+        if camera == "over_shoulder_left_camera":
+            shape = frame.shape
+    count = _warmup(root, receipt["render_only_diagnostic"], shape)
+    overlay_record = receipt["overlay_manifest"]
+    _file(Path(overlay_record["path"]), overlay_record)
+    manifest = _manifest(Path(overlay_record["path"]))
+    if manifest["manifest_sha256"] != receipt["overlay_manifest_sha256"]:
+        raise ValueError("prospective capture overlay differs from its manifest")
+    dependencies = receipt["usd_dependency_inventory"]
+    required_layers = {manifest[key]["path"] for key in ("overlay_usda", "base_scene")}
+    if not required_layers.issubset({row["real_path"] for row in dependencies}):
+        raise ValueError("prospective capture dependency inventory omits required source layers")
+    for dependency in dependencies:
+        _file(Path(dependency["real_path"]), dependency)
+    return {"status": "verified_capture_artifacts_not_fixture_qualification",
+            "verified_recording_files": count + 3, "receipt": _record(path)}
+
+
 def main() -> None:
     args = parse_args()
     args.enable_cameras = True
@@ -203,28 +278,30 @@ def main() -> None:
     os.environ["SGW_PROSPECTIVE_OVERLAY_MANIFEST_SHA256"] = _sha256(args.overlay_manifest)
     from isaaclab.app import AppLauncher
 
-    app = AppLauncher(args).app
+    app = None
+    env = None
     try:
-        import numpy as np
-        import robolab
-        import robolab.constants
-        import omni.usd
-        from robolab.constants import set_output_dir
-        from robolab.core.environments.runtime import create_env
-        from robolab.core.sensors.contact_sensor_utils import get_contact_sensors
-        from robolab.core.world.world_state import get_world
-        from robolab.registrations.droid.auto_env_registrations_abs_ik import auto_register_droid_abs_ik_envs
-        from robolab.registrations.droid.camera_presets import WRIST_LEFT_RIGHT_HEAD
+        with _capture_failure_guard(args.output):
+            app = AppLauncher(args).app
+            import numpy as np
+            import robolab
+            import robolab.constants
+            import omni.usd
+            from robolab.constants import set_output_dir
+            from robolab.core.environments.runtime import create_env
+            from robolab.core.sensors.contact_sensor_utils import get_contact_sensors
+            from robolab.core.world.world_state import get_world
+            from robolab.registrations.droid.auto_env_registrations_abs_ik import auto_register_droid_abs_ik_envs
+            from robolab.registrations.droid.camera_presets import WRIST_LEFT_RIGHT_HEAD
 
-        if not Path(robolab.__file__).resolve().is_relative_to(args.robolab_root.resolve()):
-            raise RuntimeError("effective RoboLab import is outside pinned checkout")
-        task_path = args.study_root / "experiments/workshops/spatial_grounding_v1/prospective_family_capture_task.py"
-        set_output_dir(str(args.output.parent / "native"))
-        robolab.constants.ENABLE_SUBTASK_PROGRESS_CHECKING = False
-        robolab.constants.RECORD_IMAGE_DATA = False
-        auto_register_droid_abs_ik_envs(task=[str(task_path)], cameras=WRIST_LEFT_RIGHT_HEAD)
-        env, _ = _create_capture_environment(create_env, args)
-        try:
+            if not Path(robolab.__file__).resolve().is_relative_to(args.robolab_root.resolve()):
+                raise RuntimeError("effective RoboLab import is outside pinned checkout")
+            task_path = args.study_root / "experiments/workshops/spatial_grounding_v1/prospective_family_capture_task.py"
+            set_output_dir(str(args.output.parent / "native"))
+            robolab.constants.ENABLE_SUBTASK_PROGRESS_CHECKING = False
+            robolab.constants.RECORD_IMAGE_DATA = False
+            auto_register_droid_abs_ik_envs(task=[str(task_path)], cameras=WRIST_LEFT_RIGHT_HEAD)
+            env, _ = _create_capture_environment(create_env, args)
             observation, _ = env.reset()
             observation, warmup = render_only_warmup(env, observation, 120, args.output.parent / "render_diagnostic")
             warmup["material_assets"] = material_asset_paths(omni.usd.get_context().get_stage())
@@ -242,29 +319,38 @@ def main() -> None:
                 path = root / f"{camera}.npy"
                 np.save(path, frame, allow_pickle=False)
                 views[camera] = {"shape": list(frame.shape), "lossless_array": _record(path)}
-        finally:
-            env.close()
-        receipt = {
-            "schema_version": "sgw-01-prospective-family-native-capture-v1",
-            "status": "prospective_native_capture_not_candidate_qualified",
-            "family": manifest["family"], "model_request_count": 0, "behavioral_episode_count": 0,
-            "overlay_manifest": _record(args.overlay_manifest),
-            "overlay_manifest_sha256": manifest["manifest_sha256"],
-            "asset_manifest_sha256": _record(args.assets_manifest)["sha256"],
-            "renderer_receipt": _record(args.renderer_receipt),
-            "robolab_commit": subprocess.check_output(["git", "-C", str(args.robolab_root), "rev-parse", "HEAD"], text=True).strip(),
-            "environment_seed": args.environment_seed,
-            "environment_origin_world_xyz_m": _vector(origin),
-            "objects": object_rows, "contact_sensor_inventory": contacts, "views": views,
-            "usd_dependency_inventory": _usd_dependencies(Path(manifest["overlay_usda"]["path"])),
-            "render_only_diagnostic": warmup, "validated_slots": [],
-            "versions": {name: importlib.metadata.version(name) for name in ("isaacsim", "isaaclab", "robolab")},
-        }
-        receipt["receipt_sha256"] = workspace_digest(receipt)
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(json.dumps(receipt, sort_keys=True, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+            receipt = {
+                "schema_version": "sgw-01-prospective-family-native-capture-v1",
+                "status": "prospective_native_capture_not_candidate_qualified",
+                "family": manifest["family"], "model_request_count": 0, "behavioral_episode_count": 0,
+                "overlay_manifest": _record(args.overlay_manifest),
+                "overlay_manifest_sha256": manifest["manifest_sha256"],
+                "asset_manifest_sha256": _record(args.assets_manifest)["sha256"],
+                "renderer_receipt": _record(args.renderer_receipt),
+                "robolab_commit": subprocess.check_output(["git", "-C", str(args.robolab_root), "rev-parse", "HEAD"], text=True).strip(),
+                "study_source_commit": subprocess.check_output(["git", "-C", str(args.study_root), "rev-parse", "HEAD"], text=True).strip(),
+                "environment_seed": args.environment_seed,
+                "environment_origin_world_xyz_m": _vector(origin),
+                "objects": object_rows, "contact_sensor_inventory": contacts, "views": views,
+                "usd_dependency_inventory": _usd_dependencies(Path(manifest["overlay_usda"]["path"])),
+                "render_only_diagnostic": warmup, "validated_slots": [],
+                "versions": {name: importlib.metadata.version(name) for name in ("isaacsim", "isaaclab", "robolab")},
+            }
+            receipt["receipt_sha256"] = workspace_digest(receipt)
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            with args.output.open("x", encoding="utf-8") as stream:
+                json.dump(receipt, stream, sort_keys=True, indent=2, allow_nan=False)
+                stream.write("\n")
+                stream.flush()
+                os.fsync(stream.fileno())
     finally:
-        app.close()
+        try:
+            with _capture_failure_guard(args.output.with_suffix(".cleanup.json")):
+                if env is not None:
+                    env.close()
+        finally:
+            if app is not None:
+                app.close()
 
 
 if __name__ == "__main__":

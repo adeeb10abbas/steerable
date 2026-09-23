@@ -1,6 +1,7 @@
 import json
 import math
 from pathlib import Path
+import subprocess
 import sys
 from types import SimpleNamespace
 
@@ -342,6 +343,7 @@ def test_capture_enables_cameras_before_native_application_start(tmp_path, monke
     args = SimpleNamespace(
         headless=True, num_envs=1, renderer="realtime", rendering_type="balanced",
         enable_cameras=False, renderer_receipt=receipt, overlay_manifest=receipt,
+        output=tmp_path / "capture.json",
     )
     monkeypatch.setattr(capture, "parse_args", lambda: args)
     monkeypatch.setattr(capture, "_manifest", lambda _: {})
@@ -360,3 +362,119 @@ def test_capture_enables_cameras_before_native_application_start(tmp_path, monke
     monkeypatch.setitem(sys.modules, "isaaclab.app", SimpleNamespace(AppLauncher=launcher))
     with pytest.raises(StopAtApplicationBoundary):
         capture.main()
+
+
+def test_capture_records_original_failure_before_application_cleanup_exits_zero(tmp_path, monkeypatch):
+    renderer = tmp_path / "renderer.json"
+    renderer.write_text(json.dumps({
+        "status": "passed_zero_model_renderer_preflight", "model_request_count": 0,
+    }))
+    args = SimpleNamespace(
+        headless=True, num_envs=1, renderer="realtime", rendering_type="balanced",
+        renderer_receipt=renderer, overlay_manifest=renderer, output=tmp_path / "capture.json",
+    )
+    monkeypatch.setattr(capture, "parse_args", lambda: args)
+    monkeypatch.setattr(capture, "_manifest", lambda _: {})
+    monkeypatch.setattr(capture, "_validate_capture_bindings", lambda *args: None)
+    monkeypatch.setenv("SGW_PROSPECTIVE_OVERLAY_MANIFEST", "")
+    monkeypatch.setenv("SGW_PROSPECTIVE_OVERLAY_MANIFEST_SHA256", "")
+
+    def close():
+        raise SystemExit(0)
+
+    monkeypatch.setitem(sys.modules, "isaaclab", SimpleNamespace())
+    monkeypatch.setitem(sys.modules, "isaaclab.app", SimpleNamespace(
+        AppLauncher=lambda _: SimpleNamespace(app=SimpleNamespace(close=close)),
+    ))
+    monkeypatch.setitem(sys.modules, "robolab", None)
+    with pytest.raises(SystemExit) as exited:
+        capture.main()
+    assert exited.value.code == 0
+    failure = json.loads(args.output.with_suffix(".failure.json").read_text())
+    assert failure["error_type"] == "ModuleNotFoundError"
+    assert "import robolab" in failure["traceback"]
+    assert not args.output.exists()
+    with pytest.raises(ValueError, match="infrastructure failure"):
+        capture.verify_capture_artifacts(args.output)
+
+
+def test_capture_failure_survives_immediate_native_process_exit(tmp_path):
+    path = tmp_path / "capture.json"
+    code = """
+import os, sys
+from pathlib import Path
+from experiments.workshops.spatial_grounding_v1.prospective_family_capture import _capture_failure_guard
+try:
+    with _capture_failure_guard(Path(sys.argv[1])):
+        raise RuntimeError("native constructor failed before capture")
+finally:
+    os._exit(0)
+"""
+    result = subprocess.run([sys.executable, "-c", code, str(path)], capture_output=True, text=True, timeout=20)
+    assert result.returncode == 0
+    failure = json.loads(path.with_suffix(".failure.json").read_text())
+    assert failure["error"] == "native constructor failed before capture"
+    assert failure["error"] in result.stderr
+    with pytest.raises(FileExistsError, match="reuse"):
+        with capture._capture_failure_guard(path):
+            pytest.fail("failed capture root must not be reused")
+    result = subprocess.run([
+        sys.executable, "-c",
+        "import sys; from pathlib import Path; "
+        "from experiments.workshops.spatial_grounding_v1.prospective_family_capture import verify_capture_artifacts; "
+        "verify_capture_artifacts(Path(sys.argv[1]))", str(path),
+    ], capture_output=True, text=True, timeout=20)
+    assert result.returncode != 0
+    assert "infrastructure failure" in result.stderr
+
+
+def test_capture_output_check_requires_actual_receipt_and_complete_video(tmp_path):
+    import numpy as np
+    from test_sgw_render_warmup import Array
+
+    path = tmp_path / "capture.json"
+    with pytest.raises(FileNotFoundError):
+        capture.verify_capture_artifacts(path)
+    workspace = tmp_path / "workspace.json"
+    workspace.write_text(json.dumps(_workspace()))
+    overlay = tmp_path / "height.usda"
+    manifest = build_overlay(
+        family="HEIGHT", base_scene=_base_scene(tmp_path), workspace_receipt=workspace,
+        output=overlay, upper_side="left",
+    )
+    manifest_path = tmp_path / "height.manifest.json"
+    manifest_path.write_text(json.dumps(manifest))
+    frame = np.arange(192, dtype=np.uint8).reshape(8, 8, 3)
+    cameras = ("over_shoulder_left_camera", "wrist_cam", "over_shoulder_right_camera")
+    obs = {"image_obs": {camera: [Array(frame)] for camera in cameras}}
+    env = SimpleNamespace(
+        sim=SimpleNamespace(current_time=0.0, render=lambda: None),
+        scene={camera: SimpleNamespace(update=lambda *args, **kwargs: None) for camera in cameras},
+        observation_manager=SimpleNamespace(compute=lambda: obs),
+    )
+    _, warmup = capture.render_only_warmup(env, obs, 120, tmp_path / "render_diagnostic")
+    views = {}
+    for camera in cameras:
+        view = tmp_path / f"{camera}.npy"
+        np.save(view, frame)
+        views[camera] = {"shape": list(frame.shape), "lossless_array": capture._record(view)}
+    receipt = {
+        "schema_version": "sgw-01-prospective-family-native-capture-v1",
+        "status": "prospective_native_capture_not_candidate_qualified",
+        "model_request_count": 0, "behavioral_episode_count": 0,
+        "views": views, "render_only_diagnostic": warmup,
+        "overlay_manifest": capture._record(manifest_path),
+        "overlay_manifest_sha256": manifest["manifest_sha256"],
+        "usd_dependency_inventory": _usd_dependencies(overlay),
+    }
+    receipt["receipt_sha256"] = workspace_digest(receipt)
+    path.write_text(json.dumps(receipt))
+    assert capture.verify_capture_artifacts(path)["verified_recording_files"] == 137
+    cleanup_failure = path.with_suffix(".cleanup.failure.json")
+    cleanup_failure.write_text('{"error": "native cleanup failed"}')
+    with pytest.raises(ValueError, match="infrastructure failure"):
+        capture.verify_capture_artifacts(path)
+    cleanup_failure.unlink()
+    Path(warmup["viewport_video"]["path"]).unlink()
+    with pytest.raises(ValueError, match="missing evidence"):
+        capture.verify_capture_artifacts(path)

@@ -76,6 +76,29 @@ Completing this chain authorizes **evidence review only**. Candidate freezing,
 scripted qualification, historical deduplication and model-runtime gates
 remain separate.
 
+### Observed ar infrastructure outcome
+
+The original four-index ar attempt completed at the Kubernetes level on
+23 September at 04:01:32 UTC, but all four containers exited zero without
+`capture.json`, original camera arrays or render-diagnostic media. It produced
+**zero valid captures**. The original Job, scene inputs and raw output roots
+are immutable infrastructure evidence; they must not be overwritten or
+misclassified as physical or model failures.
+
+The capture CLI now fsyncs an exception/traceback receipt before native
+cleanup can terminate the process, and writes its successful capture receipt
+before environment teardown. Launchers must run the native Python command
+as a child, not shell `exec`, then call `verify_capture_artifacts()` in a fresh
+CPU-only Python process before reporting success. This checks the receipt,
+source layers, all three original views, every retained warmup array and
+all 121 decoded video frames. An exit-zero process without those files fails.
+The check is artifact integrity, not visual review or physical qualification.
+
+The initial recovery is one bounded diagnostic of the unchanged height-left
+baseline in a new output directory. Capture failure recording fixes a
+diagnostic blind spot; it does not establish the native root cause before
+new evidence exists. No candidate cap, pose or scientific threshold changes.
+
 ## Prospective design-plan boundary
 
 After—and only after—the two native baseline captures for each family have

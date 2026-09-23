@@ -131,6 +131,15 @@ to remain open. The compiler/worker/executor checks pass 34 tests. The collector
 cannot release fixtures, launch a model, assign behavioral partitions, or change
 the live worker source.
 
+At 08:29:28 UTC, bu completed its real initial compilation and independently
+accounted for all 200 proposals: 79 geometric rejections, two all-six physical
+passes, two valid physical rejections, four in-progress slots and 113 unstarted
+slots. This is explicitly an incomplete snapshot, not a completed campaign.
+Its hash-verified output is retained in
+[`infrastructure/family-collector-20260923bu/initial/summary.json`](infrastructure/family-collector-20260923bu/initial/summary.json).
+The collector is now waiting for terminal worker receipts before the separate
+final compilation.
+
 ## Scientific accounting
 
 - Planned: **1,044** episodes (P 36, D 144, C 864).

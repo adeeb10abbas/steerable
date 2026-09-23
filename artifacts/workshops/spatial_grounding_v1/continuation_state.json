@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_height_dist_remaining_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T08:27:00Z",
+  "updated_at_utc": "2026-09-23T08:29:28Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -515,13 +515,18 @@
       "job_uid": "d386cfac-76ee-40c1-a339-b6aaa11531cf",
       "pod": "sgw01-ali-family-collector-20260923bu-jvpjd",
       "pod_uid": "76cfcee1-b742-4bd8-a787-7ad26ccdd15b",
-      "status": "exact_source_staged_initial_raw_verification_running_then_finite_terminal_wait",
+      "status": "initial_raw_snapshot_verified_waiting_for_four_terminal_workers",
       "source_commit": "a995e014af92c2f7df9aed0e6a9e931530995d62",
       "started_at_utc": "2026-09-23T08:23:10Z",
       "allocated_gpus": 0,
       "job_deadline_seconds": 194400,
       "manifest": "handoff/k8s/sgw01-ali-family-collector-20260923bu.json",
       "raw_root": "/data/users/ali/sgw-01/infrastructure/family-collector-20260923bu",
+      "receipt": "infrastructure/family-collector-20260923bu/receipt.json",
+      "receipt_sha256": "5180c5277a7b45e776e2260b92f564a532728cc446470f6d9562c95ced60ff71",
+      "initial_summary": "infrastructure/family-collector-20260923bu/initial/summary.json",
+      "initial_summary_sha256": "618fc1e99ed5594c65b8dac463d80e2f5c09dd12a29de8a9ec049b2d744918a0",
+      "initial_snapshot": {"proposed": 200, "geometric_rejections": 79, "physical_accepted": 2, "physical_rejected": 2, "in_progress_slots": 4, "unstarted_slots": 113, "infrastructure_invalid_slots": 0},
       "worker_source_mutated": false,
       "release_permitted": false
     },
@@ -991,7 +996,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Inspect bu initial-receipt.json or collector-error.json and bt shared infrastructure-stop.json; retain all ongoing videos and completed evidence. Collect terminal summaries when all four workers finish. Exact historical producer b3815553737b42dad20eabdfde81dfa66fdf41cae7abdb84b3fecbcb1eb2babf is present in this checkout and prior2d3a0b9 commit exists for bounded CPU-only lineage investigation. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
+  "next_action": "bu initial snapshot is verified and committed; inspect its future final-receipt.json/collector-error.json and bt shared infrastructure-stop.json without interrupting active trials. Historical next trace: exact2d3a0b9 contains r004/repair_registration.json, source_push_gate.json, and r004/state_repair_gate.py; its raw-output binding block at lines532-544 names E004 reference and both scene assets, while snapshot roots come from root_pos_w. The exact E004 full reset reference exists at artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json. Follow these CPU-only lineage bindings, not an invented historical SGW identity. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

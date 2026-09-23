@@ -131,8 +131,12 @@ def test_only_the_parsed_stream_is_opened_and_hashed(tmp_path, monkeypatch):
 def test_source_defined_solve_environment_and_diagnostic_resets(tmp_path):
     fresh = _payload()["attempts"][0]["stages"]["canonical_carry"]["fresh_reset"]
     payload = {
-        "attempts": [{"stages": {"carry": {"ik_solve_environment": {"fresh_reset": fresh}}}}],
-        "known_reachable_diagnostics": [{"fresh_reset": fresh}, {"fresh_reset": fresh}],
+        "attempts": [{"stages": {"carry": {
+            "ik_solve_environment": {"fresh_reset": fresh, "candidate_state": fresh},
+        }}}],
+        "known_reachable_diagnostics": [
+            {"fresh_reset": fresh, "candidate_state": fresh}, {"fresh_reset": fresh},
+        ],
     }
     path = tmp_path / "state.json"
     digest, size = _write(path, payload)
@@ -143,6 +147,7 @@ def test_source_defined_solve_environment_and_diagnostic_resets(tmp_path):
         "/known_reachable_diagnostics/1/fresh_reset/objects/a~1b~0c",
     ]
     assert len(result["full_reset_comparisons"]) == 3
+    assert result["candidate_state_objects"] == []
 
 
 @pytest.mark.parametrize("limits,reason", [

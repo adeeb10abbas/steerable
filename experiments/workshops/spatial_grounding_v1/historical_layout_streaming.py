@@ -122,10 +122,17 @@ def _selection(path: PathTokens) -> tuple[str, str] | None:
     ):
         relative = path[4:]
         if relative[0] == "ik_solve_environment":
+            if relative[1] != "fresh_reset":
+                return None
             relative = relative[1:]
     elif len(path) >= 4 and path[0] == "known_reachable_diagnostics" and isinstance(path[1], int):
         relative = path[2:]
-    if len(relative) == 4 and relative[1] == "objects" and relative[3] in OBJECT_FIELDS:
+        if relative[0] != "fresh_reset":
+            return None
+    if (
+        len(relative) == 4 and relative[1] == "objects"
+        and isinstance(relative[2], str) and relative[3] in OBJECT_FIELDS
+    ):
         if relative[0] == "fresh_reset":
             return "fresh_reset_objects", "max_object_bytes"
         if relative[0] == "candidate_state":

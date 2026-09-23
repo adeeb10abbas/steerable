@@ -1,0 +1,275 @@
+{
+  "behavioral_episodes": 0,
+  "claim_boundary": "Current distribution-verified native API implementation and a historically bound SGW DIST capture. The native API semantics match the registered Isaac Sim5/IsaacLab2.2 contract; this is not a historical import-byte attestation, global history coverage or fixture release.",
+  "files": {
+    "candidate.json": {
+      "bytes": 4117,
+      "sha256": "3b141c4ea5dd05f79734827f525904dfa23828fbc1b074eea1969eb4614f8c6f"
+    },
+    "candidate_capture.json": {
+      "bytes": 80484,
+      "sha256": "063a3cf5ed19796505a058582db04aac7297e951817b986b299eecc8e03f97a7"
+    },
+    "family_verification.json": {
+      "bytes": 7365,
+      "sha256": "c8a25186c24c2b8c5e016733bf0765bb76843365eacbaa2cb71de8714789c0b4"
+    }
+  },
+  "historical_native_import_bytes_independently_attested": false,
+  "model_requests": 0,
+  "native_root_tensor_dtype": "float32",
+  "native_sources": {
+    "ArticulationData": {
+      "distribution": {
+        "name": "isaaclab",
+        "record_sha256": "YUrgHImezdGilZ6AbXIxnFjS8s5GSLxqJV1XqZ3vAGk",
+        "version": "2.2.0"
+      },
+      "methods": {
+        "ArticulationData.root_link_pos_w": {
+          "ast_sha256": "2cb0b1a8b4fcb6f621f242e72311c2ecd1f6b2b27dbb5ab85c8c71be8dd81c40",
+          "calls": [],
+          "lines": [
+            815,
+            820
+          ],
+          "returns": [
+            "self.root_link_pose_w[:, :3]"
+          ]
+        },
+        "ArticulationData.root_link_pose_w": {
+          "ast_sha256": "cba92c3e3d3268599eff815c1e67e21c3639ad909c165428c3572a9e34268fcc",
+          "calls": [
+            "math_utils.convert_quat",
+            "self._root_physx_view.get_root_transforms",
+            "self._root_physx_view.get_root_transforms().clone"
+          ],
+          "lines": [
+            445,
+            459
+          ],
+          "returns": [
+            "self._root_link_pose_w.data"
+          ]
+        },
+        "ArticulationData.root_link_quat_w": {
+          "ast_sha256": "451f9f754f5bd9eec18836f99ad465409c1fd0957c769e5d59a3781994522320",
+          "calls": [],
+          "lines": [
+            823,
+            828
+          ],
+          "returns": [
+            "self.root_link_pose_w[:, 3:7]"
+          ]
+        },
+        "ArticulationData.root_pos_w": {
+          "ast_sha256": "1a68245f5c7bf04801c32030de00321df9fb4ab641e392a1d14160b487c611e7",
+          "calls": [],
+          "lines": [
+            987,
+            989
+          ],
+          "returns": [
+            "self.root_link_pos_w"
+          ]
+        },
+        "ArticulationData.root_quat_w": {
+          "ast_sha256": "7126c970d437a47f2c86c2193119b91e2201f8db122588bc7f02c2c16d6e6e91",
+          "calls": [],
+          "lines": [
+            992,
+            994
+          ],
+          "returns": [
+            "self.root_link_quat_w"
+          ]
+        }
+      },
+      "source": {
+        "bytes": 48298,
+        "path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/assets/articulation/articulation_data.py",
+        "sha256": "614ae01c899ecdd1a2959e806d72319c58d2f2ce4648bc6a255d57a99def0069"
+      }
+    },
+    "PhysX": {
+      "distribution": {
+        "name": "isaacsim-extscache-kit",
+        "record_sha256": "gm8gfOWbLoJEZJfAPuQ9UOvRJ-vkKZ0133acT2P5UJo",
+        "version": "5.0.0.0"
+      },
+      "methods": {
+        "ArticulationView.get_root_transforms": {
+          "ast_sha256": "934df8813cece5a060f47ef7f6992cdcbaba34e01a396bad9ae88a4cc108e0c8",
+          "calls": [
+            "Exception",
+            "hasattr",
+            "self._backend.get_root_transforms",
+            "self._frontend.create_tensor"
+          ],
+          "lines": [
+            1597,
+            1622
+          ],
+          "returns": [
+            "self._root_transforms"
+          ]
+        },
+        "RigidBodyView.get_transforms": {
+          "ast_sha256": "1571863558404dc46dc84118e1ed07a67b8fe6ea1d8e69b1b9248149606535d9",
+          "calls": [
+            "Exception",
+            "hasattr",
+            "self._backend.get_transforms",
+            "self._frontend.create_tensor"
+          ],
+          "lines": [
+            3342,
+            3367
+          ],
+          "returns": [
+            "self._transforms"
+          ]
+        }
+      },
+      "source": {
+        "bytes": 441183,
+        "path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/isaacsim/extscache/omni.physics.tensors-107.3.18+107.3.1.lx64.r.cp311.u353/omni/physics/tensors/impl/api.py",
+        "sha256": "826f207ce59b2e82446497c03ee43d50ebd127ebe4299d35df769c4f63f9509a"
+      }
+    },
+    "RigidObjectData": {
+      "distribution": {
+        "name": "isaaclab",
+        "record_sha256": "5gSjSTepeuLd0_-H8pzKTnoBIfXmGBnXIY1qoDbTYco",
+        "version": "2.2.0"
+      },
+      "methods": {
+        "RigidObjectData.root_link_pos_w": {
+          "ast_sha256": "2cb0b1a8b4fcb6f621f242e72311c2ecd1f6b2b27dbb5ab85c8c71be8dd81c40",
+          "calls": [],
+          "lines": [
+            395,
+            400
+          ],
+          "returns": [
+            "self.root_link_pose_w[:, :3]"
+          ]
+        },
+        "RigidObjectData.root_link_pose_w": {
+          "ast_sha256": "fa1d899bd4279fe5f14b85848c29293e5f60af778dd2f22a4603d6f2cd48e23e",
+          "calls": [
+            "math_utils.convert_quat",
+            "self._root_physx_view.get_transforms",
+            "self._root_physx_view.get_transforms().clone"
+          ],
+          "lines": [
+            124,
+            138
+          ],
+          "returns": [
+            "self._root_link_pose_w.data"
+          ]
+        },
+        "RigidObjectData.root_link_quat_w": {
+          "ast_sha256": "451f9f754f5bd9eec18836f99ad465409c1fd0957c769e5d59a3781994522320",
+          "calls": [],
+          "lines": [
+            403,
+            408
+          ],
+          "returns": [
+            "self.root_link_pose_w[:, 3:7]"
+          ]
+        },
+        "RigidObjectData.root_pos_w": {
+          "ast_sha256": "1a68245f5c7bf04801c32030de00321df9fb4ab641e392a1d14160b487c611e7",
+          "calls": [],
+          "lines": [
+            566,
+            568
+          ],
+          "returns": [
+            "self.root_link_pos_w"
+          ]
+        },
+        "RigidObjectData.root_quat_w": {
+          "ast_sha256": "7126c970d437a47f2c86c2193119b91e2201f8db122588bc7f02c2c16d6e6e91",
+          "calls": [],
+          "lines": [
+            571,
+            573
+          ],
+          "returns": [
+            "self.root_link_quat_w"
+          ]
+        }
+      },
+      "source": {
+        "bytes": 26270,
+        "path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/assets/rigid_object/rigid_object_data.py",
+        "sha256": "e604a34937a97ae2ddd3ff87f29cca4e7a0121f5e61819d7218d6aa036d361ca"
+      }
+    },
+    "SimulationContext": {
+      "distribution": {
+        "name": "isaaclab",
+        "record_sha256": "beJnTanfQPDAMMjhAVBNRtpIG0Vy_LTOnNfhyo683Fk",
+        "version": "2.2.0"
+      },
+      "methods": {
+        "SimulationContext.__init__": {
+          "ast_sha256": "d87d261b731dec6a3df45c73264a9c7173ef5f1e1f146fa1814ae60df6cb2e7f",
+          "calls": [
+            "'.'.join",
+            "RuntimeError",
+            "SimulationCfg",
+            "bool",
+            "carb.settings.get_settings",
+            "cfg.validate",
+            "create_new_stage_in_memory",
+            "float",
+            "get_active_viewport",
+            "get_version",
+            "int",
+            "obj._app_control_on_stop_handle_fn",
+            "omni.log.warn",
+            "omni.timeline.get_timeline_interface",
+            "omni.timeline.get_timeline_interface().get_timeline_event_stream",
+            "omni.usd.get_context",
+            "omni.usd.get_context().get_stage",
+            "self._apply_physics_settings",
+            "self._apply_render_settings_from_cfg",
+            "self._setup_anim_recording",
+            "self.carb_settings.get",
+            "self.cfg.to_dict",
+            "sim_params.pop",
+            "sim_params.update",
+            "stage_utils.get_current_stage",
+            "super",
+            "super().__init__",
+            "timeline_event_stream.create_subscription_to_pop_by_type",
+            "torch.tensor",
+            "ui.Workspace.get_window",
+            "weakref.proxy"
+          ],
+          "lines": [
+            117,
+            284
+          ],
+          "returns": []
+        }
+      },
+      "source": {
+        "bytes": 50505,
+        "path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/sim/simulation_context.py",
+        "sha256": "6de2674da9df40f0c030c8e101504d46da481b4572fcb4ce9cd7e1ca8ebcdc59"
+      }
+    }
+  },
+  "release_permitted": false,
+  "robolab_getter_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "robolab_getter_sha256": "a4c12dc07673b0733c53990244e86577d16fa98888772a6c93934903f9699bbf",
+  "schema_version": "sgw-01-native-metric-contract-export-v1",
+  "stage_units_in_meters": 1.0
+}

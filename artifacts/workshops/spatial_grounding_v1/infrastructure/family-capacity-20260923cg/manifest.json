@@ -1,0 +1,53 @@
+{
+  "schema_version": "sgw-01-family-capacity-evidence-v1",
+  "observed_at_utc": "2026-09-23T12:38:40.642104+00:00",
+  "replayed_at_utc": "2026-09-23T12:43:48.659820+00:00",
+  "audit": {
+    "path": "audit.json",
+    "sha256": "34851821cb0067b5be26d9592a870892fe7bbeee831dd7d455f36dd2ed44d08b"
+  },
+  "new_terminal_evidence": {
+    "manifest_sha256": "395c18828046c471914ceac7ec6fa023fe9004617ac88cce060cc68808abae6d",
+    "slots": ["HEIGHT-069", "HEIGHT-070", "HEIGHT-072", "HEIGHT-076"],
+    "passed_trials": [4, 6, 5, 5],
+    "all_six_passes": 1,
+    "valid_physical_rejections": 3,
+    "original_trial_and_viewport_video_bindings_rehashed": 24,
+    "raw_state_and_score_projections_equal_retained_projection": true
+  },
+  "retained_totals_including_smoke": {
+    "completed_candidates": 48,
+    "all_six_pass": 14,
+    "physical_rejections": 34,
+    "complete_trials": 288,
+    "scripted_actions": 129600
+  },
+  "height_capacity": {
+    "maximum_qualified_left": 17,
+    "maximum_qualified_right": 7,
+    "required_left": 15,
+    "required_right": 14,
+    "maximum_qualified_total": 24,
+    "required_total": 29,
+    "blocked_by_total_and_right_stratum": true
+  },
+  "pvc_replay": {
+    "root": "/data/users/ali/sgw-01/infrastructure/native-metric-20260923cg",
+    "delta_archive": "replay-delta.tar.gz",
+    "delta_archive_sha256": "ef625838b1310cc6adf1adc524da5d6b5eb6276a83369ce30d1b4f28901287d9",
+    "receipt": "replay-receipt.json",
+    "byte_identical": true,
+    "additional_gpus": 0
+  },
+  "tests": {
+    "path": "tests/test_sgw_family_capacity.py",
+    "sha256": "26391e1adba9f6f7c4ea95b4d7e0443b6968d1f2618b317ea2acc8e9daa5b0b8",
+    "combined_capacity_collector_historical_metric_tests_passed": 87
+  },
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false,
+  "live_workers_modified": false,
+  "authorizes_worker_interruption": false,
+  "claim_boundary": "The original finite queue remains unchanged. This is worker-verified qualification evidence and a necessary capacity bound, not final independent raw compilation, historical freshness or learned-model evidence. Slots outside this retained prefix are not classified from a later progress monitor."
+}

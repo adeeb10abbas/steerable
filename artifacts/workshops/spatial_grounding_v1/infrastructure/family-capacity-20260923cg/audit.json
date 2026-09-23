@@ -1,0 +1,844 @@
+{
+  "behavioral_episodes": 0,
+  "claim_boundary": "A necessary capacity bound conditioned on retained worker-verified classifications, including independently rechecked smoke. Unknown slots and physical passes are optimistically counted as potentially qualified. No historical-coverage, deduplication, runtime or learned release is inferred. This is not a rerun of raw verification or the pending final collector.",
+  "families": {
+    "DIST": {
+      "by_side": {
+        "left": {
+          "additional_rejections_tolerable": 30,
+          "capture_eligible": 45,
+          "geometric_rejections": 5,
+          "maximum_qualified_possible": 45,
+          "physical_accepted": 1,
+          "physical_rejected": 0,
+          "proposed": 50,
+          "required_qualified": 15,
+          "unavoidable_shortfall": 0,
+          "unresolved_slots": 44
+        },
+        "right": {
+          "additional_rejections_tolerable": 4,
+          "capture_eligible": 19,
+          "geometric_rejections": 31,
+          "maximum_qualified_possible": 18,
+          "physical_accepted": 0,
+          "physical_rejected": 1,
+          "proposed": 50,
+          "required_qualified": 14,
+          "unavoidable_shortfall": 0,
+          "unresolved_slots": 18
+        }
+      },
+      "family": "DIST",
+      "pilot_side": "left",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "release_permitted": false,
+      "status": "not_ruled_out_not_a_release"
+    },
+    "HEIGHT": {
+      "by_side": {
+        "left": {
+          "additional_rejections_tolerable": 2,
+          "capture_eligible": 28,
+          "geometric_rejections": 22,
+          "maximum_qualified_possible": 17,
+          "physical_accepted": 12,
+          "physical_rejected": 11,
+          "proposed": 50,
+          "required_qualified": 15,
+          "unavoidable_shortfall": 0,
+          "unresolved_slots": 5
+        },
+        "right": {
+          "additional_rejections_tolerable": 0,
+          "capture_eligible": 29,
+          "geometric_rejections": 21,
+          "maximum_qualified_possible": 7,
+          "physical_accepted": 1,
+          "physical_rejected": 22,
+          "proposed": 50,
+          "required_qualified": 14,
+          "unavoidable_shortfall": 7,
+          "unresolved_slots": 6
+        }
+      },
+      "family": "HEIGHT",
+      "pilot_side": "left",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "release_permitted": false,
+      "status": "mathematically_blocked_by_frozen_stratum_capacity"
+    }
+  },
+  "fixture_release_permitted": false,
+  "inputs": [
+    {
+      "bytes": 633774,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-plan-freeze-20260923bm/height-plan.json",
+      "sha256": "4cb646b854c83e09470bf358c201719f652bef03ab7daf9a7c8eadbd55f5b784"
+    },
+    {
+      "bytes": 682897,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-plan-freeze-20260923bm/dist-plan.json",
+      "sha256": "979a976c0c2c1e7e93b29378870c7f7c8b4618dc1ccfc94b916c4d53d1347cad"
+    },
+    {
+      "bytes": 26202,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-collector-20260923bu/initial/summary.json",
+      "sha256": "618fc1e99ed5594c65b8dac463d80e2f5c09dd12a29de8a9ec049b2d744918a0"
+    },
+    {
+      "bytes": 37275,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-bv/manifest.json",
+      "sha256": "a6d52dd182367ad1b91634b745a5f3e19cc1e9959bcbabdbc8bfe66b218ccb0b"
+    },
+    {
+      "bytes": 37284,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-bw/manifest.json",
+      "sha256": "5450d30ee2ada65388b9f97e6293c63ad22f233172b79673dfe7ce7c4978b9f3"
+    },
+    {
+      "bytes": 37281,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-bx/manifest.json",
+      "sha256": "68003bd008a4be0df8064c00e6e36f9ec6d856243dd02b815db6b6802d487dc9"
+    },
+    {
+      "bytes": 37245,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-bz/manifest.json",
+      "sha256": "7f3b10dffaaf73b8599cac2110a342f81bfed32eaae0b10fae37d0e48c7aa66b"
+    },
+    {
+      "bytes": 37291,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-ca/manifest.json",
+      "sha256": "7749cae896e4b16373df30fc58d4b36b0ddf57a125710dc50542e598c004d8ed"
+    },
+    {
+      "bytes": 37299,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-cb/manifest.json",
+      "sha256": "57f5de8d0182ed7508c763f6bdb6bb29dd0cffc32b9f7c8bc311a80848b7714a"
+    },
+    {
+      "bytes": 37269,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-cc/manifest.json",
+      "sha256": "43c855ff20811e5e0e80593d98e7c11a6a8e8a390e1fa1af37f3a70241481e81"
+    },
+    {
+      "bytes": 37298,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-cd/manifest.json",
+      "sha256": "ea0c6418a791b94d2265eedd4520062bf6aa3aa6a77d196c0f0238d59d57bb1d"
+    },
+    {
+      "bytes": 18998,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-ce/manifest.json",
+      "sha256": "99f96d58920418fbc73a8dc608660cd0b62c9171e8e862ce4c1974436c355768"
+    },
+    {
+      "bytes": 55693,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-cf/manifest.json",
+      "sha256": "99e1d95272989f8aba00691edaac943b22639e7d9c82807d04ad11926a99e0dc"
+    },
+    {
+      "bytes": 37289,
+      "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-cg/manifest.json",
+      "sha256": "395c18828046c471914ceac7ec6fa023fe9004617ac88cce060cc68808abae6d"
+    }
+  ],
+  "live_workers_modified": false,
+  "model_release_permitted": false,
+  "model_requests": 0,
+  "schema_version": "sgw-01-frozen-family-capacity-audit-v1",
+  "terminal_evidence": [
+    {
+      "accepted": true,
+      "design_id": "SGW-DIST-DESIGN-000",
+      "failed_trials": [],
+      "family": "DIST",
+      "side": "left",
+      "verification_sha256": "24c38f60f5aa387aa476f4462c53842937b988f9ebdeafaae41fa903734a6ff7"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-DIST-DESIGN-003",
+      "failed_trials": [
+        {
+          "failure_stage": "transport_failed",
+          "goal_sign": 1,
+          "reset_index": 0
+        }
+      ],
+      "family": "DIST",
+      "side": "right",
+      "verification_sha256": "fb4402715b0009f7e3f4368f48622a2831bce17e773d2df05ea3ad7e02b2bb72"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-000",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "ed9fdb249c8dc5f4b00d3741416177ffad4e6abae8eaa2644e2803b6570477cd"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-001",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "aa8f6ddbf067af151821ee44464a90b3fdb1253615360a27a549ad6dd3ad6aaa"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-003",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "transport_failed",
+          "goal_sign": -1,
+          "reset_index": 1
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "b244c92cc2e45526f2fa73c130b1b85c7edc9c8c8955e9257df7e2102809bfca"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-004",
+      "failed_trials": [
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": 1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "f5dc4adc6389ce42cbe489a7fe229bd8ebe9fc753bcad70bcb053f6fdaf62acf"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-005",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "1820df8f8ceeb309fa4f9746ef1cc8c5822f2afaec0ad467b8a6bb21ddad4c28"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-006",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "0a3d092ae4c88b713074bb2583ff146e79b9ad76d00830ac6d70a5f1583ce72f"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-007",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": -1,
+          "reset_index": 1
+        },
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 2
+        },
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": 1,
+          "reset_index": 1
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "b5cc67dfbbc0fe61db02c6ae4be584e7fca4da0edefaa8c217d53074fe1b2b11"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-008",
+      "failed_trials": [
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": 1,
+          "reset_index": 0
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "0c0e40dc52fd672cfffc93d089745bfb8785bb0c2310ea69526f0f7ffab1c7f2"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-009",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "5458377717640a6c11de2fb77297c8b9371cfbab2e40349e5c4b83ff47867cdd"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-010",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "4fc1a5e0bd27ed4e7cf134d89f3f1c06b0dc2750a8f616a1dd9883c3d294dd2f"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-012",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "3a1867073b4fc1483d48d908685c14f5826dfcbc0f476a19c173c5ed3242a7e5"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-013",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "80eb00b93271f0582a8835867afdaf852c6cab3494c3c7ca2ced261381847210"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-014",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": 1,
+          "reset_index": 1
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "ff6dfd7f4d6c8fb335eba611eabbac9dc1d0d0c4d9762f71622e4ffd78952060"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-015",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": -1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "fa94a32b1757361650d05ec978e71073aa710894f4053d5d3b5f0f1583d7c2de"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-016",
+      "failed_trials": [
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": 1,
+          "reset_index": 1
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "aba4048dca0bab1ea8f97c92a82c017be4004fb9c20d175d77015b4b1e87665e"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-020",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "502c0380edc728bbe9d6e8bc3f7f6cfa9bcf3cec49c83df3d0a977903035ebf4"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-021",
+      "failed_trials": [
+        {
+          "failure_stage": "transport_failed",
+          "goal_sign": -1,
+          "reset_index": 1
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "d5e7cb6fe4d724fa235887dbfadd686c6a1aa55b1f08e68d17b775101e3e48cf"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-024",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "b2f42b2a00e074915083aa19c2b7a670fec8ce39660c72aef733a9fa4e0919b3"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-026",
+      "failed_trials": [
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": -1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "83eb2dcdd54cda002c65ec0fa4f0b36e380d45d35a56e58e9be59b9fb8f3753e"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-027",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "transport_failed",
+          "goal_sign": -1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "f2b1a98bb538f342957f44e7b694a431c50784623873996728647c0a684a46bb"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-032",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "459da2c094f8e2d18a81209259c75f45bdcea40c44545751c40a4115c4b66980"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-033",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "5037081b2fc8986012db261b18d244df50ccba926d6dcc63c85357825e39bf59"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-034",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "47e5274649413811edbe9d6cd1d640c8b1c06e3e975f63eb5936706eec64f7be"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-035",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 1
+        },
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": 1,
+          "reset_index": 0
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "1d609dc33994c16d546fac914ce8d463ef19d6fd856d581309d17fea8ae8717f"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-036",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "8baa8156d07de13a803c9dbc8f462b464ee5033968a052e3e733a7dea277e78c"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-037",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 1
+        },
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": 1,
+          "reset_index": 1
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "73f598f83b41b6b330f5a8f2d0eedfa7ea127ec690f9d52696d5a73f87631975"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-039",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "557d035d57e1fd0f3ac5ee1d85d7f2f5cf7de9197dc27e8e37aa63f4f6327005"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-040",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "702628f152b22d274928d4ddad5f01523b5acc6ff27bbd9e2abb1fcbf21162ce"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-041",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "a67c5be95ad983e3506fea50e9efb5116761a71138c209f0342c4c1aede9ad72"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-044",
+      "failed_trials": [
+        {
+          "failure_stage": "transport_failed",
+          "goal_sign": -1,
+          "reset_index": 0
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "99d0bcdfa336ba02fad4985041de6e75e0f8411f460ffdc5404146f48ab9a92a"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-046",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "a9af403bc22d7c6f5e32728bb0d0cb835b2221470931641c7df83d3d2fe2c6f8"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-049",
+      "failed_trials": [
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": -1,
+          "reset_index": 0
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "db495fc584ae4b98829a39f17596b15ce388ccb6de9c46737189ec06a054ad39"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-052",
+      "failed_trials": [
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": 1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": 1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "7c87a9e78cc236cd476d22338ceb71df2eb4659bf462b5587846abec993bf02b"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-053",
+      "failed_trials": [
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 1
+        },
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "c657fe3fbb51561b5ca7e8947aef5c33e43b1a9caace2178e945065841c2acbd"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-055",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 1
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "9c9dac593813d9f7070fb4f29ab778aecc330328fd88fdf1aa822cb455018fc7"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-059",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "2dde9e6adf9f230b653caa55cec542870d214983c9e0d211fd787b18ab9d0312"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-061",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "2a2e05b7cfd97ffa4f0c7b18896c12cb4c96ae589a9537ee92aeb6203ee48555"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-063",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": -1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "2c61c1cbcbddf5d7d73caaf7f8ec306c9e934ef475e843c2ed69669cd224a4ae"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-064",
+      "failed_trials": [
+        {
+          "failure_stage": "transport_failed",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": 1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "9f2fd3e2d8580a7be49990cc5df52650af13b0d38e40c8f47b74c165741d1d19"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-065",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": -1,
+          "reset_index": 1
+        },
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": -1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "7ae956323b235cb47f7ce17b59c5fb4eba1c860340084b5c4cc9fc4879f28409"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-066",
+      "failed_trials": [
+        {
+          "failure_stage": "transport_failed",
+          "goal_sign": -1,
+          "reset_index": 1
+        },
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": 1,
+          "reset_index": 1
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "d118410180e5546274663f1678f90a6775d60b001f775341dfecf8ac938aeab3"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-067",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 1
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "4ccb0bd48d3df813c316bbdbd8d5caad64cb40d5286365208a5bd5d17fb75ff4"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-069",
+      "failed_trials": [
+        {
+          "failure_stage": "wrong_side",
+          "goal_sign": -1,
+          "reset_index": 0
+        },
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": -1,
+          "reset_index": 1
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "right",
+      "verification_sha256": "695ad62ac9097968352a76fc0deeb862c761e24fe47fc137178410044ac410f1"
+    },
+    {
+      "accepted": true,
+      "design_id": "SGW-HEIGHT-DESIGN-070",
+      "failed_trials": [],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "fa8028305cf913d0dea68b0f44196a5c768cb6abc128ef959c39d2cb49f3167c"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-072",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": 1,
+          "reset_index": 2
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "8f290abf60669cbdf2b4626fb17056480b91dbc2a50066292459720a688b5fdf"
+    },
+    {
+      "accepted": false,
+      "design_id": "SGW-HEIGHT-DESIGN-076",
+      "failed_trials": [
+        {
+          "failure_stage": "anchor_disturbance",
+          "goal_sign": 1,
+          "reset_index": 0
+        }
+      ],
+      "family": "HEIGHT",
+      "side": "left",
+      "verification_sha256": "1edf2f1cf1e9ee3028000443618e99c8cc7931f5ad3c6e20b8d81d0c3956ebe1"
+    }
+  ]
+}

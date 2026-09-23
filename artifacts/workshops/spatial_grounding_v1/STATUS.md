@@ -6,12 +6,12 @@ behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
 have verified receipts, views and complete videos. Native smoke br has completed
 24 full physical trials: two candidates pass all six trials and two are valid
 physical rejections. All four raw evidence chains passed independent rechecks.
-Including the first forty subsequent candidates, 44 HEIGHT/DIST candidates
-have completed 264 full trials: thirteen all-six passes and thirty-one physical
-rejections. There are 77 slots outside this retained terminal evidence;
+Including the first forty-four subsequent candidates, 48 HEIGHT/DIST candidates
+have completed 288 full trials: fourteen all-six passes and thirty-four physical
+rejections. There are 73 slots outside this retained terminal evidence;
 four durable GPU workers continue independently.
 HEIGHT's fixture gate is now blocked: its right-side best-case capacity is
-8, below the required 14, and its total capacity is at most 27 against 29.
+7, below the required 14, and its total capacity is at most 24 against 29.
 The running qualification queue remains unchanged;
 DIST's pool is not yet ruled out. Historical coverage and all learned-runtime
 release gates remain unresolved.
@@ -21,6 +21,47 @@ The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
 implemented separate fixture, policy, persistence and analysis components.
 Implementation and synthetic tests do not establish scientific readiness.
+
+## Latest retained evidence (23 September, 12:46 UTC)
+
+The eleventh prefix preserves HEIGHT069/070/072/076 with 4/6, 6/6, 5/6 and
+5/6 physical passes. All 24 original raw trial/state/score/video projections
+were checked. Including smoke, the retained total is 48 candidates, 288
+complete trials and 129,600 scripted actions. The replayed capacity bound is
+HEIGHT left17/right7; the frozen gate stays closed and DIST remains unresolved.
+At 12:46 UTC, workers had 11/12/11/12 completions with active079/086/082/089.
+HEIGHT081/083 were newly terminal but are not classified in this retained prefix.
+There was no shared stop, terminal launcher receipt, collector error or final
+collector receipt. The original queue, controller and resource ceiling remain
+unchanged.
+
+The [native metric capsule](infrastructure/native-metric-20260923cg/manifest.json)
+now binds DIST000's actual actor roots and the current installed native
+root/precision/metre API to the registered Isaac Sim5/IsaacLab2.2 contract.
+The historically hash-bound V3-B002 producer supports an exact-arithmetic,
+outward-rounded per-root error bound of 0.500 mm (rounded upward here).
+All 108 named final-cell post-settle comparisons violate the necessary
+distance-match condition, with a minimum remaining gap of 84.24 mm.
+These are **conditional on the recorded native API contract**, not historical
+native import-byte attestations, 108 independent layouts, global population
+coverage or a fixture release. Constructor, settle-window, preflight and
+infrastructure states remain outside this selection. Both proof and capacity
+audit replay byte-identically on the PVC; all four native exports reproduce.
+
+The user's offer of manual scene setup is treated as targeted engineering
+help, not a human approval gate or authorization to rewrite frozen candidates.
+An existing HEIGHT063 lower-goal reset0 recording and exact scene/controller
+context were copied for inspection. Its bowl drifts 44.23 mm against the 5 mm
+limit, first crossing the limit at action84 during transport (actions81-100).
+The cube still finishes on the requested lower side with detached release.
+Inspecting swept-path clearance around the bowl is more targeted than rebuilding
+the whole scene; exact contacting-link attribution remains unmeasured.
+Any future repair requires separate prospective disclosure and preserves every
+existing outcome. No trial or policy request was added for this inspection.
+The user explicitly selected **full benchmark qualification first**, not an
+exploratory learned-policy pilot. Side chat separately supplied four existing
+LAT/HEIGHT failure/control clips; that handoff is not duplicated or counted
+as new evidence here.
 
 ## Current prospective freeze (23 September, 07:07 UTC)
 

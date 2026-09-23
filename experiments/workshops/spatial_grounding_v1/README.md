@@ -86,6 +86,20 @@ Its current prefix reader accepts complete six-trial candidates only; it
 rejects other shapes rather than padding a terminal geometry prefix or a
 partial episode. The independent collector handles those shapes separately.
 
+`tools.prove_sgw_pi05_root_separation` compares the exact accepted DIST000
+capture against the 108 source-bound V3-B002 final-cell post-settle root pairs.
+Run it with `--output <new-path>`. It replays the historical producer/reset audit,
+binds the native root aliases, metre units and binary32 API against the
+registered versions, and derives an outward-rounded per-root error certificate
+for the historically anchored subtraction/normalized-rotation code. The native
+source projection is independently reproducible from installed distribution
+RECORD hashes without importing a simulator.
+The resulting nonmatches are conditional on that recorded API contract;
+current native bytes are not presented as historical import-byte attestations.
+The 108 records contain only two numerical root pairs and exclude no
+constructor, settle-window, preflight or infrastructure populations. Neither
+this necessary distance test nor its agreement case releases a fixture.
+
 One selected proposal runs both goals three times in a fresh Isaac process:
 `model_blind_qualification --proposal-file <file> --candidate-id <id>`, with the
 required pinned runtime arguments. Every trial retains 450 issued commands,

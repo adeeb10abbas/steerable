@@ -137,6 +137,21 @@ def test_tenth_prefix_also_exhausts_total_height_capacity():
     assert sum(row["accepted"] for row in result["terminal_evidence"]) == 13
 
 
+def test_eleventh_prefix_retains_new_pass_and_three_rejections():
+    result = audit(prefix_paths() + [
+        ROOT / INFRA / f"family-partition-20260923bt-prefix-{suffix}/manifest.json"
+        for suffix in ("ce", "cf", "cg")
+    ])
+    assert len(result["terminal_evidence"]) == 48
+    assert sum(row["accepted"] for row in result["terminal_evidence"]) == 14
+    height = result["families"]["HEIGHT"]["by_side"]
+    assert height["left"]["maximum_qualified_possible"] == 17
+    assert height["right"]["maximum_qualified_possible"] == 7
+    assert height["right"]["unavoidable_shortfall"] == 7
+    assert result["families"]["DIST"]["status"] == "not_ruled_out_not_a_release"
+    assert result["live_workers_modified"] is False
+
+
 def test_changed_projection_cannot_reclassify_a_valid_outcome(monkeypatch):
     import tools.audit_sgw_family_capacity as module
 

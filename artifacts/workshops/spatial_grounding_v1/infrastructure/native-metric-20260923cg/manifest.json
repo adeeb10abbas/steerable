@@ -1,0 +1,54 @@
+{
+  "schema_version": "sgw-01-named-native-metric-evidence-v1",
+  "replayed_at_utc": "2026-09-23T12:43:48.659820+00:00",
+  "native_contract": {
+    "path": "native_contract.json",
+    "bytes": 9125,
+    "sha256": "c5d5a81504d2eec4ff6ce86ccde569ca8401dbb924539def73af93f7c36835e0"
+  },
+  "proof": {
+    "path": "proof.json",
+    "bytes": 52355,
+    "sha256": "29d4e2aba9768da4aaedb7e373028e4e46b6d90b2e1eff19db0a95ef34405eb3"
+  },
+  "implementation": {
+    "path": "tools/prove_sgw_pi05_root_separation.py",
+    "sha256": "cc19da64e89ae3ee885037c154cd793f37e62fe324f0ff927e255d49e0cde026"
+  },
+  "exporter": {
+    "path": "export_inputs.py",
+    "sha256": "b248425e694c75a859d1938457d7178d3186f0496ec5b157db3d3cdebd84218e"
+  },
+  "scope": {
+    "prospective_candidate": "DIST-CANDIDATE-SGW-DIST-DESIGN-000",
+    "historical_cohort": "pi05_mirror_v3b002_final_cells_post_settle_initial_states",
+    "historical_cells": 108,
+    "distinct_historical_numerical_root_pairs": 2,
+    "nonmatches_under_registered_native_api_contract": 108,
+    "unresolved_numerical_comparisons": 0,
+    "historical_root_euclidean_error_bound_m": 0.0004990371040237471,
+    "minimum_separation_gap_lower_bound_m": 0.08424126483157565,
+    "native_source_distribution_records_verified": true,
+    "historical_native_import_bytes_independently_attested": false,
+    "historical_population_coverage_complete": false
+  },
+  "pvc_replay": {
+    "root": "/data/users/ali/sgw-01/infrastructure/native-metric-20260923cg",
+    "delta_archive": "replay-delta.tar.gz",
+    "delta_archive_sha256": "ef625838b1310cc6adf1adc524da5d6b5eb6276a83369ce30d1b4f28901287d9",
+    "receipt": "replay-receipt.json",
+    "proof_and_capacity_byte_identical": true,
+    "all_four_native_export_files_byte_identical": true,
+    "additional_gpus": 0
+  },
+  "tests": {
+    "path": "tests/test_sgw_pi05_root_separation.py",
+    "sha256": "3a19bda56613c9fb7a99902b65fde60b58e5998a359e0a0d1423e94047925d03",
+    "focused_metric_and_pi05_source_tests_passed": 46,
+    "combined_capacity_collector_historical_metric_tests_passed": 87
+  },
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false,
+  "claim_boundary": "A necessary root-position exclusion for one named DIST capture against108 source-bound final-cell states, conditional on the recorded native metre/root/precision API contract. No historical imported-native-byte attestation, global population coverage, independent108-layout count, duplication proof or fixture/model release."
+}

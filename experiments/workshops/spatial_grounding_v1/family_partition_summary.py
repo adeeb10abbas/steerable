@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
+from .family_campaign_executor import EXECUTOR_SCHEMA
 from .family_campaign_verifier import verify_design
 from .family_partition_worker import (
     SCHEMA as WORKER_SCHEMA, _campaigns, _config_bindings, _freeze, _json, _sha256, partition_slots,
@@ -174,7 +175,14 @@ def compile_summary(
         if rank in rank_claims:
             raise ValueError("duplicate rank claim")
         rank_claims.add(rank)
-        worker_receipt = _json(rank_root / "worker-receipt.json")
+        receipt_path = rank_root / "worker-receipt.json"
+        if not receipt_path.is_file():
+            incomplete = True
+            if any((slot["family"], slot["slot_index"]) in claimed_slots for slot in expected):
+                raise ValueError("slot claims exist without their worker receipt")
+            results.extend({**slot, "outcome": "unstarted"} for slot in expected)
+            continue
+        worker_receipt = _json(receipt_path)
         if (
             worker_receipt.get("schema_version") != WORKER_SCHEMA or worker_receipt.get("rank") != rank
             or worker_receipt.get("slot_order") != expected or worker_receipt.get("bindings") != bindings
@@ -185,11 +193,22 @@ def compile_summary(
         completed_slots = None
         if completion_path.is_file():
             completion = _json(completion_path)
-            if completion.get("schema_version") != WORKER_SCHEMA or completion.get("rank") != rank:
+            if (
+                completion.get("schema_version") != WORKER_SCHEMA or completion.get("rank") != rank
+                or completion.get("workers") != 4
+                or completion.get("status") not in {"complete", "stopped_before_next_slot"}
+            ):
                 raise ValueError("worker completion receipt differs from rank")
             completed_slots = completion.get("completed_slots")
             if not isinstance(completed_slots, list) or any(row not in expected for row in completed_slots):
                 raise ValueError("worker completion has an unexpected slot list")
+            if completion["status"] == "complete":
+                if completed_slots != expected or completion.get("stopped_by_peer") is not False:
+                    raise ValueError("complete worker does not account its entire frozen slice")
+            else:
+                incomplete = True
+        else:
+            incomplete = True
         completed_paths = set((rank_root / "completed").glob("*.json")) if (rank_root / "completed").exists() else set()
         recorded_completed = []
         for slot in expected:
@@ -205,10 +224,18 @@ def compile_summary(
             if slot_claim.get("rank") != rank or slot_claim.get("slot") != slot or slot_claim.get("bindings_sha256") != _digest(bindings):
                 raise ValueError("slot claim is duplicated or differs from deterministic partition")
             if not done_path.exists():
+                incomplete = True
                 failed = slot_root / "executor-failure.json"
                 if failed.is_file():
                     failure = _json(failed)
-                    if not isinstance(failure.get("error"), str) or not failure["error"]:
+                    if (
+                        failure.get("schema_version") != EXECUTOR_SCHEMA
+                        or failure.get("campaign_path") != str(campaigns[slot["family"]].resolve())
+                        or failure.get("index") != slot["slot_index"]
+                        or failure.get("model_request_count") != 0 or failure.get("behavioral_episode_count") != 0
+                        or failure.get("release_permitted") is not False
+                        or not isinstance(failure.get("error"), str) or not failure["error"]
+                    ):
                         raise ValueError("terminal infrastructure receipt is malformed")
                     results.append({**slot, "outcome": "infrastructure_invalid", "claim": _record(claim_path),
                                     "infrastructure_receipt": _record(failed)})
@@ -243,7 +270,7 @@ def compile_summary(
             if not executor.is_file():
                 raise ValueError("completed slot lacks executor receipt")
             executor_value = _json(executor)
-            if executor_value.get("status") != outcome:
+            if executor_value != done["result"]:
                 raise ValueError("executor receipt differs from completed outcome")
             if completed_slots is not None and slot not in completed_slots:
                 raise ValueError("completed slot differs from worker completion receipt")
@@ -265,6 +292,7 @@ def compile_summary(
             raise ValueError("worker completion slot list differs from completed records")
     if set((row["family"], row["slot_index"]) for row in results) != set(all_slots):
         raise ValueError("partition collection has duplicate or missing slot accounting")
+    incomplete = incomplete or (workers_root / "infrastructure-stop.json").exists()
     value = {
         "schema_version": SCHEMA, "status": "incomplete" if incomplete else "complete",
         "release_permitted": False, "fixture_release_permitted": False, "model_release_permitted": False,

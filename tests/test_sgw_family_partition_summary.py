@@ -162,7 +162,10 @@ def test_terminal_infrastructure_receipt_is_not_partial(tmp_path, monkeypatch):
     _write(workers_root / "slot-claims" / f"{slot['family'].lower()}-{slot['slot_index']:03d}.json",
            {"rank": 0, "slot": slot, "bindings_sha256": worker._digest(metadata["bindings"])})
     _write(rank_root / "slots" / f"{slot['family'].lower()}-{slot['slot_index']:03d}" / "executor-failure.json",
-           {"error": "retained native infrastructure traceback"})
+           {"schema_version": summary.EXECUTOR_SCHEMA, "index": slot["slot_index"],
+            "campaign_path": _json(config)["campaigns"][slot["family"]],
+            "model_request_count": 0, "behavioral_episode_count": 0, "release_permitted": False,
+            "error": "retained native infrastructure traceback"})
     result = summary.compile_summary(config_path=config, workers_root=workers_root, output=tmp_path / "summary.json",
                                      verifier=_verifier)
     assert result["families"]["HEIGHT"]["infrastructure_invalid"] == 1
@@ -188,7 +191,8 @@ def test_completed_result_requires_authoritative_not_status_label(tmp_path, monk
         )
 
 
-def test_completed_canonical_slot_retains_trial_warmup_and_video_bindings(tmp_path, monkeypatch):
+@pytest.mark.parametrize("tamper_executor", [False, True])
+def test_completed_canonical_slot_retains_trial_warmup_and_video_bindings(tmp_path, monkeypatch, tamper_executor):
     config, workers_root, metadata = _fixture(tmp_path, monkeypatch)
     slot = _rank(workers_root, metadata, 0)[0]
     rank_root = workers_root / "0"
@@ -206,7 +210,8 @@ def test_completed_canonical_slot_retains_trial_warmup_and_video_bindings(tmp_pa
     digest = "c" * 64
     result = {"status": "externally_verified_candidate_slot_not_fixture_or_behavioral_release",
               "verification_sha256": digest}
-    _write(slot_root / "executor-receipt.json", {"status": result["status"]})
+    _write(slot_root / "executor-receipt.json",
+           {**result, "verification_sha256": "d" * 64} if tamper_executor else result)
     _write(rank_root / "completed" / f"{slot['family'].lower()}-{slot['slot_index']:03d}.json", {
         "schema_version": worker.SCHEMA, "slot": slot, "slot_root": str(slot_root), "result": result,
     })
@@ -214,7 +219,8 @@ def test_completed_canonical_slot_retains_trial_warmup_and_video_bindings(tmp_pa
     worker_receipt["smoke_verifications"] = []
     _write(rank_root / "worker-receipt.json", worker_receipt)
     _write(rank_root / "worker-completion.json", {
-        "schema_version": worker.SCHEMA, "rank": 0, "completed_slots": [slot],
+        "schema_version": worker.SCHEMA, "rank": 0, "workers": 4, "completed_slots": [slot],
+        "status": "stopped_before_next_slot", "stopped_by_peer": True,
     })
 
     def verifier(**kwargs):
@@ -227,8 +233,48 @@ def test_completed_canonical_slot_retains_trial_warmup_and_video_bindings(tmp_pa
         return {"status": "verified_evidence_not_fixture_release", "verification_sha256": "a" * 64,
                 "physical_geometry_rejection": None}
 
+    if tamper_executor:
+        with pytest.raises(ValueError, match="executor receipt"):
+            summary.compile_summary(config_path=config, workers_root=workers_root,
+                                    output=tmp_path / "summary.json", verifier=verifier)
+        return
     result = summary.compile_summary(config_path=config, workers_root=workers_root, output=tmp_path / "summary.json",
                                      verifier=verifier)
     retained = next(row for row in result["results"] if row["slot_index"] == slot["slot_index"])
     assert retained["retained_trial_bindings"][0]["viewport_video"]["bytes"] == len(b"video")
     assert retained["retained_trial_bindings"][0]["render_only_warmup"]["path"] == str(warmup)
+
+
+def test_missing_startup_receipt_is_incomplete_not_failed(tmp_path, monkeypatch):
+    config, workers_root, metadata = _fixture(tmp_path, monkeypatch)
+    _rank(workers_root, metadata, 0)
+    (workers_root / "0/worker-receipt.json").unlink()
+    result = summary.compile_summary(config_path=config, workers_root=workers_root,
+                                     output=tmp_path / "summary.json", verifier=_verifier)
+    assert result["status"] == "incomplete"
+    assert sum(row["unstarted"] for row in result["families"].values()) == 117
+    assert sum(row["infrastructure_invalid"] for row in result["families"].values()) == 0
+
+
+def test_complete_worker_cannot_claim_an_incomplete_slice(tmp_path, monkeypatch):
+    config, workers_root, metadata = _fixture(tmp_path, monkeypatch)
+    slots = _rank(workers_root, metadata, 0)
+    _write(workers_root / "0/worker-completion.json", {
+        "schema_version": worker.SCHEMA, "rank": 0, "workers": 4,
+        "completed_slots": slots[:1], "status": "complete", "stopped_by_peer": False,
+    })
+    with pytest.raises(ValueError, match="entire frozen slice"):
+        summary.compile_summary(config_path=config, workers_root=workers_root,
+                                output=tmp_path / "summary.json", verifier=_verifier)
+
+
+def test_infrastructure_receipt_must_bind_the_actual_slot(tmp_path, monkeypatch):
+    config, workers_root, metadata = _fixture(tmp_path, monkeypatch)
+    slot = _rank(workers_root, metadata, 0)[0]
+    _write(workers_root / "slot-claims" / f"{slot['family'].lower()}-{slot['slot_index']:03d}.json",
+           {"rank": 0, "slot": slot, "bindings_sha256": worker._digest(metadata["bindings"])})
+    _write(workers_root / "0/slots" / f"{slot['family'].lower()}-{slot['slot_index']:03d}" / "executor-failure.json",
+           {"error": "unbound status-only failure"})
+    with pytest.raises(ValueError, match="infrastructure receipt"):
+        summary.compile_summary(config_path=config, workers_root=workers_root,
+                                output=tmp_path / "summary.json", verifier=_verifier)

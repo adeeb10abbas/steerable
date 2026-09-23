@@ -176,6 +176,29 @@ def test_rejection_followed_by_later_controller_action_is_technical_invalid(tmp_
         )
 
 
+def test_guard_cannot_bind_another_hash_valid_reset_snapshot(tmp_path: Path) -> None:
+    candidate = tmp_path / "candidate.json"
+    candidate.write_text("{}")
+    candidate_sha = hashlib.sha256(candidate.read_bytes()).hexdigest()
+    trial = tmp_path / "goal-+1" / "reset-0"
+    trial.mkdir(parents=True)
+    (trial / "state-0000.json").write_text('{"actual":true}')
+    other = tmp_path / "other-state.json"
+    other.write_text("{}")
+    (trial / "preaction-geometry-guard.json").write_text(json.dumps({
+        "schema_version": "sgw-01-family-preaction-geometry-guard-v1",
+        "design_id": "HEIGHT-001", "candidate_sha256": candidate_sha, "candidate_capture_sha256": "c" * 64,
+        "goal_sign": 1, "reset_index": 0,
+        "raw_reset": {"path": str(other), "sha256": hashlib.sha256(other.read_bytes()).hexdigest(), "bytes": 2},
+        "status": "physical_geometry_rejection_before_actions", "controller_actions_executed": 0,
+        "rejection_scope": "reset", "reason": "wrong retained state",
+    }))
+    with pytest.raises(RuntimeError, match="raw reset evidence"):
+        executor._trial_guards(
+            tmp_path, design_id="HEIGHT-001", candidate_sha256=candidate_sha, candidate_capture_sha256="c" * 64,
+        )
+
+
 def test_child_timeout_retains_fsynced_logs_and_fails_slot(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     campaign, calibration = _campaign(tmp_path), _calibration(tmp_path)
     _patch_fixture(monkeypatch, calibration)

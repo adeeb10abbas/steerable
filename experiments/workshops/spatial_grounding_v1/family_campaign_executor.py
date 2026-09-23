@@ -157,9 +157,11 @@ def _validate_guard_common(
             or not isinstance(raw.get("sha256"), str) or len(raw["sha256"]) != 64
             or type(raw.get("bytes")) is not int):
         raise RuntimeError("qualification per-trial pre-action geometry guard is malformed")
+    expected = (root / "state-0000.json").resolve()
     path = Path(raw["path"])
-    path = path if path.is_absolute() else root / path
-    if not path.is_file() or path.stat().st_size != raw["bytes"] or _sha256(path) != raw["sha256"]:
+    path = path.resolve() if path.is_absolute() else (root / path).resolve()
+    if (path != expected or not path.is_file() or path.stat().st_size != raw["bytes"]
+            or _sha256(path) != raw["sha256"]):
         raise RuntimeError("qualification pre-action raw reset evidence is absent or hash-mismatched")
 
 

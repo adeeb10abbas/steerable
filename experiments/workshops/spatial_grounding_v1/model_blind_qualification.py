@@ -30,6 +30,48 @@ def _state(snapshot: SimulatorSnapshot, index: int) -> dict[str, Any]:
     return snapshot.scoring_state(index)
 
 
+def _write_preaction_geometry_guard(
+    trial: Path, candidate: FixtureCandidate, goal_sign: int, reset_index: int, *,
+    physical_geometry_rejection: Mapping[str, str] | None,
+) -> None:
+    """Bind state-0 to the trial before the first controller command is issued."""
+
+    state = trial / "state-0000.json"
+    if not state.is_file():
+        raise QualificationError("preaction guard requires retained raw reset state")
+    candidate_capture_sha256 = candidate.metadata.get("candidate_capture_sha256")
+    design_id = candidate.metadata.get("prospective_design_id")
+    if not isinstance(candidate_capture_sha256, str) or len(candidate_capture_sha256) != 64 or not isinstance(design_id, str):
+        # LAT has no prospective capture chain and intentionally does not emit
+        # the family-worker guard.
+        if candidate.family == "LAT":
+            return
+        raise QualificationError("family candidate lacks prospective capture/design binding")
+    value: dict[str, Any] = {
+        "schema_version": "sgw-01-family-preaction-geometry-guard-v1",
+        "design_id": design_id,
+        "candidate_sha256": hashlib.sha256(
+            json.dumps(asdict(candidate), sort_keys=True).encode()
+        ).hexdigest(),
+        "candidate_capture_sha256": candidate_capture_sha256,
+        "goal_sign": goal_sign,
+        "reset_index": reset_index,
+        "raw_reset": {
+            "path": str(state.resolve()), "sha256": hashlib.sha256(state.read_bytes()).hexdigest(),
+            "bytes": state.stat().st_size,
+        },
+        "status": "measured_banana_geometry_valid_before_actions",
+        "controller_actions_executed": 0,
+    }
+    if physical_geometry_rejection is not None:
+        value.update({
+            "status": "physical_geometry_rejection_before_actions",
+            "rejection_scope": physical_geometry_rejection["scope"],
+            "reason": physical_geometry_rejection["reason"],
+        })
+    atomic_json(trial / "preaction-geometry-guard.json", value)
+
+
 class _TrialEvidence:
     def __init__(self, path: Path, dt: float) -> None:
         if not math.isfinite(dt) or dt <= 0:
@@ -110,6 +152,10 @@ def qualify_candidate(
                 atomic_json(evidence.path / "reset.json", dict(reset.receipt))
                 try:
                     evidence.observe(reset.snapshot, environment.render_viewport())
+                    _write_preaction_geometry_guard(
+                        evidence.path, candidate, goal_sign, reset_index,
+                        physical_geometry_rejection=None,
+                    )
                     actions = list(controller.actions_for_goal(environment, candidate, goal_sign))
                     if len(actions) != ACTION_CAP:
                         raise QualificationError("scripted plan must cover exactly 450 controller actions")

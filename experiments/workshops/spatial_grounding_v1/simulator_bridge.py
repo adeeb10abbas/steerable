@@ -16,6 +16,16 @@ class SimulatorBridgeError(RuntimeError):
     """The assigned simulator lane cannot prove a model-blind qualification."""
 
 
+class PhysicalGeometryRejection(RuntimeError):
+    """Measured scene geometry invalidates a candidate before any controller action."""
+
+    def __init__(self, *, scope: str, reason: str) -> None:
+        if scope not in {"candidate", "reset"} or not reason:
+            raise ValueError("physical geometry rejection requires a scope and reason")
+        self.scope, self.reason = scope, reason
+        super().__init__(f"{scope} geometry rejection: {reason}")
+
+
 @dataclass(frozen=True)
 class ObjectState:
     pose: Pose

@@ -150,6 +150,7 @@ def materialize_campaign_candidate(
     centers = {name: _captured_vector(objects.get(name), "geometric_center_env_local_xyz_m", name) for name in names}
     goal_supports = _measured_goal_supports(plan["family"], objects, capture)
     baseline = _baseline_manifest(manifest)
+    _validate_preaction_banana_capture(objects, manifest, baseline)
     counterbalance_key = "upper_support_side" if plan["family"] == "HEIGHT" else "bowl_side"
     candidate = {
         "candidate_id": f"{plan['family']}-CANDIDATE-{design_id}",
@@ -174,6 +175,7 @@ def materialize_campaign_candidate(
             },
             counterbalance_key: baseline["counterbalance"][counterbalance_key],
             "goal_supports": goal_supports,
+            "baseline_banana_pose": _captured_pose(objects.get("banana"), "banana"),
             "geometric_screen_status": "passed",
             "historical_layout_fingerprint": None,
         },
@@ -209,6 +211,42 @@ def _baseline_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(value.get("counterbalance"), Mapping):
         raise ValueError("candidate overlay baseline lacks counterbalance")
     return value
+
+
+def _validate_preaction_banana_capture(
+    objects: Mapping[str, Any], manifest: Mapping[str, Any], baseline: Mapping[str, Any],
+) -> None:
+    """Reject measured banana displacement before candidate materialization."""
+
+    from .fixtures import Pose, pose_error
+    from .prospective_family_designs import _aabb_xy_clearance_m
+
+    banana = _captured_pose(objects.get("banana"), "banana")
+    authored = baseline["prospective_design"]["authored_actor_root_overrides_env_local_xyz_m"]["banana"]
+    quaternion = baseline["prospective_design"]["authored_actor_quaternion_overrides_wxyz"]["banana"]
+    position_error, angle_error = pose_error(
+        Pose.from_json(banana), Pose.from_json({"position_m": authored, "quaternion_wxyz": quaternion}),
+    )
+    if position_error > 0.003 or angle_error > 2.0:
+        raise ValueError("measured candidate banana differs from fixed baseline pose")
+    table_minimum, table_maximum = _bounds(objects.get("table"), "table")
+    banana_minimum, banana_maximum = _bounds(objects.get("banana"), "banana")
+    if (
+        banana_minimum[0] < table_minimum[0] or banana_maximum[0] > table_maximum[0]
+        or banana_minimum[1] < table_minimum[1] or banana_maximum[1] > table_maximum[1]
+    ):
+        raise ValueError("measured candidate banana leaves table bounds")
+    for name in manifest["native_import_contract"]["kinematic_or_static_bodies"]:
+        minimum, maximum = _bounds(objects.get(name), name)
+        if _aabb_xy_clearance_m(banana_minimum, banana_maximum, minimum[:2], maximum[:2]) < .02:
+            raise ValueError(f"measured candidate banana clearance is below 20 mm for {name}")
+
+
+def _bounds(row: Any, name: str) -> tuple[list[float], list[float]]:
+    return (
+        _captured_vector(row, "bbox_env_local_min_xyz_m", name),
+        _captured_vector(row, "bbox_env_local_max_xyz_m", name),
+    )
 
 
 def _captured_pose(row: Any, name: str) -> dict[str, list[float]]:

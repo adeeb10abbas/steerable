@@ -340,6 +340,14 @@ def test_complete_synthetic_height_campaign_chain_and_adversarial_bindings(tmp_p
     with pytest.raises(ValueError, match="calibration binding"):
         verify_design(campaign_path=campaign_path, design_id=design["design_id"], root=root, output=root / "wrong-calibration.json")
     calibration.write_bytes(calibration_bytes)
+    controller_path = root / "controller.json"
+    controller = json.loads(controller_path.read_text())
+    controller["calibration"]["robot_asset"]["sha256"] = "0" * 64
+    controller["calibration"]["receipt_sha256"] = workspace_digest(controller["calibration"])
+    controller_path.write_text(json.dumps(controller))
+    with pytest.raises(ValueError, match="calibration binding"):
+        verify_design(campaign_path=campaign_path, design_id=design["design_id"], root=root, output=root / "wrong-embedded-calibration.json")
+    _produce_family_qualification(root, candidate, calibration, reject_reset=False)
     plan_bytes = plan_path.read_bytes()
     altered_plan = json.loads(plan_bytes)
     altered_plan["designs"][0]["translation_xy_m"][0] += .001

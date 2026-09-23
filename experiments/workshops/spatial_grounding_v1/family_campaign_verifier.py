@@ -61,6 +61,7 @@ def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Pa
         trial = root / "trials" / f"goal-{check['goal_sign']:+d}" / f"reset-{check['reset_index']}" / "trial.json"
         if not trial.is_file():
             raise ValueError("qualification trial receipt is missing")
+        _verify_preaction_guard(trial.parent, candidate, check)
         try:
             report, reset = verify_trial_evidence(
                 evidence_root=root, trial=trial.parent, check=check, candidate=candidate,
@@ -175,12 +176,17 @@ def _verified_calibration(root: Path, candidate: FixtureCandidate, result: Mappi
     if not isinstance(record, Mapping):
         raise ValueError("materialized candidate lacks bound calibration file")
     calibration_path = Path(str(record.get("path", "")))
+    try:
+        bound_calibration = json.loads(calibration_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError("bound calibration file cannot be decoded") from error
     if (
         not calibration_path.is_file()
         or record.get("sha256") != _sha256(calibration_path)
         or record.get("bytes") != calibration_path.stat().st_size
         or controller.get("calibration_sha256") != _sha256(calibration_path)
         or candidate.metadata.get("controller_calibration_sha256") != _sha256(calibration_path)
+        or controller["calibration"] != bound_calibration
     ):
         raise ValueError("materialized candidate calibration binding differs from qualification")
     return controller
@@ -240,6 +246,27 @@ def _verify_reset_banana_geometry(trial: Path, manifest: Mapping[str, Any]) -> N
     if not isinstance(context, Mapping) or not required.issubset(context):
         raise ValueError("raw reset snapshot lacks measured banana/table/support geometry")
     _verify_banana_clearance(context, manifest["native_import_contract"]["kinematic_or_static_bodies"])
+
+
+def _verify_preaction_guard(trial: Path, candidate: FixtureCandidate, check: Mapping[str, Any]) -> None:
+    path = trial / "preaction-geometry-guard.json"
+    if not path.is_file():
+        raise ValueError("trial lacks preaction geometry guard")
+    value = json.loads(path.read_text(encoding="utf-8"))
+    raw = value.get("raw_reset")
+    state = trial / "state-0000.json"
+    if (
+        value.get("schema_version") != "sgw-01-family-preaction-geometry-guard-v1"
+        or value.get("design_id") != candidate.metadata.get("prospective_design_id")
+        or value.get("candidate_sha256") != _candidate_sha256(candidate)
+        or value.get("candidate_capture_sha256") != candidate.metadata.get("candidate_capture_sha256")
+        or value.get("goal_sign") != check["goal_sign"] or value.get("reset_index") != check["reset_index"]
+        or value.get("status") != "measured_banana_geometry_valid_before_actions"
+        or value.get("controller_actions_executed") != 0
+        or not isinstance(raw, Mapping) or raw.get("path") != str(state.resolve())
+        or raw.get("sha256") != _sha256(state) or raw.get("bytes") != state.stat().st_size
+    ):
+        raise ValueError("preaction geometry guard differs from retained reset state")
 
 
 def _bbox(row: Any, name: str) -> tuple[list[float], list[float]]:

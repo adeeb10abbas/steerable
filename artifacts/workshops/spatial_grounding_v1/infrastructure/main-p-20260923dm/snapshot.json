@@ -1,0 +1,128 @@
+{
+  "attempts": [
+    {
+      "attempt_id": "attempt-001",
+      "cell_id": "LAT-P01-N3-I-POS",
+      "recent_actions": [
+        {
+          "name": "action-0170.npy",
+          "written_at_utc": "2026-09-23T23:40:09.898584+00:00"
+        },
+        {
+          "name": "action-0171.npy",
+          "written_at_utc": "2026-09-23T23:40:10.400720+00:00"
+        },
+        {
+          "name": "action-0172.npy",
+          "written_at_utc": "2026-09-23T23:40:10.925086+00:00"
+        },
+        {
+          "name": "action-0173.npy",
+          "written_at_utc": "2026-09-23T23:40:11.433969+00:00"
+        },
+        {
+          "name": "action-0174.npy",
+          "written_at_utc": "2026-09-23T23:40:11.871627+00:00"
+        },
+        {
+          "name": "action-0175.npy",
+          "written_at_utc": "2026-09-23T23:40:12.342716+00:00"
+        },
+        {
+          "name": "action-0176.npy",
+          "written_at_utc": "2026-09-23T23:40:12.850729+00:00"
+        },
+        {
+          "name": "action-0177.npy",
+          "written_at_utc": "2026-09-23T23:40:13.371398+00:00"
+        }
+      ],
+      "recorded_actions": 177,
+      "recorded_frames": 178
+    }
+  ],
+  "completed_cell_pointers": [],
+  "exposed_retained_future_count": 6,
+  "files": {
+    "/data/users/ali/sgw-01/infrastructure/main-p-20260923dm/mailbox_visibility.py": {
+      "bytes": 3590,
+      "sha256": "8df2efaa5c4343f1829ef582ec856fc8faf2844cc0526826afa819576145862f",
+      "snapshot": "09-mailbox_visibility.py"
+    },
+    "/data/users/ali/sgw-01/infrastructure/main-p-20260923dm/visibility-policy.log": {
+      "bytes": 1417,
+      "sha256": "a528d8920ef3fa44e9dbc706ec6568bd1f54b236c10ac6bc4badafb208ffb462",
+      "snapshot": "07-visibility-policy.log"
+    },
+    "/data/users/ali/sgw-01/infrastructure/main-p-20260923dm/visibility-simulator.log": {
+      "bytes": 1408,
+      "sha256": "7971a8c02f2855efd845deb55dd0b027f24e5b530ecbc58d8b82837a6a2b38ed",
+      "snapshot": "08-visibility-simulator.log"
+    },
+    "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm/claims/policy/owner.json": {
+      "bytes": 1114,
+      "sha256": "28c955e6b5393545cec96b15a6081eba854735b6591da385f098b11f714a5164",
+      "snapshot": "02-owner.json"
+    },
+    "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm/claims/simulator/owner.json": {
+      "bytes": 1099,
+      "sha256": "7426c2f9e90573c34c1ac1301af9a07a85e0b9f64a72189c1a6045227d5456a1",
+      "snapshot": "03-owner.json"
+    },
+    "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm/environment-binding.json": {
+      "bytes": 3472,
+      "sha256": "22ec7b3614bc513d6e8613a8c8ed3cf2c9f015458539b1dd48fd36f1118be7bd",
+      "snapshot": "01-environment-binding.json"
+    },
+    "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm/execution-plan.json": {
+      "bytes": 1754,
+      "sha256": "9b95b1ec73603958fb699b550780b9e78776ef8e24501fff1e930bf46fa09e45",
+      "snapshot": "00-execution-plan.json"
+    },
+    "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm/policy/attestation.json": {
+      "bytes": 712,
+      "sha256": "ba2ef686f78810674d641ec85c9ccdf26fa0c119705c0b9b842f6d3c3dc87d15",
+      "snapshot": "04-attestation.json"
+    },
+    "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm/policy/ready.json": {
+      "bytes": 447,
+      "sha256": "d9c742e8f5da754bd496344ed4b2f7e1b48e2605858ec8344ec0c0773f719b41",
+      "snapshot": "05-ready.json"
+    },
+    "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm/progress.json": {
+      "bytes": 97,
+      "sha256": "c089be3e30c93ac43426700cf5e56ef36026aa779b467e1c70b9149455793837",
+      "snapshot": "06-progress.json"
+    }
+  },
+  "main_responses": 6,
+  "metadata_helper_commit": "ec26d8c7",
+  "metadata_only_intervention": {
+    "additional_model_requests": 0,
+    "changes_policy_or_physics_or_commands": false,
+    "preserved_preintervention_action_intervals_seconds": [
+      30.104127,
+      30.103767,
+      30.09417
+    ],
+    "proof": "Same pending response: exists=False before STATX_FORCE_SYNC on its parent; exists=True 0.0026 seconds later.",
+    "reason": "NFSv3 negative lookup cache delayed each step about 30.1 seconds.",
+    "replayed_actions": 0,
+    "started_at_utc": "2026-09-23T23:38:10Z",
+    "worker_restarts": 0
+  },
+  "native_source_commit": "b346a1bc47cd8985b185eb4cc9208902aab93e78",
+  "nonwinning_jobs_deleted": 12,
+  "observed_at_utc": "2026-09-23T23:40:13.852798+00:00",
+  "precleanup_kubernetes_snapshot": "/data/users/ali/sgw-01/infrastructure/main-p-20260923dm/before-cleanup.json",
+  "prediction_physical_scores_permitted": false,
+  "root": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm",
+  "sampling_seeds": [
+    2026092201
+  ],
+  "schema": "sgw-01-main-p-live-launch-snapshot-v1",
+  "scope": "Live operational snapshot, not a completed scientific compilation.",
+  "smolvla_modified": false,
+  "trace_snapshot_sha256": "d7a400866d1dc006c76489f0fb08c17320e498495fcf66e861d0976da0ec60dd",
+  "worker_failure_files": []
+}

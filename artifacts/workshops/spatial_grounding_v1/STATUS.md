@@ -1,19 +1,35 @@
 # SGW-01 status
 
-**23:06 UTC: Nano completed all six registered fixed-input requests on an
-idle 80-GB A100. Repeated prompts produced identical actions and futures;
-opposite prompts changed both. All six decoded futures and three matching
-offline redecodes are retained, with six playable prediction videos.
-Downloads and GPU admission are no longer the N3 blocker. SmolVLA was not
-interrupted. Live RoboLab runtime/recording and physical-time mapping still
-block MAIN P; no behavioral episode is released or completed.**
+**23:40 UTC: the six assigned MAIN N3/LAT P episodes are running, not another
+fixed-input check. Nano owns an idle-at-launch A100 and RoboLab an idle-at-launch
+A40. The first episode has six actual policy responses, 177 recorded robot
+actions and 178 viewport frames at this snapshot; no episode is complete yet.
+The exact static prompt and policy seed2026092201 are present in the real
+request trace. SmolVLA remains untouched.**
+
+The user's subsequent [DM execution direction](main_p_execution_20260923dm.json)
+explicitly moves reset/action/timing/recording checks inline during these six
+existing P cells. It does not manufacture passed integration or time-map
+receipts. Raw futures are retained, physical prediction scores remain
+unavailable, and full D/C is still unreleased. The earlier six fixed-input
+requests are complete and must not be repeated. Their six genuine prediction
+videos are not executed-rollout evidence.
+
+The [live launch capsule](infrastructure/main-p-20260923dm/snapshot.json) binds
+the source, plan, exclusive GPU owners and actual action/frame snapshot.
+Twelve terminal nonwinning admissions were preserved and removed; both live
+winners remain untouched. NFSv3 negative lookup caching initially added
+30.1 seconds per step. A bounded, read-only `STATX_FORCE_SYNC` directory
+refresher on each existing worker reduced subsequent recorded-action intervals
+to about0.5 seconds, excluding inference. No policy/simulator restart, command
+change, action replay or extra inference request was used.
 
 **The new 0.50 m native engineering layout passed all six recorded scripted
 checks: both goals, three resets each. It ran on an additional verified-idle
 A40 without interrupting the original four workers. Those workers have since
 completed their current candidates and acknowledged the separately authorized
 administrative pause. The redesigned layout is now prospectively assigned to
-the existing six N3/LAT P cells, but no learned-policy run is released.**
+the existing six N3/LAT P cells, now executing under the scoped DM direction.**
 
 **LAT qualification is complete: 20 all-six passes and 20 physical rejections,
 including candidate 032, plus 60 geometric rejections. The frozen 29-layout
@@ -25,13 +41,16 @@ Including the first fifty-two subsequent candidates, 56 HEIGHT/DIST candidates
 have completed 336 full trials: seventeen all-six passes and thirty-nine physical
 rejections. That retained scientific prefix is unchanged. The final worker
 accounting now contains 110 completed operational slots and seven unstarted
-pending slots; BU is independently compiling the remaining raw/video evidence.
+pending slots. BU subsequently failed with103 partial recheck files preserved
+and no final summary; those files are not a scientific denominator.
 HEIGHT's fixture gate is now blocked: its right-side best-case capacity is
 3, below the required 14, and its total capacity is at most 19 against 29.
 The qualification queue is administratively paused, not rewritten;
 DIST's pool is not yet ruled out by the retained prefix. Historical layout uniqueness is not a release
-requirement; the learned-runtime release gates remain unresolved.
-Learned-policy requests are now six; behavioral episodes remain zero.**
+requirement. Generic learned-runtime release gates remain unresolved; the
+separate DM scope permits only the six assigned P episodes.
+At this snapshot, learned-policy responses total twelve: six nonbehavioral
+and six in MAIN P. Completed behavioral episodes remain zero.**
 
 ## User requirement clarification (23 September, 14:31 UTC)
 

@@ -89,6 +89,17 @@ standalone inference probes are authorized. Prediction physical scores remain
 unavailable until their time mapping is established. Runtime failures preserve
 partial evidence and stop rather than automatically replaying a cell.
 
+The DM workers are now executing real actions on separate A100 policy/A40
+simulator GPUs. Their NFSv3 mount initially hid each newly published response
+for about30 seconds through negative lookup caching. `mailbox_visibility` is
+a bounded Linux-only, read-only metadata refresher run on each existing worker:
+`--root <run-root> --role policy|simulator --seconds 12000`. It uses
+`STATX_FORCE_SYNC` on mailbox directories, exits on worker completion/failure
+or its deadline, and surfaces syscall errors. It writes no evidence or commands,
+loads no model and never retries an action. The already-running native workers
+retain their original source identity; helper identity and startup receipts
+are separately retained. Do not restart or replay the live batch to apply it.
+
 Current restart state and cluster evidence:
 
 - [`STATUS.md`](../../../artifacts/workshops/spatial_grounding_v1/STATUS.md)

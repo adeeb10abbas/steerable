@@ -109,26 +109,55 @@ PRODUCER_BINDINGS = {
 }
 
 
-def _probe_archive(archive: Path | None) -> dict[str, Any]:
+def _probe_archive(
+    archive: Path | None,
+    allowed_requests: set[tuple[str, str, str]],
+) -> dict[str, Any]:
     if archive is None or not archive.is_file():
         return {"status": "not_loaded", "archive": "sgw-bj-historical-payloads.tar.gz"}
     with tarfile.open(archive, "r:gz") as tar:
         manifest_bytes = tar.extractfile("manifest.json").read()
         manifest = json.loads(manifest_bytes)
         probes = []
+        errors = []
         for item in manifest["records"]:
-            payload = json.loads(tar.extractfile(item["export_path"]).read())
+            payload_bytes = tar.extractfile(item["export_path"]).read()
+            actual_payload_sha = hashlib.sha256(payload_bytes).hexdigest()
+            expected_payload_sha = item.get("expected_sha256")
+            if (
+                actual_payload_sha != expected_payload_sha
+                or actual_payload_sha != item.get("actual_sha256")
+            ):
+                errors.append({
+                    "export_path": item.get("export_path"),
+                    "reason": "payload bytes do not match both manifest expected_sha256 and actual_sha256",
+                })
+                continue
+            request_key = (
+                item.get("cohort_id"),
+                item.get("path"),
+                expected_payload_sha,
+            )
+            if request_key not in allowed_requests:
+                errors.append({
+                    "export_path": item.get("export_path"),
+                    "reason": "exported source path/hash is not present in committed inventory request set",
+                })
+                continue
+            payload = json.loads(payload_bytes)
+            if {"object_xyz", "reference_xyz"} <= set(payload):
+                semantic_result = "single_step_object_reference_xyz_only_no_quaternion_or_centroid"
+            elif isinstance(payload.get("child_report"), dict):
+                semantic_result = "repair_harness_accounting_only_no_reset_geometry"
+            else:
+                semantic_result = "unclassified_payload_shape_requires_review"
             probe = {
                 "cohort_id": item["cohort_id"],
                 "path": item["path"],
                 "expected_sha256": item["expected_sha256"],
                 "actual_sha256": item["actual_sha256"],
                 "payload_keys": sorted(payload),
-                "semantic_result": (
-                    "single_step_object_reference_xyz_only_no_quaternion_or_centroid"
-                    if item["export_path"].endswith(".jsonl")
-                    else "repair_harness_accounting_only_no_reset_geometry"
-                ),
+                "semantic_result": semantic_result,
             }
             if item["cohort_id"].startswith("V3-E006"):
                 payload = json.loads(tar.extractfile(item["export_path"]).read())
@@ -143,17 +172,26 @@ def _probe_archive(archive: Path | None) -> dict[str, Any]:
         "job_uid": manifest["job_uid"],
         "model_requests": manifest["model_requests"],
         "probes": probes,
+        "errors": errors,
     }
 
 
 def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
     inventory_path = repo_root / INVENTORY.relative_to(REPO_ROOT)
     inventory = json.loads(inventory_path.read_text())
+    allowed_requests = {
+        (cohort["cohort_id"], item["path"], item["expected_sha256"])
+        for cohort in inventory["cohorts"]
+        for item in cohort.get("relevant_path_evidence", [])
+        if item.get("expected_sha256")
+    }
     records = []
     recovered_root_only = []
     indispensable_requests = []
     archive = Path(os.environ["SGW_BJ_ARCHIVE"]) if os.environ.get("SGW_BJ_ARCHIVE") else None
-    probe_results = _probe_archive(archive)
+    probe_results = _probe_archive(archive, allowed_requests)
+    if probe_results.get("errors"):
+        probe_results["status"] = "rejected_payload_binding"
     for cohort in inventory["cohorts"]:
         source = repo_root / cohort["source_path"]
         status, reason = _status(cohort)
@@ -221,7 +259,12 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
             )
     for probe in probe_results.get("probes", []):
         request = probe.get("state_payload_request")
-        if isinstance(request, dict) and request.get("path") and request.get("sha256"):
+        if (
+            probe_results.get("status") == "loaded_hash_verified"
+            and isinstance(request, dict)
+            and request.get("path")
+            and request.get("sha256")
+        ):
             indispensable_requests.append(
                 {
                     "cohort_id": probe["cohort_id"],

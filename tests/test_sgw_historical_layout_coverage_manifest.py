@@ -1,4 +1,11 @@
+import hashlib
+import io
+import json
+import tarfile
+import tempfile
+
 from experiments.workshops.spatial_grounding_v1.historical_layout_coverage_manifest import (
+    _probe_archive,
     compile_manifest,
 )
 
@@ -64,3 +71,32 @@ def test_payload_requests_are_source_anchored_and_centers_not_promoted():
         request["selection_reason"].startswith("minimal_semantics_probe")
         for request in result["indispensable_external_requests"]
     )
+
+
+def test_corrupt_or_wrong_source_probe_is_rejected():
+    payload = b'{"action_step":0,"object_xyz":[1,2,3],"reference_xyz":[1,2,3]}'
+    manifest = {
+        "job_uid": "test",
+        "model_requests": 0,
+        "records": [{
+            "cohort_id": "V3-A-phase-a-groot",
+            "export_path": "00-payload.jsonl",
+            "path": "/data/wrong/source.jsonl",
+            "expected_sha256": hashlib.sha256(payload).hexdigest(),
+            "actual_sha256": hashlib.sha256(payload).hexdigest(),
+        }],
+    }
+    with tempfile.TemporaryDirectory() as directory:
+        archive = __import__("pathlib").Path(directory) / "bad.tar.gz"
+        with tarfile.open(archive, "w:gz") as tar:
+            manifest_bytes = json.dumps(manifest).encode()
+            for name, data in (("manifest.json", manifest_bytes), ("00-payload.jsonl", payload + b"x")):
+                info = tarfile.TarInfo(name)
+                info.size = len(data)
+                tar.addfile(info, io.BytesIO(data))
+        result = _probe_archive(
+            archive,
+            {("V3-A-phase-a-groot", "/data/expected/source.jsonl", manifest["records"][0]["expected_sha256"])},
+        )
+    assert result["errors"]
+    assert result["probes"] == []

@@ -2,9 +2,10 @@
 
 **LAT qualification is complete: 20 all-six passes and 20 physical rejections,
 including candidate 032, plus 60 geometric rejections. The frozen 29-layout
-behavioral gate cannot pass. All four HEIGHT/DIST capture Pods exited zero
-without required receipts or media; these are preserved infrastructure-invalid
-attempts, not captures. Learned-policy episodes remain at zero.**
+behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
+have verified receipts, views and complete videos, but independent visual review
+requires support/distractor engineering repair before scene acceptance.
+Learned-policy requests and episodes remain at zero.**
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
@@ -450,8 +451,50 @@ and the Job failed at `04:22:51Z`. This is another preserved infrastructure
 attempt, not a physical failure. SGW-ENG-006 prospectively corrects newly
 authored supports to fixed kinematic rigid bodies, retaining dimensions,
 colors, poses and counterbalances. All original scenes remain immutable.
-Repaired captures will retain actual cube-support force matrices as well as
-the full warmup/video and views; no successful native capture is claimed yet.
+That correction was subsequently captured in bf, as recorded below.
+
+### Verified bf captures and independent setup review
+
+Stage be bound source `fccf310c` and compared all four revised manifests to
+their originals, allowing only the disclosed support-body flags. Capture bf
+(UID `19df9e13-f5e0-40cb-ad4f-80e7077ffc87`) completed all four indexes at
+`04:33:44Z`. The [capture outcome](infrastructure/a40-20260923bf-native-capture-outcome.json)
+binds all four native receipts. Producer and separate CPU verification each
+checked 137 recording files per capture and all 121 video frames. All raw
+arrays/videos remain on the PVC. CPU accessors bb/be ended at `04:41:31Z` and
+`04:50:37Z`; no study GPU or model server is active.
+
+The single independent reviewer completed its
+[source-bound report](infrastructure/independent-scene-review-20260923bf/sgw-bf-review-analysis/independent_scene_review.md).
+It verified all 118 exported files, decoded all 484 video frames, and inspected
+all 12 final views plus fixed warmup/video samples. Its direct file coverage was
+22 recording files per capture, not the remote verifier's 137. All four setup
+dispositions are **engineering repair required**, not physical-candidate or
+model failures. The valid bf evidence remains immutable.
+
+The reviewer found elevated supports without bases, DIST banana/support
+interleaving with missing current banana measurements, and uncertain plate
+category identity despite a visually distinct disc. Initial neutral geometry,
+warmed materials and positive cube-support forces do not establish settling,
+reachability, stable release or six-trial qualification.
+
+**Disclosed prospective amendment SGW-ENG-007:** ground the supports on the
+measured tabletop while preserving their top planes/XY footprints and scored
+object centers. Place the banana consistently at center XY `[0.80, 0.39]`,
+retain its orientation, and derive its height from the measured bottom offset.
+Verify clearance/table containment and record actual banana geometry/contacts.
+Improve plate/support color contrast without changing plate dimensions; retain
+the simplified-disc caveat and check actual policy-sized views. New captures
+must use fresh source/manifests/output roots and return to the same independent
+reviewer. No candidate freeze or inference is released.
+
+D1's owned two-rank lifecycle is integrated through `13f60fb5`; `1b02fb29`
+aligns native startup with the parent's explicit finite readiness budget and
+fixes the factory regression test. The full source-backed suite passed 245
+checks with one Linux-only skip before the final added guard regression; the
+subsequent focused suite passed 44 with one skip. These remain local engineering
+checks, not native runtime qualification. Decoded-future, campaign descriptor
+and RPC follow-ups remain under review.
 
 ## Artifacts and source identities
 

@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
-  "status": "lat_qualification_complete_release_blocked_height_dist_capture_infrastructure_recovery",
-  "updated_at_utc": "2026-09-23T04:22:51Z",
+  "status": "lat_closed_below_release_gate_height_dist_captures_verified_scene_repair_required",
+  "updated_at_utc": "2026-09-23T04:55:06Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -44,8 +44,11 @@
     "native_joint_position_measurement_and_policy_integration": "782ab6cf",
     "prospective_family_plan_and_inherited_source_guards": "1b6dcf92",
     "historical_root_and_aabb_geometry_registry": "6484f244",
-    "local_sgw_tests_passed": 224,
+    "owned_d1_distributed_lifecycle": "13f60fb5",
+    "d1_shared_readiness_budget_and_factory_regression": "1b02fb29",
+    "local_sgw_tests_passed": 245,
     "local_sgw_tests_skipped_linux_identity": 1,
+    "subsequent_focused_d1_tests_passed": 44,
     "targeted_support_capture_repair_tests_passed": 31,
     "live_model_runtime_qualified": false,
     "concrete_behavioral_allocation_receipt_exists": false
@@ -386,20 +389,23 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "Prospective bounded campaign preparation and inherited-source guards integrated through 1b6dcf92. All four ar capture attempts exited zero without required outputs and are infrastructure-invalid. No valid HEIGHT/DIST capture or candidate freeze; parent alone owns recovery launches.",
+    "fixture_scope": "Four bf baseline captures are artifact-valid, but independent review requires engineering repair. Child is implementing SGW-ENG-007 locally. Campaign descriptor commits b7a43c9/40909fd remain unintegrated; reviewed-scene acceptance must be distinct from artifact verification. No candidate plan is frozen; parent alone owns launches.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
-    "runtime_scope": "Local-only D1 distributed lifecycle corrections remain under review and unintegrated. Parent integrated official client, HTTP producer, trace and recording. Native startup and decoded-future time mapping remain unqualified. No model construction or live server authorized.",
+    "runtime_scope": "D1 distributed lifecycle integrated through 13f60fb5, shared bounded readiness and factory regression fixed in 1b02fb29. Decoded-future retention commit bbfa470e awaits review/integration. Native startup, VAE execution and physical future time mapping remain unqualified. No model construction or live server authorized.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
-    "worker_scope": "Parent repaired native joint-position environment and full 450-action N3/D1 recorded integration in 782ab6cf. Child is implementing bounded local-only PVC mailbox RPC and native AppLauncher receiver lifecycle. No remote transport or runtime release yet.",
+    "worker_scope": "Parent repaired native joint-position environment and full 450-action N3/D1 recorded integration in 782ab6cf. RPC commits through 047e3d24 remain unintegrated: review identified non-atomic manifest publication, post-close native reads, unsafe observation-key filenames, invalid-timeout handling and incomplete external completion verification. Child is correcting these locally; no remote transport/runtime release.",
     "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
     "historical_coverage_scope": "Parent integrated repaired historical geometry compiler in 6484f244: 23 source tuples and 144 object-geometry rows from the 24-layout cohort. Settled actor roots, reset displacement and AABB-derived centers remain distinct. Coverage is incomplete; no historical reruns or release.",
     "independent_scene_reviewer": "89af7b05-595a-43d4-977b-ae0b077d6e9f",
-    "scene_review_scope": "One independent reviewer is waiting for actual verified receipts and media. It has inspected no ar scene images and assigns no visual result."
+    "scene_review_scope": "The single independent reviewer completed bf review: all four need engineering repair, not physical/model rejection. All118 exported files and484 video frames verified;12 final views,72 lossless samples and24 video samples inspected. Reviewer directly verified22 recording files/capture, distinct from remote137-file verification."
   },
   "active_task_gpu_jobs": [],
-  "active_task_cpu_jobs": [
+  "active_task_cpu_jobs": [],
+  "completed_capture_source_stages": [
     {
       "job": "sgw01-ali-source-stage-20260923bb",
+      "job_uid": "e94e770e-a46d-4db4-a6d6-0137cc675534",
+      "completed_at_utc": "2026-09-23T04:41:31Z",
       "pod": "sgw01-ali-source-stage-20260923bb-7wrzs",
       "pod_uid": "da07cca7-352d-4578-be51-2ec0565ec5a3",
       "source_staged_at_utc": "2026-09-23T04:21:29.138304+00:00",
@@ -410,6 +416,15 @@
       "release_permitted": false,
       "manifest": "handoff/k8s/sgw01-ali-source-stage-20260923bb.yaml",
       "receipt": "infrastructure/cpu-20260923bb-source-stage.json"
+    },
+    {
+      "job": "sgw01-ali-source-stage-20260923be",
+      "job_uid": "13454164-7774-4608-88a9-012242482c49",
+      "completed_at_utc": "2026-09-23T04:50:37Z",
+      "source_root": "/data/users/ali/sgw-01/source/fccf310-be",
+      "allocated_gpus": 0,
+      "bounded_accessor_expired": true,
+      "receipt": "infrastructure/cpu-20260923be-source-stage.json"
     }
   ],
   "verification_recovery": {
@@ -566,6 +581,30 @@
     "model_requests": 0,
     "behavioral_episodes": 0
   },
+  "verified_prospective_baseline_captures": {
+    "job": "sgw01-ali-prospective-capture-20260923bf",
+    "job_uid": "19df9e13-f5e0-40cb-ad4f-80e7077ffc87",
+    "completed_at_utc": "2026-09-23T04:33:44Z",
+    "source_commit": "fccf310c41fa16e8dc703491559c933558f08d96",
+    "raw_root": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bf",
+    "receipt": "infrastructure/a40-20260923bf-native-capture-outcome.json",
+    "receipt_sha256": "515f55449d8363b1516ab4b1e29e8c66976ede223026e03dc1a370fd42819eea",
+    "valid_native_baseline_captures": 4,
+    "independently_verified_recording_files_per_capture": 137,
+    "decoded_warmup_frames_per_capture": 121,
+    "frozen_candidate_plans": 0,
+    "qualified_candidates": 0,
+    "release_permitted": false,
+    "review_manifest": "infrastructure/independent-scene-review-20260923bf/sgw-bf-review-analysis/independent_scene_review_manifest.json",
+    "review_manifest_sha256": "0ba08e859b40ee9062c482fd91336cdf11e3abc4fdfabc7536563faf87809bae",
+    "review_disposition": "engineering_repair_required_all_four_baselines",
+    "review_findings": [
+      "F1: elevated fixed-kinematic support slabs have no visible/collision-consistent bases connecting them to the table.",
+      "F2: DIST inherited banana visibly interleaves with supports and lacks current pose/AABB/contact measurements; actual mesh collision is not established.",
+      "F3: simplified disc is distinct from bowl but plate-category identity remains uncertain; wrist occlusion must not be converted into forced semantic labels."
+    ],
+    "preservation": "All bf captures remain valid original setup evidence; repair uses newly disclosed designs and new output roots, never overwritten receipts or relabeled failures."
+  },
   "prospective_lat_proposals": {
     "path": "proposals/lat-20260922.json",
     "sha256": "5b47860f6eac16e318515534a918d9460677b58d6174b4b76a29f7cc6be34eb9",
@@ -636,6 +675,13 @@
       "evidence": "infrastructure/a40-20260923bc-capture-failure.json",
       "change": "Author fresh baseline revisions whose added supports have PhysicsRigidBodyAPI with kinematicEnabled=true. The native importer activates contact reporting on rigid bodies; static support colliders cannot host the registered sensors. Record actual filtered cube-support force matrices in new captures.",
       "unchanged": "Preserve every original aq/ar/bc input and output. New stage must compare all support dimensions/colors/poses and actor poses/quaternions/counterbalances, allowing only the declared support body flags to differ. DIST plate remains dynamic. This is a prospective physical implementation repair, not a claim of physical equivalence or a candidate/behavioral release."
+    },
+    {
+      "id": "SGW-ENG-007",
+      "timing": "After independent bf visual review, before any revised capture, candidate freeze, learned request or behavioral episode.",
+      "evidence": "infrastructure/independent-scene-review-20260923bf/sgw-bf-review-analysis/independent_scene_review_manifest.json",
+      "change": "Prospectively ground each support box on the measured table while retaining its top plane and XY footprint. Reposition the inherited banana consistently in both families/counterbalances to center XY [0.80,0.39], retaining its orientation and measured root-to-bottom offset; validate table containment and clearance. Capture its actual geometry/contact evidence. Improve the unchanged-size disc's color contrast while retaining its explicit plate-category caveat.",
+      "unchanged": "Preserve aq/ar/bc/bf evidence and all LAT outcomes. Retain scored cube/bowl/plate centers, goal top planes, side assignments, camera geometry, frozen prompts, thresholds, candidate caps and model settings. A repair/recapture is not physical qualification or learned release; no real candidate plan exists."
     }
   ],
   "blockers": [
@@ -643,13 +689,13 @@
     "Historical-layout coverage remains incomplete. The recovered 24-layout cohort now has independently hash-bound roots, AABB-derived centers and separate reset displacement in infrastructure/historical-droid-layout-evidence-registry-v1.json. This does not establish exhaustive coverage or release.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Both native client paths now run complete 450-action engineering integrations through joint-position measurements, HTTP producers, trace readers, recorder and scorer with simulated physics/model computation. Native AppLauncher/RPC, D1 distributed startup, official decode/time mapping and all live model runtimes remain unqualified.",
-    "All four ar attempts are infrastructure-invalid. Diagnostic bc reproduced the unchanged height-left contact-reporter failure and the external validator correctly rejected native exit0. Prepare fresh kinematic-support baseline revisions under SGW-ENG-006, retaining all original inputs/outputs and comparing geometry/poses before bounded capture. No native HEIGHT/DIST capture or candidate plan is yet valid.",
+    "All four bf captures are artifact-valid, but independent scene review requires SGW-ENG-007 grounding/distractor repair and fresh capture/review before candidate freezing. No HEIGHT/DIST candidate plan or physical qualification exists. Original ar/bc infrastructure failures and bf review outcomes remain unchanged.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Stage the SGW-ENG-006 support-body repair through a new bounded CPU Job using b429ddd. Author fresh baseline revisions and verify unchanged original dimensions/poses/quaternions/colors/counterbalances, with only fixed-kinematic support flags changed. After confirming allocation release, capture the four revised baselines in fresh bounded GPU roots with post-process media validation. Preserve ar/bc and all LAT results. No learned inference or candidate freeze; existing reviewer needs actual verified media.",
+  "next_action": "Complete and verify the local SGW-ENG-007 scene repair, then commit/push and stage exact source through a fresh bounded CPU Job cloned directly from b429ddd. Compare the new geometry to bf under only disclosed changes; use fresh bounded capture roots and external media validation. Return actual media to the same independent reviewer. In parallel review local D1 decode/campaign/RPC slices and finish historical coverage. No learned inference, LAT refill or candidate freeze before required gates.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

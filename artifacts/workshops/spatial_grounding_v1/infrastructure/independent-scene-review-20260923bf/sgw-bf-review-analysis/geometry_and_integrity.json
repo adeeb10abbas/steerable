@@ -1,0 +1,1825 @@
+{
+  "claim_boundary": "Read-only integrity and geometry checks, not visual verdicts or physical qualification.",
+  "export_manifest_sha256": "25f860f0efc31a61a66a6448fd9dd5837a25dbd3dabb6f488c287145e0075ad5",
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "scenes": {
+    "0-height-left": {
+      "capture_receipt_content_sha256": "a9e4b7a0cac211ccf18e6b77ce9be6f26cef0c6110c4dbba64f717d62c8bcbaa",
+      "capture_sha256": "20c16465cb215e5458b14e8ec68957eae17b6c609bb0d442af38205e940e9f30",
+      "center_reconstruction_max_coordinate_error_m": {
+        "bowl": 0.0,
+        "height_lower_support": 0.0,
+        "height_neutral_cube_support": 0.0,
+        "height_reference_support": 0.0,
+        "height_upper_support": 0.0,
+        "rubiks_cube": 0.0,
+        "table": 0.0
+      },
+      "counterbalance": {
+        "upper_support_side": "left"
+      },
+      "cube_bottom_minus_neutral_support_top_m": 0.0,
+      "decoded_video_frames": 121,
+      "environment_origin_world_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "hypothetical_same_orientation_landings_not_physical_evidence": {
+        "height_lower_support": {
+          "center_xyz_m": [
+            0.6499999761581421,
+            -0.23000000417232513,
+            0.11999998986721039
+          ],
+          "claim_boundary": "Geometric same-orientation AABB extrapolation; not a measured landing, contact, reachability or qualification result.",
+          "signed_relation_m": -0.040000006556510925
+        },
+        "height_upper_support": {
+          "center_xyz_m": [
+            0.6499999761581421,
+            0.23000000417232513,
+            0.19999998807907104
+          ],
+          "claim_boundary": "Geometric same-orientation AABB extrapolation; not a measured landing, contact, reachability or qualification result.",
+          "signed_relation_m": 0.03999999165534973
+        }
+      },
+      "initial_cube_support_contact_force_norm_n": {
+        "height_lower_support": 0.0,
+        "height_neutral_cube_support": 1.9833185803985853,
+        "height_reference_support": 0.0,
+        "height_upper_support": 0.0
+      },
+      "local_recording_files_verified": 22,
+      "locally_verified_usd_dependencies": [
+        {
+          "bytes": 3255,
+          "exists": true,
+          "identifier": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923be/prospective/height-left.usda",
+          "real_path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923be/prospective/height-left.usda",
+          "sha256": "847a7fd074131b1b86cac3c7dae30a77a79ac03b40cee526e8c58db9cd713de1"
+        },
+        {
+          "bytes": 5373,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+        }
+      ],
+      "manifest_content_sha256": "54ffae2b36f05b1bd9550d6247292990a1b100c4f695d979051c580485b526e6",
+      "manifest_file_sha256": "c770afb0c2105b0b4ab2ac4064dce0516848e0af97a69f15324f2bd4a460c4c6",
+      "material_asset_records": [
+        {
+          "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000013.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000013.png"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000030.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/textures/obj_000030.png"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000010.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000010.png"
+        }
+      ],
+      "measured_objects": {
+        "bowl": {
+          "bbox_env_local_max_xyz_m": [
+            0.5307566523551941,
+            0.21057668328285217,
+            0.18754670023918152
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.3692432940006256,
+            0.04942330718040466,
+            0.1324532926082611
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.44999998807907104,
+            0.12999999523162842,
+            0.1599999964237213
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.44999998807907104,
+            0.12999999523162842,
+            0.1599999964237213
+          ],
+          "root_quaternion_world_wxyz": [
+            0.9999999403953552,
+            -5.8753543271450326e-05,
+            -0.00032362030469812453,
+            -0.00010501052747713402
+          ]
+        },
+        "height_lower_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.7199999690055847,
+            -0.1599999964237213,
+            0.09090538322925568
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.5799999833106995,
+            -0.30000001192092896,
+            0.050905387848615646
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.6499999761581421,
+            -0.23000000417232513,
+            0.07090538740158081
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.6499999761581421,
+            -0.23000000417232513,
+            0.07090538740158081
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "height_neutral_cube_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.3400000035762787,
+            -0.05000000074505806,
+            0.1309053897857666
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.23999999463558197,
+            -0.15000000596046448,
+            0.09090538322925568
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.28999999165534973,
+            -0.10000000149011612,
+            0.11090538650751114
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.28999999165534973,
+            -0.10000000149011612,
+            0.11090538650751114
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "height_reference_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.5299999713897705,
+            0.20999999344348907,
+            0.1324532926082611
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.3700000047683716,
+            0.04999999701976776,
+            0.09245330095291138
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.44999998807907104,
+            0.12999999523162842,
+            0.11245329678058624
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.44999998807907104,
+            0.12999999523162842,
+            0.11245329678058624
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "height_upper_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.7199999690055847,
+            0.30000001192092896,
+            0.17090538144111633
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.5799999833106995,
+            0.1599999964237213,
+            0.1309053897857666
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.6499999761581421,
+            0.23000000417232513,
+            0.15090538561344147
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.6499999761581421,
+            0.23000000417232513,
+            0.15090538561344147
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "rubiks_cube": {
+          "bbox_env_local_max_xyz_m": [
+            0.31920796632766724,
+            -0.07105716317892075,
+            0.18909460306167603
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.2607920467853546,
+            -0.1289428323507309,
+            0.1309053897857666
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.28999999165534973,
+            -0.09999999403953552,
+            0.1599999964237213
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            -0.010159748770011363,
+            0.0289287532637624,
+            -0.0024039926342527334
+          ],
+          "root_position_env_local_xyz_m": [
+            0.3001696467399597,
+            -0.12892264127731323,
+            0.1624353677034378
+          ],
+          "root_quaternion_world_wxyz": [
+            0.9999990463256836,
+            -0.0009071399690583348,
+            0.001037940033711493,
+            8.44117093947716e-05
+          ]
+        },
+        "table": {
+          "bbox_env_local_max_xyz_m": [
+            0.8985843658447266,
+            0.5220682621002197,
+            0.05000072345137596
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.19858434796333313,
+            -0.4779317378997803,
+            -0.6499992609024048
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.5485843420028687,
+            0.02206825464963913,
+            -0.29999926686286926
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.3499999940395355,
+            0.0,
+            -0.3499999903142452
+          ],
+          "root_position_env_local_xyz_m": [
+            0.19858434796333313,
+            0.02206825464963913,
+            0.05000072345137596
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "neutral_signed_relation_m": 0.0,
+      "neutral_within_frozen_5mm": true,
+      "overlay_sha256": "847a7fd074131b1b86cac3c7dae30a77a79ac03b40cee526e8c58db9cd713de1",
+      "physics_actions": 0,
+      "positive_volume_aabb_overlaps": [],
+      "quaternion_norms": {
+        "bowl": 1.0000000000000027,
+        "height_lower_support": 1.0,
+        "height_neutral_cube_support": 1.0,
+        "height_reference_support": 1.0,
+        "height_upper_support": 1.0,
+        "rubiks_cube": 1.000000000000025,
+        "table": 1.0
+      },
+      "recorded_usd_dependencies_not_exported": [
+        {
+          "bytes": 17794512,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+          "sha256": "b7827de44e5051d8d7803507b9362dbf8521181996449a88934b59ceb0d54db6"
+        },
+        {
+          "bytes": 3569,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+          "sha256": "f5a00da4c05db6dd0441f8c76a886a898435e61890dd1f445ff7e8f79e1e2495"
+        },
+        {
+          "bytes": 7318,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+          "sha256": "46fd4ea678f0ced8f620f2a8ceb045d779e412bca881d5ec584ce4cadf18133a"
+        },
+        {
+          "bytes": 682045,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+          "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+        },
+        {
+          "bytes": 419223,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+          "sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9"
+        },
+        {
+          "bytes": 342393,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+          "sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e"
+        }
+      ],
+      "recorded_warmup_arrays_not_exported": 115,
+      "simulation_time_s": 0.01666666753590107,
+      "support_underside_minus_table_top_m": {
+        "height_lower_support": 0.0009046643972396851,
+        "height_neutral_cube_support": 0.040904659777879715,
+        "height_reference_support": 0.042452577501535416,
+        "height_upper_support": 0.08090466633439064
+      },
+      "table_top_z_m": 0.05000072345137596,
+      "video_fps_display_only": 30.0,
+      "video_sample_mean_absolute_rgb_compression_error": {
+        "0": 1.9896567563657408,
+        "1": 2.2382805266203705,
+        "10": 2.2898274739583333,
+        "120": 2.372564380787037,
+        "30": 2.3209870515046296,
+        "60": 2.300023509837963
+      },
+      "video_sha256": "a16be885e1e54021770c55d505ae75206501d911a8f1938b2286213d4c8e71f6",
+      "video_sheet": "0-height-left/decoded-video-samples.png",
+      "video_sheet_sha256": "d709eec79181cc07500a304cff8f9433027e1b5f15091c4b8224754ae7fc50cd"
+    },
+    "1-height-right": {
+      "capture_receipt_content_sha256": "5396a00c1dc74617128f7c7e36fae34c709f8b366f4a1d5e467e7fee391ad4b2",
+      "capture_sha256": "56c92caa5d7b79de915c237e0dddb15ee5d5e84b4cde13dbc9946a2c2a026b71",
+      "center_reconstruction_max_coordinate_error_m": {
+        "bowl": 0.0,
+        "height_lower_support": 0.0,
+        "height_neutral_cube_support": 0.0,
+        "height_reference_support": 0.0,
+        "height_upper_support": 0.0,
+        "rubiks_cube": 0.0,
+        "table": 0.0
+      },
+      "counterbalance": {
+        "upper_support_side": "right"
+      },
+      "cube_bottom_minus_neutral_support_top_m": 0.0,
+      "decoded_video_frames": 121,
+      "environment_origin_world_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "hypothetical_same_orientation_landings_not_physical_evidence": {
+        "height_lower_support": {
+          "center_xyz_m": [
+            0.6499999761581421,
+            0.23000000417232513,
+            0.11999998986721039
+          ],
+          "claim_boundary": "Geometric same-orientation AABB extrapolation; not a measured landing, contact, reachability or qualification result.",
+          "signed_relation_m": -0.040000006556510925
+        },
+        "height_upper_support": {
+          "center_xyz_m": [
+            0.6499999761581421,
+            -0.23000000417232513,
+            0.19999998807907104
+          ],
+          "claim_boundary": "Geometric same-orientation AABB extrapolation; not a measured landing, contact, reachability or qualification result.",
+          "signed_relation_m": 0.03999999165534973
+        }
+      },
+      "initial_cube_support_contact_force_norm_n": {
+        "height_lower_support": 0.0,
+        "height_neutral_cube_support": 1.9833185803985853,
+        "height_reference_support": 0.0,
+        "height_upper_support": 0.0
+      },
+      "local_recording_files_verified": 22,
+      "locally_verified_usd_dependencies": [
+        {
+          "bytes": 3255,
+          "exists": true,
+          "identifier": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923be/prospective/height-right.usda",
+          "real_path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923be/prospective/height-right.usda",
+          "sha256": "5700f244702932c43caff42f210d4c85288f5037cd125957d726df443abbca09"
+        },
+        {
+          "bytes": 5373,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+        }
+      ],
+      "manifest_content_sha256": "7410b8c39b4828e8687b37d9ed4ffb78d55e689e01d6b7977e6a5ac31f858de1",
+      "manifest_file_sha256": "ac915b53de429117a6c72ea5cbcd63d934019e6bc0250eda9bc6a09ad2decef2",
+      "material_asset_records": [
+        {
+          "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000013.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000013.png"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000030.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/textures/obj_000030.png"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000010.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000010.png"
+        }
+      ],
+      "measured_objects": {
+        "bowl": {
+          "bbox_env_local_max_xyz_m": [
+            0.5307566523551941,
+            0.21057668328285217,
+            0.18754670023918152
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.3692432940006256,
+            0.04942330718040466,
+            0.1324532926082611
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.44999998807907104,
+            0.12999999523162842,
+            0.1599999964237213
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.44999998807907104,
+            0.12999999523162842,
+            0.1599999964237213
+          ],
+          "root_quaternion_world_wxyz": [
+            0.9999999403953552,
+            -5.8753543271450326e-05,
+            -0.00032362030469812453,
+            -0.00010501052747713402
+          ]
+        },
+        "height_lower_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.7199999690055847,
+            0.30000001192092896,
+            0.09090538322925568
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.5799999833106995,
+            0.1599999964237213,
+            0.050905387848615646
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.6499999761581421,
+            0.23000000417232513,
+            0.07090538740158081
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.6499999761581421,
+            0.23000000417232513,
+            0.07090538740158081
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "height_neutral_cube_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.3400000035762787,
+            -0.05000000074505806,
+            0.1309053897857666
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.23999999463558197,
+            -0.15000000596046448,
+            0.09090538322925568
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.28999999165534973,
+            -0.10000000149011612,
+            0.11090538650751114
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.28999999165534973,
+            -0.10000000149011612,
+            0.11090538650751114
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "height_reference_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.5299999713897705,
+            0.20999999344348907,
+            0.1324532926082611
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.3700000047683716,
+            0.04999999701976776,
+            0.09245330095291138
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.44999998807907104,
+            0.12999999523162842,
+            0.11245329678058624
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.44999998807907104,
+            0.12999999523162842,
+            0.11245329678058624
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "height_upper_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.7199999690055847,
+            -0.1599999964237213,
+            0.17090538144111633
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.5799999833106995,
+            -0.30000001192092896,
+            0.1309053897857666
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.6499999761581421,
+            -0.23000000417232513,
+            0.15090538561344147
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.6499999761581421,
+            -0.23000000417232513,
+            0.15090538561344147
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "rubiks_cube": {
+          "bbox_env_local_max_xyz_m": [
+            0.31920796632766724,
+            -0.07105716317892075,
+            0.18909460306167603
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.2607920467853546,
+            -0.1289428323507309,
+            0.1309053897857666
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.28999999165534973,
+            -0.09999999403953552,
+            0.1599999964237213
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            -0.010159748770011363,
+            0.0289287532637624,
+            -0.0024039926342527334
+          ],
+          "root_position_env_local_xyz_m": [
+            0.3001696467399597,
+            -0.12892264127731323,
+            0.1624353677034378
+          ],
+          "root_quaternion_world_wxyz": [
+            0.9999990463256836,
+            -0.0009071399690583348,
+            0.001037940033711493,
+            8.44117093947716e-05
+          ]
+        },
+        "table": {
+          "bbox_env_local_max_xyz_m": [
+            0.8985843658447266,
+            0.5220682621002197,
+            0.05000072345137596
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.19858434796333313,
+            -0.4779317378997803,
+            -0.6499992609024048
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.5485843420028687,
+            0.02206825464963913,
+            -0.29999926686286926
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.3499999940395355,
+            0.0,
+            -0.3499999903142452
+          ],
+          "root_position_env_local_xyz_m": [
+            0.19858434796333313,
+            0.02206825464963913,
+            0.05000072345137596
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "neutral_signed_relation_m": 0.0,
+      "neutral_within_frozen_5mm": true,
+      "overlay_sha256": "5700f244702932c43caff42f210d4c85288f5037cd125957d726df443abbca09",
+      "physics_actions": 0,
+      "positive_volume_aabb_overlaps": [],
+      "quaternion_norms": {
+        "bowl": 1.0000000000000027,
+        "height_lower_support": 1.0,
+        "height_neutral_cube_support": 1.0,
+        "height_reference_support": 1.0,
+        "height_upper_support": 1.0,
+        "rubiks_cube": 1.000000000000025,
+        "table": 1.0
+      },
+      "recorded_usd_dependencies_not_exported": [
+        {
+          "bytes": 17794512,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+          "sha256": "b7827de44e5051d8d7803507b9362dbf8521181996449a88934b59ceb0d54db6"
+        },
+        {
+          "bytes": 3569,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+          "sha256": "f5a00da4c05db6dd0441f8c76a886a898435e61890dd1f445ff7e8f79e1e2495"
+        },
+        {
+          "bytes": 7318,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+          "sha256": "46fd4ea678f0ced8f620f2a8ceb045d779e412bca881d5ec584ce4cadf18133a"
+        },
+        {
+          "bytes": 682045,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+          "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+        },
+        {
+          "bytes": 419223,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+          "sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9"
+        },
+        {
+          "bytes": 342393,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+          "sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e"
+        }
+      ],
+      "recorded_warmup_arrays_not_exported": 115,
+      "simulation_time_s": 0.01666666753590107,
+      "support_underside_minus_table_top_m": {
+        "height_lower_support": 0.0009046643972396851,
+        "height_neutral_cube_support": 0.040904659777879715,
+        "height_reference_support": 0.042452577501535416,
+        "height_upper_support": 0.08090466633439064
+      },
+      "table_top_z_m": 0.05000072345137596,
+      "video_fps_display_only": 30.0,
+      "video_sample_mean_absolute_rgb_compression_error": {
+        "0": 2.0103327546296295,
+        "1": 2.258529369212963,
+        "10": 2.298042534722222,
+        "120": 2.375751591435185,
+        "30": 2.32255859375,
+        "60": 2.3086628327546297
+      },
+      "video_sha256": "da0b515e3af1f9925cfdaa557b1267c4d346f9a4f0eab4fe0d88ba62dd77f0eb",
+      "video_sheet": "1-height-right/decoded-video-samples.png",
+      "video_sheet_sha256": "84b28d5e517c4dc51ac037416ddfb5ff8c1f550c606e3eab797abffcd388af68"
+    },
+    "2-dist-left": {
+      "capture_receipt_content_sha256": "a8b226a556d4ca339812c24349f7c3291243f4757b3b4cb813e58c3f50d5bdf1",
+      "capture_sha256": "e5e149208b93e33400e7db47f52c8711f688c7cf32cbeb201b1fdeffae7745fd",
+      "center_reconstruction_max_coordinate_error_m": {
+        "bowl": 0.0,
+        "dist_bowl_landing_support": 0.0,
+        "dist_bowl_support": 0.0,
+        "dist_neutral_cube_support": 0.0,
+        "dist_plate_landing_support": 0.0,
+        "dist_plate_support": 0.0,
+        "plate": 0.0,
+        "rubiks_cube": 3.469446951953614e-18,
+        "table": 0.0
+      },
+      "counterbalance": {
+        "bowl_side": "left"
+      },
+      "cube_bottom_minus_neutral_support_top_m": 0.0,
+      "decoded_video_frames": 121,
+      "environment_origin_world_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "hypothetical_same_orientation_landings_not_physical_evidence": {
+        "dist_bowl_landing_support": {
+          "center_xyz_m": [
+            0.30000001192092896,
+            0.1599999964237213,
+            0.11999999731779099
+          ],
+          "claim_boundary": "Geometric same-orientation AABB extrapolation; not a measured landing, contact, reachability or qualification result.",
+          "signed_relation_m": 0.3416638033966824
+        },
+        "dist_plate_landing_support": {
+          "center_xyz_m": [
+            0.6600000262260437,
+            -0.3400000035762787,
+            0.11999999731779099
+          ],
+          "claim_boundary": "Geometric same-orientation AABB extrapolation; not a measured landing, contact, reachability or qualification result.",
+          "signed_relation_m": -0.36626001571979394
+        }
+      },
+      "initial_cube_support_contact_force_norm_n": {
+        "dist_bowl_landing_support": 0.0,
+        "dist_bowl_support": 0.0,
+        "dist_neutral_cube_support": 1.9833457605816074,
+        "dist_plate_landing_support": 0.0,
+        "dist_plate_support": 0.0
+      },
+      "local_recording_files_verified": 22,
+      "locally_verified_usd_dependencies": [
+        {
+          "bytes": 4357,
+          "exists": true,
+          "identifier": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923be/prospective/dist-left.usda",
+          "real_path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923be/prospective/dist-left.usda",
+          "sha256": "c03dbd34cb88d4a80ed98299ebdaeb6f0c617b3e00f47c69823501933ea9f610"
+        },
+        {
+          "bytes": 5373,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+        }
+      ],
+      "manifest_content_sha256": "b5f34d54b213dc06238702519d10cb18f604de09903448f5812f4494a0d9a801",
+      "manifest_file_sha256": "48c4c7cef9e70bf81bc4ea05ebc5de24fd2e2c50d18c1a91bab2517de0fcdf19",
+      "material_asset_records": [
+        {
+          "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000013.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000013.png"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000030.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/textures/obj_000030.png"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000010.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000010.png"
+        }
+      ],
+      "measured_objects": {
+        "bowl": {
+          "bbox_env_local_max_xyz_m": [
+            0.5207566618919373,
+            0.24057668447494507,
+            0.1475466936826706
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.3592433035373688,
+            0.07942330837249756,
+            0.09245330095291138
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.4399999976158142,
+            0.1599999964237213,
+            0.11999999731779099
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.4399999976158142,
+            0.1599999964237213,
+            0.11999999731779099
+          ],
+          "root_quaternion_world_wxyz": [
+            0.9999999403953552,
+            -5.8753543271450326e-05,
+            -0.00032362030469812453,
+            -0.00010501052747713402
+          ]
+        },
+        "dist_bowl_landing_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.3400000035762787,
+            0.19999998807907104,
+            0.09090538322925568
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.2600000202655792,
+            0.11999999731779099,
+            0.050905387848615646
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.30000001192092896,
+            0.1599999964237213,
+            0.07090538740158081
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.30000001192092896,
+            0.1599999964237213,
+            0.07090538740158081
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "dist_bowl_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.5299999713897705,
+            0.25,
+            0.09245330095291138
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.3499999940395355,
+            0.06999999284744263,
+            0.05245329812169075
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.4399999976158142,
+            0.1599999964237213,
+            0.07245329767465591
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.4399999976158142,
+            0.1599999964237213,
+            0.07245329767465591
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "dist_neutral_cube_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.5900000333786011,
+            0.03999999910593033,
+            0.09090538322925568
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.5099999904632568,
+            -0.03999999910593033,
+            0.050905387848615646
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.550000011920929,
+            0.0,
+            0.07090538740158081
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.550000011920929,
+            0.0,
+            0.07090538740158081
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "dist_plate_landing_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.7000000476837158,
+            -0.30000001192092896,
+            0.09090538322925568
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.6200000047683716,
+            -0.3799999952316284,
+            0.050905387848615646
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.6600000262260437,
+            -0.3400000035762787,
+            0.07090538740158081
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.6600000262260437,
+            -0.3400000035762787,
+            0.07090538740158081
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "dist_plate_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.7800000309944153,
+            -0.03999999910593033,
+            0.11399999260902405
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.5400000214576721,
+            -0.2800000011920929,
+            0.07400000095367432
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.6600000262260437,
+            -0.1599999964237213,
+            0.09399999678134918
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.6600000262260437,
+            -0.1599999964237213,
+            0.09399999678134918
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "plate": {
+          "bbox_env_local_max_xyz_m": [
+            0.7700000405311584,
+            -0.04999999701976776,
+            0.12600000202655792
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.550000011920929,
+            -0.26999998092651367,
+            0.11400000005960464
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.6600000262260437,
+            -0.1599999964237213,
+            0.11999999731779099
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.6600000262260437,
+            -0.1599999964237213,
+            0.11999999731779099
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "rubiks_cube": {
+          "bbox_env_local_max_xyz_m": [
+            0.5792079567909241,
+            0.028942830860614777,
+            0.1490946114063263
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.5207920670509338,
+            -0.028942830860614777,
+            0.09090538322925568
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.550000011920929,
+            0.0,
+            0.11999999731779099
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            -0.01015971898322125,
+            0.028928753245158832,
+            -0.002403985121839028
+          ],
+          "root_position_env_local_xyz_m": [
+            0.5601696372032166,
+            -0.02892264723777771,
+            0.12243536114692688
+          ],
+          "root_quaternion_world_wxyz": [
+            0.9999990463256836,
+            -0.0009071399690583348,
+            0.001037940033711493,
+            8.44117093947716e-05
+          ]
+        },
+        "table": {
+          "bbox_env_local_max_xyz_m": [
+            0.8985843658447266,
+            0.5220682621002197,
+            0.05000072345137596
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.19858434796333313,
+            -0.4779317378997803,
+            -0.6499992609024048
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.5485843420028687,
+            0.02206825464963913,
+            -0.29999926686286926
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.3499999940395355,
+            0.0,
+            -0.3499999903142452
+          ],
+          "root_position_env_local_xyz_m": [
+            0.19858434796333313,
+            0.02206825464963913,
+            0.05000072345137596
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "neutral_signed_relation_m": 0.0,
+      "neutral_within_frozen_5mm": true,
+      "overlay_sha256": "c03dbd34cb88d4a80ed98299ebdaeb6f0c617b3e00f47c69823501933ea9f610",
+      "physics_actions": 0,
+      "positive_volume_aabb_overlaps": [],
+      "quaternion_norms": {
+        "bowl": 1.0000000000000027,
+        "dist_bowl_landing_support": 1.0,
+        "dist_bowl_support": 1.0,
+        "dist_neutral_cube_support": 1.0,
+        "dist_plate_landing_support": 1.0,
+        "dist_plate_support": 1.0,
+        "plate": 1.0,
+        "rubiks_cube": 1.000000000000025,
+        "table": 1.0
+      },
+      "recorded_usd_dependencies_not_exported": [
+        {
+          "bytes": 17794512,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+          "sha256": "b7827de44e5051d8d7803507b9362dbf8521181996449a88934b59ceb0d54db6"
+        },
+        {
+          "bytes": 3569,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+          "sha256": "f5a00da4c05db6dd0441f8c76a886a898435e61890dd1f445ff7e8f79e1e2495"
+        },
+        {
+          "bytes": 7318,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+          "sha256": "46fd4ea678f0ced8f620f2a8ceb045d779e412bca881d5ec584ce4cadf18133a"
+        },
+        {
+          "bytes": 682045,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+          "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+        },
+        {
+          "bytes": 419223,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+          "sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9"
+        },
+        {
+          "bytes": 342393,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+          "sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e"
+        }
+      ],
+      "recorded_warmup_arrays_not_exported": 115,
+      "simulation_time_s": 0.01666666753590107,
+      "support_underside_minus_table_top_m": {
+        "dist_bowl_landing_support": 0.0009046643972396851,
+        "dist_bowl_support": 0.002452574670314789,
+        "dist_neutral_cube_support": 0.0009046643972396851,
+        "dist_plate_landing_support": 0.0009046643972396851,
+        "dist_plate_support": 0.023999277502298355
+      },
+      "table_top_z_m": 0.05000072345137596,
+      "video_fps_display_only": 30.0,
+      "video_sample_mean_absolute_rgb_compression_error": {
+        "0": 2.0073093894675926,
+        "1": 2.2495963541666666,
+        "10": 2.2945041232638888,
+        "120": 2.3673415798611113,
+        "30": 2.3187076822916666,
+        "60": 2.2952777777777778
+      },
+      "video_sha256": "9d16a41443184eac37fde3ea93e699a308be0f52f8794cc4907d4a681c4b7d2d",
+      "video_sheet": "2-dist-left/decoded-video-samples.png",
+      "video_sheet_sha256": "19c3b8ce010648b7ea6768f77a97edeef6fe079b75ff9f12baea28b9ebf3e0be"
+    },
+    "3-dist-right": {
+      "capture_receipt_content_sha256": "84e27ef2f16663e8bce750e3e8702ab7ba5d3349967c721abc6e4a84179a9c84",
+      "capture_sha256": "d7566dd505996d0c658a7f0e0514bf1f55a8d71be1e7f5db1ec0bb1eac0821c9",
+      "center_reconstruction_max_coordinate_error_m": {
+        "bowl": 0.0,
+        "dist_bowl_landing_support": 0.0,
+        "dist_bowl_support": 0.0,
+        "dist_neutral_cube_support": 0.0,
+        "dist_plate_landing_support": 0.0,
+        "dist_plate_support": 0.0,
+        "plate": 0.0,
+        "rubiks_cube": 3.469446951953614e-18,
+        "table": 0.0
+      },
+      "counterbalance": {
+        "bowl_side": "right"
+      },
+      "cube_bottom_minus_neutral_support_top_m": 0.0,
+      "decoded_video_frames": 121,
+      "environment_origin_world_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "hypothetical_same_orientation_landings_not_physical_evidence": {
+        "dist_bowl_landing_support": {
+          "center_xyz_m": [
+            0.30000001192092896,
+            -0.1599999964237213,
+            0.11999999731779099
+          ],
+          "claim_boundary": "Geometric same-orientation AABB extrapolation; not a measured landing, contact, reachability or qualification result.",
+          "signed_relation_m": 0.3416638033966824
+        },
+        "dist_plate_landing_support": {
+          "center_xyz_m": [
+            0.6600000262260437,
+            0.3400000035762787,
+            0.11999999731779099
+          ],
+          "claim_boundary": "Geometric same-orientation AABB extrapolation; not a measured landing, contact, reachability or qualification result.",
+          "signed_relation_m": -0.36626001571979394
+        }
+      },
+      "initial_cube_support_contact_force_norm_n": {
+        "dist_bowl_landing_support": 0.0,
+        "dist_bowl_support": 0.0,
+        "dist_neutral_cube_support": 1.9833457605816074,
+        "dist_plate_landing_support": 0.0,
+        "dist_plate_support": 0.0
+      },
+      "local_recording_files_verified": 22,
+      "locally_verified_usd_dependencies": [
+        {
+          "bytes": 4357,
+          "exists": true,
+          "identifier": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923be/prospective/dist-right.usda",
+          "real_path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923be/prospective/dist-right.usda",
+          "sha256": "0127a6f2eb4593d5b68ead6bd66b112279c395453c664073eae83b8f4641e1ec"
+        },
+        {
+          "bytes": 5373,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+        }
+      ],
+      "manifest_content_sha256": "5b07a4f5fd7485ff31d36b5c692c2e040b1233c9736736285d4b37ec9592efee",
+      "manifest_file_sha256": "2f1202af695a54eb2c2e6405dfe38c36b0a23dc6554c9e14e34a76fd98e2965d",
+      "material_asset_records": [
+        {
+          "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000013.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000013.png"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000030.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/textures/obj_000030.png"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "authored_asset": "OmniPBR.mdl",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+        },
+        {
+          "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "authored_asset": "./textures/obj_000010.png",
+          "resolved_file_exists": true,
+          "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000010.png"
+        }
+      ],
+      "measured_objects": {
+        "bowl": {
+          "bbox_env_local_max_xyz_m": [
+            0.5207566618919373,
+            -0.07942330837249756,
+            0.1475466936826706
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.3592433035373688,
+            -0.24057668447494507,
+            0.09245330095291138
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.4399999976158142,
+            -0.1599999964237213,
+            0.11999999731779099
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.4399999976158142,
+            -0.1599999964237213,
+            0.11999999731779099
+          ],
+          "root_quaternion_world_wxyz": [
+            0.9999999403953552,
+            -5.8753543271450326e-05,
+            -0.00032362030469812453,
+            -0.00010501052747713402
+          ]
+        },
+        "dist_bowl_landing_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.3400000035762787,
+            -0.11999999731779099,
+            0.09090538322925568
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.2600000202655792,
+            -0.19999998807907104,
+            0.050905387848615646
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.30000001192092896,
+            -0.1599999964237213,
+            0.07090538740158081
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.30000001192092896,
+            -0.1599999964237213,
+            0.07090538740158081
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "dist_bowl_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.5299999713897705,
+            -0.06999999284744263,
+            0.09245330095291138
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.3499999940395355,
+            -0.25,
+            0.05245329812169075
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.4399999976158142,
+            -0.1599999964237213,
+            0.07245329767465591
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.4399999976158142,
+            -0.1599999964237213,
+            0.07245329767465591
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "dist_neutral_cube_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.5900000333786011,
+            0.03999999910593033,
+            0.09090538322925568
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.5099999904632568,
+            -0.03999999910593033,
+            0.050905387848615646
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.550000011920929,
+            0.0,
+            0.07090538740158081
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.550000011920929,
+            0.0,
+            0.07090538740158081
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "dist_plate_landing_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.7000000476837158,
+            0.3799999952316284,
+            0.09090538322925568
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.6200000047683716,
+            0.30000001192092896,
+            0.050905387848615646
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.6600000262260437,
+            0.3400000035762787,
+            0.07090538740158081
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.6600000262260437,
+            0.3400000035762787,
+            0.07090538740158081
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "dist_plate_support": {
+          "bbox_env_local_max_xyz_m": [
+            0.7800000309944153,
+            0.2800000011920929,
+            0.11399999260902405
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.5400000214576721,
+            0.03999999910593033,
+            0.07400000095367432
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.6600000262260437,
+            0.1599999964237213,
+            0.09399999678134918
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.6600000262260437,
+            0.1599999964237213,
+            0.09399999678134918
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "plate": {
+          "bbox_env_local_max_xyz_m": [
+            0.7700000405311584,
+            0.26999998092651367,
+            0.12600000202655792
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.550000011920929,
+            0.04999999701976776,
+            0.11400000005960464
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.6600000262260437,
+            0.1599999964237213,
+            0.11999999731779099
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "root_position_env_local_xyz_m": [
+            0.6600000262260437,
+            0.1599999964237213,
+            0.11999999731779099
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "rubiks_cube": {
+          "bbox_env_local_max_xyz_m": [
+            0.5792079567909241,
+            0.028942830860614777,
+            0.1490946114063263
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.5207920670509338,
+            -0.028942830860614777,
+            0.09090538322925568
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.550000011920929,
+            0.0,
+            0.11999999731779099
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            -0.01015971898322125,
+            0.028928753245158832,
+            -0.002403985121839028
+          ],
+          "root_position_env_local_xyz_m": [
+            0.5601696372032166,
+            -0.02892264723777771,
+            0.12243536114692688
+          ],
+          "root_quaternion_world_wxyz": [
+            0.9999990463256836,
+            -0.0009071399690583348,
+            0.001037940033711493,
+            8.44117093947716e-05
+          ]
+        },
+        "table": {
+          "bbox_env_local_max_xyz_m": [
+            0.8985843658447266,
+            0.5220682621002197,
+            0.05000072345137596
+          ],
+          "bbox_env_local_min_xyz_m": [
+            0.19858434796333313,
+            -0.4779317378997803,
+            -0.6499992609024048
+          ],
+          "geometric_center_env_local_xyz_m": [
+            0.5485843420028687,
+            0.02206825464963913,
+            -0.29999926686286926
+          ],
+          "geometric_center_offset_root_local_xyz_m": [
+            0.3499999940395355,
+            0.0,
+            -0.3499999903142452
+          ],
+          "root_position_env_local_xyz_m": [
+            0.19858434796333313,
+            0.02206825464963913,
+            0.05000072345137596
+          ],
+          "root_quaternion_world_wxyz": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "neutral_signed_relation_m": 0.0,
+      "neutral_within_frozen_5mm": true,
+      "overlay_sha256": "0127a6f2eb4593d5b68ead6bd66b112279c395453c664073eae83b8f4641e1ec",
+      "physics_actions": 0,
+      "positive_volume_aabb_overlaps": [],
+      "quaternion_norms": {
+        "bowl": 1.0000000000000027,
+        "dist_bowl_landing_support": 1.0,
+        "dist_bowl_support": 1.0,
+        "dist_neutral_cube_support": 1.0,
+        "dist_plate_landing_support": 1.0,
+        "dist_plate_support": 1.0,
+        "plate": 1.0,
+        "rubiks_cube": 1.000000000000025,
+        "table": 1.0
+      },
+      "recorded_usd_dependencies_not_exported": [
+        {
+          "bytes": 17794512,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+          "sha256": "b7827de44e5051d8d7803507b9362dbf8521181996449a88934b59ceb0d54db6"
+        },
+        {
+          "bytes": 3569,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+          "sha256": "f5a00da4c05db6dd0441f8c76a886a898435e61890dd1f445ff7e8f79e1e2495"
+        },
+        {
+          "bytes": 7318,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+          "sha256": "46fd4ea678f0ced8f620f2a8ceb045d779e412bca881d5ec584ce4cadf18133a"
+        },
+        {
+          "bytes": 682045,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+          "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+        },
+        {
+          "bytes": 419223,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+          "sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9"
+        },
+        {
+          "bytes": 342393,
+          "exists": true,
+          "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+          "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+          "sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e"
+        }
+      ],
+      "recorded_warmup_arrays_not_exported": 115,
+      "simulation_time_s": 0.01666666753590107,
+      "support_underside_minus_table_top_m": {
+        "dist_bowl_landing_support": 0.0009046643972396851,
+        "dist_bowl_support": 0.002452574670314789,
+        "dist_neutral_cube_support": 0.0009046643972396851,
+        "dist_plate_landing_support": 0.0009046643972396851,
+        "dist_plate_support": 0.023999277502298355
+      },
+      "table_top_z_m": 0.05000072345137596,
+      "video_fps_display_only": 30.0,
+      "video_sample_mean_absolute_rgb_compression_error": {
+        "0": 2.0041315827546295,
+        "1": 2.2486537905092594,
+        "10": 2.293082320601852,
+        "120": 2.3668272569444446,
+        "30": 2.3139388020833334,
+        "60": 2.2997985387731483
+      },
+      "video_sha256": "f440ae46496466cdf5aa79a7d49737f90af99793269b690c4396e2a194cf0d97",
+      "video_sheet": "3-dist-right/decoded-video-samples.png",
+      "video_sheet_sha256": "71ca7425c6f021abec57667eb3eb74f8f5a6f765cd5434404d804270c0ce35ac"
+    }
+  },
+  "study_source_commit": "fccf310c41fa16e8dc703491559c933558f08d96",
+  "verified_exported_files": 118
+}

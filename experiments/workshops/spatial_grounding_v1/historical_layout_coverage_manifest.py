@@ -32,14 +32,50 @@ def _status(cohort: dict[str, Any]) -> tuple[str, str]:
     return "source_inspection_needed", "source is locally inspectable, but no exact source-to-registry geometry binding is established"
 
 
+def _recover_explicit_root_only(cohort: dict[str, Any], repo_root: Path) -> list[dict[str, Any]]:
+    """Recover measured root fields without promoting them to geometry."""
+    if cohort["cohort_id"] != "V3-E006":
+        return []
+    path = repo_root / cohort["source_path"]
+    if not path.is_file():
+        return []
+    document = json.loads(path.read_text())
+    rows = []
+    for object_name, value in document.get("rigid_objects", {}).items():
+        position = value.get("root_position", {})
+        quaternion = value.get("root_quaternion_wxyz", {})
+        if not (isinstance(position.get("values"), list) and isinstance(quaternion.get("values"), list)):
+            continue
+        rows.append(
+            {
+                "cohort_id": cohort["cohort_id"],
+                "object": object_name,
+                "source_path": cohort["source_path"],
+                "source_sha256": cohort["source_sha256"],
+                "position_json_pointer": f"/rigid_objects/{object_name}/root_position",
+                "quaternion_json_pointer": f"/rigid_objects/{object_name}/root_quaternion_wxyz",
+                "position": position["values"],
+                "quaternion_wxyz": quaternion["values"],
+                "position_data_sha256": position.get("data_sha256"),
+                "quaternion_data_sha256": quaternion.get("data_sha256"),
+                "semantic_status": "measured_root_only",
+                "blocker": "no source-defined centroid/AABB or configured-reset pair; not comparable geometry",
+            }
+        )
+    return rows
+
+
 def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
     inventory_path = repo_root / INVENTORY.relative_to(REPO_ROOT)
     inventory = json.loads(inventory_path.read_text())
     records = []
+    recovered_root_only = []
+    indispensable_requests = []
     for cohort in inventory["cohorts"]:
         source = repo_root / cohort["source_path"]
         status, reason = _status(cohort)
         actual_sha256 = _sha256(source) if source.is_file() else None
+        recovered_root_only.extend(_recover_explicit_root_only(cohort, repo_root))
         hash_status = (
             "verified_against_inventory"
             if actual_sha256 == cohort["source_sha256"]
@@ -72,6 +108,25 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
             "comparable_geometry_eligible": False,
         }
         records.append(record)
+        candidates = []
+        for payload in record["required_pvc_payloads"]:
+            if payload["hash_binding_status"] != "hash_anchored":
+                continue
+            lower = payload["path"].lower()
+            if any(token in lower for token in ("reset", "pose", "layout", "geometry", "aabb", "scan", "state")):
+                candidates.append(payload)
+        if candidates:
+            # One exact reset/state payload per source is sufficient to verify
+            # producer semantics; full coverage still requires the source's
+            # complete manifest and remains unresolved.
+            indispensable_requests.append(
+                {
+                    "cohort_id": cohort["cohort_id"],
+                    **candidates[0],
+                    "request_scope": "exact_file_only",
+                    "selection_reason": "minimal_semantics_probe; not a complete cohort export",
+                }
+            )
 
     return {
         "schema_version": "sgw-01-historical-layout-coverage-read-request-v1",
@@ -86,6 +141,9 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
             "claim": "existing 24-layout registry is preserved; this manifest does not replace or extend its comparable rows",
         },
         "records": records,
+        "recovered_root_only_evidence": recovered_root_only,
+        "recovered_geometry_rows": [],
+        "indispensable_external_requests": indispensable_requests,
         "counts": {
             "total": len(records),
             "already_covered": sum(r["coverage_status"] == "already_covered" for r in records),
@@ -95,6 +153,9 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
             ),
             "arena_excluded": 0,
             "comparable_geometry_eligible": 0,
+            "recovered_root_only_rows": len(recovered_root_only),
+            "recovered_geometry_rows": 0,
+            "indispensable_external_requests": len(indispensable_requests),
         },
         "prospective_neutral_centers": {
             "height_center_m": 0.16,

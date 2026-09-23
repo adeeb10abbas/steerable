@@ -36,6 +36,12 @@ capture-eligible slots remain unlaunched until actual smoke integrity passes.
 Historical coverage, learned runtime, pilot and behavioral release gates are
 unchanged.
 
+Job bn started at 07:12:51 UTC on four existing A40 nodes. All four
+allocation probes measured zero MiB used before native simulator startup;
+native capture is progressing and the first slot has entered qualification.
+The Job does not depend on a laptop process and has a finite 4,800-second
+deadline. No native outcome is claimed from startup alone.
+
 ## Scientific accounting
 
 - Planned: **1,044** episodes (P 36, D 144, C 864).

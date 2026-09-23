@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_below_release_gate_height_dist_native_visual_setup_accepted_qualification_unreleased",
-  "updated_at_utc": "2026-09-23T07:09:58Z",
+  "updated_at_utc": "2026-09-23T07:13:45Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -410,7 +410,27 @@
     "independent_scene_reviewer": "89af7b05-595a-43d4-977b-ae0b077d6e9f",
     "scene_review_scope": "The same independent reviewer sealed bi acceptance as ACCEPT_NATIVE_VISUAL_SETUP_ONLY for all4 captures and exactly reproduced all20 policy preprocessing images. This is not an additional rater, physical qualification, category recognition, live tensor parity or behavioral release. Plate-category/wrist-occlusion caveats and per-candidate banana clearance remain binding."
   },
-  "active_task_gpu_jobs": [],
+  "active_task_gpu_jobs": [
+    {
+      "job": "sgw01-ali-family-native-smoke-20260923bn",
+      "job_uid": "181cdd45-0bce-4acb-8388-0134e52cf34c",
+      "started_at_utc": "2026-09-23T07:12:51Z",
+      "status": "native_smoke_running_after_all_four_fresh_idle_guards_passed",
+      "raw_root": "/data/users/ali/sgw-01/qualification/family-native-smoke-20260923bn",
+      "allocated_gpus": 4,
+      "model_workers": 0,
+      "automatic_retries_per_index": 0,
+      "job_deadline_seconds": 4800,
+      "pod_deadline_seconds": 4500,
+      "child_deadline_seconds": 1800,
+      "pods": [
+        "sgw01-ali-family-native-smoke-20260923bn-0-wzwld",
+        "sgw01-ali-family-native-smoke-20260923bn-1-gz848",
+        "sgw01-ali-family-native-smoke-20260923bn-2-t9dtx",
+        "sgw01-ali-family-native-smoke-20260923bn-3-p8gc6"
+      ]
+    }
+  ],
   "active_task_cpu_jobs": [
     {
       "job": "sgw01-ali-family-source-stage-20260923bm",
@@ -435,7 +455,7 @@
     "dist": {"capture_eligible": 64, "geometric_rejections": 36, "left": 45, "right": 19},
     "native_smoke_design_ids": ["SGW-HEIGHT-DESIGN-000", "SGW-HEIGHT-DESIGN-001", "SGW-DIST-DESIGN-000", "SGW-DIST-DESIGN-003"],
     "native_smoke_manifest": "handoff/k8s/sgw01-ali-family-native-smoke-20260923bn.yaml",
-    "native_smoke_status": "registered_not_launched",
+    "native_smoke_status": "running_no_outcome_claimed",
     "remaining_capture_eligible_slots": 117,
     "physically_qualified_candidates": 0,
     "historical_coverage_complete": false,
@@ -557,7 +577,7 @@
       "kubernetes_failed_at_utc": "2026-09-23T06:33:03Z"
     }
   },
-  "next_authorized_step": "Launch registered bn native smoke at the four exact first-per-side slots in the verified bm freeze. At most four A40 GPUs, zero model workers, no retries/refill; native capture, canonical materialization, six fixed trials or verified terminal rejection, and independent raw-evidence verification. Preserve every video/failure/partial. Inspect smoke integrity before authorizing any of the remaining117 slots. Historical/model/runtime gates remain separate; no learned-policy release or LAT rerun.",
+  "next_authorized_step": "Inspect running bn native smoke at the four exact first-per-side slots in the verified bm freeze. At most four A40 GPUs, zero model workers, no retries/refill; native capture, canonical materialization, six fixed trials or verified terminal rejection, and independent raw-evidence verification. Preserve every video/failure/partial. Inspect smoke integrity before authorizing any of the remaining117 slots. Historical/model/runtime gates remain separate; no learned-policy release or LAT rerun.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -826,7 +846,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Launch and inspect handoff/k8s/sgw01-ali-family-native-smoke-20260923bn.yaml against the exact bm freeze. Seven large historical payloads remain bounded root-only evidence, not comparable geometry or a coverage release. No learned inference, LAT refill, threshold relaxation or reuse of original attempt roots.",
+  "next_action": "Inspect and preserve results of running sgw01-ali-family-native-smoke-20260923bn against the exact bm freeze. Seven large historical payloads remain bounded root-only evidence, not comparable geometry or a coverage release. No learned inference, LAT refill, threshold relaxation or reuse of original attempt roots.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

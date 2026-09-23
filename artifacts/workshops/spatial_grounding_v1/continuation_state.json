@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
-  "status": "lat_batch_running_with_independent_verification_and_durable_zero_model_capture_handoff",
-  "updated_at_utc": "2026-09-23T02:58:33Z",
+  "status": "lat_release_blocked_registered_batch_finishing_with_durable_height_dist_capture_handoff",
+  "updated_at_utc": "2026-09-23T03:33:59.436690+00:00",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -41,7 +41,8 @@
     "prospective_family_scene_and_live_asset_camera_guards": "ff2c361d51b3fe370cef2ec2b07347082a4ea5d4",
     "d1_source_backed_http_trace_and_recording": "a61d466",
     "durable_zero_model_capture_sequencer": "ff19302",
-    "local_sgw_tests_passed": 193,
+    "native_joint_position_measurement_and_policy_integration": "782ab6cf",
+    "local_sgw_tests_passed": 202,
     "local_sgw_tests_skipped_linux_identity": 1,
     "live_model_runtime_qualified": false,
     "concrete_behavioral_allocation_receipt_exists": false
@@ -382,13 +383,13 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "Calibrated family plumbing integrated. Prospective real USD scene/capture implementation is under parent review; no actual HEIGHT/DIST scene capture or candidate freeze exists. No independent cluster launch authorized.",
+    "fixture_scope": "Four baseline captures remain queued. Local 100-slot prospective family campaign preparation and inherited-USD guards are under parent integration review; no native HEIGHT/DIST capture, candidate freeze or independent cluster launch.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
-    "runtime_scope": "D1 exact official client cadence/identity tests integrated. Child is implementing the actual 14B conditional server using CPU-exported pinned source/config; local synthetic wrappers are not native qualification. No model construction, live server or cluster operations authorized.",
+    "runtime_scope": "Paused. Parent integrated and repaired D1 official client, HTTP producer, trace and recording. Native distributed startup and decoded-future time mapping remain unqualified. No model construction or live server authorized.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
-    "worker_scope": "Old child verifier is paused and not integrated. Parent owns corrected CPU verifier ao. Child is implementing the actual native joint-position Environment; remote A40/B200 boundary and runtime release remain absent.",
+    "worker_scope": "Parent repaired native joint-position environment and full 450-action N3/D1 recorded integration in 782ab6cf. Child is implementing bounded local-only PVC mailbox RPC and native AppLauncher receiver lifecycle. No remote transport or runtime release yet.",
     "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
-    "historical_coverage_scope": "Source-backed exhaustive DROID layout inventory and explicit unresolved raw paths; no historical reruns or release from incomplete coverage."
+    "historical_coverage_scope": "Paused. Additive 45-record source inventory integrated and independently reproduced; layout coverage is explicitly incomplete. No historical reruns or release."
   },
   "active_task_gpu_jobs": [
     {
@@ -420,6 +421,16 @@
       "automatic_retries": 0,
       "release_permitted": false,
       "receipt": "infrastructure/cpu-20260923ao-first-verified-results.json"
+    },
+    {
+      "job": "sgw01-ali-capture-sequencer-20260923as",
+      "job_uid": "26610acb-0428-48b9-b3ab-0a75e13f51f2",
+      "started_at_utc": "2026-09-23T02:56:55Z",
+      "allocated_gpus": 0,
+      "automatic_retries": 0,
+      "release_permitted": false,
+      "raw_output": "/data/users/ali/sgw-01/infrastructure/capture-sequencer-20260923as",
+      "receipt": "infrastructure/kubernetes-20260923at-progress.json"
     }
   ],
   "verification_recovery": {
@@ -476,32 +487,39 @@
     "plan_sha256": "f5007f84d26f27946b38f2053ca7d640b56e50e92ae3d09a0261feb45f88275e",
     "job": "sgw01-ali-lat-batch-20260923ak",
     "manifest": "handoff/k8s/sgw01-ali-lat-batch-20260923ak.yaml",
-    "status": "running_23_producer_completions_21_independent_verifications",
+    "status": "running_32_producer_completions_31_verified_lat_release_impossible",
     "job_uid": "f31bfbca-f4e3-4919-af8a-3fd92ec515a2",
     "started_at_utc": "2026-09-23T01:24:09Z",
     "progress_receipt": "infrastructure/a40-20260923ak-launch-progress.json",
-    "latest_progress_receipt": "infrastructure/kubernetes-20260923as-progress.json",
-    "latest_verification_receipt": "infrastructure/cpu-20260923as-sequencing-and-verification.json",
-    "latest_observed_at_utc": "2026-09-23T02:58:33Z",
-    "producer_completed_indices": "0-22",
-    "producer_completed_candidates": 23,
+    "latest_progress_receipt": "infrastructure/kubernetes-20260923at-progress.json",
+    "latest_verification_receipt": "infrastructure/cpu-20260923at-lat-release-bound.json",
+    "latest_observed_at_utc": "2026-09-23T03:33:59.436690+00:00",
+    "producer_completed_indices": "0-31",
+    "producer_completed_candidates": 32,
     "independently_verified_all_six_pass": [
       "LAT-CANDIDATE-082", "LAT-CANDIDATE-071", "LAT-CANDIDATE-002",
       "LAT-CANDIDATE-024", "LAT-CANDIDATE-017", "LAT-CANDIDATE-044",
       "LAT-CANDIDATE-046", "LAT-CANDIDATE-007", "LAT-CANDIDATE-055",
       "LAT-CANDIDATE-068", "LAT-CANDIDATE-015", "LAT-CANDIDATE-086",
-      "LAT-CANDIDATE-098", "LAT-CANDIDATE-005"
+      "LAT-CANDIDATE-098", "LAT-CANDIDATE-005", "LAT-CANDIDATE-064",
+      "LAT-CANDIDATE-052", "LAT-CANDIDATE-037", "LAT-CANDIDATE-013"
     ],
     "independently_verified_physical_rejections_in_batch": [
       "LAT-CANDIDATE-057", "LAT-CANDIDATE-050", "LAT-CANDIDATE-062",
       "LAT-CANDIDATE-077", "LAT-CANDIDATE-003", "LAT-CANDIDATE-012",
-      "LAT-CANDIDATE-084"
+      "LAT-CANDIDATE-084", "LAT-CANDIDATE-036", "LAT-CANDIDATE-051",
+      "LAT-CANDIDATE-085", "LAT-CANDIDATE-053", "LAT-CANDIDATE-043",
+      "LAT-CANDIDATE-026"
     ],
     "verified_files_for_candidate_082": 11628,
     "decoded_frames_for_candidate_082": 3432,
     "verified_snapshot_is_not_family_release": true,
     "registered_remaining_candidates": 39,
-    "awaiting_independent_verification": 18,
+    "awaiting_independent_verification": 8,
+    "required_layouts_per_family": 29,
+    "maximum_possible_all_six_pass_candidates": 26,
+    "lat_behavioral_release_permitted": false,
+    "decision": "The frozen minimum-layout rule blocks LAT: 13 independently verified batch rejections leave at most 26 all-six passes. Finish the already registered finite batch and existing capture handoff; never refill the cap or relax thresholds.",
     "max_parallel_gpu_pods": 4,
     "concurrent_model_workers": 0,
     "per_pod_deadline_seconds": 3600,
@@ -541,13 +559,13 @@
   "prospective_lat_proposals": {
     "path": "proposals/lat-20260922.json",
     "sha256": "5b47860f6eac16e318515534a918d9460677b58d6174b4b76a29f7cc6be34eb9",
-    "status": "one_corrected_candidate_rejected_remaining_39_in_active_finite_batch",
+    "status": "lat_release_blocked_below_29_layouts_finite_qualification_still_running",
     "total_candidates_including_geometric_rejections": 100,
     "geometric_passes": 40,
     "geometric_rejections": 60,
     "physically_qualified": 0,
-    "independently_verified_all_six_physical_passes_not_final_release": 14,
-    "physically_rejected_under_corrected_controller": 8,
+    "independently_verified_all_six_physical_passes_not_final_release": 18,
+    "physically_rejected_under_corrected_controller": 14,
     "first_hash_ordered_geometric_pass": "LAT-CANDIDATE-032",
     "reachability_and_historical_deduplication_release": false
   },
@@ -597,17 +615,17 @@
     }
   ],
   "blockers": [
-    "Candidate 032's original six trials and corrected ai trials remain unchanged. The corrected recipe passed five of six but failed the strict terminal angular-speed gate once; candidate 032 remains rejected. The 39 remaining eligible poses are running in bounded model-blind batch ak; do not launch a duplicate or allocate above the four-GPU ceiling.",
+    "LAT behavioral release is blocked by the frozen 29-layout requirement: at 03:33 UTC, 13 independently verified rejections in the 39-candidate batch leave at most 26 all-six passes. Candidate032 is an additional preserved rejection. Do not refill the 100-candidate cap, rerun rejected poses, lower the required layout count or change thresholds. Finish the already registered finite batch and retain all footage.",
     "Historical-layout coverage remains incomplete. The additive 45-record source inventory reproduces exact source hashes and raw path pointers, but every source still has unresolved layout coverage. See infrastructure/historical-droid-layout-source-inventory-v2.json; the original comparator and earlier inventory remain unchanged.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
-    "D1's actual source-backed client, HTTP producer, trace reader and recorder now pass together offline, with physical/wrapper/native IDs and raw/processed actions separated. Native distributed startup, official decode/time mapping, N3 runtime, and the production joint-position simulator/RPC remain unqualified.",
+    "Both native client paths now run complete 450-action engineering integrations through joint-position measurements, HTTP producers, trace readers, recorder and scorer with simulated physics/model computation. Native AppLauncher/RPC, D1 distributed startup, official decode/time mapping and all live model runtimes remain unqualified.",
     "Four prospective HEIGHT/DIST designs have verified live asset bindings but no native captures at this snapshot. Controller as will unsuspend capture Job ar only after ak completes and releases all GPU allocations; the entire chain remains within four GPUs. Do not manually launch another study GPU phase concurrently.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs sgw01-ali-lat-batch-20260923ak sgw01-ali-lat-verify-20260923ao sgw01-ali-prospective-capture-20260923ar sgw01-ali-capture-sequencer-20260923as",
-  "next_action": "Supervise existing ak/ao/as and suspended ar by exact UID. The finite controller now owns automatic ar activation after ak terminates successfully; do not independently unsuspend ar or launch another GPU phase. Read newly persisted independent reports and preserve all physical rejections, especially candidate032. After ar completes, inspect all four actual scene receipts, videos and contacts before proposal freezing or scripted qualification. No family/model/behavioral release exists. Do not recreate Jobs, resume am, relaunch an, overwrite raw outputs or relax thresholds. Continue CPU-only native runtime and exhaustive historical-coverage work.",
+  "next_action": "LAT cannot reach the frozen required29 layouts and must not release behavior. Supervise existing ak/ao/as and suspended ar by exact UID; finish the registered finite qualification without changing its poses/controller. Controller as owns automatic ar activation after successful ak completion and allocation release. Do not manually unsuspend ar or launch another GPU phase. After ar completes, inspect all four actual scene receipts, videos and contacts before HEIGHT/DIST design-plan freezing or scripted qualification. No family/model/behavioral release exists. Do not recreate Jobs, resume am, relaunch an, overwrite raw outputs or relax thresholds. Integrate reviewed local campaign/RPC work and continue native runtime and historical-coverage gates.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

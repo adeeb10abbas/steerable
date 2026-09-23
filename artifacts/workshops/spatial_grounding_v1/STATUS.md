@@ -1,6 +1,6 @@
 # SGW-01 status
 
-**The four-GPU LAT batch and CPU verifier are running durably. At 02:58 UTC, 23 candidates had producer receipts; independent verification confirmed 14 all-six-pass candidates and seven physical rejections. Four zero-model HEIGHT/DIST captures are queued for automatic handoff after LAT releases its GPUs. Learned-policy episodes remain at zero.**
+**LAT behavioral release is blocked by the frozen 29-layout requirement. At 03:33 UTC, 13 independently verified batch rejections leave at most 26 possible passes. The four-GPU qualification batch is finishing; four zero-model HEIGHT/DIST captures remain queued for automatic handoff. Learned-policy episodes remain at zero.**
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
@@ -385,6 +385,31 @@ not decoded predictions. Live distributed startup, official video decode/time
 mapping and the production joint-position simulator/RPC remain unfinished;
 the unintegrated worker prototype's hardcoded support state is not accepted.
 
+### Frozen LAT stop rule and native integration
+
+The [03:33 Job snapshot](infrastructure/kubernetes-20260923at-progress.json)
+records 32 producer completions and four active GPUs. The independent
+[release-bound receipt](infrastructure/cpu-20260923at-lat-release-bound.json)
+records 31 verified candidates: 18 all-six passes and 13 physical rejections.
+Together with rejected candidate 032 and the 60 original geometric rejections,
+this leaves **at most 26 qualifying LAT layouts**, below the required 29.
+LAT cannot release P/D/C behavior under this freeze. This applies the existing
+stop rule; it is not an amendment, a new denominator or permission to refill
+the cap. The registered batch and all recordings continue to completion,
+followed by the already-authorized four HEIGHT/DIST captures.
+
+Parent source `782ab6cf` replaces the joint-position prototype's fabricated
+support and COM-speed shortcut with the existing measured contact and
+geometric-center path. Complete 450-action N3 and D1 engineering integrations
+now reach the actual HTTP producer, trace reader, recorder and scorer with
+simulated physics/model computation. Both native camera-packing paths are
+source-backed; the adapter performs the native session reset and retains the
+physical reset/warmup evidence. Behavioral video timing follows measured
+15-Hz action timestamps rather than the warmup's 30-FPS display convention.
+The full local SGW suite has 202 passing checks and one Linux-only identity
+skip. No live runtime is qualified: AppLauncher/RPC, distributed D1 startup,
+decoded-future time mapping and the remaining release gates are still open.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure
@@ -422,6 +447,8 @@ handoff to `sgw01-ali-prospective-capture-20260923ar`. Do not recreate these
 Jobs, manually unsuspend ar, or launch any other study GPU phase concurrently.
 Preserve all earlier outcomes and all 100 candidate poses; no
 learned-policy release exists.
+LAT's frozen minimum-layout gate cannot pass; do not start LAT behavior or
+generate replacement LAT candidates.
 Do not rerun completed captures or overwrite evidence.
 **Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**

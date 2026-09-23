@@ -1,0 +1,84 @@
+{
+  "context": "prod-dcwi-warrenq1-vmkub007",
+  "jobs": [
+    {
+      "name": "sgw01-ali-lat-batch-20260923ak",
+      "spec": {
+        "completions": 39,
+        "parallelism": 4,
+        "suspend": false
+      },
+      "status": {
+        "active": 4,
+        "completedIndexes": "0-31",
+        "failedIndexes": "",
+        "ready": 4,
+        "startTime": "2026-09-23T01:24:09Z",
+        "succeeded": 32,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "uid": "f31bfbca-f4e3-4919-af8a-3fd92ec515a2"
+    },
+    {
+      "name": "sgw01-ali-lat-verify-20260923ao",
+      "spec": {
+        "completions": 1,
+        "parallelism": 1,
+        "suspend": false
+      },
+      "status": {
+        "active": 1,
+        "ready": 1,
+        "startTime": "2026-09-23T02:13:47Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "uid": "1de130fb-6fd4-4c10-94d5-6fcc6e1e4c1c"
+    },
+    {
+      "name": "sgw01-ali-prospective-capture-20260923ar",
+      "spec": {
+        "completions": 4,
+        "parallelism": 4,
+        "suspend": true
+      },
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-23T02:55:06Z",
+            "lastTransitionTime": "2026-09-23T02:55:06Z",
+            "message": "Job suspended",
+            "reason": "JobSuspended",
+            "status": "True",
+            "type": "Suspended"
+          }
+        ],
+        "failedIndexes": "",
+        "ready": 0,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "uid": "8f3327bc-95bb-48ea-ae17-3eaf4b2d4077"
+    },
+    {
+      "name": "sgw01-ali-capture-sequencer-20260923as",
+      "spec": {
+        "completions": 1,
+        "parallelism": 1,
+        "suspend": false
+      },
+      "status": {
+        "active": 1,
+        "ready": 1,
+        "startTime": "2026-09-23T02:56:55Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "uid": "26610acb-0428-48b9-b3ab-0a75e13f51f2"
+    }
+  ],
+  "namespace": "211247-prod",
+  "observed_at_utc": "2026-09-23T03:33:59.436690+00:00",
+  "schema_version": "sgw-01-owned-kubernetes-progress-v1"
+}

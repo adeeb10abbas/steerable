@@ -147,6 +147,17 @@ materialization-environment resets and is explicitly not an exhaustive
 population. Lifecycle accounting must also address earlier infrastructure
 attempts; extraction alone cannot release fixtures or learned inference.
 
+The expanded bx audit adds a separately hash-bound R012 geometry-preflight
+receipt and matches all 101 recorded lifecycles to reset snapshots. Its 149
+named snapshots do not cover the earlier R005 attempt01, whose ledger records
+missing rank 1--3 scientific state payloads. Reproduce this bounded accounting:
+
+```bash
+.venv/bin/python -m tools.audit_sgw_historical_population \
+  --export-root artifacts/workshops/spatial_grounding_v1/infrastructure/historical-population-20260923bx \
+  --output /tmp/sgw-historical-population-audit.json
+```
+
 Reproduce the retained seven-source audit into a fresh output file:
 
 ```bash

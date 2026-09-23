@@ -106,3 +106,50 @@ def test_named_root_proof_rejects_native_frame_drift(tmp_path, monkeypatch, muta
     monkeypatch.setattr(module, "FRAMES", target)
     with pytest.raises(ValueError, match=message):
         module.compile_proof()
+
+
+def test_population_audit_preserves_snapshots_and_accounts_for_named_lifecycles():
+    from tools.audit_sgw_historical_population import audit as audit_population
+
+    result = audit_population(ROOT, INFRA / "historical-population-20260923bx")
+    assert sum(row["recorded_environment_count"] for row in result["records"]) == 101
+    assert sum(row["fresh_reset_snapshot_count"] for row in result["records"]) == 101
+    assert sum(row["candidate_state_snapshot_count"] for row in result["records"]) == 48
+    assert sum(row["additional_reset_count"] for row in result["records"]) == 49
+    assert sum(row["new_materialization_reset_count"] for row in result["records"]) == 48
+    assert all(row["recorded_lifecycles_each_have_unique_reset_snapshot"] for row in result["records"])
+    assert all(row["all_frame_identity_checks_passed"] for row in result["records"])
+    assert result["known_uncovered_infrastructure_attempts"][0]["attempt_id"] == "98f0234-a40r06-attempt01"
+    assert result["historical_population_coverage_complete"] is False
+    assert result["release_permitted"] is False
+
+
+@pytest.mark.parametrize("mutation,message", [
+    ("prior", "prior fresh_reset_objects changed or missing"),
+    ("lifecycle", "snapshot lifecycle differs"),
+    ("preflight", "supplementary preflight byte/hash mismatch"),
+])
+def test_population_audit_rejects_drift(tmp_path, mutation, message):
+    from tools.audit_sgw_historical_population import audit as audit_population
+
+    target = tmp_path / "population"
+    shutil.copytree(INFRA / "historical-population-20260923bx", target)
+    if mutation == "preflight":
+        path = target / "r012-geometry-preflight.json"
+        path.write_bytes(path.read_bytes() + b"\n")
+    else:
+        manifest_path = target / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        row = manifest["records"][0]
+        path = target / row["export_path"]
+        value = json.loads(path.read_text())
+        if mutation == "prior":
+            value["fresh_reset_objects"][0]["value"]["position_world_m"][0] += 1
+        else:
+            value["snapshot_environment_bindings"][0]["value"]["label"] = "different_environment"
+        raw = (json.dumps(value, sort_keys=True) + "\n").encode()
+        path.write_bytes(raw)
+        row["export_bytes"], row["export_sha256"] = len(raw), hashlib.sha256(raw).hexdigest()
+        manifest_path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match=message):
+        audit_population(ROOT, target)

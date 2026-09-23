@@ -1,0 +1,116 @@
+{
+  "asset_manifest_sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806",
+  "candidate_id": "HEIGHT-CANDIDATE-SGW-HEIGHT-DESIGN-012",
+  "family": "HEIGHT",
+  "metadata": {
+    "baseline_banana_pose": {
+      "position_m": [
+        0.800000011920929,
+        0.38999998569488525,
+        0.06946864724159241
+      ],
+      "quaternion_wxyz": [
+        0.9999781250953674,
+        -0.0026648887433111668,
+        -0.006051987875252962,
+        0.0001454032608307898
+      ]
+    },
+    "candidate_capture_receipt_sha256": "1ab525100a54b4d0cb7c2e0c7755373ec0ccb2cbbac7e2a4e3ed0ec83c19417f",
+    "candidate_capture_sha256": "738ea88871dd1f0ed47a270c66ca603424941d42f05b62003e860c8807492c88",
+    "candidate_overlay_manifest_sha256": "7af3cd0f43dae92ef1414852ba69b9972fd3bf453bd4ea6d5f924ea2c640c203",
+    "controller_calibration": {
+      "bytes": 4031,
+      "path": "/data/users/ali/sgw-01/source/68b9e100-bs/artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json",
+      "sha256": "107442ccca01c4ac44ec6e1cb9674d51dbcd8663288a851dc54fa91a124f93d7"
+    },
+    "controller_calibration_sha256": "107442ccca01c4ac44ec6e1cb9674d51dbcd8663288a851dc54fa91a124f93d7",
+    "geometric_screen_status": "passed",
+    "geometry_guard_support_ids": [
+      "height_reference_support",
+      "height_neutral_cube_support",
+      "height_lower_support",
+      "height_upper_support"
+    ],
+    "goal_supports": {
+      "higher": {
+        "contact_sensor_id": "rubiks_cube__height_upper_support",
+        "cube_center_env_local_xyz_m": [
+          0.6407449841499329,
+          0.2081959992647171,
+          0.19999998807907104
+        ],
+        "support_surface_id": "height_upper_support"
+      },
+      "lower": {
+        "contact_sensor_id": "rubiks_cube__height_lower_support",
+        "cube_center_env_local_xyz_m": [
+          0.6407449841499329,
+          -0.251803994178772,
+          0.11999999731779099
+        ],
+        "support_surface_id": "height_lower_support"
+      }
+    },
+    "historical_layout_fingerprint": null,
+    "native_scene": {
+      "asset": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-012/candidate-overlay.usda",
+      "object_names": [
+        "rubiks_cube",
+        "bowl",
+        "banana",
+        "table",
+        "height_reference_support",
+        "height_neutral_cube_support",
+        "height_lower_support",
+        "height_upper_support"
+      ]
+    },
+    "prospective_design_id": "SGW-HEIGHT-DESIGN-012",
+    "prospective_plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+    "scoring_center_offsets_root_local_m": {
+      "bowl": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rubiks_cube": [
+        -0.010159748770011363,
+        0.0289287532637624,
+        -0.0024039926342527334
+      ]
+    },
+    "status": "unqualified_proposal_starting_physical_validation",
+    "upper_support_side": "left"
+  },
+  "object_poses": {
+    "bowl": {
+      "position_m": [
+        0.4407449960708618,
+        0.10819599777460098,
+        0.1599999964237213
+      ],
+      "quaternion_wxyz": [
+        0.9999999403953552,
+        -5.8753543271450326e-05,
+        -0.00032362030469812453,
+        -0.00010501052747713402
+      ]
+    },
+    "rubiks_cube": {
+      "position_m": [
+        0.2909146547317505,
+        -0.15072664618492126,
+        0.1624353677034378
+      ],
+      "quaternion_wxyz": [
+        0.9999990463256836,
+        -0.0009071399690583348,
+        0.001037940033711493,
+        8.44117093947716e-05
+      ]
+    }
+  },
+  "seed": 20260922,
+  "task_asset": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-012/candidate-overlay.usda"
+}

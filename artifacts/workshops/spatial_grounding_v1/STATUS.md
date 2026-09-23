@@ -6,7 +6,9 @@ behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
 have verified receipts, views and complete videos. Native smoke br has completed
 24 full physical trials: two candidates pass all six trials and two are valid
 physical rejections. All four raw evidence chains passed independent rechecks.
-The remaining 117 frozen candidates are running in four durable GPU workers.
+Including the first twelve subsequent candidates, 16 candidates have completed
+96 full trials: six all-six passes and ten physical rejections. Four durable
+GPU workers continue the remaining 105 frozen slots.
 Historical coverage and all learned-runtime release gates remain open.
 Learned-policy requests and episodes remain at zero.**
 
@@ -187,6 +189,41 @@ release gate; complete historical populations remain unproved. The evidence
 and reproducible proof are in
 [`infrastructure/native-root-frames-20260923bw/`](infrastructure/native-root-frames-20260923bw/).
 All 33 targeted root/lineage checks pass; no model or fixture branch is released.
+
+At 09:34 UTC, HEIGHT 012 passed all six trials; HEIGHT 013/014 each passed
+five and HEIGHT 015 passed four. The three valid rejections remain consumed.
+The third worker-verified prefix is in
+[`infrastructure/family-partition-20260923bt-prefix-bx/`](infrastructure/family-partition-20260923bt-prefix-bx/).
+Including smoke, 16 candidates have completed 96 trials and 43,200 scripted
+actions, with all videos retained. This remains worker-verified evidence,
+not the pending independent final collector result. At 09:40 UTC, bt was
+recording HEIGHT 016/020/021/024, its shared stop was absent, and bu had no
+terminal output or error record. Geometrically rejected indices are not refilled.
+
+The source trace found that bl/bv omitted the distinct
+`materialization_environment/fresh_reset` path. CPU-only bx completed at
+09:36:30 UTC, rehashing the same seven full sources and retaining 48 additional
+materialization resets, their frame records, lifecycle bindings and scalar
+outcomes. Its expanded selections preserve every old selected pointer/value.
+A separately hash-bound 47,076-byte R012 geometry-preflight receipt supplies
+one further reset omitted by both stream contracts. The reproducible audit
+now accounts for 101 recorded environment lifecycles, 101 fresh-reset
+snapshots and 48 candidate-state snapshots across these seven named
+executions. All 149 frame identities pass and have zero environment origins.
+Evidence and the audit are in
+[`infrastructure/historical-population-20260923bx/`](infrastructure/historical-population-20260923bx/).
+The 400 earlier nonmatch comparisons remain scoped to their original 100
+snapshots; they are not silently extended to this larger set.
+
+This is still **not complete historical coverage**. The committed R005
+infrastructure ledger records an earlier `98f0234-a40r06-attempt01`: all
+20 environments and four candidate pairs were computed before terminal
+serialization failed, but ranks 1--3 lack retained materialization scientific
+state payloads. It is outside the seven streamed executions. Neither its zero
+accepted states nor its zero model requests permits excluding those layouts.
+The exact ledger, source and raw failure-report bindings are retained in the
+new audit. All 43 targeted extraction/lineage/root tests pass; learned runtime,
+historical coverage and fixture release remain unresolved.
 
 ## Scientific accounting
 

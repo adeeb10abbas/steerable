@@ -1,0 +1,494 @@
+{
+  "auditor_sha256": "120a1b6774d0479f3388a863990773f76b513e01643d2aec2aa422e69475ce84",
+  "behavioral_episodes": 0,
+  "claim_boundary": "Every retained lifecycle in these seven named executions has a matching retained fresh reset; prior selections are preserved. This is not a proof of every historical execution, intermediate constructed layout, asset dependency or geometry. R005 attempt01 is separate: its ledger records 20 completed environments and missing rank1-3 scientific state payloads. Zero accepted states or zero model requests do not exclude those layouts. No fixtures or model requests are released.",
+  "export_manifest_sha256": "5e7fd159687a1a0482d125bcd7584432e60b7e8e8483d8b4996b2a87f4c302e3",
+  "historical_population_coverage_complete": false,
+  "inputs_manifest_sha256": "d66cf43ffb56032dee7c84efc3ffbce2d830eedcb94626d73a229b1e713a09ae",
+  "known_uncovered_infrastructure_attempts": [
+    {
+      "attempt_id": "98f0234-a40r06-attempt01",
+      "raw_failure_report": {
+        "bytes": 25614537,
+        "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/state_construction_failure.json",
+        "sha256": "e858a4431bd0451a1e380d66c8c5d05c5486718f5b23388f874d24a7d271ae8e"
+      },
+      "recorded_completeness": {
+        "candidate_pair_compute_count": 4,
+        "completed_environment_lifecycle_count": 20,
+        "diagnostic_compute_count": 4,
+        "failure_report_retains_complete_scientific_payloads_for_ranks": [
+          4
+        ],
+        "failure_report_retains_complete_scientific_payloads_for_ranks_1_through_3": false,
+        "offline_terminal_recovery_permitted": false,
+        "reason_offline_recovery_prohibited": "LAST_PARTIAL_STAGES was overwritten at each rank; ranks 1 through 3 have cameras, environment configs, and IK HDF5 but lack retained materialization scientific-gate payloads.",
+        "scientifically_completed_candidate_pair_count": 0
+      },
+      "source": {
+        "branch": "experiment/v3e006-r005-state-repair",
+        "study_checkout": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234",
+        "study_commit": "98f0234cd124d24004fd0053bc8f61f71e8dd50b"
+      }
+    }
+  ],
+  "model_requests": 0,
+  "prior_attempt_ledger_sha256": "3efd158f2502d6495006e32cdb9c715e0d8f23286242045148185839051c349c",
+  "prior_lineage_git_bindings_verified": 93,
+  "prior_lineage_manifest_sha256": "6fae51f4abf2e2b11ac1db599c09eb769e5c3f344e0ad7c192aad88b7378d2ed",
+  "records": [
+    {
+      "additional_reset_count": 0,
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_snapshot_count": 0,
+      "cohort_id": "V3-E006-repair-r004",
+      "frame_identity_count": 12,
+      "fresh_reset_snapshot_count": 12,
+      "new_materialization_reset_count": 0,
+      "new_reset_pointers": [],
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "population_accounting": {
+        "/accepted_candidate_rank": null,
+        "/attempts/0/candidate_rank": 1,
+        "/attempts/1/candidate_rank": 2,
+        "/attempts/2/candidate_rank": 3,
+        "/attempts/3/candidate_rank": 4,
+        "/candidate_budget": 4,
+        "/diagnostic_budget": 4,
+        "/r004_live_diagnostic_count": 4,
+        "/repair_candidate_evaluation_count": 4,
+        "/status": "r004_candidate_budget_exhausted_no_valid_state_pair"
+      },
+      "prior_selections_preserved": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r004/state_repair/2d3a0b9-a40r06-attempt01/raw/state_repair_result.json",
+      "raw_source_sha256": "54c2335c5c4339037bd5f7e7e76ab15c5485191d82de253cc61d27dd66ddb81d",
+      "recorded_environment_count": 12,
+      "recorded_lifecycles_each_have_unique_reset_snapshot": true,
+      "selected_export_sha256": "5e6145ab11b5e1dac95c1a07d0ec0fa4b5750484209277133310561c15786b07",
+      "stage_outcomes": {
+        "/attempts/0/stages/canonical_carry/candidate_state/candidate_rejection": "waypoint_07_environment_terminated",
+        "/attempts/0/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/0/stages/canonical_carry/candidate_state/unchanged_scientific_gate_evaluated": false,
+        "/attempts/0/stages/canonical_carry/ik_solution/failure_reason": "waypoint_07_environment_terminated",
+        "/attempts/0/stages/canonical_carry/ik_solution/passed": false,
+        "/attempts/0/stages/canonical_grasp/candidate_state/candidate_rejection": "waypoint_07_environment_terminated",
+        "/attempts/0/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/0/stages/canonical_grasp/candidate_state/unchanged_scientific_gate_evaluated": false,
+        "/attempts/0/stages/canonical_grasp/ik_solution/failure_reason": "waypoint_07_environment_terminated",
+        "/attempts/0/stages/canonical_grasp/ik_solution/passed": false,
+        "/attempts/1/stages/canonical_carry/candidate_state/candidate_rejection": "waypoint_07_environment_terminated",
+        "/attempts/1/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_carry/candidate_state/unchanged_scientific_gate_evaluated": false,
+        "/attempts/1/stages/canonical_carry/ik_solution/failure_reason": "waypoint_07_environment_terminated",
+        "/attempts/1/stages/canonical_carry/ik_solution/passed": false,
+        "/attempts/1/stages/canonical_grasp/candidate_state/candidate_rejection": "waypoint_07_environment_terminated",
+        "/attempts/1/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_grasp/candidate_state/unchanged_scientific_gate_evaluated": false,
+        "/attempts/1/stages/canonical_grasp/ik_solution/failure_reason": "waypoint_07_environment_terminated",
+        "/attempts/1/stages/canonical_grasp/ik_solution/passed": false,
+        "/attempts/2/stages/canonical_carry/candidate_state/candidate_rejection": "waypoint_07_environment_terminated",
+        "/attempts/2/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_carry/candidate_state/unchanged_scientific_gate_evaluated": false,
+        "/attempts/2/stages/canonical_carry/ik_solution/failure_reason": "waypoint_07_environment_terminated",
+        "/attempts/2/stages/canonical_carry/ik_solution/passed": false,
+        "/attempts/2/stages/canonical_grasp/candidate_state/candidate_rejection": "waypoint_07_environment_terminated",
+        "/attempts/2/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_grasp/candidate_state/unchanged_scientific_gate_evaluated": false,
+        "/attempts/2/stages/canonical_grasp/ik_solution/failure_reason": "waypoint_07_environment_terminated",
+        "/attempts/2/stages/canonical_grasp/ik_solution/passed": false,
+        "/attempts/3/stages/canonical_carry/candidate_state/candidate_rejection": "waypoint_07_environment_terminated",
+        "/attempts/3/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_carry/candidate_state/unchanged_scientific_gate_evaluated": false,
+        "/attempts/3/stages/canonical_carry/ik_solution/failure_reason": "waypoint_07_environment_terminated",
+        "/attempts/3/stages/canonical_carry/ik_solution/passed": false,
+        "/attempts/3/stages/canonical_grasp/candidate_state/candidate_rejection": "waypoint_07_environment_terminated",
+        "/attempts/3/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_grasp/candidate_state/unchanged_scientific_gate_evaluated": false,
+        "/attempts/3/stages/canonical_grasp/ik_solution/failure_reason": "waypoint_07_environment_terminated",
+        "/attempts/3/stages/canonical_grasp/ik_solution/passed": false
+      },
+      "supplementary_preflight": null
+    },
+    {
+      "additional_reset_count": 8,
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_snapshot_count": 8,
+      "cohort_id": "V3-E006-repair-r005",
+      "frame_identity_count": 28,
+      "fresh_reset_snapshot_count": 20,
+      "new_materialization_reset_count": 8,
+      "new_reset_pointers": [
+        "/attempts/0/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/0/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_grasp/materialization_environment/fresh_reset"
+      ],
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "population_accounting": {
+        "/accepted_candidate_rank": null,
+        "/attempts/0/candidate_rank": 1,
+        "/attempts/1/candidate_rank": 2,
+        "/attempts/2/candidate_rank": 3,
+        "/attempts/3/candidate_rank": 4,
+        "/candidate_budget": 4,
+        "/diagnostic_budget": 4,
+        "/r005_live_diagnostic_count": 4,
+        "/repair_candidate_evaluation_count": 4,
+        "/status": "r005_candidate_budget_exhausted_no_valid_state_pair"
+      },
+      "prior_selections_preserved": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/66d307f-a40r06-attempt02/raw/state_repair_result.json",
+      "raw_source_sha256": "4cb6c3e7e19e510e2422368131c06074014ba5173caf2134b7d6b456043afc01",
+      "recorded_environment_count": 20,
+      "recorded_lifecycles_each_have_unique_reset_snapshot": true,
+      "selected_export_sha256": "7a94ea88690c0b1ee2fefa0fb09abc9f671a7e07424282acc422e2512285f3b5",
+      "stage_outcomes": {
+        "/attempts/0/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/0/stages/canonical_carry/ik_solution/failure_reason": null,
+        "/attempts/0/stages/canonical_carry/ik_solution/passed": true,
+        "/attempts/0/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/0/stages/canonical_grasp/ik_solution/failure_reason": null,
+        "/attempts/0/stages/canonical_grasp/ik_solution/passed": true,
+        "/attempts/1/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_carry/ik_solution/failure_reason": null,
+        "/attempts/1/stages/canonical_carry/ik_solution/passed": true,
+        "/attempts/1/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_grasp/ik_solution/failure_reason": null,
+        "/attempts/1/stages/canonical_grasp/ik_solution/passed": true,
+        "/attempts/2/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_carry/ik_solution/failure_reason": null,
+        "/attempts/2/stages/canonical_carry/ik_solution/passed": true,
+        "/attempts/2/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_grasp/ik_solution/failure_reason": null,
+        "/attempts/2/stages/canonical_grasp/ik_solution/passed": true,
+        "/attempts/3/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_carry/ik_solution/failure_reason": null,
+        "/attempts/3/stages/canonical_carry/ik_solution/passed": true,
+        "/attempts/3/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_grasp/ik_solution/failure_reason": null,
+        "/attempts/3/stages/canonical_grasp/ik_solution/passed": true
+      },
+      "supplementary_preflight": null
+    },
+    {
+      "additional_reset_count": 8,
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_snapshot_count": 8,
+      "cohort_id": "V3-E006-repair-r006",
+      "frame_identity_count": 28,
+      "fresh_reset_snapshot_count": 20,
+      "new_materialization_reset_count": 8,
+      "new_reset_pointers": [
+        "/attempts/0/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/0/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_grasp/materialization_environment/fresh_reset"
+      ],
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "population_accounting": {
+        "/accepted_candidate_rank": null,
+        "/attempts/0/candidate_rank": 1,
+        "/attempts/1/candidate_rank": 2,
+        "/attempts/2/candidate_rank": 3,
+        "/attempts/3/candidate_rank": 4,
+        "/candidate_budget": 4,
+        "/diagnostic_budget": 4,
+        "/r006_live_diagnostic_count": 4,
+        "/repair_candidate_evaluation_count": 4,
+        "/status": "r006_candidate_budget_exhausted_no_valid_state_pair"
+      },
+      "prior_selections_preserved": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r006/state_repair/eea3bb3-a40r06-attempt02/raw/state_repair_result.json",
+      "raw_source_sha256": "7eae75c38a7b65ba4b8fbc44f3ca4c565c3af5675134c93570b1dc0e85176011",
+      "recorded_environment_count": 20,
+      "recorded_lifecycles_each_have_unique_reset_snapshot": true,
+      "selected_export_sha256": "227de6c5c8102c4260409e83451db8503a422e17871eab23de2ddf3e5c2a53d2",
+      "stage_outcomes": {
+        "/attempts/0/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/0/stages/canonical_carry/ik_solution/failure_reason": null,
+        "/attempts/0/stages/canonical_carry/ik_solution/passed": true,
+        "/attempts/0/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/0/stages/canonical_grasp/ik_solution/failure_reason": null,
+        "/attempts/0/stages/canonical_grasp/ik_solution/passed": true,
+        "/attempts/1/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_carry/ik_solution/failure_reason": null,
+        "/attempts/1/stages/canonical_carry/ik_solution/passed": true,
+        "/attempts/1/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_grasp/ik_solution/failure_reason": null,
+        "/attempts/1/stages/canonical_grasp/ik_solution/passed": true,
+        "/attempts/2/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_carry/ik_solution/failure_reason": null,
+        "/attempts/2/stages/canonical_carry/ik_solution/passed": true,
+        "/attempts/2/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_grasp/ik_solution/failure_reason": null,
+        "/attempts/2/stages/canonical_grasp/ik_solution/passed": true,
+        "/attempts/3/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_carry/ik_solution/failure_reason": null,
+        "/attempts/3/stages/canonical_carry/ik_solution/passed": true,
+        "/attempts/3/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_grasp/ik_solution/failure_reason": null,
+        "/attempts/3/stages/canonical_grasp/ik_solution/passed": true
+      },
+      "supplementary_preflight": null
+    },
+    {
+      "additional_reset_count": 8,
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_snapshot_count": 8,
+      "cohort_id": "V3-E006-repair-r007",
+      "frame_identity_count": 20,
+      "fresh_reset_snapshot_count": 12,
+      "new_materialization_reset_count": 8,
+      "new_reset_pointers": [
+        "/attempts/0/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/0/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_grasp/materialization_environment/fresh_reset"
+      ],
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "population_accounting": {
+        "/accepted_candidate_rank": null,
+        "/attempts/0/candidate_rank": 1,
+        "/attempts/1/candidate_rank": 2,
+        "/attempts/2/candidate_rank": 3,
+        "/attempts/3/candidate_rank": 4,
+        "/candidate_budget": 4,
+        "/diagnostic_budget": 4,
+        "/r007_live_diagnostic_count": 4,
+        "/repair_candidate_evaluation_count": 4,
+        "/status": "r007_candidate_budget_exhausted_no_valid_state_pair"
+      },
+      "prior_selections_preserved": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r007/state_repair/2c7c528-a40r06-attempt01/raw/state_repair_result.json",
+      "raw_source_sha256": "f20314dcd32d9d6503dd5c2bd3777a08563fea3ca2a47c5f91bc26f4483a5cd6",
+      "recorded_environment_count": 12,
+      "recorded_lifecycles_each_have_unique_reset_snapshot": true,
+      "selected_export_sha256": "a7560b5c4f673e8a240dbddfbe758ece3d910a148433a2f8a78f1e4805042c01",
+      "stage_outcomes": {
+        "/attempts/0/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/0/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_grasp/candidate_state/passed": false
+      },
+      "supplementary_preflight": null
+    },
+    {
+      "additional_reset_count": 8,
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_snapshot_count": 8,
+      "cohort_id": "V3-E006-repair-r008",
+      "frame_identity_count": 20,
+      "fresh_reset_snapshot_count": 12,
+      "new_materialization_reset_count": 8,
+      "new_reset_pointers": [
+        "/attempts/0/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/0/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_grasp/materialization_environment/fresh_reset"
+      ],
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "population_accounting": {
+        "/accepted_candidate_rank": null,
+        "/attempts/0/candidate_rank": 1,
+        "/attempts/1/candidate_rank": 2,
+        "/attempts/2/candidate_rank": 3,
+        "/attempts/3/candidate_rank": 4,
+        "/candidate_budget": 4,
+        "/diagnostic_budget": 4,
+        "/r008_live_diagnostic_count": 4,
+        "/repair_candidate_evaluation_count": 4,
+        "/status": "r008_candidate_budget_exhausted_no_valid_state_pair"
+      },
+      "prior_selections_preserved": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r008/state_repair/ae06a1f-a40r06-attempt01/raw/state_repair_result.json",
+      "raw_source_sha256": "58f8e54994348634d8793f0448c49144b35ab3b601065ab4be298cbd9ebc6548",
+      "recorded_environment_count": 12,
+      "recorded_lifecycles_each_have_unique_reset_snapshot": true,
+      "selected_export_sha256": "90d5ec360f8927ee267ed894d6583731e8f87a0f8f47e2a5cd5d96407b3f0c6c",
+      "stage_outcomes": {
+        "/attempts/0/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/0/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_grasp/candidate_state/passed": false
+      },
+      "supplementary_preflight": null
+    },
+    {
+      "additional_reset_count": 8,
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_snapshot_count": 8,
+      "cohort_id": "V3-E006-repair-r009",
+      "frame_identity_count": 20,
+      "fresh_reset_snapshot_count": 12,
+      "new_materialization_reset_count": 8,
+      "new_reset_pointers": [
+        "/attempts/0/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/0/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_grasp/materialization_environment/fresh_reset"
+      ],
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "population_accounting": {
+        "/accepted_candidate_rank": null,
+        "/attempts/0/candidate_rank": 1,
+        "/attempts/1/candidate_rank": 2,
+        "/attempts/2/candidate_rank": 3,
+        "/attempts/3/candidate_rank": 4,
+        "/candidate_budget": 4,
+        "/diagnostic_budget": 4,
+        "/r009_live_diagnostic_count": 4,
+        "/repair_candidate_evaluation_count": 4,
+        "/status": "r009_candidate_budget_exhausted_no_valid_state_pair"
+      },
+      "prior_selections_preserved": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r009/state_repair/2edc2a5-a40r06-attempt01/raw/state_repair_result.json",
+      "raw_source_sha256": "0753b4fe44ed479d4575804f3b5f38e3244a1cea25de3f1a8564dca4cd26ab3c",
+      "recorded_environment_count": 12,
+      "recorded_lifecycles_each_have_unique_reset_snapshot": true,
+      "selected_export_sha256": "95543f4d21527dd8133b04a456866a1852b51fd3327e064840e8e4a582840c79",
+      "stage_outcomes": {
+        "/attempts/0/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/0/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_grasp/candidate_state/passed": false
+      },
+      "supplementary_preflight": null
+    },
+    {
+      "additional_reset_count": 9,
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_snapshot_count": 8,
+      "cohort_id": "V3-E006-repair-r012",
+      "frame_identity_count": 21,
+      "fresh_reset_snapshot_count": 13,
+      "new_materialization_reset_count": 8,
+      "new_reset_pointers": [
+        "/attempts/0/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/0/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/1/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/2/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_carry/materialization_environment/fresh_reset",
+        "/attempts/3/stages/canonical_grasp/materialization_environment/fresh_reset",
+        "/geometry_attachment_preflight/fresh_reset"
+      ],
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "population_accounting": {
+        "/accepted_candidate_rank": null,
+        "/attempts/0/candidate_rank": 1,
+        "/attempts/1/candidate_rank": 2,
+        "/attempts/2/candidate_rank": 3,
+        "/attempts/3/candidate_rank": 4,
+        "/candidate_budget": 4,
+        "/diagnostic_budget": 4,
+        "/r012_live_diagnostic_count": 4,
+        "/repair_candidate_evaluation_count": 4,
+        "/status": "r012_candidate_budget_exhausted_no_valid_state_pair"
+      },
+      "prior_selections_preserved": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r012/state_repair/219c7a2-a40r06-attempt01/raw/state_repair_result.json",
+      "raw_source_sha256": "a556be5fb67e95687ba390b689c3f7f676b20d21475fd2357ae1429c7b424c56",
+      "recorded_environment_count": 13,
+      "recorded_lifecycles_each_have_unique_reset_snapshot": true,
+      "selected_export_sha256": "5cc7eb844f2a8888f1b35aca07048babf79d3bc70d943c97bf229c2b571973d1",
+      "stage_outcomes": {
+        "/attempts/0/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/0/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/1/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/2/stages/canonical_grasp/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_carry/candidate_state/passed": false,
+        "/attempts/3/stages/canonical_grasp/candidate_state/passed": false
+      },
+      "supplementary_preflight": {
+        "binding": {
+          "bytes": 47076,
+          "path": "/data/users/ali/vla_wam/raw/v3e006_r012/state_repair/219c7a2-a40r06-attempt01/raw/geometry_attachment_preflight.json",
+          "sha256": "4327ae990d11dc13a7a3206ea82bceeab47fc4a4bbbbf25f0fe5451d13b215e4"
+        },
+        "closure_manifest": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r012/results/evidence_manifest.json",
+        "closure_manifest_sha256": "bfd9b5b9f8b874ee8c45cc60fb402804eecbd975252387feb1bee9c2e8d8c270",
+        "export_path": "r012-geometry-preflight.json",
+        "scope": "Separately hash-bound preflight receipt from the same named execution, not another run."
+      }
+    }
+  ],
+  "release_permitted": false,
+  "schema_version": "sgw-01-historical-reset-population-audit-v1"
+}

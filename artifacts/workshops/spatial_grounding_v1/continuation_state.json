@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_height_dist_remaining_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T09:18:29Z",
+  "updated_at_utc": "2026-09-23T09:40:09Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -56,6 +56,8 @@
     "historical_lineage_stream_and_audit_tests_passed": 19,
     "historical_root_nonmatch_primitive": "experiments/workshops/spatial_grounding_v1/historical_root_nonmatch.py",
     "historical_root_and_lineage_targeted_tests_passed": 33,
+    "opt_in_historical_population_extractor": "c9d8517d452285af24f43d98316c1dd871aa368f",
+    "historical_population_lineage_root_targeted_tests_passed": 43,
     "family_capture_materializer_and_six_trial_verifier": "5b21c8af",
     "finite_family_slot_executor": "e1f8a212",
     "preaction_guard_persisted_before_controller_planning": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
@@ -648,6 +650,28 @@
       "including_native_smoke_and_both_prefixes": {"completed_candidates": 12, "all_six_pass": 5, "physical_rejected": 7, "completed_trials": 72},
       "claim_boundary": "Same worker-verification and hash-bound projection scope as the first prefix. Final independent raw compilation remains pending."
     },
+    "verified_third_prefix": {
+      "observed_at_utc": "2026-09-23T09:34:31.395916+00:00",
+      "manifest": "infrastructure/family-partition-20260923bt-prefix-bx/manifest.json",
+      "manifest_sha256": "68003bd008a4be0df8064c00e6e36f9ec6d856243dd02b815db6b6802d487dc9",
+      "completed_remaining_slots_including_prior_prefixes": 12,
+      "remaining_slots_not_yet_terminal": 105,
+      "completed_trials_this_prefix": 24,
+      "all_six_pass_slots": ["HEIGHT-012"],
+      "valid_physical_rejections": [
+        {"slot": "HEIGHT-013", "passed_trials": 5},
+        {"slot": "HEIGHT-014", "passed_trials": 5},
+        {"slot": "HEIGHT-015", "passed_trials": 4}
+      ],
+      "next_claimed_slots": ["HEIGHT-016", "HEIGHT-020", "HEIGHT-021", "HEIGHT-024"],
+      "including_native_smoke_and_all_prefixes": {"completed_candidates": 16, "all_six_pass": 6, "physical_rejected": 10, "completed_trials": 96, "controller_actions": 43200},
+      "claim_boundary": "Worker verification and hash-bound qualification projections, not final independent raw compilation."
+    },
+    "last_read_only_monitor": {
+      "observed_at_utc": "2026-09-23T09:40:09.133125+00:00",
+      "shared_infrastructure_stop_present": false,
+      "collector_terminal_or_error_record_present": false
+    },
     "release_permitted": false
   },
   "completed_capture_source_stages": [
@@ -766,7 +790,7 @@
       "kubernetes_failed_at_utc": "2026-09-23T06:33:03Z"
     }
   },
-  "latest_historical_payload_recovery": {
+  "historical_payload_recovery_bv": {
     "job": "sgw01-ali-historical-lineage-20260923bv",
     "job_uid": "f97205ed-aa9c-4f1f-8495-be199e0cfb91",
     "pod": "sgw01-ali-historical-lineage-20260923bv-2zd5q",
@@ -797,6 +821,49 @@
     "coverage_complete": false,
     "release_permitted": false
   },
+  "latest_historical_payload_recovery": {
+    "job": "sgw01-ali-historical-population-20260923bx",
+    "job_uid": "42144006-eb70-45b9-b8d0-056943927715",
+    "pod": "sgw01-ali-historical-population-20260923bx-zkdrd",
+    "pod_uid": "53cfa73d-4fdb-4195-9907-e35c2e56e451",
+    "started_at_utc": "2026-09-23T09:33:59Z",
+    "extraction_completed_at_utc": "2026-09-23T09:36:27.689550+00:00",
+    "kubernetes_completed_at_utc": "2026-09-23T09:36:30Z",
+    "kubernetes_terminal_status": "Complete",
+    "allocated_gpus": 0,
+    "source_commit": "c9d8517d452285af24f43d98316c1dd871aa368f",
+    "source_files_streamed_and_fully_hashed": 7,
+    "source_bytes": 1338347469,
+    "retained_streamed_payload_bytes": 1722961,
+    "process_peak_rss_kib": 25636,
+    "manifest": "infrastructure/historical-population-20260923bx/manifest.json",
+    "manifest_sha256": "5e7fd159687a1a0482d125bcd7584432e60b7e8e8483d8b4996b2a87f4c302e3",
+    "receipt": "infrastructure/historical-population-20260923bx/receipt.json",
+    "receipt_sha256": "00745157ce79e44a6165140ed848a4cdd9323605db4e70c4497a7dfd020e9df3",
+    "population_audit": "infrastructure/historical-population-20260923bx/population_audit.json",
+    "population_audit_sha256": "cfb0cf832285da1071d5ad0478637609082dc416c3ee442c00300afd7f3f715c",
+    "supplementary_r012_preflight": "infrastructure/historical-population-20260923bx/r012-geometry-preflight.json",
+    "supplementary_r012_preflight_bytes": 47076,
+    "supplementary_r012_preflight_sha256": "4327ae990d11dc13a7a3206ea82bceeab47fc4a4bbbbf25f0fe5451d13b215e4",
+    "prior_selections_preserved_as_subset": true,
+    "new_materialization_resets": 48,
+    "new_separately_bound_preflight_resets": 1,
+    "recorded_lifecycles_accounted": 101,
+    "fresh_reset_snapshots": 101,
+    "candidate_state_snapshots": 48,
+    "named_frame_identity_records": 149,
+    "all_named_frame_identities_passed": true,
+    "known_uncovered_attempt": {
+      "attempt_id": "98f0234-a40r06-attempt01",
+      "cohort_id": "V3-E006-repair-r005",
+      "completed_environment_lifecycles": 20,
+      "candidate_pairs_computed": 4,
+      "missing_materialization_scientific_state_payload_ranks": [1, 2, 3],
+      "boundary": "Zero accepted states/model requests cannot exclude instantiated historical layouts. Separate raw failure/source bindings are in population_audit.json."
+    },
+    "coverage_complete": false,
+    "release_permitted": false
+  },
   "named_historical_root_nonmatches": {
     "native_frame_manifest": "infrastructure/native-root-frames-20260923bw/manifest.json",
     "native_frame_manifest_sha256": "9252c331fa8b3bd7553117818107884a7a8a2ab8cb6ae8761010cc2bc3ec01ee",
@@ -813,7 +880,8 @@
     "historical_population_coverage_complete": false,
     "release_permitted": false
   },
-  "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. CPU-only historical work must now establish complete named populations or other source-specific exclusions; the400 proved observed-root nonmatches do not by themselves close coverage.",
+  "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. CPU-only historical work must account for earlier infrastructure attempts, including R005 98f0234 attempt01 and its missing rank1-3 state payloads. bx now accounts for149 snapshots/101 recorded lifecycles in seven named later executions, not complete historical coverage. The400 prior nonmatches remain limited to their original100 snapshots.",
+  "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu -o wide",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",

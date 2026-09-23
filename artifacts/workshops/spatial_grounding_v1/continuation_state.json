@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
-  "status": "main_p_fixture_assigned_n3_startup_blocked_family_workers_administratively_paused_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T20:49:00Z",
+  "status": "n3_auxiliary_assets_ready_gpu_admission_blocked_main_p_assigned_behavior_unreleased",
+  "updated_at_utc": "2026-09-23T22:01:01.437005+00:00",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -463,7 +463,7 @@
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
     "fixture_scope": "MAIN N3/LAT P assignment helper integrated from1c6fb520 with non-overwriting outputs. Exact retained redesigned capture and six-pass verification now bind only the six original LAT-P01 N3 P cells. No runtime release or learned request follows from this assignment. D/C qualification and within-study disjointness remain required; historical novelty is not a gate. Parent alone owns launches.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
-    "runtime_scope": "Native worker bootstrap and allocated-device child environment support are integrated. N3 constructor failed before any request; auxiliary-asset access remains unresolved under the unchanged native configuration. D1 startup, actual VAE execution and physical future time mapping remain unqualified. No child has launch authority.",
+    "runtime_scope": "Native worker bootstrap and allocated-device child environment support are integrated. N3 auxiliary assets are now downloaded, hashed and CPU-loadable under unchanged native configuration. Actual GPU admission is blocked, so native policy construction/fixed-input requests remain untested after that repair. D1 startup, actual VAE execution and physical future time mapping remain unqualified. No child has launch authority.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
     "worker_scope": "All four BT workers acknowledged the administrative pause after their current complete candidates and terminated. Exactly110 operational slots are complete and7 unstarted DIST slots remain pending. CPU-only BU independently compiles terminal raw/video evidence; no source mutation, fixture/model release or child launch authority.",
     "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
@@ -655,7 +655,7 @@
     "unstarted_pending_DIST_slots_per_rank": [[86, 92, 98], [94], [90, 95], [96]],
     "unfinished_claimed_slots": 0,
     "active_worker_containers": 0,
-    "independent_final_raw_video_compilation": "BU_running_summary_not_yet_present_at_2049_UTC",
+    "independent_final_raw_video_compilation": "BU_running_72_recheck_files_no_final_summary_or_error_at_2201_UTC",
     "job": "sgw01-ali-family-partition-20260923bt",
     "job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
     "started_at_utc": "2026-09-23T08:16:48Z",
@@ -1368,7 +1368,7 @@
     "frozen_candidates_or_controller_modified": false,
     "scope": "Inspect scene/path clearance using copies of exact existing source and video. Offer does not authorize replacing frozen failures or waive history/runtime gates; future repairs require prospective disclosure."
   },
-  "next_authorized_step": "N3 remains blocked before its first request. Initial auth checks showed both environments were logged out; normal laptop browser sign-in has now succeeded. The exact authenticated file check still reports repository access required, and the Hub reports automatic gating. The official Cosmos-Guardrail1 page is open for the user to accept its access terms. After that, verify exact pinned asset access and stage CPU prerequisites before any GPU allocation. Native configuration is unchanged. Preserve CW/CZ failures and the owner claim; record a distinct zero-prior-request recovery before the same six registered requests. MAIN N3/LAT P's physical assignment remains frozen but fixed-input/runtime/time-map release is pending. BT's110 completed operational slots and7 unstarted pending slots remain preserved; BU independently compiles raw/video evidence. No learned request or behavioral episode has completed.",
+  "next_authorized_step": "Authentication and auxiliary downloads are resolved: user signed in and accepted terms; both complete dependency snapshots are hashed and their native constructors passed offline on CPU. Do not ask for another sign-in or redownload. GPU admission is the current blocker: DC/DF/DG/DH/DI all failed before container startup with zero available devices on the tested A40/B200/A100 placements. DE created no Pod because priority admission rejects explicit Never for the unnamed class; DE is suspended and configured PriorityClasses cannot be listed with current permissions. Obtain an actually allocatable authorized GPU or an administrator-provided non-preempting scheduling class before another bounded recovery, not another blind admission loop. The single successor claim is still absent and all six original requests remain unconsumed. Native policy configuration is unchanged. MAIN N3/LAT P remains physically assigned but unreleased; BU independently compiles raw/video evidence.",
   "next_qualification_milestone": {
     "status": "prospective_revision_not_yet_registered_or_launched",
     "first_deliverable": "Separately disclose and freeze a post-result LAT/HEIGHT candidate-generation revision using SGW-ENG-008's actual translated geometry and measured center/root transforms. Specify family-appropriate landing/support geometry, unchanged robot/cameras/controller, seed, finite candidate cap, deterministic selection and required counterbalance before new candidate outcomes.",
@@ -1379,7 +1379,7 @@
     "new_campaign_released": false
   },
   "immediate_nonbehavioral_priority": {
-    "status": "native_constructor_attempted_zero_requests_auxiliary_asset_access_blocked",
+    "status": "auxiliary_assets_ready_offline_cpu_preflight_passed_gpu_admission_blocked",
     "first_model": "N3",
     "maximum_fixed_input_requests_per_model": 6,
     "maximum_fixed_input_requests_total": 12,
@@ -1394,7 +1394,35 @@
     "requires_full_29_layout_pool": false,
     "requires_historical_novelty": false,
     "authentication_check": "infrastructure/n3-fixed-input-20260923cw/authentication-check-20260923.json",
-    "next_step": "Laptop browser sign-in succeeded, but the exact authenticated asset dry-run remains denied. Complete the official Cosmos-Guardrail1 access/terms form (automatic gating), then download the pinned auxiliary file through normal authenticated access. Keep native configuration unchanged and stage every auxiliary dependency on CPU before another GPU launch. Preserve failed CZ output and claim; corrected launch must be separately recorded with zero prior requests verified."
+    "authentication_check_scope": "Historical initial diagnosis, superseded by successful user terms acceptance and the downloaded/hashed dependency manifest.",
+    "auxiliary_assets": "infrastructure/n3-fixed-input-20260923cw/auxiliary-assets-manifest.json",
+    "auxiliary_cpu_preflight": "infrastructure/n3-fixed-input-20260923cw/auxiliary-cpu-preflight.json",
+    "latest_execution_evidence": "infrastructure/n3-fixed-input-20260923cw/post-authentication-execution.json",
+    "prospective_infrastructure_recovery": "infrastructure/n3-fixed-input-20260923cw/recovery-20260923dc.json",
+    "successor_claim_acquired": false,
+    "additional_request_allocation": 0,
+    "next_step": "Resolve actual GPU admission or obtain a cluster-approved non-preempting PriorityClass for normal scheduling. All downloads and CPU constructor checks are complete. Preserve all zero-container admissions and CZ's zero-request constructor failure. Reuse the same six-request registration and canonical exclusive successor claim only after fresh ownership, physical-idle, asset and storage checks."
+  },
+  "post_authentication_resource_state": {
+    "observed_at_utc": "2026-09-23T22:01:01.437005+00:00",
+    "receipt": "infrastructure/n3-fixed-input-20260923cw/post-authentication-execution.json",
+    "failed_device_admissions": ["DC", "DF", "DG", "DH", "DI"],
+    "zero_pod_scheduler_rejection": "DE",
+    "DE_suspended": true,
+    "active_recovery_containers": 0,
+    "allocated_recovery_gpus": 0,
+    "recovery_run_directories_created": [],
+    "model_requests": 0,
+    "behavioral_episodes": 0,
+    "qualification_collector": "BU_running_72_recheck_files_no_final_summary_or_error",
+    "owned_terminal_pod_cleanup": {
+      "pod": "sgw01-ali-family-partition-20260923bt-0-vfrxn",
+      "pod_uid": "47875bb1-e784-486a-adde-3f4fd5311960",
+      "action": "Deleted only after its containers and parent Job were terminal and its logs/metadata had been backed up. No current candidate or raw output was changed.",
+      "receipt": "infrastructure/n3-fixed-input-20260923cw/placement-20260923dg.json",
+      "device_availability_restored": false
+    },
+    "claim_boundary": "The tested placements reported no available devices; this does not establish that every GPU in the cluster is occupied. No unrelated workload was used, stopped or preempted."
   },
   "main_n3_lat_p_fixture_assignment": {
     "id": "SGW-MAIN-N3-LAT-P-20260923",
@@ -1472,7 +1500,7 @@
     "collision_scope": "Nine panda arm-link collision bounds, not gripper collision geometry. All2706 states retain geometry/contact observations; no arm AABB obstacle overlap and zero filtered gripper force on bowl/banana/table. These are not full collision-safety closure.",
     "next_milestone": "Preserve this completed engineering slice and prospectively disclose any next redesigned qualification campaign. Do not refill frozen LAT/HEIGHT pools, count this single layout as29 fixtures, or release models from an engineering demonstration."
   },
-  "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu sgw01-ali-paper-engineering-20260923ct-1 sgw01-ali-paper-handoff-20260923cp -o wide",
+  "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-collector-20260923bu sgw01-ali-n3-fixedinput-20260923de sgw01-ali-n3-fixedinput-20260923di -o wide",
   "next_historical_trace": "No historical-novelty audit is required for SGW release under the explicit user clarification SGW-REQ-001. Preserve all prior recoveries, incomplete coverage and provenance records unchanged; do not turn them into active release blockers. Current scene/model/runtime identity checks remain required.",
   "verification_recovery": {
     "am": {
@@ -1746,7 +1774,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "User must accept Cosmos-Guardrail1 access terms in the official signed-in browser page now open. Normal browser authentication succeeded, but the authenticated exact-file dry-run still reports access required; repository gating is auto. Then stage authorized pinned auxiliary assets and CPU prerequisites without redownloading the verified policy checkpoint. Native configuration is unchanged. Preserve CW/CZ zero-request failures, all BT outcomes and pending slots, and independent BU collection. No extra pilot or full confirmation release.",
+  "next_action": "Obtain a genuinely allocatable existing authorized GPU or administrator-provided non-preempting scheduling class; current priority admission rejects explicit Never, and the tested pre-bound GPU placements all failed before container start. Do not repeat sign-in/download work: dependencies are cached, hashed and CPU-loadable. All six original N3 requests remain unconsumed; preserve the absent canonical successor claim, every infrastructure receipt and BU's continuing independent collection. No extra pilot or full confirmation release.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

@@ -66,14 +66,20 @@ behavioral actions are started, and output directories cannot be reused.
 
 The first actual native constructor attempt stopped before any request. The
 missing native `libxcb` search path is resolved by the existing Ubuntu 22.04
-native libraries; the remaining prerequisite is approved Hugging Face access
-to the pinned Cosmos-Guardrail1 auxiliary asset under the unchanged native
-configuration. This auxiliary content filter is not a scientific or robot
-collision-safety gate. The user's explanatory question authorized no change:
-preserve the zero-request failure and its owner claim, do not automatically
-change the runtime, and never bypass repository access controls. An alternative
-runtime configuration would need explicit authorization and prospective
-disclosure. See the current execution capsule in
+native libraries. Normal authentication and user terms acceptance subsequently
+resolved access: both complete auxiliary snapshots are hashed on the PVC and
+their native constructors passed offline on CPU. The original safety settings
+and policy configuration remain unchanged; no redownload or new sign-in is
+needed.
+
+Current execution is blocked by device admission, not weights. Five bounded
+post-repair A40/B200/A100 admissions created no container. The normal-scheduler
+attempt created no Pod because priority admission rejected explicit `Never`;
+that Job is suspended. Obtain actually allocatable authorized capacity or a
+cluster-approved non-preempting scheduling class before another launch.
+The canonical successor claim is still absent and all six original requests
+remain unconsumed. Preserve every prior failure and recheck ownership, actual
+physical idleness, storage and asset hashes before resuming. See the current execution capsule in
 `artifacts/workshops/spatial_grounding_v1/infrastructure/n3-fixed-input-20260923cw/`.
 
 Current restart state and cluster evidence:

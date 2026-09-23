@@ -1,5 +1,10 @@
 # SGW-01 status
 
+**22:01 UTC: the weight/access problem is resolved. Native auxiliary models
+are downloaded, hashed and successfully load offline on CPU. The current
+blocker is GPU admission: tested A40, B200 and A100 placements were rejected
+before container startup. No learned-policy request has run.**
+
 **The new 0.50 m native engineering layout passed all six recorded scripted
 checks: both goals, three resets each. It ran on an additional verified-idle
 A40 without interrupting the original four workers. Those workers have since
@@ -227,6 +232,39 @@ The main Nano checkpoint is already downloaded and hash-verified. Only its
 native auxiliary startup dependencies remain to be staged after legitimate
 authentication. No runtime configuration change, new policy request or GPU
 allocation occurred during this diagnosis.
+
+### 22:01 UTC: dependencies ready; actual GPU admission now blocked
+
+The user completed normal browser authentication and repository terms
+acceptance. The complete source-pinned Cosmos-Guardrail1 snapshot and Qwen3Guard
+revision `fada3b2f655b89601929198343c94cd2f64d93cc` are on persistent storage.
+Every file is [hashed](infrastructure/n3-fixed-input-20260923cw/auxiliary-assets-manifest.json),
+and both native auxiliary constructors
+[passed offline on CPU](infrastructure/n3-fixed-input-20260923cw/auxiliary-cpu-preflight.json).
+No safety setting, policy checkpoint, sampler configuration or input changed.
+
+The [prospective recovery](infrastructure/n3-fixed-input-20260923cw/recovery-20260923dc.json)
+preserves CZ and permits only one exclusive successor for the original six
+unconsumed requests. Subsequent DC/DF/DG/DH/DI placements were rejected by device
+admission before a container started: the tested A40, B200 and A100 nodes
+reported one requested device and zero available. This is not proof that the
+whole cluster is occupied. A normal-scheduler attempt, DE, created no Pod:
+priority admission rejected `preemptionPolicy: Never` for the unnamed class,
+and this account cannot list configured PriorityClasses. DE is suspended.
+No preempting scheduling or cluster-policy change was attempted.
+
+Only the already terminated original BT rank0 Pod was removed, after its
+metadata and logs were backed up and the collector's PVC-only contract was
+checked. No current candidate, raw evidence or unrelated workload was changed.
+That cleanup did not restore device availability on its node.
+
+The [live observation](infrastructure/n3-fixed-input-20260923cw/post-authentication-execution.json)
+confirms **zero recovery run directories, zero successor claim, zero request
+intents/traces and zero learned episodes**. No recovery GPU is allocated.
+BU remains active, with 72 recheck files and no final summary or error at the
+latest read. The next requirement is an actually allocatable authorized GPU
+or a cluster-approved non-preempting scheduling class, not another download,
+configuration debate or blind admission loop.
 
 ## Latest retained evidence (23 September, 13:34 UTC)
 

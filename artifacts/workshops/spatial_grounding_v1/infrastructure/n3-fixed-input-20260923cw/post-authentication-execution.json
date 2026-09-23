@@ -1,0 +1,100 @@
+{
+  "admission_failures": [
+    {
+      "container_started": false,
+      "job": "sgw01-ali-n3-fixedinput-20260923dc",
+      "node": "dcwipphhgc171.edc.nam.gm.com",
+      "pod": "sgw01-ali-n3-fixedinput-20260923dc-cwnjx",
+      "pod_uid": "08dc492c-ed36-4b28-b0ca-df05a6867cae",
+      "status": {
+        "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+        "phase": "Failed",
+        "reason": "UnexpectedAdmissionError",
+        "startTime": "2026-09-23T21:41:20Z"
+      }
+    },
+    {
+      "container_started": false,
+      "job": "sgw01-ali-n3-fixedinput-20260923df",
+      "node": "dcwipphhgc185.edc.nam.gm.com",
+      "pod": "sgw01-ali-n3-fixedinput-20260923df-78v6g",
+      "pod_uid": "f68383d8-b1ea-48ff-adb3-689be8e01e8a",
+      "status": {
+        "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+        "phase": "Failed",
+        "reason": "UnexpectedAdmissionError",
+        "startTime": "2026-09-23T21:47:06Z"
+      }
+    },
+    {
+      "container_started": false,
+      "job": "sgw01-ali-n3-fixedinput-20260923dg",
+      "node": "dcwipphhgc185.edc.nam.gm.com",
+      "pod": "sgw01-ali-n3-fixedinput-20260923dg-s7pdc",
+      "pod_uid": "2cd06eda-faba-4814-9e93-50d6f4d159e1",
+      "status": {
+        "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+        "phase": "Failed",
+        "reason": "UnexpectedAdmissionError",
+        "startTime": "2026-09-23T21:51:51Z"
+      }
+    },
+    {
+      "container_started": false,
+      "job": "sgw01-ali-n3-fixedinput-20260923dh",
+      "node": "dcwipphhgc227.edc.nam.gm.com",
+      "pod": "sgw01-ali-n3-fixedinput-20260923dh-p6glh",
+      "pod_uid": "033561a9-f3e6-4aa4-9ada-fe642a0e9dda",
+      "status": {
+        "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+        "phase": "Failed",
+        "reason": "UnexpectedAdmissionError",
+        "startTime": "2026-09-23T21:56:14Z"
+      }
+    },
+    {
+      "container_started": false,
+      "job": "sgw01-ali-n3-fixedinput-20260923di",
+      "node": "dcwipphai0055.edc.nam.gm.com",
+      "pod": "sgw01-ali-n3-fixedinput-20260923di-fgt9q",
+      "pod_uid": "de74ff76-a13c-4623-b00d-c38dcffa225e",
+      "status": {
+        "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+        "phase": "Failed",
+        "reason": "UnexpectedAdmissionError",
+        "startTime": "2026-09-23T21:59:56Z"
+      }
+    }
+  ],
+  "allocated_recovery_gpus": 0,
+  "auxiliary_asset_manifest_sha256": "9ec7c8ab51b9081fdbfe74808eabae4194f13d75775145d38246e176078c9bac",
+  "behavioral_episodes": 0,
+  "claim_boundary": "These are concrete failed admissions, not evidence that every cluster GPU is occupied. No new policy runtime has been exercised after dependency repair. No further blind admission loop is planned.",
+  "model_requests_completed": 0,
+  "model_requests_started": 0,
+  "native_configuration_changed": false,
+  "next_requirement": "An actually allocatable existing authorized GPU or an administrator-provided non-preempting PriorityClass for normal scheduling; retain fresh physical-idle, ownership, storage and exclusive successor checks.",
+  "observed_at_utc": "2026-09-23T22:01:01.437005+00:00",
+  "offline_cpu_constructor_preflight_sha256": "37d10767663f4ea3254838bf1fa2d95f1f3b87384f830697638bd3f6f86992f8",
+  "pod_snapshot_sha256": "136b6e2df89f4c8fe8c8f4912bb38bcd20ddd1ef911f9ce85f0732f1e5826aff",
+  "pvc_observation": {
+    "collector_error_exists": false,
+    "collector_final_summary_exists": false,
+    "collector_recheck_files": 72,
+    "observed_at_utc": "2026-09-23T22:01:01.437005+00:00",
+    "recovery_run_directories": [],
+    "request_intents": [],
+    "request_traces": [],
+    "successor_claim_exists": false
+  },
+  "remaining_registered_requests": 6,
+  "scheduler_attempt": {
+    "error": "Priority admission requires PreemptLowerPriority for the unnamed PriorityClass and rejects explicit Never. Listing configured PriorityClasses is forbidden. No preempting scheduling or cluster policy change was attempted.",
+    "job": "sgw01-ali-n3-fixedinput-20260923de",
+    "pods_created": 0,
+    "suspended": true,
+    "uid": "ab13833e-d808-48e6-ba23-4052dcc3268d"
+  },
+  "schema_version": "sgw-01-post-authentication-execution-observation-v1",
+  "status": "auxiliary_dependencies_ready_gpu_admission_blocked_before_container_start"
+}

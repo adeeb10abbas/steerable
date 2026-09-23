@@ -124,6 +124,19 @@ def test_ninth_prefix_proves_height_block_without_releasing_dist():
     assert result["live_workers_modified"] is False
 
 
+def test_tenth_prefix_also_exhausts_total_height_capacity():
+    result = audit(prefix_paths() + [
+        ROOT / INFRA / f"family-partition-20260923bt-prefix-{suffix}/manifest.json"
+        for suffix in ("ce", "cf")
+    ])
+    assert len(result["terminal_evidence"]) == 44
+    height = result["families"]["HEIGHT"]["by_side"]
+    assert sum(row["maximum_qualified_possible"] for row in height.values()) == 27
+    assert sum(row["required_qualified"] for row in height.values()) == 29
+    assert height["right"]["maximum_qualified_possible"] == 8
+    assert sum(row["accepted"] for row in result["terminal_evidence"]) == 13
+
+
 def test_changed_projection_cannot_reclassify_a_valid_outcome(monkeypatch):
     import tools.audit_sgw_family_capacity as module
 

@@ -1,0 +1,55 @@
+{
+  "schema_version": "sgw-01-family-capacity-evidence-v1",
+  "observed_at_utc": "2026-09-23T12:07:12.032200+00:00",
+  "replayed_at_utc": "2026-09-23T12:10:53Z",
+  "audit": {
+    "path": "audit.json",
+    "sha256": "3038b172c74055d6a48c92385f8d07361db6f85e78b9ed8b887aaf5c9cea4987"
+  },
+  "new_terminal_evidence": {
+    "manifest_sha256": "99e1d95272989f8aba00691edaac943b22639e7d9c82807d04ad11926a99e0dc",
+    "slots": ["HEIGHT-055", "HEIGHT-061", "HEIGHT-064", "HEIGHT-065", "HEIGHT-066", "HEIGHT-067"],
+    "passed_trials": [4, 4, 4, 3, 4, 4],
+    "valid_physical_rejections": 6,
+    "original_trial_and_viewport_video_bindings_rehashed": 36,
+    "raw_state_and_score_projections_equal_retained_projection": true
+  },
+  "retained_totals_including_smoke": {
+    "completed_candidates": 44,
+    "all_six_pass": 13,
+    "physical_rejections": 31,
+    "complete_trials": 264,
+    "scripted_actions": 118800
+  },
+  "height_capacity": {
+    "maximum_qualified_left": 19,
+    "maximum_qualified_right": 8,
+    "required_left": 15,
+    "required_right": 14,
+    "maximum_qualified_total": 27,
+    "required_total": 29,
+    "blocked_by_total_and_right_stratum": true
+  },
+  "pvc_replay": {
+    "root": "/data/users/ali/sgw-01/infrastructure/family-capacity-20260923cf",
+    "base_archive": "/data/users/ali/sgw-01/infrastructure/family-capacity-20260923cd/replay-inputs.tar.gz",
+    "base_archive_sha256": "465b179692c05047e243109d5755ccdbbe430c75ff994bb38fdfb38749915cc6",
+    "prior_delta_archive": "/data/users/ali/sgw-01/infrastructure/family-capacity-20260923ce/replay-delta.tar.gz",
+    "prior_delta_sha256": "fd74d9dcb283feb5d2bd64049cbd50c897719bac336416935102a90de75f30b0",
+    "delta_archive": "replay-delta.tar.gz",
+    "delta_archive_sha256": "deaaf37f30b512738d29fa572b2e21a2ef8518aa59c7b1cae55802ffe8e76d2c",
+    "byte_identical": true,
+    "additional_gpus": 0
+  },
+  "tests": {
+    "path": "tests/test_sgw_family_capacity.py",
+    "sha256": "3be8dbceeb9a76b21c1777afc3142be3d05142d450b319bc9cb3500f9e75fa3e",
+    "combined_capacity_collector_historical_reset_separation_passed": 75
+  },
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false,
+  "live_workers_modified": false,
+  "authorizes_worker_interruption": false,
+  "claim_boundary": "The original finite queue remains unchanged. This is worker-verified qualification evidence and a necessary capacity bound, not final independent raw compilation, historical freshness or learned-model evidence. Unresolved slots are not failures."
+}

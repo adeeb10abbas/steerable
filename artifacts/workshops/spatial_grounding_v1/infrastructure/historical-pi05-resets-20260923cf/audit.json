@@ -1,0 +1,128 @@
+{
+  "claim_boundary": "The final 108 V3-B002 cells and their post-settle initial roots are bound to original reset attestations and a historically anchored 16-file adapter contract. The second logical reset is idempotent, not another independent layout. Constructor/settle states, model-blind preflights and infrastructure attempts remain outside this selection. No global coverage, numerical cross-frame qualification or SGW release.",
+  "complete_final_manifest_cell_selection": true,
+  "cross_frame_comparison_qualified": false,
+  "declared_frame_root_separation_range_m": [
+    0.13661147455881584,
+    0.1386767964853295
+  ],
+  "distinct_numerical_root_pairs": 2,
+  "final_cell_count": 108,
+  "historical_population_coverage_complete": false,
+  "new_behavioral_episodes": 0,
+  "new_model_requests": 0,
+  "original_reset_attestations_reconstructed": 108,
+  "post_settle_initial_root_pairs": 108,
+  "producer_sha256": "69e96268f3c04c186a7cdc4c9d63aad6d424e2101ef35cbbc50de769dd932321",
+  "proved_historical_nonmatches_added": 0,
+  "queue_sha256": "0db680a3aee04c991bcc78904cb572b7d962971e04fbc879e828354da30dafee",
+  "recovery": {
+    "bytes": 267956,
+    "sha256": "9ad3e91a3e16db1d24a18ebce7231d181d158b0a5f48fcbd8a21d58891a13c94"
+  },
+  "registration_sha256": "8aaaa38302f6a654090250b3e12cd8735fab28a74027d50193325ffa9d0dddea",
+  "release_permitted": false,
+  "runtime_identity_sha256": "6e5e500f5efee2d7576d090a8ec544f28e47af4db6e797c1bb514a16a43fc944",
+  "schema_version": "sgw-01-pi05-v3b002-final-reset-audit-v1",
+  "source_contract": {
+    "adapter_contract_sha256": "03c051ed517e8d72660c77a8a0a536a423f6be76e99cba918c94ae43e754a932",
+    "bridge_sha256": "5083133a56a18337b79d3b47c80483285cc25838783ed6bd98611874d818b1c9",
+    "coordinate_contract": "Named cube/bowl root_pos_w minus the same robot root_pos_w, then inverse rotation by the normalized robot wxyz quaternion. Not AABB or geometric centers.",
+    "git_commit": "636a33eedb9e4a9920f4ff357388099fba78a108",
+    "historically_hash_bound": true,
+    "reset_contract": "Two logical pre-action reset calls, one physical reset, one 60-step settle plus 15-step stability window; second logical reset returns the cached result. Attestation requires the final settled roots to match the bound fixture within 3mm per component and precedes the first model request.",
+    "source_files": [
+      {
+        "path": "experiments/v3/pi05_phase_b/contract.py",
+        "sha256": "699bd7fb508642c65b017b6c56343a10dc938bda23cded2523629cbe7c8e6181"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/runtime.py",
+        "sha256": "2a0b034fdfd2185411ec8c34b0cc47163c14e1b6e26b84ecc5dc1bdead41dafd"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/diagnostics.py",
+        "sha256": "1d97c06e72a3a70f3e63fb657ecf6b343fbe539a15ee1d2f7380c169570bd703"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/client.py",
+        "sha256": "e9493ddd18211dcf09581c43da82dc1b9cacc7fd746c427fd3e6a4b7837cd9cb"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/robolab_bridge.py",
+        "sha256": "5083133a56a18337b79d3b47c80483285cc25838783ed6bd98611874d818b1c9"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/compile_cell.py",
+        "sha256": "009e67cc45261aa9104a5f0803ea130cab13e3203413277170dd79be583268a2"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/compiler.py",
+        "sha256": "9413b4630f0ad9bf9302051d3f4a5aaff77f08c8660cbcc137bb7c551b5ed297"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/queue.py",
+        "sha256": "8dd8ca9182695bc7adaf3409deddd4e5269e36d41f1ec70496e10fe6cf28a88b"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/fixture_tasks.py",
+        "sha256": "fa1ae97014d9b4ea66268b321d2758787a9a9520733b45f899eeb49a8c859e92"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/fixed_observation_probe.py",
+        "sha256": "0102419a2bd560c04ef511bdd59c4df13b55da6487696b9e1befc0fd3c68d1a9"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/model_blind_preflight.py",
+        "sha256": "3e67ae5ce525ed4b4e770fa1552657ceb5899225fb6e95b2df644754e035db32"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/task_files/__init__.py",
+        "sha256": "d466da8c83ad328b28d50fb4e865611ab79362e9409283e780527f56f942be41"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/task_files/control_left.py",
+        "sha256": "f748c15621cf07912e86788999d7fad671a7dc4e285f7c7de4e6332b816e2399"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/task_files/control_right.py",
+        "sha256": "d374f42993943a2853d6b658aeca6145e62d49b8e0d3cce1a85b73bb6d54e3bb"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/task_files/position_mirrored_left.py",
+        "sha256": "a055d4d7d41d70a3fa0e65c92a3d175e24028a4ebc294f2dd17c2615ca355bc5"
+      },
+      {
+        "path": "experiments/v3/pi05_phase_b/task_files/position_mirrored_right.py",
+        "sha256": "ef4c0c912f4888e8012838239e91a4c00177c3a51b3e846e30612e6620004ba8"
+      }
+    ],
+    "source_method_lines": {
+      "_fixture_match": [
+        255,
+        265
+      ],
+      "_inverse_rotate": [
+        157,
+        163
+      ],
+      "_sample": [
+        203,
+        215
+      ],
+      "reset": [
+        217,
+        253
+      ],
+      "write_reset_attestation": [
+        267,
+        296
+      ]
+    }
+  },
+  "source_episodes": {
+    "bytes": 7552700,
+    "path": "/data/users/ali/vla_wam/raw/v3b/pi05_current_stack/position_reflection_v3b002/compiled_results_attempt04/pi05_v3b002_episodes.jsonl",
+    "sha256": "7b89287a2b75e40cffc97cd6d2fea58c4189a09d2dc5a0fb9a6427df3d726e70"
+  }
+}

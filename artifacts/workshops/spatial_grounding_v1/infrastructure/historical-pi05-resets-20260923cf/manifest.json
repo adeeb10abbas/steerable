@@ -1,0 +1,62 @@
+{
+  "schema_version": "sgw-01-pi05-reset-recovery-evidence-v1",
+  "replayed_at_utc": "2026-09-23T12:05:42Z",
+  "resets": {
+    "path": "resets.json",
+    "bytes": 267956,
+    "sha256": "9ad3e91a3e16db1d24a18ebce7231d181d158b0a5f48fcbd8a21d58891a13c94"
+  },
+  "audit": {
+    "path": "audit.json",
+    "sha256": "738a1104bdb82d7aea0f231d63426053f2a1edd57f91b0fb4b563621132a8359"
+  },
+  "implementation": {
+    "path": "tools/audit_sgw_pi05_reset_population.py",
+    "sha256": "69e96268f3c04c186a7cdc4c9d63aad6d424e2101ef35cbbc50de769dd932321"
+  },
+  "exporter": {
+    "path": "export_resets.py",
+    "sha256": "eb86b5d03f3fa41bba7b7a11c985b4cbfbff21f1d56681125e60c488ec1128fb"
+  },
+  "source_contract": {
+    "historical_study_commit": "636a33eedb9e4a9920f4ff357388099fba78a108",
+    "historical_runtime_identity_sha256": "6e5e500f5efee2d7576d090a8ec544f28e47af4db6e797c1bb514a16a43fc944",
+    "historical_adapter_contract_sha256": "03c051ed517e8d72660c77a8a0a536a423f6be76e99cba918c94ae43e754a932",
+    "source_files_reconstructed_from_historical_git_objects": 16,
+    "historical_source_hash_anchor_established": true,
+    "current_tree_is_not_substituted_for_historical_source": true
+  },
+  "population": {
+    "final_accepted_cells": 108,
+    "hash_verified_original_reset_attestations": 108,
+    "post_settle_behavioral_initial_states": 108,
+    "distinct_numerical_cube_bowl_root_pairs": 2,
+    "logical_preaction_reset_calls_per_cell": 2,
+    "physical_reset_calls_per_cell": 1,
+    "second_logical_reset_is_idempotent": true
+  },
+  "pvc_replay": {
+    "root": "/data/users/ali/sgw-01/infrastructure/historical-pi05-resets-20260923cf",
+    "base_archive": "/data/users/ali/sgw-01/infrastructure/family-capacity-20260923cd/replay-inputs.tar.gz",
+    "base_archive_sha256": "465b179692c05047e243109d5755ccdbbe430c75ff994bb38fdfb38749915cc6",
+    "delta_archive": "replay-delta.tar.gz",
+    "delta_archive_sha256": "dccecad4a6c499ea19332c78d8f4b7a9aa7be92ca5eafcb6ddd804eb49fc05e5",
+    "git_object_store": "/data/users/ali/sgw-01/source/b429ddd",
+    "audit_byte_identical": true,
+    "export_byte_identical": true,
+    "additional_gpus": 0
+  },
+  "tests": {
+    "path": "tests/test_sgw_pi05_reset_population.py",
+    "sha256": "d282c7dd8b50dfa70317712718cf1730a2bffd8b2d6e3d129cdceb66ec430297",
+    "focused_pi05_groot_separation_passed": 46,
+    "combined_with_capacity_and_collector_passed": 75
+  },
+  "historical_population_coverage_complete": false,
+  "cross_frame_comparison_qualified": false,
+  "proved_historical_nonmatches_added": 0,
+  "new_model_requests": 0,
+  "new_behavioral_episodes": 0,
+  "release_permitted": false,
+  "claim_boundary": "Historically anchored SGW-independent producer/reset provenance for the final108 V3-B002 cells. No constructor, settle-window, preflight or infrastructure-attempt coverage. Two numerical root pairs are not108 independent layouts. Numerical/native-frame qualifications remain separate from this source audit."
+}

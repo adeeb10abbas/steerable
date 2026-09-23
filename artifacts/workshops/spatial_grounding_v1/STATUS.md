@@ -6,12 +6,13 @@ behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
 have verified receipts, views and complete videos. Native smoke br has completed
 24 full physical trials: two candidates pass all six trials and two are valid
 physical rejections. All four raw evidence chains passed independent rechecks.
-Including the first thirty-four subsequent candidates, 38 HEIGHT/DIST candidates
-have completed 228 full trials: thirteen all-six passes and twenty-five physical
-rejections. There are 83 slots outside this retained terminal evidence;
+Including the first forty subsequent candidates, 44 HEIGHT/DIST candidates
+have completed 264 full trials: thirteen all-six passes and thirty-one physical
+rejections. There are 77 slots outside this retained terminal evidence;
 four durable GPU workers continue independently.
 HEIGHT's fixture gate is now blocked: its right-side best-case capacity is
-12, below the required 14. The running qualification queue remains unchanged;
+8, below the required 14, and its total capacity is at most 27 against 29.
+The running qualification queue remains unchanged;
 DIST's pool is not yet ruled out. Historical coverage and all learned-runtime
 release gates remain unresolved.
 Learned-policy requests and episodes remain at zero.**
@@ -428,6 +429,40 @@ released for inference. No SGW learned request or behavioral episode has run.
 At 11:45 UTC, HEIGHT 055/061 had also completed but were not yet exported or
 classified in this prefix. HEIGHT 064/065/066/067 were active; no shared stop,
 terminal launcher, collector error or final receipt was present.
+
+At 12:07 UTC, the [tenth prefix](infrastructure/family-partition-20260923bt-prefix-cf/manifest.json)
+retained HEIGHT 055/061/064/065/066/067. Five passed four of six trials;
+HEIGHT 065 passed three. All six remain valid physical rejections, with
+36 complete original state/score projections and video hashes checked.
+Including smoke, the retained total is **44 candidates / 264 full trials /
+118,800 scripted actions**, with thirteen all-six passes and thirty-one
+rejections. HEIGHT's optimistic capacity is now left 19/right 8: **27 total**,
+below 29 even before its failed right-side counterbalance is considered.
+The [updated capacity record](infrastructure/family-capacity-20260923cf/manifest.json)
+and complete prefix are preserved on the PVC and replay byte-identically.
+
+The independent [pi0.5 V3-B002 recovery](infrastructure/historical-pi05-resets-20260923cf/manifest.json)
+adds all **108 final-cell post-settle initial states and their original
+hash-verified reset attestations**. Unlike the earlier GR00T runtime patch,
+this producer has a genuine historical source anchor: its runtime binds a
+16-file adapter digest, reproduced exactly from Git commit `636a33e`.
+Only a later model-blind-preflight file differs in the current tree; current
+files are not substituted for the recorded historical sources.
+
+The bound producer reads named actor roots and applies a common normalized
+inverse robot rotation. Its second logical pre-action reset is idempotent:
+each cell attests one physical reset and one settle/stability sequence, not
+two independently sampled layouts. The 108 records contain **two distinct
+numerical cube/bowl root pairs**. This recovers neither constructor/settle
+states nor other preflights or infrastructure attempts. Numerical/native-frame
+qualification remains separate: no cross-frame exclusion or global historical
+coverage is added. Both exporter and audit replay byte-identically on the PVC.
+The combined capacity, collector, reset-recovery and separation suite passes
+75 checks.
+
+At 12:14 UTC, all four ranks had ten completed slots and
+HEIGHT 069/070/072/076 were active. No shared stop, terminal launcher,
+collector error or final receipt was present. All learned gates remain closed.
 
 ## Scientific accounting
 

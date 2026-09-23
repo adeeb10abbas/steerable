@@ -270,6 +270,24 @@ normalized-rotation ASTs, but its source files lack an independently established
 historical hash anchor in the final manifest. No world-frame relabeling or
 cross-frame exclusion is claimed.
 
+The separate pi0.5 V3-B002 recovery binds all **108 final-cell post-settle
+initial states** to their original reset attestations and a historically
+recorded 16-file adapter digest. Reproduce its exact Git-source, queue,
+initial-state, attestation-byte and reset-fingerprint checks with:
+
+```bash
+.venv/bin/python -m tools.audit_sgw_pi05_reset_population \
+  --output /tmp/sgw-pi05-reset-population.json
+```
+
+Use the recorded Git objects, not current files, for the adapter digest.
+The two logical pre-action reset calls correspond to one physical reset;
+the second returns cached observations. The recovered records contain two
+distinct numerical cube/bowl root pairs, not 108 independent layouts.
+Source provenance does not establish complete constructor/settle/preflight/
+infrastructure coverage or independently qualify numerical cross-frame
+comparisons. No exclusion or SGW release follows from this audit alone.
+
 The separate `historical_root_separation` primitive supplies a necessary
 distance-based exclusion for future qualified inputs in different orthonormal
 metre frames. A match within the unchanged componentwise tolerance bounds the

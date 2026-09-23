@@ -153,15 +153,22 @@ def _warmup(root: Path, receipt: Mapping[str, Any], shape: tuple[int, ...]) -> i
     time = rows[0]["sim_time_s"]
     _require(math.isfinite(time) and all(row["sim_time_s"] == time for row in rows),
              "reset warmup physical time differs")
+    verified_files = 0
     for row in rows:
-        _require(set(row["views"]) == {"over_shoulder_left_camera", "over_shoulder_right_camera", "wrist_cam"},
+        # The frozen recorder retains every viewport, with other cameras sampled
+        # at these render-only checkpoints (not at every display frame).
+        cameras = {"over_shoulder_left_camera"}
+        if row["render_frame"] in {0, 1, 10, 30, 60, 120}:
+            cameras.update({"over_shoulder_right_camera", "wrist_cam"})
+        _require(set(row["views"]) == cameras,
                  "reset warmup camera inventory differs")
         for record in row["views"].values():
             path = _scoped(root, record["path"])
             _file(path, record)
             _require(_frame(path).shape == shape, "reset warmup RGB shape differs")
+            verified_files += 1
     _video(root, receipt["viewport_video"], 121, 30, shape)
-    return 121 * 3 + 1
+    return verified_files + 1
 
 
 def _trial(root: Path, check: dict[str, Any], candidate: FixtureCandidate) -> tuple[dict[str, Any], ResetSnapshot]:

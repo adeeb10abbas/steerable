@@ -272,6 +272,12 @@ reset comparisons, and full video decoding. It recomputes the unchanged scorer.
 A strict stability failure is a verified physical rejection, not a technical
 error. Missing/partial evidence never becomes a physical failure.
 
+Warmup verification follows the frozen recorder's actual sampling: all 121
+left-shoulder frames and three camera views at frames 0, 1, 10, 30, 60 and
+120. That is 133 arrays plus one warmup video per reset, not 363 arrays.
+CPU attempt am incorrectly required three views at every frame; its reports
+are preserved as verifier failures and do not invalidate or rerun raw trials.
+
 Run it in a CPU-only process against the persistent raw tree:
 
 ```bash

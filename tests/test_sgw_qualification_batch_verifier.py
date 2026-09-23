@@ -3,14 +3,16 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
 
 from experiments.workshops.spatial_grounding_v1 import qualification_batch_verifier as verifier
 from experiments.workshops.spatial_grounding_v1.grasp_calibration import calibrated_actions
+from experiments.workshops.spatial_grounding_v1.lat_workspace_capture import render_only_warmup
 from experiments.workshops.spatial_grounding_v1.model_blind_qualification import qualify_candidate
-from experiments.workshops.spatial_grounding_v1.recorder import atomic_json, encode_viewport_video
+from experiments.workshops.spatial_grounding_v1.recorder import atomic_json
 from experiments.workshops.spatial_grounding_v1.scoring import GoalSpec, score_episode
 from experiments.workshops.spatial_grounding_v1.simulator_bridge import ResetResult
 from test_sgw_simulator import FakeEnvironment
@@ -31,6 +33,23 @@ def file_record(path):
     return {"path": str(path), "bytes": path.stat().st_size, "sha256": digest(path)}
 
 
+class CameraTensor:
+    def __init__(self, array):
+        self.array = array
+
+    def __getitem__(self, index):
+        return CameraTensor(self.array[index])
+
+    def detach(self):
+        return self
+
+    def cpu(self):
+        return self
+
+    def numpy(self):
+        return self.array
+
+
 class NativeReceiptEnvironment(FakeEnvironment):
     """Synthetic physics with the real producer, arrays, reset schema and codecs."""
 
@@ -43,23 +62,16 @@ class NativeReceiptEnvironment(FakeEnvironment):
         reset = super().reset()
         self.ordinal += 1
         path = self.root / f"reset-{self.ordinal:02d}"
-        path.mkdir(parents=True)
-        snapshots, frames = [], []
-        for index in range(121):
-            views = {}
-            for camera in ("over_shoulder_left_camera", "over_shoulder_right_camera", "wrist_cam"):
-                target = path / f"{camera}-{index:04d}.npy"
-                np.save(target, self.render_viewport(), allow_pickle=False)
-                views[camera] = file_record(target)
-                if camera == "over_shoulder_left_camera":
-                    frames.append(target)
-            snapshots.append({"render_frame": index, "sim_time_s": 1 / 60, "views": views})
-        warmup = {
-            "physics_actions": 0, "render_frames": 120, "simulation_time_unchanged": True,
-            "snapshots": snapshots, "viewport_video": encode_viewport_video(frames, path / "render_only.mp4", fps=30),
-            "status": "render_only_diagnostic_not_visual_qualification",
-            "video_timing": "30_fps_display_only_no_physical_time_advance",
-        }
+        cameras = ("over_shoulder_left_camera", "over_shoulder_right_camera", "wrist_cam")
+        observation = {"image_obs": {
+            camera: CameraTensor(self.render_viewport()[None, ...]) for camera in cameras
+        }}
+        render_env = SimpleNamespace(
+            sim=SimpleNamespace(current_time=1 / 60, render=lambda: None),
+            scene={camera: SimpleNamespace(update=lambda *args, **kwargs: None) for camera in cameras},
+            observation_manager=SimpleNamespace(compute=lambda: observation),
+        )
+        _, warmup = render_only_warmup(render_env, observation, 120, path)
         fingerprint = hashlib.sha256(json.dumps(
             {name: asdict(obj.pose) for name, obj in reset.snapshot.objects.items()},
             sort_keys=True, separators=(",", ":"),
@@ -138,7 +150,22 @@ def test_real_producer_and_full_decoders_verify_all_six(produced):
     assert report["passed_checks"] == 6
     assert sum(row["verified_trial_files"] for row in report["checks"]) == 10824
     assert sum(row["decoded_trial_frames"] + row["decoded_warmup_frames"] for row in report["checks"]) == 3432
-    assert sum(row["verified_warmup_files"] for row in report["checks"]) == 2184
+    assert sum(row["verified_warmup_files"] for row in report["checks"]) == 804
+
+
+@pytest.mark.parametrize("index,remove", [(2, False), (10, True)])
+def test_warmup_enforces_frozen_sampled_camera_inventory(produced, index, remove):
+    _, root = produced
+    result = json.loads((root / "result/qualification.json").read_text())
+    warmup = result["checks"][0]["reset_receipt"]["render_only_warmup"]
+    views = warmup["snapshots"][index]["views"]
+    if remove:
+        del views["wrist_cam"]
+    else:
+        views["wrist_cam"] = warmup["snapshots"][0]["views"]["wrist_cam"]
+    shape = np.load(root / "result/trials/goal-+1/reset-0/frame-0000.npy", allow_pickle=False).shape
+    with pytest.raises(verifier.VerificationError, match="warmup camera inventory"):
+        verifier._warmup(root, warmup, shape)
 
 
 @pytest.mark.parametrize("mutation,match", [

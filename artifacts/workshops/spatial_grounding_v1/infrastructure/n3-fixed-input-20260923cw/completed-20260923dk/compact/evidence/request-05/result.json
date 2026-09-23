@@ -1,0 +1,77 @@
+{
+  "actions": {
+    "bytes": 1152,
+    "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-05/actions.npy",
+    "sha256": "a2a835c8cd6a78735af3ae5dbc569824e45f365218f670f46f06d24326aef783"
+  },
+  "executed_actions": 0,
+  "future": {
+    "bytes": 33454208,
+    "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-98b38a60f17c43bf9fed12ea70c49044.npy",
+    "sha256": "d66b469e421a8a662a290c48775c25b5ef197e40e9d4420d6a87a666197c0702",
+    "shape": [
+      33,
+      528,
+      640,
+      3
+    ]
+  },
+  "index": 5,
+  "latent": {
+    "bytes": 2281088,
+    "native_dtype": "torch.float32",
+    "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-05/vision-latent.npy",
+    "retention": "Lossless float32 representation of native float32/float16/bfloat16 values.",
+    "sha256": "7668b64ed5a68d05db16a0287d5de81b17f374b5277aac6b1426614431fb387c",
+    "shape": [
+      1,
+      48,
+      9,
+      33,
+      40
+    ]
+  },
+  "prompt_id": "LAT-D-NEG",
+  "request_id": "SGW-N3-FIXED-20260923CW-request-05",
+  "seconds": 7.67949095601216,
+  "trace": {
+    "actions_sha256": "f84f2a8eb3b82bfd41b3e0adc821f34257f8749b93da96e886d9caa12a7494f8",
+    "actions_shape": [
+      32,
+      8
+    ],
+    "backend_request": {
+      "observation_keys": [
+        "observation/exterior_image_1_left",
+        "observation/exterior_image_2_left",
+        "observation/gripper_position",
+        "observation/joint_position",
+        "observation/wrist_image_left"
+      ],
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "sampling_seed": 1140
+    },
+    "camera_id": "over_shoulder_left_camera",
+    "camera_name": "over_shoulder_left_camera",
+    "created_at": 1790204191.549528,
+    "future_path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-98b38a60f17c43bf9fed12ea70c49044.npy",
+    "future_sha256": "d66b469e421a8a662a290c48775c25b5ef197e40e9d4420d6a87a666197c0702",
+    "future_shape": [
+      33,
+      528,
+      640,
+      3
+    ],
+    "future_status": "exposed_and_retained",
+    "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+    "provenance": "sgw_wrapper_generated",
+    "registered_cell_id": "SGW-N3-FIXED-20260923CW",
+    "request_id": "SGW-N3-FIXED-20260923CW-request-05",
+    "request_index": 0,
+    "reset_fingerprint": "e09fadc3a85485774bd61c19a8058d13f7bc8605fec32f6e964bc76147216fcb",
+    "reset_id": "sgw-reset-84c27f94934b463b9573ef2075b440ad",
+    "sampling_seed": 1140,
+    "wrapper_request_id": "sgw-n3-request-98b38a60f17c43bf9fed12ea70c49044",
+    "wrapper_reset_id": "sgw-reset-84c27f94934b463b9573ef2075b440ad"
+  }
+}

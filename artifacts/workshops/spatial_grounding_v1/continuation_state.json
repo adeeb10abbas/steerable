@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
-  "status": "n3_auxiliary_assets_ready_gpu_admission_blocked_main_p_assigned_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T22:43:31.798213+00:00",
+  "status": "n3_six_fixed_input_requests_complete_runtime_time_map_pending_main_p_unreleased",
+  "updated_at_utc": "2026-09-23T23:06:38Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -20,7 +20,7 @@
     "C": 864,
     "total": 1044
   },
-  "model_requests": 0,
+  "model_requests": 6,
   "released_behavioral_cells": 0,
   "valid_behavioral_episodes": 0,
   "invalid_behavioral_attempts": 0,
@@ -1368,18 +1368,18 @@
     "frozen_candidates_or_controller_modified": false,
     "scope": "Inspect scene/path clearance using copies of exact existing source and video. Offer does not authorize replacing frozen failures or waive history/runtime gates; future repairs require prospective disclosure."
   },
-  "next_authorized_step": "Authentication and auxiliary downloads are resolved: user signed in and accepted terms; both complete dependency snapshots are hashed and their native constructors passed offline on CPU. Do not ask for another sign-in or redownload. GPU admission is the current blocker: DC/DF/DG/DH/DI all failed before container startup with zero available devices on the tested A40/B200/A100 placements. DE created no Pod because priority admission rejects explicit Never for the unnamed class; DE is suspended and configured PriorityClasses cannot be listed with current permissions. Obtain an actually allocatable authorized GPU or an administrator-provided non-preempting scheduling class before another bounded recovery, not another blind admission loop. The single successor claim is still absent and all six original requests remain unconsumed. Native policy configuration is unchanged. MAIN N3/LAT P remains physically assigned but unreleased; BU independently compiles raw/video evidence.",
+  "next_authorized_step": "N3 completed all six original fixed-input requests on DK-04's independently idle A100. Preserve the exclusive successor claim and do not repeat any request. Both repeat and prompt-sensitivity comparisons passed for actions and futures; all three offline redecodes match. Complete genuine live RoboLab observation/reset/recording and physical-time-map qualification, then the scoped release for the six existing MAIN N3/LAT P cells. Fixed-input success alone does not release behavior or full D/C qualification. SmolVLA must remain untouched; the user explicitly declined stopping it. All DK resource objects are cleaned up with raw/compact evidence retained. BU independently compiles the paused qualification queue.",
   "next_qualification_milestone": {
     "status": "prospective_revision_not_yet_registered_or_launched",
     "first_deliverable": "Separately disclose and freeze a post-result LAT/HEIGHT candidate-generation revision using SGW-ENG-008's actual translated geometry and measured center/root transforms. Specify family-appropriate landing/support geometry, unchanged robot/cameras/controller, seed, finite candidate cap, deterministic selection and required counterbalance before new candidate outcomes.",
     "qualification_gate": "Native materialization, reset/recording integrity and both goals across three resets per candidate under the unchanged450-action cap; independently verify raw evidence and videos. A released family still needs29 distinct qualifying layouts with the registered strata. Preserve each original frozen pool and every failure; never count the one-layout engineering demonstration as a family release or refill.",
     "parallel_existing_work": "BT candidate-boundary pause is complete, with110 operational slots complete and7 unstarted pending. BU performs terminal independent raw/video accounting. Preserve all completed outcomes and exact resumable pending slots; operational completion counts do not substitute for independently verified scientific results.",
-    "parallel_runtime_gate": "User prioritizes the already preregistered nonbehavioral fixed-input checks, starting with N3 when actual source-bound native image/proprio/reset inputs and idle capacity are ready. These do not wait for29 layouts or historical novelty. Qualify actual policy-server/observation/reset identities and recording/repeat/prompt-sensitivity plus exposed-future timing/decoding. Keep the registered12 requests, six per model, separate from behavioral episodes; do not manufacture optional decoding when the released interface requires it. Any conditional official-reference checks require their own registered condition.",
+    "parallel_runtime_gate": "N3's six fixed-input requests are complete and must not be repeated; D1 retains its six registered requests pending its own input/runtime prerequisites. Complete actual live observation/reset/recording and physical-time-map qualification. The registered12 requests, six per model, remain separate from behavioral episodes. Native decoding remained enabled and offline redecodes added no sampler requests. Any conditional official-reference checks require their own registered condition.",
     "behavioral_release_permitted": false,
     "new_campaign_released": false
   },
   "immediate_nonbehavioral_priority": {
-    "status": "auxiliary_assets_ready_offline_cpu_preflight_passed_gpu_admission_blocked",
+    "status": "N3_six_requests_complete_repeat_sensitive_actions_and_futures_D1_not_started",
     "first_model": "N3",
     "maximum_fixed_input_requests_per_model": 6,
     "maximum_fixed_input_requests_total": 12,
@@ -1389,21 +1389,27 @@
     "main_P_scope": "Six existing N3/LAT P-stage episodes, not extra allocation. Require prospectively disclosed redesigned-scene assignment and scoped staged release before behavior; no full confirmation release implied.",
     "fixed_input_registration": "artifacts/workshops/spatial_grounding_v1/n3_fixed_input_20260923cw.json",
     "execution_evidence": "artifacts/workshops/spatial_grounding_v1/infrastructure/n3-fixed-input-20260923cw/execution-summary.json",
-    "model_requests_started": 0,
-    "model_requests_completed": 0,
+    "model_requests_started": 6,
+    "model_requests_completed": 6,
     "requires_full_29_layout_pool": false,
     "requires_historical_novelty": false,
     "authentication_check": "infrastructure/n3-fixed-input-20260923cw/authentication-check-20260923.json",
     "authentication_check_scope": "Historical initial diagnosis, superseded by successful user terms acceptance and the downloaded/hashed dependency manifest.",
     "auxiliary_assets": "infrastructure/n3-fixed-input-20260923cw/auxiliary-assets-manifest.json",
     "auxiliary_cpu_preflight": "infrastructure/n3-fixed-input-20260923cw/auxiliary-cpu-preflight.json",
-    "latest_execution_evidence": "infrastructure/n3-fixed-input-20260923cw/post-authentication-execution.json",
+    "latest_execution_evidence": "infrastructure/n3-fixed-input-20260923cw/completed-20260923dk/completion.json",
+    "latest_execution_evidence_sha256": "4091a118027d8a35d98513e9750a2580f2b68c2bc8cd450ee0e7fcc740e91793",
     "prospective_infrastructure_recovery": "infrastructure/n3-fixed-input-20260923cw/recovery-20260923dc.json",
-    "successor_claim_acquired": false,
+    "successor_claim_acquired": true,
+    "successor_claim_preserved_after_completion": true,
+    "decoded_futures": 6,
+    "offline_redecodes": 3,
+    "playable_generated_future_videos": 6,
     "additional_request_allocation": 0,
-    "next_step": "Resolve actual GPU admission or obtain a cluster-approved non-preempting PriorityClass for normal scheduling. All downloads and CPU constructor checks are complete. Preserve all zero-container admissions and CZ's zero-request constructor failure. Reuse the same six-request registration and canonical exclusive successor claim only after fresh ownership, physical-idle, asset and storage checks."
+    "next_step": "Do not repeat N3's six consumed requests or remove its owner claim. Use its retained source-bound results for remaining live-runtime and physical-time-map qualification before scoped MAIN P release. D1's six requests remain unconsumed. Preserve all earlier zero-request infrastructure failures and the nonwinning DK candidate."
   },
   "post_authentication_resource_state": {
+    "scope": "Historical 22:01 UTC snapshot, superseded for current state by completed_admission_batch below; original failure evidence remains unchanged.",
     "observed_at_utc": "2026-09-23T22:01:01.437005+00:00",
     "receipt": "infrastructure/n3-fixed-input-20260923cw/post-authentication-execution.json",
     "failed_device_admissions": ["DC", "DF", "DG", "DH", "DI"],
@@ -1432,9 +1438,30 @@
     "latest_saved_step": 25000,
     "target_steps": 40000,
     "resume_checkpoint_verified_present": true,
-    "user_stop_authorization": "not_yet_given",
+    "user_stop_authorization": "explicitly_declined",
     "resource_modified": false,
-    "possible_next_step": "Ask whether to stop the separate SmolVLA run and reuse this already allocated B200, retaining checkpoint25000 for later resume. Do not stop or co-run without explicit approval."
+    "possible_next_step": "Leave SmolVLA running and do not co-run on its GPU. Other idle A100 capacity was found and used for N3 without modifying this Pod or training."
+  },
+  "completed_admission_batch": {
+    "batch": "20260923dk",
+    "prospective_commit": "403606b8",
+    "plan": "infrastructure/n3-fixed-input-20260923cw/admission-batch-20260923dk.json",
+    "completion": "infrastructure/n3-fixed-input-20260923cw/completed-20260923dk/completion.json",
+    "cleanup": "infrastructure/n3-fixed-input-20260923cw/completed-20260923dk/resource-cleanup.json",
+    "candidate_pods": 8,
+    "failed_before_container_start": 6,
+    "verified_idle_gpus": 2,
+    "native_policy_owners": 1,
+    "winner_node": "dcwipphai0061.edc.nam.gm.com",
+    "winner_gpu_uuid": "GPU-9b784824-3fad-dcf1-8e3e-abee22db4a8e",
+    "remaining_batch_objects": 0,
+    "active_policy_processes": 0,
+    "protected_smolvla_training_modified": false,
+    "model_requests": 6,
+    "behavioral_episodes": 0,
+    "raw_output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04",
+    "derived_output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion",
+    "qualification_collector": "BU_running_103_recheck_files_no_final_summary_at_latest_read"
   },
   "main_n3_lat_p_fixture_assignment": {
     "id": "SGW-MAIN-N3-LAT-P-20260923",
@@ -1450,8 +1477,10 @@
     "additional_episode_allocation": 0,
     "selection_disclosure": "After six scripted passes and before any learned outcome. Original rejected LAT057 and blocked pools remain unchanged. Reserve against later D/C duplicate-within-tolerance reuse.",
     "runtime_release_permitted": false,
-    "pending": ["passed_native_fixed_input_receipt", "passed_runtime_receipt", "passed_time_map_receipt"],
-    "model_requests": 0,
+    "pending": ["passed_runtime_receipt", "passed_time_map_receipt"],
+    "fixed_input_evidence": "infrastructure/n3-fixed-input-20260923cw/completed-20260923dk/completion.json",
+    "model_requests": 6,
+    "model_request_scope": "Nonbehavioral prerequisite requests only; no MAIN P behavioral policy calls.",
     "behavioral_episodes": 0
   },
   "paper_engineering_attempt": {
@@ -1781,12 +1810,12 @@
   "blockers": [
     "Next redesigned qualification campaign is not yet registered: SGW-ENG-008's native scene and six independently verified goal checks are complete. Freeze a separate post-result LAT/HEIGHT candidate-generation/geometry/selection revision before collecting new candidate outcomes; do not repeat ENG-008 or substitute its one layout for full qualification.",
     "Full benchmark fixture release: frozen LAT has20 passes/20 physical rejections/60 geometric rejections, below29. Retained HEIGHT's right-side upper bound3 is below14. DIST awaits full independent terminal accounting. The completed one-layout engineering result neither repairs those denominators nor releases a new campaign.",
-    "Live runtime release: native policy observation/mailbox loop and N3/D1 server identities, D1 distributed decode/physical-time mapping, fixed-input repeat and prompt sensitivity remain unqualified. Synthetic HTTP/450-action tests are not live qualification.",
+    "Live runtime release: N3's native six-request repeat/prompt-sensitivity and decode checks are complete. Actual RoboLab observation/reset/recording integration and physical-time mapping still require qualification. D1's fixed-input requests, server identity and distributed decode/time mapping remain pending. Synthetic HTTP/450-action tests are not live qualification.",
     "Behavioral operation/release: fresh resource receipts, direct/pilot gates, measured deadlines/storage P95 and D/C estimates, and required prediction annotations remain after fixture/runtime release. Missing futures remain unavailable, never zero.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "User requested discovery of other contexts or held GPUs. Only one context is configured and the only explicitly owned active GPU reservation is211247-ali-b200-1gpu, running SmolVLA training toward40000 with a complete25000-step checkpoint saved minutes ago. It is not abandoned; ask explicit permission before stopping that separate training and reusing its allocation. No stop or co-run has been authorized. N3 dependencies are ready, all six requests remain unconsumed, and the canonical successor claim is absent. Preserve every infrastructure receipt and BU collection.",
+  "next_action": "N3 fixed-input work is complete: six requests, six genuine futures, three exact offline redecodes and six verified playable prediction videos. Both repeat and prompt-sensitivity checks passed. No behavioral episode is released. Complete remaining actual runtime/recording and physical-time-map evidence for the already assigned six MAIN N3/LAT P cells; do not rerun consumed fixed-input requests. Preserve the exclusive claim and all prior attempts. Keep the explicitly protected SmolVLA training untouched. BU continues independent collection of the paused qualification queue.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

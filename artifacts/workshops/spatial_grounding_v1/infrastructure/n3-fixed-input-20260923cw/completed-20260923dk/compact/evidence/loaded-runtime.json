@@ -1,0 +1,29 @@
+{
+  "checkpoint_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+  "config": {
+    "action_chunk_size": 32,
+    "action_dim": 8,
+    "action_space": "joint_pos",
+    "checkpoint_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+    "conditioning_fps": 15.0,
+    "decode_video": true,
+    "deterministic_seed": true,
+    "domain_name": "droid_lerobot",
+    "guidance": 3.0,
+    "history_length": 1,
+    "image_height": 540,
+    "image_width": 640,
+    "num_steps": 4,
+    "resolution": "480",
+    "seed": 1140,
+    "shift": 5.0,
+    "use_state": true
+  },
+  "cuda_device": "NVIDIA A100-SXM4-80GB",
+  "source_root": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b",
+  "versions": {
+    "numpy": "2.2.6",
+    "torch": "2.10.0+cu128",
+    "transformers": "4.57.6"
+  }
+}

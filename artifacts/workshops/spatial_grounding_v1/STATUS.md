@@ -1,9 +1,12 @@
 # SGW-01 status
 
-**22:01 UTC: the weight/access problem is resolved. Native auxiliary models
-are downloaded, hashed and successfully load offline on CPU. The current
-blocker is GPU admission: tested A40, B200 and A100 placements were rejected
-before container startup. No learned-policy request has run.**
+**23:06 UTC: Nano completed all six registered fixed-input requests on an
+idle 80-GB A100. Repeated prompts produced identical actions and futures;
+opposite prompts changed both. All six decoded futures and three matching
+offline redecodes are retained, with six playable prediction videos.
+Downloads and GPU admission are no longer the N3 blocker. SmolVLA was not
+interrupted. Live RoboLab runtime/recording and physical-time mapping still
+block MAIN P; no behavioral episode is released or completed.**
 
 **The new 0.50 m native engineering layout passed all six recorded scripted
 checks: both goals, three resets each. It ran on an additional verified-idle
@@ -28,7 +31,7 @@ HEIGHT's fixture gate is now blocked: its right-side best-case capacity is
 The qualification queue is administratively paused, not rewritten;
 DIST's pool is not yet ruled out by the retained prefix. Historical layout uniqueness is not a release
 requirement; the learned-runtime release gates remain unresolved.
-Learned-policy requests and episodes remain at zero.**
+Learned-policy requests are now six; behavioral episodes remain zero.**
 
 ## User requirement clarification (23 September, 14:31 UTC)
 
@@ -281,6 +284,47 @@ No process was changed. Reusing this already allocated GPU would require the
 user's explicit permission to stop the separate training run and later resume
 from its saved25000-step checkpoint; unsaved intervening steps would be lost.
 No active training will be stopped or co-run merely because memory is free.
+
+### 23:06 UTC: other idle GPUs found; N3 fixed-input work complete
+
+The user explicitly declined stopping SmolVLA and directed discovery of other
+GPUs. The [prospective DK batch](infrastructure/n3-fixed-input-20260923cw/admission-batch-20260923dk.json),
+committed before launch, tried eight other existing 80-GB A100 nodes without
+scheduler preemption. Six failed device admission before container startup.
+Two passed the physical idle probe: nodes0061 and0063, each with zero used GPU
+memory, zero utilization and no compute occupants. The shared atomic successor
+claim admitted only DK-04 on node0061 to the native model runner; DK-06 exited
+before model construction. This was one six-request allocation, not eight
+independent model runs.
+
+The [completed evidence](infrastructure/n3-fixed-input-20260923cw/completed-20260923dk/completion.json)
+independently checks every retained action, future and decoder-input file,
+the six intents/results and server trace, original prompt order, successful
+terminal owner and all eight terminal Pods. Both repeated-action comparisons
+are bit-identical, both opposite-prompt comparisons are distinct, and the
+LEFT/RIGHT action RMS difference is `0.023852476555825355` in each group.
+The three corresponding action pairs also match between groups. Futures are
+likewise repeat-identical and prompt-distinct: all six contain 33 RGB frames
+at 528x640. All three extra offline decodes exactly reproduce their original
+futures and consume no additional model requests.
+
+Raw outputs remain at
+`/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04`.
+Six derived H.264 clips are retained under
+`/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion/generated-future-videos`;
+each was decoded again to verify all 33 frames and its presentation cadence.
+They are **generated local predictions, not robot rollouts or physical success
+evidence**. Their presentation at 15 FPS does not establish a physical-time map.
+
+All eight finished DK Jobs and their Pods were
+[removed after evidence preservation](infrastructure/n3-fixed-input-20260923cw/completed-20260923dk/resource-cleanup.json).
+No batch object remains, the exclusive successor claim is preserved, and the
+protected SmolVLA Pod remains running with its original UID. Do not rerun these
+six consumed requests. The remaining MAIN N3/LAT P requirements are actual
+runtime/recording qualification, physical-time-map evidence and scoped release
+of the six already assigned P cells. D1 still has zero SGW model requests.
+BU remains CPU-only, with 103 recheck files and no final summary at this read;
+its operational progress is not a new scientific denominator.
 
 ## Latest retained evidence (23 September, 13:34 UTC)
 

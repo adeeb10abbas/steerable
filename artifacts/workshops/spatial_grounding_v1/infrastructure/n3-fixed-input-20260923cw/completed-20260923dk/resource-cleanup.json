@@ -1,0 +1,41 @@
+{
+  "schema_version": "sgw-01-terminal-admission-batch-cleanup-v1",
+  "observed_at_utc": "2026-09-23T23:06:38Z",
+  "batch": "20260923dk",
+  "user_instruction": "no find other GPUs man how are we out of all gpus lol",
+  "protected_training_pod": "211247-ali-b200-1gpu",
+  "protected_training_pod_uid": "b58e8416-9412-4db5-921b-110420433480",
+  "protected_training_phase_after_cleanup": "Running",
+  "protected_training_modified": false,
+  "admission_results": {
+    "candidates": 8,
+    "failed_before_container_start": 6,
+    "passed_physical_idle_probe": 2,
+    "exclusive_native_policy_owners": 1,
+    "completed_model_requests": 6,
+    "behavioral_episodes": 0
+  },
+  "nonwinning_idle_candidate": {
+    "pod": "sgw01-ali-n3-fixedinput-20260923dk-06-p2bj7",
+    "pod_uid": "2822d2dd-9964-4539-be43-596bf08181d0",
+    "node": "dcwipphai0063.edc.nam.gm.com",
+    "gpu_uuid": "GPU-629fce94-92f7-4687-4882-b59f399964ff",
+    "raw_root": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-06",
+    "idle_receipt_sha256": "d45dd0ab6bd7f865e6ff99be22ce741f44137bd4e71bdb7088127407f737ec17",
+    "log_sha256": "910ad09c86a5964da6852f4487690ce206e4a5b65881e06574322f30b61acd95",
+    "native_runner_output_exists": false,
+    "model_requests": 0,
+    "outcome": "Exited at atomic successor claim before native model construction; no duplicate request."
+  },
+  "cleanup": {
+    "manifest": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923dk.json",
+    "jobs_deleted": 8,
+    "preconditions": "All eight exact Job UIDs rechecked against backed-up snapshots; each owned by ali, inactive and terminal. All Pods terminal. Winner output independently verified and raw evidence, metadata and logs retained on PVC before deletion.",
+    "remaining_batch_objects": 0,
+    "after_cleanup_snapshot_sha256": "7a779468a2dde976a9b896541df1e4ef805e813093bd5edb40ef1a6eea588edf",
+    "successor_claim_preserved": true,
+    "raw_outputs_deleted": false,
+    "unrelated_resources_modified": false
+  },
+  "next_boundary": "The six original N3 requests are consumed and must not be rerun. Remaining live runtime/recording and physical-time-map qualification does not follow automatically from fixed-input success. MAIN P remains unreleased."
+}

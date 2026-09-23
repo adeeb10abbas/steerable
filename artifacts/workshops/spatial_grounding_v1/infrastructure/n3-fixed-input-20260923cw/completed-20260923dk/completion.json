@@ -1,0 +1,630 @@
+{
+  "additional_model_requests": 0,
+  "batch_plan": {
+    "bytes": 3033,
+    "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion-inputs/artifacts/workshops/spatial_grounding_v1/infrastructure/n3-fixed-input-20260923cw/admission-batch-20260923dk.json",
+    "sha256": "304dfac94d483aa1f2c61488d72f0fe87b2734db91be7075fb49fc7266f52a09"
+  },
+  "behavioral_episodes": 0,
+  "candidate_pods": [
+    {
+      "containers": [],
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "name": "sgw01-ali-n3-fixedinput-20260923dk-00-ljgjm",
+      "node": "dcwipphai0056.edc.nam.gm.com",
+      "phase": "Failed",
+      "reason": "UnexpectedAdmissionError",
+      "uid": "078d4b83-f54a-4077-882b-79cab8ef57b0"
+    },
+    {
+      "containers": [],
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "name": "sgw01-ali-n3-fixedinput-20260923dk-01-cszpm",
+      "node": "dcwipphai0057.edc.nam.gm.com",
+      "phase": "Failed",
+      "reason": "UnexpectedAdmissionError",
+      "uid": "bd75cd13-fd0b-40a6-bdf5-8acbc8c84c42"
+    },
+    {
+      "containers": [],
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "name": "sgw01-ali-n3-fixedinput-20260923dk-02-75msj",
+      "node": "dcwipphai0059.edc.nam.gm.com",
+      "phase": "Failed",
+      "reason": "UnexpectedAdmissionError",
+      "uid": "1b4983be-fef1-474d-ad86-0f11882c9e72"
+    },
+    {
+      "containers": [],
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "name": "sgw01-ali-n3-fixedinput-20260923dk-03-ftg7t",
+      "node": "dcwipphai0060.edc.nam.gm.com",
+      "phase": "Failed",
+      "reason": "UnexpectedAdmissionError",
+      "uid": "efa653b1-f1ce-4c09-a4f5-89eed5ae4dba"
+    },
+    {
+      "containers": [
+        {
+          "containerID": "containerd://08ddc5a659dacc4ab0f73d378dbfda41cdc45243599051a0c3d52edb0882df55",
+          "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base:ubuntu22.04",
+          "imageID": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+          "lastState": {},
+          "name": "fixed-input",
+          "ready": false,
+          "restartCount": 0,
+          "started": false,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://08ddc5a659dacc4ab0f73d378dbfda41cdc45243599051a0c3d52edb0882df55",
+              "exitCode": 0,
+              "finishedAt": "2026-09-23T22:56:45Z",
+              "reason": "Completed",
+              "startedAt": "2026-09-23T22:52:00Z"
+            }
+          }
+        }
+      ],
+      "message": null,
+      "name": "sgw01-ali-n3-fixedinput-20260923dk-04-fblzg",
+      "node": "dcwipphai0061.edc.nam.gm.com",
+      "phase": "Succeeded",
+      "reason": null,
+      "uid": "e3d4a89e-c7ea-4b57-9e9e-06731e93f6c7"
+    },
+    {
+      "containers": [],
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "name": "sgw01-ali-n3-fixedinput-20260923dk-05-zc9fc",
+      "node": "dcwipphai0062.edc.nam.gm.com",
+      "phase": "Failed",
+      "reason": "UnexpectedAdmissionError",
+      "uid": "8e422702-99a9-4e76-a866-a63c7a14553b"
+    },
+    {
+      "containers": [
+        {
+          "containerID": "containerd://f4fec168b8b5e2ef0e0d94d9e577fb6a948d8e17d175d77afee42f1af59d2aac",
+          "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base:ubuntu22.04",
+          "imageID": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+          "lastState": {},
+          "name": "fixed-input",
+          "ready": false,
+          "restartCount": 0,
+          "started": false,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://f4fec168b8b5e2ef0e0d94d9e577fb6a948d8e17d175d77afee42f1af59d2aac",
+              "exitCode": 1,
+              "finishedAt": "2026-09-23T22:52:23Z",
+              "reason": "Error",
+              "startedAt": "2026-09-23T22:52:00Z"
+            }
+          }
+        }
+      ],
+      "message": null,
+      "name": "sgw01-ali-n3-fixedinput-20260923dk-06-p2bj7",
+      "node": "dcwipphai0063.edc.nam.gm.com",
+      "phase": "Failed",
+      "reason": null,
+      "uid": "2822d2dd-9964-4539-be43-596bf08181d0"
+    },
+    {
+      "containers": [],
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "name": "sgw01-ali-n3-fixedinput-20260923dk-07-nlz2m",
+      "node": "dcwipphai0064.edc.nam.gm.com",
+      "phase": "Failed",
+      "reason": "UnexpectedAdmissionError",
+      "uid": "24a47de3-af0a-4c94-8cba-727ef8d24db2"
+    }
+  ],
+  "comparisons": {
+    "between_groups_equal": [
+      true,
+      true,
+      true
+    ],
+    "opposite_prompt_action_rms": [
+      0.023852476555825355,
+      0.023852476555825355
+    ],
+    "opposite_prompt_distinct": [
+      true,
+      true
+    ],
+    "repeat_equal": [
+      true,
+      true
+    ]
+  },
+  "compiler": {
+    "bytes": 9723,
+    "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion-inputs/artifacts/workshops/spatial_grounding_v1/infrastructure/n3-fixed-input-20260923cw/collect_completion.py",
+    "sha256": "e1222ef41604d533381de02562dd10cd1ca58091a0ca806ff02dd1d35fc5e900"
+  },
+  "executed_actions": 0,
+  "existing_smolvla_training_modified": false,
+  "future_opposite_prompt_distinct": [
+    true,
+    true
+  ],
+  "future_repeat_equal": [
+    true,
+    true
+  ],
+  "future_shapes": [
+    [
+      33,
+      528,
+      640,
+      3
+    ],
+    [
+      33,
+      528,
+      640,
+      3
+    ],
+    [
+      33,
+      528,
+      640,
+      3
+    ],
+    [
+      33,
+      528,
+      640,
+      3
+    ],
+    [
+      33,
+      528,
+      640,
+      3
+    ],
+    [
+      33,
+      528,
+      640,
+      3
+    ]
+  ],
+  "generated_future_videos": [
+    {
+      "bytes": 669649,
+      "frames": 33,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion/generated-future-videos/request-00-LAT-D-POS-generated-future.mp4",
+      "physical_time_mapping_qualified": false,
+      "presentation_fps": 15,
+      "prompt_id": "LAT-D-POS",
+      "request_index": 0,
+      "scope": "Generated local prediction, not an executed robot rollout.",
+      "sha256": "9c4cfe7cdd1b39807ca42c2ff1967d475f349d0c8ed1709a653126c875231ccc",
+      "source": {
+        "bytes": 33454208,
+        "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-7e18c93c3f704de8b82c126da86fb420.npy",
+        "sha256": "e90cfa162dbd1c647a4a7a6aa30d45c75375313cbf51374b7ce424c9587a52ca",
+        "shape": [
+          33,
+          528,
+          640,
+          3
+        ]
+      }
+    },
+    {
+      "bytes": 669649,
+      "frames": 33,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion/generated-future-videos/request-01-LAT-D-POS-generated-future.mp4",
+      "physical_time_mapping_qualified": false,
+      "presentation_fps": 15,
+      "prompt_id": "LAT-D-POS",
+      "request_index": 1,
+      "scope": "Generated local prediction, not an executed robot rollout.",
+      "sha256": "9c4cfe7cdd1b39807ca42c2ff1967d475f349d0c8ed1709a653126c875231ccc",
+      "source": {
+        "bytes": 33454208,
+        "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-991c2c32cca14a66972ccde9bb14606b.npy",
+        "sha256": "e90cfa162dbd1c647a4a7a6aa30d45c75375313cbf51374b7ce424c9587a52ca",
+        "shape": [
+          33,
+          528,
+          640,
+          3
+        ]
+      }
+    },
+    {
+      "bytes": 698905,
+      "frames": 33,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion/generated-future-videos/request-02-LAT-D-NEG-generated-future.mp4",
+      "physical_time_mapping_qualified": false,
+      "presentation_fps": 15,
+      "prompt_id": "LAT-D-NEG",
+      "request_index": 2,
+      "scope": "Generated local prediction, not an executed robot rollout.",
+      "sha256": "c17128dd2cae0c27bc427d0ea53b041d3dbd4277a2452bad2a9020c824bb1c96",
+      "source": {
+        "bytes": 33454208,
+        "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-76401f9e51c3431a8e06e92e6a872cbb.npy",
+        "sha256": "d66b469e421a8a662a290c48775c25b5ef197e40e9d4420d6a87a666197c0702",
+        "shape": [
+          33,
+          528,
+          640,
+          3
+        ]
+      }
+    },
+    {
+      "bytes": 669649,
+      "frames": 33,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion/generated-future-videos/request-03-LAT-D-POS-generated-future.mp4",
+      "physical_time_mapping_qualified": false,
+      "presentation_fps": 15,
+      "prompt_id": "LAT-D-POS",
+      "request_index": 3,
+      "scope": "Generated local prediction, not an executed robot rollout.",
+      "sha256": "9c4cfe7cdd1b39807ca42c2ff1967d475f349d0c8ed1709a653126c875231ccc",
+      "source": {
+        "bytes": 33454208,
+        "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-a054391ea7f14c37a2266f4a48a49288.npy",
+        "sha256": "e90cfa162dbd1c647a4a7a6aa30d45c75375313cbf51374b7ce424c9587a52ca",
+        "shape": [
+          33,
+          528,
+          640,
+          3
+        ]
+      }
+    },
+    {
+      "bytes": 669649,
+      "frames": 33,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion/generated-future-videos/request-04-LAT-D-POS-generated-future.mp4",
+      "physical_time_mapping_qualified": false,
+      "presentation_fps": 15,
+      "prompt_id": "LAT-D-POS",
+      "request_index": 4,
+      "scope": "Generated local prediction, not an executed robot rollout.",
+      "sha256": "9c4cfe7cdd1b39807ca42c2ff1967d475f349d0c8ed1709a653126c875231ccc",
+      "source": {
+        "bytes": 33454208,
+        "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-db02605baddb42848ed6b1a9fdc07a2c.npy",
+        "sha256": "e90cfa162dbd1c647a4a7a6aa30d45c75375313cbf51374b7ce424c9587a52ca",
+        "shape": [
+          33,
+          528,
+          640,
+          3
+        ]
+      }
+    },
+    {
+      "bytes": 698905,
+      "frames": 33,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion/generated-future-videos/request-05-LAT-D-NEG-generated-future.mp4",
+      "physical_time_mapping_qualified": false,
+      "presentation_fps": 15,
+      "prompt_id": "LAT-D-NEG",
+      "request_index": 5,
+      "scope": "Generated local prediction, not an executed robot rollout.",
+      "sha256": "c17128dd2cae0c27bc427d0ea53b041d3dbd4277a2452bad2a9020c824bb1c96",
+      "source": {
+        "bytes": 33454208,
+        "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-98b38a60f17c43bf9fed12ea70c49044.npy",
+        "sha256": "d66b469e421a8a662a290c48775c25b5ef197e40e9d4420d6a87a666197c0702",
+        "shape": [
+          33,
+          528,
+          640,
+          3
+        ]
+      }
+    }
+  ],
+  "gpu": {
+    "index": 0,
+    "memory_free_mib": 81153,
+    "memory_used_mib": 0,
+    "name": "NVIDIA A100-SXM4-80GB",
+    "utilization_percent": 0,
+    "uuid": "GPU-9b784824-3fad-dcf1-8e3e-abee22db4a8e"
+  },
+  "kubernetes_jobs": {
+    "bytes": 159550,
+    "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion-inputs/sgw-dk-jobs-final.json",
+    "sha256": "f8da2566eace397b9da307b7010429c66208618837123e47756d1d9737c95166"
+  },
+  "kubernetes_pods": {
+    "bytes": 147252,
+    "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923dk-completion-inputs/sgw-dk-pods-final.json",
+    "sha256": "929aaad00a3eafb4ea38c23d413ee1b788b4edf6f5cadd1ca9687df85a17bed3"
+  },
+  "model_requests": 6,
+  "observed_at_utc": "2026-09-23T23:03:37.619095+00:00",
+  "offline_redecodes_equal": [
+    true,
+    true,
+    true
+  ],
+  "raw_files": [
+    {
+      "bytes": 77,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/endpoint.json",
+      "sha256": "2f4b8cc58d9d2a4c79f04505baa48de49a48065951b1abdefc4d01ac2e7e6a22"
+    },
+    {
+      "bytes": 33454208,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-76401f9e51c3431a8e06e92e6a872cbb.npy",
+      "sha256": "d66b469e421a8a662a290c48775c25b5ef197e40e9d4420d6a87a666197c0702"
+    },
+    {
+      "bytes": 33454208,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-7e18c93c3f704de8b82c126da86fb420.npy",
+      "sha256": "e90cfa162dbd1c647a4a7a6aa30d45c75375313cbf51374b7ce424c9587a52ca"
+    },
+    {
+      "bytes": 33454208,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-98b38a60f17c43bf9fed12ea70c49044.npy",
+      "sha256": "d66b469e421a8a662a290c48775c25b5ef197e40e9d4420d6a87a666197c0702"
+    },
+    {
+      "bytes": 33454208,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-991c2c32cca14a66972ccde9bb14606b.npy",
+      "sha256": "e90cfa162dbd1c647a4a7a6aa30d45c75375313cbf51374b7ce424c9587a52ca"
+    },
+    {
+      "bytes": 33454208,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-a054391ea7f14c37a2266f4a48a49288.npy",
+      "sha256": "e90cfa162dbd1c647a4a7a6aa30d45c75375313cbf51374b7ce424c9587a52ca"
+    },
+    {
+      "bytes": 33454208,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/futures/sgw-n3-request-db02605baddb42848ed6b1a9fdc07a2c.npy",
+      "sha256": "e90cfa162dbd1c647a4a7a6aa30d45c75375313cbf51374b7ce424c9587a52ca"
+    },
+    {
+      "bytes": 2581,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/input-manifest.json",
+      "sha256": "3cc0193f2a6a88a0e2537b92c4049be7d4a6fbcc62c2c62f30ff3a71c7285cbd"
+    },
+    {
+      "bytes": 2764928,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/inputs/observation-exterior_image_1_left.npy",
+      "sha256": "6dcc8ae2dbda769bebeefdfc95b1a0a85b98d3907f21568ec04a92fb471efc8b"
+    },
+    {
+      "bytes": 2764928,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/inputs/observation-exterior_image_2_left.npy",
+      "sha256": "51d81c00481a9f0ed1457b87ae7c2ad54fc298d8c818b2f6bc6f733675d4b3d3"
+    },
+    {
+      "bytes": 132,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/inputs/observation-gripper_position.npy",
+      "sha256": "579f4fc9e240b80aade6941d3fba86534d9e959a8520066318b52ed266243e65"
+    },
+    {
+      "bytes": 156,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/inputs/observation-joint_position.npy",
+      "sha256": "404baa729f8564d1f5fd5606b623f9d8185634655ccbb6f68795625dacf2cd45"
+    },
+    {
+      "bytes": 2764928,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/inputs/observation-wrist_image_left.npy",
+      "sha256": "33de7bf38717b0280b1d629a2049037cf9d57bb5f03a8e0ba29f4811c5d4bb9a"
+    },
+    {
+      "bytes": 384,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/intent.json",
+      "sha256": "39c67341b269bbc5d8a810cce2ab0297bb7d52949491a95075e562d9dab92f3e"
+    },
+    {
+      "bytes": 822,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/loaded-runtime.json",
+      "sha256": "6e13441b8e25fe6d3c4e9943f7655ae8dcdcde931f800fa681529ffa29d181b6"
+    },
+    {
+      "bytes": 1152,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-00/actions.npy",
+      "sha256": "a5f25445e18cf221a0c6648b090da3eaeb13a5f679dfa7d076353ea8f2ce482b"
+    },
+    {
+      "bytes": 840,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-00/intent.json",
+      "sha256": "decc628a7685773b1a9fdb20f6c35d2a9fc37ee532794ffd96470db8665cbb78"
+    },
+    {
+      "bytes": 415,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-00/reset.json",
+      "sha256": "ced0b169eef00661347645996df1867442efb3e54f22f344faeaf458a3342758"
+    },
+    {
+      "bytes": 2805,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-00/result.json",
+      "sha256": "f4770312464f6797261407079d50fff07b1bece2d3f19769736a0aa2322e4822"
+    },
+    {
+      "bytes": 2281088,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-00/vision-latent.npy",
+      "sha256": "9d51d6f8d3284c857c0aafde1c7dbe65809fa10050057d3ad6a636d5b9515a77"
+    },
+    {
+      "bytes": 1152,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-01/actions.npy",
+      "sha256": "a5f25445e18cf221a0c6648b090da3eaeb13a5f679dfa7d076353ea8f2ce482b"
+    },
+    {
+      "bytes": 840,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-01/intent.json",
+      "sha256": "48d445ca0c2148b21a5a07bfb7fc7bb1a981d111aa8ef5dc9e7cc36048a45b62"
+    },
+    {
+      "bytes": 415,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-01/reset.json",
+      "sha256": "947452f1c206553887b57b9efc3a298bcb526f3aa5c436f286b26a2d9b171379"
+    },
+    {
+      "bytes": 2803,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-01/result.json",
+      "sha256": "1ce3e7792380c91b4c9860bc44cc39c508add491b1068fa4ce32e56b3612c56e"
+    },
+    {
+      "bytes": 2281088,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-01/vision-latent.npy",
+      "sha256": "9d51d6f8d3284c857c0aafde1c7dbe65809fa10050057d3ad6a636d5b9515a77"
+    },
+    {
+      "bytes": 1152,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-02/actions.npy",
+      "sha256": "a2a835c8cd6a78735af3ae5dbc569824e45f365218f670f46f06d24326aef783"
+    },
+    {
+      "bytes": 841,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-02/intent.json",
+      "sha256": "2f324f1135028923be70746a785a0c08b7437c216618d61f865e3f78d2fd34c5"
+    },
+    {
+      "bytes": 415,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-02/reset.json",
+      "sha256": "01492c92c5bfc2a5dbb787413271cff565de9e7d047ebe41c983d7aa205f5501"
+    },
+    {
+      "bytes": 2805,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-02/result.json",
+      "sha256": "542ea3873a7f45cdafc5bbeacb65a985e3e5697a0dd2615bf2c81bf66a53f5fd"
+    },
+    {
+      "bytes": 2281088,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-02/vision-latent.npy",
+      "sha256": "7668b64ed5a68d05db16a0287d5de81b17f374b5277aac6b1426614431fb387c"
+    },
+    {
+      "bytes": 1152,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-03/actions.npy",
+      "sha256": "a5f25445e18cf221a0c6648b090da3eaeb13a5f679dfa7d076353ea8f2ce482b"
+    },
+    {
+      "bytes": 862,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-03/intent.json",
+      "sha256": "dc04f66bf6c1bb698fb79d2068779bded4b7c16380f5ff8ed22982de896208f7"
+    },
+    {
+      "bytes": 33454208,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-03/offline-redecoded-future.npy",
+      "sha256": "e90cfa162dbd1c647a4a7a6aa30d45c75375313cbf51374b7ce424c9587a52ca"
+    },
+    {
+      "bytes": 415,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-03/reset.json",
+      "sha256": "e14bd50d285b4e0fb7dbee3a2925cd068a51ff49f91517a2fa5ddd88de96c2ba"
+    },
+    {
+      "bytes": 2803,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-03/result.json",
+      "sha256": "82487fc93b794c958363a905062494d37c9af2bd06095b30793cfab2946ef420"
+    },
+    {
+      "bytes": 2281088,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-03/vision-latent.npy",
+      "sha256": "9d51d6f8d3284c857c0aafde1c7dbe65809fa10050057d3ad6a636d5b9515a77"
+    },
+    {
+      "bytes": 1152,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-04/actions.npy",
+      "sha256": "a5f25445e18cf221a0c6648b090da3eaeb13a5f679dfa7d076353ea8f2ce482b"
+    },
+    {
+      "bytes": 862,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-04/intent.json",
+      "sha256": "7c53f3b6568d83991dca2604d60f1049e923ad8fe7073988300fec706d6d9eb9"
+    },
+    {
+      "bytes": 33454208,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-04/offline-redecoded-future.npy",
+      "sha256": "e90cfa162dbd1c647a4a7a6aa30d45c75375313cbf51374b7ce424c9587a52ca"
+    },
+    {
+      "bytes": 415,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-04/reset.json",
+      "sha256": "f03bd2149ff42e354a1196e8f46ba3af4bec66602d7ae1b9bdcced5d26a249f7"
+    },
+    {
+      "bytes": 2803,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-04/result.json",
+      "sha256": "58f0ddba3aca6887f5fac81bd89d7edab5d8c2ac0e2ed270ca57545dd5547f03"
+    },
+    {
+      "bytes": 2281088,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-04/vision-latent.npy",
+      "sha256": "9d51d6f8d3284c857c0aafde1c7dbe65809fa10050057d3ad6a636d5b9515a77"
+    },
+    {
+      "bytes": 1152,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-05/actions.npy",
+      "sha256": "a2a835c8cd6a78735af3ae5dbc569824e45f365218f670f46f06d24326aef783"
+    },
+    {
+      "bytes": 863,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-05/intent.json",
+      "sha256": "e2d36a29f31954110071e04175a0add2b0574f8a4a96ff9faea6c59ffb750a77"
+    },
+    {
+      "bytes": 33454208,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-05/offline-redecoded-future.npy",
+      "sha256": "d66b469e421a8a662a290c48775c25b5ef197e40e9d4420d6a87a666197c0702"
+    },
+    {
+      "bytes": 415,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-05/reset.json",
+      "sha256": "07fe71511588689f87efb941a33d4013fe7e0db9571561dfe6061282e64b59dd"
+    },
+    {
+      "bytes": 2803,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-05/result.json",
+      "sha256": "25172f8457c2f73b37792586dd14aaf09b97be6d457bab9d8e8b03f7e03d723d"
+    },
+    {
+      "bytes": 2281088,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/request-05/vision-latent.npy",
+      "sha256": "7668b64ed5a68d05db16a0287d5de81b17f374b5277aac6b1426614431fb387c"
+    },
+    {
+      "bytes": 20869,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/result.json",
+      "sha256": "3804d7c0119e36be351dfe2e5857b204b6b03117720a4cf1739cde520c8454e1"
+    },
+    {
+      "bytes": 714,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/server-attestation.json",
+      "sha256": "63f2de74c2d6c8a75c744a4d87e7d7637d581546a272191aba0ee59efb076071"
+    },
+    {
+      "bytes": 8406,
+      "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/trace.jsonl",
+      "sha256": "236041685cd5dff81cc8228f5bd307eaa8c693c0a1601108c29c107e7bcd0071"
+    }
+  ],
+  "registration_id": "SGW-N3-FIXED-20260923CW",
+  "release_permitted": false,
+  "result": {
+    "bytes": 20869,
+    "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04/evidence/result.json",
+    "sha256": "3804d7c0119e36be351dfe2e5857b204b6b03117720a4cf1739cde520c8454e1"
+  },
+  "schema_version": "sgw-01-n3-fixed-input-completion-v1",
+  "scope": "Generated local predictions only. No physical success, live simulator qualification, or time-map release follows from this receipt.",
+  "source_commit": "383beb7447170a505d33059c6be46e9ba363ec58",
+  "status": "six_requests_completed_independently_rechecked_not_behavioral_release",
+  "successor_owner": {
+    "bytes": 1251,
+    "path": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/request-owner/successor/owner.json",
+    "sha256": "da49bd9b023e891ca636f3474d8d0624535ef9bc80f0acd3d6c0b307af199327"
+  },
+  "winner_node": "dcwipphai0061.edc.nam.gm.com",
+  "winner_pod": "sgw01-ali-n3-fixedinput-20260923dk-04-fblzg",
+  "winner_pod_uid": "e3d4a89e-c7ea-4b57-9e9e-06731e93f6c7"
+}

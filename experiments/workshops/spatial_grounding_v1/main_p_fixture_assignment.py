@@ -90,7 +90,8 @@ def write_assignment(*, output: Path, **kwargs: Any) -> dict[str, Any]:
         raise FileExistsError("refusing to overwrite prospective P fixture assignment")
     value = build_assignment(**kwargs)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_bytes(canonical_bytes(value))
+    with output.open("xb") as stream:
+        stream.write(canonical_bytes(value))
     return value
 
 
@@ -122,6 +123,8 @@ def materialize_release_fixture(
         raise ValueError("release fixture input lacks the independently qualified N3 time map")
     value = dict(source)
     value["layouts"] = dict(source["layouts"])
+    if "LAT-P01" in value["layouts"]:
+        raise ValueError("refusing to replace an existing LAT-P01 fixture binding")
     value["layouts"]["LAT-P01"] = {
         "fixture_sha256": assignment["assignment_sha256"],
         "source_assignment": {"path": str(assignment_path.resolve()), "sha256": sha256_file(assignment_path)},
@@ -134,7 +137,8 @@ def materialize_release_fixture(
         "model_requests": 0, "behavioral_episodes": 0, "release_permitted": False,
     }
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_bytes(canonical_bytes(value))
+    with output.open("xb") as stream:
+        stream.write(canonical_bytes(value))
     return value
 
 

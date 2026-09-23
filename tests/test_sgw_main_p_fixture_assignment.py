@@ -71,6 +71,10 @@ def test_assignment_is_immutable_on_write(tmp_path):
         translated_capture_sha256=hashlib.sha256(capture.read_bytes()).hexdigest(),
         qualification_verification=proof, qualification_verification_sha256=_evidence(proof),
     )
+    original = output.read_bytes()
+    with pytest.raises(FileExistsError):
+        write_assignment(output=output)
+    assert output.read_bytes() == original
 
 
 def test_materialization_requires_prequalified_time_map_and_keeps_runtime_pending(tmp_path):
@@ -92,8 +96,21 @@ def test_materialization_requires_prequalified_time_map_and_keeps_runtime_pendin
     assert value["layouts"]["LAT-P01"]["fixture_sha256"] == value["main_p_fixture_materialization"]["assignment_sha256"]
     assert value["layouts"]["LAT-P01"]["release_permitted"] is False
     with pytest.raises(FileExistsError):
-        write_assignment(
-            output=output, planned_queue=QUEUE, translated_capture=capture,
-            translated_capture_sha256=hashlib.sha256(capture.read_bytes()).hexdigest(),
-            qualification_verification=proof, qualification_verification_sha256=_evidence(proof),
+        materialize_release_fixture(
+            assignment_path=assignment_path, qualified_fixture_input=fixture, output=output,
+        )
+    fixture.write_text(json.dumps({"status": "qualified", "layouts": {}, "time_maps": {}}))
+    with pytest.raises(ValueError, match="independently qualified N3 time map"):
+        materialize_release_fixture(
+            assignment_path=assignment_path, qualified_fixture_input=fixture,
+            output=tmp_path / "missing-time-map.json",
+        )
+    fixture.write_text(json.dumps({
+        "status": "qualified", "layouts": {"LAT-P01": {"fixture_sha256": "a" * 64}},
+        "time_maps": {"N3": "t" * 64},
+    }))
+    with pytest.raises(ValueError, match="existing LAT-P01"):
+        materialize_release_fixture(
+            assignment_path=assignment_path, qualified_fixture_input=fixture,
+            output=tmp_path / "changed-fixture.json",
         )

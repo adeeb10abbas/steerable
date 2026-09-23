@@ -14,6 +14,8 @@ from pathlib import Path
 import time
 from typing import Any, Mapping
 from types import SimpleNamespace
+import math
+import uuid
 
 import numpy as np
 
@@ -38,10 +40,24 @@ def _digest(path: Path) -> str:
 
 def _write(path: Path, value: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-    with os.fdopen(fd, "wb") as f:
-        f.write(_bytes(value)); f.flush(); os.fsync(f.fileno())
-    directory = os.open(path.parent, os.O_RDONLY); os.fsync(directory); os.close(directory)
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.{uuid.uuid4().hex}.tmp")
+    try:
+        fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "wb") as f:
+            f.write(_bytes(value)); f.flush(); os.fsync(f.fileno())
+        # A hard link publishes a fully-fsynced inode atomically without
+        # replacing a competing publisher's immutable receipt.
+        os.link(temporary, path)
+        directory = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+    finally:
+        try:
+            temporary.unlink()
+        except FileNotFoundError:
+            pass
 
 
 def _read(path: Path) -> dict[str, Any]:
@@ -74,13 +90,18 @@ def _load_array(root: Path, record: Mapping[str, Any]) -> np.ndarray:
     return value
 
 
-def _encode_tree(directory: Path, prefix: str, value: Any) -> Any:
+def _encode_tree(directory: Path, prefix: str, value: Any, leaf: list[int] | None = None) -> Any:
+    leaf = [0] if leaf is None else leaf
     if isinstance(value, Mapping):
         if not value:
             raise MailboxError("empty policy-observation mapping is not transportable")
-        return {"mapping": {str(key): _encode_tree(directory, f"{prefix}.{key}", item)
+        if any(not isinstance(key, str) for key in value):
+            raise MailboxError("policy-observation mapping keys must be strings")
+        return {"mapping": {key: _encode_tree(directory, prefix, item, leaf)
                             for key, item in value.items()}}
-    return {"array": _array(directory / f"{prefix}.npy", value)}
+    name = f"{prefix}.{leaf[0]:06d}.npy"
+    leaf[0] += 1
+    return {"array": _array(directory / name, value)}
 
 
 def _decode_tree(root: Path, value: Any) -> Any:
@@ -97,7 +118,9 @@ class MailboxClient:
     def __init__(self, *, root: Path, identity: Mapping[str, str], timeout_s: float = 30) -> None:
         self.root, self.identity, self.timeout_s = Path(root), dict(identity), timeout_s
         self.command = 0; self._cache: dict[str, Any] | None = None; self._closed = False
-        if not self.root.is_dir() or not all(isinstance(v, str) and v for v in self.identity.values()):
+        if (not self.root.is_dir() or not all(isinstance(v, str) and v for v in self.identity.values())
+                or isinstance(timeout_s, bool) or not isinstance(timeout_s, (int, float))
+                or not math.isfinite(timeout_s) or timeout_s <= 0):
             raise MailboxError("mailbox root or immutable identity is invalid")
 
     def _call(self, operation: str, payload: Mapping[str, Any] | None = None) -> dict[str, Any]:
@@ -119,13 +142,22 @@ class MailboxClient:
                 self._closed = True
                 raise MailboxError("mailbox action timed out; session is permanently closed")
             time.sleep(.01)
-        result = _read(response)
-        if result.get("command_id") != self.command or result.get("identity") != self.identity or result.get("status") != "ok":
-            self._closed = True; raise MailboxError("mailbox response identity/status mismatch")
-        return result
+        try:
+            result = _read(response)
+            if result.get("command_id") != self.command or result.get("identity") != self.identity or result.get("status") != "ok":
+                raise MailboxError("mailbox response identity/status mismatch")
+            return result
+        except Exception:
+            self._closed = True
+            raise
 
     def reset(self) -> Any:
-        result = self._call("reset"); self._cache = _decode_response(self.root / "responses", result)
+        result = self._call("reset")
+        try:
+            self._cache = _decode_response(self.root / "responses", result)
+        except Exception:
+            self._closed = True
+            raise
         reset = self._cache["reset"]
         return SimpleNamespace(snapshot=reset["snapshot"], receipt=reset["receipt"])
 
@@ -133,7 +165,12 @@ class MailboxClient:
         temp = self.root / "requests" / f"{self.command + 1:04d}-step.action.npy"
         record = _array(temp, np.asarray(action, dtype=np.float32))
         if record["shape"] != [8]: raise MailboxError("mailbox step action must be finite shape [8]")
-        result = self._call("step", {"action": record}); self._cache = _decode_response(self.root / "responses", result)
+        result = self._call("step", {"action": record})
+        try:
+            self._cache = _decode_response(self.root / "responses", result)
+        except Exception:
+            self._closed = True
+            raise
         return self._cache["step_result"]
 
     def snapshot(self) -> Any:
@@ -190,6 +227,12 @@ class MailboxReceiver:
     def __init__(self, *, root: Path, identity: Mapping[str, str], environment: Any) -> None:
         self.root, self.identity, self.environment = Path(root), dict(identity), environment
         self.last = 0; self.closed = False
+        self.environment_closed = False
+
+    def close_environment(self) -> None:
+        if not self.environment_closed:
+            self.environment.close()
+            self.environment_closed = True
 
     def serve_one(self, request_path: Path) -> None:
         try:
@@ -206,10 +249,25 @@ class MailboxReceiver:
                 action = _load_array(request_path.parent, request["payload"]["action"])
                 result = {"reset": None, "step_result": self.environment.step(action)}
             elif operation == "close":
-                self.environment.close(); self.closed = True; result = {"reset": None, "step_result": None}
+                self.close_environment(); self.closed = True
+                result = {"reset": None, "step_result": None}
             else: raise MailboxError("unsupported mailbox operation")
-            snapshot, viewport, policy = self.environment.snapshot(), self.environment.render_viewport(), self.environment.policy_observation()
             out = self.root / "responses"; token = request_path.stem
+            if operation == "close":
+                payload = {"command_id": command, "identity": self.identity, "status": "ok",
+                           "data": result}
+                response_path = out / f"{token}.json"
+                _write(response_path, payload); self.last = command
+                _write(self.root / "receiver_complete.json", {
+                    "schema": "sgw-01-mailbox-receiver-completion-v1",
+                    "attempt_scope": "learned_policy_remote_simulator",
+                    "identity": self.identity,
+                    "close_command_id": command,
+                    "command_count": self.last,
+                    "close_response_sha256": _digest(response_path),
+                })
+                return
+            snapshot, viewport, policy = self.environment.snapshot(), self.environment.render_viewport(), self.environment.policy_observation()
             arrays = {"viewport": _array(out / f"{token}.viewport.npy", viewport)}
             payload = {"command_id": command, "identity": self.identity, "status": "ok",
                        "data": {**result, "snapshot": asdict(snapshot) if is_dataclass(snapshot) else snapshot,
@@ -217,13 +275,6 @@ class MailboxReceiver:
                                 "policy_observation": _encode_tree(out, f"{token}.policy", policy)}}
             response_path = out / f"{token}.json"
             _write(response_path, payload); self.last = command
-            if operation == "close":
-                _write(self.root / "receiver_complete.json", {
-                    "identity": self.identity,
-                    "close_command_id": command,
-                    "command_count": self.last,
-                    "close_response_sha256": _digest(response_path),
-                })
         except Exception as exc:
             fault = self.root / "faults" / f"{request_path.stem}.json"
             if not fault.exists():

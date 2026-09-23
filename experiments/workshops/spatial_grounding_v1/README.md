@@ -246,6 +246,11 @@ durably published. It binds the identity, exact close command, command count,
 and response hash. Native receiver exceptions are fsynced to
 `receiver_failure.json` before environment/AppLauncher cleanup, so exit zero
 without the completion record is never evidence of a complete attempt.
+An external coordinator-side `verify_receiver_completion` must validate the
+completion receipt, close-response hash, exact learned-policy attempt scope,
+and absence of a failure receipt before it treats a receiver process as
+complete. These receipts are not interchangeable with zero-model capture
+artifacts or a scored behavioral completion.
 
 The mailbox never starts a model, provides a network listener, retries an
 action, or attests the remote simulator as a local policy process. A timeout,

@@ -34,6 +34,45 @@ def _load_identity(path: Path, expected_sha256: str) -> dict[str, str]:
     return {key: value[key] for key in required}
 
 
+def verify_receiver_completion(root: Path, identity: dict[str, str]) -> dict[str, Any]:
+    """Validate a completed learned-policy receiver from a separate process."""
+    root = Path(root)
+    failure = root / "receiver_failure.json"
+    complete = root / "receiver_complete.json"
+    if failure.exists() or not complete.is_file():
+        raise AdapterError("receiver has no clean completion receipt")
+    try:
+        receipt = json.loads(complete.read_text())
+        if (receipt.get("schema") != "sgw-01-mailbox-receiver-completion-v1"
+                or receipt.get("attempt_scope") != "learned_policy_remote_simulator"
+                or receipt.get("identity") != identity
+                or type(receipt.get("close_command_id")) is not int
+                or receipt.get("close_command_id") != receipt.get("command_count")):
+            raise ValueError("completion fields do not bind the learned attempt")
+        response = root / "responses" / f"{receipt['close_command_id']:04d}-close.json"
+        if not response.is_file() or hashlib.sha256(response.read_bytes()).hexdigest() != receipt.get("close_response_sha256"):
+            raise ValueError("close response is absent or hash-mismatched")
+        payload = json.loads(response.read_text())
+        if payload.get("status") != "ok" or payload.get("identity") != identity:
+            raise ValueError("close response is invalid")
+    except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
+        raise AdapterError("receiver completion receipt is malformed") from exc
+    return receipt
+
+
+def _load_bound_cell(path: Path, expected_sha256: str, identity: dict[str, str]) -> dict[str, Any]:
+    if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected_sha256:
+        raise AdapterError("receiver release-cell binding is absent or hash-mismatched")
+    try:
+        cell = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise AdapterError("receiver release-cell JSON is malformed") from exc
+    if not isinstance(cell, dict) or any(cell.get(key) != identity[key] for key in
+                                        ("cell_id", "candidate_sha256", "binding_sha256")):
+        raise AdapterError("receiver identity does not bind the actual release-cell bytes")
+    return cell
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--mailbox-root", type=Path, required=True)
@@ -46,19 +85,20 @@ def main() -> None:
     if args.deadline_seconds <= 0 or args.mailbox_root.exists():
         raise AdapterError("receiver requires a new mailbox root and finite positive deadline")
     identity = _load_identity(args.identity, args.identity_sha256)
-    if not args.release_cell_json.is_file() or hashlib.sha256(args.release_cell_json.read_bytes()).hexdigest() != args.release_cell_sha256:
-        raise AdapterError("receiver release-cell binding is absent or hash-mismatched")
+    cell = _load_bound_cell(args.release_cell_json, args.release_cell_sha256, identity)
     args.mailbox_root.mkdir(mode=0o700)
     for name in ("requests", "responses", "faults"):
         (args.mailbox_root / name).mkdir()
-    # Imports after immutable argument validation: no Isaac app exists on bad input.
-    from isaaclab.app import AppLauncher
-    from .robolab_jointpos_environment import create_environment
-    app = AppLauncher({"headless": True, "enable_cameras": True}).app
     environment: Any = None
+    receiver: MailboxReceiver | None = None
+    app: Any = None
     failure = args.mailbox_root / "receiver_failure.json"
     try:
-        cell = json.loads(args.release_cell_json.read_text())
+        # Imports and initialization remain inside the failure guard because
+        # AppLauncher cleanup can terminate an otherwise propagating process.
+        from isaaclab.app import AppLauncher
+        from .robolab_jointpos_environment import create_environment
+        app = AppLauncher({"headless": True, "enable_cameras": True}).app
         environment = create_environment(cell=cell, evidence_root=args.mailbox_root / "evidence")
         receiver = MailboxReceiver(root=args.mailbox_root, identity=identity, environment=environment)
         deadline = time.monotonic() + args.deadline_seconds
@@ -74,10 +114,13 @@ def main() -> None:
         raise
     finally:
         try:
-            if environment is not None:
+            if receiver is not None:
+                receiver.close_environment()
+            elif environment is not None:
                 environment.close()
         finally:
-            app.close()
+            if app is not None:
+                app.close()
 
 
 if __name__ == "__main__":

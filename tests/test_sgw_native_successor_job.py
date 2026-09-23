@@ -45,8 +45,10 @@ def test_successor_requires_exact_nodes_and_bt_anti_affinity(tmp_path):
     assert job["spec"]["parallelism"] == job["spec"]["completions"] == 1
     assert job["spec"]["backoffLimit"] == 0 and pod["preemptionPolicy"] == "Never"
     assert len(job["metadata"]["annotations"]["sgw-01/config-sha256"]) == 64
-    assert pod["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"][0]["matchFields"] == [
-        {"key": "metadata.name", "operator": "In", "values": ["bt-node-a", "bt-node-b"]},
+    terms = pod["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"]
+    assert [term["matchFields"] for term in terms] == [
+        [{"key": "metadata.name", "operator": "In", "values": ["bt-node-a"]}],
+        [{"key": "metadata.name", "operator": "In", "values": ["bt-node-b"]}],
     ]
     assert pod["affinity"]["podAntiAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"][0]["topologyKey"] == "kubernetes.io/hostname"
     assert pod["containers"][0]["resources"]["limits"]["nvidia.com/gpu"] == "1"

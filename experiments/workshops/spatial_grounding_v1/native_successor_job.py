@@ -148,8 +148,8 @@ sync"""
                     "affinity": {
                         "nodeAffinity": {"requiredDuringSchedulingIgnoredDuringExecution": {"nodeSelectorTerms": [{
                             "matchExpressions": [{"key": "nvidia.com/gpu.product", "operator": "In", "values": ["NVIDIA-A40"]}],
-                            "matchFields": [{"key": "metadata.name", "operator": "In", "values": nodes}],
-                        }]}},
+                            "matchFields": [{"key": "metadata.name", "operator": "In", "values": [node]}],
+                        } for node in nodes]}},
                         "podAntiAffinity": {"requiredDuringSchedulingIgnoredDuringExecution": [{
                             "labelSelector": {"matchExpressions": [{
                                 "key": "batch.kubernetes.io/job-name", "operator": "In", "values": [BT_JOB],
@@ -207,8 +207,6 @@ def validate(job: Mapping[str, Any], *, nodes: list[str]) -> None:
         spec, pod = job["spec"], job["spec"]["template"]["spec"]
         container = pod["containers"][0]
         terms = pod["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"]
-        node_term = terms[0]
-        node_expression = node_term["matchFields"][0]
         anti = pod["affinity"]["podAntiAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"][0]
         environment = {row["name"]: row["value"] for row in container["env"]}
         native_command = json.loads(environment["SGW_NATIVE_COMMAND_JSON"])
@@ -222,10 +220,10 @@ def validate(job: Mapping[str, Any], *, nodes: list[str]) -> None:
         or str(spec.get("activeDeadlineSeconds")) != job.get("metadata", {}).get("annotations", {}).get("sgw-01/active-deadline-seconds")
         or pod.get("automountServiceAccountToken") is not False
         or pod.get("nodeSelector") != {"node-role.kubernetes.io/worker-gpu": ""}
-        or len(terms) != 1 or node_term.get("matchExpressions") != [{
-            "key": "nvidia.com/gpu.product", "operator": "In", "values": ["NVIDIA-A40"],
-        }]
-        or node_expression != {"key": "metadata.name", "operator": "In", "values": nodes}
+        or terms != [{
+            "matchExpressions": [{"key": "nvidia.com/gpu.product", "operator": "In", "values": ["NVIDIA-A40"]}],
+            "matchFields": [{"key": "metadata.name", "operator": "In", "values": [node]}],
+        } for node in nodes]
         or anti.get("namespaces") != [NAMESPACE] or anti.get("topologyKey") != "kubernetes.io/hostname"
         or anti.get("labelSelector", {}).get("matchExpressions") != [{
             "key": "batch.kubernetes.io/job-name", "operator": "In", "values": [BT_JOB],

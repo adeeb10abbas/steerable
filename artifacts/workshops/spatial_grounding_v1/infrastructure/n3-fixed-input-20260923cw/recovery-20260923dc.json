@@ -1,0 +1,59 @@
+{
+  "schema_version": "sgw-01-zero-request-infrastructure-recovery-v1",
+  "status": "prospectively_registered_before_recovery_launch",
+  "registration_id": "SGW-N3-FIXED-20260923CW",
+  "registration_sha256": "efa2fa67f7b797f1d56b388aeecc595ab7598473c41b00a5e6fee9145e498919",
+  "study_source_commit": "383beb7447170a505d33059c6be46e9ba363ec58",
+  "user_direction": "Download the weights and run; user completed normal browser sign-in and confirmed repository terms acceptance.",
+  "prior_attempt": {
+    "pod": "sgw01-ali-n3-fixedinput-20260923cz-7lfc8",
+    "pod_uid": "df31b5db-4cf8-4f46-b904-29475d005923",
+    "terminated_at_utc": "2026-09-23T19:11:01Z",
+    "exit_code": 1,
+    "model_requests_started": 0,
+    "per_request_intents": 0,
+    "trace_exists": false,
+    "loaded_runtime_exists": false,
+    "preserved_raw_root": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-cz",
+    "preserved_owner": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/request-owner/owner.json"
+  },
+  "repairs": [
+    "Use the already installed native library directories through LD_LIBRARY_PATH.",
+    "Put the pinned Nano environment's uvx on PATH and supply USER, LOGNAME and an explicit Torch cache.",
+    "Use the existing persistent HF_HOME and UV_CACHE_DIR.",
+    "Download the source-pinned complete Cosmos-Guardrail1 snapshot through normal authorized Hugging Face access.",
+    "Download Qwen3Guard's main ref, verify its resolved revision, and freeze that exact cached revision for offline native loading."
+  ],
+  "auxiliary_asset_manifest": {
+    "path": "auxiliary-assets-manifest.json",
+    "sha256": "9ec7c8ab51b9081fdbfe74808eabae4194f13d75775145d38246e176078c9bac"
+  },
+  "cpu_preflight": {
+    "path": "auxiliary-cpu-preflight.json",
+    "sha256": "37d10767663f4ea3254838bf1fa2d95f1f3b87384f830697638bd3f6f86992f8",
+    "result": "Both native auxiliary constructors passed offline on CPU; no policy model or request was run."
+  },
+  "unchanged": [
+    "Policy checkpoint, source commit and complete pinned checkpoint manifest",
+    "Native safety settings and decoded-video configuration",
+    "Six original prompts, order, seeds and retained camera/proprio input",
+    "No simulator action, behavioral episode or scientific release"
+  ],
+  "recovery": {
+    "job": "sgw01-ali-n3-fixedinput-20260923dc",
+    "manifest": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923dc.yaml",
+    "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dc",
+    "exclusive_successor_claim": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/request-owner/successor",
+    "requested_gpus": 1,
+    "maximum_remaining_model_requests": 6,
+    "additional_request_allocation": 0,
+    "automatic_retries": 0,
+    "deadline_seconds": 7200,
+    "ownership_and_idle_gate": "Recheck terminal prior owner, zero prior requests, exact auxiliary bytes, storage reserve, physical GPU occupancy/utilization/memory and UUID lock before acquiring the single successor claim.",
+    "credentials_in_job": false,
+    "offline_model_loading": true
+  },
+  "model_requests_at_registration": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false
+}

@@ -2,7 +2,8 @@ import hashlib
 import io
 import json
 import tarfile
-import tempfile
+
+import pytest
 
 from experiments.workshops.spatial_grounding_v1.historical_layout_coverage_manifest import (
     _probe_archive,
@@ -67,13 +68,21 @@ def test_payload_requests_are_source_anchored_and_centers_not_promoted():
         request["request_scope"] == "exact_file_only"
         for request in result["indispensable_external_requests"]
     )
-    assert all(
-        request["selection_reason"].startswith("minimal_semantics_probe")
-        for request in result["indispensable_external_requests"]
-    )
+    for request in result["indispensable_external_requests"]:
+        if request["selection_reason"].startswith("minimal_semantics_probe"):
+            continue
+        assert result["external_probe_results"]["status"] == "loaded_hash_verified"
+        assert request["source_json_pointer"] == "/child_report"
+        assert any(
+            probe["cohort_id"] == request["cohort_id"]
+            and probe.get("state_payload_request", {}).get("path") == request["path"]
+            and probe["state_payload_request"]["sha256"] == request["expected_sha256"]
+            for probe in result["external_probe_results"]["probes"]
+        )
 
 
-def test_corrupt_or_wrong_source_probe_is_rejected():
+@pytest.mark.parametrize("corrupt,wrong_source", [(True, False), (False, True), (True, True), (False, False)])
+def test_probe_binding_verifies_payload_and_source_independently(tmp_path, corrupt, wrong_source):
     payload = b'{"action_step":0,"object_xyz":[1,2,3],"reference_xyz":[1,2,3]}'
     manifest = {
         "job_uid": "test",
@@ -81,22 +90,33 @@ def test_corrupt_or_wrong_source_probe_is_rejected():
         "records": [{
             "cohort_id": "V3-A-phase-a-groot",
             "export_path": "00-payload.jsonl",
-            "path": "/data/wrong/source.jsonl",
+            "path": "/data/wrong/source.jsonl" if wrong_source else "/data/expected/source.jsonl",
             "expected_sha256": hashlib.sha256(payload).hexdigest(),
             "actual_sha256": hashlib.sha256(payload).hexdigest(),
         }],
     }
-    with tempfile.TemporaryDirectory() as directory:
-        archive = __import__("pathlib").Path(directory) / "bad.tar.gz"
-        with tarfile.open(archive, "w:gz") as tar:
-            manifest_bytes = json.dumps(manifest).encode()
-            for name, data in (("manifest.json", manifest_bytes), ("00-payload.jsonl", payload + b"x")):
-                info = tarfile.TarInfo(name)
-                info.size = len(data)
-                tar.addfile(info, io.BytesIO(data))
-        result = _probe_archive(
-            archive,
-            {("V3-A-phase-a-groot", "/data/expected/source.jsonl", manifest["records"][0]["expected_sha256"])},
-        )
-    assert result["errors"]
-    assert result["probes"] == []
+    archive = tmp_path / "probe.tar.gz"
+    with tarfile.open(archive, "w:gz") as tar:
+        manifest_bytes = json.dumps(manifest).encode()
+        actual_payload = payload + b"x" if corrupt else payload
+        for name, data in (("manifest.json", manifest_bytes), ("00-payload.jsonl", actual_payload)):
+            info = tarfile.TarInfo(name)
+            info.size = len(data)
+            tar.addfile(info, io.BytesIO(data))
+    result = _probe_archive(
+        archive,
+        {("V3-A-phase-a-groot", "/data/expected/source.jsonl", manifest["records"][0]["expected_sha256"])},
+    )
+    if corrupt or wrong_source:
+        assert result["status"] == "rejected_payload_binding"
+        assert result["errors"]
+        assert result["probes"] == []
+    else:
+        assert result["status"] == "loaded_hash_verified"
+        assert result["errors"] == []
+        assert len(result["probes"]) == 1
+
+
+def test_explicit_missing_archive_does_not_silently_disappear(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        _probe_archive(tmp_path / "missing.tar.gz", set())

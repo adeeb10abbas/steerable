@@ -113,7 +113,7 @@ def _probe_archive(
     archive: Path | None,
     allowed_requests: set[tuple[str, str, str]],
 ) -> dict[str, Any]:
-    if archive is None or not archive.is_file():
+    if archive is None:
         return {"status": "not_loaded", "archive": "sgw-bj-historical-payloads.tar.gz"}
     with tarfile.open(archive, "r:gz") as tar:
         manifest_bytes = tar.extractfile("manifest.json").read()
@@ -160,12 +160,11 @@ def _probe_archive(
                 "semantic_result": semantic_result,
             }
             if item["cohort_id"].startswith("V3-E006"):
-                payload = json.loads(tar.extractfile(item["export_path"]).read())
                 probe["state_payload_request"] = payload.get("child_report")
                 probe["state_payload_semantics"] = "named state_repair_result; not exported in this probe archive"
             probes.append(probe)
     return {
-        "status": "loaded_hash_verified",
+        "status": "rejected_payload_binding" if errors else "loaded_hash_verified",
         "archive_name": archive.name,
         "archive_sha256": _sha256(archive),
         "manifest_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
@@ -190,8 +189,6 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
     indispensable_requests = []
     archive = Path(os.environ["SGW_BJ_ARCHIVE"]) if os.environ.get("SGW_BJ_ARCHIVE") else None
     probe_results = _probe_archive(archive, allowed_requests)
-    if probe_results.get("errors"):
-        probe_results["status"] = "rejected_payload_binding"
     for cohort in inventory["cohorts"]:
         source = repo_root / cohort["source_path"]
         status, reason = _status(cohort)

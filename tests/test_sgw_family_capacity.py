@@ -110,6 +110,20 @@ def test_duplicate_prefix_does_not_double_count_failures():
         audit(prefix_paths() + prefix_paths()[:1])
 
 
+def test_ninth_prefix_proves_height_block_without_releasing_dist():
+    result = audit(prefix_paths() + [
+        ROOT / INFRA / "family-partition-20260923bt-prefix-ce/manifest.json",
+    ])
+    assert len(result["terminal_evidence"]) == 38
+    height = result["families"]["HEIGHT"]
+    assert height["status"] == "mathematically_blocked_by_frozen_stratum_capacity"
+    assert height["by_side"]["right"]["maximum_qualified_possible"] == 12
+    assert height["by_side"]["right"]["unavoidable_shortfall"] == 2
+    assert result["families"]["DIST"]["status"] == "not_ruled_out_not_a_release"
+    assert result["fixture_release_permitted"] is result["model_release_permitted"] is False
+    assert result["live_workers_modified"] is False
+
+
 def test_changed_projection_cannot_reclassify_a_valid_outcome(monkeypatch):
     import tools.audit_sgw_family_capacity as module
 

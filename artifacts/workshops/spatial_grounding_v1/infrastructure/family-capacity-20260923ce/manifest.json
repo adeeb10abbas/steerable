@@ -1,0 +1,57 @@
+{
+  "schema_version": "sgw-01-family-capacity-evidence-v1",
+  "observed_at_utc": "2026-09-23T11:38:56.268038+00:00",
+  "replayed_at_utc": "2026-09-23T11:41:30Z",
+  "status": "height_frozen_fixture_gate_blocked_by_unavoidable_right_stratum_shortfall",
+  "audit": {
+    "path": "audit.json",
+    "sha256": "b3b8e986d5bc52a323941fb3b8a4c7eb553458565fb583b23fe49565af26b280"
+  },
+  "implementation": {
+    "source_commit": "ab569d9c",
+    "path": "tools/audit_sgw_family_capacity.py",
+    "sha256": "eaece0008ec1f9a77def738425c6f4ea75a772dfea0d72e3e58e9619f5be6134"
+  },
+  "tests": {
+    "path": "tests/test_sgw_family_capacity.py",
+    "sha256": "a24c1e21be9c576bcf9d047b44d11321b1e35b80b4a6e47af0bb65658f25d9d0",
+    "focused_capacity_and_partition_summary_passed": 28
+  },
+  "pvc_replay": {
+    "root": "/data/users/ali/sgw-01/infrastructure/family-capacity-20260923ce",
+    "base_archive": "/data/users/ali/sgw-01/infrastructure/family-capacity-20260923cd/replay-inputs.tar.gz",
+    "base_archive_sha256": "465b179692c05047e243109d5755ccdbbe430c75ff994bb38fdfb38749915cc6",
+    "delta_archive": "replay-delta.tar.gz",
+    "delta_archive_sha256": "fd74d9dcb283feb5d2bd64049cbd50c897719bac336416935102a90de75f30b0",
+    "output": "replayed-audit.json",
+    "byte_identical": true,
+    "additional_gpus": 0,
+    "exporter_source_retained": "replay/export_sgw_bt_first_wave.py"
+  },
+  "new_terminal_evidence": {
+    "manifest_sha256": "99f96d58920418fbc73a8dc608660cd0b62c9171e8e862ce4c1974436c355768",
+    "slots": ["HEIGHT-059", "HEIGHT-063"],
+    "passed_trials": [5, 4],
+    "valid_physical_rejections": 2,
+    "original_trial_and_viewport_video_bindings_rehashed": 12,
+    "raw_state_and_score_projections_equal_retained_projection": true
+  },
+  "height_gate_outcome": {
+    "frozen_capture_eligible_right_designs": 29,
+    "valid_physical_right_rejections": 17,
+    "right_physical_passes": 1,
+    "right_unresolved_slots": 11,
+    "right_qualified_upper_bound": 12,
+    "right_qualified_required": 14,
+    "unavoidable_right_shortfall": 2,
+    "decision": "No HEIGHT fixture or learned-policy branch can be released from this frozen proposal pool.",
+    "basis": "Consequence of unchanged frozen counterbalance and no-refill rules, not a new scientific threshold.",
+    "interpretation": "Registered fixture-pool/controller qualification failure, not evidence about either learned model's height reasoning."
+  },
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false,
+  "live_workers_modified": false,
+  "authorizes_worker_interruption": false,
+  "claim_boundary": "Necessary stratum-capacity accounting conditional on retained classifications, not independent final raw compilation. Unknown slots stay potentially qualified; valid failures are not replaced. The running finite qualification queue, resources and original protocol remain unchanged. DIST still requires its own complete fixture, historical and runtime gates."
+}

@@ -6,12 +6,14 @@ behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
 have verified receipts, views and complete videos. Native smoke br has completed
 24 full physical trials: two candidates pass all six trials and two are valid
 physical rejections. All four raw evidence chains passed independent rechecks.
-Including the first thirty-two subsequent candidates, 36 HEIGHT/DIST candidates
-have completed 216 full trials: thirteen all-six passes and twenty-three physical
-rejections. Four durable GPU workers continue the remaining 85 frozen slots.
-HEIGHT's right-side best-case capacity is exactly 14 against 14 required; one
-more valid right-side rejection would block its frozen pool.
-Historical coverage and all learned-runtime release gates remain open.
+Including the first thirty-four subsequent candidates, 38 HEIGHT/DIST candidates
+have completed 228 full trials: thirteen all-six passes and twenty-five physical
+rejections. There are 83 slots outside this retained terminal evidence;
+four durable GPU workers continue independently.
+HEIGHT's fixture gate is now blocked: its right-side best-case capacity is
+12, below the required 14. The running qualification queue remains unchanged;
+DIST's pool is not yet ruled out. Historical coverage and all learned-runtime
+release gates remain unresolved.
 Learned-policy requests and episodes remain at zero.**
 
 The supplied study is committed on
@@ -396,6 +398,36 @@ the running queue. At 11:32 UTC, HEIGHT 055/059/061/063 were active and all
 four ranks had eight completed slots. No shared stop, launcher terminal,
 collector error or final receipt was present. Learned requests and episodes
 remain zero.
+
+At 11:38 UTC, two further completed candidates were retained in the
+[ninth prefix](infrastructure/family-partition-20260923bt-prefix-ce/manifest.json):
+HEIGHT 059 passed five trials and HEIGHT 063 passed four. Their failures are
+two negative-goal anchor disturbances and one negative-goal wrong-side placement.
+All twelve original full state/score projections and complete video hashes
+agree with the worker verification. Including smoke, the retained count is
+38 candidates, **228 full trials**, and 102,600 scripted actions: thirteen
+all-six passes and twenty-five valid physical rejections.
+
+The [new capacity outcome](infrastructure/family-capacity-20260923ce/manifest.json)
+closes HEIGHT's frozen fixture gate. Of its 29 geometrically eligible right
+designs, 17 are valid physical rejections. The remaining one physical pass and
+eleven unresolved slots can produce at most **12 right layouts**, below the
+required 14, even if every unresolved slot passes. No replacement, retry of a
+valid failure, changed threshold or positive assumption about missing evidence
+is used. This is a consequence of the unchanged counterbalance, not a new
+scientific criterion. It concerns the registered fixture pool/controller,
+**not either learned model's height reasoning**.
+
+The evidence and exporter are preserved on the PVC under
+`infrastructure/family-capacity-20260923ce/`; the bound replays byte-identically.
+The actual blocked case is also covered by the 28-check capacity/collector
+regression set. The finite bt/bu queue remains running without modification;
+its later HEIGHT data remain recorded qualification evidence, not a route
+around the gate. DIST is still separately eligible for qualification, not
+released for inference. No SGW learned request or behavioral episode has run.
+At 11:45 UTC, HEIGHT 055/061 had also completed but were not yet exported or
+classified in this prefix. HEIGHT 064/065/066/067 were active; no shared stop,
+terminal launcher, collector error or final receipt was present.
 
 ## Scientific accounting
 

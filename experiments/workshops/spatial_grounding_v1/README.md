@@ -82,6 +82,9 @@ Every unknown slot and every physical pass remains optimistically potentially
 qualified. A sufficient upper bound is **not** historical freshness, physical
 release, or model release. This audit neither changes the live queue nor
 replaces its pending independent final raw compilation.
+Its current prefix reader accepts complete six-trial candidates only; it
+rejects other shapes rather than padding a terminal geometry prefix or a
+partial episode. The independent collector handles those shapes separately.
 
 One selected proposal runs both goals three times in a fresh Isaac process:
 `model_blind_qualification --proposal-file <file> --candidate-id <id>`, with the

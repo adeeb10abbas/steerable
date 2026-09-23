@@ -1,0 +1,173 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-family-source-stage-20260923bm
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 3600
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: finite-family-source-and-plan-freeze}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: stage
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              OUT=/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm
+              BASE=/data/users/ali/sgw-01/source/b429ddd
+              TARGET=/data/users/ali/sgw-01/source/cdb7a55b-bm
+              SOURCE=cdb7a55b6cc71ac34828c96368850623102e7137
+              ROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              test ! -e "$OUT"
+              test ! -e "$TARGET"
+              test "$(git -C "$BASE" rev-parse HEAD)" = b429ddd8c3e7be59f63759c1820e352029e48b8c
+              test ! -e "$BASE/.git/objects/info/alternates"
+              mkdir "$OUT"
+              exec > >(tee "$OUT/stage.log") 2>&1
+              for i in $(seq 1 180); do
+                test ! -f "$OUT/transfer.complete" || break
+                sleep 2
+              done
+              test -f "$OUT/transfer.complete"
+              test "$(sha256sum "$OUT/update.bundle" | awk '{print $1}')" = 5e5f6f663693d42d7dbe6822cc48677c97ac2b12c17099e8a9c9c42682997c96
+              git clone --shared --no-checkout "$BASE" "$TARGET"
+              git -C "$TARGET" bundle verify "$OUT/update.bundle"
+              git -C "$TARGET" fetch --no-tags "$OUT/update.bundle" HEAD
+              git -C "$TARGET" checkout --detach "$SOURCE"
+              test "$(git -C "$TARGET" rev-parse HEAD)" = "$SOURCE"
+              test -z "$(git -C "$TARGET" status --porcelain)"
+              test "$(git -C "$ROBOLAB" rev-parse HEAD)" = 0aef241fb088ca21bb4ebd24448940ed56620d17
+              test -z "$(git -C "$ROBOLAB" status --porcelain --untracked-files=no)"
+              cd "$TARGET"
+              export PYTHONPATH="$TARGET"
+              "$PY" tools/validate_vla_wam_v3_protocol.py --quiet
+              "$PY" tools/validate_vla_wam_v2_protocol.py > "$OUT/v2-validation.json"
+              "$PY" -m experiments.workshops.spatial_grounding_v1.family_campaign_executor --help > "$OUT/executor-help.txt"
+              "$PY" - "$OUT" "$TARGET" <<'PY'
+              from datetime import datetime, timezone
+              import hashlib, json, os, sys
+              from pathlib import Path
+              from experiments.workshops.spatial_grounding_v1.family_campaign import compile_campaign
+              from experiments.workshops.spatial_grounding_v1.prospective_family_designs import build_design_plan
+
+              out, source = map(Path, sys.argv[1:])
+              def record(path):
+                  return {"path": str(path), "bytes": path.stat().st_size,
+                          "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+              def write(path, value):
+                  with path.open("x") as stream:
+                      json.dump(value, stream, indent=2, sort_keys=True, allow_nan=False)
+                      stream.write("\n")
+                      stream.flush()
+                      os.fsync(stream.fileno())
+              review = source / "artifacts/workshops/spatial_grounding_v1/infrastructure/independent-scene-review-20260923bi/sgw-bi-review-analysis/independent_scene_review_manifest.json"
+              assert record(review)["sha256"] == "8a5d5f82edb73cd774c82e093646604dc90e560cd3696b715dac7eba007476ba"
+              capture_root = Path("/data/users/ali/sgw-01/qualification/prospective-families-20260923bi")
+              baseline_root = Path("/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective")
+              hashes = {
+                  "0-height-left": "d8c961be41b65d4d6860f550466a2a0b000d44bd147f631901f6de31d98b9148",
+                  "1-height-right": "35327020323b406969eef7613d94946bd776001567d0dcc4e223dfc3330ad3b7",
+                  "2-dist-left": "beb0991e7f11bbd57f4e762627ceffd478aeeab1e91a6f4f65723e2c41d31b32",
+                  "3-dist-right": "7a8ace8867e0e1807518b9ca073c2004fc80fe9b9c11a1a489d57a49857ee19a",
+              }
+              families, eligible, smoke = [], [], []
+              for offset, family in ((0, "HEIGHT"), (2, "DIST")):
+                  captures, manifests = {}, {}
+                  for side_index, side in enumerate(("left", "right")):
+                      key = f"{offset + side_index}-{family.lower()}-{side}"
+                      captures[side] = capture_root / key / "capture.json"
+                      assert record(captures[side])["sha256"] == hashes[key]
+                      manifests[side] = baseline_root / f"{family.lower()}-{side}.manifest.json"
+                  plan = build_design_plan(
+                      family=family, seed=20260922, count=100,
+                      baseline_capture_paths=captures, baseline_manifest_paths=manifests,
+                  )
+                  plan_path = out / f"{family.lower()}-plan.json"
+                  write(plan_path, plan)
+                  campaign_path = out / f"{family.lower()}-campaign.json"
+                  campaign = compile_campaign(
+                      plan_path=plan_path, baseline_captures=captures,
+                      baseline_reviews={"left": review, "right": review}, output=campaign_path,
+                  )
+                  family_slots = [
+                      {"family": family, "slot_index": index, "design_id": row["design_id"], "side": row["side"]}
+                      for index, row in enumerate(campaign["jobs"])
+                      if row["status"] == "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+                  ]
+                  eligible.extend(family_slots)
+                  for side in ("left", "right"):
+                      match = next((row for row in family_slots if row["side"] == side), None)
+                      if match is not None:
+                          smoke.append(match)
+                  families.append({
+                      "family": family, "plan": record(plan_path), "campaign": record(campaign_path),
+                      "plan_sha256": plan["plan_sha256"], "campaign_sha256": campaign["campaign_sha256"],
+                      "proposed_slots": 100, "capture_eligible_slots": plan["accepted_design_count"],
+                      "geometric_rejections": plan["geometric_rejection_count"],
+                  })
+              receipt = {
+                  "schema_version": "sgw-01-native-family-prospective-freeze-v1",
+                  "status": "frozen_finite_model_blind_plans_not_fixture_or_behavioral_release",
+                  "source_commit": "cdb7a55b6cc71ac34828c96368850623102e7137", "source_root": str(source),
+                  "source_bundle": record(out / "update.bundle"),
+                  "generator": record(source / "experiments/workshops/spatial_grounding_v1/prospective_family_designs.py"),
+                  "seed": 20260922, "maximum_slots_per_family": 100,
+                  "baseline_review": record(review), "families": families,
+                  "native_smoke_slots": smoke,
+                  "remaining_capture_eligible_slots": [row for row in eligible if row not in smoke],
+                  "slot_order": "family HEIGHT then DIST; ascending frozen ordinal; smoke is first eligible slot per side",
+                  "selection_boundary": "No refill or physical-outcome-based tuning; later fixture assignment remains frozen hash order with required strata.",
+                  "historical_coverage_complete": False,
+                  "job_uid": os.environ["JOB_UID"], "pod_uid": os.environ["POD_UID"],
+                  "frozen_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "allocated_gpus": 0, "model_requests": 0, "behavioral_episodes": 0, "release_permitted": False,
+              }
+              write(out / "receipt.json", receipt)
+              print(json.dumps(receipt, sort_keys=True), flush=True)
+              PY
+              sync
+              sleep 1200
+          env:
+            - {name: HOME, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: CUDA_VISIBLE_DEVICES, value: ""}
+            - {name: NVIDIA_VISIBLE_DEVICES, value: void}
+            - name: JOB_UID
+              valueFrom: {fieldRef: {fieldPath: "metadata.labels['batch.kubernetes.io/controller-uid']"}}
+            - name: POD_UID
+              valueFrom: {fieldRef: {fieldPath: metadata.uid}}
+          resources:
+            requests: {cpu: "1", memory: 2Gi}
+            limits: {cpu: "4", memory: 4Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: tmp
+          emptyDir: {}

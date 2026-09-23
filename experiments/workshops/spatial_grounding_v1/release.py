@@ -19,6 +19,28 @@ from .recorder import atomic_json
 _TOKEN = re.compile(r"\$\{([A-Z0-9_]+)\}")
 
 
+def _as_needed_scaling(binding: Mapping[str, Any]) -> bool:
+    receipt = binding.get("operational_authorization_receipt")
+    if not isinstance(receipt, Mapping) or not isinstance(receipt.get("path"), str) or not isinstance(receipt.get("sha256"), str):
+        return False
+    path = Path(receipt["path"])
+    if not path.is_file() or sha256_file(path) != receipt["sha256"]:
+        raise ContractError("runtime binding operational authorization receipt differs")
+    authorization = load_json(path, "operational authorization")
+    constraints = authorization.get("constraints")
+    return (
+        authorization.get("schema_version") == "sgw-01-operational-authorization-v1"
+        and authorization.get("status") == "approved"
+        and authorization.get("budget_mode") == "existing_idle_capacity_no_aggregate_hour_cap"
+        and isinstance(constraints, Mapping)
+        and constraints.get("allocation_scaling") == "as_needed_verified_idle_capacity"
+        and "max_concurrent_model_workers" in constraints
+        and "max_total_allocated_gpus" in constraints
+        and constraints["max_concurrent_model_workers"] is None
+        and constraints["max_total_allocated_gpus"] is None
+    )
+
+
 def _queue_rows(path: Path) -> list[dict[str, Any]]:
     if path.suffix == ".csv":
         with path.open(newline="", encoding="utf-8") as stream:
@@ -98,7 +120,10 @@ def render_job(*, release: Path, template: Path, output: Path, model: str, famil
     gpu_counts = binding.get("model_gpu_counts")
     if not isinstance(gpu_counts, dict) or model not in gpu_counts:
         raise ContractError("runtime binding lacks model GPU count")
-    if sum(int(value) for value in gpu_counts.values()) > 4 or int(gpu_counts[model]) < 1:
+    if (any(type(value) is not int or value < 1 for value in gpu_counts.values())
+            or type(binding.get("max_total_allocated_gpus")) is not int
+            or sum(gpu_counts.values()) > binding["max_total_allocated_gpus"]
+            or (not _as_needed_scaling(binding) and sum(gpu_counts.values()) > 4)):
         raise ContractError("runtime binding exceeds the SGW-01 four-GPU ceiling")
     source_root = binding.get("source_root")
     if not isinstance(source_root, str) or not source_root:

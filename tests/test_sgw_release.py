@@ -59,6 +59,30 @@ def test_render_job_rejects_unresolved_placeholder(tmp_path: Path) -> None:
                    model="N3", family="LAT", stage="P")
 
 
+def test_render_job_expanded_gpu_plan_requires_explicit_as_needed_authorization(tmp_path: Path) -> None:
+    release = make_release(tmp_path)
+    binding = json.loads((release / "runtime_binding.json").read_text())
+    authorization_path = Path(binding["operational_authorization_receipt"]["path"])
+    authorization = json.loads(authorization_path.read_text())
+    authorization["budget_mode"] = "existing_idle_capacity_no_aggregate_hour_cap"
+    authorization["constraints"].update({
+        "allocation_scaling": "as_needed_verified_idle_capacity",
+        "max_concurrent_model_workers": None, "max_total_allocated_gpus": None,
+    })
+    authorization_path.write_text(json.dumps(authorization))
+    import hashlib
+    binding["operational_authorization_receipt"]["sha256"] = hashlib.sha256(authorization_path.read_bytes()).hexdigest()
+    binding.update({
+        "max_concurrent_model_workers": 5, "max_total_allocated_gpus": 8,
+        "model_gpu_counts": {"N3": 5, "D1": 3},
+        "cpu_memory_limits": {"cpu_request": "2", "memory_request": "4Gi", "cpu_limit": "4", "memory_limit": "8Gi"},
+    })
+    _update_binding(release, binding)
+    render_job(release=release, template=Path("experiments/workshops/spatial_grounding_v1/spec/kubernetes/worker-job.yaml.in"),
+               output=tmp_path / "expanded.yaml", model="N3", family="LAT", stage="P")
+    assert (tmp_path / "expanded.yaml").is_file()
+
+
 def test_create_release_consumes_frozen_csv_registry(tmp_path: Path) -> None:
     source = Path("experiments/workshops/spatial_grounding_v1/spec")
     binding = json.loads((make_release(tmp_path) / "runtime_binding.json").read_text())

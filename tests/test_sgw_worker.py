@@ -304,6 +304,71 @@ def _replace_receipt(release, key, contents):
     return load_release(release.root)
 
 
+def _expanded_authorization(release):
+    authorization = json.loads(Path(release.binding["operational_authorization_receipt"]["path"]).read_text())
+    authorization["budget_mode"] = "existing_idle_capacity_no_aggregate_hour_cap"
+    authorization["constraints"].update({
+        "allocation_scaling": "as_needed_verified_idle_capacity",
+        "max_concurrent_model_workers": None,
+        "max_total_allocated_gpus": None,
+    })
+    return authorization
+
+
+def _replace_binding(release, **changes):
+    binding = dict(release.binding)
+    binding.update(changes)
+    (release.root / "runtime_binding.json").write_text(json.dumps(binding))
+    _rehash_binding(release)
+    return load_release(release.root)
+
+
+def test_explicit_as_needed_authorization_allows_finite_expanded_binding(tmp_path):
+    release = load_release(make_release(tmp_path))
+    release = _replace_receipt(release, "operational_authorization_receipt", _expanded_authorization(release))
+    release = _replace_binding(
+        release, max_concurrent_model_workers=5, max_total_allocated_gpus=8,
+        model_gpu_counts={"N3": 5, "D1": 3},
+    )
+    assert worker_module._authorization_check(release, model="N3") == "existing_idle_capacity_no_aggregate_hour_cap"
+    worker_module._budget_check(release, stage="P", model="N3", minimum_runtime_seconds=1200)
+
+
+@pytest.mark.parametrize("mutate", [
+    lambda authorization: authorization["constraints"].pop("max_total_allocated_gpus"),
+    lambda authorization: authorization["constraints"].update({"max_concurrent_model_workers": 5, "max_total_allocated_gpus": None}),
+    lambda authorization: authorization.update({"status": "unapproved"}),
+    lambda authorization: authorization["constraints"].update({"allocation_scaling": "unbounded"}),
+])
+def test_as_needed_authorization_requires_explicit_approved_null_caps(tmp_path, mutate):
+    release = load_release(make_release(tmp_path))
+    authorization = _expanded_authorization(release)
+    mutate(authorization)
+    release = _replace_receipt(release, "operational_authorization_receipt", authorization)
+    release = _replace_binding(release, max_concurrent_model_workers=5, max_total_allocated_gpus=8,
+                               model_gpu_counts={"N3": 5, "D1": 3})
+    with pytest.raises(ResourceBlocked):
+        worker_module._authorization_check(release, model="N3")
+
+
+@pytest.mark.parametrize("workers,gpus,counts", [(0, 8, {"N3": 5}), (5, 0, {"N3": 5}), (5, 8, {"N3": 9}), (5.0, 8, {"N3": 5})])
+def test_expanded_authorization_still_requires_finite_positive_runtime_plan(tmp_path, workers, gpus, counts):
+    release = load_release(make_release(tmp_path))
+    release = _replace_receipt(release, "operational_authorization_receipt", _expanded_authorization(release))
+    release = _replace_binding(release, max_concurrent_model_workers=workers, max_total_allocated_gpus=gpus,
+                               model_gpu_counts=counts)
+    with pytest.raises(ResourceBlocked):
+        worker_module._budget_check(release, stage="P", model="N3", minimum_runtime_seconds=1200)
+
+
+def test_legacy_authorization_retains_two_worker_four_gpu_ceiling(tmp_path):
+    release = load_release(make_release(tmp_path))
+    release = _replace_binding(release, max_concurrent_model_workers=3, max_total_allocated_gpus=5,
+                               model_gpu_counts={"N3": 3, "D1": 2})
+    with pytest.raises(ResourceBlocked):
+        worker_module._authorization_check(release, model="N3")
+
+
 @pytest.mark.parametrize("fault", [
     "before_job", "future", "stale", "nan", "busy_memory", "busy_utilization",
     "insufficient_memory", "wrong_count", "unhashable_uuid", "second_gpu_busy",

@@ -185,6 +185,18 @@ def _positive_finite_number(value: Any) -> bool:
     return type(value) in {int, float} and value > 0 and math.isfinite(value)
 
 
+def _as_needed_scaling(authorization: Mapping[str, Any], constraints: Mapping[str, Any]) -> bool:
+    """Only an explicit approved null-cap receipt can waive legacy aggregate caps."""
+    return (
+        authorization.get("budget_mode") == "existing_idle_capacity_no_aggregate_hour_cap"
+        and constraints.get("allocation_scaling") == "as_needed_verified_idle_capacity"
+        and "max_concurrent_model_workers" in constraints
+        and "max_total_allocated_gpus" in constraints
+        and constraints["max_concurrent_model_workers"] is None
+        and constraints["max_total_allocated_gpus"] is None
+    )
+
+
 def _authorization_check(release: Release, *, model: str) -> str:
     authorization = _receipt(release.binding.get("operational_authorization_receipt"), "operational authorization")
     if authorization.get("schema_version") != "sgw-01-operational-authorization-v1" or authorization.get("status") != "approved":
@@ -199,6 +211,7 @@ def _authorization_check(release: Release, *, model: str) -> str:
     models = scope.get("models")
     authorized_workers = constraints.get("max_concurrent_model_workers")
     authorized_gpus = constraints.get("max_total_allocated_gpus")
+    as_needed = _as_needed_scaling(authorization, constraints)
     if (not isinstance(authorization.get("owner_approval_reference"), Mapping)
             or authorization.get("source_protocol_sha256") != release.hashes["protocol.json"]
             or authorization.get("source_queue_sha256") != _source_queue_hash(release)
@@ -209,9 +222,11 @@ def _authorization_check(release: Release, *, model: str) -> str:
             or not isinstance(models, list) or model not in models
             or scope.get("maximum_registered_behavioral_episodes") != SOURCE_QUEUE_EPISODE_COUNT
             or scope.get("maximum_attempts_per_behavioral_cell") != 3
-            or type(authorized_workers) is not int or type(authorized_gpus) is not int
-            or not 1 <= release.binding["max_concurrent_model_workers"] <= authorized_workers <= 2
-            or not 1 <= release.binding["max_total_allocated_gpus"] <= authorized_gpus <= 4
+            or not (as_needed or (
+                type(authorized_workers) is int and type(authorized_gpus) is int
+                and 1 <= release.binding["max_concurrent_model_workers"] <= authorized_workers <= 2
+                and 1 <= release.binding["max_total_allocated_gpus"] <= authorized_gpus <= 4
+            ))
             or constraints.get("existing_authorized_cluster_capacity_only") is not True
             or constraints.get("fresh_idle_allocation_check_required") is not True
             or constraints.get("new_paid_capacity_allowed") is not False
@@ -375,8 +390,11 @@ def _budget_check(release: Release, *, stage: str, model: str, minimum_runtime_s
             raise ResourceBlocked(f"{stage} budget estimate is below the measured remaining GPU-hour bound")
     workers = release.binding.get("max_concurrent_model_workers")
     total_gpus = release.binding.get("max_total_allocated_gpus")
-    if (type(workers) is not int or type(total_gpus) is not int or not 1 <= workers <= 2
-            or not 1 <= total_gpus <= 4
+    authorization = _receipt(release.binding["operational_authorization_receipt"], "operational authorization")
+    constraints = authorization.get("constraints")
+    as_needed = isinstance(constraints, Mapping) and _as_needed_scaling(authorization, constraints)
+    if (type(workers) is not int or type(total_gpus) is not int or workers < 1 or total_gpus < 1
+            or (not as_needed and (workers > 2 or total_gpus > 4))
             or any(type(value) is not int or value < 1 for value in release.binding["model_gpu_counts"].values())
             or sum(release.binding["model_gpu_counts"].values()) > total_gpus):
         raise ResourceBlocked("runtime binding exceeds frozen two-worker/four-GPU ceiling")

@@ -1,6 +1,6 @@
 {
   "study_id": "SGW-01",
-  "status": "render_readiness_verified_native_model_blind_fixture_qualification_next",
+  "status": "native_recording_verified_candidate_rejected_control_frame_unqualified",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -34,7 +34,7 @@
     "owned_nano_runtime": "aadb5b9",
     "recorded_fixture_and_render_diagnostics": "42b26ed8d2df546340497965d1fc86d47cc14197",
     "native_reset_readiness": "177e7dd064f41401b58c6c3491bde2b8af13ec34",
-    "local_sgw_tests_passed": 110,
+    "local_sgw_tests_passed": 116,
     "local_sgw_tests_skipped_linux_identity": 1,
     "live_model_runtime_qualified": false,
     "concrete_behavioral_allocation_receipt_exists": false
@@ -299,6 +299,55 @@
       "simulation_time_s_all_samples": 0.01666666753590107,
       "model_requests": 0,
       "behavioral_episodes": 0
+    },
+    {
+      "job": "sgw01-ali-source-stage-20260922ab",
+      "status": "passed_exact_offline_source_stage_and_native_cli",
+      "completed_at_utc": "2026-09-22T23:52:53.239114+00:00",
+      "source_commit": "4f5ca8accb71e6eeefb051bb9f261e9c4e704c6c",
+      "source_root": "/data/users/ali/sgw-01/source/4f5ca8a-ab",
+      "bundle_sha256": "27979e11bb4afbd004f519f02f6f7caef1b7c62a0eef791fe5a93dad269b157b",
+      "native_cli_help_sha256": "356bdf45998427b3102b17b1ac2e10ec674cd94639bbcf424c170c5f48f69f13",
+      "allocated_gpus": 0,
+      "model_requests": 0,
+      "simulator_created": false
+    },
+    {
+      "job": "sgw01-ali-lat-qualification-20260922ac",
+      "job_uid": "1e30c533-705d-47e6-b1f8-7f4a4d2a317c",
+      "pod": "sgw01-ali-lat-qualification-20260922ac-k9vrw",
+      "pod_uid": "5e019700-1787-493a-9266-198d73c75a5a",
+      "status": "completed_candidate_rejected_all_six_scripted_checks",
+      "completed_at_utc": "2026-09-23T00:10:18Z",
+      "receipt": "infrastructure/a40-20260922ac-native-qualification.json",
+      "started_at_utc": "2026-09-22T23:54:28Z",
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "source_commit": "4f5ca8accb71e6eeefb051bb9f261e9c4e704c6c",
+      "source_root": "/data/users/ali/sgw-01/source/4f5ca8a-ab",
+      "candidate_id": "LAT-CANDIDATE-032",
+      "proposal_sha256": "5b47860f6eac16e318515534a918d9460677b58d6174b4b76a29f7cc6be34eb9",
+      "raw_output": "/data/users/ali/sgw-01/qualification/lat-032-20260922ac",
+      "requested_gpus": 1,
+      "deadline_seconds": 3600,
+      "automatic_retries": 0,
+      "planned_scripted_trials": 6,
+      "controller_actions_per_trial": 450,
+      "completed_scripted_trials": 6,
+      "verified_trial_files": 10824,
+      "decoded_trial_video_frames": 2706,
+      "decoded_reset_warmup_video_frames": 726,
+      "model_requests": 0,
+      "behavioral_episodes": 0
+    },
+    {
+      "job": "sgw01-ali-qualification-export-20260923ad",
+      "job_uid": "51d3a67b-9d8e-40fb-aa49-96f97fb1a8ed",
+      "status": "completed_independent_trial_hash_and_twelve_video_verification",
+      "completed_at_utc": "2026-09-23T00:16:23Z",
+      "allocated_gpus": 0,
+      "lifecycle_receipt": "infrastructure/a40-20260922ac-lifecycle.json",
+      "model_requests": 0,
+      "behavioral_episodes": 0
     }
   ],
   "connectivity_event": {
@@ -328,6 +377,15 @@
     "first_hash_ordered_geometric_pass": "LAT-CANDIDATE-032",
     "reachability_and_historical_deduplication_release": false
   },
+  "native_controller_gate": {
+    "status": "blocked_on_measured_flange_to_grasp_geometry",
+    "audit": "infrastructure/cpu-20260923-control-frame-audit.json",
+    "completed_candidate": "LAT-CANDIDATE-032",
+    "scripted_checks_passed": 0,
+    "scripted_checks_completed": 6,
+    "all_recorded_rejections_preserved": true,
+    "poses_or_scientific_thresholds_changed": false
+  },
   "disclosed_operational_amendments": [
     {
       "id": "SGW-ENG-001",
@@ -336,10 +394,18 @@
       "change": "Require the recorded 120-frame zero-physics render warmup before native fixture reset state zero. Production simulator readiness remains independently gated.",
       "reason": "The first reset image can be nonblank while materials remain unready. Warmup restored intended textures at unchanged physical time, with all MDL/PNG paths resolving.",
       "unchanged": "Scientific prompts, models, queue, thresholds, candidate cap and 450 scored actions; no cache deletion or material replacement."
+    },
+    {
+      "id": "SGW-ENG-002",
+      "timing": "After all six ac scripted rejections and their complete recordings were known; before any learned request or behavioral episode.",
+      "evidence": "infrastructure/cpu-20260923-control-frame-audit.json",
+      "change": "Pause further fixture acceptance to measure actual finger geometry and robot body frames. A bounded empty-gripper calibration may hold the initial flange pose for 30 closing and 30 reopening actions, with all 61 states/frames and complete video retained.",
+      "reason": "The native absolute-IK target is the mount flange, while the current recipe lacks measured flange-to-grasp geometry.",
+      "unchanged": "All 100 candidate poses, all ac rejections and their original controller identity, every scientific threshold and the learned-policy queue. The 60 calibration actions are not model episodes and do not replace any 450-action qualification."
     }
   ],
   "blockers": [
-    "Workspace r proves root/center/COM/EEF/robot measurements and three exact RGB arrays, but validated_slots is empty. Prospective proposals and six-trial raw/video recording are implemented. Actual robot reachability, waypoints, resets and LAT/DIST/HEIGHT physical qualification remain outstanding.",
+    "Candidate 032 completed six native trials with verified raw files, reset checks and twelve complete videos, but all six failed pickup and anchor stability. The native IK target is the gripper flange; measured flange-to-grasp geometry and a prospectively bound controller correction are required before further fixture acceptance.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Native model runtime/reset/time-map receipts and actual server-side trace/future production remain unqualified; local scaffolding is not live proof.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
@@ -347,7 +413,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Commit and stage the native-reset warmup source plus the frozen unqualified proposal artifact. Run LAT-CANDIDATE-032 first in hash order in one bounded fresh Isaac process, retaining all six scripted traces and reset warmup videos. No family or learned runtime is released. Do not rerun r/z or overwrite existing evidence.",
+  "next_action": "Preserve completed ac/ad without rerunning or relabeling their six scripted rejections. Commit and stage the body/finger geometry instrumentation, then run the disclosed bounded 60-action empty-gripper calibration with complete recording. Measure the flange-to-grasp transform before changing the static controller; preserve all 100 candidate poses and scientific thresholds. No family or learned runtime is released.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

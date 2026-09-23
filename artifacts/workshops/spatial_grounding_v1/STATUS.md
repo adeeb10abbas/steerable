@@ -222,6 +222,41 @@ hash-ordered eligible candidate is `LAT-CANDIDATE-032`. None is physically
 qualified, and historical-layout deduplication remains a release gate. This
 file is not a fixture release and contains no model outcomes.
 
+CPU stage ab restored exact clean source `4f5ca8a` and passed the actual Linux
+qualification CLI without constructing Isaac or allocating a GPU. First native
+qualification Job `sgw01-ali-lat-qualification-20260922ac` started at
+`23:54:28Z` on one A40. It runs only `LAT-CANDIDATE-032`, in frozen hash order,
+with six scripted trials and separately recorded reset warmups. It has a
+3,600-second deadline, no automatic retries and a 100-GiB reserve plus 16 GiB
+recording allowance. Its raw root is
+`/data/users/ali/sgw-01/qualification/lat-032-20260922ac`.
+The Job completed at `2026-09-23T00:10:18Z` and released its GPU.
+Read-only CPU verifier ad checked all **10,824 trial-file hashes**, matched every
+scored state to its raw record, and decoded all **2,706 trial-video frames**
+plus **726 reset-warmup frames** across twelve videos. All six 450-action
+checks were physically rejected: none met pickup, and each moved the bowl more
+than 5 mm. All six reset-validation checks passed. These are retained scripted
+calibration outcomes, not learned-policy failures or a qualified fixture.
+
+The exact native source audit identifies an unresolved control-frame issue:
+absolute IK targets the Robotiq `base_link` mount flange with zero positional
+offset, while the copied recipe uses object-relative approach/grasp heights
+without measured flange-to-grasp geometry. Quaternion conversion alone does not
+solve this. The source's nominal 162.8-mm maximum fingertip height is not a
+measured grasp TCP. The next probe must record actual robot/link geometry before
+any prospective controller correction. Do not infer intrinsic fixture
+infeasibility or replace the registered poses from these controller outcomes.
+New instrumentation retains body-frame poses for that purpose; 116 local checks
+pass with one Linux-only skip. No further GPU Job is currently active.
+
+**Disclosed operational amendment SGW-ENG-002:** before any further fixture
+acceptance, measure actual finger mesh bounds relative to named robot bodies
+and record one bounded empty-gripper calibration: hold the initial flange pose,
+close for 30 actions, reopen for 30, and retain all 61 states/frames plus video.
+These 60 calibration actions are not a zero-action render probe, a fixture
+qualification, or learned behavior. They do not alter the 100 candidate poses
+or erase ac's six recorded rejections.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure
@@ -249,9 +284,11 @@ and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Stage the committed native-reset warmup source and unqualified proposal artifact,
-then run candidate `LAT-CANDIDATE-032` in one bounded fresh Isaac process with
-all six recorded scripted trials. Preserve geometric and physical rejections.
+Stage the robot body/finger geometry instrumentation and run the bounded
+60-action empty-gripper calibration. Bind a measured flange-to-grasp transform
+before prospectively
+correcting the scripted controller. Preserve ac's six rejections and all 100
+candidate poses; no learned-policy release exists.
 Do not rerun completed captures or overwrite evidence.
 **Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**

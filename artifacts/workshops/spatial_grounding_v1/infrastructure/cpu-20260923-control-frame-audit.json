@@ -1,0 +1,29 @@
+{
+  "schema_version": "sgw-01-control-frame-source-audit-v1",
+  "status": "native_flange_interface_verified_grasp_transform_unqualified",
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "source_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "sources": [
+    {
+      "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/robots/droid.py",
+      "sha256": "3c43b562cc22476135b7cd82c9c4c01ed361350eda25f3ef6669408ffce53e5d",
+      "relevant_lines": [30, 34, 35, 149, 150, 151, 152, 322, 325, 343, 346, 347, 349]
+    },
+    {
+      "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/registrations/droid/auto_env_registrations_abs_ik.py",
+      "sha256": "2362f1907877e45133db0479df01d43c7a4c8291536a038e09f9db7adb61baff",
+      "relevant_lines": [13, 25, 77]
+    }
+  ],
+  "native_control_body": "base_link",
+  "native_body_offset_position_m": [0.0, 0.0, 0.0],
+  "published_eef_position_offset_m": [0.0, 0.0, 0.0],
+  "published_eef_rotation_wxyz": [0.5, -0.5, 0.5, -0.5],
+  "nominal_source_comment_maximum_flange_to_fingertip_height_m": 0.1628,
+  "nominal_height_is_not_measured_grasp_tcp": true,
+  "finding": "The registered absolute-IK interface controls the Robotiq mount flange. The existing seven-phase recipe uses object-centre-relative approach/grasp heights without a measured flange-to-grasp transform. Its quaternion conversion does not supply that missing positional geometry.",
+  "native_observation": "All six ac trials failed pickup and exceeded the 5-mm anchor-motion limit. All raw traces and all twelve trial/reset-warmup videos are retained; the recorded scripted rejections are not relabeled.",
+  "claim_boundary": "This does not establish that the candidate is intrinsically unreachable, that the nominal 0.1628-m comment is a calibrated TCP, or that a learned policy failed.",
+  "next_gate": "Measure actual robot body/link geometry and the disclosed 60-action empty-gripper motion. Bind the grasp-frame transform and corrected static controller prospectively before any further fixture acceptance. Do not invent the fingertip offset or change the 100 registered poses or scientific thresholds."
+}

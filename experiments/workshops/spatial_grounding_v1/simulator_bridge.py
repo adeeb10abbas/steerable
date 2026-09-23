@@ -31,6 +31,7 @@ class SimulatorSnapshot:
     simulated_time_s: float = 0.0
     reset_root_poses: Mapping[str, Pose] | None = None
     termination_reason: str | None = None
+    robot_body_frames: Mapping[str, Any] | None = None
 
     def reset_snapshot(self) -> ResetSnapshot:
         if self.reset_root_poses is None:

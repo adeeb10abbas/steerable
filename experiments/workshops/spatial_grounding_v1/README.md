@@ -96,6 +96,26 @@ zero. This startup-readiness correction changes no scored action count. A future
 production simulator binding must provide equivalent verified readiness before
 any model observation; no production binding is released by this diagnostic.
 
+First native candidate qualification ac completed six full recorded trials,
+but all six failed pickup and violated the anchor-motion limit. Its 10,824 trial
+file hashes and twelve complete trial/warmup videos were independently checked.
+The pinned IK interface controls the Robotiq `base_link` flange, not a fingertip
+or grasp center. The copied recipe lacks a measured flange-to-grasp transform;
+do not scale that unqualified controller or infer intrinsic fixture infeasibility.
+New capture/trace instrumentation records actual robot body-frame origins and
+quaternions, explicitly not inferred contact centers. Measured tool geometry and
+a prospectively bound controller correction remain prerequisites.
+
+`lat_workspace_capture --render-warmup-frames 120 --gripper-calibration`
+additionally measures actual finger geometry relative to named articulation
+bodies, then holds the initial flange pose while closing the empty gripper for
+30 actions and reopening for 30. This is **60 explicitly recorded calibration
+actions**, not a zero-action render probe or a behavioral episode. It fits the
+native five-second task, retains all 61 post-reset states/frames and a decoded
+video, and rejects premature termination. Partial calibration evidence remains
+on failure. Neither mesh bounds nor a source-code nominal fingertip height is
+silently presented as an established grasp transform.
+
 ## Execution order
 
 1. Obtain a genuinely idle, authorized RTX/Vulkan-capable allocation. A

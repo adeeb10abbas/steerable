@@ -13,6 +13,7 @@ from typing import Any
 
 from .build_asset_manifest import is_git_worktree
 from .lat_candidate_generator import workspace_digest
+from .robolab_measurements import articulation_body_frames
 
 
 def _vector(values: Any) -> list[float]:
@@ -61,6 +62,7 @@ def parse_args() -> argparse.Namespace:
     bootstrap.add_argument("--output", type=Path, required=True)
     bootstrap.add_argument("--environment-seed", type=int, default=20260922)
     bootstrap.add_argument("--render-warmup-frames", type=int, default=0)
+    bootstrap.add_argument("--gripper-calibration", action="store_true")
     known, _ = bootstrap.parse_known_args()
     if known.output.exists():
         raise FileExistsError(f"refusing to overwrite workspace receipt: {known.output}")
@@ -149,6 +151,8 @@ def main() -> None:
         raise ValueError("workspace capture requires one headless realtime/balanced RTX environment")
     if not 0 <= args.render_warmup_frames <= 120:
         raise ValueError("render-only diagnostic is bounded to at most 120 frames")
+    if args.gripper_calibration and args.render_warmup_frames != 120:
+        raise ValueError("gripper calibration requires the verified render warmup")
     renderer = json.loads(args.renderer_receipt.read_text(encoding="utf-8"))
     if renderer.get("status") != "passed_zero_model_renderer_preflight" or renderer.get("model_request_count") != 0:
         raise ValueError("workspace capture requires the passed zero-model renderer receipt")
@@ -189,6 +193,15 @@ def main() -> None:
                     env, obs, args.render_warmup_frames, args.output.parent / "render_diagnostic",
                 )
                 warmup["material_assets"] = material_asset_paths(omni.usd.get_context().get_stage())
+            gripper = None
+            if args.gripper_calibration:
+                from .gripper_geometry_capture import capture_gripper_motion, finger_geometry
+                geometry = finger_geometry(
+                    omni.usd.get_context().get_stage(), list(env.scene["robot"].data.body_names),
+                )
+                obs, gripper = capture_gripper_motion(
+                    env, obs, args.output.parent / "gripper_calibration", geometry=geometry,
+                )
             world = get_world(env)
             origin = env.scene.env_origins[0].detach().cpu().numpy()
             frames = env.scene["frames"]
@@ -202,6 +215,8 @@ def main() -> None:
                 "joint_names": [str(name) for name in env.scene["robot"].joint_names],
                 "joint_position_rad": _vector(robot.joint_pos[0]),
                 "joint_velocity_rad_s": _vector(robot.joint_vel[0]),
+                "body_frames": articulation_body_frames(robot),
+                "asset_usd": _record(Path(env.scene["robot"].cfg.spawn.usd_path)),
             }
             objects = {}
             for name in ("rubiks_cube", "bowl", "banana", "table"):
@@ -286,6 +301,7 @@ def main() -> None:
             "contact_sensor_inventory": contact_inventory,
             "views": views,
             "render_only_diagnostic": warmup,
+            "gripper_calibration": gripper,
             "validated_slots": [],
             "versions": {name: importlib.metadata.version(name) for name in ("isaacsim", "isaaclab", "robolab")},
         }

@@ -22,7 +22,7 @@ from .simulator_bridge import (
     SimulatorSnapshot,
 )
 from .task_definitions import RoboLabTaskDefinition
-from .robolab_measurements import geometric_center_state
+from .robolab_measurements import articulation_body_frames, geometric_center_state
 from .lat_workspace_capture import render_only_warmup
 
 
@@ -85,7 +85,10 @@ class RoboLabLatEnvironment:
                     else False
                 ),
             )
-        return SimulatorSnapshot(rows, simulated_time_s=self._steps * self._step_dt_s, reset_root_poses=reset_roots)
+        return SimulatorSnapshot(
+            rows, simulated_time_s=self._steps * self._step_dt_s, reset_root_poses=reset_roots,
+            robot_body_frames=articulation_body_frames(self._env.scene["robot"].data),
+        )
 
     def reset(self) -> ResetResult:
         counter = getattr(self._env, "episode_length_buf", None)

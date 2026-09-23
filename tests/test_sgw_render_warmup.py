@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from experiments.workshops.spatial_grounding_v1.lat_workspace_capture import render_only_warmup
+from experiments.workshops.spatial_grounding_v1.robolab_measurements import articulation_body_frames
 
 
 class Array:
@@ -18,6 +19,21 @@ class Array:
 
     def numpy(self):
         return self.data
+
+
+def test_body_frame_measurement_preserves_names_and_rejects_malformed_geometry():
+    data = SimpleNamespace(
+        body_names=["base_link", "finger"],
+        body_pos_w=[Array(np.asarray([[0.3, 0, 0.4], [0.3, 0, 0.25]]))],
+        body_quat_w=[Array(np.asarray([[1, 0, 0, 0], [1, 0, 0, 0]]))],
+    )
+    receipt = articulation_body_frames(data)
+    assert receipt["bodies"]["base_link"]["position_world_xyz_m"] == [0.3, 0, 0.4]
+    assert receipt["bodies"]["finger"]["position_world_xyz_m"] == [0.3, 0, 0.25]
+    assert "not inferred fingertip" in receipt["claim_boundary"]
+    data.body_names = ["base_link", "base_link"]
+    with pytest.raises(ValueError, match="inventory"):
+        articulation_body_frames(data)
 
 
 def test_render_diagnostic_refreshes_cameras_without_physics_and_retains_video(tmp_path):

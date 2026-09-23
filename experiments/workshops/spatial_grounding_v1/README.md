@@ -15,6 +15,15 @@ first**: no benchmark substitution or exploratory policy pilot. Manual scene
 designs are prospective proposals, not new gates or permission to rewrite
 frozen failures.
 
+**Effective requirement clarification:** [SGW-REQ-001](../../../artifacts/workshops/spatial_grounding_v1/historical_layout_reuse_clarification.json)
+allows historical geometry reuse whenever the current ablation criteria are
+satisfied. Historical layout uniqueness and exhaustive
+historical-layout coverage are **not release gates**. The imported specification
+is retained unchanged; this explicit user clarification supersedes only its
+historical-non-reuse clause. Distinct layouts within the new SGW cohort, physical
+qualification, current source/runtime identity and recording requirements remain.
+Existing historical audits are optional provenance, not work required to launch.
+
 Current restart state and cluster evidence:
 
 - [`STATUS.md`](../../../artifacts/workshops/spatial_grounding_v1/STATUS.md)
@@ -120,8 +129,9 @@ bindings, canonical verification digests, score projections and unique design
 membership. The seeded pilot side needs 15 layouts, not 14; the other side needs
 14. Geometric and valid physical rejections consume slots without refill.
 Every unknown slot and every physical pass remains optimistically potentially
-qualified. A sufficient upper bound is **not** historical freshness, physical
-release, or model release. This audit neither changes the live queue nor
+qualified. A sufficient upper bound is **not** physical or model release.
+Historical freshness is not a release requirement under SGW-REQ-001.
+This audit neither changes the live queue nor
 replaces its pending independent final raw compilation.
 Its current prefix reader accepts complete six-trial candidates only; it
 rejects other shapes rather than padding a terminal geometry prefix or a
@@ -653,8 +663,9 @@ python -m experiments.workshops.spatial_grounding_v1.qualification_batch_verifie
   --output <new-verification-report.json>
 ```
 
-The report never releases a family. Source/launch attestation, historical
-deduplication and model-runtime release remain separate gates. Reverification
+The report never releases a family. Source/launch attestation and model-runtime
+release remain separate gates; historical-layout deduplication is not required.
+Reverification
 reads existing evidence only; it never reruns a physical trial.
 For a durable CPU Job, `--wait-until-utc <timezone-qualified-deadline>` verifies
 new completed candidates once and fsyncs a compact per-candidate report beside

@@ -13,9 +13,24 @@ four durable GPU workers continue independently.
 HEIGHT's fixture gate is now blocked: its right-side best-case capacity is
 3, below the required 14, and its total capacity is at most 19 against 29.
 The running qualification queue remains unchanged;
-DIST's pool is not yet ruled out. Historical coverage and all learned-runtime
-release gates remain unresolved.
+DIST's pool is not yet ruled out. Historical layout uniqueness is not a release
+requirement; the learned-runtime release gates remain unresolved.
 Learned-policy requests and episodes remain at zero.**
+
+## User requirement clarification (23 September, 14:31 UTC)
+
+[SGW-REQ-001](historical_layout_reuse_clarification.json) records the user's
+explicit clarification: historical layout uniqueness is not required.
+Historical geometry may be reused; missing historical reset/producer/asset
+coverage does not block SGW release. Existing historical audit entries below
+are retained as provenance and must not be treated as active release gates.
+Do not continue historical-novelty audits on the critical path.
+
+Within-study layout distinctness, frozen physical outcomes, candidate caps,
+counterbalance and current asset/runtime/recording qualification remain intact.
+This clarification alone releases no fixture or policy run, changes no prior
+failure, and does not refill the blocked LAT/HEIGHT pools. The original frozen
+specification, queue and V2/V3 records remain unchanged.
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions

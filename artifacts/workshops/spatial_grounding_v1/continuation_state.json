@@ -1,10 +1,19 @@
 {
   "study_id": "SGW-01",
   "status": "lat_and_height_fixture_gates_closed_finite_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T14:20:12Z",
+  "updated_at_utc": "2026-09-23T14:31:39.409Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
+  "active_requirement_clarification": {
+    "id": "SGW-REQ-001",
+    "path": "historical_layout_reuse_clarification.json",
+    "historical_layout_uniqueness_required": false,
+    "historical_layout_audit_required_for_release": false,
+    "historical_geometry_reuse_allowed": true,
+    "within_study_layout_uniqueness_required": true,
+    "scope": "User clarification supersedes the historical-non-reuse clause for subsequent SGW validation/releases. Historical evidence remains unchanged and incomplete coverage is not a release blocker. No other gate is waived."
+  },
   "planned_episodes": {
     "P": 36,
     "D": 144,
@@ -439,7 +448,7 @@
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
     "worker_scope": "bt runs117 remaining slots with exact worker source68b9e100, fresh per-slot GPU checks, global storage reserve, exclusive claims and shared stop sentinel. Corrected offline compiler integrated at a995e014;34 parent compiler/worker/executor tests pass. CPU-only bu independently compiles initial and terminal evidence; no source mutation, fixture/model release or child launch authority.",
     "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
-    "historical_coverage_scope": "All45 inventory sources remain unresolved for complete comparable geometry; the24-layout WMF registry is not V3-E004 coverage. bv rehashed the same7 sources and retained explicit producer/input/frame lineage, leaving all bl fields identical. All93 in-repository bindings match exact historical Git objects;100 named frame identities pass with zero environment origins. Three distinct directly bound external files also match their retained hashes. Asset dependency/geometry and population completeness remain unresolved. No historical behavioral acceptance or SGW identity is required for comparison; no cohort exclusion or release is claimed.",
+    "historical_coverage_scope": "Archived provenance work only under SGW-REQ-001; complete historical geometry/population coverage is not required for SGW release. Preserve existing inventories and unresolved source facts without continuing novelty audits on the release critical path.",
     "independent_scene_reviewer": "89af7b05-595a-43d4-977b-ae0b077d6e9f",
     "scene_review_scope": "The same independent reviewer sealed bi acceptance as ACCEPT_NATIVE_VISUAL_SETUP_ONLY for all4 captures and exactly reproduced all20 policy preprocessing images. This is not an additional rater, physical qualification, category recognition, live tensor parity or behavioral release. Plate-category/wrist-occlusion caveats and per-candidate banana clearance remain binding."
   },
@@ -1335,7 +1344,7 @@
     "next_milestone": "Stage exact committed native implementation and queue the guarded successor; then retrieve actual translated-scene capture and both-goal evidence."
   },
   "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu -o wide",
-  "next_historical_trace": "ci closes a bounded Phase-A source/reset trace:54 final cells plus54 separately preserved setup resets, with actual runtime patche65bede7 anchored by runtime_instrumentation, pair manifests and launch commands.108 conditional DIST000 comparisons are nonmatches under the recorded native API, but only one numerical root pair; no global coverage or historical native-import attestation. Keep cg's V3-B002 comparisons and ch's unqualified D001 records separate and do not sum them as independent layouts. D001 producer, GR00T runtime patch, R005 no-plate closure and missing materialization states remain unresolved. Prioritize the user-approved offline pose-design proposal while the original queue finishes; extend history only with new independently bound evidence.",
+  "next_historical_trace": "No historical-novelty audit is required for SGW release under the explicit user clarification SGW-REQ-001. Preserve all prior recoveries, incomplete coverage and provenance records unchanged; do not turn them into active release blockers. Current scene/model/runtime identity checks remain required.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -1603,7 +1612,6 @@
   "blockers": [
     "Immediate native milestone: SGW-ENG-008 has no fresh reference/translated capture or both-goal demonstration yet. All four GPU lanes remain occupied; use a guarded natural-successor allocation, not interruption or extra capacity.",
     "Full benchmark fixture release: frozen LAT has20 passes/20 physical rejections/60 geometric rejections, below29. Retained HEIGHT's right-side upper bound3 is below14. DIST awaits full independent terminal accounting. The one-layout engineering attempt neither repairs those denominators nor authorizes a new campaign.",
-    "Historical uniqueness/asset coverage: D001's actual simulator producer, GR00T Phase-A runtime patch, selected Phase-C preflight producer and missing constructor/intermediate/preflight populations remain unclosed. Existing bounded recoveries/nonmatches are not global closure. Do not expand broad audits ahead of the native scene milestone.",
     "Live runtime release: native policy observation/mailbox loop and N3/D1 server identities, D1 distributed decode/physical-time mapping, fixed-input repeat and prompt sensitivity remain unqualified. Synthetic HTTP/450-action tests are not live qualification.",
     "Behavioral operation/release: fresh resource receipts, direct/pilot gates, measured deadlines/storage P95 and D/C estimates, and required prediction annotations remain after fixture/runtime release. Missing futures remain unavailable, never zero.",
     "No authenticated Overleaf connection is available."

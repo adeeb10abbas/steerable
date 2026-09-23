@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from experiments.workshops.spatial_grounding_v1.contract import ContractError
+from experiments.workshops.spatial_grounding_v1.contract import ContractError, sha256_file
 from experiments.workshops.spatial_grounding_v1.release import create_release, render_job
 from tests.test_sgw_contract import make_release
 
@@ -14,6 +14,23 @@ def _update_binding(release: Path, binding: dict) -> None:
     import hashlib
     hashes["runtime_binding.json"] = hashlib.sha256((release / "runtime_binding.json").read_bytes()).hexdigest()
     (release / "hashes.json").write_text(json.dumps(hashes))
+
+
+def test_historical_reuse_clarification_preserves_frozen_registration() -> None:
+    amendment = json.loads(Path(
+        "artifacts/workshops/spatial_grounding_v1/historical_layout_reuse_clarification.json"
+    ).read_text())
+    assert amendment["amendment_id"] == "SGW-REQ-001"
+    assert amendment["historical_layout_uniqueness_required"] is False
+    assert amendment["historical_layout_audit_required_for_release"] is False
+    assert amendment["within_study_layout_uniqueness_required"] is True
+    assert amendment["release_permitted_by_this_clarification_alone"] is False
+    clause = amendment["superseded_clause"]
+    assert sha256_file(Path(clause["path"])) == clause["sha256"]
+    source = Path("experiments/workshops/spatial_grounding_v1/spec")
+    unchanged = amendment["unchanged_frozen_sources"]
+    assert sha256_file(source / "protocol.json") == unchanged["protocol_sha256"]
+    assert sha256_file(source / "planned_cells.csv") == unchanged["planned_queue_sha256"]
 
 
 def test_render_job_resolves_every_template_token(tmp_path: Path) -> None:
@@ -64,3 +81,6 @@ def test_create_release_consumes_frozen_csv_registry(tmp_path: Path) -> None:
     queue = (output / "queue.jsonl").read_text().splitlines()
     assert len(queue) == 6
     assert json.loads(queue[0])["status"] == "RELEASED"
+    receipt = json.loads((output / "release_receipt.json").read_text())
+    assert receipt["requirement_clarification"] == "SGW-REQ-001"
+    assert receipt["historical_layout_uniqueness_required"] is False

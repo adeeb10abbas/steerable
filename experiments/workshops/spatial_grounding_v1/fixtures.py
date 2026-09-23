@@ -117,8 +117,6 @@ class FixtureCandidate:
     def validate_neutral_start(self) -> None:
         if abs(self.relation_m()) > NEUTRAL_TOLERANCE_M:
             raise FixtureError("candidate is not neutral within 5 mm")
-        if self.metadata.get("historical_layout_fingerprint"):
-            raise FixtureError("candidate duplicates a historical layout")
 
     def fingerprint(self) -> str:
         value = {

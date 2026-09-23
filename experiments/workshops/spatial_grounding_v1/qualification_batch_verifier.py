@@ -387,7 +387,8 @@ def _summary(registration: Registration, reports: list[dict[str, Any]]) -> dict[
         )},
         "model_requests": 0, "behavioral_episodes": 0, "release_permitted": False,
         "claim_boundary": "Raw evidence integrity and recomputed model-blind qualification only. "
-                          "Launch/source attestation, historical deduplication and all model/family release gates remain separate.",
+                          "Launch/source attestation and model/family release gates remain separate. "
+                          "Historical layout uniqueness is not a release requirement (SGW-REQ-001).",
     }
 
 

@@ -77,6 +77,8 @@ def create_release(*, output: Path, release_id: str, protocol: Path, prompts: Pa
     receipt = {"schema_version": "sgw-01-release-v1", "release_id": release_id, "resource_owner": resource_owner,
                "source_queue_sha256": sha256_file(planned_queue), "stage": stage, "model": model, "family": family,
                "cell_count": len(queue), "status": "released",
+               "requirement_clarification": "SGW-REQ-001",
+               "historical_layout_uniqueness_required": False,
                "stage_authorizations": authorizations}
     atomic_json(output / "release_receipt.json", receipt)
     hashes = {name: sha256_file(output / name) for name in ("protocol.json", "prompts.json", "queue.jsonl", "fixtures.json", "runtime_binding.json", "release_receipt.json")}

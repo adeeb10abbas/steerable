@@ -12,12 +12,15 @@ from experiments.workshops.spatial_grounding_v1.build_asset_manifest import is_g
 from experiments.workshops.spatial_grounding_v1.lat_candidate_generator import materialize_lat_candidates, workspace_digest
 
 
-def candidate(identifier: str, *, family: str = "LAT", side: str | None = None, x: float = 0.4) -> FixtureCandidate:
+def candidate(identifier: str, *, family: str = "LAT", side: str | None = None, x: float = 0.4,
+              historical_fingerprint: str | None = None) -> FixtureCandidate:
     poses = {
         "rubiks_cube": {"position_m": [x, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
         "bowl": {"position_m": [x + 0.1, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]},
     }
     metadata = {"scoring_center_offsets_root_local_m": {"rubiks_cube": [0, 0, 0], "bowl": [0, 0, 0]}}
+    if historical_fingerprint is not None:
+        metadata["historical_layout_fingerprint"] = historical_fingerprint
     if family == "DIST":
         poses["plate"] = {"position_m": [x - 0.1, 0.0, 0.1], "quaternion_wxyz": [1, 0, 0, 0]}
         metadata["bowl_side"] = side
@@ -54,6 +57,19 @@ def test_lat_selection_is_hash_ordered_and_complete() -> None:
     assert list(selected.values()) == [item.candidate_id for item in candidate_order(7, candidates)]
 
 
+def test_historical_geometry_reuse_retains_provenance_without_blocking_selection() -> None:
+    candidates = [
+        candidate(f"c{index:02d}", x=0.4 + index * 0.01, historical_fingerprint=f"historical-{index}")
+        for index in range(29)
+    ]
+    for index, item in enumerate(candidates):
+        assert item.metadata["historical_layout_fingerprint"] == f"historical-{index}"
+        item.validate_neutral_start()
+    selected = select_qualified_layouts("LAT", 7, candidates, {item.candidate_id for item in candidates})
+    assert len(selected) == 29
+    assert len(set(selected.values())) == 29
+
+
 def test_dist_requires_frozen_counterbalance() -> None:
     candidates = [
         candidate(f"left{index}", family="DIST", side="left", x=0.4 + index * 0.01)
@@ -72,8 +88,8 @@ def test_dist_requires_frozen_counterbalance() -> None:
 
 
 def test_candidates_within_reset_tolerance_are_duplicates() -> None:
-    first = candidate("first")
-    second = candidate("second", x=0.402)
+    first = candidate("first", historical_fingerprint="historical-layout")
+    second = candidate("second", x=0.402, historical_fingerprint="historical-layout")
     try:
         candidate_order(1, [first, second])
     except FixtureError as error:

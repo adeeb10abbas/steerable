@@ -1,0 +1,42 @@
+{
+  "schema_version": "sgw-01-requirement-clarification-v1",
+  "amendment_id": "SGW-REQ-001",
+  "study_id": "SGW-01",
+  "authorized_at_utc": "2026-09-23T14:31:39.409Z",
+  "user_instruction": "wait historical layout uniqueness is not a requirement",
+  "user_confirmation": "as long as they fit the criteria for our ablations historical uniqueness is NOT a blocker",
+  "status": "effective_for_subsequent_SGW_fixture_validation_and_release",
+  "clarification": "Historical layout novelty is not required. A scene may reuse historical geometry, and incomplete historical layout coverage does not block SGW release.",
+  "historical_layout_uniqueness_required": false,
+  "historical_layout_audit_required_for_release": false,
+  "historical_geometry_reuse_allowed": true,
+  "eligibility_condition": "The layout must satisfy the current ablation's physical, within-study distinctness, counterbalance, source/runtime and recording requirements; historical use neither qualifies nor disqualifies it.",
+  "within_study_layout_uniqueness_required": true,
+  "superseded_clause": {
+    "path": "experiments/workshops/spatial_grounding_v1/spec/EXPERIMENT_SPEC.md",
+    "sha256": "40f3a6c86af16fd4845df9367792a63b60177ebd1d849212c988bf7eacd84577",
+    "section": "5. Fixtures and qualification, candidate selection",
+    "scope": "Supersedes only the requirement to reject historical-layout duplicates. The distinct-layout requirement within the new SGW cohort is retained."
+  },
+  "unchanged_frozen_sources": {
+    "protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
+    "planned_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
+    "original_specification_edited": false,
+    "V2_V3_protocols_edited": false
+  },
+  "timing_disclosure": {
+    "model_blind_qualification_outcomes_already_observed": true,
+    "SGW_model_requests_at_clarification": 0,
+    "SGW_behavioral_episodes_at_clarification": 0
+  },
+  "preserved_requirements": [
+    "Distinct SGW layouts within the registered cohort, including reset-tolerance duplicate checks.",
+    "Frozen candidate caps, counterbalance, allocation and physical qualification criteria.",
+    "Preservation of every existing valid failure and partial or infrastructure attempt.",
+    "Historical episodes remain historical: no relabeling, replacement or pooling into new SGW evidence.",
+    "Current asset, source, model, reset, runtime, resource and recording identities remain required.",
+    "RoboLab only and full benchmark qualification first; no exploratory policy shortcut."
+  ],
+  "operational_effect": "Stop historical-novelty audits as a release prerequisite. Keep existing historical inventories and audit records as optional provenance; do not delete them or falsely mark their coverage complete.",
+  "release_permitted_by_this_clarification_alone": false
+}

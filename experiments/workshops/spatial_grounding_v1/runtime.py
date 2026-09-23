@@ -489,6 +489,9 @@ class _NanoHttpTransport:
         observation = request.get("observation")
         if not isinstance(observation, Mapping):
             raise AdapterError("N3 observation must be a mapping for the native HTTP server")
+        if "image_obs" in observation:
+            from .policy_observations import nano_observation
+            observation = nano_observation(observation)
         for key in (
             "request_id",
             "request_index",
@@ -696,6 +699,10 @@ class _OfficialDreamZeroClient:
         observation = request.get("observation")
         if not isinstance(observation, Mapping):
             raise AdapterError("D1 observation must be a mapping for the native client")
+        images = observation.get("image_obs")
+        if isinstance(images, Mapping) and any(isinstance(value, np.ndarray) for value in images.values()):
+            from .policy_observations import dreamzero_observation
+            observation = dreamzero_observation(observation)
         self.client.returned_chunks.clear()
         self.client.processed_chunks.clear()
         self.client.returned_future = None

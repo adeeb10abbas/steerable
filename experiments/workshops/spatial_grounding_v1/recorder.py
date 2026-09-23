@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import tempfile
@@ -80,6 +81,8 @@ class AttemptRecorder:
         self.path = self.root / "attempts" / cell.cell_id / attempt_id
         self._video_writer = None
         self._video_frames = 0
+        self._last_frame_sim_time: float | None = None
+        self._frame_interval_s: float | None = None
 
     def begin(self) -> Path:
         self.path.mkdir(parents=True, exist_ok=False)
@@ -144,6 +147,9 @@ class AttemptRecorder:
         self.event("reset_attested", reset_id=reset["reset_id"], camera_name=reset["camera_name"])
         if not isinstance(initial_state, Mapping) or initial_sim_time is None:
             raise ContractError("reset scorer state and simulated time are required")
+        if not math.isfinite(initial_sim_time):
+            raise ContractError("reset simulated time must be finite")
+        self._last_frame_sim_time = initial_sim_time
         return {"action_step": 0, "sim_time_s": initial_sim_time, **dict(initial_state)}
 
     def _write_video_frame(self, frame: Any) -> None:
@@ -160,6 +166,13 @@ class AttemptRecorder:
                       state: Mapping[str, Any], viewport_frame: Any, step_result: Mapping[str, Any]) -> None:
         if not request_id or action_index < 1 or sim_time < 0:
             raise ContractError("action telemetry identity is invalid")
+        if self._last_frame_sim_time is None or not math.isfinite(sim_time):
+            raise ContractError("action frame lacks its physical reset time")
+        interval = sim_time - self._last_frame_sim_time
+        if interval <= 0 or (self._frame_interval_s is not None and not math.isclose(
+                interval, self._frame_interval_s, rel_tol=1e-6, abs_tol=1e-9)):
+            raise ContractError("viewport frames lack a constant positive physical time interval")
+        self._frame_interval_s = interval if self._frame_interval_s is None else self._frame_interval_s
         action_record = self._array(self.path / "actions" / f"action-{action_index:04d}.npy", action)
         frame_record = self._array(self.path / "observations" / f"frame-{action_index:04d}.npy", viewport_frame)
         atomic_json(self.path / "states" / f"state-{action_index:04d}.json", {
@@ -167,17 +180,21 @@ class AttemptRecorder:
             "state": dict(state), "step_result": dict(step_result), "action": action_record, "frame": frame_record,
         })
         self._write_video_frame(viewport_frame)
+        self._last_frame_sim_time = sim_time
         return {"action_step": action_index, **dict(state)}
 
     def finalize_viewport(self) -> dict[str, Any]:
         """Accept only a real encoder-produced MP4 already closed by the runtime."""
         path = self.path / "videos" / "viewport.mp4"
+        if self._frame_interval_s is None:
+            raise ContractError("viewport encoding requires measured physical action timing")
+        fps = 1 / self._frame_interval_s
         if not path.exists():
             try:
                 frames = sorted((self.path / "videos").glob("frame-*.npy"))
                 if len(frames) != self._video_frames:
                     raise ContractError("retained viewport frame count differs from recording count")
-                record = encode_viewport_video(frames, path, fps=30)
+                record = encode_viewport_video(frames, path, fps=fps)
                 return {**record, "path": path.relative_to(self.path).as_posix()}
             except ImportError as exc:
                 raise ContractError("qualified imageio/ffmpeg video backend is required") from exc
@@ -189,12 +206,15 @@ class AttemptRecorder:
         try:
             import imageio.v3 as iio
             decoded = sum(1 for _ in iio.imiter(path))
+            actual_fps = iio.immeta(path).get("fps")
         except Exception as exc:
             raise ContractError(f"viewport MP4 cannot be decoded: {exc}") from exc
         if decoded != self._video_frames:
             raise ContractError(f"viewport MP4 frame count mismatch: decoded {decoded}, expected {self._video_frames}")
+        if not isinstance(actual_fps, (int, float)) or not math.isclose(actual_fps, fps, rel_tol=1e-4):
+            raise ContractError("viewport MP4 FPS differs from physical action timing")
         return {"path": path.relative_to(self.path).as_posix(), "sha256": sha256_file(path),
-                "bytes": path.stat().st_size, "frame_count": decoded}
+                "bytes": path.stat().st_size, "frame_count": decoded, "fps": fps}
 
     def prediction(self, prediction: Any) -> None:
         """Persist the adapter's raw request/response envelope without decoding it."""

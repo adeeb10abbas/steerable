@@ -441,6 +441,41 @@ def test_exported_official_client_runs_owned_http_cache_postprocess_and_reset(
         transport.reset()
         assert transport.client._chunks == transport.client._counters == transport.client._env_session_id == {}
         assert policy.resets[-1] == {"session_id": session}
+
+        from tests.test_sgw_jointpos_environment import candidate, install_native_boundary
+        from tests.test_sgw_contract import make_release
+        from experiments.workshops.spatial_grounding_v1.contract import Cell, load_release
+        from experiments.workshops.spatial_grounding_v1.adapters import ProductionAdapter
+        from experiments.workshops.spatial_grounding_v1.robolab_jointpos_environment import JointPositionEnvironment
+        from experiments.workshops.spatial_grounding_v1.worker import _canonical_outcome, _load_scorer
+
+        native = install_native_boundary(monkeypatch)()
+        integration = tmp_path / "production"
+        integration.mkdir()
+        release = load_release(make_release(integration))
+        cell = Cell({**release.cells[0].row, "cell_id": "d1-native-boundary", "model": "D1",
+                     "sampling_seed": 17, "physical_goal_sign": 1, "form": "D"})
+        episode_recorder = AttemptRecorder(release, cell, "attempt-001")
+        episode_recorder.begin()
+        production = ProductionAdapter(
+            DreamZeroPolicyAdapter, transport=transport, transport_factory=lambda **_: transport,
+            environment_factory=lambda cell, evidence_root: JointPositionEnvironment(
+                native, candidate=candidate(), cell_id=cell.cell_id, evidence_root=evidence_root,
+            ),
+        )
+        calls_before = len(policy.calls)
+        physical_reset = production.reset(cell, episode_recorder)
+        outcome = production.run_episode(cell, episode_recorder, physical_reset)
+        assert len(policy.calls) - calls_before == 57
+        assert len(native.actions) == 450
+        assert outcome["viewport_artifact"]["frame_count"] == 451
+        assert outcome["viewport_artifact"]["fps"] == 15
+        assert _canonical_outcome(outcome, cell, _load_scorer())["status"] == "valid_success"
+        for packed in policy.calls[calls_before:]:
+            assert packed["observation/exterior_image_0_left"].shape == (180, 320, 3)
+            assert packed["observation/joint_position"].shape == (7,)
+        production.close()
+        assert native.closed == 1
     finally:
         server.shutdown()
         server.server_close()

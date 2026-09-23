@@ -38,6 +38,20 @@ class SimulatorSnapshot:
             raise SimulatorBridgeError("snapshot lacks explicit root reset poses")
         return ResetSnapshot(self.reset_root_poses)
 
+    def scoring_state(self, action_step: int) -> dict[str, Any]:
+        cube = self.objects["rubiks_cube"]
+        return {
+            "action_step": action_step, "sim_time_s": self.simulated_time_s,
+            "cube_xyz_m": cube.pose.position_m,
+            "bowl_xyz_m": self.objects["bowl"].pose.position_m,
+            "plate_xyz_m": self.objects["plate"].pose.position_m if "plate" in self.objects else None,
+            "supported": cube.supported,
+            "final_detached_release": not cube.attached_to_gripper,
+            "gripper_holding": cube.attached_to_gripper,
+            "linear_speed_m_s": cube.linear_speed_m_s,
+            "angular_speed_rad_s": cube.angular_speed_rad_s,
+        }
+
 
 @dataclass(frozen=True)
 class ResetResult:

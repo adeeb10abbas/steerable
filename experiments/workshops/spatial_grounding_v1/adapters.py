@@ -353,11 +353,23 @@ class ProductionAdapter:
     def reset(self, cell: Any, recorder: Any) -> dict[str, Any]:
         """Reset the environment and policy temporal state for one attempt."""
 
+        if self.environment is not None:
+            self.environment.close()
+            self.environment = None
+        self.policy = None
+        self._initial_mapping = None
+        runtime = self.runtime_handle if self.runtime_handle is not None else self.transport
+        reset_runtime = getattr(runtime, "reset", None)
+        if self.runtime_handle is not None and not callable(reset_runtime):
+            raise AdapterError("production runtime lacks its native temporal reset")
+        if callable(reset_runtime):
+            reset_runtime()
         environment = getattr(cell, "environment", None)
         if environment is None and self.environment_factory is not None:
-            environment = self.environment_factory(cell=cell)
+            environment = self.environment_factory(cell=cell, evidence_root=recorder.path / "simulator")
         if environment is None or not hasattr(environment, "reset"):
             raise AdapterError("production cell must provide Environment.reset()")
+        self.environment = environment
         reset_result = environment.reset()
         evidence = getattr(reset_result, "receipt", reset_result)
         initial_state = getattr(reset_result, "snapshot", None)
@@ -385,6 +397,7 @@ class ProductionAdapter:
             camera_id=camera_name,
         )
         payload = reset.as_dict()
+        payload["physical_reset_receipt"] = dict(evidence)
         if not hasattr(recorder, "record_reset"):
             raise AdapterError("recorder must expose record_reset()")
         reset_record = recorder.record_reset(
@@ -492,13 +505,15 @@ class ProductionAdapter:
         }
 
     def close(self) -> None:
-        if self.environment is not None and hasattr(self.environment, "close"):
-            self.environment.close()
-        self.environment = None
-        self.policy = None
-        self._initial_mapping = None
-        if self.runtime_handle is not None and hasattr(self.runtime_handle, "close"):
-            self.runtime_handle.close()
+        try:
+            if self.environment is not None and hasattr(self.environment, "close"):
+                self.environment.close()
+        finally:
+            self.environment = None
+            self.policy = None
+            self._initial_mapping = None
+            if self.runtime_handle is not None and hasattr(self.runtime_handle, "close"):
+                self.runtime_handle.close()
 
 
 class NanoPolicyAdapter(_BaseAdapter):

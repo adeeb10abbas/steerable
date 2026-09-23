@@ -27,7 +27,8 @@ from .lat_workspace_capture import render_only_warmup
 
 
 class RoboLabLatEnvironment:
-    def __init__(self, env: Any, candidate: FixtureCandidate, evidence_root: Path) -> None:
+    def __init__(self, env: Any, candidate: FixtureCandidate, evidence_root: Path,
+                 *, support_sensor_names: tuple[str, ...] | None = None) -> None:
         self._env = env
         self._candidate = candidate
         self._evidence_root = evidence_root
@@ -39,6 +40,7 @@ class RoboLabLatEnvironment:
         self._step_dt_s = float(step_dt)
         self._steps = 0
         self._observation: Any = None
+        self._explicit_support_sensor_names = support_sensor_names
 
     def _snapshot(self) -> SimulatorSnapshot:
         from robolab.core.task.conditionals import object_grabbed
@@ -95,6 +97,11 @@ class RoboLabLatEnvironment:
         )
 
     def _support_sensor_names(self) -> tuple[str, ...]:
+        explicit = getattr(self, "_explicit_support_sensor_names", None)
+        if explicit is not None:
+            if not explicit or any(not isinstance(name, str) or not name.startswith("rubiks_cube__") for name in explicit):
+                raise SimulatorBridgeError("production support sensors must be explicit cube/object pairs")
+            return explicit
         supports = self._candidate.metadata.get("goal_supports")
         if supports is None:
             return ("rubiks_cube__table",)

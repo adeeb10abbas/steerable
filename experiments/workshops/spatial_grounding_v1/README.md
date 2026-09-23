@@ -263,6 +263,46 @@ eight executed actions separately. Reset must evict the server session and
 clear local chunk state. Live server trace, reset eviction, decoded-future
 evidence, and checkpoint attestation remain required before D1 qualification.
 
+## Native joint-position execution boundary
+
+`robolab_jointpos_environment:create_environment` is a simulator-process
+factory accepting `cell` and an attempt-specific `evidence_root`. It requires
+an already-running AppLauncher; it is **not** a remote simulator launcher.
+`SGW01_ENV_BINDING` and `SGW01_ENV_BINDING_SHA256` bind clean study/RoboLab
+checkouts, actual asset bytes, and each released cell's layout, fixture,
+prompt, candidate file and scene seed. HEIGHT/DIST additionally require their
+native scene-file hashes. The factory registers the native absolute joint
+controller, preserves goal-independent termination, and checks actual reset
+roots against 3 mm / 2 degree tolerances before a policy observation.
+
+The production wrapper reuses the qualification measurement implementation:
+actor roots remain distinct from geometric centers, COM velocity is transported
+to the scored center, and support comes from attributed cube/object contact
+forces, never a constant. Production support includes all imported non-gripper
+surfaces rather than only the two scripted landing targets. Camera/proprioception
+observations exclude simulator object state. N3 receives its official
+one-based exterior-camera slots and leaves composition/resizing to the pinned
+service; D1 receives native batched tensors before its unmodified official
+extraction/padding path.
+
+The production adapter resets the policy session once per attempt, closes the
+previous simulator, and retains the full physical reset/warmup receipt. Viewport
+FPS is derived from measured action timestamps (15 Hz for this native runtime),
+not the render-only warmup's 30-FPS display convention. Nonuniform or absent
+physical timing fails closed.
+
+Both model paths have complete 450-action adapter/environment/recorder/scorer
+integration tests with simulated physics and model computation, including the
+real owned HTTP producers and trace readers. D1 uses the hash-verified official
+client source; N3 image composition uses its exact exported source and CPU
+PyTorch interpolation. These are engineering tests, not physical qualification
+or behavioral episodes. Native AppLauncher lifecycle, cross-pod simulator
+transport, D1 distributed startup/decode/time mapping and live runtime gates
+remain unreleased. Neither factory nor passing tests authorizes a model launch.
+The source-backed checks additionally accept `SGW01_NANO_SOURCE_AUDIT` and
+require CPU PyTorch in the local test environment; model execution still uses
+the separately pinned native environments.
+
 ## Independent qualification verification
 
 `qualification_batch_verifier` checks the frozen batch/proposal/calibration

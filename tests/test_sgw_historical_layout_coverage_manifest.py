@@ -25,6 +25,10 @@ def test_manifest_accounts_for_all_45_inventory_sources():
         for record in result["records"]
     )
     assert all(record["inspection_conclusion"] for record in result["records"])
+    assert result["producer_semantics"]["V3-A-phase-a-groot"]["pinned_robolab_commit"] == (
+        "0aef241fb088ca21bb4ebd24448940ed56620d17"
+    )
+    assert result["producer_semantics"]["V3-A-phase-a-groot"]["cohort_wide_exclusion_proven"] is False
 
 
 def test_payload_requests_are_source_anchored_and_centers_not_promoted():

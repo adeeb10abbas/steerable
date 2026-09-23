@@ -90,6 +90,24 @@ SOURCE_CONCLUSIONS = {
     "V3-B002-pi05-runtime-identity": "runtime identity only; no measured reset geometry",
 }
 
+PRODUCER_BINDINGS = {
+    "V3-A-phase-a-groot": {
+        "producer_path": "experiments/v3/groot_droid/robolab_bridge.py",
+        "producer_role": "scene root_pos_w transformed by robot root pose into robot frame",
+        "pinned_robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    },
+    "V3-A-phase-a-nano": {
+        "producer_path": "experiments/v3/cosmos_droid/compile_pair.py",
+        "producer_role": "compiled object_xyz/reference_xyz fields; producer reset getter is not present in this compiler",
+        "pinned_robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    },
+    "V3-A-phase-a-dreamzero": {
+        "producer_path": "experiments/v3/dreamzero_droid/robolab_bridge.py",
+        "producer_role": "scene root_pos_w transformed by robot root pose into robot frame",
+        "pinned_robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    },
+}
+
 
 def _probe_archive(archive: Path | None) -> dict[str, Any]:
     if archive is None or not archive.is_file():
@@ -100,7 +118,7 @@ def _probe_archive(archive: Path | None) -> dict[str, Any]:
         probes = []
         for item in manifest["records"]:
             payload = json.loads(tar.extractfile(item["export_path"]).read())
-            probes.append({
+            probe = {
                 "cohort_id": item["cohort_id"],
                 "path": item["path"],
                 "expected_sha256": item["expected_sha256"],
@@ -111,7 +129,12 @@ def _probe_archive(archive: Path | None) -> dict[str, Any]:
                     if item["export_path"].endswith(".jsonl")
                     else "repair_harness_accounting_only_no_reset_geometry"
                 ),
-            })
+            }
+            if item["cohort_id"].startswith("V3-E006"):
+                payload = json.loads(tar.extractfile(item["export_path"]).read())
+                probe["state_payload_request"] = payload.get("child_report")
+                probe["state_payload_semantics"] = "named state_repair_result; not exported in this probe archive"
+            probes.append(probe)
     return {
         "status": "loaded_hash_verified",
         "archive_name": archive.name,
@@ -130,6 +153,7 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
     recovered_root_only = []
     indispensable_requests = []
     archive = Path(os.environ["SGW_BJ_ARCHIVE"]) if os.environ.get("SGW_BJ_ARCHIVE") else None
+    probe_results = _probe_archive(archive)
     for cohort in inventory["cohorts"]:
         source = repo_root / cohort["source_path"]
         status, reason = _status(cohort)
@@ -168,6 +192,11 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
             "explicit_root_pose_count": len(cohort.get("explicit_root_poses", [])),
             "comparable_geometry_eligible": False,
         }
+        if cohort["cohort_id"] in PRODUCER_BINDINGS:
+            binding = dict(PRODUCER_BINDINGS[cohort["cohort_id"]])
+            producer = repo_root / binding["producer_path"]
+            binding["producer_sha256"] = _sha256(producer) if producer.is_file() else None
+            record["producer_binding"] = binding
         if hash_status == "verified_against_inventory":
             recovered_root_only.extend(_recover_explicit_root_only(cohort, repo_root))
         records.append(record)
@@ -190,6 +219,20 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
                     "selection_reason": "minimal_semantics_probe; not a complete cohort export",
                 }
             )
+    for probe in probe_results.get("probes", []):
+        request = probe.get("state_payload_request")
+        if isinstance(request, dict) and request.get("path") and request.get("sha256"):
+            indispensable_requests.append(
+                {
+                    "cohort_id": probe["cohort_id"],
+                    "path": request["path"],
+                    "expected_sha256": request["sha256"],
+                    "source_json_pointer": "/child_report",
+                    "hash_binding_status": "hash_anchored",
+                    "request_scope": "exact_file_only",
+                    "selection_reason": "named state_repair_result needed to inspect actual state/initial-layout payload; not a complete cohort export",
+                }
+            )
 
     return {
         "schema_version": "sgw-01-historical-layout-coverage-read-request-v1",
@@ -207,7 +250,20 @@ def compile_manifest(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
         "recovered_root_only_evidence": recovered_root_only,
         "recovered_geometry_rows": [],
         "indispensable_external_requests": indispensable_requests,
-        "external_probe_results": _probe_archive(archive),
+        "external_probe_results": probe_results,
+        "producer_semantics": {
+            cohort_id: {
+                **binding,
+                "producer_sha256": (
+                    _sha256(repo_root / binding["producer_path"])
+                    if (repo_root / binding["producer_path"]).is_file()
+                    else None
+                ),
+                "cohort_wide_exclusion_proven": False,
+                "exclusion_blocker": "single probe lacks complete registered cohort reset bounds and asset/layout identity",
+            }
+            for cohort_id, binding in PRODUCER_BINDINGS.items()
+        },
         "counts": {
             "total": len(records),
             "already_covered": sum(r["coverage_status"] == "already_covered" for r in records),

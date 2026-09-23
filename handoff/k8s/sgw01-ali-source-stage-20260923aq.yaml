@@ -1,0 +1,135 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-source-stage-20260923aq
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: prospective-family-source-stage}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: stage
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              OUT=/data/users/ali/sgw-01/infrastructure/source-stage-20260923aq
+              BASE=/data/users/ali/sgw-01/source/b429ddd
+              TARGET=/data/users/ali/sgw-01/source/ff2c361-aq
+              SOURCE=ff2c361d51b3fe370cef2ec2b07347082a4ea5d4
+              ROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              test ! -e "$OUT"
+              test ! -e "$TARGET"
+              test "$(git -C "$BASE" rev-parse HEAD)" = b429ddd8c3e7be59f63759c1820e352029e48b8c
+              test ! -e "$BASE/.git/objects/info/alternates"
+              mkdir "$OUT"
+              exec > >(tee "$OUT/stage.log") 2>&1
+              for attempt in {1..180}; do
+                if test -f "$OUT/transfer.complete"; then break; fi
+                sleep 2
+              done
+              test -f "$OUT/transfer.complete"
+              test "$(sha256sum "$OUT/update.bundle" | awk '{print $1}')" = 289c0138604570a120b78ed62e01f632f356c86b60fa31a0ae425a0cf3a99391
+              git clone --shared --no-checkout "$BASE" "$TARGET"
+              git -C "$TARGET" bundle verify "$OUT/update.bundle"
+              git -C "$TARGET" fetch --no-tags "$OUT/update.bundle" HEAD
+              git -C "$TARGET" checkout --detach "$SOURCE"
+              test "$(git -C "$TARGET" rev-parse HEAD)" = "$SOURCE"
+              test -z "$(git -C "$TARGET" status --porcelain)"
+              test "$(git -C "$ROBOLAB" rev-parse HEAD)" = 0aef241fb088ca21bb4ebd24448940ed56620d17
+              test -z "$(git -C "$ROBOLAB" status --porcelain --untracked-files=no)"
+              cd "$TARGET"
+              export PYTHONPATH="$TARGET"
+              "$PY" -m experiments.workshops.spatial_grounding_v1.prospective_family_scene --help > "$OUT/builder-cli.txt"
+              "$PY" tools/validate_vla_wam_v3_protocol.py --quiet
+              "$PY" tools/validate_vla_wam_v2_protocol.py > "$OUT/v2-validation.json"
+              "$PY" - "$OUT" "$TARGET" "$ROBOLAB" <<'PY'
+              from datetime import datetime, timezone
+              import json
+              from pathlib import Path
+              from types import SimpleNamespace
+              import sys
+              from experiments.workshops.spatial_grounding_v1.prospective_family_scene import build_overlay
+              from experiments.workshops.spatial_grounding_v1.prospective_family_capture import _manifest, _validate_capture_bindings
+              from experiments.workshops.spatial_grounding_v1.lat_workspace_capture import _record
+              out, source, robolab = map(Path, sys.argv[1:])
+              baseline = source / "artifacts/workshops/spatial_grounding_v1/infrastructure/a40-20260922r-workspace.json"
+              base = robolab / "assets/scenes/rubiks_cube_banana_bowl.usda"
+              if _record(base)["sha256"] != "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0":
+                  raise ValueError("base scene differs from audited native source")
+              bindings = SimpleNamespace(
+                  robolab_root=robolab,
+                  assets_manifest=Path("/data/users/ali/sgw-01/preflight/a40-20260922e/assets.json"),
+              )
+              manifests = []
+              for family in ("HEIGHT", "DIST"):
+                  for side in ("left", "right"):
+                      key = f"{family.lower()}-{side}"
+                      scene = build_overlay(
+                          family=family, base_scene=base, workspace_receipt=baseline,
+                          output=out / "prospective" / f"{key}.usda",
+                          **{("upper_side" if family == "HEIGHT" else "bowl_side"): side},
+                      )
+                      path = out / "prospective" / f"{key}.manifest.json"
+                      with path.open("x") as stream:
+                          json.dump(scene, stream, indent=2, sort_keys=True, allow_nan=False)
+                          stream.write("\n")
+                      _validate_capture_bindings(bindings, _manifest(path))
+                      manifests.append({"family": family, "counterbalance": side, **_record(path)})
+              receipt = {
+                  "status": "passed_source_and_asset_bound_prospective_designs_not_native_captured",
+                  "source_commit": "ff2c361d51b3fe370cef2ec2b07347082a4ea5d4",
+                  "source_root": str(source),
+                  "object_store_dependency": str(source.parent / "b429ddd"),
+                  "alternate_store_depth": 1,
+                  "bundle": _record(out / "update.bundle"),
+                  "prospective_manifests": manifests,
+                  "completed_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "model_requests": 0, "behavioral_episodes": 0, "allocated_gpus": 0,
+                  "simulator_created": False, "frozen_candidates": 0, "release_permitted": False,
+              }
+              with (out / "receipt.json").open("x") as stream:
+                  json.dump(receipt, stream, indent=2, sort_keys=True)
+                  stream.write("\n")
+              print(json.dumps(receipt, sort_keys=True))
+              PY
+              sync
+          env:
+            - {name: HOME, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: CUDA_VISIBLE_DEVICES, value: ""}
+          resources:
+            requests: {cpu: "2", memory: 4Gi}
+            limits: {cpu: "2", memory: 4Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: tmp
+          emptyDir: {}

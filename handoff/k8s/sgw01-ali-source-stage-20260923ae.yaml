@@ -1,0 +1,108 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-source-stage-20260923ae
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: offline-source-and-cli-preflight}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: stage
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              OUT=/data/users/ali/sgw-01/infrastructure/source-stage-20260923ae
+              BASE=/data/users/ali/sgw-01/source/4f5ca8a-ab
+              TARGET=/data/users/ali/sgw-01/source/436f67a-ae
+              SOURCE=436f67a313e8b8a98a6af362e75eb2d1d9bd57b1
+              ROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              PREFLIGHT=/data/users/ali/sgw-01/preflight/a40-20260922e
+              test ! -e "$OUT"
+              test ! -e "$TARGET"
+              test "$(git -C "$BASE" rev-parse HEAD)" = 4f5ca8accb71e6eeefb051bb9f261e9c4e704c6c
+              mkdir "$OUT"
+              exec > >(tee "$OUT/stage.log") 2>&1
+              echo "Waiting for exact geometry-calibration source bundle."
+              for attempt in {1..180}; do
+                if test -f "$OUT/transfer.complete"; then break; fi
+                sleep 2
+              done
+              test -f "$OUT/transfer.complete"
+              test "$(sha256sum "$OUT/update.bundle" | awk '{print $1}')" = 3d88ff366a14d41cc12a2b7c592d2a191a7b22afe1481354262c756493659a4a
+              git clone --shared --no-checkout "$BASE" "$TARGET"
+              git -C "$TARGET" bundle verify "$OUT/update.bundle"
+              git -C "$TARGET" fetch --no-tags "$OUT/update.bundle" HEAD
+              git -C "$TARGET" checkout --detach "$SOURCE"
+              test "$(git -C "$TARGET" rev-parse HEAD)" = "$SOURCE"
+              test -z "$(git -C "$TARGET" status --porcelain)"
+              export PYTHONPATH="$TARGET:$ROBOLAB"
+              cd "$ROBOLAB"
+              "$PY" -m experiments.workshops.spatial_grounding_v1.lat_workspace_capture --study-root "$TARGET" --robolab-root "$ROBOLAB" --assets-manifest "$PREFLIGHT/assets.json" --renderer-receipt "$PREFLIGHT/renderer.json" --output "$OUT/cli-only-no-runtime/workspace.json" --render-warmup-frames 120 --gripper-calibration --headless --num-envs 1 --device cuda:0 --renderer realtime --rendering-type balanced --rendering_mode balanced --help > "$OUT/native-cli-help.txt"
+              test ! -e "$OUT/cli-only-no-runtime"
+              "$PY" - "$OUT" "$TARGET" <<'PY'
+              from datetime import datetime, timezone
+              import hashlib
+              import json
+              from pathlib import Path
+              import subprocess
+              import sys
+              output, target = map(Path, sys.argv[1:])
+              receipt = {
+                  "status": "passed_exact_offline_source_stage_and_native_cli",
+                  "source_commit": subprocess.check_output(["git", "-C", str(target), "rev-parse", "HEAD"], text=True).strip(),
+                  "source_root": str(target),
+                  "bundle_sha256": hashlib.sha256((output / "update.bundle").read_bytes()).hexdigest(),
+                  "native_cli_help_sha256": hashlib.sha256((output / "native-cli-help.txt").read_bytes()).hexdigest(),
+                  "completed_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "model_requests": 0, "allocated_gpus": 0, "simulator_created": False,
+              }
+              with (output / "receipt.json").open("x") as stream:
+                  json.dump(receipt, stream, indent=2, sort_keys=True)
+                  stream.write("\n")
+              print(json.dumps(receipt, sort_keys=True))
+              PY
+              sync
+          env:
+            - {name: HOME, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: OMNI_KIT_ACCEPT_EULA, value: "YES"}
+            - {name: ACCEPT_EULA, value: "Y"}
+            - name: LD_LIBRARY_PATH
+              value: /data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu
+          resources:
+            requests: {cpu: "2", memory: 8Gi}
+            limits: {cpu: "2", memory: 8Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: tmp
+          emptyDir: {}

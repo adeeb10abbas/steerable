@@ -1,0 +1,36 @@
+{
+  "schema_version": "sgw-01-bounded-idle-selection-v1",
+  "authorization_id": "SGW-OPS-002",
+  "authorization_sha256": "20c0d1796ada4e8026f2dc06eacfd5428a73ff7eab14f137aebaf6a72f09e2f7",
+  "attempt_id": "SGW-ENG-008-LAT-057",
+  "timing": "After all four cs probes terminated without taking the native claim.",
+  "observed_constraints": "A40 nodes191/184/170/187/196 rejected device allocation before container start. The admitted RTX lease exposed GPU-37425604-6c72-a77a-f635-392439431707 with94059MiB used and3192MiB free; the idle gate correctly blocked it. That busy GPU was not used or modified.",
+  "maximum_probe_jobs": 10,
+  "gpus_per_probe": 1,
+  "maximum_concrete_gpus_including_four_existing_workers": 14,
+  "maximum_native_executions_across_both_probe_waves": 1,
+  "blocked_idle_lease_hold_seconds": 30,
+  "output_root": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cs",
+  "persistent_claim": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cs-claim",
+  "allocation_selection": "Check the six remaining A40 nodes with one visible reservation in the authorized namespace, plus four concurrent one-GPU RTX leases so the device plugin can expose distinct available device allocations instead of repeatedly returning the same busy card. A blocked idle lease waits at most30 seconds without any simulator/model activity before exiting, allowing the concurrent leases to observe distinct allocations. Each lease must independently pass the real idle gate. This does not assert any unprobed device is idle.",
+  "nodes": [
+    "dcwipphhgc169.edc.nam.gm.com",
+    "dcwipphhgc171.edc.nam.gm.com",
+    "dcwipphhgc194.edc.nam.gm.com",
+    "dcwipphhgc197.edc.nam.gm.com",
+    "dcwipphhgc198.edc.nam.gm.com",
+    "dcwipphhgc200.edc.nam.gm.com",
+    "dcwipphrtx0005.edc.nam.gm.com",
+    "dcwipphrtx0005.edc.nam.gm.com",
+    "dcwipphrtx0005.edc.nam.gm.com",
+    "dcwipphrtx0005.edc.nam.gm.com"
+  ],
+  "unchanged_safety": "Same persistent one-winner claim as cs, never removed automatically; same source/registration/storage/idle/UUID-lock checks and original native command; ordinary priority0 and pre-bound existing nodes; no scheduler preemption, new hardware or modification of any existing workload. BackoffLimit0; no automatic retry.",
+  "scientific_counts": {
+    "new_engineering_layouts": 1,
+    "planned_scripted_trials_total": 6,
+    "model_requests": 0,
+    "release_permitted": false
+  },
+  "stop_condition": "If these real idle checks also fail, report graphics-capacity unavailability rather than borrowing a busy GPU or substituting compute-only hardware for viewport recording."
+}

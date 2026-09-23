@@ -1,0 +1,20 @@
+Selected sole native owner: sgw01-ali-paper-engineering-20260923ct-1
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/data/users/ali/sgw-01/source/4f04e31e-cj/experiments/workshops/spatial_grounding_v1/paper_engineering.py", line 392, in <module>
+    main()
+  File "/data/users/ali/sgw-01/source/4f04e31e-cj/experiments/workshops/spatial_grounding_v1/paper_engineering.py", line 388, in main
+    print(json.dumps(run(registration_path=args.registration, output=args.output_root), sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/users/ali/sgw-01/source/4f04e31e-cj/experiments/workshops/spatial_grounding_v1/paper_engineering.py", line 360, in run
+    verification = verify_candidate(Registration(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/users/ali/sgw-01/source/4f04e31e-cj/experiments/workshops/spatial_grounding_v1/qualification_batch_verifier.py", line 351, in verify_candidate
+    _require("reset_error" not in check and check["reset_validation"] ==
+  File "/data/users/ali/sgw-01/source/4f04e31e-cj/experiments/workshops/spatial_grounding_v1/qualification_batch_verifier.py", line 31, in _require
+    raise VerificationError(message)
+experiments.workshops.spatial_grounding_v1.qualification_batch_verifier.VerificationError: recorded reset comparison differs
+Traceback (most recent call last):
+  File "<stdin>", line 9, in <module>
+RuntimeError: native command exited 1

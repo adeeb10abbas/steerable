@@ -1,0 +1,6 @@
+{
+  "model_requests": 0,
+  "release_permitted": false,
+  "status": "engineering_infrastructure_failure_not_model_or_physical_failure",
+  "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/sgw-01/source/4f04e31e-cj/experiments/workshops/spatial_grounding_v1/paper_engineering.py\", line 360, in run\n    verification = verify_candidate(Registration(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/sgw-01/source/4f04e31e-cj/experiments/workshops/spatial_grounding_v1/qualification_batch_verifier.py\", line 351, in verify_candidate\n    _require(\"reset_error\" not in check and check[\"reset_validation\"] ==\n  File \"/data/users/ali/sgw-01/source/4f04e31e-cj/experiments/workshops/spatial_grounding_v1/qualification_batch_verifier.py\", line 31, in _require\n    raise VerificationError(message)\nexperiments.workshops.spatial_grounding_v1.qualification_batch_verifier.VerificationError: recorded reset comparison differs\n"
+}

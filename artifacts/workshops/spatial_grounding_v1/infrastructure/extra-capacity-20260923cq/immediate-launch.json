@@ -1,0 +1,33 @@
+{
+  "schema_version": "sgw-01-native-immediate-launch-v1",
+  "attempt_id": "SGW-ENG-008-LAT-057",
+  "authorization": "release-intent.json",
+  "source_template": "handoff/k8s/sgw01-ali-paper-engineering-20260923cn.json",
+  "source_template_sha256": "2537cb018851aab273848d84a949b8fda11d0285124662092f340c2a3902d4ba",
+  "job_name": "sgw01-ali-paper-engineering-20260923cr",
+  "node_name": "dcwipphhgc184.edc.nam.gm.com",
+  "output_root": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cr",
+  "native_source_commit": "4f04e31ee0219dae052bba2ef95b9e2010dbceeb",
+  "registration_sha256": "ec79b162dc7dbac10155ee62ee1962da617ffb0517b6b683387bf9f37dcecb92",
+  "prior_attempt": {
+    "job_uid": "acdf52db-7ded-4b33-8b7a-1ec818e82a2c",
+    "pod_uid": "71f51ac6-5511-4c6b-8d08-cc0dd6df7ade",
+    "status": "UnexpectedAdmissionError",
+    "reason": "Node191 had no unallocated GPU: device plugin rejected the Pod before any container started. Its second GPU was reserved by an existing workload, which was not touched.",
+    "native_container_started": false,
+    "output_root_created": false,
+    "scientific_trials_consumed": 0
+  },
+  "node_selection": "Existing Ready, uncordoned A40 node184 has no active reservation in the authorized namespace. Actual device-plugin allocation and the unchanged GPU-idle/UUID-lock gates must still pass before simulator execution; namespace vacancy alone is not an idle-GPU attestation.",
+  "template_changes": [
+    "New unique Job and output identity for the preserved pre-container infrastructure retry.",
+    "Immediate start rather than suspension, under the explicit additional-idle-capacity authorization.",
+    "Exact node184 pre-binding and A40 node affinity; noncritical priority0 and no default-scheduler preemption.",
+    "Native command output path only; registration, source, image, resources, identity/storage/idle checks, six-trial controller and recording remain unchanged."
+  ],
+  "gpu_requests": 1,
+  "model_requests": 0,
+  "maximum_new_engineering_layouts": 1,
+  "planned_scripted_trials": 6,
+  "release_permitted": false
+}

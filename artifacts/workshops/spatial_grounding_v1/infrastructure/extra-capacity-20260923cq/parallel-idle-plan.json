@@ -1,0 +1,28 @@
+{
+  "schema_version": "sgw-01-bounded-idle-selection-v1",
+  "authorization_id": "SGW-OPS-002",
+  "authorization_sha256": "20c0d1796ada4e8026f2dc06eacfd5428a73ff7eab14f137aebaf6a72f09e2f7",
+  "attempt_id": "SGW-ENG-008-LAT-057",
+  "native_source_commit": "4f04e31ee0219dae052bba2ef95b9e2010dbceeb",
+  "source_template": "handoff/k8s/sgw01-ali-paper-engineering-20260923cr.json",
+  "source_registration_sha256": "ec79b162dc7dbac10155ee62ee1962da617ffb0517b6b683387bf9f37dcecb92",
+  "maximum_capacity_probe_jobs": 4,
+  "gpus_per_probe": 1,
+  "maximum_concrete_gpus_including_four_existing_workers": 8,
+  "maximum_native_executions": 1,
+  "planned_scripted_trials_total": 6,
+  "model_requests": 0,
+  "output_root": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cs",
+  "persistent_claim": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cs-claim",
+  "selection": "Each named existing node first must admit an exclusive GPU lease. The unchanged real GPU-idle probe runs before any simulator. An atomic persistent shared mkdir then selects at most one idle lease for native execution. All other admitted leases explicitly record not-selected and exit. The claim is never automatically removed, including after failure; late arrivals cannot rerun the attempt.",
+  "nodes": [
+    {"node": "dcwipphhgc170.edc.nam.gm.com", "product": "NVIDIA-A40", "gpu_name": "NVIDIA A40"},
+    {"node": "dcwipphhgc187.edc.nam.gm.com", "product": "NVIDIA-A40", "gpu_name": "NVIDIA A40"},
+    {"node": "dcwipphhgc196.edc.nam.gm.com", "product": "NVIDIA-A40", "gpu_name": "NVIDIA A40"},
+    {"node": "dcwipphrtx0005.edc.nam.gm.com", "product": "NVIDIA-RTX-PRO-6000-Blackwell-Server-Edition", "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition"}
+  ],
+  "hardware_disclosure": "Permit the graphics-capable RTX PRO6000 lane as well as A40, before this attempt has any native outcome. Preserve the same pinned RoboLab/Isaac source, image, settings, source inputs, geometry, controller and scoring. Record actual GPU/driver identity and require fresh native captures; an idle RTX lease alone is not renderer qualification. The A100/B200/V100 compute-only lanes are not substituted for required RTX viewport recording.",
+  "resource_safety": "Pre-bound ordinary-priority Pods do not invoke scheduler preemption or provision nodes. Respect existing taints. A device-admission rejection or failed idle probe cannot start native code. No unrelated workload is modified. Every Job has a finite deadline and backoffLimit0.",
+  "preserved_attempts": "CN/node191 and CR/node184 were rejected before any container started. Their outputs and scientific trial counts remain absent/zero, not model failures. CP is retired. These four bounded capacity probes are not four engineering replications.",
+  "release_permitted": false
+}

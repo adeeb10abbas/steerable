@@ -194,6 +194,13 @@ LAT scene path is hash-bound to the fresh capture; the original stock task
 path is unchanged. Raw frames/videos, native geometry and all outcomes remain
 on PVC. This is one engineering layout, not a refill or release of a frozen
 pool. Unavailable arm/camera measurements are explicit, never safe defaults.
+For a CPU-only recheck, pass the existing evidence root plus
+`--verification-output <new-receipt-outside-evidence-tree>`. This reads the exact
+serialized proposal used by the trial producer, preserving reset-row object
+order, and runs the unchanged raw/state/action/video verifier. It starts no
+simulator or model, refuses to overwrite a receipt, and leaves original process
+failures and raw outcomes intact.
+
 `native_successor_job` creates a **suspended**, one-GPU Job pre-bound to one
 registered predecessor node at noncritical priority zero. The default scheduler
 does not handle it. `native_successor_handoff` checks all four exact worker
@@ -204,8 +211,13 @@ can read only the named resources and patch that one new Job; it cannot create,
 bind, delete or evict Pods. Missing, failed, replaced or interrupted workers
 are not treated as available capacity.
 
-This admitted namespace-scoped route replaces the rejected PriorityClass and
-Pod-binding proposals without weakening non-preemption or the four-GPU ceiling.
+This admitted namespace-scoped route replaced the rejected PriorityClass and
+Pod-binding proposals under the former four-GPU ceiling. It is now retired
+for this attempt: SGW-OPS-002 supersedes that operational ceiling and permits
+as-needed, verified-idle existing capacity through finite concrete allocations.
+Do not resume the old `cn`/`cp` handoff. CS/CT's pre-bound probes share one
+persistent atomic claim; only CT-1 on node171 started the native scene, using
+the CS output root. Never remove that claim to rerun the attempt.
 The exact operational disclosure is
 [`scheduling-amendment.json`](../../../artifacts/workshops/spatial_grounding_v1/infrastructure/paper-engineering-20260923cn/scheduling-amendment.json).
 The original workers/collector and immutable native execution source remain

@@ -1,0 +1,358 @@
+{
+  "actual_native_executions": 1,
+  "actual_raw_root": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cs",
+  "administrative_attempts": [
+    {
+      "containers": [],
+      "job": "sgw01-ali-paper-engineering-20260923cn",
+      "job_uid": "acdf52db-7ded-4b33-8b7a-1ec818e82a2c",
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "outcome": "rejected_device_admission_before_container_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923cn-5d7sr",
+      "pod_uid": "71f51ac6-5511-4c6b-8d08-cc0dd6df7ade"
+    },
+    {
+      "containers": [],
+      "job": "sgw01-ali-paper-engineering-20260923cr",
+      "job_uid": "355974f4-5581-4f1c-95c0-842af1647468",
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "node": "dcwipphhgc184.edc.nam.gm.com",
+      "outcome": "rejected_device_admission_before_container_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923cr-q5k2f",
+      "pod_uid": "288d84fc-39a5-4b67-9e13-d1758ad73549"
+    },
+    {
+      "containers": [],
+      "job": "sgw01-ali-paper-engineering-20260923cs-0",
+      "job_uid": "c66e35f8-9237-4eb2-a5fe-503f80f9ca5d",
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "node": "dcwipphhgc170.edc.nam.gm.com",
+      "outcome": "rejected_device_admission_before_container_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923cs-0-5v4kh",
+      "pod_uid": "16a69076-a7c8-4100-9f17-0969b35edd3f"
+    },
+    {
+      "containers": [],
+      "job": "sgw01-ali-paper-engineering-20260923cs-1",
+      "job_uid": "db4490f3-1f45-4824-858d-f0a5eb4cc218",
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "node": "dcwipphhgc187.edc.nam.gm.com",
+      "outcome": "rejected_device_admission_before_container_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923cs-1-25l9z",
+      "pod_uid": "9d8fa05c-fb4a-4d18-a85b-b1130b441b8d"
+    },
+    {
+      "containers": [],
+      "job": "sgw01-ali-paper-engineering-20260923cs-2",
+      "job_uid": "07529129-dc85-496a-821d-45820c2ec515",
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "node": "dcwipphhgc196.edc.nam.gm.com",
+      "outcome": "rejected_device_admission_before_container_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923cs-2-7t6zs",
+      "pod_uid": "9a56ce7a-6513-4298-8678-fa565347bf50"
+    },
+    {
+      "containers": [
+        {
+          "name": "native-engineering",
+          "restart_count": 0,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://12423a7f8b65209723a827dbe6182e2207122559e538946a4b9d31a7bed53845",
+              "exitCode": 1,
+              "finishedAt": "2026-09-23T16:44:30Z",
+              "reason": "Error",
+              "startedAt": "2026-09-23T16:44:28Z"
+            }
+          }
+        }
+      ],
+      "job": "sgw01-ali-paper-engineering-20260923cs-3",
+      "job_uid": "f307e1d4-5688-4854-8e14-63aa384b0e17",
+      "message": null,
+      "node": "dcwipphrtx0005.edc.nam.gm.com",
+      "outcome": "idle_gate_blocked_before_native_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923cs-3-xxn4q",
+      "pod_uid": "e395e93d-bcf8-4258-88a1-0b40f9eaa0dd"
+    },
+    {
+      "containers": [],
+      "job": "sgw01-ali-paper-engineering-20260923ct-0",
+      "job_uid": "3194116d-60df-4bf5-bec5-d72a434fe503",
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "node": "dcwipphhgc169.edc.nam.gm.com",
+      "outcome": "rejected_device_admission_before_container_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923ct-0-lxxxb",
+      "pod_uid": "622d7dc0-69ec-4168-96c6-6b79d9631128"
+    },
+    {
+      "containers": [
+        {
+          "name": "native-engineering",
+          "restart_count": 0,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://80adf90e4966e6054a7d85ea4d2c6875f11083aff6b01214a2bbac57acb17b2c",
+              "exitCode": 1,
+              "finishedAt": "2026-09-23T17:13:20Z",
+              "reason": "Error",
+              "startedAt": "2026-09-23T16:52:32Z"
+            }
+          }
+        }
+      ],
+      "job": "sgw01-ali-paper-engineering-20260923ct-1",
+      "job_uid": "b06d0bd1-b89f-42ad-ad42-2d74d0cf7f25",
+      "message": null,
+      "node": "dcwipphhgc171.edc.nam.gm.com",
+      "outcome": "native_owner",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923ct-1-vrcg4",
+      "pod_uid": "07d2e2d6-fd66-433a-8835-320d1509255a"
+    },
+    {
+      "containers": [],
+      "job": "sgw01-ali-paper-engineering-20260923ct-2",
+      "job_uid": "960fac8a-cdcd-4376-9e6e-80783044505b",
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "node": "dcwipphhgc194.edc.nam.gm.com",
+      "outcome": "rejected_device_admission_before_container_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923ct-2-ntzmh",
+      "pod_uid": "dcd7ec79-1968-4409-8ccf-23e70e60a509"
+    },
+    {
+      "containers": [],
+      "job": "sgw01-ali-paper-engineering-20260923ct-3",
+      "job_uid": "7b882016-4fa0-4ba2-9ec3-599766cf703e",
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "node": "dcwipphhgc197.edc.nam.gm.com",
+      "outcome": "rejected_device_admission_before_container_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923ct-3-6dvsq",
+      "pod_uid": "0af5fa59-e970-4589-b852-1d86aa586f0c"
+    },
+    {
+      "containers": [],
+      "job": "sgw01-ali-paper-engineering-20260923ct-4",
+      "job_uid": "b78e29eb-4152-4de2-9878-59afb0379d31",
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "node": "dcwipphhgc198.edc.nam.gm.com",
+      "outcome": "rejected_device_admission_before_container_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923ct-4-jnjs6",
+      "pod_uid": "f1659c9c-c172-4adb-bc97-8bf6bfb231fd"
+    },
+    {
+      "containers": [],
+      "job": "sgw01-ali-paper-engineering-20260923ct-5",
+      "job_uid": "e2cbc5f0-c9f1-429c-b65e-4e91aca91a8b",
+      "message": "Pod was rejected: Allocate failed due to requested number of devices unavailable for nvidia.com/gpu. Requested: 1, Available: 0, which is unexpected",
+      "node": "dcwipphhgc200.edc.nam.gm.com",
+      "outcome": "rejected_device_admission_before_container_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923ct-5-qscdt",
+      "pod_uid": "c849fdb6-0294-462a-87cb-e910ae21120f"
+    },
+    {
+      "containers": [
+        {
+          "name": "native-engineering",
+          "restart_count": 0,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://dbe24b15c8f013afde30667cec294464bde91620ac295d5ae41ad0ea282ae235",
+              "exitCode": 75,
+              "finishedAt": "2026-09-23T16:53:04Z",
+              "reason": "Error",
+              "startedAt": "2026-09-23T16:52:33Z"
+            }
+          }
+        }
+      ],
+      "job": "sgw01-ali-paper-engineering-20260923ct-6",
+      "job_uid": "786cfebb-9860-4b12-a6d5-8190fa4d7381",
+      "message": null,
+      "node": "dcwipphrtx0005.edc.nam.gm.com",
+      "outcome": "idle_gate_blocked_before_native_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923ct-6-twqlh",
+      "pod_uid": "1a182736-8f6b-4a4f-b01d-f6154f0d93be"
+    },
+    {
+      "containers": [
+        {
+          "name": "native-engineering",
+          "restart_count": 0,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://dcc0f4b0ebdeabc9c28a2ea72b5763a753a676783a0a6e0fca42d9f75fe108bb",
+              "exitCode": 75,
+              "finishedAt": "2026-09-23T16:53:05Z",
+              "reason": "Error",
+              "startedAt": "2026-09-23T16:52:33Z"
+            }
+          }
+        }
+      ],
+      "job": "sgw01-ali-paper-engineering-20260923ct-7",
+      "job_uid": "efc7f792-d36c-477e-b2d1-1f4e4a232ed7",
+      "message": null,
+      "node": "dcwipphrtx0005.edc.nam.gm.com",
+      "outcome": "idle_gate_blocked_before_native_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923ct-7-ql87m",
+      "pod_uid": "122f4af6-5a1e-445c-8c6c-8a1699dbf3e2"
+    },
+    {
+      "containers": [
+        {
+          "name": "native-engineering",
+          "restart_count": 0,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://3dac37db7b00621209c03f5cdfbca781dc3185281651941587b78f176c740ec9",
+              "exitCode": 75,
+              "finishedAt": "2026-09-23T16:53:05Z",
+              "reason": "Error",
+              "startedAt": "2026-09-23T16:52:33Z"
+            }
+          }
+        }
+      ],
+      "job": "sgw01-ali-paper-engineering-20260923ct-8",
+      "job_uid": "5c5c32fc-67f8-414e-bb01-ab9447fde4d3",
+      "message": null,
+      "node": "dcwipphrtx0005.edc.nam.gm.com",
+      "outcome": "idle_gate_blocked_before_native_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923ct-8-454h5",
+      "pod_uid": "a482908b-2dd9-4e59-9480-f41207953354"
+    },
+    {
+      "containers": [
+        {
+          "name": "native-engineering",
+          "restart_count": 0,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://fc0a37261a736e10e9bf057789fc8d244c88fc79e1f5f25d52e5baf55156285e",
+              "exitCode": 75,
+              "finishedAt": "2026-09-23T16:53:05Z",
+              "reason": "Error",
+              "startedAt": "2026-09-23T16:52:33Z"
+            }
+          }
+        }
+      ],
+      "job": "sgw01-ali-paper-engineering-20260923ct-9",
+      "job_uid": "b82b2f1f-aaf7-4ed2-b47a-c52ba65a6d7d",
+      "message": null,
+      "node": "dcwipphrtx0005.edc.nam.gm.com",
+      "outcome": "idle_gate_blocked_before_native_start",
+      "phase": "Failed",
+      "pod": "sgw01-ali-paper-engineering-20260923ct-9-g7qxt",
+      "pod_uid": "6ce229a7-dfd6-465e-ad5c-f1528219bf34"
+    }
+  ],
+  "attempt_id": "SGW-ENG-008-LAT-057",
+  "authorization_id": "SGW-OPS-002",
+  "authorization_sha256": "20c0d1796ada4e8026f2dc06eacfd5428a73ff7eab14f137aebaf6a72f09e2f7",
+  "counts": {
+    "idle_gate_blocked_before_native_start": 5,
+    "native_owner": 1,
+    "rejected_device_admission_before_container_start": 10
+  },
+  "model_requests": 0,
+  "native_gpu_released_by_container_exit": true,
+  "native_owner": {
+    "containers": [
+      {
+        "name": "native-engineering",
+        "restart_count": 0,
+        "state": {
+          "terminated": {
+            "containerID": "containerd://80adf90e4966e6054a7d85ea4d2c6875f11083aff6b01214a2bbac57acb17b2c",
+            "exitCode": 1,
+            "finishedAt": "2026-09-23T17:13:20Z",
+            "reason": "Error",
+            "startedAt": "2026-09-23T16:52:32Z"
+          }
+        }
+      }
+    ],
+    "job": "sgw01-ali-paper-engineering-20260923ct-1",
+    "job_uid": "b06d0bd1-b89f-42ad-ad42-2d74d0cf7f25",
+    "message": null,
+    "node": "dcwipphhgc171.edc.nam.gm.com",
+    "outcome": "native_owner",
+    "phase": "Failed",
+    "pod": "sgw01-ali-paper-engineering-20260923ct-1-vrcg4",
+    "pod_uid": "07d2e2d6-fd66-433a-8835-320d1509255a"
+  },
+  "native_source_commit": "4f04e31ee0219dae052bba2ef95b9e2010dbceeb",
+  "new_scripted_trials": 6,
+  "observed_at_utc": "2026-09-23T17:21:37.393974+00:00",
+  "original_workers": [
+    {
+      "job": "sgw01-ali-family-partition-20260923bt",
+      "status": {
+        "active": 4,
+        "failedIndexes": "",
+        "ready": 4,
+        "startTime": "2026-09-23T08:16:48Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56"
+    },
+    {
+      "job": "sgw01-ali-family-collector-20260923bu",
+      "status": {
+        "active": 1,
+        "ready": 1,
+        "startTime": "2026-09-23T08:23:10Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "uid": "d386cfac-76ee-40c1-a339-b6aaa11531cf"
+    }
+  ],
+  "original_workers_modified": false,
+  "persistent_one_owner_claim": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cs-claim/owner.json",
+  "process_vs_science": "Native exited1 at post-trial reset-row-order comparison; all six original trials independently verified by unchanged source4f on CPU using the serialized proposal. Failure receipts remain immutable.",
+  "registered_native_attempts": 1,
+  "release_permitted": false,
+  "remaining_active_sgw_gpu_workers": 4,
+  "retired_handoff": {
+    "job": "sgw01-ali-paper-handoff-20260923cp",
+    "job_uid": "190fcdaf-582a-46cc-be12-37a715724407",
+    "pod_absent_from_exact_label_query": true,
+    "status": {
+      "conditions": [
+        {
+          "lastProbeTime": "2026-09-23T16:22:19Z",
+          "lastTransitionTime": "2026-09-23T16:22:19Z",
+          "message": "Job suspended",
+          "reason": "JobSuspended",
+          "status": "True",
+          "type": "Suspended"
+        }
+      ],
+      "ready": 0,
+      "startTime": "2026-09-23T15:56:42Z",
+      "terminating": 0,
+      "uncountedTerminatedPods": {}
+    },
+    "suspended": true
+  },
+  "schema_version": "sgw-01-extra-capacity-native-deployment-v1"
+}

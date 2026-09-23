@@ -1,5 +1,10 @@
 # SGW-01 status
 
+**The new 0.50 m native engineering layout passed all six recorded scripted
+checks: both goals, three resets each. It ran on an additional verified-idle
+A40, leaving the original four workers untouched. This is one engineering
+layout outside the frozen pools, not a benchmark or learned-policy release.**
+
 **LAT qualification is complete: 20 all-six passes and 20 physical rejections,
 including candidate 032, plus 60 geometric rejections. The frozen 29-layout
 behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
@@ -56,27 +61,55 @@ actions, measures the articulation root and cameras, realizes one translated
 0.50 m cube-center arrangement, then records both goals across the standard
 six scripted trials. Root-offset conversion, raw/video retention and independent
 evidence verification are implemented; this is not another candidate campaign.
-No new native capture or successful goal is claimed yet.
+It has now completed using exact native source `4f04e31e`.
+The [native evidence](infrastructure/extra-capacity-20260923cq/native-evidence.json)
+and [deployment record](infrastructure/extra-capacity-20260923cq/deployment-evidence.json)
+bind the sole owner, `sgw01-ali-paper-engineering-20260923ct-1` on node171,
+to the actual `paper-engineering-20260923cs` PVC output root. The realized
+cube-center/root distance is **0.4999999796 m**. Robot joints and positions,
+and camera positions, were unchanged; maximum measured camera angular
+difference was 0.02743 degrees, within the retained 2-degree tolerance.
 
-The exact native source `4f04e31e` is staged. The previous
+All six trials retained 450 commands and 451 states. The independent verifier
+checked 10,824 trial files and decoded all 2,706 trial-video frames plus
+726 warmup-video frames. Both native captures also retain viewport videos.
+Requested terminal margins span 0.1254-0.1307 m; maximum bowl drift is
+0.00002973 m. Raw frames, actions, states and every video remain on the PVC.
+The nine measured arm-link bounds had no recorded obstacle AABB overlap;
+these bounds do not cover the gripper's collision geometry. Filtered gripper
+forces were observed on the cube and zero on the bowl, banana and table.
+Neither those bounds nor filtered contacts establish complete collision safety.
+
+The native Job exited with an infrastructure error **after all six trials**:
+its verifier compared in-memory cube/bowl row order against the producer's
+serialized bowl/cube order. Every numeric reset comparison matched.
+The original failure and process receipts remain unchanged. A separate
+[CPU-only recheck](infrastructure/extra-capacity-20260923cq/recheck/qualification-verification.json)
+used the unchanged source4f verifier with the exact serialized proposal and
+confirmed **6/6 passes**, without rerunning physics or changing any threshold.
+The caller now reads that same proposal, and an explicit CPU-only recheck mode
+preserves the original evidence tree.
+
+The previous
 [deployment receipt](infrastructure/paper-engineering-20260923cn/deployment-receipt.json)
 recorded **a client-independent natural-release handoff**. Under that superseded
 allocation policy, native Job `cn` was created
-suspended and pre-bound to rank1's existing node. CPU Job `cp` passed its
-actual ServiceAccount resume dry-run and repeatedly observes all four `bt`
-workers still running. It can resume only that exact Job after rank1 naturally
-succeeds and its indexed Job acknowledges completion. The complete target spec
-is hash-checked, with atomic UID/resource-version guards. No create, bind,
-delete or eviction permission is granted, and no default-scheduler preemption
-was used. The original four GPUs and independent `bu` collector are unchanged.
-These scheduling receipts remain provenance; SGW-OPS-002 authorizes replacing
-the obsolete wait safely, not duplicating or overwriting its native attempt.
+suspended and pre-bound to rank1's existing node. CPU Job `cp` is now retired
+and suspended, its logs preserved and its Pod confirmed absent. Do not restart
+`cn` or `cp`. Ten device-admission failures and five rejected non-idle leases
+remain administrative evidence, not scientific failures. Only CT-1 passed
+both idle checks and acquired the persistent cross-wave claim. That claim
+must never be removed to rerun this attempt. No preemption, paid provisioning
+or unrelated workload modification occurred. The extra GPU was released when
+the native container exited; the four original GPU workers and `bu` collector
+remain active under the expanded authorization.
 
 The rejected `ck`/`cl` scheduling routes and `cm`/`co` CPU dry-run attempts
 remain infrastructure provenance; none executed the new scene or a model.
-The next milestone is actual new-scene capture and both-goal evidence, not
-another historical audit. No frozen pool is paused, refilled or relabeled,
-and no campaign or learned run is released by this engineering demonstration.
+The next redesign milestone is a separately disclosed prospective campaign
+based on these native results, not another historical audit or a duplicate
+engineering attempt. No frozen pool is paused, refilled or relabeled, and no
+campaign or learned run is released by this engineering demonstration.
 
 ## Latest retained evidence (23 September, 13:34 UTC)
 
@@ -89,8 +122,8 @@ shortage. At 13:34 UTC, workers had 13/14/14/14 completions with active
 HEIGHT090 and DIST006/007/008. HEIGHT091/097 and DIST002 were newly terminal
 but are not classified in this retained prefix.
 There was no shared stop, terminal launcher receipt, collector error or final
-collector receipt. The original queue, controller and resource ceiling remain
-unchanged.
+collector receipt. The original queue, controller and four-worker allocation
+remain unchanged; the former aggregate resource ceiling is superseded above.
 
 The [native metric capsule](infrastructure/native-metric-20260923cg/manifest.json)
 now binds DIST000's actual actor roots and the current installed native
@@ -159,8 +192,9 @@ and its pose metric includes rotation. It is not a universal pure-distance
 success optimum. The supplied Fig. 5 discussion of arXiv:2602.17659 concerns
 fine-tuned pi0.5 on real FR3/Robotiq with randomized positions, not matched-reset
 N3/D1 evidence. Cube contact alone cannot establish SGW goal grounding.
-No scene has been materialized or new experiment released; native realization
-and full qualification must follow separate prospective disclosure.
+At that proposal stage no scene had been materialized or released. The later
+separately registered SGW-ENG-008 realization and six-trial result are recorded
+above; full benchmark qualification remains a separate requirement.
 
 ## Current prospective freeze (23 September, 07:07 UTC)
 

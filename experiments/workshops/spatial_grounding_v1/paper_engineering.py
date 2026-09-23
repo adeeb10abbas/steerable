@@ -266,6 +266,28 @@ def compare_native_configuration(reference: Mapping[str, Any], translated: Mappi
     }
 
 
+def verify_recorded_trials(*, registration_path: Path, output: Path) -> dict[str, Any]:
+    registration = load_registration(registration_path)
+    if json.loads((output / "registration-binding.json").read_bytes()) != record(registration_path):
+        raise ValueError("retained engineering registration binding differs")
+    proposal = json.loads((output / "engineering-proposal.json").read_bytes())
+    if (proposal.get("engineering_attempt_id") != ATTEMPT
+            or proposal.get("outside_all_frozen_candidate_pools") is not True
+            or proposal.get("model_request_count") != 0 or proposal.get("behavioral_episode_count") != 0
+            or len(proposal["candidates"]) != 1):
+        raise ValueError("retained engineering proposal identity differs")
+    # Match the producer's serialized object order, including reset-report rows.
+    candidate = FixtureCandidate.from_json(proposal["candidates"][0])
+    if candidate.candidate_id != ATTEMPT or candidate.family != "LAT":
+        raise ValueError("retained engineering candidate identity differs")
+    calibration = json.loads(bound_file(registration["calibration"]).read_bytes())
+    return verify_candidate(Registration(
+        {"candidate_ids_in_frozen_hash_order": [ATTEMPT]},
+        record(registration_path)["sha256"], {ATTEMPT: candidate},
+        {"recipe": CALIBRATION_SCHEMA, "calibration_sha256": CALIBRATION_SHA256, "calibration": calibration},
+    ), index=0, root=output / f"0-{ATTEMPT}")
+
+
 def run(*, registration_path: Path, output: Path) -> dict[str, Any]:
     registration = load_registration(registration_path)
     if output.exists():
@@ -356,12 +378,7 @@ def run(*, registration_path: Path, output: Path) -> dict[str, Any]:
             f"--kit_args=--portable-root={trial_root}/kit --/rtx/verifyDriverVersion/enabled=false",
         ]
         _run_child(command, label="qualification", root=trial_root, values={}, timeout_seconds=2400)
-        calibration = json.loads(bound_file(registration["calibration"]).read_bytes())
-        verification = verify_candidate(Registration(
-            {"candidate_ids_in_frozen_hash_order": [ATTEMPT]},
-            record(registration_path)["sha256"], {ATTEMPT: FixtureCandidate.from_json(candidate)},
-            {"recipe": CALIBRATION_SCHEMA, "calibration_sha256": CALIBRATION_SHA256, "calibration": calibration},
-        ), index=0, root=trial_root)
+        verification = verify_recorded_trials(registration_path=registration_path, output=output)
         _fsync_json(output / "qualification-verification.json", verification)
         result = {
             "status": "both_goal_paths_recorded_and_independently_verified",
@@ -384,8 +401,19 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("--registration", type=Path, required=True)
     parser.add_argument("--output-root", type=Path, required=True)
+    parser.add_argument("--verification-output", type=Path,
+                        help="CPU-only recheck of existing output; write a new receipt outside its evidence tree")
     args = parser.parse_args()
-    print(json.dumps(run(registration_path=args.registration, output=args.output_root), sort_keys=True))
+    if args.verification_output is not None:
+        if args.verification_output.resolve().is_relative_to(args.output_root.resolve()):
+            parser.error("--verification-output must preserve the existing evidence tree")
+        if args.verification_output.exists():
+            raise FileExistsError(args.verification_output)
+        result = verify_recorded_trials(registration_path=args.registration, output=args.output_root)
+        _fsync_json(args.verification_output, result)
+    else:
+        result = run(registration_path=args.registration, output=args.output_root)
+    print(json.dumps(result, sort_keys=True))
 
 
 if __name__ == "__main__":

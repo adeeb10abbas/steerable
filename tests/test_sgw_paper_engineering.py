@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from experiments.workshops.spatial_grounding_v1 import paper_engineering as engineering
-from experiments.workshops.spatial_grounding_v1.fixtures import FixtureCandidate
+from experiments.workshops.spatial_grounding_v1.fixtures import FixtureCandidate, ResetSnapshot, validate_reset
 from experiments.workshops.spatial_grounding_v1.lat_candidate_generator import workspace_digest
 from experiments.workshops.spatial_grounding_v1.lat_workspace_capture import _rotate_wxyz
 from experiments.workshops.spatial_grounding_v1.paper_informed_geometry import translation_preview
@@ -124,6 +124,47 @@ def test_measured_footprint_rejection_is_retained(measured_translation):
     assert screen["release_permitted"] is False
 
 
+def test_retained_verification_uses_producer_serialized_reset_order(measured_translation, tmp_path, monkeypatch):
+    source, _, capture, manifest = measured_translation
+    candidate, _ = engineering.materialize_lat_candidate(
+        capture_path=capture, manifest_path=manifest, source_candidate=source,
+    )
+    registration_path = tmp_path / "registration.json"
+    registration_path.write_text("{}")
+    calibration = tmp_path / "calibration.json"
+    calibration.write_text("{}")
+    monkeypatch.setattr(engineering, "load_registration", lambda _: {
+        "calibration": engineering.record(calibration),
+    })
+    output = tmp_path / "evidence"
+    output.mkdir()
+    engineering._fsync_json(output / "registration-binding.json", engineering.record(registration_path))
+    engineering._fsync_json(output / "engineering-proposal.json", {
+        "engineering_attempt_id": engineering.ATTEMPT, "outside_all_frozen_candidate_pools": True,
+        "model_request_count": 0, "behavioral_episode_count": 0, "candidates": [candidate],
+    })
+    producer = FixtureCandidate.from_json(json.loads(
+        (output / "engineering-proposal.json").read_bytes())["candidates"][0])
+    snapshots = [ResetSnapshot(producer.object_poses) for _ in range(3)]
+    expected = validate_reset(producer, snapshots)
+    assert list(candidate["object_poses"]) != list(producer.object_poses)
+
+    def verify(registration, *, index, root):
+        assert index == 0 and root == output / f"0-{engineering.ATTEMPT}"
+        assert validate_reset(registration.candidates[engineering.ATTEMPT], snapshots) == expected
+        return {"status": "test_only_order_verified"}
+
+    monkeypatch.setattr(engineering, "verify_candidate", verify)
+    before = {path.name: path.read_bytes() for path in output.iterdir()}
+    assert engineering.verify_recorded_trials(
+        registration_path=registration_path, output=output,
+    ) == {"status": "test_only_order_verified"}
+    assert before == {path.name: path.read_bytes() for path in output.iterdir()}
+    registration_path.write_text('{"changed":true}')
+    with pytest.raises(ValueError, match="registration binding differs"):
+        engineering.verify_recorded_trials(registration_path=registration_path, output=output)
+
+
 def test_registration_does_not_authorize_policy_or_extra_trials(tmp_path):
     path = tmp_path / "registration.json"
     for changes in ({"model_requests": 1}, {"scripted_trials": 7}, {"maximum_new_engineering_layouts": 2}):
@@ -136,6 +177,27 @@ def test_registration_does_not_authorize_policy_or_extra_trials(tmp_path):
         path.write_text(json.dumps(value))
         with pytest.raises(ValueError, match="bounded zero-model"):
             engineering.load_registration(path)
+
+
+def test_cpu_recheck_cli_refuses_raw_tree_and_existing_receipts(tmp_path, monkeypatch):
+    output = tmp_path / "raw"
+    output.mkdir()
+    receipt = tmp_path / "recheck.json"
+    arguments = ["paper_engineering", "--registration", str(tmp_path / "registration.json"),
+                 "--output-root", str(output), "--verification-output"]
+    monkeypatch.setattr(engineering.sys, "argv", [*arguments, str(output / "replacement.json")])
+    with pytest.raises(SystemExit) as error:
+        engineering.main()
+    assert error.value.code == 2
+
+    monkeypatch.setattr(engineering.sys, "argv", [*arguments, str(receipt)])
+    monkeypatch.setattr(engineering, "verify_recorded_trials", lambda **_: {"test_only": True})
+    monkeypatch.setattr(engineering, "run", lambda **_: pytest.fail("CPU recheck started native execution"))
+    engineering.main()
+    assert json.loads(receipt.read_bytes()) == {"test_only": True}
+    assert not list(output.iterdir())
+    with pytest.raises(FileExistsError):
+        engineering.main()
 
 
 def test_native_configuration_comparison_reports_measurements_and_missing_cameras():

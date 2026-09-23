@@ -1,0 +1,39 @@
+{
+  "schema_version": "sgw-01-extra-idle-capacity-release-v1",
+  "attempt_id": "SGW-ENG-008-LAT-057",
+  "authorization_received_at_utc": "2026-09-23T16:19:31.997Z",
+  "exact_user_instruction": "use as MANY as neeeded!!!! the whole cluster is yours",
+  "scope": "Immediate override of the aggregate four-GPU ceiling. Use additional verified-idle existing authorized capacity; no paid provisioning, preemption or interference. RoboLab-only, full qualification first, experiment counts and recording/runtime gates remain unchanged.",
+  "prospective_action": "Resume the already registered native cn Job now on an additional exclusively allocated A40, rather than waiting for bt rank1. Do not create a second native Job or another copy of the attempt.",
+  "target_job": "sgw01-ali-paper-engineering-20260923cn",
+  "target_uid": "acdf52db-7ded-4b33-8b7a-1ec818e82a2c",
+  "native_source_commit": "4f04e31ee0219dae052bba2ef95b9e2010dbceeb",
+  "registration_sha256": "ec79b162dc7dbac10155ee62ee1962da617ffb0517b6b683387bf9f37dcecb92",
+  "output_root": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cn",
+  "duplicate_prevention": "The obsolete cp waiting controller was suspended with its exact UID and its Pod was confirmed deleted. Re-read cn after that retirement; require the exact UID, suspended/unstarted state and absent output root before one atomic UID/resourceVersion-guarded resume. Preserve all prior logs.",
+  "placement": {
+    "node": "dcwipphhgc191.edc.nam.gm.com",
+    "node_ready": true,
+    "node_gpu_product": "NVIDIA-A40",
+    "node_allocatable_gpus": 2,
+    "unchanged_bt_gpu_request_on_node": 1,
+    "new_native_gpu_request": 1,
+    "expected_aggregate_sgw_gpus": 5,
+    "nonpreemption": "Keep the admitted existing nodeName and noncritical priority0. No default-scheduler preemption is invoked. Kubelet/device-plugin admission must supply another resource rather than commandeer the existing worker's GPU.",
+    "idle_gate": "Before any simulator starts, the unchanged startup probes its one allocated GPU: no compute occupant, zero utilization, at most1024MiB used and at least16384MiB free. Bind its physical UUID with a nonblocking PVC lock and require NVIDIA A40. Failure is infrastructure evidence, never permission to use a busy GPU."
+  },
+  "superseded_operational_conditions": [
+    "Aggregate four-GPU ceiling for this registered engineering attempt.",
+    "Waiting for rank1 natural completion before resuming cn.",
+    "The obsolete handoff's no-coexistence condition; the pre-bound template does not consult default-scheduler anti-affinity."
+  ],
+  "unchanged_scientific_scope": {
+    "new_engineering_layouts": 1,
+    "planned_scripted_trials": 6,
+    "model_requests": 0,
+    "campaign_or_policy_release": false,
+    "frozen_pools_or_failures_modified": false,
+    "all_raw_frames_actions_states_and_videos_required": true
+  },
+  "existing_work": "All four bt workers and bu collector remain untouched."
+}

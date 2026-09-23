@@ -1,0 +1,89 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-historical-stream-20260923bl
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 2400
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: bounded-historical-state-stream}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: extract
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              OUT=/data/users/ali/sgw-01/infrastructure/historical-stream-20260923bl
+              BASE=/data/users/ali/sgw-01/infrastructure/historical-stream-deps-20260923bl
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              test ! -e "$OUT"
+              mkdir "$OUT"
+              exec > >(tee "$OUT/extract.log") 2>&1
+              test "$(sha256sum /inputs/requests.json | awk '{print $1}')" = c5135406d3eaef09d300a7db30780135c2a68cc6c0dec0a2996681a2713019b2
+              test "$(sha256sum /inputs/historical_layout_streaming.py | awk '{print $1}')" = 5e27fbd91ca967515e90bf7aba7896e7ad174175fb087223bba8d3a9a209e2e0
+              test "$(sha256sum /inputs/run.py | awk '{print $1}')" = 5856aae4dec58db42c32961be35dee37984b40f7dd46ca46c48f61aee5a1013b
+              cp "$BASE/parser.tar.gz" "$OUT/parser.tar.gz"
+              test "$(sha256sum "$OUT/parser.tar.gz" | awk '{print $1}')" = eba26d2fd366a677278eedcab046c571e6613dec70eeeab3a9b9d54c4e9bf718
+              "$PY" - "$OUT" <<'PY'
+              from pathlib import Path
+              import sys, tarfile
+              root = Path(sys.argv[1])
+              (root / "parser").mkdir()
+              with tarfile.open(root / "parser.tar.gz") as bundle:
+                  bundle.extractall(root / "parser", filter="data")
+              PY
+              export PYTHONPATH="$OUT/parser:/inputs"
+              export IJSON_BACKEND=yajl2_c
+              result=0
+              "$PY" -u /inputs/run.py "$OUT" || result=$?
+              printf '%s\n' "$result" > "$OUT/child-exit-code"
+              sync
+              sleep 600
+              exit "$result"
+          env:
+            - {name: HOME, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: CUDA_VISIBLE_DEVICES, value: ""}
+            - {name: NVIDIA_VISIBLE_DEVICES, value: void}
+            - {name: SOURCE_COMMIT, value: b5923f6ecec2a77f2af39d718e61f5fb6f526912}
+            - name: JOB_UID
+              valueFrom: {fieldRef: {fieldPath: "metadata.labels['batch.kubernetes.io/controller-uid']"}}
+            - name: POD_UID
+              valueFrom: {fieldRef: {fieldPath: metadata.uid}}
+          resources:
+            requests: {cpu: "250m", memory: 1Gi}
+            limits: {cpu: "2", memory: 1Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+            - {name: inputs, mountPath: /inputs, readOnly: true}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: tmp
+          emptyDir: {}
+        - name: inputs
+          configMap: {name: sgw01-ali-history-stream-inputs-20260923bk}

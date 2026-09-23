@@ -529,6 +529,11 @@ def _produce_family_qualification(root, candidate_value, calibration_path, *, re
     class Controller:
         def __init__(self): self.identity = identity
         def actions_for_goal(self, environment, _candidate, sign):
+            guard_path = (
+                root / "trials" / f"goal-{sign:+d}" / f"reset-{len(controller_calls) % 3}"
+                / "preaction-geometry-guard.json"
+            )
+            assert json.loads(guard_path.read_text())["status"] == "measured_banana_geometry_valid_before_actions"
             controller_calls.append((sign, environment.steps))
             environment.goal = sign
             return [np.asarray([[0, 0, 0, 1, 0, 0, 0, 0]], dtype=np.float32) for _ in range(450)]

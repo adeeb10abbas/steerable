@@ -211,13 +211,13 @@ def qualify_candidate(
                     rejection = validate_preaction_reset_geometry(reset.snapshot, candidate)
                     if rejection is not None:
                         raise rejection
-                    actions = list(controller.actions_for_goal(environment, candidate, goal_sign))
-                    if len(actions) != ACTION_CAP:
-                        raise QualificationError("scripted plan must cover exactly 450 controller actions")
                     _write_preaction_geometry_guard(
                         evidence.path, candidate, goal_sign, reset_index,
                         physical_geometry_rejection=None,
                     )
+                    actions = list(controller.actions_for_goal(environment, candidate, goal_sign))
+                    if len(actions) != ACTION_CAP:
+                        raise QualificationError("scripted plan must cover exactly 450 controller actions")
                     for index, action in enumerate(actions, 1):
                         evidence.command(index, action)
                         snapshot = environment.step(action)

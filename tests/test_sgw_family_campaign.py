@@ -1,5 +1,10 @@
 import json
+import hashlib
+import shutil
+from dataclasses import replace
+from pathlib import Path
 
+import numpy as np
 import pytest
 
 from experiments.workshops.spatial_grounding_v1 import family_campaign
@@ -9,6 +14,14 @@ from experiments.workshops.spatial_grounding_v1.family_campaign_verifier import 
     verify_design,
 )
 from experiments.workshops.spatial_grounding_v1.prospective_family_designs import _digest
+from experiments.workshops.spatial_grounding_v1.prospective_family_designs import author_candidate_overlay, build_design_plan
+from experiments.workshops.spatial_grounding_v1.height_dist_proposals import materialize_campaign_candidate
+from experiments.workshops.spatial_grounding_v1.model_blind_qualification import qualify_candidate
+from experiments.workshops.spatial_grounding_v1.recorder import atomic_json
+from experiments.workshops.spatial_grounding_v1.simulator_bridge import SimulatorSnapshot
+from experiments.workshops.spatial_grounding_v1.lat_candidate_generator import workspace_digest
+from test_sgw_prospective_family_designs import WORKSPACE, _baseline_files
+from test_sgw_qualification_batch_verifier import NativeReceiptEnvironment, file_record
 
 
 def _plan(tmp_path, captures):
@@ -271,3 +284,187 @@ def _verification(campaign_sha256, root):
     }
     value["verification_sha256"] = _digest(value, "verification_sha256")
     return value
+
+
+def test_complete_synthetic_height_campaign_chain_and_adversarial_bindings(tmp_path, monkeypatch):
+    """Exercise materialization -> real recorder -> canonical family verification."""
+
+    captures, manifests = _baseline_files(tmp_path, "HEIGHT")
+    plan = build_design_plan(
+        family="HEIGHT", seed=91, count=4, baseline_capture_paths=captures, baseline_manifest_paths=manifests,
+    )
+    plan_path = tmp_path / "plan.json"
+    plan_path.write_text(json.dumps(plan))
+    design = next(row for row in plan["designs"] if row["status"].endswith("capture"))
+    root = tmp_path / "design"
+    root.mkdir()
+    candidate_manifest = root / "candidate_manifest.json"
+    manifest = author_candidate_overlay(
+        plan=plan, design_id=design["design_id"], output=root / "candidate.usda", manifest_output=candidate_manifest,
+    )
+    capture = _candidate_capture(captures[design["side"]], manifest, design, root / "candidate_capture.json")
+    calibration = tmp_path / "controller-calibration.json"
+    calibration.write_bytes(Path(
+        "artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json"
+    ).read_bytes())
+    monkeypatch.setattr(
+        "experiments.workshops.spatial_grounding_v1.height_dist_proposals.verify_capture_artifacts",
+        lambda path: {"receipt": {"sha256": hashlib.sha256(path.read_bytes()).hexdigest()}},
+    )
+    candidate = materialize_campaign_candidate(
+        plan_path=plan_path, design_id=design["design_id"], candidate_manifest_path=candidate_manifest,
+        candidate_capture_path=capture, controller_calibration_path=calibration, output=root / "candidate.json",
+    )
+    monkeypatch.setattr(
+        family_campaign, "verify_capture_artifacts",
+        lambda path: {"receipt": {"path": str(path), "sha256": family_campaign._sha256(path)}},
+    )
+    review = _native_review(tmp_path, {"left": captures["left"], "right": captures["right"]})
+    campaign_path = tmp_path / "campaign.json"
+    compile_campaign(
+        plan_path=plan_path, baseline_captures=captures, baseline_reviews={"left": review, "right": review},
+        output=campaign_path,
+    )
+    monkeypatch.setattr(
+        "experiments.workshops.spatial_grounding_v1.family_campaign_verifier.verify_capture_artifacts",
+        lambda path: {"receipt": {"sha256": hashlib.sha256(path.read_bytes()).hexdigest()}},
+    )
+    _produce_family_qualification(root, candidate, calibration, reject_reset=False)
+    verified = verify_design(
+        campaign_path=campaign_path, design_id=design["design_id"], root=root, output=root / "family_verification.json",
+    )
+    assert verified["status"] == "verified_evidence_not_fixture_release"
+
+    calibration_bytes = calibration.read_bytes()
+    calibration.write_text("{}")
+    with pytest.raises(ValueError, match="calibration binding"):
+        verify_design(campaign_path=campaign_path, design_id=design["design_id"], root=root, output=root / "wrong-calibration.json")
+    calibration.write_bytes(calibration_bytes)
+    plan_bytes = plan_path.read_bytes()
+    altered_plan = json.loads(plan_bytes)
+    altered_plan["designs"][0]["translation_xy_m"][0] += .001
+    altered_plan["plan_sha256"] = _digest(altered_plan, "plan_sha256")
+    plan_path.write_text(json.dumps(altered_plan))
+    with pytest.raises(ValueError, match="plan"):
+        verify_design(campaign_path=campaign_path, design_id=design["design_id"], root=root, output=root / "wrong-plan.json")
+    plan_path.write_bytes(plan_bytes)
+
+    # A score-success/reset mismatch is retained as a verified physical rejection.
+    _produce_family_qualification(root, candidate, calibration, reject_reset=True)
+    rejected = verify_design(
+        campaign_path=campaign_path, design_id=design["design_id"], root=root, output=root / "reset-rejection.json",
+    )
+    assert rejected["status"] == "verified_evidence_not_fixture_release"
+
+    # Restore passing output, then exercise capture/raw-media/plan/calibration failures.
+    _produce_family_qualification(root, candidate, calibration, reject_reset=False)
+    raw = root / "trials/goal-+1/reset-0/frame-0001.npy"
+    saved_raw = raw.read_bytes()
+    raw.write_bytes(b"corrupt")
+    with pytest.raises(ValueError, match="raw trial integrity"):
+        verify_design(campaign_path=campaign_path, design_id=design["design_id"], root=root, output=root / "corrupt-media.json")
+    raw.write_bytes(saved_raw)
+    capture.write_text(capture.read_text() + "\n")
+    with pytest.raises(ValueError, match="materialized candidate"):
+        verify_design(campaign_path=campaign_path, design_id=design["design_id"], root=root, output=root / "corrupt-capture.json")
+
+
+def _native_review(tmp_path, captures):
+    path = tmp_path / "review.json"
+    path.write_text(json.dumps({"scenes": [
+        {"scene": f"synthetic-height-{side}", "capture": {"sha256": family_campaign._sha256(capture)},
+         "disposition": "ACCEPT_NATIVE_VISUAL_SETUP_ONLY"}
+        for side, capture in captures.items()
+    ]}))
+    return path
+
+
+def _candidate_capture(baseline_path, manifest, design, output):
+    value = json.loads(baseline_path.read_text())
+    objects = value["objects"]
+    # The prospective baseline manifest provides measured/captured support dimensions.
+    baseline_manifest = json.loads(Path(manifest["source_baseline"]["overlay_manifest"]["path"]).read_text())
+    specs = {row["name"]: row for row in baseline_manifest["prospective_design"]["dimensions_and_poses"]}
+    for name, pose in design["authored_scored_object_roots"].items():
+        objects[name]["root_position_env_local_xyz_m"] = pose["position_m"]
+        objects[name]["root_quaternion_world_wxyz"] = pose["quaternion_wxyz"]
+    for name, spec in specs.items():
+        if name in objects:
+            continue
+        center, size = spec["center_m"], spec["size_m"]
+        objects[name] = {
+            "root_position_env_local_xyz_m": center, "root_quaternion_world_wxyz": [1, 0, 0, 0],
+            "geometric_center_env_local_xyz_m": center,
+            "geometric_center_offset_root_local_xyz_m": [0, 0, 0],
+            "bbox_env_local_min_xyz_m": [center[i] - size[i] / 2 for i in range(3)],
+            "bbox_env_local_max_xyz_m": [center[i] + size[i] / 2 for i in range(3)],
+        }
+    # Synthetic *measured* capture rows retain valid released HEIGHT centers.
+    cube_center = objects["rubiks_cube"]["geometric_center_env_local_xyz_m"]
+    cube_bottom = objects["rubiks_cube"]["bbox_env_local_min_xyz_m"][2]
+    center_above_bottom = cube_center[2] - cube_bottom
+    bowl_z = objects["bowl"]["geometric_center_env_local_xyz_m"][2]
+    for name, target_z in (("height_upper_support", bowl_z + .04), ("height_lower_support", bowl_z - .04)):
+        row = objects[name]
+        height = row["bbox_env_local_max_xyz_m"][2] - row["bbox_env_local_min_xyz_m"][2]
+        top = target_z - center_above_bottom
+        row["bbox_env_local_max_xyz_m"][2] = top
+        row["bbox_env_local_min_xyz_m"][2] = top - height
+        row["geometric_center_env_local_xyz_m"][2] = top - height / 2
+        row["root_position_env_local_xyz_m"][2] = row["geometric_center_env_local_xyz_m"][2]
+    value["objects"] = objects
+    value["overlay_manifest_sha256"] = manifest["manifest_sha256"]
+    value["usd_dependency_inventory"].append({"real_path": manifest["overlay_usda"]["path"], "sha256": manifest["overlay_usda"]["sha256"]})
+    value["support_contact_measurements"] = {
+        name: {"sensor": f"rubiks_cube__{name}", "force_matrix_world_n": [[[[0, 0, 0]]]], "shape": [1, 1, 1, 3]}
+        for name in manifest["native_import_contract"]["kinematic_or_static_bodies"]
+    }
+    value["receipt_sha256"] = workspace_digest(value)
+    output.write_text(json.dumps(value))
+    return output
+
+
+def _produce_family_qualification(root, candidate_value, calibration_path, *, reject_reset):
+    from experiments.workshops.spatial_grounding_v1.fixtures import FixtureCandidate
+
+    candidate = FixtureCandidate.from_json(candidate_value)
+    class Environment(NativeReceiptEnvironment):
+        def _context(self):
+            objects = json.loads((root / "candidate_capture.json").read_text())["objects"]
+            return {name: {
+                key: row[key] for key in ("root_position_env_local_xyz_m", "root_quaternion_world_wxyz",
+                                           "geometric_center_env_local_xyz_m", "bbox_env_local_min_xyz_m", "bbox_env_local_max_xyz_m")
+            } for name, row in objects.items()
+              if all(key in row for key in ("root_position_env_local_xyz_m", "root_quaternion_world_wxyz",
+                                             "geometric_center_env_local_xyz_m", "bbox_env_local_min_xyz_m", "bbox_env_local_max_xyz_m"))}
+        def reset(self):
+            result = super().reset()
+            snapshot = replace(result.snapshot, context_measurements=self._context())
+            if reject_reset and self.ordinal == 3:
+                bad = dict(snapshot.reset_root_poses)
+                pose = bad["rubiks_cube"]
+                bad["rubiks_cube"] = type(pose)((pose.position_m[0] + .01, pose.position_m[1], pose.position_m[2]), pose.quaternion_wxyz)
+                snapshot = replace(snapshot, reset_root_poses=bad)
+            return replace(result, snapshot=snapshot)
+        def step(self, action):
+            self.steps += 1
+            cube = self.candidate.scoring_poses()["rubiks_cube"].position_m
+            bowl = self.candidate.scoring_poses()["bowl"].position_m
+            z = cube[2] + (.04 * self.goal if self.steps > 3 else .04)
+            state = self.objects(lift=z - cube[2], supported=self.steps > 3, attached=self.steps <= 3)
+            return SimulatorSnapshot(state, self.steps / 15, context_measurements=self._context())
+    class Bridge:
+        def create_environment(self, task, seed):
+            return Environment(candidate, root / "reset-warmup")
+    calibration = json.loads(calibration_path.read_text())
+    identity = {"recipe": calibration["schema_version"], "calibration_sha256": hashlib.sha256(calibration_path.read_bytes()).hexdigest(), "calibration": calibration}
+    class Controller:
+        def __init__(self): self.identity = identity
+        def actions_for_goal(self, environment, _candidate, sign):
+            environment.goal = sign
+            return [np.asarray([[0, 0, 0, 1, 0, 0, 0, 0]], dtype=np.float32) for _ in range(450)]
+    shutil.rmtree(root / "trials", ignore_errors=True)
+    shutil.rmtree(root / "reset-warmup", ignore_errors=True)
+    atomic_json(root / "controller.json", identity)
+    result = qualify_candidate(candidate, Bridge(), Controller(), seed=candidate.seed, evidence_root=root / "trials")
+    atomic_json(root / "qualification.json", result)

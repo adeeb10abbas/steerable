@@ -126,6 +126,10 @@ def _verify_design_chain(
     if not plan_path.is_file():
         raise ValueError("campaign job lacks its frozen plan path")
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    if plan.get("plan_sha256") != _digest(plan, "plan_sha256"):
+        raise ValueError("frozen plan bytes or digest differ from the campaign binding")
+    if job.get("plan_sha256") != plan.get("plan_sha256"):
+        raise ValueError("frozen plan no longer matches the campaign job binding")
     row = next((value for value in plan.get("designs", []) if value.get("design_id") == job["design_id"]), None)
     if (
         not isinstance(row, Mapping)
@@ -282,8 +286,17 @@ def _verify_reset_groups(
             errors[sign] = None
             for check in checks:
                 if check["goal_sign"] == sign:
-                    expected = [row for row in rows if row["repeat"] == check["reset_index"]]
-                    if check.get("reset_validation") != expected or check.get("reset_error") is not None:
+                    expected = sorted(
+                        (row for row in rows if row["repeat"] == check["reset_index"]),
+                        key=lambda row: str(row["object"]),
+                    )
+                    recorded = check.get("reset_validation")
+                    if isinstance(recorded, list):
+                        recorded = sorted(recorded, key=lambda row: str(row.get("object", "")) if isinstance(row, Mapping) else "")
+                    if (
+                        _canonical_json(recorded) != _canonical_json(expected)
+                        or check.get("reset_error") is not None
+                    ):
                         raise ValueError("aggregate reset validation differs from recomputation")
     return errors
 
@@ -305,3 +318,7 @@ def _sha256(path: Path) -> str:
 
 def _record(path: Path) -> dict[str, Any]:
     return {"path": str(path.resolve()), "sha256": _sha256(path), "bytes": path.stat().st_size}
+
+
+def _canonical_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"))

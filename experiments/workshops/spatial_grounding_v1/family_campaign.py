@@ -225,10 +225,21 @@ def _validate_external_verification(verification: Mapping[str, Any], campaign_sh
     if any(not isinstance(verification.get(key), str) or len(verification[key]) != 64 for key in required_hashes):
         raise RuntimeError("external verification lacks bound capture and qualification evidence")
     trials = verification.get("trials")
-    if not isinstance(trials, list) or len(trials) != 6:
+    expected = [(sign, reset) for sign in (1, -1) for reset in range(3)]
+    early = verification.get("physical_geometry_rejection")
+    if early is not None:
+        if (
+            not isinstance(early, Mapping) or early.get("rejection_scope") != "reset"
+            or (early.get("goal_sign"), early.get("reset_index")) not in expected
+            or early.get("controller_actions_executed") != 0
+            or not isinstance(early.get("reason"), str) or not early["reason"]
+        ):
+            raise RuntimeError("external verification has malformed early rejection")
+        expected = expected[:expected.index((early["goal_sign"], early["reset_index"])) + 1]
+    if not isinstance(trials, list) or len(trials) != len(expected):
         raise RuntimeError("external verification lacks six retained trial evidence records")
-    identities = {(row.get("goal_sign"), row.get("reset_index")) for row in trials if isinstance(row, Mapping)}
-    if identities != {(sign, reset) for sign in (1, -1) for reset in range(3)}:
+    identities = [(row.get("goal_sign"), row.get("reset_index")) for row in trials if isinstance(row, Mapping)]
+    if identities != expected:
         raise RuntimeError("external verification trial identities differ from the fixed contract")
     if any(not isinstance(row.get("trial_sha256"), str) or len(row["trial_sha256"]) != 64 for row in trials):
         raise RuntimeError("external verification has malformed trial evidence hashes")

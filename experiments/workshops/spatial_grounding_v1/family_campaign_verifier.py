@@ -8,14 +8,13 @@ import math
 from pathlib import Path
 from typing import Any, Mapping
 
-import imageio.v2 as iio
 from .fixtures import ACTION_CAP, FixtureCandidate, FixtureError, Pose, validate_reset
 from .family_campaign import SCHEMA
 from .prospective_family_capture import verify_capture_artifacts
 from .prospective_family_designs import (
     CANDIDATE_STATUS, _aabb_xy_clearance_m, _candidate_manifest, _digest, require_design_capture,
 )
-from .qualification_batch_verifier import VerificationError, verify_trial_evidence
+from .qualification_batch_verifier import VerificationError, verify_trial_evidence, verify_zero_action_trial_evidence
 from .robolab_height_dist_qualification import CALIBRATION_SCHEMA, validate_candidate_inputs
 from .lat_candidate_generator import workspace_digest
 from .model_blind_qualification import QualificationError, validate_preaction_reset_geometry
@@ -146,20 +145,30 @@ def _verify_early_rejection(
     checks = result.get("checks")
     if not isinstance(checks, list) or [(row.get("goal_sign"), row.get("reset_index")) for row in checks] != identities[:terminal + 1]:
         raise ValueError("early physical geometry rejection has a non-prefix trial aggregate")
-    reports = []
+    reports, reset_groups = [], {1: [], -1: []}
     for check in checks[:terminal]:
         trial = root / "trials" / f"goal-{check['goal_sign']:+d}" / f"reset-{check['reset_index']}"
         _verify_preaction_guard(trial, candidate, check)
         try:
-            report, _reset = verify_trial_evidence(evidence_root=root, trial=trial, check=check, candidate=candidate)
+            report, reset_snapshot = verify_trial_evidence(evidence_root=root, trial=trial, check=check, candidate=candidate)
         except VerificationError as error:
             raise ValueError(f"completed prefix trial differs from raw evidence: {error}") from error
         _verify_reset_banana_geometry(trial, candidate)
         _verify_aggregate_trial(check, report)
+        reset_groups[check["goal_sign"]].append(reset_snapshot)
         reports.append(_trial_record(trial, check))
+    complete_groups = {sign: rows for sign, rows in reset_groups.items() if len(rows) == 3}
+    reset_errors = _verify_reset_groups(candidate, checks[:-1], complete_groups)
+    for check in checks[:-1]:
+        sign = check["goal_sign"]
+        if sign not in complete_groups and any(key in check for key in ("reset_validation", "reset_error")):
+            raise ValueError("incomplete reset group claims a completed reset comparison")
+        expected_pass = bool(check["score"]["requested_success"]) and reset_errors.get(sign) is None
+        if check.get("passed") is not expected_pass:
+            raise ValueError("completed prefix pass differs from physical/reset gates")
     rejected_check = checks[-1]
     trial = root / "trials" / f"goal-{goal:+d}" / f"reset-{reset}"
-    _verify_rejected_trial(trial, candidate, rejected_check, early)
+    _verify_rejected_trial(root, trial, candidate, rejected_check, early)
     reports.append(_trial_record(trial, rejected_check))
     for sign, index in identities[terminal + 1:]:
         future = root / "trials" / f"goal-{sign:+d}" / f"reset-{index}"
@@ -193,33 +202,26 @@ def _trial_record(trial: Path, check: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _verify_rejected_trial(
-    trial: Path, candidate: FixtureCandidate, check: Mapping[str, Any], early: Mapping[str, Any],
+    root: Path, trial: Path, candidate: FixtureCandidate, check: Mapping[str, Any], early: Mapping[str, Any],
 ) -> None:
     receipt_path = trial / "trial.json"
     guard_path = trial / "preaction-geometry-guard.json"
     if not receipt_path.is_file() or not guard_path.is_file():
         raise ValueError("early rejection lacks trial receipt or guard")
-    receipt, guard = json.loads(receipt_path.read_text()), json.loads(guard_path.read_text())
-    expected_files = {"reset.json", "state-0000.json", "frame-0000.npy", "viewport.mp4", "preaction-geometry-guard.json"}
-    if (receipt.get("status") != "physical_geometry_rejection_before_actions"
-            or receipt.get("actions_executed") != 0 or receipt.get("observed_actions") != 0
-            or receipt.get("goal_sign") != check["goal_sign"] or receipt.get("reset_index") != check["reset_index"]
-            or receipt.get("physical_geometry_rejection") != {
-                "rejection_scope": early["rejection_scope"], "reason": early["reason"],
-            } or set(receipt.get("files", {})) != expected_files
-            or {path.name for path in trial.iterdir()} != expected_files | {"trial.json"}):
-        raise ValueError("early rejection trial contains controller or incomplete evidence")
-    for name, record in receipt["files"].items():
-        path = trial / name
-        if not path.is_file() or record.get("bytes") != path.stat().st_size or record.get("sha256") != _sha256(path):
-            raise ValueError("early rejection trial file hash differs")
-    with iio.get_reader(trial / "viewport.mp4") as reader:
-        if sum(1 for _ in reader) != 1:
-            raise ValueError("early rejection viewport does not contain only reset frame")
-    state = trial / "state-0000.json"
-    raw = json.loads(state.read_text()).get("raw_snapshot")
-    if not isinstance(raw, Mapping):
-        raise ValueError("early rejection lacks raw reset snapshot")
+    _verify_preaction_guard(
+        trial, candidate, check, expected_status="physical_geometry_rejection_before_actions",
+    )
+    guard = json.loads(guard_path.read_text())
+    if check.get("physical_geometry_rejection") != {
+        "rejection_scope": early["rejection_scope"], "reason": early["reason"],
+    }:
+        raise ValueError("early rejection aggregate reason differs from trial")
+    try:
+        raw = verify_zero_action_trial_evidence(
+            evidence_root=root, trial=trial, check=check, candidate=candidate,
+        )
+    except VerificationError as error:
+        raise ValueError(f"early rejection raw recording differs: {error}") from error
     try:
         recomputed = validate_preaction_reset_geometry(
             SimulatorSnapshot(objects={}, context_measurements=raw.get("context_measurements")), candidate,
@@ -228,13 +230,8 @@ def _verify_rejected_trial(
         raise ValueError(f"early rejection reset geometry is malformed: {error}") from error
     if recomputed is None or recomputed.scope != early["rejection_scope"] or recomputed.reason != early["reason"]:
         raise ValueError("early rejection reason differs from recomputed measured geometry")
-    raw_record = guard.get("raw_reset")
     if (
-        guard.get("status") != "physical_geometry_rejection_before_actions"
-        or guard.get("rejection_scope") != early["rejection_scope"] or guard.get("reason") != early["reason"]
-        or guard.get("controller_actions_executed") != 0 or not isinstance(raw_record, Mapping)
-        or raw_record.get("path") != str(state.resolve()) or raw_record.get("sha256") != _sha256(state)
-        or raw_record.get("bytes") != state.stat().st_size
+        guard.get("rejection_scope") != early["rejection_scope"] or guard.get("reason") != early["reason"]
     ):
         raise ValueError("early rejection guard differs from recomputed reset evidence")
 
@@ -372,7 +369,10 @@ def _verify_reset_banana_geometry(trial: Path, candidate: FixtureCandidate) -> N
         raise ValueError(f"raw reset is a physical geometry rejection: {rejection.reason}")
 
 
-def _verify_preaction_guard(trial: Path, candidate: FixtureCandidate, check: Mapping[str, Any]) -> None:
+def _verify_preaction_guard(
+    trial: Path, candidate: FixtureCandidate, check: Mapping[str, Any], *,
+    expected_status: str = "measured_banana_geometry_valid_before_actions",
+) -> None:
     path = trial / "preaction-geometry-guard.json"
     if not path.is_file():
         raise ValueError("trial lacks preaction geometry guard")
@@ -385,7 +385,7 @@ def _verify_preaction_guard(trial: Path, candidate: FixtureCandidate, check: Map
         or value.get("candidate_sha256") != _candidate_sha256(candidate)
         or value.get("candidate_capture_sha256") != candidate.metadata.get("candidate_capture_sha256")
         or value.get("goal_sign") != check["goal_sign"] or value.get("reset_index") != check["reset_index"]
-        or value.get("status") != "measured_banana_geometry_valid_before_actions"
+        or value.get("status") != expected_status
         or value.get("controller_actions_executed") != 0
         or not isinstance(raw, Mapping) or raw.get("path") != str(state.resolve())
         or raw.get("sha256") != _sha256(state) or raw.get("bytes") != state.stat().st_size
@@ -425,7 +425,7 @@ def _verify_reset_groups(
     candidate: FixtureCandidate, checks: list[Mapping[str, Any]], groups: Mapping[int, list[Any]],
 ) -> dict[int, str | None]:
     errors: dict[int, str | None] = {}
-    for sign in (1, -1):
+    for sign in groups:
         try:
             rows = validate_reset(candidate, groups[sign])
         except FixtureError as error:

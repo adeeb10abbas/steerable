@@ -238,6 +238,7 @@ def run_slot(
         common = {
             "campaign": str(campaign_path.resolve()), "campaign_sha256": campaign["campaign_sha256"],
             "index": str(index), "design_id": str(job["design_id"]), "root": str(root.resolve()),
+            "family": str(campaign["family"]),
             "calibration": str(controller_calibration.resolve()),
             "study_root": str(Path(__file__).resolve().parents[3]),
         }

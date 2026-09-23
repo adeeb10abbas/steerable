@@ -365,7 +365,12 @@ def main() -> None:
             if not Path(robolab.__file__).resolve().is_relative_to(args.robolab_root.resolve()):
                 raise RuntimeError("effective RoboLab import is outside pinned checkout")
             task_path = args.study_root / "experiments/workshops/spatial_grounding_v1/prospective_family_capture_task.py"
-            set_output_dir(str(args.output.parent / "native"))
+            native_name = (
+                "capture_native"
+                if manifest["status"] == "prospective_candidate_design_requires_zero_model_capture"
+                else "native"
+            )
+            set_output_dir(str(args.output.parent / native_name))
             robolab.constants.ENABLE_SUBTASK_PROGRESS_CHECKING = False
             robolab.constants.RECORD_IMAGE_DATA = False
             auto_register_droid_abs_ik_envs(task=[str(task_path)], cameras=WRIST_LEFT_RIGHT_HEAD)

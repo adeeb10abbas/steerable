@@ -321,11 +321,16 @@ def test_complete_synthetic_family_campaign_chain_and_adversarial_bindings(tmp_p
         candidate_file=root / "candidate.json", candidate_manifest=candidate_manifest,
         candidate_capture=capture, candidate_id=candidate["candidate_id"], output_root=root,
     )
+    (root / "capture_native").mkdir()
     _preflight_output_root(cli_args)
     (root / "qualification.json").write_text("{}")
     with pytest.raises(FileExistsError, match="overwrite"):
         _preflight_output_root(cli_args)
     (root / "qualification.json").unlink()
+    (root / "native").mkdir()
+    with pytest.raises(FileExistsError, match="overwrite"):
+        _preflight_output_root(cli_args)
+    (root / "native").rmdir()
     monkeypatch.setattr(
         family_campaign, "verify_capture_artifacts",
         lambda path: {"receipt": {"path": str(path), "sha256": family_campaign._sha256(path)}},
@@ -392,6 +397,11 @@ def test_complete_synthetic_family_campaign_chain_and_adversarial_bindings(tmp_p
     assert verified_geometry_rejection["physical_geometry_rejection"]["reason"] == (
         geometry_rejection["physical_geometry_rejection_before_actions"]["reason"]
     )
+    postprocess = family_campaign.verify_external_postprocess(
+        campaign_path=campaign_path, output=root / "rejection-postprocess.json", returncode=0,
+        verification_path=root / "geometry-rejection.json",
+    )
+    assert postprocess["release_permitted"] is False
     guard["reason"] = "forged physical rejection"
     guard_path = root / "trials/goal-+1/reset-0/preaction-geometry-guard.json"
     guard_path.write_text(json.dumps(guard))
@@ -400,10 +410,36 @@ def test_complete_synthetic_family_campaign_chain_and_adversarial_bindings(tmp_p
     trial_receipt["files"][guard_path.name]["bytes"] = guard_path.stat().st_size
     trial_receipt["files"][guard_path.name]["sha256"] = hashlib.sha256(guard_path.read_bytes()).hexdigest()
     trial_receipt_path.write_text(json.dumps(trial_receipt))
+    geometry_rejection["checks"][-1] = trial_receipt
+    atomic_json(root / "qualification.json", geometry_rejection)
     with pytest.raises(ValueError, match="recomputed"):
         verify_design(
             campaign_path=campaign_path, design_id=design["design_id"], root=root,
             output=root / "forged-geometry-rejection.json",
+        )
+    geometry_rejection, _ = _produce_family_qualification(
+        root, candidate, calibration, reject_reset=False, reject_geometry=True,
+    )
+    guard = json.loads(guard_path.read_text())
+    guard["candidate_sha256"] = "0" * 64
+    guard_path.write_text(json.dumps(guard))
+    with pytest.raises(ValueError, match="preaction geometry guard"):
+        verify_design(
+            campaign_path=campaign_path, design_id=design["design_id"], root=root,
+            output=root / "wrong-rejection-candidate.json",
+        )
+    geometry_rejection, _ = _produce_family_qualification(
+        root, candidate, calibration, reject_reset=False, reject_geometry=True,
+    )
+    warmup = geometry_rejection["checks"][0]["reset_receipt"]["render_only_warmup"]
+    warmup_frame = Path(warmup["snapshots"][0]["views"]["over_shoulder_left_camera"]["path"])
+    if not warmup_frame.is_absolute():
+        warmup_frame = root / warmup_frame
+    warmup_frame.write_bytes(b"corrupt")
+    with pytest.raises(ValueError, match="file hash/size mismatch"):
+        verify_design(
+            campaign_path=campaign_path, design_id=design["design_id"], root=root,
+            output=root / "corrupt-rejection-warmup.json",
         )
     geometry_rejection, _ = _produce_family_qualification(
         root, candidate, calibration, reject_reset=False, reject_geometry=True,
@@ -414,6 +450,30 @@ def test_complete_synthetic_family_campaign_chain_and_adversarial_bindings(tmp_p
             campaign_path=campaign_path, design_id=design["design_id"], root=root,
             output=root / "late-action-geometry-rejection.json",
         )
+    if family == "HEIGHT":
+        geometry_rejection, calls = _produce_family_qualification(
+            root, candidate, calibration, reject_reset=False, reject_geometry=True, reject_geometry_at=5,
+        )
+        assert len(calls) == 4
+        verify_design(
+            campaign_path=campaign_path, design_id=design["design_id"], root=root,
+            output=root / "late-reset-geometry-rejection.json",
+        )
+        geometry_rejection["checks"][0]["passed"] = False
+        atomic_json(root / "qualification.json", geometry_rejection)
+        with pytest.raises(ValueError, match="completed prefix pass"):
+            verify_design(
+                campaign_path=campaign_path, design_id=design["design_id"], root=root,
+                output=root / "forged-prefix-pass.json",
+            )
+        geometry_rejection["checks"][0]["passed"] = True
+        atomic_json(root / "qualification.json", geometry_rejection)
+        (root / "trials/goal-+1/reset-0/frame-0001.npy").write_bytes(b"corrupt")
+        with pytest.raises(ValueError, match="completed prefix trial"):
+            verify_design(
+                campaign_path=campaign_path, design_id=design["design_id"], root=root,
+                output=root / "corrupt-prefix-trial.json",
+            )
     _produce_family_qualification(root, candidate, calibration, reject_reset=False)
     raw = root / "trials/goal-+1/reset-0/frame-0001.npy"
     saved_raw = raw.read_bytes()
@@ -511,7 +571,9 @@ def _candidate_capture(baseline_path, manifest, design, output):
     return output
 
 
-def _produce_family_qualification(root, candidate_value, calibration_path, *, reject_reset, reject_geometry=False):
+def _produce_family_qualification(
+    root, candidate_value, calibration_path, *, reject_reset, reject_geometry=False, reject_geometry_at=1,
+):
     from experiments.workshops.spatial_grounding_v1.fixtures import FixtureCandidate
 
     candidate = FixtureCandidate.from_json(candidate_value)
@@ -530,7 +592,7 @@ def _produce_family_qualification(root, candidate_value, calibration_path, *, re
             } for name, row in objects.items()
               if all(key in row for key in ("root_position_env_local_xyz_m", "root_quaternion_world_wxyz",
                                              "geometric_center_env_local_xyz_m", "bbox_env_local_min_xyz_m", "bbox_env_local_max_xyz_m"))}
-            if reject_geometry:
+            if reject_geometry and self.ordinal == reject_geometry_at:
                 rows["banana"]["root_position_env_local_xyz_m"][0] += .01
             return rows
         def reset(self):

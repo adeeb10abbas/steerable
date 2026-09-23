@@ -171,6 +171,60 @@ def _warmup(root: Path, receipt: Mapping[str, Any], shape: tuple[int, ...]) -> i
     return verified_files + 1
 
 
+def _reset_identity(reset: Mapping[str, Any], candidate: FixtureCandidate, sign: int, repeat: int) -> float:
+    ordinal = repeat + (1 if sign == 1 else 4)
+    _require(reset["reset_id"] == f"{candidate.candidate_id}:{ordinal}"
+             and reset["camera_id"] == reset["camera_name"] == "over_shoulder_left_camera"
+             and reset["temporal_cache_reset"] is True, "native reset identity differs")
+    dt = reset["control_step_dt_s"]
+    _require(math.isfinite(dt) and dt > 0, "invalid physical control period")
+    return dt
+
+
+def _initial_roots(initial: Mapping[str, Any], reset: Mapping[str, Any]) -> ResetSnapshot:
+    fingerprint = hashlib.sha256(json.dumps(
+        {name: obj["pose"] for name, obj in initial["objects"].items()}, sort_keys=True, separators=(",", ":")
+    ).encode()).hexdigest()
+    _require(reset["fingerprint"] == fingerprint, "reset scoring-pose fingerprint differs")
+    return ResetSnapshot.from_json({"poses": initial["reset_root_poses"]})
+
+
+def verify_zero_action_trial_evidence(
+    *, evidence_root: Path, trial: Path, check: Mapping[str, Any], candidate: FixtureCandidate,
+) -> dict[str, Any]:
+    """Verify the full reset recording when measured geometry stops a trial."""
+    saved = _json(trial / "trial.json")
+    _require(saved == check, "zero-action trial receipt differs from aggregate")
+    _require(saved["status"] == "physical_geometry_rejection_before_actions"
+             and saved["passed"] is False and saved["requested_margin_m"] is None
+             and saved["observed_actions"] == saved["actions_executed"] == 0
+             and saved["model_request_count"] == saved["behavioral_episode_count"] == 0,
+             "early rejection is not a zero-action zero-model trace")
+    expected = {"reset.json", "state-0000.json", "frame-0000.npy", "viewport.mp4", "preaction-geometry-guard.json"}
+    _require(set(saved["files"]) == expected
+             and {path.name for path in trial.iterdir()} == expected | {"trial.json"},
+             "early rejection trial contains controller or incomplete evidence")
+    for name in expected:
+        _file(_scoped(trial, name), saved["files"][name])
+    reset = saved["reset_receipt"]
+    _require(_json(trial / "reset.json") == reset, "reset receipt differs from trial")
+    dt = _reset_identity(reset, candidate, saved["goal_sign"], saved["reset_index"])
+    record = _json(trial / "state-0000.json")
+    initial = record["raw_snapshot"]
+    state = _raw_state(initial, 0, candidate)
+    _require(state == record["state"] and saved["per_step_states"] == [state]
+             and math.isclose(state["sim_time_s"], 0, abs_tol=1e-9),
+             "zero-action raw/scored reset state differs")
+    _require(record["viewport_path"] == "frame-0000.npy"
+             and record["viewport_sha256"] == saved["files"]["frame-0000.npy"]["sha256"],
+             "zero-action state/RGB binding differs")
+    shape = _frame(trial / "frame-0000.npy").shape
+    _initial_roots(initial, reset)
+    _video(evidence_root, saved["viewport_video"], 1, 1 / dt, shape)
+    _warmup(evidence_root, reset["render_only_warmup"], shape)
+    return initial
+
+
 def verify_trial_evidence(
     *, evidence_root: Path, trial: Path, check: Mapping[str, Any], candidate: FixtureCandidate,
 ) -> tuple[dict[str, Any], ResetSnapshot]:
@@ -204,12 +258,7 @@ def verify_trial_evidence(
         _file(_scoped(trial, name), saved["files"][name])
     reset = saved["reset_receipt"]
     _require(_json(trial / "reset.json") == reset, "reset receipt differs from trial")
-    ordinal = repeat + (1 if sign == 1 else 4)
-    _require(reset["reset_id"] == f"{candidate.candidate_id}:{ordinal}"
-             and reset["camera_id"] == reset["camera_name"] == "over_shoulder_left_camera"
-             and reset["temporal_cache_reset"] is True, "native reset identity differs")
-    dt = reset["control_step_dt_s"]
-    _require(math.isfinite(dt) and dt > 0, "invalid physical control period")
+    dt = _reset_identity(reset, candidate, sign, repeat)
     states = []
     initial = None
     shape = _frame(trial / "frame-0000.npy").shape
@@ -242,11 +291,7 @@ def verify_trial_evidence(
              and saved["status"] == ("passed_scripted_goal" if score.requested_success else "rejected_scripted_goal"),
              "recorded physical score differs from recomputation")
     _require(initial is not None, "missing initial snapshot")
-    fingerprint = hashlib.sha256(json.dumps(
-        {name: obj["pose"] for name, obj in initial["objects"].items()}, sort_keys=True, separators=(",", ":")
-    ).encode()).hexdigest()
-    _require(reset["fingerprint"] == fingerprint, "reset scoring-pose fingerprint differs")
-    roots = ResetSnapshot.from_json({"poses": initial["reset_root_poses"]})
+    roots = _initial_roots(initial, reset)
     _video(evidence_root, saved["viewport_video"], ACTION_CAP + 1, 1 / dt, shape)
     warmup_files = _warmup(evidence_root, reset["render_only_warmup"], shape)
     return {

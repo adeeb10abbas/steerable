@@ -265,7 +265,7 @@ required output is a technical failure, not a success.
 The qualification child must write and fsync one
 `goal-{sign:+d}/reset-{index}/preaction-geometry-guard.json` **after** each
 fresh reset/warmup's `state-0000.json` is retained and **before** that trial's
-first controller action. Each guard binds its design, materialized candidate,
+first controller plan or action. Each guard binds its design, materialized candidate,
 candidate-capture hash, goal/reset identity, and hash/size/path of that reset
 snapshot. A normal guard has status
 `measured_banana_geometry_valid_before_actions` and
@@ -277,6 +277,18 @@ Missing, malformed, partial, or hash-mismatched guards are technical-invalid,
 not physical rejections. The child itself must evaluate fresh per-reset banana,
 table, and support geometry before starting each 450-action sequence; an
 external verifier is intentionally too late to make that safe.
+
+External verification of an early rejection checks the complete ordered trial
+prefix, every preceding physical/reset result, the rejected trial's raw state,
+RGB, video and full render-only warmup, and the independently recomputed
+geometry reason. A declared zero-action status alone never accounts a physical
+rejection. The external handoff accepts this verified terminal prefix without
+pretending it is six completed trials.
+
+Candidate capture stores its native auxiliary output under `capture_native`;
+qualification owns `native`. Baseline captures keep their historical `native`
+directory convention. This separation prevents the legitimate capture output
+from colliding with the qualification CLI's no-overwrite guard.
 
 The qualification child uses the canonical executor root in place; it must not
 create a nested output directory or move evidence after recording it. Its

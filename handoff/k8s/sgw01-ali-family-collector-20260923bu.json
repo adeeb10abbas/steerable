@@ -1,0 +1,146 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "labels": {
+      "app.kubernetes.io/name": "sgw-01",
+      "owner": "ali"
+    },
+    "name": "sgw01-ali-family-collector-20260923bu",
+    "namespace": "211247-prod"
+  },
+  "spec": {
+    "activeDeadlineSeconds": 194400,
+    "backoffLimit": 0,
+    "template": {
+      "metadata": {
+        "labels": {
+          "app.kubernetes.io/name": "sgw-01",
+          "owner": "ali",
+          "purpose": "finite-read-only-family-collection"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 194100,
+        "automountServiceAccountToken": false,
+        "containers": [
+          {
+            "args": [
+              "set -euo pipefail\nOUT=/data/users/ali/sgw-01/infrastructure/family-collector-20260923bu\nBASE=/data/users/ali/sgw-01/source/b429ddd\nTARGET=/data/users/ali/sgw-01/source/a995e014-bu\nSOURCE=a995e014af92c2f7df9aed0e6a9e931530995d62\nROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241\nPY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python\ntest ! -e \"$OUT\"\ntest ! -e \"$TARGET\"\ntest \"$(git -C \"$BASE\" rev-parse HEAD)\" = b429ddd8c3e7be59f63759c1820e352029e48b8c\ntest ! -e \"$BASE/.git/objects/info/alternates\"\nmkdir \"$OUT\"\nexec > >(tee \"$OUT/stage.log\") 2>&1\nfor i in $(seq 1 180); do\n  test ! -f \"$OUT/transfer.complete\" || break\n  sleep 2\ndone\ntest -f \"$OUT/transfer.complete\"\ntest \"$(sha256sum \"$OUT/update.bundle\" | awk '{print $1}')\" = e7d8ca960a8fbe84736f507cde2288439afbe684fb362ad445013a813c499df7\ngit clone --shared --no-checkout \"$BASE\" \"$TARGET\"\ngit -C \"$TARGET\" bundle verify \"$OUT/update.bundle\"\ngit -C \"$TARGET\" fetch --no-tags \"$OUT/update.bundle\" HEAD\ngit -C \"$TARGET\" checkout --detach \"$SOURCE\"\ntest \"$(git -C \"$TARGET\" rev-parse HEAD)\" = \"$SOURCE\"\ntest -z \"$(git -C \"$TARGET\" status --porcelain)\"\ntest \"$(git -C \"$ROBOLAB\" rev-parse HEAD)\" = 0aef241fb088ca21bb4ebd24448940ed56620d17\ntest -z \"$(git -C \"$ROBOLAB\" status --porcelain --untracked-files=no)\"\ncd \"$TARGET\"\nexport PYTHONPATH=\"$TARGET\"\n\"$PY\" tools/validate_vla_wam_v3_protocol.py --quiet\n\"$PY\" tools/validate_vla_wam_v2_protocol.py > \"$OUT/v2-validation.json\"\n\"$PY\" -m experiments.workshops.spatial_grounding_v1.family_partition_summary --help > \"$OUT/worker-help.txt\"\n\"$PY\" - \"$OUT\" \"$TARGET\" <<'PY'\nfrom datetime import datetime, timezone\nimport hashlib, json, os, sys, time, traceback\nfrom pathlib import Path\nfrom experiments.workshops.spatial_grounding_v1.family_partition_summary import compile_summary\nout, source = map(Path, sys.argv[1:])\nconfig = Path(\"/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bs/partition-config.json\")\nbase = Path(\"/data/users/ali/sgw-01/qualification/family-partition-20260923bt\")\nworkers = base / \"workers\"\ndef record(path):\n    return {\"path\": str(path), \"bytes\": path.stat().st_size,\n            \"sha256\": hashlib.sha256(path.read_bytes()).hexdigest()}\ndef write(path, value):\n    path.parent.mkdir(parents=True, exist_ok=True)\n    with path.open(\"x\") as stream:\n        json.dump(value, stream, indent=2, sort_keys=True, allow_nan=False)\n        stream.write(\"\\n\"); stream.flush(); os.fsync(stream.fileno())\nassert record(config)[\"sha256\"] == \"aa6413ae35cce7e8a1c9d5770a6b22260e9089d8301e45afe630f00ebf5d6ee9\"\nreceipt = {\n    \"schema_version\": \"sgw-01-durable-family-collector-v1\",\n    \"source_commit\": \"a995e014af92c2f7df9aed0e6a9e931530995d62\", \"source_root\": str(source),\n    \"config\": record(config), \"workers_root\": str(workers),\n    \"source_bundle\": record(out / \"update.bundle\"),\n    \"job_uid\": os.environ[\"JOB_UID\"], \"pod_uid\": os.environ[\"POD_UID\"],\n    \"started_at_utc\": datetime.now(timezone.utc).isoformat(),\n    \"allocated_gpus\": 0, \"model_requests\": 0, \"behavioral_episodes\": 0, \"release_permitted\": False,\n    \"worker_source_mutated\": False,\n}\nwrite(out / \"receipt.json\", receipt)\ntry:\n    startup_deadline = time.monotonic() + 1800\n    while not all((workers / str(i) / \"worker-receipt.json\").is_file() for i in range(4)):\n        if (workers / \"infrastructure-stop.json\").is_file():\n            raise RuntimeError(\"partition startup stopped before four worker receipts; preserve raw startup evidence\")\n        if time.monotonic() >= startup_deadline:\n            raise TimeoutError(\"partition startup receipts are incomplete\")\n        time.sleep(10)\n    initial = compile_summary(config_path=config, workers_root=workers, output=out / \"initial\" / \"summary.json\")\n    initial_receipt = {\n        \"summary\": record(out / \"initial\" / \"summary.json\"),\n        \"status\": initial[\"status\"], \"families\": initial[\"families\"],\n        \"checked_at_utc\": datetime.now(timezone.utc).isoformat(), \"release_permitted\": False,\n    }\n    write(out / \"initial-receipt.json\", initial_receipt)\n    print(json.dumps(initial_receipt, sort_keys=True), flush=True)\n    wait_deadline = time.monotonic() + 172800\n    timed_out = False\n    while not all((base / \"launchers\" / str(i) / \"process_outcome.json\").is_file() for i in range(4)):\n        if time.monotonic() >= wait_deadline:\n            timed_out = True\n            break\n        time.sleep(30)\n    final = compile_summary(config_path=config, workers_root=workers, output=out / \"final\" / \"summary.json\")\n    final_receipt = {\n        \"summary\": record(out / \"final\" / \"summary.json\"),\n        \"status\": final[\"status\"], \"families\": final[\"families\"],\n        \"terminal_receipt_wait_timed_out\": timed_out,\n        \"finished_at_utc\": datetime.now(timezone.utc).isoformat(),\n        \"model_requests\": 0, \"behavioral_episodes\": 0, \"release_permitted\": False,\n        \"raw_frames_states_actions_and_videos_remain_on_pvc\": True,\n    }\n    write(out / \"final-receipt.json\", final_receipt)\n    print(json.dumps(final_receipt, sort_keys=True), flush=True)\n    if timed_out or final[\"status\"] != \"complete\":\n        raise RuntimeError(\"finite qualification collection remains incomplete; no release\")\nexcept BaseException:\n    write(out / \"collector-error.json\", {\n        \"status\": \"infrastructure_invalid_collection_not_physical_or_model_failure\",\n        \"error\": traceback.format_exc(), \"recorded_at_utc\": datetime.now(timezone.utc).isoformat(),\n        \"model_requests\": 0, \"behavioral_episodes\": 0, \"release_permitted\": False,\n    })\n    raise\nPY\nsync\n"
+            ],
+            "command": [
+              "/bin/bash",
+              "-ec"
+            ],
+            "env": [
+              {
+                "name": "HOME",
+                "value": "/tmp"
+              },
+              {
+                "name": "PYTHONDONTWRITEBYTECODE",
+                "value": "1"
+              },
+              {
+                "name": "CUDA_VISIBLE_DEVICES",
+                "value": ""
+              },
+              {
+                "name": "NVIDIA_VISIBLE_DEVICES",
+                "value": "void"
+              },
+              {
+                "name": "JOB_UID",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                  }
+                }
+              },
+              {
+                "name": "POD_UID",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.uid"
+                  }
+                }
+              }
+            ],
+            "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+            "name": "stage",
+            "resources": {
+              "limits": {
+                "cpu": "16",
+                "memory": "8Gi"
+              },
+              "requests": {
+                "cpu": "4",
+                "memory": "4Gi"
+              }
+            },
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              },
+              "runAsGroup": 2518800,
+              "runAsNonRoot": true,
+              "runAsUser": 816149040
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/data",
+                "name": "workspace"
+              },
+              {
+                "mountPath": "/tmp",
+                "name": "tmp"
+              }
+            ]
+          }
+        ],
+        "imagePullSecrets": [
+          {
+            "name": "artifactory-ci-pull-secret"
+          }
+        ],
+        "nodeSelector": {
+          "kubernetes.io/hostname": "dcwipphhgc191.edc.nam.gm.com"
+        },
+        "restartPolicy": "Never",
+        "securityContext": {
+          "fsGroup": 2518800,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          },
+          "supplementalGroups": [
+            2518800
+          ]
+        },
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+          {
+            "effect": "NoSchedule",
+            "key": "nvidia.com/gpu",
+            "operator": "Equal",
+            "value": "present"
+          }
+        ],
+        "volumes": [
+          {
+            "name": "workspace",
+            "persistentVolumeClaim": {
+              "claimName": "211247-prod-pvc"
+            }
+          },
+          {
+            "emptyDir": {},
+            "name": "tmp"
+          }
+        ]
+      }
+    }
+  }
+}

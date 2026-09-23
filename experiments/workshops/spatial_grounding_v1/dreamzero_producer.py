@@ -57,9 +57,13 @@ class DreamZeroEvidenceProducer:
         self._fingerprint = ""
         self._prompt: str | None = None
         self._session_id: str | None = None
+        self.native_metadata = dict(getattr(backend, "native_metadata", {
+            key: value for key, value in config.items() if key not in DREAMZERO_CONFIG
+        }))
         attestation = {
             "model": "D1",
-            "config": config,
+            "config": {key: config[key] for key in DREAMZERO_CONFIG},
+            "native_metadata": self.native_metadata,
             "source_root": str(Path(backend.source_root).resolve()),
             "checkpoint_path": str(Path(backend.checkpoint_path).resolve()),
             "source_commit": DREAMZERO_CONFIG["source_commit"],
@@ -106,10 +110,11 @@ class DreamZeroEvidenceProducer:
             if packet.get("request_index") != self._request_index:
                 raise AdapterError("D1 request_index is stale or non-contiguous")
             for field, current in (
-                ("reset_id", self._reset_id),
+                ("wrapper_reset_id", self._reset_id),
                 ("camera_name", self._camera_name),
             ):
-                if packet.get(field) != current:
+                supplied = packet.get(field, packet.get("reset_id"))
+                if supplied != current:
                     raise AdapterError(f"D1 packet {field} does not match reset binding")
             for field in ("registered_cell_id", "reset_fingerprint", "request_id"):
                 if not isinstance(packet.get(field), str) or not packet[field]:
@@ -139,10 +144,12 @@ class DreamZeroEvidenceProducer:
                 "wrapper_request_id": wrapper_request_id,
                 "request_index": self._request_index,
                 "reset_id": self._reset_id,
+                "physical_reset_id": packet.get("reset_id"),
                 "camera_name": self._camera_name,
                 "registered_cell_id": self._cell_id,
                 "reset_fingerprint": self._fingerprint,
                 "sampling_seed": seed,
+                "effective_noise_seed": DREAMZERO_CONFIG["effective_noise_seed"],
                 "prompt_sha256": _sha(prompt.encode()),
                 "request_started_ns": started,
                 "request_finished_ns": finished,
@@ -153,7 +160,12 @@ class DreamZeroEvidenceProducer:
             if future is None:
                 record["future_status"] = "not_exposed"
             else:
-                future_array = np.asarray(future)
+                if hasattr(future, "detach"):
+                    future_array = future.detach().cpu().numpy()
+                    future_encoding = "native_latent_tensor_cpu"
+                else:
+                    future_array = np.asarray(future)
+                    future_encoding = "native_latent_array"
                 if future_array.ndim < 1:
                     raise AdapterError("D1 native future must be an array")
                 self.future_dir.mkdir(parents=True, exist_ok=True)
@@ -166,6 +178,7 @@ class DreamZeroEvidenceProducer:
                     "future_path": str(path),
                     "future_shape": list(future_array.shape),
                     "future_sha256": _sha(path.read_bytes()),
+                    "future_encoding": future_encoding,
                 })
             self.trace_path.parent.mkdir(parents=True, exist_ok=True)
             with self.trace_path.open("a", encoding="utf-8") as handle:

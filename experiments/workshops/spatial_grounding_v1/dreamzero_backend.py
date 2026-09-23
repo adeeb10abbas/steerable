@@ -188,6 +188,7 @@ class OfficialDreamZero14BBackend:
         source_root: str,
         checkpoint_path: str,
         resolved_config: Mapping[str, Any],
+        native_metadata: Mapping[str, Any] | None = None,
     ) -> None:
         native_config = dict(resolved_config)
         for key, expected in DREAMZERO_CONFIG.items():
@@ -196,7 +197,8 @@ class OfficialDreamZero14BBackend:
         self.policy = policy
         self.source_root = source_root
         self.checkpoint_path = checkpoint_path
-        self.resolved_config = dict(native_config)
+        self.resolved_config = dict(DREAMZERO_CONFIG)
+        self.native_metadata = dict(native_metadata or {})
 
     def predict(self, observation: Mapping[str, Any], prompt: str, sampling_seed: int, **kwargs: Any) -> Mapping[str, Any]:
         del sampling_seed, kwargs
@@ -267,8 +269,8 @@ def build_official_14b_dreamzero_backend() -> OfficialDreamZero14BBackend:
         wrapper,
         source_root=str(source_root),
         checkpoint_path=identity["checkpoint_path"],
-        resolved_config={
-            **DREAMZERO_CONFIG,
+        resolved_config=DREAMZERO_CONFIG,
+        native_metadata={
             "native_checkpoint_num_inference_timesteps": native_config[
                 "checkpoint_num_inference_timesteps"
             ],

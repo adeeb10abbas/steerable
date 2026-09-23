@@ -589,6 +589,11 @@ class _OfficialDreamZeroClient:
                 self.raw_response: Any | None = None
                 super().__init__(**kwargs)
 
+            def _connect_with_retries(self) -> None:
+                if http_url:
+                    return
+                return super()._connect_with_retries()
+
             def _owned_http(self, endpoint: str, packet: Mapping[str, Any]) -> Any:
                 payload = json.dumps(
                     dict(packet),
@@ -620,11 +625,12 @@ class _OfficialDreamZeroClient:
                     "request_id": context["request_id"],
                     "request_index": context["request_index"],
                     "reset_id": context["reset_id"],
+                    "wrapper_reset_id": self._sgw_reset,
                     "camera_name": context["camera_name"],
                     "registered_cell_id": context["registered_cell_id"],
                     "reset_fingerprint": context["reset_fingerprint"],
                     "prompt": request["prompt"],
-                    "sampling_seed": DREAMZERO_CONFIG["effective_noise_seed"],
+                    "sampling_seed": context["sampling_seed"],
                     "observation": observation,
                 }
                 return self._owned_http("predict", packet)
@@ -726,7 +732,7 @@ class _OfficialDreamZeroClient:
             "request_duration_ns": finished_ns - started_ns,
         }
         if self.client.returned_future is not None:
-            response["future"] = np.asarray(self.client.returned_future)
+            response["future"] = self.client.returned_future
             response["future_status"] = "exposed_and_retained"
         else:
             response["future_status"] = "not_exposed"

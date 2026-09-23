@@ -4,6 +4,7 @@ import ast
 import json
 from pathlib import Path
 import threading
+import types
 import urllib.request
 import urllib.error
 
@@ -162,6 +163,107 @@ def test_dreamzero_native_sampler_fields_are_observed_not_checkpoint_overlaid() 
         "seed": 1140,
         "cfg_scale": 5.0,
     }
+
+
+def test_exported_official_client_runs_owned_http_cache_postprocess_and_reset(tmp_path: Path) -> None:
+    export = Path(
+        "/Users/SZ5VJY/.copilot/session-state/"
+        "c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/"
+        "sgw-native-d1-client-source-ah.json"
+    )
+    if not export.exists():
+        pytest.skip("authorized D1 source export is not present")
+    sources = json.loads(export.read_text())["native_d1_client_sources"]
+    base_text = next(v["text"] for k, v in sources.items() if k.endswith("base_client.py"))
+    client_text = next(v["text"] for k, v in sources.items() if k.endswith("client.py"))
+    namespace: dict[str, object] = {
+        "ABC": object,
+        "abstractmethod": lambda fn: fn,
+        "np": np,
+        "os": __import__("os"),
+        "uuid": __import__("uuid"),
+        "logging": __import__("logging"),
+        "time": __import__("time"),
+        "dataclasses": __import__("dataclasses"),
+    }
+    base_class = next(
+        node for node in ast.parse(base_text).body
+        if isinstance(node, ast.ClassDef) and node.name == "InferenceClient"
+    )
+    exec(compile(ast.Module(body=[base_class], type_ignores=[]), "<official-base>", "exec"), namespace)
+    client_nodes = [
+        node for node in ast.parse(client_text).body
+        if isinstance(node, ast.ClassDef) and node.name in {"MsgPackNumpy", "DreamZeroClient"}
+    ]
+    exec(compile(ast.Module(body=client_nodes, type_ignores=[]), "<official-client>", "exec"), namespace)
+    Official = namespace["DreamZeroClient"]
+
+    backend = _Backend()
+    producer = DreamZeroEvidenceProducer(
+        backend,
+        trace_path=tmp_path / "trace.jsonl",
+        future_dir=tmp_path / "future",
+        attestation_path=tmp_path / "attestation.json",
+    )
+    server = make_dreamzero_http_server(producer, host="127.0.0.1", port=0)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        reset = producer.reset({"camera_name": "over_shoulder_left_camera"})
+        client = Official.__new__(Official)
+        client._chunks = {}
+        client._counters = {}
+        client._env_session_id = {}
+        client.open_loop_horizon = 8
+        client.binarize_gripper = True
+        client._packer = types.SimpleNamespace(pack=lambda value: value)
+        client._send_recv = lambda packet: (
+            _post_local(server, "/reset", {"camera_name": "over_shoulder_left_camera"})
+            if packet["endpoint"] == "reset"
+            else {}
+        )
+        client._extract_observation = lambda obs, *, env_id=0: obs
+        client._pack_request = lambda obs, instruction: {
+            **obs, "prompt": instruction, "endpoint": "infer"
+        }
+        client._query_server = lambda request: _post_local(
+            server,
+            "/predict",
+            {
+                "request_id": "official-r0",
+                "request_index": 0,
+                "reset_id": "physical-reset",
+                "wrapper_reset_id": reset["reset_id"],
+                "camera_name": "over_shoulder_left_camera",
+                "registered_cell_id": "cell-1",
+                "reset_fingerprint": "fingerprint-1",
+                "prompt": request["prompt"],
+                "sampling_seed": 8301,
+                "observation": request,
+            },
+        )
+        client._build_visualization = lambda extracted: None
+        first = [client.infer({"observation/x": 1}, "static")["action"] for _ in range(8)]
+        assert len(first) == 8
+        assert np.all(np.asarray(first)[:, -1] == 1.0)
+        assert client._counters[0] == 8
+        client.reset()
+        assert client._chunks == {}
+        assert client._counters == {}
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def _post_local(server: object, path: str, packet: dict) -> dict:
+    request = urllib.request.Request(
+        f"http://127.0.0.1:{server.server_port}{path}",
+        data=json.dumps(packet).encode(),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    with urllib.request.urlopen(request) as response:
+        return json.loads(response.read().decode())
 
 
 def test_exported_14b_ar_policy_executes_infer_and_session_reset() -> None:

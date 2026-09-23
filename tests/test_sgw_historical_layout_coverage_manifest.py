@@ -24,6 +24,7 @@ def test_manifest_accounts_for_all_45_inventory_sources():
         record["source_hash_status"] == "verified_against_inventory"
         for record in result["records"]
     )
+    assert all(record["inspection_conclusion"] for record in result["records"])
 
 
 def test_payload_requests_are_source_anchored_and_centers_not_promoted():

@@ -72,7 +72,14 @@ The snapshot now reuses capture's established per-corner vector conversion.
 Seven native-boundary tests pass, including real `Gf.Vec3d` list and Tensor
 corner representations through the actual snapshot method. This additive
 engineering repair changes no geometry, threshold, seed, or valid outcome.
-Fresh same-slot technical attempts remain necessary; all learned gates stay closed.
+Job br started at 07:36:45 UTC on the same four fixed slots with tested source
+`e43f5b40`. It has advanced into real controller execution: each slot recorded
+its first complete 450-action/451-state trial and subsequent resets are
+running. No all-six-trial physical outcome is yet claimed. The full
+source-backed suite now passes 329 tests with one Linux-only identity skip.
+The finite remaining-slot worker is being implemented independently, but its
+launch remains conditional on completed native smoke integrity. All learned
+gates stay closed.
 
 ## Scientific accounting
 

@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_below_release_gate_height_dist_native_visual_setup_accepted_qualification_unreleased",
-  "updated_at_utc": "2026-09-23T07:30:06Z",
+  "updated_at_utc": "2026-09-23T07:43:57Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -55,10 +55,12 @@
     "family_capture_materializer_and_six_trial_verifier": "5b21c8af",
     "finite_family_slot_executor": "e1f8a212",
     "preaction_guard_persisted_before_controller_planning": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
-    "local_sgw_tests_passed": 326,
+    "native_contact_inventory_order": "c3c976db56fd694d2c5498a8409b08f9a510a41c",
+    "native_single_environment_bbox_vectors": "e43f5b4054d1b65d192daa734fa9d99427b2eca3",
+    "local_sgw_tests_passed": 329,
     "local_sgw_tests_skipped_linux_identity": 1,
-    "last_full_test_source_commit": "cdb7a55b6cc71ac34828c96368850623102e7137",
-    "last_full_test_scope": "Complete source-backed SGW suite after independent early-rejection/prefix verification and native canonical-root/phase-directory corrections: 326 passed and one Linux-only identity skip in 242.19 seconds. This does not establish native qualification or release learned inference.",
+    "last_full_test_source_commit": "e43f5b4054d1b65d192daa734fa9d99427b2eca3",
+    "last_full_test_scope": "Complete source-backed SGW suite after native contact-order and Gf.Vec3d bbox corrections: 329 passed and one Linux-only identity skip in 249.36 seconds. Native br trials are running; no completed six-trial candidate or learned release is claimed.",
     "subsequent_focused_d1_tests_passed": 44,
     "targeted_support_capture_repair_tests_passed": 31,
     "live_model_runtime_qualified": false,
@@ -404,13 +406,29 @@
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
     "runtime_scope": "D1 accumulated native-latent decode and provenance are integrated, including distinct decoded_unmapped/decode_error/latent_only_retained states. Native startup, actual VAE execution and physical future time mapping remain unqualified. A real launch needs an explicit realistic finite SGW01_READINESS_TIMEOUT, not the default15-second budget. No model construction/server launch authorized.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
-    "worker_scope": "Corrections integrated through cdb7a55b: complete rejected reset/RGB/video/warmup verification, exact guard identity, preceding physical/reset gates, typed-prefix external handoff, exact native candidate-file/canonical-root CLI, and phase-separated capture_native/native directories. Full source-backed regression326passed/1skip. Source staging and finite plan freeze completed; four native smoke slots preregistered. No learned-runtime release.",
+    "worker_scope": "Existing child is implementing a finite four-rank worker for the frozen remaining117 slots, with independent smoke evidence gate, disjoint deterministic slicing, shared stop sentinel between slots, resource rechecks, bounded children and no retry/refill. CPU-only code/tests; no cluster or model authority. Parent retains all launches, pending br integrity. Parent source e43f5b40 passes329 source-backed tests/1skip.",
     "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
     "historical_coverage_scope": "The24-layout WMF forecast registry is not V3-E004 coverage. All45 inventory sources remain unresolved for complete comparable geometry. bj recovered15 semantics probes and5 full E006 state payloads; bl now recovered bounded fields from all7 remaining files, hashing every source byte. Root-only/preflight records remain non-comparable. The additive exclusion audit found neither complete HEIGHT root intervals nor complete DIST no-plate inventories; no exemption, rerun or release.",
     "independent_scene_reviewer": "89af7b05-595a-43d4-977b-ae0b077d6e9f",
     "scene_review_scope": "The same independent reviewer sealed bi acceptance as ACCEPT_NATIVE_VISUAL_SETUP_ONLY for all4 captures and exactly reproduced all20 policy preprocessing images. This is not an additional rater, physical qualification, category recognition, live tensor parity or behavioral release. Plate-category/wrist-occlusion caveats and per-candidate banana clearance remain binding."
   },
-  "active_task_gpu_jobs": [],
+  "active_task_gpu_jobs": [
+    {
+      "job": "sgw01-ali-family-native-smoke-20260923br",
+      "job_uid": "72b77b0a-bcdb-42b4-8a0a-0956a9492259",
+      "started_at_utc": "2026-09-23T07:36:45Z",
+      "status": "real_native_controller_trials_running_first_450_action_trial_recorded_per_slot",
+      "source_commit": "e43f5b4054d1b65d192daa734fa9d99427b2eca3",
+      "raw_root": "/data/users/ali/sgw-01/qualification/family-native-smoke-20260923br",
+      "allocated_gpus": 4,
+      "model_workers": 0,
+      "automatic_retries_per_index": 0,
+      "job_deadline_seconds": 4800,
+      "pod_deadline_seconds": 4500,
+      "child_deadline_seconds": 1800,
+      "pods": ["sgw01-ali-family-native-smoke-20260923br-0-s8sj6", "sgw01-ali-family-native-smoke-20260923br-1-cff8x", "sgw01-ali-family-native-smoke-20260923br-2-5rdh8", "sgw01-ali-family-native-smoke-20260923br-3-zn5bl"]
+    }
+  ],
   "native_family_smoke_attempts": [
     {
       "job": "sgw01-ali-family-native-smoke-20260923bp",
@@ -462,6 +480,18 @@
   ],
   "active_task_cpu_jobs": [
     {
+      "job": "sgw01-ali-family-source-stage-20260923bq",
+      "job_uid": "c386c1dd-13ae-4330-82ef-3148221fcbf9",
+      "pod": "sgw01-ali-family-source-stage-20260923bq-9gqfj",
+      "pod_uid": "b303603f-0245-440c-ba0a-3e73a82bde05",
+      "status": "source_stage_complete_finite_export_window_active",
+      "allocated_gpus": 0,
+      "staged_at_utc": "2026-09-23T07:35:48.879963+00:00",
+      "bounded_export_window_seconds": 1800,
+      "receipt": "infrastructure/family-source-stage-20260923bq/receipt.json",
+      "receipt_sha256": "6dc4e13b305950ed5633029718a6d71ffb9a3a74f92d0a0f23fdcaa870e4566b"
+    },
+    {
       "job": "sgw01-ali-family-source-stage-20260923bo",
       "job_uid": "b76545c7-fec9-44ec-8712-da22564a18c7",
       "pod": "sgw01-ali-family-source-stage-20260923bo-jbtvh",
@@ -486,7 +516,8 @@
     "dist": {"capture_eligible": 64, "geometric_rejections": 36, "left": 45, "right": 19},
     "native_smoke_design_ids": ["SGW-HEIGHT-DESIGN-000", "SGW-HEIGHT-DESIGN-001", "SGW-DIST-DESIGN-000", "SGW-DIST-DESIGN-003"],
     "native_smoke_manifest": "handoff/k8s/sgw01-ali-family-native-smoke-20260923bn.yaml",
-    "native_smoke_status": "bn_and_bp_infrastructure_failures_preserved_bbox_vector_correction_tested_native_repair_pending",
+    "native_smoke_status": "br_real_native_physical_trials_running_after_preserved_bn_bp_setup_failures",
+    "native_smoke_repair_manifest": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-source-stage-20260923bq/native-smoke-br.json",
     "source_stage_job_completed_at_utc": "2026-09-23T07:27:43Z",
     "remaining_capture_eligible_slots": 117,
     "physically_qualified_candidates": 0,
@@ -609,7 +640,7 @@
       "kubernetes_failed_at_utc": "2026-09-23T06:33:03Z"
     }
   },
-  "next_authorized_step": "Stage the tested bbox-vector conversion repair, then run only the same four infrastructure-invalid smoke design slots in fresh roots. bp passed the repaired contact boundary but exposed native list[Gf.Vec3d] bbox corners; reuse the already-proven capture vector helper. Seven native-boundary tests pass. Preserve bn/bp captures and warmup videos; neither produced a controller action or valid physical trial. bm plans, seeds, thresholds and calibration stay fixed. Four A40 maximum, zero models, no automatic retry/refill. Inspect native smoke integrity before remaining117 slots.",
+  "next_authorized_step": "Let br finish the four exact native smoke slots, retain all physical outcomes and raw videos, and independently verify completed six-trial or genuine terminal-rejection evidence. Only after native integrity passes may the frozen remaining117 slots enter the finite four-GPU worker; preserve no retry/refill, source/calibration/geometry and stage resource gates. Learned runtime/historical/model release remains closed. No LAT rerun or threshold relaxation.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -878,7 +909,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Stage the tested bbox-vector repair and explicitly rerun only the same four infrastructure-invalid native smoke slots in fresh roots. Preserve bn/bp as infrastructure failures, never physical/model failures. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
+  "next_action": "Inspect running br native trials and preserve/verify terminal evidence. Integrate and test the bounded partition worker without launching remaining slots before the smoke integrity gate. Preserve bn/bp as infrastructure failures, never physical/model failures. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

@@ -5,8 +5,8 @@ six-cell blocks and 1,044 planned episodes were reproduced byte-for-byte.
 Neither the imported specification nor historical V2/V3 protocols are edited
 by this implementation.
 
-**No SGW-01 learned-policy request, behavioral episode, or released family
-fixture exists yet.** Recorded model-blind candidate qualification is in progress;
+**N3 completed six fixed-input requests; behavioral episodes and full released
+family fixtures remain at zero.** Recorded model-blind candidate qualification is in progress;
 individual physical passes do not release a family. Local synthetic tests are
 engineering checks, not study evidence. Runtime factories, server trace provenance, full resets, physical-time
 maps and the live simulator remain subject to qualification before release.
@@ -72,15 +72,22 @@ their native constructors passed offline on CPU. The original safety settings
 and policy configuration remain unchanged; no redownload or new sign-in is
 needed.
 
-Current execution is blocked by device admission, not weights. Five bounded
-post-repair A40/B200/A100 admissions created no container. The normal-scheduler
-attempt created no Pod because priority admission rejected explicit `Never`;
-that Job is suspended. Obtain actually allocatable authorized capacity or a
-cluster-approved non-preempting scheduling class before another launch.
-The canonical successor claim is still absent and all six original requests
-remain unconsumed. Preserve every prior failure and recheck ownership, actual
-physical idleness, storage and asset hashes before resuming. See the current execution capsule in
+The bounded DK batch found two idle A100s. One exclusive owner completed all
+six original requests; repeat actions/futures match and opposite prompts differ.
+All six native futures, three exact offline redecodes and six prediction videos
+are retained. The successor claim is consumed and preserved; do not repeat it.
+The finished DK Jobs were removed without touching SmolVLA. See the execution capsule in
 `artifacts/workshops/spatial_grounding_v1/infrastructure/n3-fixed-input-20260923cw/`.
+
+The subsequent explicit user direction to stop additional checks and run MAIN
+is disclosed in `main_p_execution_20260923dm.json`. `main_p_execution` executes
+only the six already assigned P cells, using the existing native joint-position
+environment, mailbox, production adapter, recorder and physical scorer. It does
+not manufacture passed integration/time-map receipts or release D/C. Resets,
+finite actions, actual timing and recordings are checked inline; no additional
+standalone inference probes are authorized. Prediction physical scores remain
+unavailable until their time mapping is established. Runtime failures preserve
+partial evidence and stop rather than automatically replaying a cell.
 
 Current restart state and cluster evidence:
 

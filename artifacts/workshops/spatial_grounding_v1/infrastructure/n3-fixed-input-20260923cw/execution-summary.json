@@ -1,0 +1,57 @@
+{
+  "schema_version": "sgw-01-fixed-input-execution-observation-v1",
+  "record_type": "coordinator_observation_with_retained_native_failure_receipts",
+  "registration_id": "SGW-N3-FIXED-20260923CW",
+  "registration_sha256": "efa2fa67f7b797f1d56b388aeecc595ab7598473c41b00a5e6fee9145e498919",
+  "study_source_commit": "383beb7447170a505d33059c6be46e9ba363ec58",
+  "status": "blocked_before_first_request_native_auxiliary_asset_access_required",
+  "model_requests_started": 0,
+  "model_requests_completed": 0,
+  "behavioral_episodes": 0,
+  "executed_actions": 0,
+  "remaining_registered_N3_requests": 6,
+  "release_permitted": false,
+  "attempts": [
+    {
+      "job": "sgw01-ali-n3-fixedinput-20260923cw",
+      "pod": "sgw01-ali-n3-fixedinput-20260923cw-9gs9w",
+      "pod_uid": "62c2d369-25d1-43de-a278-c1cbf284c5bd",
+      "node": "dcwipphhgc223.edc.nam.gm.com",
+      "outcome": "UnexpectedAdmissionError: requested one GPU, zero available; no container or model started"
+    },
+    {
+      "job": "sgw01-ali-n3-fixedinput-20260923cz",
+      "pod": "sgw01-ali-n3-fixedinput-20260923cz-7lfc8",
+      "node": "dcwipphhgc171.edc.nam.gm.com",
+      "gpu_uuid": "GPU-07dd8eee-ceb3-fb2b-0269-ec07cf5aab7c",
+      "idle_memory_used_mib": 0,
+      "idle_utilization_percent": 0,
+      "idle_compute_occupants": [],
+      "outcome": "Native constructor failed while importing its guardrail dependencies: missing libxcb.so.1. No request intent, response trace, or model output exists.",
+      "raw_root": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-cz",
+      "original_failure": "run-cz/evidence/failure.json",
+      "original_process_outcome": "run-cz/process-outcome.json",
+      "persistent_claim": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/request-owner/owner.json"
+    }
+  ],
+  "prerequisites_verified": [
+    "Retained three native 720x1280 RGB camera arrays and measured seven-joint/one-gripper input are hash-bound; no object/scoring geometry in the policy payload.",
+    "The complete pinned N3 checkpoint manifest passed _checkpoint_identity before native service construction.",
+    "The exact clean Cosmos source is 411d25b2e35bc441126f48c44a4b93e1c0564274.",
+    "CPU import succeeds with USER=ali, LOGNAME=ali, explicit TORCHINDUCTOR_CACHE_DIR and existing pinned native LD_LIBRARY_PATH."
+  ],
+  "remaining_native_blocker": {
+    "component": "Unchanged native constructor's auxiliary guardrail assets",
+    "repository": "nvidia/Cosmos-Guardrail1",
+    "revision": "d6d4bfa899a71454a700907664f3e88f503950cf",
+    "missing_file": "face_blur_filter/Resnet50_Final.pth",
+    "observed_download_error": "Access denied. This repository requires approval.",
+    "action": "Obtain authorized Hugging Face repository access and normal cluster authentication. Do not bypass access controls or disable safety settings.",
+    "additional_dependency_not_yet_downloaded": "Qwen/Qwen3Guard-Gen-0.6B, required by the unchanged constructor; the chained command stopped at the first denied download.",
+    "native_cli": "uvx hf@1.16.4",
+    "hf_home": "/data/users/ali/vla_wam/cache/huggingface-cosmos",
+    "uv_cache": "/data/users/ali/vla_wam/cache/uv-cosmos"
+  },
+  "unrelated_workload": "The explicitly ali-owned legacy B200 allocation was inspected read-only, found occupied by an unrelated training process, and was not used or changed.",
+  "recovery_contract": "Preserve both failed admissions and the CZ one-owner claim. Any corrected launch needs a new disclosed infrastructure recovery/output and positive proof of zero prior request intents/traces plus terminated prior owner. No automatic retry or additional request allocation."
+}

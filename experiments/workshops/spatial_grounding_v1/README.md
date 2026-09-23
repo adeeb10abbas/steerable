@@ -53,6 +53,14 @@ on persistent storage. Native decoding stays enabled; the last three latents
 are re-decoded offline without additional policy requests. No simulator or
 behavioral actions are started, and output directories cannot be reused.
 
+The first actual native constructor attempt stopped before any request. The
+missing native `libxcb` search path is resolved by the existing Ubuntu 22.04
+native libraries; the remaining prerequisite is approved Hugging Face access
+to the pinned Cosmos-Guardrail1 auxiliary asset. Preserve this zero-request
+failure and its owner claim. Do not disable safety settings or bypass access
+controls to resume. See the current execution capsule in
+`artifacts/workshops/spatial_grounding_v1/infrastructure/n3-fixed-input-20260923cw/`.
+
 Current restart state and cluster evidence:
 
 - [`STATUS.md`](../../../artifacts/workshops/spatial_grounding_v1/STATUS.md)

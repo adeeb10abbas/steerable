@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "native_engineering_six_pass_verified_original_family_qualification_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T18:49:00Z",
+  "updated_at_utc": "2026-09-23T19:19:00Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -42,10 +42,13 @@
   "administrative_priority_pause_authorization": {
     "id": "SGW-OPS-003",
     "path": "priority_pause_authorization_20260923.json",
-    "status": "approved_for_future_priority_decisions_not_activated",
-    "pause_sentinel_written": false,
-    "cluster_objects_modified": false,
-    "current_decision": "Leave BT/BU uninterrupted: the proposed immediate reason to drain was stale because SGW-ENG-008 already completed. Preserve the user's safe candidate-boundary pause authority for a future concrete priority decision. No duplicate engineering start."
+    "status": "activated_administrative_candidate_boundary_pause",
+    "pause_sentinel_written": true,
+    "bt_kubernetes_objects_modified": false,
+    "activation_receipt": "infrastructure/administrative-pause-20260923cx/activation.json",
+    "acknowledged_ranks_at_latest_read": [1, 2],
+    "current_candidate_finishing_ranks_at_latest_read": [0, 3],
+    "current_decision": "The stale ENG-008 rationale was not acted on. After explicit MAIN P->D->C priority, write an honest administrative sentinel under the deployed shared lock; finish each current candidate, then stop before the next. Preserve original generic launcher/collector labels but classify cause via the separate administrative receipt. Pending slots remain pending, never scientific failures. No duplicate engineering start or mid-candidate termination."
   },
   "implementation_slices": {
     "measurement_contract_and_prospective_capture": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
@@ -1340,18 +1343,18 @@
     "frozen_candidates_or_controller_modified": false,
     "scope": "Inspect scene/path clearance using copies of exact existing source and video. Offer does not authorize replacing frozen failures or waive history/runtime gates; future repairs require prospective disclosure."
   },
-  "next_authorized_step": "Run the already registered six N3 fixed-input requests under SGW-N3-FIXED-20260923CW, then prepare the MAIN N3/LAT P stage (six existing episodes), not a separate exploratory pilot. The user explicitly confirmed the main P->D->C priority. Freeze the distinct redesigned-scene fixture assignment and scoped staged-ordering disclosure before behavior; preserve physical checks, counterbalance/disjointness, later D/C scope, all original failed pools and fixed counts. This priority does not itself certify a release. SGW-ENG-008 is complete and must not be rerun. Leave BT/BU running unless a concrete future resource need activates the authorized completed-candidate administrative drain. Use finite useful allocations on verified-idle existing authorized capacity, without preemption, interference or paid provisioning. RoboLab only; no historical-novelty gate. No learned requests were completed at this update.",
+  "next_authorized_step": "N3 reached the native constructor on a verified-idle A40 but failed before any request. Preserve CW admission/CZ constructor failures and the persistent owner claim. Resolve authorized Hugging Face access to the unchanged constructor's missing Cosmos-Guardrail1 auxiliary asset, then disclose a zero-prior-request infrastructure recovery before executing the same six registered requests. Do not disable safety settings or bypass access controls. MAIN N3/LAT P remains next after actual technical release; no extra pilot, no full D/C release. BT administrative boundary pause was activated at19:00:41Z: ranks1/2 acknowledged after complete candidates at19:16, ranks0/3 still finishing at latest read. Do not kill them or count pending slots as failures. BU retains independent raw/video compilation. Use only verified-idle authorized existing capacity. No learned request or behavioral episode has completed.",
   "next_qualification_milestone": {
     "status": "prospective_revision_not_yet_registered_or_launched",
     "first_deliverable": "Separately disclose and freeze a post-result LAT/HEIGHT candidate-generation revision using SGW-ENG-008's actual translated geometry and measured center/root transforms. Specify family-appropriate landing/support geometry, unchanged robot/cameras/controller, seed, finite candidate cap, deterministic selection and required counterbalance before new candidate outcomes.",
     "qualification_gate": "Native materialization, reset/recording integrity and both goals across three resets per candidate under the unchanged450-action cap; independently verify raw evidence and videos. A released family still needs29 distinct qualifying layouts with the registered strata. Preserve each original frozen pool and every failure; never count the one-layout engineering demonstration as a family release or refill.",
-    "parallel_existing_work": "BT continues the original frozen HEIGHT/DIST queue and BU performs terminal independent raw/video accounting. DIST eligibility depends on that actual accounting, not the102 observed completion receipts alone.",
+    "parallel_existing_work": "BT is administratively pausing only after current complete candidates. BU performs terminal independent raw/video accounting. Preserve all completed outcomes and exact resumable pending slots; operational completion counts do not substitute for independently verified scientific results.",
     "parallel_runtime_gate": "User prioritizes the already preregistered nonbehavioral fixed-input checks, starting with N3 when actual source-bound native image/proprio/reset inputs and idle capacity are ready. These do not wait for29 layouts or historical novelty. Qualify actual policy-server/observation/reset identities and recording/repeat/prompt-sensitivity plus exposed-future timing/decoding. Keep the registered12 requests, six per model, separate from behavioral episodes; do not manufacture optional decoding when the released interface requires it. Any conditional official-reference checks require their own registered condition.",
     "behavioral_release_permitted": false,
     "new_campaign_released": false
   },
   "immediate_nonbehavioral_priority": {
-    "status": "authorized_preregistered_inputs_and_live_runtime_not_yet_qualified",
+    "status": "native_constructor_attempted_zero_requests_auxiliary_asset_access_blocked",
     "first_model": "N3",
     "maximum_fixed_input_requests_per_model": 6,
     "maximum_fixed_input_requests_total": 12,
@@ -1360,9 +1363,12 @@
     "main_progression_user_confirmation": "amazing yes, let's prioritize getting results this is insane, use as many gpus as needed",
     "main_P_scope": "Six existing N3/LAT P-stage episodes, not extra allocation. Require prospectively disclosed redesigned-scene assignment and scoped staged release before behavior; no full confirmation release implied.",
     "fixed_input_registration": "artifacts/workshops/spatial_grounding_v1/n3_fixed_input_20260923cw.json",
+    "execution_evidence": "artifacts/workshops/spatial_grounding_v1/infrastructure/n3-fixed-input-20260923cw/execution-summary.json",
+    "model_requests_started": 0,
+    "model_requests_completed": 0,
     "requires_full_29_layout_pool": false,
     "requires_historical_novelty": false,
-    "next_step": "Bind actual retained native images/proprioception and the exact official N3 server/reset/recording interface, then use finite verified-idle existing capacity for the six registered requests. Persist intent before every request and raw outputs afterward; do not claim live qualification before actual evidence."
+    "next_step": "Obtain approved access/authentication for nvidia/Cosmos-Guardrail1 at d6d4bfa899a71454a700907664f3e88f503950cf (missing face_blur_filter/Resnet50_Final.pth); retain native safety configuration. Restore the existing native library/PATH/cache environment and all required auxiliary assets before another GPU launch. Preserve failed CZ output and claim; corrected launch must be separately recorded with zero prior requests verified."
   },
   "paper_engineering_attempt": {
     "id": "SGW-ENG-008-LAT-057",
@@ -1696,7 +1702,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Execute SGW-N3-FIXED-20260923CW on verified-idle capacity. Then freeze and release only the eligible MAIN N3/LAT P-stage branch through a distinct redesigned-scene and scoped stage-ordering registration. Do not add the cancelled exploratory pilot, rerun ENG-008, rewrite old outcomes or imply full D/C qualification. Keep original BT/BU evidence and ownership intact; candidate-boundary priority pause is available if actually needed.",
+  "next_action": "Resolve the exact native auxiliary-asset Hugging Face access blocker before retrying N3 construction. Preserve zero-request CW/CZ failures and owner claim. Record remaining BT candidate-boundary acknowledgements and explicit pending-slot ledger; keep BU independent collection intact. Prepare only the existing MAIN N3/LAT P branch under its distinct prospective redesigned-scene/staged-ordering assignment. No extra pilot or full confirmation release.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

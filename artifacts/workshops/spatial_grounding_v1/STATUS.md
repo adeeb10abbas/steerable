@@ -149,6 +149,38 @@ If a future priority decision uses it, retain their original records and add
 an explicit administrative-pause receipt and remaining-slot ledger; do not
 invent infrastructure faults or relabel physical outcomes.
 
+### 19:19 UTC: native N3 startup attempted; exact access blocker
+
+The fixed-input registration and runner are committed. CW B200 admission
+failed before container startup (zero available devices). CZ reclaimed the
+previously released native A40: its actual idle receipt recorded zero used
+memory, zero utilization and no compute occupants. It verified the source and
+checkpoint, retained the actual camera/proprio inputs, then failed in the
+native constructor before **any policy request** because OpenCV could not
+resolve `libxcb.so.1`. Existing native libraries resolve that CPU import.
+
+The next constructor prerequisite is now explicit: its unchanged auxiliary
+safety assets require
+`nvidia/Cosmos-Guardrail1@d6d4bfa899a71454a700907664f3e88f503950cf`,
+including `face_blur_filter/Resnet50_Final.pth`. The official pinned download
+returned **“Access denied. This repository requires approval.”** Authorized
+Hugging Face access/authentication must be resolved; safety settings and access
+controls were not bypassed. No policy responses or generated futures exist:
+**0/6 N3 requests started, zero behavioral episodes**. Original receipts and
+the owner claim are retained in the
+[execution capsule](infrastructure/n3-fixed-input-20260923cw/execution-summary.json).
+
+For the confirmed main-experiment priority, the administrative boundary pause
+was activated at 19:00:41 UTC with 106 completed partition receipts and four
+current candidates. Ranks 1 and 2 subsequently acknowledged
+`stopped_before_next_slot` after completing DIST088 and DIST080; their original
+launcher error labels remain untouched and are classified by the separate
+[administrative receipt](infrastructure/administrative-pause-20260923cx/activation.json).
+Ranks 0 and 3 were still completing their candidates at the latest read.
+Unstarted slots stay pending; no candidate was killed and no new scientific
+failure is inferred from the pause. BU's independent final collection remains
+required.
+
 ## Latest retained evidence (23 September, 13:34 UTC)
 
 The thirteenth prefix preserves HEIGHT084/086/088/089 with 6/6, 6/6, 5/6 and

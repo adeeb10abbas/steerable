@@ -131,7 +131,7 @@ class FixtureCandidate:
         return sha256(_canonical_json(value)).hexdigest()
 
     def task_payload(self) -> dict[str, Any]:
-        return {
+        payload = {
             "schema_version": "sgw-01-task-definition-v1",
             "candidate_id": self.candidate_id,
             "family": self.family,
@@ -142,6 +142,10 @@ class FixtureCandidate:
             "goal_termination": False,
             "model_request_count": 0,
         }
+        native_scene = self.metadata.get("native_scene")
+        if native_scene is not None:
+            payload["native_scene"] = native_scene
+        return payload
 
 
 @dataclass(frozen=True)

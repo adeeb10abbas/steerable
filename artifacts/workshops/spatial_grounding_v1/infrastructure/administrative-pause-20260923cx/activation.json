@@ -1,0 +1,1475 @@
+{
+  "authorization": "SGW-OPS-003, renewed main-experiment priority; no mid-candidate kill",
+  "behavioral_episodes": 0,
+  "binding": {
+    "bindings_sha256": "193561f1fed597e0a28b5fbb8fd951c6a0bb0ca8890e455990cff36c6a965e42",
+    "config_sha256": "aa6413ae35cce7e8a1c9d5770a6b22260e9089d8301e45afe630f00ebf5d6ee9",
+    "freeze_sha256": "55b2dbbce2376b1c297180630238b09a83e8f226697f8da6a1814d748eebefd3",
+    "schema_version": "sgw-01-family-partition-worker-v1",
+    "workers": 4
+  },
+  "infrastructure_failure_claimed": false,
+  "legacy_wrapper_caveat": "Preserve original incomplete/infrastructure_stopped_partition launcher and collector labels. This separate receipt classifies the cause as ADMINISTRATIVE PRIORITY PAUSE, not infrastructure fault or model failure.",
+  "model_requests": 0,
+  "owned_job": "sgw01-ali-family-partition-20260923bt",
+  "owned_job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
+  "ranks": [
+    {
+      "assigned": [
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-003",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 3
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-007",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 7
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-012",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 12
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-016",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 16
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-026",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 26
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-034",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 34
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-039",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 39
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-046",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 46
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-055",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 55
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-064",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 64
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-069",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 69
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-079",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 79
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-084",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 84
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-090",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 90
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-004",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 4
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-010",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 10
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-016",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 16
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-023",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 23
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-027",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 27
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-032",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 32
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-039",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 39
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-046",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 46
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-052",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 52
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-058",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 58
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-065",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 65
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-070",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 70
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-078",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 78
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-086",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 86
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-092",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 92
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-098",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 98
+        }
+      ],
+      "completed_at_stop_request": [
+        {
+          "design_id": "SGW-DIST-DESIGN-004",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 4
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-010",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 10
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-016",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 16
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-023",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 23
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-027",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 27
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-032",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 32
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-039",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 39
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-046",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 46
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-052",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 52
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-058",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 58
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-065",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 65
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-070",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 70
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-003",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 3
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-007",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 7
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-012",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 12
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-016",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 16
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-026",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 26
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-034",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 34
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-039",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 39
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-046",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 46
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-055",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 55
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-064",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 64
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-069",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 69
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-079",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 79
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-084",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 84
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-090",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 90
+        }
+      ],
+      "current_claims_to_finish": [
+        {
+          "design_id": "SGW-DIST-DESIGN-078",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 78
+        }
+      ],
+      "not_yet_started_remain_pending": [
+        {
+          "design_id": "SGW-DIST-DESIGN-086",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 86
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-092",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 92
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-098",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 98
+        }
+      ],
+      "rank": 0
+    },
+    {
+      "assigned": [
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-004",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 4
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-008",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 8
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-013",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 13
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-020",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 20
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-027",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 27
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-035",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 35
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-040",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 40
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-049",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 49
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-059",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 59
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-065",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 65
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-070",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 70
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-081",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 81
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-086",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 86
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-091",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 91
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-006",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 6
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-011",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 11
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-018",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 18
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-024",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 24
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-028",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 28
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-035",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 35
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-040",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 40
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-048",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 48
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-054",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 54
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-060",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 60
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-066",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 66
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-071",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 71
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-079",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 79
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-088",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 88
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-094",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 94
+        }
+      ],
+      "completed_at_stop_request": [
+        {
+          "design_id": "SGW-DIST-DESIGN-006",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 6
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-011",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 11
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-018",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 18
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-024",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 24
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-028",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 28
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-035",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 35
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-040",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 40
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-048",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 48
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-054",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 54
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-060",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 60
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-066",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 66
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-071",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 71
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-079",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 79
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-004",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 4
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-008",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 8
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-013",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 13
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-020",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 20
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-027",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 27
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-035",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 35
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-040",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 40
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-049",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 49
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-059",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 59
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-065",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 65
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-070",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 70
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-081",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 81
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-086",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 86
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-091",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 91
+        }
+      ],
+      "current_claims_to_finish": [
+        {
+          "design_id": "SGW-DIST-DESIGN-088",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 88
+        }
+      ],
+      "not_yet_started_remain_pending": [
+        {
+          "design_id": "SGW-DIST-DESIGN-094",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 94
+        }
+      ],
+      "rank": 1
+    },
+    {
+      "assigned": [
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-005",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 5
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-009",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 9
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-014",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 14
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-021",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 21
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-032",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 32
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-036",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 36
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-041",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 41
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-052",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 52
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-061",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 61
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-066",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 66
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-072",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 72
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-082",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 82
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-088",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 88
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-097",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 97
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-007",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 7
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-012",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 12
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-020",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 20
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-025",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 25
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-030",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 30
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-037",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 37
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-042",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 42
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-049",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 49
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-055",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 55
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-062",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 62
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-067",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 67
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-072",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 72
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-080",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 80
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-090",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 90
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-095",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 95
+        }
+      ],
+      "completed_at_stop_request": [
+        {
+          "design_id": "SGW-DIST-DESIGN-007",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 7
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-012",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 12
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-020",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 20
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-025",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 25
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-030",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 30
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-037",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 37
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-042",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 42
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-049",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 49
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-055",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 55
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-062",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 62
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-067",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 67
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-072",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 72
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-005",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 5
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-009",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 9
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-014",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 14
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-021",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 21
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-032",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 32
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-036",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 36
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-041",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 41
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-052",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 52
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-061",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 61
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-066",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 66
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-072",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 72
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-082",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 82
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-088",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 88
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-097",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 97
+        }
+      ],
+      "current_claims_to_finish": [
+        {
+          "design_id": "SGW-DIST-DESIGN-080",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 80
+        }
+      ],
+      "not_yet_started_remain_pending": [
+        {
+          "design_id": "SGW-DIST-DESIGN-090",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 90
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-095",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 95
+        }
+      ],
+      "rank": 2
+    },
+    {
+      "assigned": [
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-006",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 6
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-010",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 10
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-015",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 15
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-024",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 24
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-033",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 33
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-037",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 37
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-044",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 44
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-053",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 53
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-063",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 63
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-067",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 67
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-076",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 76
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-083",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 83
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-089",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 89
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-002",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 2
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-008",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 8
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-014",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 14
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-022",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 22
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-026",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 26
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-031",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 31
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-038",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 38
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-044",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 44
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-050",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 50
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-056",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 56
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-064",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 64
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-068",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 68
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-076",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 76
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-083",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 83
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-091",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 91
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-096",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 96
+        }
+      ],
+      "completed_at_stop_request": [
+        {
+          "design_id": "SGW-DIST-DESIGN-002",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 2
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-008",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 8
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-014",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 14
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-022",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 22
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-026",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 26
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-031",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 31
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-038",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 38
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-044",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 44
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-050",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 50
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-056",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 56
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-064",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 64
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-068",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 68
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-076",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 76
+        },
+        {
+          "design_id": "SGW-DIST-DESIGN-083",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 83
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-006",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 6
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-010",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 10
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-015",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 15
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-024",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 24
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-033",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 33
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-037",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 37
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-044",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 44
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-053",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 53
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-063",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 63
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-067",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 67
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-076",
+          "family": "HEIGHT",
+          "side": "left",
+          "slot_index": 76
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-083",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 83
+        },
+        {
+          "design_id": "SGW-HEIGHT-DESIGN-089",
+          "family": "HEIGHT",
+          "side": "right",
+          "slot_index": 89
+        }
+      ],
+      "current_claims_to_finish": [
+        {
+          "design_id": "SGW-DIST-DESIGN-091",
+          "family": "DIST",
+          "side": "right",
+          "slot_index": 91
+        }
+      ],
+      "not_yet_started_remain_pending": [
+        {
+          "design_id": "SGW-DIST-DESIGN-096",
+          "family": "DIST",
+          "side": "left",
+          "slot_index": 96
+        }
+      ],
+      "rank": 3
+    }
+  ],
+  "reason": "Prioritize the registered main-experiment N3 fixed-input/P progression. New B200 CW admission has no available device; existing ali B200 is occupied by unrelated training and is untouched.",
+  "recorded_at_utc": "2026-09-23T19:00:42.733809+00:00",
+  "resume_contract": "Retain completed outcomes and exact unstarted assignments. Never refill, rerun valid outcomes or count unfinished slots as failures.",
+  "reuse_gate": "Require worker boundary acknowledgement, process outcome and terminated Pod before re-admission; then independently check GPU idleness/ownership.",
+  "schema_version": "sgw-01-administrative-priority-pause-v1",
+  "scientific_failure_claimed": false,
+  "status": "administrative_priority_pause_requested_at_complete_candidate_boundary",
+  "user_approval": "Yes--prioritize the redesigned scene on our GPUs (Recommended)",
+  "worker_contract": "Existence checked under .partition.lock only before a new slot; current candidate completes before stopped_before_next_slot acknowledgement."
+}

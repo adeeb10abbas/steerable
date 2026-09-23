@@ -26,7 +26,8 @@ def _inputs():
         "status": {},
     }
     target = {
-        "metadata": {"name": "sgw01-ali-example", "uid": "target-job", "namespace": handoff.NAMESPACE},
+        "metadata": {"name": "sgw01-ali-example", "uid": "target-job", "resourceVersion": "7",
+                     "namespace": handoff.NAMESPACE},
         "spec": {"suspend": True, "parallelism": 1, "completions": 1, "backoffLimit": 0,
                  "template": {"spec": {"schedulerName": "sgw01-ali-example", "priority": 0,
                              "nodeName": "node-2",
@@ -140,7 +141,7 @@ class FakeKubernetes:
             raise URLError("resume denied")
         assert payload[:2] == [
             {"op": "test", "path": "/metadata/uid", "value": self.resources[path]["metadata"]["uid"]},
-            {"op": "test", "path": "/spec", "value": self.resources[path]["spec"]},
+            {"op": "test", "path": "/metadata/resourceVersion", "value": self.resources[path]["metadata"]["resourceVersion"]},
         ]
         assert payload[2] == {"op": "replace", "path": "/spec/suspend", "value": False}
         self.resources[path]["spec"]["suspend"] = False

@@ -1,7 +1,7 @@
 """Resume one pre-bound SGW Job after its recorded worker naturally succeeds.
 
 The account needs GET on four named Pods and two Jobs, plus PATCH on the one
-target Job. The only mutation is an atomic UID/spec-guarded change of suspend
+target Job. The only mutation is an atomic UID/resourceVersion-guarded change of suspend
 from true to false. No Pod binding, eviction, deletion or node provisioning
 operation is used; the target Pod is pre-bound at noncritical priority zero.
 """
@@ -99,6 +99,8 @@ def select_node(
         raise ValueError("predecessor identity or finite no-retry contract changed")
     if (
         target["metadata"]["uid"] != expected["uid"]
+        or not isinstance(target["metadata"].get("resourceVersion"), str)
+        or not target["metadata"]["resourceVersion"]
         or target["metadata"]["name"] != expected["name"]
         or target["metadata"]["namespace"] != NAMESPACE
         or target["metadata"].get("deletionTimestamp")
@@ -155,6 +157,7 @@ class Kubernetes:
             data=json.dumps(payload).encode() if payload is not None else None,
             headers={
                 "Authorization": "Bearer " + (SERVICE_ACCOUNT / "token").read_text().strip(),
+                "Accept": "application/json",
                 "Content-Type": "application/json-patch+json" if method == "PATCH" else "application/json",
             },
             method=method,
@@ -204,7 +207,7 @@ def run(config: dict[str, Any], output: Path, api: Kubernetes) -> None:
             })
             patch = [
                 {"op": "test", "path": "/metadata/uid", "value": config["target"]["uid"]},
-                {"op": "test", "path": "/spec", "value": target["spec"]},
+                {"op": "test", "path": "/metadata/resourceVersion", "value": target["metadata"]["resourceVersion"]},
                 {"op": "replace", "path": "/spec/suspend", "value": False},
             ]
             resumed_spec = {**target["spec"], "suspend": False}

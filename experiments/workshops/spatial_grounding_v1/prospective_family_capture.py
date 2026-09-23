@@ -26,8 +26,11 @@ def _manifest(path: Path) -> dict[str, Any]:
     material = dict(value)
     material.pop("manifest_sha256", None)
     computed = hashlib.sha256((json.dumps(material, allow_nan=False, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest()
-    if digest != computed or value.get("status") != "prospective_scene_design_not_measured_or_qualified":
-        raise ValueError("prospective overlay manifest is malformed or not prospective-only")
+    if digest != computed or value.get("status") not in {
+        "prospective_scene_design_not_measured_or_qualified",
+        "prospective_candidate_design_requires_zero_model_capture",
+    }:
+        raise ValueError("prospective overlay manifest is malformed or not capture-eligible")
     overlay = value.get("overlay_usda", {})
     if not isinstance(overlay, Mapping) or not Path(overlay.get("path", "")).is_file():
         raise ValueError("prospective overlay USD is missing")

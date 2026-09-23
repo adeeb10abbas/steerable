@@ -21,8 +21,11 @@ def _manifest() -> dict:
     if hashlib.sha256(raw).hexdigest() != expected:
         raise RuntimeError("prospective overlay manifest file digest mismatch")
     value = json.loads(raw)
-    if value.get("status") != "prospective_scene_design_not_measured_or_qualified":
-        raise RuntimeError("overlay manifest is not prospective-only")
+    if value.get("status") not in {
+        "prospective_scene_design_not_measured_or_qualified",
+        "prospective_candidate_design_requires_zero_model_capture",
+    }:
+        raise RuntimeError("overlay manifest is not prospective capture-eligible")
     return value
 
 

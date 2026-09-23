@@ -134,7 +134,7 @@ def test_dist_overlay_has_visual_plate_and_counterbalance(tmp_path):
     ("HEIGHT", "left"), ("HEIGHT", "right"), ("DIST", "left"), ("DIST", "right"),
 ])
 def test_real_measured_receipt_authors_supported_poses_and_goal_clearance(tmp_path, family, side):
-    from pxr import Usd
+    Usd = pytest.importorskip("pxr.Usd")
 
     receipt = Path(__file__).parents[1] / (
         "artifacts/workshops/spatial_grounding_v1/infrastructure/a40-20260922r-workspace.json"

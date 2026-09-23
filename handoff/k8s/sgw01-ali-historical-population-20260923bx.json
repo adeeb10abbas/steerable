@@ -1,0 +1,161 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "sgw01-ali-historical-population-20260923bx",
+    "namespace": "211247-prod",
+    "labels": {
+      "owner": "ali",
+      "app.kubernetes.io/name": "sgw-01"
+    }
+  },
+  "spec": {
+    "backoffLimit": 0,
+    "activeDeadlineSeconds": 2400,
+    "template": {
+      "metadata": {
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "purpose": "bounded-historical-population"
+        }
+      },
+      "spec": {
+        "restartPolicy": "Never",
+        "terminationGracePeriodSeconds": 30,
+        "automountServiceAccountToken": false,
+        "nodeSelector": {
+          "kubernetes.io/hostname": "dcwipphhgc191.edc.nam.gm.com"
+        },
+        "tolerations": [
+          {
+            "key": "nvidia.com/gpu",
+            "operator": "Equal",
+            "value": "present",
+            "effect": "NoSchedule"
+          }
+        ],
+        "imagePullSecrets": [
+          {
+            "name": "artifactory-ci-pull-secret"
+          }
+        ],
+        "securityContext": {
+          "fsGroup": 2518800,
+          "supplementalGroups": [
+            2518800
+          ],
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "containers": [
+          {
+            "name": "extract",
+            "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+            "command": [
+              "/bin/bash",
+              "-ec"
+            ],
+            "args": [
+              "set -euo pipefail\nOUT=/data/users/ali/sgw-01/infrastructure/historical-population-20260923bx\nBASE=/data/users/ali/sgw-01/infrastructure/historical-stream-deps-20260923bl\nPY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python\ntest ! -e \"$OUT\"\nmkdir \"$OUT\"\nexec > >(tee \"$OUT/extract.log\") 2>&1\ntest \"$(sha256sum /inputs/requests.json | awk '{print $1}')\" = e037a360f00c54b4f132373549ac67faa865d151e22a9a35e25863d6077f1ddf\ntest \"$(sha256sum /inputs/historical_layout_streaming.py | awk '{print $1}')\" = e877f932a69079a9c67bad612972afd1d82129b59eeb719ce519e74cba5e7ce2\ntest \"$(sha256sum /inputs/run.py | awk '{print $1}')\" = 072e94807645a56d6bb3e9f2378b6964f04429441e52c0edaff33f9f1e1228d8\ncp \"$BASE/parser.tar.gz\" \"$OUT/parser.tar.gz\"\ntest \"$(sha256sum \"$OUT/parser.tar.gz\" | awk '{print $1}')\" = eba26d2fd366a677278eedcab046c571e6613dec70eeeab3a9b9d54c4e9bf718\n\"$PY\" - \"$OUT\" <<'PY'\nfrom pathlib import Path\nimport sys, tarfile\nroot = Path(sys.argv[1])\n(root / \"parser\").mkdir()\nwith tarfile.open(root / \"parser.tar.gz\") as bundle:\n    bundle.extractall(root / \"parser\", filter=\"data\")\nPY\nexport PYTHONPATH=\"$OUT/parser:/inputs\"\nexport IJSON_BACKEND=yajl2_c\nresult=0\n\"$PY\" -u /inputs/run.py \"$OUT\" || result=$?\nprintf '%s\\n' \"$result\" > \"$OUT/child-exit-code\"\nsync\nexit \"$result\"\n"
+            ],
+            "env": [
+              {
+                "name": "HOME",
+                "value": "/tmp"
+              },
+              {
+                "name": "PYTHONDONTWRITEBYTECODE",
+                "value": "1"
+              },
+              {
+                "name": "CUDA_VISIBLE_DEVICES",
+                "value": ""
+              },
+              {
+                "name": "NVIDIA_VISIBLE_DEVICES",
+                "value": "void"
+              },
+              {
+                "name": "SOURCE_COMMIT",
+                "value": "c9d8517d452285af24f43d98316c1dd871aa368f"
+              },
+              {
+                "name": "JOB_UID",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                  }
+                }
+              },
+              {
+                "name": "POD_UID",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.uid"
+                  }
+                }
+              }
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "250m",
+                "memory": "1Gi"
+              },
+              "limits": {
+                "cpu": "2",
+                "memory": "1Gi"
+              }
+            },
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              },
+              "runAsGroup": 2518800,
+              "runAsNonRoot": true,
+              "runAsUser": 816149040
+            },
+            "volumeMounts": [
+              {
+                "name": "workspace",
+                "mountPath": "/data"
+              },
+              {
+                "name": "tmp",
+                "mountPath": "/tmp"
+              },
+              {
+                "name": "inputs",
+                "mountPath": "/inputs",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "workspace",
+            "persistentVolumeClaim": {
+              "claimName": "211247-prod-pvc"
+            }
+          },
+          {
+            "name": "tmp",
+            "emptyDir": {}
+          },
+          {
+            "name": "inputs",
+            "configMap": {
+              "name": "sgw01-ali-historical-population-inputs-20260923bx"
+            }
+          }
+        ],
+        "activeDeadlineSeconds": 2340
+      }
+    }
+  }
+}

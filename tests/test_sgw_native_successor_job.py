@@ -10,17 +10,22 @@ from experiments.workshops.spatial_grounding_v1 import native_successor_job as s
 def _config(tmp_path: Path) -> Path:
     source = tmp_path / "source"; source.mkdir()
     receipt = tmp_path / "source-receipt.json"; receipt.write_text('{"source":"pinned"}')
+    registration = tmp_path / "registration.json"; registration.write_text('{"registration":"pinned"}')
+    python = "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
     config = {
         "schema_version": successor.SCHEMA, "job_name": "sgw01-ali-native-successor-example",
         "source_path": str(source), "source_commit": "e9ffc35635e96b5f66ee906f4c84062fb36002b1",
         "source_receipt": str(receipt), "source_receipt_sha256": hashlib.sha256(receipt.read_bytes()).hexdigest(),
+        "registration": str(registration), "registration_sha256": hashlib.sha256(registration.read_bytes()).hexdigest(),
         "output_root": "/data/users/ali/sgw-01/qualification/native-successor-example",
         "robolab_root": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241",
-        "python": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
+        "python": python,
         "assets_manifest": "/data/users/ali/sgw-01/preflight/a40-20260922e/assets.json",
         "preflight_root": "/data/users/ali/sgw-01/preflight/a40-20260922e",
-        "native_command": ["python", "-m", "example.native"], "bt_node_names": ["bt-node-a", "bt-node-b"],
-        "active_deadline_seconds": 7200,
+        "native_command": [python, "-m", "experiments.workshops.spatial_grounding_v1.paper_engineering",
+                           "--registration", str(registration), "--output-root", "/example/evidence"],
+        "bt_node_names": ["bt-node-a", "bt-node-b"], "active_deadline_seconds": 7200,
+        "native_child_timeout_seconds": 4800, "storage_reserve_bytes": successor.MIN_STORAGE_RESERVE_BYTES,
     }
     path = tmp_path / "config.json"
     path.write_text(json.dumps(config))
@@ -44,6 +49,8 @@ def test_successor_requires_exact_nodes_and_bt_anti_affinity(tmp_path):
     ]
     assert pod["affinity"]["podAntiAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"][0]["topologyKey"] == "kubernetes.io/hostname"
     assert pod["containers"][0]["resources"]["limits"]["nvidia.com/gpu"] == "1"
+    assert pod["nodeSelector"] == {"node-role.kubernetes.io/worker-gpu": ""}
+    assert pod["containers"][0]["env"][-1]["name"] == "LD_LIBRARY_PATH"
 
 
 @pytest.mark.parametrize("mutate", [
@@ -51,6 +58,8 @@ def test_successor_requires_exact_nodes_and_bt_anti_affinity(tmp_path):
     lambda job: job["spec"]["template"]["spec"].update({"preemptionPolicy": "PreemptLowerPriority"}),
     lambda job: job["spec"]["template"]["spec"]["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"][0]["matchFields"][0].update({"values": []}),
     lambda job: job["spec"]["template"]["spec"]["affinity"]["podAntiAffinity"].pop("requiredDuringSchedulingIgnoredDuringExecution"),
+    lambda job: job["spec"]["template"]["spec"]["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"].append({}),
+    lambda job: job["spec"].update({"activeDeadlineSeconds": 1}),
 ])
 def test_weakened_successor_constraints_are_rejected(tmp_path, mutate):
     _config, job = _render(tmp_path)

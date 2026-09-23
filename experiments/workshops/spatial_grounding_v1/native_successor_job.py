@@ -13,6 +13,7 @@ IMAGE = "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7
 PVC = "211247-prod-pvc"
 ROBOLAB_COMMIT = "0aef241fb088ca21bb4ebd24448940ed56620d17"
 SCHEMA = "sgw-01-native-successor-job-v1"
+MIN_STORAGE_RESERVE_BYTES = 3860 * 1024**3
 
 
 def _sha256(path: Path) -> str:
@@ -42,6 +43,7 @@ def render(config_path: Path) -> dict[str, Any]:
     name = _required_text(config.get("job_name"), "job_name")
     source = Path(_required_text(config.get("source_path"), "source_path"))
     source_receipt = Path(_required_text(config.get("source_receipt"), "source_receipt"))
+    registration = Path(_required_text(config.get("registration"), "registration"))
     output = _required_text(config.get("output_root"), "output_root")
     command = config.get("native_command")
     nodes = config.get("bt_node_names")
@@ -50,6 +52,8 @@ def render(config_path: Path) -> dict[str, Any]:
         or not all(isinstance(item, str) and item for item in command)
         or not source_receipt.is_file() or not isinstance(config.get("source_receipt_sha256"), str)
         or _sha256(source_receipt) != config["source_receipt_sha256"]
+        or not registration.is_file() or not isinstance(config.get("registration_sha256"), str)
+        or _sha256(registration) != config["registration_sha256"]
         or not isinstance(nodes, list) or not nodes or not all(isinstance(node, str) and node for node in nodes)
         or len(set(nodes)) != len(nodes)
     ):
@@ -58,8 +62,14 @@ def render(config_path: Path) -> dict[str, Any]:
     assets = _required_text(config.get("assets_manifest"), "assets_manifest")
     preflight = _required_text(config.get("preflight_root"), "preflight_root")
     deadline = config.get("active_deadline_seconds")
-    if type(deadline) is not int or not 1 <= deadline <= 172800:
-        raise ValueError("successor active deadline must be finite and at most 48 hours")
+    storage_reserve = config.get("storage_reserve_bytes")
+    child_timeout = config.get("native_child_timeout_seconds")
+    if (type(deadline) is not int or not 1 <= deadline <= 172800
+            or type(storage_reserve) is not int or storage_reserve < MIN_STORAGE_RESERVE_BYTES
+            or type(child_timeout) is not int or not 1 <= child_timeout <= 4800
+            or command[:3] != [config.get("python"), "-m", "experiments.workshops.spatial_grounding_v1.paper_engineering"]
+            or "--registration" not in command or "--output-root" not in command):
+        raise ValueError("successor budget or bounded paper-engineering command differs")
     script = """set -euo pipefail
 OUT="${SGW_OUTPUT_ROOT}"
 mkdir "$OUT"
@@ -68,7 +78,7 @@ python3 - "$OUT" <<'PY'
 from datetime import datetime, timezone
 import json, os, shutil, sys
 from pathlib import Path
-out = Path(sys.argv[1]); free = shutil.disk_usage(out).free; required = 100 * 1024**3
+out = Path(sys.argv[1]); free = shutil.disk_usage(out).free; required = int(os.environ["SGW_STORAGE_RESERVE_BYTES"])
 receipt = {"recorded_at_utc": datetime.now(timezone.utc).isoformat(), "free_bytes": free,
            "required_free_bytes": required, "model_requests": 0, "behavioral_episodes": 0,
            "status": "passed_conservative_space_check" if free >= required else "insufficient_space"}
@@ -76,6 +86,8 @@ with (out / "storage_preflight.json").open("x") as stream:
     json.dump(receipt, stream, indent=2, sort_keys=True); stream.write("\\n"); stream.flush(); os.fsync(stream.fileno())
 if free < required: raise RuntimeError("insufficient persistent storage")
 PY
+test "$(sha256sum "$SGW_SOURCE_RECEIPT" | awk '{print $1}')" = "$SGW_SOURCE_RECEIPT_SHA256"
+test "$(sha256sum "$SGW_REGISTRATION" | awk '{print $1}')" = "$SGW_REGISTRATION_SHA256"
 test "$(git -C "$SGW_SOURCE" rev-parse HEAD)" = "$SGW_SOURCE_COMMIT"
 test -z "$(git -C "$SGW_SOURCE" status --porcelain)"
 test "$(git -C "$ROBOLAB" rev-parse HEAD)" = "$ROBOLAB_COMMIT"
@@ -84,20 +96,22 @@ cd "$SGW_SOURCE"
 "$PY" tools/validate_vla_wam_v3_protocol.py --quiet
 "$PY" tools/validate_vla_wam_v2_protocol.py > "$OUT/v2_validation.json"
 export PYTHONPATH="$SGW_SOURCE:$ROBOLAB"
+export XDG_CACHE_HOME="$OUT/cache/xdg" WARP_CACHE_PATH="$OUT/cache/warp" MPLCONFIGDIR="$OUT/cache/matplotlib"
+mkdir -p "$HOME/.cache" "$XDG_CACHE_HOME" "$WARP_CACHE_PATH" "$MPLCONFIGDIR" "$OUT/kit"
 CUDA_VISIBLE_DEVICES=$("$PY" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output "$OUT/gpu_selection.json")
 export CUDA_VISIBLE_DEVICES
 mkdir -p /data/users/ali/sgw-01/locks
 exec 9>"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock"
 flock --nonblock 9
 nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total,memory.used,utilization.gpu --format=csv,noheader > "$OUT/gpu_identity.csv"
-"$PY" - "$OUT" "$SGW_NATIVE_COMMAND_JSON" <<'PY'
+"$PY" - "$OUT" "$SGW_NATIVE_COMMAND_JSON" "$SGW_NATIVE_CHILD_TIMEOUT_SECONDS" <<'PY'
 from datetime import datetime, timezone
 import json, os, subprocess, sys, traceback
 from pathlib import Path
-out, command = Path(sys.argv[1]), json.loads(sys.argv[2])
+out, command, timeout = Path(sys.argv[1]), json.loads(sys.argv[2]), int(sys.argv[3])
 receipt = {"command": command, "model_requests": 0, "behavioral_episodes": 0, "release_permitted": False}
 try:
-    result = subprocess.run(command, cwd=os.environ["SGW_SOURCE"], check=False)
+    result = subprocess.run(command, cwd=os.environ["SGW_SOURCE"], check=False, timeout=timeout)
     receipt["native_exit_code"] = result.returncode
     if result.returncode: raise RuntimeError(f"native command exited {result.returncode}")
     receipt["status"] = "native_exit_zero_requires_external_evidence_verification"
@@ -116,7 +130,10 @@ sync"""
             "annotations": {
                 "sgw-01/config-sha256": _sha256(config_path),
                 "sgw-01/source-receipt-sha256": config["source_receipt_sha256"],
+                "sgw-01/registration-sha256": config["registration_sha256"],
                 "sgw-01/robolab-commit": ROBOLAB_COMMIT,
+                "sgw-01/active-deadline-seconds": str(deadline),
+                "sgw-01/storage-reserve-bytes": str(storage_reserve),
             },
         },
         "spec": {
@@ -127,9 +144,11 @@ sync"""
                 "spec": {
                     "restartPolicy": "Never", "preemptionPolicy": "Never", "automountServiceAccountToken": False,
                     "activeDeadlineSeconds": deadline, "terminationGracePeriodSeconds": 180,
+                    "nodeSelector": {"node-role.kubernetes.io/worker-gpu": ""},
                     "affinity": {
                         "nodeAffinity": {"requiredDuringSchedulingIgnoredDuringExecution": {"nodeSelectorTerms": [{
-                            "matchFields": [{"key": "metadata.name", "operator": "In", "values": nodes}]
+                            "matchExpressions": [{"key": "nvidia.com/gpu.product", "operator": "In", "values": ["NVIDIA-A40"]}],
+                            "matchFields": [{"key": "metadata.name", "operator": "In", "values": nodes}],
                         }]}},
                         "podAntiAffinity": {"requiredDuringSchedulingIgnoredDuringExecution": [{
                             "labelSelector": {"matchExpressions": [{
@@ -139,6 +158,9 @@ sync"""
                         }]},
                     },
                     "imagePullSecrets": [{"name": "artifactory-ci-pull-secret"}],
+                    "tolerations": [{"key": "nvidia.com/gpu", "operator": "Equal", "value": "present", "effect": "NoSchedule"}],
+                    "securityContext": {"fsGroup": 2518800, "supplementalGroups": [2518800],
+                                        "seccompProfile": {"type": "RuntimeDefault"}},
                     "containers": [{
                         "name": "native-engineering", "image": IMAGE, "command": ["/bin/bash", "-ec"], "args": [script],
                         "env": [
@@ -146,18 +168,33 @@ sync"""
                             {"name": "SGW_SOURCE_COMMIT", "value": source_commit}, {"name": "ROBOLAB", "value": _required_text(config.get("robolab_root"), "robolab_root")},
                             {"name": "ROBOLAB_COMMIT", "value": ROBOLAB_COMMIT}, {"name": "PY", "value": _required_text(config.get("python"), "python")},
                             {"name": "SGW_ASSETS_MANIFEST", "value": assets}, {"name": "SGW_PREFLIGHT_ROOT", "value": preflight},
-                            {"name": "SGW_NATIVE_COMMAND_JSON", "value": json.dumps(command)}, {"name": "HOME", "value": "/home/ali"},
+                            {"name": "SGW_SOURCE_RECEIPT", "value": str(source_receipt)}, {"name": "SGW_SOURCE_RECEIPT_SHA256", "value": config["source_receipt_sha256"]},
+                            {"name": "SGW_REGISTRATION", "value": str(registration)}, {"name": "SGW_REGISTRATION_SHA256", "value": config["registration_sha256"]},
+                            {"name": "SGW_NATIVE_COMMAND_JSON", "value": json.dumps(command)}, {"name": "SGW_NATIVE_CHILD_TIMEOUT_SECONDS", "value": str(child_timeout)},
+                            {"name": "SGW_STORAGE_RESERVE_BYTES", "value": str(storage_reserve)}, {"name": "HOME", "value": "/home/ali"},
+                            {"name": "USER", "value": "ali"}, {"name": "LOGNAME", "value": "ali"}, {"name": "TMPDIR", "value": "/tmp"},
                             {"name": "PYTHONDONTWRITEBYTECODE", "value": "1"}, {"name": "NVIDIA_DRIVER_CAPABILITIES", "value": "compute,utility,graphics,display"},
                             {"name": "OMNI_KIT_ACCEPT_EULA", "value": "YES"}, {"name": "ACCEPT_EULA", "value": "Y"},
+                            {"name": "VK_ICD_FILENAMES", "value": "/etc/vulkan/icd.d/nvidia_icd.json"},
+                            {"name": "LD_LIBRARY_PATH", "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"},
                         ],
                         "resources": {"requests": {"cpu": "16", "memory": "64Gi", "nvidia.com/gpu": "1"},
                                       "limits": {"cpu": "32", "memory": "128Gi", "nvidia.com/gpu": "1"}},
                         "securityContext": {"allowPrivilegeEscalation": False, "capabilities": {"drop": ["ALL"]},
                                             "runAsNonRoot": True, "runAsUser": 816149040, "runAsGroup": 2518800},
-                        "volumeMounts": [{"name": "workspace", "mountPath": "/data"}, {"name": "dshm", "mountPath": "/dev/shm"}],
+                        "volumeMounts": [
+                            {"name": "workspace", "mountPath": "/data"}, {"name": "dshm", "mountPath": "/dev/shm"},
+                            {"name": "tmp", "mountPath": "/tmp"}, {"name": "vartmp", "mountPath": "/var/tmp"},
+                            {"name": "home", "mountPath": "/home/ali"},
+                            {"name": "userdb", "mountPath": "/etc/passwd", "subPath": "passwd", "readOnly": True},
+                            {"name": "userdb", "mountPath": "/etc/group", "subPath": "group", "readOnly": True},
+                        ],
                     }],
                     "volumes": [{"name": "workspace", "persistentVolumeClaim": {"claimName": PVC}},
-                                {"name": "dshm", "emptyDir": {"medium": "Memory", "sizeLimit": "32Gi"}}],
+                                {"name": "dshm", "emptyDir": {"medium": "Memory", "sizeLimit": "32Gi"}},
+                                {"name": "tmp", "emptyDir": {}}, {"name": "vartmp", "emptyDir": {}},
+                                {"name": "home", "emptyDir": {}},
+                                {"name": "userdb", "configMap": {"name": "211247-ali-b200-1gpu-userdb"}}],
                 },
             },
         },
@@ -169,15 +206,25 @@ def validate(job: Mapping[str, Any], *, nodes: list[str]) -> None:
     try:
         spec, pod = job["spec"], job["spec"]["template"]["spec"]
         container = pod["containers"][0]
-        node_expression = pod["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"][0]["matchFields"][0]
+        terms = pod["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"]
+        node_term = terms[0]
+        node_expression = node_term["matchFields"][0]
         anti = pod["affinity"]["podAntiAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"][0]
+        environment = {row["name"]: row["value"] for row in container["env"]}
+        native_command = json.loads(environment["SGW_NATIVE_COMMAND_JSON"])
     except (KeyError, IndexError, TypeError) as error:
         raise ValueError("successor Job lacks required scheduling structure") from error
     if (
         job.get("kind") != "Job" or job.get("metadata", {}).get("namespace") != NAMESPACE
         or spec.get("parallelism") != 1 or spec.get("completions") != 1 or spec.get("backoffLimit") != 0
         or pod.get("restartPolicy") != "Never" or pod.get("preemptionPolicy") != "Never"
+        or spec.get("activeDeadlineSeconds") != pod.get("activeDeadlineSeconds")
+        or str(spec.get("activeDeadlineSeconds")) != job.get("metadata", {}).get("annotations", {}).get("sgw-01/active-deadline-seconds")
         or pod.get("automountServiceAccountToken") is not False
+        or pod.get("nodeSelector") != {"node-role.kubernetes.io/worker-gpu": ""}
+        or len(terms) != 1 or node_term.get("matchExpressions") != [{
+            "key": "nvidia.com/gpu.product", "operator": "In", "values": ["NVIDIA-A40"],
+        }]
         or node_expression != {"key": "metadata.name", "operator": "In", "values": nodes}
         or anti.get("namespaces") != [NAMESPACE] or anti.get("topologyKey") != "kubernetes.io/hostname"
         or anti.get("labelSelector", {}).get("matchExpressions") != [{
@@ -186,6 +233,18 @@ def validate(job: Mapping[str, Any], *, nodes: list[str]) -> None:
         or container.get("image") != IMAGE or container.get("resources", {}).get("limits", {}).get("nvidia.com/gpu") != "1"
         or container.get("resources", {}).get("requests", {}).get("nvidia.com/gpu") != "1"
         or "gpu_idle_probe" not in container.get("args", [""])[0] or "flock --nonblock" not in container.get("args", [""])[0]
+        or "SGW_SOURCE_RECEIPT" not in container.get("args", [""])[0]
+        or "SGW_STORAGE_RESERVE_BYTES" not in container.get("args", [""])[0]
+        or environment.get("SGW_STORAGE_RESERVE_BYTES") != job.get("metadata", {}).get("annotations", {}).get("sgw-01/storage-reserve-bytes")
+        or environment.get("SGW_SOURCE_RECEIPT_SHA256") != job.get("metadata", {}).get("annotations", {}).get("sgw-01/source-receipt-sha256")
+        or environment.get("SGW_REGISTRATION_SHA256") != job.get("metadata", {}).get("annotations", {}).get("sgw-01/registration-sha256")
+        or native_command[:3] != [environment.get("PY"), "-m", "experiments.workshops.spatial_grounding_v1.paper_engineering"]
+        or "policy" in " ".join(native_command).lower()
+        or len(pod.get("containers", [])) != 1 or any(
+            item.get("resources", {}).get("requests", {}).get("nvidia.com/gpu")
+            or item.get("resources", {}).get("limits", {}).get("nvidia.com/gpu")
+            for item in pod.get("initContainers", [])
+        )
         or not isinstance(job.get("metadata", {}).get("annotations", {}).get("sgw-01/config-sha256"), str)
     ):
         raise ValueError("successor Job constraints are weakened")

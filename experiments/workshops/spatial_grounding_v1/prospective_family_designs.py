@@ -18,7 +18,7 @@ from typing import Any, Mapping
 
 from .fixtures import Pose, pose_error
 from .lat_candidate_generator import workspace_digest
-from .prospective_family_capture import _sha256
+from .prospective_family_capture import _manifest as capture_manifest, _sha256
 
 PLAN_SCHEMA = "sgw-01-prospective-family-design-plan-v1"
 CANDIDATE_OVERLAY_SCHEMA = "sgw-01-prospective-family-candidate-overlay-v1"
@@ -122,6 +122,8 @@ def author_candidate_overlay(*, plan: Mapping[str, Any], design_id: str, output:
     manifest = _prospective_manifest(manifest_path, expected_sha256=binding["overlay_manifest"]["sha256"])
     if capture["overlay_manifest_sha256"] != manifest["manifest_sha256"]:
         raise ValueError("baseline capture does not bind its baseline overlay manifest")
+    if _validated_capture_dependencies(capture, manifest) != binding["used_layer_dependencies"]:
+        raise ValueError("baseline dependency inventory differs from the frozen plan")
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(_candidate_usda(manifest, capture, row), encoding="utf-8")
     value = {
@@ -156,6 +158,12 @@ def require_design_capture(*, candidate_manifest_path: Path, capture_path: Path)
         raise ValueError("candidate capture family differs from candidate overlay")
     if capture.get("overlay_manifest_sha256") != manifest["manifest_sha256"]:
         raise ValueError("candidate capture does not bind the candidate overlay manifest")
+    baseline = manifest["source_baseline"]
+    if (
+        capture.get("asset_manifest_sha256") != baseline["asset_manifest_sha256"]
+        or capture.get("robolab_commit") != baseline["robolab_commit"]
+    ):
+        raise ValueError("candidate capture source or asset identity differs from its baseline")
     _capture_dependencies_include(capture, manifest["overlay_usda"], manifest["inherited_overlay_dependencies"])
     return capture
 
@@ -264,13 +272,9 @@ def _prospective_manifest(path: Path, expected_sha256: str | None = None) -> dic
 def _candidate_manifest(path: Path) -> dict[str, Any]:
     if not path.is_file():
         raise FileNotFoundError(f"candidate overlay manifest is missing: {path}")
-    value = json.loads(path.read_text(encoding="utf-8"))
-    if value.get("status") != CANDIDATE_STATUS or value.get("manifest_sha256") != _digest(value, "manifest_sha256"):
+    value = capture_manifest(path)
+    if value.get("status") != CANDIDATE_STATUS:
         raise ValueError("candidate overlay manifest is malformed")
-    if not Path(value.get("overlay_usda", {}).get("path", "")).is_file():
-        raise ValueError("candidate overlay USD is missing")
-    if _sha256(Path(value["overlay_usda"]["path"])) != value["overlay_usda"].get("sha256"):
-        raise ValueError("candidate overlay USD bytes differ from manifest")
     return value
 
 

@@ -101,23 +101,25 @@ def test_plan_rejects_mutated_bound_baseline_bytes(tmp_path):
         )
 
 
-def test_candidate_authoring_rejects_mutated_inherited_baseline_usd(tmp_path):
+@pytest.mark.parametrize("layer", ("overlay_usda", "base_scene"))
+def test_candidate_authoring_rejects_mutated_inherited_baseline_usd(tmp_path, layer):
     captures, manifests = _baseline_files(tmp_path, "HEIGHT")
     plan = build_design_plan(
         family="HEIGHT", seed=91, count=4, baseline_capture_paths=captures, baseline_manifest_paths=manifests,
     )
     baseline_manifest = json.loads(manifests["left"].read_text())
-    baseline_overlay = Path(baseline_manifest["overlay_usda"]["path"])
+    baseline_overlay = Path(baseline_manifest[layer]["path"])
     baseline_overlay.write_text(baseline_overlay.read_text() + "\n# mutation")
     design = next(row for row in plan["designs"] if row["side"] == "left" and row["status"].endswith("capture"))
-    with pytest.raises(ValueError, match="overlay USD bytes differ"):
+    with pytest.raises(ValueError, match="bytes differ"):
         author_candidate_overlay(
             plan=plan, design_id=design["design_id"], output=tmp_path / "candidate.usda",
             manifest_output=tmp_path / "candidate.manifest.json",
         )
 
 
-def test_candidate_overlay_requires_its_own_capture_before_materialization(tmp_path):
+@pytest.mark.parametrize("mutation", ("inherited_layer", "asset_manifest_sha256", "robolab_commit"))
+def test_candidate_overlay_requires_its_own_capture_before_materialization(tmp_path, mutation):
     captures, manifests = _baseline_files(tmp_path, "DIST")
     plan = build_design_plan(
         family="DIST", seed=91, count=4, baseline_capture_paths=captures, baseline_manifest_paths=manifests,
@@ -144,6 +146,15 @@ def test_candidate_overlay_requires_its_own_capture_before_materialization(tmp_p
     candidate_capture = tmp_path / "candidate.capture.json"
     candidate_capture.write_text(json.dumps(captured))
     assert require_design_capture(candidate_manifest_path=candidate_manifest_path, capture_path=candidate_capture)["family"] == "DIST"
+    if mutation == "inherited_layer":
+        baseline_overlay = Path(candidate["source_baseline"]["used_layer_dependencies"][0]["real_path"])
+        baseline_overlay.write_text(baseline_overlay.read_text() + "\n# mutation after capture")
+    else:
+        captured[mutation] = "0" * len(captured[mutation])
+        captured["receipt_sha256"] = workspace_digest(captured)
+        candidate_capture.write_text(json.dumps(captured))
+    with pytest.raises(ValueError, match="bytes differ|identity differs"):
+        require_design_capture(candidate_manifest_path=candidate_manifest_path, capture_path=candidate_capture)
 
 
 def test_candidate_overlay_preserves_measured_plate_root_over_authored_plate(tmp_path):

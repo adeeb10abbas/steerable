@@ -80,9 +80,9 @@ remain separate.
 
 After—and only after—the two native baseline captures for each family have
 been reviewed, `prospective_family_designs.py` may produce a fixed 1–100-slot
-design plan. This is a **synthetic capture schema used by local tests until
-the native baseline receipts exist**; it is not an observed capture, a
-measured layout, a reachable fixture, or a released candidate.
+design plan. Local tests use **synthetic capture-schema fixtures**, not native
+evidence. A prospective plan is not an observed capture, a measured layout,
+a reachable fixture, or a released candidate.
 
 Each plan binds both side-specific capture receipts, their baseline overlay
 manifests, every captured USD dependency hash, the base scene/workspace/source
@@ -100,3 +100,5 @@ It must first author a no-overwrite candidate overlay and then collect a
 the candidate overlay and all mutable inherited baseline layers immediately
 before AppLauncher. Only that new hash-bound capture can become input to later
 measured-layout materialization and the separate six-trial qualification gate.
+Materialization rechecks those inherited bytes and the captured source/asset
+identity; a once-valid capture cannot authorize mutated scene dependencies.

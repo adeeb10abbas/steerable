@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import importlib
+import hashlib
 import os
 from pathlib import Path
 from typing import Any, Callable, Mapping, Protocol
@@ -18,6 +19,13 @@ import numpy as np
 
 from .adapters import AdapterError, DREAMZERO_CONFIG
 from .runtime import _verify_dreamzero_identity
+
+D1_SERVER_EXPORT_SHA256 = "422f6181762756f71fbe1c1513e0076482e4aab07dfab1a11402176c11df870a"
+D1_SERVER_SURFACE = {
+    "eval_utils/policy_server.py": "5c541300759ac211aa00639223e707c80a12bf548520a70981162b8a0c534117",
+    "eval_utils/policy_client.py": "4f9f062bdc5bec081a459b75a29825c0438f15d22da601e20305e843cd05b5f1",
+    "groot/vla/model/n1_5/sim_policy.py": "c7b692b84a03a70adc7e0d21fb7632a9866285645e8d43c916100e6f5fb7497a",
+}
 
 
 class DreamZeroBackend(Protocol):
@@ -99,9 +107,21 @@ def _load_factory(spec: str) -> Callable[..., Any]:
     return factory
 
 
+def _verify_exported_server_surface(source_root: Path) -> None:
+    """Verify the source files that define the reviewed websocket boundary."""
+    for relative, expected in D1_SERVER_SURFACE.items():
+        path = source_root / relative
+        if not path.is_file():
+            raise AdapterError(f"pinned D1 server source file is missing: {relative}")
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        if digest != expected:
+            raise AdapterError(f"pinned D1 server source file hash mismatch: {relative}")
+
+
 def build_pinned_dreamzero_backend() -> DreamZeroBackend:
     """Verify identity, then invoke only an explicitly reviewed native factory."""
     identity = _verify_dreamzero_identity()
+    _verify_exported_server_surface(Path(identity["source_root"]))
     factory_spec = os.environ.get("SGW01_D1_SERVER_FACTORY", "").strip()
     if not factory_spec:
         raise AdapterError(

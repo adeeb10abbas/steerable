@@ -9,6 +9,7 @@ import urllib.error
 import numpy as np
 
 from experiments.workshops.spatial_grounding_v1.adapters import DREAMZERO_CONFIG
+from experiments.workshops.spatial_grounding_v1 import dreamzero_backend
 from experiments.workshops.spatial_grounding_v1.dreamzero_producer import (
     DreamZeroEvidenceProducer,
     make_dreamzero_http_server,
@@ -107,3 +108,12 @@ def test_dreamzero_owned_http_boundary_rejects_request_before_reset(tmp_path: Pa
     finally:
         server.shutdown()
         server.server_close()
+
+
+def test_dreamzero_native_binding_requires_exported_server_surface(tmp_path: Path) -> None:
+    try:
+        dreamzero_backend._verify_exported_server_surface(tmp_path)
+    except ValueError as error:
+        assert "source file is missing" in str(error)
+    else:
+        raise AssertionError("missing native server source must fail closed")

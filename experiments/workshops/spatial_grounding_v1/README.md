@@ -313,3 +313,17 @@ DreamZero websocket/model constructor and its reset/session-eviction method
 from the clean server checkout at
 `ab790c198fbce33503358efbbd4187ce9a89adf3`; no server method names are
 invented here.
+
+The read-only server export proves the generic websocket boundary in
+`eval_utils/policy_server.py` (source SHA
+`5c541300759ac211aa00639223e707c80a12bf548520a70981162b8a0c534117`):
+`WebsocketPolicyServer._handler` receives `endpoint`, dispatches
+`policy.reset` for reset, and `policy.infer` for inference. It also proves the
+conditional policy surface in `groot/vla/model/n1_5/sim_policy.py` (SHA
+`c7b692b84a03a70adc7e0d21fb7632a9866285645e8d43c916100e6f5fb7497a`), where
+`lazy_joint_forward_causal` returns unnormalized actions and `video_pred`.
+The export did not include the tracked `eval_utils/serve_dreamzero_wan22.py`
+launcher or the concrete policy-construction/reset class. Those exact files,
+plus their directly imported constructors, are the bounded remaining
+CPU-only export needed to replace `SGW01_D1_SERVER_FACTORY`; until then the
+entrypoint is intentionally fail-closed.

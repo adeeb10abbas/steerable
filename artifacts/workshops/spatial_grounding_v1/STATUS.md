@@ -294,20 +294,24 @@ logs and receipts remain in:
 /data/users/ali/sgw-01/qualification/lat-workspace-20260922r/
 ```
 
-The source used by the last completed diagnostic was
-`42b26ed8d2df546340497965d1fc86d47cc14197`, staged as a clean checkout at
-`/data/users/ali/sgw-01/source/42b26ed-y` using the preserved 35e627e-q and
-b429ddd object stores. The verified RoboLab
+The last completed gripper diagnostic used `436f67a` at
+`/data/users/ali/sgw-01/source/436f67a-ae`. CPU stage ah subsequently reproduced
+the calibration byte-for-byte and verified the corrected native CLI from
+`f177db308d34687a30b18f388519f999fc88e483` at
+`/data/users/ali/sgw-01/source/f177db3-ah`. All earlier shared object-store
+dependencies remain required and must not be removed. The verified RoboLab
 checkout is pinned to `0aef241fb088ca21bb4ebd24448940ed56620d17`. The image
 digest and all probe/receipt hashes are recorded in the adjacent JSON state
 and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Stage the measured SGW-ENG-003 controller and run the same candidate's six
-physical checks in a fresh bounded Job before
-correcting the scripted controller. Preserve ac's six rejections and all 100
-candidate poses; no learned-policy release exists.
+Corrected six-trial Job `sgw01-ali-lat-qualification-20260923ai` started at
+`2026-09-23T00:57:20Z` on one freshly verified-idle A40, with a 3,600-second
+deadline and no automatic retry. Collect its terminal result and run the
+registered read-only verifier aj before claiming physical qualification.
+Preserve ac's six rejections and all 100 candidate poses; no learned-policy
+release exists.
 Do not rerun completed captures or overwrite evidence.
 **Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**

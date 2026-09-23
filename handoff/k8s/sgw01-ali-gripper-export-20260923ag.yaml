@@ -1,0 +1,94 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-gripper-export-20260923ag
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: read-only-gripper-export}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 20
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: export
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              exec /data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python - <<'PY'
+              import base64
+              import gzip
+              import hashlib
+              import json
+              from pathlib import Path
+              import imageio.v2 as iio
+              import numpy as np
+              root = Path("/data/users/ali/sgw-01/qualification/gripper-calibration-20260923af")
+              workspace = json.loads((root / "workspace.json").read_text())
+              probe = json.loads((root / "gripper_calibration/receipt.json").read_text())
+              assert probe == workspace["gripper_calibration"]
+              assert probe["issued_controller_commands"] == probe["observed_controller_actions"] == 60
+              assert len(probe["records"]) == 61
+              assert json.loads((root / "gripper_calibration/geometry.json").read_text())["finger_geometry"] == probe["finger_geometry"]
+              retained = {}
+              for path in sorted((root / "gripper_calibration").iterdir()):
+                  assert path.is_file() and path.resolve().is_relative_to(root.resolve())
+                  retained[str(path.relative_to(root))] = {"sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "bytes": path.stat().st_size}
+              for index, record in enumerate(probe["records"]):
+                  assert json.loads((root / f"gripper_calibration/state-{index:04d}.json").read_text()) == record
+                  frame = np.load(root / f"gripper_calibration/frame-{index:04d}.npy", allow_pickle=False)
+                  assert frame.dtype == np.uint8 and frame.shape[-1] == 3 and np.ptp(frame)
+                  if index:
+                      command = json.loads((root / f"gripper_calibration/command-{index:04d}.json").read_text())["action"]
+                      assert np.allclose(command[:3], probe["static_flange_position_root_xyz_m"])
+                      assert np.allclose(command[3:7], probe["static_flange_quaternion_root_wxyz"])
+                      assert np.isclose(command[7], 0.785398 if index <= 30 else 0)
+              decoded = {}
+              paths = {root / n for n in ("workspace.json", "workspace.log", "gpu_selection.json", "gpu_identity.csv", "gripper_calibration/receipt.json", "gripper_calibration/geometry.json")}
+              for video in (probe["viewport_video"], workspace["render_only_diagnostic"]["viewport_video"]):
+                  path = Path(video["path"])
+                  assert path.resolve().is_relative_to(root.resolve())
+                  assert hashlib.sha256(path.read_bytes()).hexdigest() == video["sha256"]
+                  with iio.get_reader(path) as reader:
+                      count = sum(1 for _ in reader)
+                  assert count == video["frame_count"]
+                  decoded[str(path.relative_to(root))] = count
+                  paths.add(path)
+              files = {}
+              for path in sorted(paths):
+                  if not path.resolve().is_relative_to(root.resolve()) or path.stat().st_size > 64 * 1024 * 1024:
+                      raise ValueError(f"gripper export escapes its bounded root: {path}")
+                  raw = path.read_bytes()
+                  files[str(path.relative_to(root))] = {"bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest(), "encoding": "gzip_base64", "data": base64.b64encode(gzip.compress(raw, mtime=0)).decode("ascii")}
+              print(json.dumps({"schema_version": "sgw-01-read-only-gripper-export-v1", "raw_root": str(root), "files": files, "retained_file_manifest": retained, "decoded_video_frames": decoded, "model_requests": 0, "allocated_gpus": 0}))
+              PY
+          env:
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+          resources:
+            requests: {cpu: "2", memory: 2Gi}
+            limits: {cpu: "2", memory: 4Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data, readOnly: true}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc, readOnly: true}

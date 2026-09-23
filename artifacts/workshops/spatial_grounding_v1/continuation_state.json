@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_below_release_gate_height_dist_native_visual_setup_accepted_qualification_unreleased",
-  "updated_at_utc": "2026-09-23T06:36:40Z",
+  "updated_at_utc": "2026-09-23T06:42:31Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -411,18 +411,7 @@
     "scene_review_scope": "The same independent reviewer sealed bi acceptance as ACCEPT_NATIVE_VISUAL_SETUP_ONLY for all4 captures and exactly reproduced all20 policy preprocessing images. This is not an additional rater, physical qualification, category recognition, live tensor parity or behavioral release. Plate-category/wrist-occlusion caveats and per-candidate banana clearance remain binding."
   },
   "active_task_gpu_jobs": [],
-  "active_task_cpu_jobs": [
-    {
-      "job": "sgw01-ali-historical-stream-20260923bl",
-      "job_uid": "d6f46ed7-06bb-49b3-a931-e11e47dbc083",
-      "status": "extraction_complete_bounded_600_second_accessor_only",
-      "pod": "sgw01-ali-historical-stream-20260923bl-m9dfw",
-      "pod_uid": "ce247e1a-85ca-4064-b637-3452eaf8c945",
-      "allocated_gpus": 0,
-      "automatic_retries": 0,
-      "deadline_seconds": 2400
-    }
-  ],
+  "active_task_cpu_jobs": [],
   "completed_capture_source_stages": [
     {
       "job": "sgw01-ali-source-stage-20260923bb",
@@ -511,6 +500,9 @@
   "latest_historical_payload_recovery": {
     "job": "sgw01-ali-historical-stream-20260923bl",
     "job_uid": "d6f46ed7-06bb-49b3-a931-e11e47dbc083",
+    "kubernetes_completed_at_utc": "2026-09-23T06:42:31Z",
+    "kubernetes_terminal_status": "Complete",
+    "bounded_accessor_expired": true,
     "extraction_completed_at_utc": "2026-09-23T06:32:28.181035+00:00",
     "receipt": "infrastructure/cpu-20260923bl-historical-stream-outcome.json",
     "receipt_sha256": "c1f89a29ce624991c1ee9908c6f058ea43bf17f525a2460b5b6d8eb60dbfc8a2",

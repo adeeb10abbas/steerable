@@ -597,8 +597,9 @@ independently recompute the rejected geometry, prove zero actions in the
 rejected trial, and validate prior trials/media instead of accepting the
 child's declaration. That correction is still under review. No HEIGHT/DIST
 plan is frozen, no GPU is allocated and learned requests/episodes remain zero.
-At this checkpoint bl is only holding its finite 600-second CPU export window;
-bk is terminal failed. No behavioral queue is running unattended.
+The finite bl CPU export window ended with Kubernetes completion at
+`06:42:31Z`; bk is terminal failed. The subsequent owner/study-scoped snapshot
+found no running study Pods. No behavioral queue is running unattended.
 
 The actual native CLI also needs explicit canonical campaign integration:
 its existing inputs are a family candidate directory or LAT-style proposal

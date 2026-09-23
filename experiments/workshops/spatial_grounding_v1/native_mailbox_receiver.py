@@ -12,6 +12,17 @@ from .adapters import AdapterError
 from .simulator_mailbox import MailboxReceiver
 
 
+def _failure(path: Path, error: BaseException, identity: dict[str, str] | None) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if not path.exists():
+        payload = {"error_type": type(error).__name__, "error": str(error), "identity": identity}
+        with path.open("x") as stream:
+            stream.write(json.dumps(payload, sort_keys=True) + "\n")
+            stream.flush()
+            import os
+            os.fsync(stream.fileno())
+
+
 def _load_identity(path: Path, expected_sha256: str) -> dict[str, str]:
     if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected_sha256:
         raise AdapterError("receiver identity record is absent or hash-mismatched")
@@ -45,6 +56,7 @@ def main() -> None:
     from .robolab_jointpos_environment import create_environment
     app = AppLauncher({"headless": True, "enable_cameras": True}).app
     environment: Any = None
+    failure = args.mailbox_root / "receiver_failure.json"
     try:
         cell = json.loads(args.release_cell_json.read_text())
         environment = create_environment(cell=cell, evidence_root=args.mailbox_root / "evidence")
@@ -57,10 +69,15 @@ def main() -> None:
             time.sleep(.01)
         if not receiver.closed:
             raise AdapterError("receiver deadline elapsed before close")
+    except BaseException as exc:
+        _failure(failure, exc, identity)
+        raise
     finally:
-        if environment is not None:
-            environment.close()
-        app.close()
+        try:
+            if environment is not None:
+                environment.close()
+        finally:
+            app.close()
 
 
 if __name__ == "__main__":

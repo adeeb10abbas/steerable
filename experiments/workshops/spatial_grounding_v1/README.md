@@ -236,6 +236,16 @@ validates those records before creating `AppLauncher`, then starts the
 hash-bound joint-position environment. The B200 policy worker uses
 `MailboxClient` with the same identity. Requests and responses are
 exclusive-create, fsynced JSON manifests plus lossless NumPy arrays.
+`create_mailbox_environment` is the explicit `ProductionAdapter` factory:
+it requires a coordinator-provided mailbox root, immutable identity path, and
+identity SHA-256 environment binding; it does not replace the direct backend.
+Nested camera/proprio mappings retain their shape across the mailbox.
+
+A receiver writes `receiver_complete.json` only after the close response is
+durably published. It binds the identity, exact close command, command count,
+and response hash. Native receiver exceptions are fsynced to
+`receiver_failure.json` before environment/AppLauncher cleanup, so exit zero
+without the completion record is never evidence of a complete attempt.
 
 The mailbox never starts a model, provides a network listener, retries an
 action, or attests the remote simulator as a local policy process. A timeout,

@@ -74,6 +74,25 @@ def _load_array(root: Path, record: Mapping[str, Any]) -> np.ndarray:
     return value
 
 
+def _encode_tree(directory: Path, prefix: str, value: Any) -> Any:
+    if isinstance(value, Mapping):
+        if not value:
+            raise MailboxError("empty policy-observation mapping is not transportable")
+        return {"mapping": {str(key): _encode_tree(directory, f"{prefix}.{key}", item)
+                            for key, item in value.items()}}
+    return {"array": _array(directory / f"{prefix}.npy", value)}
+
+
+def _decode_tree(root: Path, value: Any) -> Any:
+    if not isinstance(value, Mapping):
+        raise MailboxError("invalid policy-observation tree")
+    if set(value) == {"array"}:
+        return _load_array(root, value["array"])
+    if set(value) == {"mapping"} and isinstance(value["mapping"], Mapping):
+        return {key: _decode_tree(root, item) for key, item in value["mapping"].items()}
+    raise MailboxError("invalid policy-observation tree node")
+
+
 class MailboxClient:
     def __init__(self, *, root: Path, identity: Mapping[str, str], timeout_s: float = 30) -> None:
         self.root, self.identity, self.timeout_s = Path(root), dict(identity), timeout_s
@@ -135,10 +154,34 @@ class MailboxClient:
             finally: self._closed = True
 
 
+def create_mailbox_environment(*, cell: Any, evidence_root: Path) -> MailboxClient:
+    """Explicit B200 factory; direct in-process environments remain unchanged."""
+    root = Path(os.environ.get("SGW01_SIMULATOR_MAILBOX_ROOT", "")).resolve()
+    identity_path = Path(os.environ.get("SGW01_SIMULATOR_MAILBOX_IDENTITY", "")).resolve()
+    expected = os.environ.get("SGW01_SIMULATOR_MAILBOX_IDENTITY_SHA256", "")
+    if not root.is_dir() or not identity_path.is_file() or _digest(identity_path) != expected:
+        raise MailboxError("mailbox factory requires a hash-bound prospective simulator identity")
+    identity = _read(identity_path)
+    row = getattr(cell, "row", cell)
+    if not isinstance(row, Mapping) or identity.get("cell_id") != row.get("cell_id"):
+        raise MailboxError("mailbox identity does not bind the released cell")
+    required = ("release_id", "cell_id", "attempt_id", "channel_nonce", "candidate_sha256",
+                "binding_sha256", "simulator_job_uid", "simulator_pod_uid")
+    if any(not isinstance(identity.get(key), str) or not identity[key] for key in required):
+        raise MailboxError("mailbox identity is incomplete")
+    # Evidence root is intentionally not used as a remote authority. The
+    # recorder retains B200-side artifacts while the immutable mailbox root
+    # holds A40-side raw request/response evidence.
+    if not Path(evidence_root).is_absolute():
+        raise MailboxError("recorder evidence root must be absolute")
+    return MailboxClient(root=root, identity={key: identity[key] for key in required},
+                         timeout_s=float(os.environ.get("SGW01_SIMULATOR_MAILBOX_TIMEOUT_S", "30")))
+
+
 def _decode_response(root: Path, response: Mapping[str, Any]) -> dict[str, Any]:
     data = dict(response.get("data", {}))
     viewport = _load_array(root, data.pop("viewport"))
-    policy = {key: _load_array(root, value) for key, value in data.pop("policy_arrays").items()}
+    policy = _decode_tree(root, data.pop("policy_observation"))
     return {**data, "viewport": viewport, "policy_observation": policy}
 
 
@@ -168,11 +211,19 @@ class MailboxReceiver:
             snapshot, viewport, policy = self.environment.snapshot(), self.environment.render_viewport(), self.environment.policy_observation()
             out = self.root / "responses"; token = request_path.stem
             arrays = {"viewport": _array(out / f"{token}.viewport.npy", viewport)}
-            policy_arrays = {key: _array(out / f"{token}.policy.{key.replace('/', '_')}.npy", value) for key, value in policy.items()}
             payload = {"command_id": command, "identity": self.identity, "status": "ok",
                        "data": {**result, "snapshot": asdict(snapshot) if is_dataclass(snapshot) else snapshot,
-                                "viewport": arrays["viewport"], "policy_arrays": policy_arrays}}
-            _write(out / f"{token}.json", payload); self.last = command
+                                "viewport": arrays["viewport"],
+                                "policy_observation": _encode_tree(out, f"{token}.policy", policy)}}
+            response_path = out / f"{token}.json"
+            _write(response_path, payload); self.last = command
+            if operation == "close":
+                _write(self.root / "receiver_complete.json", {
+                    "identity": self.identity,
+                    "close_command_id": command,
+                    "command_count": self.last,
+                    "close_response_sha256": _digest(response_path),
+                })
         except Exception as exc:
             fault = self.root / "faults" / f"{request_path.stem}.json"
             if not fault.exists():

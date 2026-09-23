@@ -27,6 +27,7 @@ D1_SERVER_SURFACE = {
     "groot/vla/model/n1_5/sim_policy.py": "c7b692b84a03a70adc7e0d21fb7632a9866285645e8d43c916100e6f5fb7497a",
 }
 D1_5B_ENTRYPOINT_SHA256 = "9d0a33047039fea3d2174c1ab46259c3c9b6e4fc1b3f67b9c7e53efcb93a7c5f"
+D1_14B_ENTRYPOINT_SHA256 = "7ef17f66064bac8defafc1a84551089b124546729a98be8c0515b33d2e159d48"
 
 
 class DreamZeroBackend(Protocol):
@@ -127,6 +128,14 @@ def _verify_5b_entrypoint(source_root: Path) -> None:
         raise AdapterError("official DreamZero 5B entrypoint hash mismatch")
 
 
+def _verify_14b_entrypoint(source_root: Path) -> None:
+    path = source_root / "socket_test_optimized_AR.py"
+    if not path.is_file():
+        raise AdapterError("official DreamZero 14B entrypoint is missing")
+    if hashlib.sha256(path.read_bytes()).hexdigest() != D1_14B_ENTRYPOINT_SHA256:
+        raise AdapterError("official DreamZero 14B entrypoint hash mismatch")
+
+
 def build_pinned_dreamzero_backend() -> DreamZeroBackend:
     """Verify identity, then invoke only an explicitly reviewed native factory."""
     identity = _verify_dreamzero_identity()
@@ -190,6 +199,82 @@ class OfficialDreamZero5BBackend:
     def reset(self, session_id: str | None) -> Mapping[str, Any]:
         self.policy.reset({"session_id": session_id})
         return {"evicted_session_id": session_id, "route": "DreamZeroWan225BPolicy.reset"}
+
+
+class OfficialDreamZero14BBackend:
+    """Adapter around the exported ``ARDroidRoboarenaPolicy`` route."""
+
+    def __init__(self, policy: Any, *, source_root: str, checkpoint_path: str) -> None:
+        native_config = getattr(policy, "resolved_config", None)
+        if not isinstance(native_config, Mapping):
+            raise AdapterError(
+                "14B policy must expose constructed resolved_config; "
+                "protocol constants cannot be used as native evidence"
+            )
+        if dict(native_config) != dict(DREAMZERO_CONFIG):
+            raise AdapterError("constructed 14B policy config differs from frozen D1 config")
+        self.policy = policy
+        self.source_root = source_root
+        self.checkpoint_path = checkpoint_path
+        self.resolved_config = dict(native_config)
+
+    def predict(self, observation: Mapping[str, Any], prompt: str, sampling_seed: int, **kwargs: Any) -> Mapping[str, Any]:
+        del sampling_seed, kwargs
+        native_observation = dict(observation)
+        native_observation["prompt"] = prompt
+        actions = np.asarray(self.policy.infer(native_observation), dtype=np.float32)
+        output: dict[str, Any] = {"actions": actions}
+        futures = getattr(self.policy, "video_across_time", [])
+        if futures:
+            output["future"] = futures[-1]
+        session_id = observation.get("session_id")
+        if isinstance(session_id, str):
+            output["session_id"] = session_id
+        return output
+
+    def reset(self, session_id: str | None) -> Mapping[str, Any]:
+        self.policy.reset({"session_id": session_id})
+        return {"evicted_session_id": session_id, "route": "ARDroidRoboarenaPolicy.reset"}
+
+
+def build_official_14b_dreamzero_backend() -> OfficialDreamZero14BBackend:
+    """Construct the exact AR 14B route after identity and config checks."""
+    identity = _verify_dreamzero_identity()
+    source_root = Path(identity["source_root"])
+    _verify_exported_server_surface(source_root)
+    _verify_14b_entrypoint(source_root)
+    model_path = os.environ.get("SGW01_D1_MODEL_PATH", "").strip()
+    if not model_path:
+        raise AdapterError("SGW01_D1_MODEL_PATH is required for explicit 14B construction")
+    try:
+        module = importlib.import_module("socket_test_optimized_AR")
+        module_origin = Path(str(getattr(module, "__file__", ""))).resolve()
+        module_origin.relative_to(source_root)
+        device_mesh = module.init_mesh()
+        signal_group = module.dist.new_group(
+            backend="gloo",
+            timeout=module.datetime.timedelta(seconds=50000),
+        )
+        policy = module.GrootSimPolicy(
+            embodiment_tag=module.EmbodimentTag("oxe_droid"),
+            model_path=model_path,
+            device="cuda" if module.torch.cuda.is_available() else "cpu",
+            device_mesh=device_mesh,
+        )
+        wrapper = module.ARDroidRoboarenaPolicy(
+            groot_policy=policy,
+            signal_group=signal_group,
+            output_dir=os.environ.get("SGW01_D1_VIDEO_OUTPUT_DIR") or None,
+        )
+    except AdapterError:
+        raise
+    except Exception as exc:
+        raise AdapterError("official exported DreamZero 14B construction failed") from exc
+    return OfficialDreamZero14BBackend(
+        wrapper,
+        source_root=str(source_root),
+        checkpoint_path=identity["checkpoint_path"],
+    )
 
 
 def build_official_5b_dreamzero_backend() -> OfficialDreamZero5BBackend:

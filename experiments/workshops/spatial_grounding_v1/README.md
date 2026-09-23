@@ -339,3 +339,17 @@ imports remain required; likely bounded paths to export are
 `socket_test_optimized_AR.py`, `test_client_AR.py`, and their imported
 DreamZero policy/config modules discovered from that launcher, not the 5B
 launcher by substitution.
+
+The AR export now supplies the exact 14B wrapper at
+`socket_test_optimized_AR.py` (SHA
+`7ef17f66064bac8defafc1a84551089b124546729a98be8c0515b33d2e159d48`).
+`OfficialDreamZero14BBackend` follows its `ARDroidRoboarenaPolicy.infer`
+frame accumulation, `GrootSimPolicy.lazy_joint_forward_causal` call, action
+conversion, session-change reset, and explicit `reset` state clearing. The
+entrypoint constructs the reviewed `GrootSimPolicy`, distributed signal group,
+and AR wrapper only after identity checks. It refuses to label the route
+qualified unless the constructed policy supplies an independently verified
+resolved configuration; the AR source itself does not expose the frozen
+guidance/step values. The bounded remaining source request is the concrete
+14B checkpoint configuration path/loader that establishes those values
+without overlaying protocol constants.

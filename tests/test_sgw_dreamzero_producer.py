@@ -117,3 +117,33 @@ def test_dreamzero_native_binding_requires_exported_server_surface(tmp_path: Pat
         assert "source file is missing" in str(error)
     else:
         raise AssertionError("missing native server source must fail closed")
+
+
+def test_dreamzero_14b_binding_executes_policy_boundary_and_reset() -> None:
+    class Policy:
+        resolved_config = DREAMZERO_CONFIG
+
+        def __init__(self) -> None:
+            self.calls = []
+            self.resets = []
+            self.video_across_time = [np.ones((2, 3), dtype=np.float32)]
+
+        def infer(self, observation):
+            self.calls.append(observation)
+            return np.ones((24, 8), dtype=np.float32)
+
+        def reset(self, info):
+            self.resets.append(info)
+
+    policy = Policy()
+    backend = dreamzero_backend.OfficialDreamZero14BBackend(
+        policy,
+        source_root="/pinned/server",
+        checkpoint_path="/pinned/checkpoint",
+    )
+    result = backend.predict({"session_id": "s1"}, "static", 1140)
+    assert np.asarray(result["actions"]).shape == (24, 8)
+    assert "future" in result
+    reset = backend.reset("s1")
+    assert reset["evicted_session_id"] == "s1"
+    assert policy.resets == [{"session_id": "s1"}]

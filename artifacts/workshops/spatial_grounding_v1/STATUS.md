@@ -266,6 +266,22 @@ latest read. The next requirement is an actually allocatable authorized GPU
 or a cluster-approved non-preempting scheduling class, not another download,
 configuration debate or blind admission loop.
 
+### User-owned resource discovery
+
+Only one Kubernetes context is configured. The
+[targeted owned-resource inspection](infrastructure/n3-fixed-input-20260923cw/owned-gpu-discovery-20260923dj.json)
+found one live personally labeled GPU allocation:
+`211247-ali-b200-1gpu`, one B200. It is **not abandoned**: PID2476 is training
+`smolvla-gm-handover-contactlocked-v1` toward40000 steps, and checkpoint25000
+was written at22:38:57 UTC. Model, optimizer, scheduler, RNG and saved-step
+files are present. Its instantaneous0% GPU utilization is not an idle-device
+release.
+
+No process was changed. Reusing this already allocated GPU would require the
+user's explicit permission to stop the separate training run and later resume
+from its saved25000-step checkpoint; unsaved intervening steps would be lost.
+No active training will be stopped or co-run merely because memory is free.
+
 ## Latest retained evidence (23 September, 13:34 UTC)
 
 The thirteenth prefix preserves HEIGHT084/086/088/089 with 6/6, 6/6, 5/6 and

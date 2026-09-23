@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "n3_auxiliary_assets_ready_gpu_admission_blocked_main_p_assigned_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T22:01:01.437005+00:00",
+  "updated_at_utc": "2026-09-23T22:43:31.798213+00:00",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -1424,6 +1424,18 @@
     },
     "claim_boundary": "The tested placements reported no available devices; this does not establish that every GPU in the cluster is occupied. No unrelated workload was used, stopped or preempted."
   },
+  "owned_gpu_discovery": {
+    "receipt": "infrastructure/n3-fixed-input-20260923cw/owned-gpu-discovery-20260923dj.json",
+    "configured_context_count": 1,
+    "active_explicitly_owned_gpu_pod": "211247-ali-b200-1gpu",
+    "classification": "active_SmolVLA_training_not_abandoned",
+    "latest_saved_step": 25000,
+    "target_steps": 40000,
+    "resume_checkpoint_verified_present": true,
+    "user_stop_authorization": "not_yet_given",
+    "resource_modified": false,
+    "possible_next_step": "Ask whether to stop the separate SmolVLA run and reuse this already allocated B200, retaining checkpoint25000 for later resume. Do not stop or co-run without explicit approval."
+  },
   "main_n3_lat_p_fixture_assignment": {
     "id": "SGW-MAIN-N3-LAT-P-20260923",
     "path": "main_n3_lat_p_assignment_20260923.json",
@@ -1774,7 +1786,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Obtain a genuinely allocatable existing authorized GPU or administrator-provided non-preempting scheduling class; current priority admission rejects explicit Never, and the tested pre-bound GPU placements all failed before container start. Do not repeat sign-in/download work: dependencies are cached, hashed and CPU-loadable. All six original N3 requests remain unconsumed; preserve the absent canonical successor claim, every infrastructure receipt and BU's continuing independent collection. No extra pilot or full confirmation release.",
+  "next_action": "User requested discovery of other contexts or held GPUs. Only one context is configured and the only explicitly owned active GPU reservation is211247-ali-b200-1gpu, running SmolVLA training toward40000 with a complete25000-step checkpoint saved minutes ago. It is not abandoned; ask explicit permission before stopping that separate training and reusing its allocation. No stop or co-run has been authorized. N3 dependencies are ready, all six requests remain unconsumed, and the canonical successor claim is absent. Preserve every infrastructure receipt and BU collection.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

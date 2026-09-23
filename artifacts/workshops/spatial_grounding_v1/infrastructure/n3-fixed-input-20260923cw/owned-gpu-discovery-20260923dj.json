@@ -1,0 +1,51 @@
+{
+  "schema_version": "sgw-01-user-owned-gpu-discovery-v1",
+  "observed_at_utc": "2026-09-23T22:43:31.798213+00:00",
+  "configured_contexts": [
+    {
+      "context": "prod-dcwi-warrenq1-vmkub007",
+      "namespace": "211247-prod"
+    }
+  ],
+  "active_explicitly_owned_gpu_allocations": [
+    {
+      "pod": "211247-ali-b200-1gpu",
+      "pod_uid": "b58e8416-9412-4db5-921b-110420433480",
+      "ownership_label": "user=ali",
+      "node": "dcwipphhgc225.edc.nam.gm.com",
+      "allocated_gpus": 1,
+      "gpu": "NVIDIA B200",
+      "gpu_uuid": "GPU-60b3065c-79cb-61e6-b92a-32d0ae3750f3",
+      "memory_total_mib": 183359,
+      "memory_used_mib": 6992,
+      "instantaneous_utilization_percent": 0,
+      "compute_pid": 2476,
+      "process": "lerobot-train",
+      "process_uid": 816149040,
+      "training_run": "smolvla-gm-handover-contactlocked-v1",
+      "target_steps": 40000,
+      "latest_saved_step": 25000,
+      "latest_checkpoint_modified_at_utc": "2026-09-23T22:38:57.957887+00:00",
+      "checkpoint": "/data/users/ali/outputs/train/smolvla-gm-handover-contactlocked-v1/checkpoints/025000",
+      "resume_files_verified_present": [
+        "pretrained_model/model.safetensors",
+        "pretrained_model/train_config.json",
+        "training_state/optimizer_param_groups.json",
+        "training_state/optimizer_state.safetensors",
+        "training_state/rng_state.safetensors",
+        "training_state/scheduler_state.json",
+        "training_state/training_step.json"
+      ],
+      "classification": "active_training_not_abandoned_or_verified_idle",
+      "reason": "Checkpoints progressed from10000 to15000 to20000 to25000; the last was written only minutes before observation. A single0% utilization sample does not establish idleness.",
+      "stop_authorized": false,
+      "process_or_allocation_modified": false,
+      "potential_reuse": "Only after explicit user permission to stop this separate training run, preserving checkpoint25000 for resume. Steps after that checkpoint would not be retained unless separately saved. Do not co-run under the existing no-interference rule."
+    }
+  ],
+  "other_configured_context_found": false,
+  "abandoned_live_gpu_allocation_found": false,
+  "scope": "Configured contexts and explicitly user-owned allocations only. No unrelated workload was inspected or modified.",
+  "sgw_model_requests": 0,
+  "sgw_behavioral_episodes": 0
+}

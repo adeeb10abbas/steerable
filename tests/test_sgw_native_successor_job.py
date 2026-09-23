@@ -23,7 +23,8 @@ def _config(tmp_path: Path) -> Path:
         "assets_manifest": "/data/users/ali/sgw-01/preflight/a40-20260922e/assets.json",
         "preflight_root": "/data/users/ali/sgw-01/preflight/a40-20260922e",
         "native_command": [python, "-m", "experiments.workshops.spatial_grounding_v1.paper_engineering",
-                           "--registration", str(registration), "--output-root", "/example/evidence"],
+                           "--registration", str(registration),
+                           "--output-root", "/data/users/ali/sgw-01/qualification/native-successor-example/evidence"],
         "bt_node_names": ["bt-node-a", "bt-node-b"], "active_deadline_seconds": 7200,
         "native_child_timeout_seconds": 4800, "storage_reserve_bytes": successor.MIN_STORAGE_RESERVE_BYTES,
     }
@@ -51,6 +52,8 @@ def test_successor_requires_exact_nodes_and_bt_anti_affinity(tmp_path):
     assert pod["containers"][0]["resources"]["limits"]["nvidia.com/gpu"] == "1"
     assert pod["nodeSelector"] == {"node-role.kubernetes.io/worker-gpu": ""}
     assert pod["containers"][0]["env"][-1]["name"] == "LD_LIBRARY_PATH"
+    assert '"$PY" - "$OUT"' in pod["containers"][0]["args"][0]
+    assert "python3 -" not in pod["containers"][0]["args"][0]
 
 
 @pytest.mark.parametrize("mutate", [
@@ -75,3 +78,12 @@ def test_absent_nodes_or_unpinned_config_is_rejected(tmp_path):
     config.write_text(json.dumps(value))
     with pytest.raises(ValueError, match="allowlist"):
         successor.render(config)
+
+
+def test_command_cannot_use_a_different_registration_than_the_hash_guard(tmp_path):
+    path = _config(tmp_path)
+    value = json.loads(path.read_text())
+    value["native_command"][4] = "/unbound-registration.json"
+    path.write_text(json.dumps(value))
+    with pytest.raises(ValueError, match="command differs"):
+        successor.render(path)

@@ -20,7 +20,9 @@ from .lat_candidate_generator import workspace_digest
 from .lat_workspace_capture import (
     _record, _root_local_offset, _vector, material_asset_paths, render_only_warmup,
 )
-from .native_geometry_measurements import camera_extrinsics, collision_geometry_local_bounds, robot_snapshot
+from .native_geometry_measurements import (
+    camera_extrinsics, collision_geometry_local_bounds, native_articulation_path, robot_snapshot,
+)
 
 
 def _manifest(path: Path) -> dict[str, Any]:
@@ -415,7 +417,7 @@ def main() -> None:
             )
             collision_geometry = collision_geometry_local_bounds(
                 omni.usd.get_context().get_stage(),
-                articulation_path=getattr(getattr(env.scene["robot"], "cfg", None), "prim_path", None),
+                articulation_path=native_articulation_path(env.scene["robot"]),
                 body_names=list(env.scene["robot"].data.body_names),
             )
             names = manifest["native_import_contract"]["objects_of_interest"]

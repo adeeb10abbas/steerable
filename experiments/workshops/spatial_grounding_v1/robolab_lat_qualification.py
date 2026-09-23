@@ -94,8 +94,8 @@ class RoboLabLatEnvironment:
                     else False
                 ),
             )
-            if corners is not None:
-                corners_values = np.asarray(corners.detach().cpu().numpy(), dtype=np.float64).reshape(-1, 3)
+            if self._candidate.metadata.get("engineering_geometry_measurements") is True:
+                corners_values = np.asarray([_vector(corner) for corner in corners], dtype=np.float64).reshape(-1, 3)
                 context_measurements[name] = {
                     "root_position_env_local_xyz_m": root_position_values,
                     "root_quaternion_world_wxyz": quaternion_values,
@@ -128,13 +128,26 @@ class RoboLabLatEnvironment:
                 }
                 objects = {
                     name: {
-                        "minimum_xyz_m": value["bbox_env_local_min_xyz_m"],
-                        "maximum_xyz_m": value["bbox_env_local_max_xyz_m"],
+                        "minimum_xyz_m": [value["bbox_env_local_min_xyz_m"][i] + float(origin[i]) for i in range(3)],
+                        "maximum_xyz_m": [value["bbox_env_local_max_xyz_m"][i] + float(origin[i]) for i in range(3)],
                     }
                     for name, value in context_measurements.items()
                     if name in {"bowl", "plate", "banana", "table"} and "bbox_env_local_min_xyz_m" in value
                 }
                 current_robot_snapshot["engineering_clearance"] = clearance_to_objects(projected, objects)
+                contact_forces = {}
+                for name, sensor in sensors.items():
+                    if not name.startswith("gripper__"):
+                        continue
+                    force = getattr(sensor.data, "force_matrix_w", None)
+                    contact_forces[name] = (
+                        {"available": False, "reason": "filtered native contact force is unavailable"}
+                        if force is None else {
+                            "available": True, "force_matrix_world_n": force.detach().cpu().tolist(),
+                            "scope": "Measured filtered contact force, not a collision-free or safety certificate.",
+                        }
+                    )
+                current_robot_snapshot["gripper_contact_forces"] = contact_forces
         except (AttributeError, KeyError, RuntimeError) as error:
             current_robot_snapshot = {
                 "available": False,

@@ -22,6 +22,26 @@ The supplied study is committed on
 implemented separate fixture, policy, persistence and analysis components.
 Implementation and synthetic tests do not establish scientific readiness.
 
+## Prospective engineering execution
+
+The user's subsequent execution direction is now separately disclosed as
+[`SGW-ENG-008-LAT-057`](infrastructure/paper-engineering-20260923cj/registration.json).
+Its native path captures the preserved near-robot example without controller
+actions, measures the articulation root and cameras, realizes one translated
+0.50 m cube-center arrangement, then records both goals across the standard
+six scripted trials. Root-offset conversion, raw/video retention and independent
+evidence verification are implemented; this is not another candidate campaign.
+No new native capture or successful goal is claimed yet.
+
+All four authorized GPU lanes are occupied by the unchanged `bt` work.
+The separate one-GPU successor must be restricted to those four nodes with
+hard anti-affinity against active `bt` pods and no preemption. It can start
+only after natural lane release, independently of this client. Neither the
+original queue nor its consumed failures is paused, replaced or refilled.
+The immediate milestone is the actual new-scene capture and both-goal evidence;
+the finite remaining fixture/history/runtime gates are listed in the current
+continuation state. Broad historical audits are not the execution priority.
+
 ## Latest retained evidence (23 September, 13:34 UTC)
 
 The thirteenth prefix preserves HEIGHT084/086/088/089 with 6/6, 6/6, 5/6 and

@@ -70,8 +70,6 @@ def camera_extrinsics(scene: Any, camera_names: tuple[str, ...]) -> dict[str, An
         data = getattr(camera, "data", None)
         position = getattr(data, "pos_w", None)
         quaternion = getattr(data, "quat_w_world", None)
-        if quaternion is None:
-            quaternion = getattr(data, "quat_w", None)
         if position is None or quaternion is None:
             rows[name] = {
                 "available": False,
@@ -90,10 +88,10 @@ def aabb_separation(first: Mapping[str, Any], second: Mapping[str, Any]) -> dict
     """Conservative axis-aligned separation; overlap is not a collision assertion."""
 
     try:
-        first_minimum = [float(value) for value in first["minimum_xyz_m"]]
-        first_maximum = [float(value) for value in first["maximum_xyz_m"]]
-        second_minimum = [float(value) for value in second["minimum_xyz_m"]]
-        second_maximum = [float(value) for value in second["maximum_xyz_m"]]
+        first_minimum = _finite3(first["minimum_xyz_m"])
+        first_maximum = _finite3(first["maximum_xyz_m"])
+        second_minimum = _finite3(second["minimum_xyz_m"])
+        second_maximum = _finite3(second["maximum_xyz_m"])
     except (KeyError, TypeError, ValueError) as error:
         raise ValueError("conservative AABB measurement is malformed") from error
     if any(low > high for low, high in zip(first_minimum + second_minimum, first_maximum + second_maximum, strict=True)):
@@ -108,6 +106,16 @@ def aabb_separation(first: Mapping[str, Any], second: Mapping[str, Any]) -> dict
         "aabb_overlap": not any(gaps),
         "caveat": "AABB overlap is conservative geometry overlap, not a measured physical collision.",
     }
+
+
+def native_articulation_path(robot: Any) -> str | None:
+    """Use the resolved native view, never a configuration regex as a prim path."""
+    paths = getattr(getattr(robot, "root_physx_view", None), "prim_paths", None)
+    if (not isinstance(paths, (tuple, list)) or len(paths) != 1
+            or not isinstance(paths[0], str) or not paths[0].startswith("/")
+            or any(character in paths[0] for character in ("*", "{", "}"))):
+        return None
+    return paths[0]
 
 
 def collision_geometry_local_bounds(stage: Any, *, articulation_path: str | None, body_names: list[str]) -> dict[str, Any]:
@@ -126,20 +134,27 @@ def collision_geometry_local_bounds(stage: Any, *, articulation_path: str | None
     transforms = UsdGeom.XformCache()
     rows = []
     known = set(body_names)
+    mapped_paths: dict[str, str] = {}
     for prim in Usd.PrimRange(root, Usd.TraverseInstanceProxies()):
         if not prim.IsA(UsdGeom.Gprim) or not prim.HasAPI(UsdPhysics.CollisionAPI):
             continue
+        if UsdPhysics.CollisionAPI(prim).GetCollisionEnabledAttr().Get() is False:
+            continue
         body = prim
-        while body and body.GetName() not in known:
+        while body and (body.GetName() not in known or not body.HasAPI(UsdPhysics.RigidBodyAPI)):
             body = body.GetParent()
         if not body or body.GetName() not in known:
             return {"available": False, "reason": f"collision geometry has ambiguous/missing native body mapping: {prim.GetPath()}"}
+        name, path = str(body.GetName()), str(body.GetPath())
+        if name in mapped_paths and mapped_paths[name] != path:
+            return {"available": False, "reason": f"multiple rigid-body prims map to native body {name}"}
+        mapped_paths[name] = path
         box = bounds.ComputeUntransformedBound(prim).ComputeAlignedRange()
         if box.IsEmpty():
             continue
         relative, resets_stack = transforms.ComputeRelativeTransform(prim, body)
         if resets_stack:
-            continue
+            return {"available": False, "reason": f"collision geometry resets its body transform stack: {prim.GetPath()}"}
         minimum, maximum = box.GetMin(), box.GetMax()
         rows.append({
             "geometry_prim": str(prim.GetPath()), "body_name": str(body.GetName()), "rigid_body_prim": str(body.GetPath()),
@@ -151,6 +166,7 @@ def collision_geometry_local_bounds(stage: Any, *, articulation_path: str | None
         return {"available": False, "reason": "no collision Gprims with a rigid-body ancestor were measured"}
     return {
         "available": True, "measurement_scope": "conservative_usd_collision_bounds_not_collision_outcome",
+        "native_articulation_path": articulation_path, "body_prim_paths": mapped_paths,
         "rows": rows,
         "caveat": "Local collision bounds require current body poses for world AABBs; overlap is not collision.",
     }
@@ -159,7 +175,7 @@ def collision_geometry_local_bounds(stage: Any, *, articulation_path: str | None
 def project_collision_aabbs(inventory: Mapping[str, Any], body_frames: Mapping[str, Any]) -> dict[str, Any]:
     """Project local collision boxes through Gf local and native body transforms."""
 
-    if inventory.get("available") is not True or not isinstance(inventory.get("rows"), list):
+    if inventory.get("available") is not True or not isinstance(inventory.get("rows"), list) or not inventory["rows"]:
         return {"available": False, "reason": "collision inventory is unavailable"}
     bodies = body_frames.get("bodies") if isinstance(body_frames, Mapping) else None
     if not isinstance(bodies, Mapping):
@@ -205,6 +221,8 @@ def clearance_to_objects(robot_aabbs: Mapping[str, Any], objects: Mapping[str, A
 
     if robot_aabbs.get("available") is not True:
         return {"available": False, "reason": robot_aabbs.get("reason", "robot AABBs unavailable")}
+    if not robot_aabbs.get("body_world_aabbs") or not objects:
+        return {"available": False, "reason": "robot or obstacle bound inventory is empty"}
     rows = {}
     for body, box in robot_aabbs["body_world_aabbs"].items():
         for name, object_box in objects.items():

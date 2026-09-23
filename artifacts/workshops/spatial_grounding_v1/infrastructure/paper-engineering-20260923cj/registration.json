@@ -1,0 +1,52 @@
+{
+  "schema_version": "sgw-01-paper-engineering-registration-v1",
+  "attempt_id": "SGW-ENG-008-LAT-057",
+  "status": "prospectively_disclosed_bounded_engineering_attempt_not_running_or_released",
+  "source_candidate_id": "LAT-CANDIDATE-057",
+  "known_outcomes_and_selection": "The complete frozen LAT pool has 20 all-six passes and 20 physical rejections, including LAT-CANDIDATE-057. LAT057 was already supplied as a near-robot failure example. Select it explicitly after those outcomes, not as an outcome-blind sample. Preserve its original geometry, controller traces and rejection. The new translated scene has a separate engineering identity and never replaces/refills any frozen slot.",
+  "authorization": "User-approved RoboLab/paper-informed design, followed by explicit request for a separately disclosed native engineering attempt, measured scene and both goal paths. Full benchmark qualification first; no exploratory policy inference.",
+  "maximum_new_engineering_layouts": 1,
+  "scripted_trials": 6,
+  "actions_per_trial": 450,
+  "model_requests": 0,
+  "release_permitted": false,
+  "reference_capture": "One zero-action native capture of the preserved LAT057 geometry, with measured articulation root, camera extrinsics, object footprints and collision-geometry inventory. This is not a rerun of its scored failed trials.",
+  "translation": "Minimum-length horizontal translation of all non-table objects together, preserving height, orientations and relative task/goal geometry. Target initial cube GEOMETRIC CENTER at 0.50m Euclidean translational separation from the newly measured articulation root. Convert each center with its measured root-local offset. Robot, cameras and table remain unauthored and fixed.",
+  "target_interpretation": "Engineering starting prior, not a paper-certified optimum, actor-root radius, authoring X coordinate or new scoring threshold. The cited experiments use different policies/domains and do not certify SGW grounding.",
+  "native_realization": "Fresh translated-scene capture must bind exact USD and dependencies, report achieved cube-center/root distance, and compare actual robot/camera configuration. Apply existing 3mm/2degree pose consistency limits; record all differences rather than claiming bit-identical physics.",
+  "qualification": "Run positive then negative goal, three fresh resets each, with the same measured virtual-TCP calibration and 450 actions/451 states per trial. Retain every raw state, issued action, RGB frame, reset warmup and complete viewport video, including failures and infrastructure partials. Independently replay original evidence before reporting six-trial outcomes.",
+  "clearance_boundary": "Measure actual object footprints and both goal/transport corridors. Record available native arm/gripper collision-bound projections and contact evidence. Conservative AABB overlap is not proof of collision; unavailable or ambiguous measurements are never zero/safe. No new campaign is released by this demonstration.",
+  "resource_boundary": "One successor GPU only. Required affinity to the four existing bt worker nodes plus required anti-affinity to active bt pods; preemption Never, no retries. Wait for natural capacity release. Do not pause, replace, edit or interrupt bt/bu, use a fifth GPU, provision resources or alter other workloads.",
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "robolab_root": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241",
+  "workspace": {
+    "path": "/data/users/ali/sgw-01/source/68b9e100-bs/artifacts/workshops/spatial_grounding_v1/infrastructure/a40-20260922z-workspace.json",
+    "bytes": 69072,
+    "sha256": "4490b1a7ba6cb3fb9174798bd6559a188edb01f609a7041ee88447c8e3314f45"
+  },
+  "proposals": {
+    "path": "/data/users/ali/sgw-01/source/68b9e100-bs/artifacts/workshops/spatial_grounding_v1/proposals/lat-20260922.json",
+    "bytes": 339897,
+    "sha256": "5b47860f6eac16e318515534a918d9460677b58d6174b4b76a29f7cc6be34eb9"
+  },
+  "calibration": {
+    "path": "/data/users/ali/sgw-01/source/68b9e100-bs/artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json",
+    "bytes": 4031,
+    "sha256": "107442ccca01c4ac44ec6e1cb9674d51dbcd8663288a851dc54fa91a124f93d7"
+  },
+  "base_scene": {
+    "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+    "bytes": 5373,
+    "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+  },
+  "assets": {
+    "path": "/data/users/ali/sgw-01/preflight/a40-20260922e/assets.json",
+    "bytes": 1631,
+    "sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806"
+  },
+  "renderer": {
+    "path": "/data/users/ali/sgw-01/preflight/a40-20260922e/renderer.json",
+    "bytes": 1764,
+    "sha256": "e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5"
+  }
+}

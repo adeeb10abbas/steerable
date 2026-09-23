@@ -67,14 +67,14 @@ def render(config_path: Path) -> dict[str, Any]:
     if (type(deadline) is not int or not 1 <= deadline <= 172800
             or type(storage_reserve) is not int or storage_reserve < MIN_STORAGE_RESERVE_BYTES
             or type(child_timeout) is not int or not 1 <= child_timeout <= 4800
-            or command[:3] != [config.get("python"), "-m", "experiments.workshops.spatial_grounding_v1.paper_engineering"]
-            or "--registration" not in command or "--output-root" not in command):
+            or command != [config.get("python"), "-m", "experiments.workshops.spatial_grounding_v1.paper_engineering",
+                           "--registration", str(registration), "--output-root", str(Path(output) / "evidence")]):
         raise ValueError("successor budget or bounded paper-engineering command differs")
     script = """set -euo pipefail
 OUT="${SGW_OUTPUT_ROOT}"
 mkdir "$OUT"
 exec > >(tee "$OUT/job.log") 2>&1
-python3 - "$OUT" <<'PY'
+"$PY" - "$OUT" <<'PY'
 from datetime import datetime, timezone
 import json, os, shutil, sys
 from pathlib import Path
@@ -238,8 +238,9 @@ def validate(job: Mapping[str, Any], *, nodes: list[str]) -> None:
         or environment.get("SGW_STORAGE_RESERVE_BYTES") != job.get("metadata", {}).get("annotations", {}).get("sgw-01/storage-reserve-bytes")
         or environment.get("SGW_SOURCE_RECEIPT_SHA256") != job.get("metadata", {}).get("annotations", {}).get("sgw-01/source-receipt-sha256")
         or environment.get("SGW_REGISTRATION_SHA256") != job.get("metadata", {}).get("annotations", {}).get("sgw-01/registration-sha256")
-        or native_command[:3] != [environment.get("PY"), "-m", "experiments.workshops.spatial_grounding_v1.paper_engineering"]
-        or "policy" in " ".join(native_command).lower()
+        or native_command != [environment.get("PY"), "-m", "experiments.workshops.spatial_grounding_v1.paper_engineering",
+                              "--registration", environment.get("SGW_REGISTRATION"),
+                              "--output-root", str(Path(environment.get("SGW_OUTPUT_ROOT", "")) / "evidence")]
         or len(pod.get("containers", [])) != 1 or any(
             item.get("resources", {}).get("requests", {}).get("nvidia.com/gpu")
             or item.get("resources", {}).get("limits", {}).get("nvidia.com/gpu")

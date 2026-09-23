@@ -1,9 +1,12 @@
 import hashlib
+import math
+from types import SimpleNamespace
 
 import pytest
 
 from experiments.workshops.spatial_grounding_v1.native_geometry_measurements import (
-    aabb_separation, camera_extrinsics, clearance_to_objects, project_collision_aabbs, robot_snapshot,
+    aabb_separation, camera_extrinsics, clearance_to_objects, native_articulation_path,
+    project_collision_aabbs, robot_snapshot,
 )
 
 
@@ -86,3 +89,35 @@ def test_projected_collision_bounds_use_matrix_and_native_body_pose():
 ])
 def test_collision_projection_reports_unavailable_for_missing_or_nonfinite_inputs(inventory, frames):
     assert project_collision_aabbs(inventory, frames)["available"] is False
+
+
+def test_only_resolved_native_articulation_path_is_accepted():
+    robot = SimpleNamespace(cfg=SimpleNamespace(prim_path="/World/envs/env_.*/Robot"))
+    assert native_articulation_path(robot) is None
+    robot.root_physx_view = SimpleNamespace(prim_paths=["/World/envs/env_0/Robot"])
+    assert native_articulation_path(robot) == "/World/envs/env_0/Robot"
+    robot.root_physx_view.prim_paths = [robot.cfg.prim_path]
+    assert native_articulation_path(robot) is None
+
+
+def test_unspecified_camera_quaternion_convention_is_not_guessed():
+    camera = SimpleNamespace(data=SimpleNamespace(pos_w=[[0, 0, 0]], quat_w=[[1, 0, 0, 0]]))
+    assert camera_extrinsics({"camera": camera}, ("camera",))["cameras"]["camera"]["available"] is False
+
+
+def test_rotation_projects_all_corners_and_empty_bounds_are_not_clear():
+    inventory = {"available": True, "rows": [{
+        "body_name": "finger", "local_min_xyz_m": [0, 0, 0], "local_max_xyz_m": [2, 1, 1],
+        "geometry_to_body_matrix_gf": [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 1]],
+    }]}
+    frames = {"bodies": {"finger": {
+        "position_world_xyz_m": [4, 5, 6], "quaternion_world_wxyz": [math.sqrt(.5), 0, 0, math.sqrt(.5)],
+    }}}
+    projected = project_collision_aabbs(inventory, frames)
+    assert projected["body_world_aabbs"]["finger"]["minimum_xyz_m"] == pytest.approx([3, 6, 6])
+    assert projected["body_world_aabbs"]["finger"]["maximum_xyz_m"] == pytest.approx([4, 8, 7])
+    assert clearance_to_objects(projected, {})["available"] is False
+    assert project_collision_aabbs({"available": True, "rows": []}, frames)["available"] is False
+    with pytest.raises(ValueError, match="malformed"):
+        aabb_separation({"minimum_xyz_m": [math.nan, 0, 0], "maximum_xyz_m": [1, 1, 1]},
+                        {"minimum_xyz_m": [2, 2, 2], "maximum_xyz_m": [3, 3, 3]})

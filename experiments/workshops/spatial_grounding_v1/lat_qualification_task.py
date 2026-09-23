@@ -27,6 +27,9 @@ def _candidate() -> dict:
     poses = value.get("object_poses")
     if set(poses or ()) != {"rubiks_cube", "bowl"}:
         raise RuntimeError("SGW LAT task requires only cube and bowl candidate poses")
+    if "native_scene" in value:
+        from experiments.workshops.spatial_grounding_v1.paper_engineering import validate_native_scene
+        validate_native_scene(value["native_scene"], value["object_poses"])
     return value
 
 
@@ -34,7 +37,9 @@ _CANDIDATE = _candidate()
 
 
 def _scene():
-    scene = import_scene("rubiks_cube_banana_bowl.usda", ["rubiks_cube", "banana", "bowl", "table"])
+    native = _CANDIDATE.get("native_scene")
+    scene = (import_scene(native["asset"], native["object_names"]) if native is not None
+             else import_scene("rubiks_cube_banana_bowl.usda", ["rubiks_cube", "banana", "bowl", "table"]))
     for name, payload in _CANDIDATE["object_poses"].items():
         position = payload["position_m"]
         quaternion = payload["quaternion_wxyz"]

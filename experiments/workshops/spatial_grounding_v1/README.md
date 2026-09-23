@@ -165,6 +165,20 @@ orientation; do not use authoring X or a zero-origin guess. This is a design
 prior, not an added scorer threshold, universal optimum, native realization,
 new gate, or modification of frozen candidates.
 
+The separately disclosed `SGW-ENG-008` attempt is implemented by
+`paper_engineering --registration <bound-json> --output-root <new-root>`.
+It first captures the preserved LAT057 layout without controller actions,
+measures the actual robot root and camera poses, then authors and captures a
+new rigidly translated arrangement. Both goal displacements, orientations,
+450-action controller and six fresh-reset checks are retained. Its opt-in
+LAT scene path is hash-bound to the fresh capture; the original stock task
+path is unchanged. Raw frames/videos, native geometry and all outcomes remain
+on PVC. This is one engineering layout, not a refill or release of a frozen
+pool. Unavailable arm/camera measurements are explicit, never safe defaults.
+`native_successor_job` binds a single non-preempting GPU Job to the four
+current worker nodes with hard anti-affinity to the original `bt` workload:
+it cannot take a fifth lane or interrupt a current episode.
+
 One selected proposal runs both goals three times in a fresh Isaac process:
 `model_blind_qualification --proposal-file <file> --candidate-id <id>`, with the
 required pinned runtime arguments. Every trial retains 450 issued commands,

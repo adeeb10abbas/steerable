@@ -43,6 +43,21 @@ def collective_timeout() -> datetime.timedelta:
     return datetime.timedelta(seconds=seconds)
 
 
+def initialize_bounded_mesh(module: Any, timeout: datetime.timedelta) -> Any:
+    """Run the exported init_mesh with an explicit NCCL timeout."""
+    original = module.dist.init_process_group
+
+    def bounded_init_process_group(*args: object, **kwargs: object) -> object:
+        kwargs.setdefault("timeout", timeout)
+        return original(*args, **kwargs)
+
+    module.dist.init_process_group = bounded_init_process_group
+    try:
+        return module.init_mesh()
+    finally:
+        module.dist.init_process_group = original
+
+
 def configure_official_startup() -> None:
     """Apply the exact AR entrypoint flags before any native construction."""
     os.environ["ENABLE_DIT_CACHE"] = "true"
@@ -309,7 +324,7 @@ def build_official_14b_dreamzero_backend(
         module = importlib.import_module("socket_test_optimized_AR")
         module_origin = Path(str(getattr(module, "__file__", ""))).resolve()
         module_origin.relative_to(source_root)
-        device_mesh = module.init_mesh()
+        device_mesh = initialize_bounded_mesh(module, collective_timeout())
         signal_group = module.dist.new_group(
             backend="gloo",
             timeout=collective_timeout(),

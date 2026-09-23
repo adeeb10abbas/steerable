@@ -207,6 +207,7 @@ class OwnedD1RankLifecycle:
         deadline = self._startup_deadline or (time.monotonic() + self.startup_timeout)
         expected = set(range(1, self.world_size))
         workers_by_rank = {worker.rank: worker for worker in self.workers}
+        ready: set[int] = set()
         while time.monotonic() < deadline:
             for worker in self.workers:
                 if worker.process.poll() is not None:

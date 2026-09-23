@@ -128,8 +128,10 @@ def test_native_init_mesh_receives_bounded_timeout() -> None:
             calls.append((args, kwargs))
 
     module = types.SimpleNamespace(dist=Dist())
-    entrypoint._install_bounded_init_process_group(module, datetime.timedelta(seconds=7))
-    module.dist.init_process_group("nccl")
+    from experiments.workshops.spatial_grounding_v1.dreamzero_backend import initialize_bounded_mesh
+    module.init_mesh = lambda: module.dist.init_process_group("nccl") or "mesh"
+    result = initialize_bounded_mesh(module, datetime.timedelta(seconds=7))
+    assert result == "mesh"
     assert calls == [(("nccl",), {"timeout": datetime.timedelta(seconds=7)})]
 
 
@@ -145,6 +147,63 @@ def test_native_signal_group_receives_bounded_timeout() -> None:
     result = entrypoint._new_bounded_signal_group(module, datetime.timedelta(seconds=7))
     assert result == "signal-group"
     assert calls == [{"backend": "gloo", "timeout": datetime.timedelta(seconds=7)}]
+
+
+def test_official_backend_path_bounds_ncc_and_gloo(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from experiments.workshops.spatial_grounding_v1 import dreamzero_backend as backend
+
+    calls: list[tuple[str, object]] = []
+
+    class Dist:
+        def init_process_group(self, *args: object, **kwargs: object) -> None:
+            calls.append(("nccl", kwargs["timeout"]))
+
+        def new_group(self, **kwargs: object) -> str:
+            calls.append(("gloo", kwargs["timeout"]))
+            return "signal"
+
+    class Policy:
+        action_head = types.SimpleNamespace(num_inference_steps=16, seed=1140, cfg_scale=5.0)
+
+    class Module:
+        __file__ = str(tmp_path / "socket_test_optimized_AR.py")
+        dist = Dist()
+        torch = types.SimpleNamespace(cuda=types.SimpleNamespace(is_available=lambda: False))
+        datetime = datetime
+        EmbodimentTag = staticmethod(lambda value: value)
+        GrootSimPolicy = staticmethod(lambda **kwargs: Policy())
+        ARDroidRoboarenaPolicy = staticmethod(lambda **kwargs: types.SimpleNamespace(
+            policy=kwargs["groot_policy"],
+            infer=lambda observation: [[0.0] * 8] * 24,
+            reset=lambda request: None,
+        ))
+        init_mesh = lambda self: self.dist.init_process_group("nccl") or "mesh"
+
+    module = Module()
+    module.init_mesh = types.MethodType(Module.init_mesh, module)
+    (tmp_path / "socket_test_optimized_AR.py").write_text("")
+    monkeypatch.setattr(backend, "configure_official_startup", lambda: None)
+    monkeypatch.setattr(backend, "verify_pinned_dreamzero_prerequisites", lambda: {
+        "source_root": str(tmp_path),
+        "checkpoint_path": str(tmp_path / "checkpoint"),
+        "source_commit": SOURCE,
+        "checkpoint_revision": CHECKPOINT,
+    })
+    monkeypatch.setattr(backend, "_read_native_checkpoint_config", lambda path: {
+        "returned_action_horizon": 24,
+        "checkpoint_num_inference_timesteps": 4,
+        "checkpoint_native_action_dim": 32,
+    })
+    monkeypatch.setattr(backend.importlib, "import_module", lambda name: module)
+    monkeypatch.setenv("SGW01_D1_MODEL_PATH", str(tmp_path / "checkpoint"))
+    monkeypatch.setenv("SGW01_D1_COLLECTIVE_TIMEOUT", "7")
+    backend.build_official_14b_dreamzero_backend()
+    assert calls == [
+        ("nccl", datetime.timedelta(seconds=7)),
+        ("gloo", datetime.timedelta(seconds=7)),
+    ]
 
 
 def test_rank_zero_startup_guard_bounds_native_construction(tmp_path: Path) -> None:

@@ -23,6 +23,7 @@ from .dreamzero_backend import (
     build_pinned_dreamzero_backend,
     collective_timeout,
     configure_official_startup,
+    initialize_bounded_mesh,
     verify_pinned_dreamzero_prerequisites,
 )
 from .dreamzero_producer import DreamZeroEvidenceProducer, make_dreamzero_http_server
@@ -57,16 +58,6 @@ def _write_ready(payload: dict[str, object]) -> None:
         os.fsync(stream.fileno())
 
 
-def _install_bounded_init_process_group(module: object, timeout: object) -> None:
-    original = module.dist.init_process_group
-
-    def bounded_init_process_group(*args: object, **kwargs: object) -> object:
-        kwargs.setdefault("timeout", timeout)
-        return original(*args, **kwargs)
-
-    module.dist.init_process_group = bounded_init_process_group
-
-
 def _new_bounded_signal_group(module: object, timeout: object) -> object:
     return module.dist.new_group(backend="gloo", timeout=timeout)
 
@@ -87,8 +78,7 @@ def run_native_rank_worker() -> None:
     except ValueError as exc:
         raise RuntimeError("D1 rank worker imported AR source outside pinned checkout") from exc
     timeout = collective_timeout()
-    _install_bounded_init_process_group(module, timeout)
-    device_mesh = module.init_mesh()
+    device_mesh = initialize_bounded_mesh(module, timeout)
     signal_group = _new_bounded_signal_group(module, timeout)
     policy = module.GrootSimPolicy(
         embodiment_tag=module.EmbodimentTag("oxe_droid"),

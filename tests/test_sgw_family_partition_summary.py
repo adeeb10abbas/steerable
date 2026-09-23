@@ -1,0 +1,163 @@
+import hashlib
+import json
+from pathlib import Path
+
+import pytest
+
+from experiments.workshops.spatial_grounding_v1 import family_partition_summary as summary
+from experiments.workshops.spatial_grounding_v1 import family_partition_worker as worker
+
+
+def _write(path: Path, value: dict) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value))
+    return path
+
+
+def _json(path: Path) -> dict:
+    return json.loads(path.read_text())
+
+
+def _fixture(tmp_path: Path, monkeypatch) -> tuple[Path, Path, dict]:
+    remaining = [
+        *[{"family": "HEIGHT", "slot_index": index, "design_id": f"HEIGHT-{index:03d}", "side": "left"}
+          for index in range(3, 58)],
+        *[{"family": "DIST", "slot_index": index, "design_id": f"DIST-{index:03d}", "side": "right"}
+          for index in range(4, 66)],
+    ]
+    campaigns, families = {}, []
+    for family, proposed, geometric, eligible in (("HEIGHT", 100, 43, 57), ("DIST", 100, 36, 64)):
+        path = _write(tmp_path / f"{family}.campaign.json", {"family": family})
+        campaigns[family] = path
+        families.append({
+            "family": family, "proposed_slots": proposed, "geometric_rejections": geometric,
+            "capture_eligible_slots": eligible, "campaign": {
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "bytes": path.stat().st_size,
+            },
+        })
+    freeze = _write(tmp_path / "freeze.json", {
+        "release_permitted": False, "model_requests": 0, "behavioral_episodes": 0, "families": families,
+        "remaining_capture_eligible_slots": remaining,
+        "native_smoke_slots": [
+            {"family": "HEIGHT", "slot_index": 0, "design_id": "HEIGHT-000"},
+            {"family": "HEIGHT", "slot_index": 1, "design_id": "HEIGHT-001"},
+            {"family": "DIST", "slot_index": 0, "design_id": "DIST-000"},
+            {"family": "DIST", "slot_index": 3, "design_id": "DIST-003"},
+        ],
+    })
+    monkeypatch.setattr(worker, "FREEZE_SHA256", hashlib.sha256(freeze.read_bytes()).hexdigest())
+    source = _write(tmp_path / "source.py", {"source": "pinned"})
+    calibration = _write(tmp_path / "calibration.json", {"calibration": "pinned"})
+    monkeypatch.setattr(worker, "CALIBRATION_SHA256", hashlib.sha256(calibration.read_bytes()).hexdigest())
+    smoke = [
+        {"family": family, "slot_index": index, "design_id": design,
+         "root": str(tmp_path / "smoke" / f"{family}-{index}"),
+         "verification": str(tmp_path / "smoke" / f"{family}-{index}" / "v.json")}
+        for family, index, design in (
+            ("HEIGHT", 0, "HEIGHT-000"), ("HEIGHT", 1, "HEIGHT-001"),
+            ("DIST", 0, "DIST-000"), ("DIST", 3, "DIST-003"),
+        )
+    ]
+    for row in smoke:
+        receipt = _write(Path(row["verification"]), {"verification_sha256": "a" * 64})
+        row["verification_file_sha256"] = hashlib.sha256(receipt.read_bytes()).hexdigest()
+        row["verification_sha256"] = "a" * 64
+    config = _write(tmp_path / "config.json", {
+        "freeze_receipt": str(freeze), "campaigns": {family: str(path) for family, path in campaigns.items()},
+        "source_path": str(source), "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "controller_calibration": str(calibration), "capture_command": ["capture"], "qualification_command": ["qualify"],
+        "smoke_evidence": smoke, "workers": 4, "free_space_floor_bytes": worker.MIN_FREE_SPACE_FLOOR_BYTES,
+        "declared_slot_bytes": 1, "child_timeout_seconds": 2400,
+    })
+    workers_root = tmp_path / "workers-root"
+    bindings = worker._config_bindings(_json(config), freeze, campaigns)
+    _write(workers_root / "partition-binding.json", {
+        "schema_version": worker.SCHEMA, "freeze_sha256": hashlib.sha256(freeze.read_bytes()).hexdigest(),
+        "bindings_sha256": worker._digest(bindings), "config_sha256": hashlib.sha256(config.read_bytes()).hexdigest(),
+        "workers": 4,
+    })
+    return config, workers_root, {"freeze": _json(freeze), "bindings": bindings}
+
+
+def _rank(worker_root: Path, metadata: dict, rank: int) -> list[dict]:
+    slots = worker.partition_slots(metadata["freeze"], rank=rank, workers=4)
+    root = worker_root / "workers" / str(rank)
+    _write(worker_root / "rank-claims" / f"rank-{rank}.json", {"rank": rank, "root": str(root.resolve())})
+    _write(root / "worker-receipt.json", {
+        "schema_version": worker.SCHEMA, "rank": rank, "slot_order": slots, "bindings": metadata["bindings"],
+        "smoke_verifications": [],
+    })
+    return slots
+
+
+def _verifier(**kwargs):
+    output = kwargs["output"]
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text("{}")
+    return {
+        "status": "verified_evidence_not_fixture_release",
+        "physical_geometry_rejection": None, "verification_sha256": "a" * 64,
+    }
+
+
+def test_incomplete_summary_accounts_all_200_without_failures(tmp_path, monkeypatch):
+    config, workers_root, metadata = _fixture(tmp_path, monkeypatch)
+    result = summary.compile_summary(config_path=config, workers_root=workers_root, output=tmp_path / "summary.json",
+                                     verifier=_verifier)
+    assert result["status"] == "incomplete"
+    assert result["families"]["HEIGHT"]["proposed"] == 100
+    assert result["families"]["HEIGHT"]["geometric_rejections"] == 43
+    assert result["families"]["HEIGHT"]["unstarted"] == 55
+    assert result["families"]["DIST"]["unstarted"] == 62
+    assert result["release_permitted"] is False and result["raw_evidence_retained_on_pvc"] is True
+
+
+def test_duplicate_or_forged_completion_is_rejected(tmp_path, monkeypatch):
+    config, workers_root, metadata = _fixture(tmp_path, monkeypatch)
+    slot = _rank(workers_root, metadata, 0)[0]
+    _write(workers_root / "slot-claims" / f"{slot['family'].lower()}-{slot['slot_index']:03d}.json",
+           {"rank": 1, "slot": slot})
+    with pytest.raises(ValueError, match="slot claim"):
+        summary.compile_summary(config_path=config, workers_root=workers_root, output=tmp_path / "summary.json",
+                                verifier=_verifier)
+
+
+def test_duplicate_slot_claim_is_rejected(tmp_path, monkeypatch):
+    config, workers_root, metadata = _fixture(tmp_path, monkeypatch)
+    slot = _rank(workers_root, metadata, 0)[0]
+    _write(workers_root / "slot-claims" / "one.json", {"rank": 0, "slot": slot})
+    _write(workers_root / "slot-claims" / "two.json", {"rank": 0, "slot": slot})
+    with pytest.raises(ValueError, match="duplicated"):
+        summary.compile_summary(config_path=config, workers_root=workers_root, output=tmp_path / "summary.json",
+                                verifier=_verifier)
+
+
+def test_stop_with_partial_is_explicitly_incomplete(tmp_path, monkeypatch):
+    config, workers_root, metadata = _fixture(tmp_path, monkeypatch)
+    slot = _rank(workers_root, metadata, 0)[0]
+    _write(workers_root / "slot-claims" / f"{slot['family'].lower()}-{slot['slot_index']:03d}.json",
+           {"rank": 0, "slot": slot})
+    _write(workers_root / "infrastructure-stop.json", {"status": "infrastructure_stop"})
+    result = summary.compile_summary(config_path=config, workers_root=workers_root, output=tmp_path / "summary.json",
+                                     verifier=_verifier)
+    assert result["status"] == "incomplete"
+    assert result["families"]["HEIGHT"]["partial"] == 1
+
+
+def test_completed_result_requires_authoritative_not_status_label(tmp_path, monkeypatch):
+    config, workers_root, metadata = _fixture(tmp_path, monkeypatch)
+    slot = _rank(workers_root, metadata, 0)[0]
+    rank_root = workers_root / "workers" / "0"
+    _write(workers_root / "slot-claims" / f"{slot['family'].lower()}-{slot['slot_index']:03d}.json",
+           {"rank": 0, "slot": slot})
+    slot_root = tmp_path / "slot-root"
+    _write(slot_root / "qualification.json", {"status": "accepted_model_blind_fixture_candidate"})
+    _write(rank_root / "completed" / f"{slot['family'].lower()}-{slot['slot_index']:03d}.json", {
+        "schema_version": worker.SCHEMA, "slot": slot, "slot_root": str(slot_root),
+        "result": {"status": "externally_verified_candidate_slot_not_fixture_or_behavioral_release"},
+    })
+    with pytest.raises(ValueError, match="authoritative"):
+        summary.compile_summary(
+            config_path=config, workers_root=workers_root, output=tmp_path / "summary.json",
+            verifier=lambda **_: {"status": "forged"},
+        )

@@ -13,6 +13,7 @@ from pathlib import Path
 import subprocess
 import sys
 import traceback
+from dataclasses import asdict, dataclass
 from typing import Any, Callable, Mapping, Sequence
 
 from .family_campaign import SCHEMA, _sha256
@@ -21,6 +22,30 @@ from .prospective_family_designs import _digest, author_candidate_overlay
 
 CALIBRATION_SHA256 = "107442ccca01c4ac44ec6e1cb9674d51dbcd8663288a851dc54fa91a124f93d7"
 EXECUTOR_SCHEMA = "sgw-01-family-campaign-executor-v1"
+
+
+@dataclass(frozen=True)
+class PhysicalGeometryRejection:
+    """Measured candidate/reset geometry rejection, never infrastructure loss."""
+
+    design_id: str
+    candidate_sha256: str
+    rejection_scope: str
+    goal_sign: int | None
+    reset_index: int | None
+    raw_reset_sha256: str
+    reason: str
+    controller_actions_executed: int = 0
+
+    def __post_init__(self) -> None:
+        if (self.rejection_scope not in {"candidate", "reset"}
+                or self.controller_actions_executed != 0
+                or not self.reason
+                or len(self.candidate_sha256) != 64
+                or len(self.raw_reset_sha256) != 64):
+            raise ValueError("physical geometry rejection lacks measured zero-action evidence")
+        if self.rejection_scope == "reset" and (self.goal_sign not in {-1, 1} or self.reset_index not in range(3)):
+            raise ValueError("reset rejection lacks its registered trial identity")
 
 
 def _fsync_json(path: Path, value: Mapping[str, Any]) -> None:
@@ -71,6 +96,75 @@ def _run_child(command: Sequence[str], *, label: str, root: Path, values: Mappin
     })
     if result.returncode != 0:
         raise RuntimeError(f"{label} native child failed")
+
+
+def _preaction_rejection(
+    value: Mapping[str, Any], *, design_id: str, candidate_sha256: str, candidate_capture_sha256: str, root: Path,
+) -> PhysicalGeometryRejection | None:
+    _validate_guard_common(
+        value, design_id=design_id, candidate_sha256=candidate_sha256,
+        candidate_capture_sha256=candidate_capture_sha256, root=root,
+    )
+    if value.get("status") != "physical_geometry_rejection_before_actions":
+        return None
+    if value.get("controller_actions_executed") != 0:
+        raise RuntimeError("physical geometry rejection guard is malformed")
+    rejection = PhysicalGeometryRejection(
+        design_id=str(value.get("design_id")), candidate_sha256=str(value.get("candidate_sha256")),
+        rejection_scope=str(value.get("rejection_scope")), goal_sign=value.get("goal_sign"),
+        reset_index=value.get("reset_index"), raw_reset_sha256=str(value["raw_reset"]["sha256"]),
+        reason=str(value.get("reason")), controller_actions_executed=value.get("controller_actions_executed"),
+    )
+    if rejection.design_id != design_id or rejection.candidate_sha256 != candidate_sha256:
+        raise RuntimeError("physical geometry rejection does not bind measured candidate")
+    return rejection
+
+
+def _validate_guard_common(
+    value: Mapping[str, Any], *, design_id: str, candidate_sha256: str, candidate_capture_sha256: str, root: Path,
+) -> None:
+    raw = value.get("raw_reset")
+    if (value.get("schema_version") != "sgw-01-family-preaction-geometry-guard-v1"
+            or value.get("design_id") != design_id or value.get("candidate_sha256") != candidate_sha256
+            or value.get("candidate_capture_sha256") != candidate_capture_sha256
+            or not isinstance(raw, Mapping) or not isinstance(raw.get("path"), str)
+            or not isinstance(raw.get("sha256"), str) or len(raw["sha256"]) != 64
+            or type(raw.get("bytes")) is not int):
+        raise RuntimeError("qualification per-trial pre-action geometry guard is malformed")
+    path = Path(raw["path"])
+    path = path if path.is_absolute() else root / path
+    if not path.is_file() or path.stat().st_size != raw["bytes"] or _sha256(path) != raw["sha256"]:
+        raise RuntimeError("qualification pre-action raw reset evidence is absent or hash-mismatched")
+
+
+def _trial_guards(
+    root: Path, *, design_id: str, candidate_sha256: str, candidate_capture_sha256: str,
+) -> PhysicalGeometryRejection | None:
+    """Validate guards exactly where each independent reset occurs."""
+    for goal_sign in (1, -1):
+        for reset_index in range(3):
+            trial_root = root / f"goal-{goal_sign:+d}" / f"reset-{reset_index}"
+            guard = trial_root / "preaction-geometry-guard.json"
+            if not guard.is_file():
+                raise RuntimeError("qualification child omitted a per-trial pre-action geometry guard")
+            value = json.loads(guard.read_text(encoding="utf-8"))
+            rejection = _preaction_rejection(
+                value, design_id=design_id, candidate_sha256=candidate_sha256,
+                candidate_capture_sha256=candidate_capture_sha256, root=trial_root,
+            )
+            if rejection is not None:
+                if rejection.goal_sign != goal_sign or rejection.reset_index != reset_index:
+                    raise RuntimeError("physical geometry rejection has a different trial identity")
+                return rejection
+            _validate_guard_common(
+                value, design_id=design_id, candidate_sha256=candidate_sha256,
+                candidate_capture_sha256=candidate_capture_sha256, root=trial_root,
+            )
+            if (value.get("goal_sign") != goal_sign or value.get("reset_index") != reset_index
+                    or value.get("status") != "measured_banana_geometry_valid_before_actions"
+                    or value.get("controller_actions_executed") != 0):
+                raise RuntimeError("qualification per-trial pre-action geometry guard is malformed")
+    return None
 
 
 def run_slot(
@@ -129,23 +223,25 @@ def run_slot(
         materialize(plan=plan, design_id=str(job["design_id"]), manifest=manifest, capture=capture,
                     calibration=controller_calibration, output=Path(values["candidate"]))
         _run_child(qualification_command, label="qualification", root=root, values=values)
-        guard = root / "preaction-geometry-guard.json"
-        if not guard.is_file():
-            raise RuntimeError("qualification child exited without fresh pre-action geometry guard")
-        guard_value = json.loads(guard.read_text(encoding="utf-8"))
-        expected_resets = [(sign, reset) for sign in (1, -1) for reset in range(3)]
-        checks = guard_value.get("checks")
-        if (guard_value.get("design_id") != job["design_id"]
-                or guard_value.get("candidate_sha256") != _sha256(Path(values["candidate"]))
-                or guard_value.get("status") != "measured_banana_geometry_valid_before_actions"
-                or guard_value.get("actions_started") is not False
-                or not isinstance(checks, list)
-                or [(item.get("goal_sign"), item.get("reset_index")) for item in checks if isinstance(item, Mapping)] != expected_resets
-                or any(item.get("status") != "measured_banana_geometry_valid_before_actions"
-                       or item.get("actions_started") is not False
-                       or not isinstance(item.get("raw_reset_sha256"), str)
-                       or len(item["raw_reset_sha256"]) != 64 for item in checks)):
-            raise RuntimeError("qualification pre-action geometry guard is absent or does not bind measured candidate")
+        candidate_sha256 = _sha256(Path(values["candidate"]))
+        candidate = json.loads(Path(values["candidate"]).read_text(encoding="utf-8"))
+        candidate_capture_sha256 = candidate.get("metadata", {}).get("candidate_capture_sha256")
+        if not isinstance(candidate_capture_sha256, str) or len(candidate_capture_sha256) != 64:
+            raise RuntimeError("materialized candidate lacks bound capture hash")
+        rejected = _trial_guards(
+            root, design_id=str(job["design_id"]), candidate_sha256=candidate_sha256,
+            candidate_capture_sha256=candidate_capture_sha256,
+        )
+        if rejected is not None:
+            value = {
+                "schema_version": EXECUTOR_SCHEMA, "campaign_sha256": campaign["campaign_sha256"],
+                "index": index, "design_id": job["design_id"], "family": campaign["family"],
+                "status": "physical_geometry_rejection_accounted_slot_no_refill",
+                "physical_rejection": asdict(rejected),
+                "model_request_count": 0, "behavioral_episode_count": 0, "release_permitted": False,
+            }
+            _fsync_json(receipt, value)
+            return value
         verification = verify(campaign_path=campaign_path, design_id=str(job["design_id"]), root=root,
                               output=root / "family_verification.json")
         value = {

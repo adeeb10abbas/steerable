@@ -239,16 +239,21 @@ one six-trial qualification child and externally verifies its retained output.
 Each child exit is recorded and fsynced. Exit zero without the required output
 is a technical failure, not a success.
 
-The qualification child must write
-`preaction-geometry-guard.json` before it sends a controller action. The guard
-must bind the design ID and measured candidate bytes, state
-`measured_banana_geometry_valid_before_actions`, and record
-`actions_started: false`. It must contain the six ordered `(goal_sign,
-reset_index)` records, each with that status, `actions_started: false`, and a
-SHA-256 of its retained raw reset snapshot. The child itself must evaluate
-fresh per-reset banana, table, and support geometry before starting each
-450-action sequence; an external verifier is intentionally too late to make
-that safe.
+The qualification child must write and fsync one
+`goal-{sign:+d}/reset-{index}/preaction-geometry-guard.json` **after** each
+fresh reset/warmup's `state-0000.json` is retained and **before** that trial's
+first controller action. Each guard binds its design, materialized candidate,
+candidate-capture hash, goal/reset identity, and hash/size/path of that reset
+snapshot. A normal guard has status
+`measured_banana_geometry_valid_before_actions` and
+`controller_actions_executed: 0`. A genuine candidate/reset geometry failure
+instead uses `physical_geometry_rejection_before_actions`, a `candidate` or
+`reset` scope, and a nonempty reason; it is a typed physical rejection
+accounted to the registered slot with zero controller actions and no refill.
+Missing, malformed, partial, or hash-mismatched guards are technical-invalid,
+not physical rejections. The child itself must evaluate fresh per-reset banana,
+table, and support geometry before starting each 450-action sequence; an
+external verifier is intentionally too late to make that safe.
 
 Geometric or measured physical/reset rejection consumes its pre-registered
 slot with no refill. Missing, partial, malformed, or technically invalid

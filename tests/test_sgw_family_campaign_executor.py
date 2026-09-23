@@ -51,14 +51,17 @@ def _success_commands() -> tuple[list[str], list[str]]:
     qualification = [
         sys.executable, "-c",
         (
-            "import hashlib,json,sys;"
-            "open(sys.argv[1],'w').write('{}');"
-            "json.dump({'design_id':'HEIGHT-001','candidate_sha256':hashlib.sha256(open(sys.argv[2],'rb').read()).hexdigest(),"
-            "'status':'measured_banana_geometry_valid_before_actions','actions_started':False,"
-            "'checks':[{'goal_sign':s,'reset_index':r,'status':'measured_banana_geometry_valid_before_actions',"
-            "'actions_started':False,'raw_reset_sha256':'a'*64} for s in (1,-1) for r in range(3)]},open(sys.argv[3],'w'))"
+            "import hashlib,json,pathlib,sys;"
+            "q,c,r=map(pathlib.Path,sys.argv[1:]);q.write_text('{}');v=json.loads(c.read_text());"
+            "[(lambda d,s:(d.mkdir(parents=True), (d/'state-0000.json').write_text('{}'),"
+            "(d/'preaction-geometry-guard.json').write_text(json.dumps({'schema_version':'sgw-01-family-preaction-geometry-guard-v1',"
+            "'design_id':'HEIGHT-001','candidate_sha256':hashlib.sha256(c.read_bytes()).hexdigest(),"
+            "'candidate_capture_sha256':v['metadata']['candidate_capture_sha256'],'goal_sign':s,'reset_index':i,"
+            "'raw_reset':{'path':'state-0000.json','sha256':hashlib.sha256((d/'state-0000.json').read_bytes()).hexdigest(),"
+            "'bytes':(d/'state-0000.json').stat().st_size},'status':'measured_banana_geometry_valid_before_actions',"
+            "'controller_actions_executed':0}))))(r/f'goal-{s:+d}'/f'reset-{i}',s) for s in (1,-1) for i in range(3)]"
         ),
-        "{qualification}", "{candidate}", "{root}/preaction-geometry-guard.json",
+        "{qualification}", "{candidate}", "{root}",
     ]
     return capture, qualification
 
@@ -70,7 +73,10 @@ def test_slot_executes_separate_children_and_records_verified_physical_rejection
     calls = []
     def materialize(**kwargs):
         calls.append(kwargs["design_id"])
-        kwargs["output"].write_text(json.dumps({"candidate": "measured"}))
+        kwargs["output"].write_text(json.dumps({
+            "candidate": "measured",
+            "metadata": {"candidate_capture_sha256": hashlib.sha256(kwargs["capture"].read_bytes()).hexdigest()},
+        }))
         return {"candidate": "measured"}
     def verify(**kwargs):
         assert Path(kwargs["root"] / "candidate.json").is_file()
@@ -107,8 +113,40 @@ def test_missing_or_late_preaction_guard_stops_slot(tmp_path: Path, monkeypatch:
         executor.run_slot(
             campaign_path=campaign, index=0, root=tmp_path / "slot", controller_calibration=calibration,
             capture_command=capture, qualification_command=[sys.executable, "-c", "pass"],
-            materialize=lambda **kwargs: kwargs["output"].write_text("{}"),
+            materialize=lambda **kwargs: kwargs["output"].write_text(json.dumps({
+                "metadata": {"candidate_capture_sha256": hashlib.sha256(kwargs["capture"].read_bytes()).hexdigest()},
+            })),
         )
+
+
+def test_typed_physical_rejection_accounts_slot_without_controller_actions(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    campaign, calibration = _campaign(tmp_path), _calibration(tmp_path)
+    _patch_fixture(monkeypatch, calibration)
+    capture, _qualification = _success_commands()
+    rejection = [
+        sys.executable, "-c",
+        (
+            "import hashlib,json,pathlib,sys;"
+            "q,c,r=map(pathlib.Path,sys.argv[1:]);q.write_text('{}');r=r/'goal-+1'/'reset-0';r.mkdir(parents=True);s=r/'state-0000.json';s.write_text('{}');"
+            "v=json.loads(c.read_text());json.dump({'schema_version':'sgw-01-family-preaction-geometry-guard-v1',"
+            "'design_id':'HEIGHT-001','candidate_sha256':hashlib.sha256(c.read_bytes()).hexdigest(),"
+            "'candidate_capture_sha256':v['metadata']['candidate_capture_sha256'],'goal_sign':1,'reset_index':0,"
+            "'raw_reset':{'path':'state-0000.json','sha256':hashlib.sha256(s.read_bytes()).hexdigest(),'bytes':s.stat().st_size},"
+            "'status':'physical_geometry_rejection_before_actions','controller_actions_executed':0,"
+            "'rejection_scope':'candidate','reason':'measured banana intersects support'},open(r/'preaction-geometry-guard.json','w'))"
+        ),
+        "{qualification}", "{candidate}", "{root}",
+    ]
+    result = executor.run_slot(
+        campaign_path=campaign, index=0, root=tmp_path / "slot", controller_calibration=calibration,
+        capture_command=capture, qualification_command=rejection,
+        materialize=lambda **kwargs: kwargs["output"].write_text(json.dumps({
+            "metadata": {"candidate_capture_sha256": hashlib.sha256(kwargs["capture"].read_bytes()).hexdigest()},
+        })),
+        verify=lambda **_: pytest.fail("physical rejection must not invoke six-trial verifier"),
+    )
+    assert result["status"] == "physical_geometry_rejection_accounted_slot_no_refill"
+    assert result["physical_rejection"]["controller_actions_executed"] == 0
 
 
 def test_geometric_rejection_is_accounted_without_child_or_refill(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

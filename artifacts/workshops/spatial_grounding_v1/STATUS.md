@@ -6,7 +6,7 @@ behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
 have verified receipts, views and complete videos. Native smoke br has completed
 24 full physical trials: two candidates pass all six trials and two are valid
 physical rejections. All four raw evidence chains passed independent rechecks.
-The remaining 117 frozen candidates have a registered finite four-GPU launcher.
+The remaining 117 frozen candidates are running in four durable GPU workers.
 Historical coverage and all learned-runtime release gates remain open.
 Learned-policy requests and episodes remain at zero.**
 
@@ -113,6 +113,23 @@ does not release any learned-policy queue or use a behavioral P95 estimate.
 Historical comparison does not require a prior layout to have passed or been
 released, but still requires complete frame/asset/layout lineage and population
 coverage. The recovered preflight roots do not close that gate.
+
+Job bt started at 08:16:48 UTC. All four allocated A40 devices measured zero
+MiB used before startup, and each worker independently repeated all four smoke
+verifications. The first four fixed slots, HEIGHT 003/004/005/006, have
+completed native capture and are recording controller actions, states and
+viewport video. Shared bindings and launch evidence are retained in
+[`infrastructure/family-partition-20260923bt-startup/`](infrastructure/family-partition-20260923bt-startup/).
+No remaining-slot terminal result is claimed from this progress snapshot.
+
+CPU-only collector bu started at 08:23:10 UTC with separately staged source
+`a995e014`. It independently checks an initial snapshot, then waits for the
+four terminal launcher receipts and compiles the complete collection from raw
+evidence. A missing or interrupted result remains explicitly incomplete.
+Its maximum lifetime is 54 hours; neither it nor the GPU queue needs this app
+to remain open. The compiler/worker/executor checks pass 34 tests. The collector
+cannot release fixtures, launch a model, assign behavioral partitions, or change
+the live worker source.
 
 ## Scientific accounting
 

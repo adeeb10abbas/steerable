@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
-  "status": "lat_closed_height_dist_smoke_verified_remaining_qualification_registered_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T08:12:51Z",
+  "status": "lat_closed_height_dist_remaining_qualification_and_offline_collection_running_behavior_unreleased",
+  "updated_at_utc": "2026-09-23T08:27:00Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -61,6 +61,8 @@
     "shared_claim_and_smoke_integrity_hardening": "4204fa65",
     "startup_failure_peer_stop": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d",
     "partition_and_executor_targeted_tests_passed": 23,
+    "offline_partition_summary": "a995e014af92c2f7df9aed0e6a9e931530995d62",
+    "partition_summary_worker_executor_tests_passed": 34,
     "local_sgw_tests_passed": 329,
     "local_sgw_tests_skipped_linux_identity": 1,
     "last_full_test_source_commit": "e43f5b4054d1b65d192daa734fa9d99427b2eca3",
@@ -410,13 +412,31 @@
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
     "runtime_scope": "D1 accumulated native-latent decode and provenance are integrated, including distinct decoded_unmapped/decode_error/latent_only_retained states. Native startup, actual VAE execution and physical future time mapping remain unqualified. A real launch needs an explicit realistic finite SGW01_READINESS_TIMEOUT, not the default15-second budget. No model construction/server launch authorized.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
-    "worker_scope": "Finite four-rank worker and startup/claim/stop hardening integrated at68b9e100;23 parent partition/executor tests pass. bt registered for117 remaining slots, with fresh per-slot GPU checks, whole-registry storage reserve, shared exclusive claims and stop-between-slots sentinel. Child is correcting offline summary compiler b0c919fc, not integrated; no cluster or model authority.",
+    "worker_scope": "bt runs117 remaining slots with exact worker source68b9e100, fresh per-slot GPU checks, global storage reserve, exclusive claims and shared stop sentinel. Corrected offline compiler integrated at a995e014;34 parent compiler/worker/executor tests pass. CPU-only bu independently compiles initial and terminal evidence; no source mutation, fixture/model release or child launch authority.",
     "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
     "historical_coverage_scope": "All45 inventory sources remain unresolved for complete comparable geometry; the24-layout WMF registry is not V3-E004 coverage. bl recovered bounded fields from all7 large sources with complete stream hashes. Audit correction: historical behavioral acceptance/release is not required to compare a failed/preflight reset. Complete frame/asset/layout lineage and a complete named population are required for coverage. Observed root gaps alone do not establish cohort exclusion; no exemption or release is claimed.",
     "independent_scene_reviewer": "89af7b05-595a-43d4-977b-ae0b077d6e9f",
     "scene_review_scope": "The same independent reviewer sealed bi acceptance as ACCEPT_NATIVE_VISUAL_SETUP_ONLY for all4 captures and exactly reproduced all20 policy preprocessing images. This is not an additional rater, physical qualification, category recognition, live tensor parity or behavioral release. Plate-category/wrist-occlusion caveats and per-candidate banana clearance remain binding."
   },
-  "active_task_gpu_jobs": [],
+  "active_task_gpu_jobs": [
+    {
+      "job": "sgw01-ali-family-partition-20260923bt",
+      "job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
+      "started_at_utc": "2026-09-23T08:16:48Z",
+      "status": "four_idle_checks_and_smoke_rechecks_passed_all_four_native_captures_complete_trials_recording",
+      "source_commit": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d",
+      "raw_root": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt",
+      "allocated_gpus": 4,
+      "model_workers": 0,
+      "automatic_retries_per_index": 0,
+      "job_deadline_seconds": 172800,
+      "pod_deadline_seconds": 171900,
+      "child_deadline_seconds": 2400,
+      "pods": ["sgw01-ali-family-partition-20260923bt-0-vfrxn", "sgw01-ali-family-partition-20260923bt-1-4jkhg", "sgw01-ali-family-partition-20260923bt-2-szmmf", "sgw01-ali-family-partition-20260923bt-3-xxw54"],
+      "startup_evidence": "infrastructure/family-partition-20260923bt-startup",
+      "first_claims": ["SGW-HEIGHT-DESIGN-003", "SGW-HEIGHT-DESIGN-004", "SGW-HEIGHT-DESIGN-005", "SGW-HEIGHT-DESIGN-006"]
+    }
+  ],
   "native_family_smoke_attempts": [
     {
       "job": "sgw01-ali-family-native-smoke-20260923br",
@@ -440,8 +460,7 @@
       "pod_deadline_seconds": 4500,
       "child_deadline_seconds": 1800,
       "pods": ["sgw01-ali-family-native-smoke-20260923br-0-s8sj6", "sgw01-ali-family-native-smoke-20260923br-1-cff8x", "sgw01-ali-family-native-smoke-20260923br-2-5rdh8", "sgw01-ali-family-native-smoke-20260923br-3-zn5bl"]
-    }
-    ,
+    },
     {
       "job": "sgw01-ali-family-native-smoke-20260923bp",
       "job_uid": "f8253c9e-1f98-49e5-9e5a-765ff71277f2",
@@ -491,6 +510,21 @@
     }
   ],
   "active_task_cpu_jobs": [
+    {
+      "job": "sgw01-ali-family-collector-20260923bu",
+      "job_uid": "d386cfac-76ee-40c1-a339-b6aaa11531cf",
+      "pod": "sgw01-ali-family-collector-20260923bu-jvpjd",
+      "pod_uid": "76cfcee1-b742-4bd8-a787-7ad26ccdd15b",
+      "status": "exact_source_staged_initial_raw_verification_running_then_finite_terminal_wait",
+      "source_commit": "a995e014af92c2f7df9aed0e6a9e931530995d62",
+      "started_at_utc": "2026-09-23T08:23:10Z",
+      "allocated_gpus": 0,
+      "job_deadline_seconds": 194400,
+      "manifest": "handoff/k8s/sgw01-ali-family-collector-20260923bu.json",
+      "raw_root": "/data/users/ali/sgw-01/infrastructure/family-collector-20260923bu",
+      "worker_source_mutated": false,
+      "release_permitted": false
+    },
     {
       "job": "sgw01-ali-family-source-stage-20260923bs",
       "job_uid": "40fcbc2c-a5f0-401d-8058-d4806e08e094",
@@ -552,8 +586,10 @@
     "release_permitted": false
   },
   "remaining_family_partition": {
-    "status": "registered_not_started",
+    "status": "running_four_disjoint_workers_native_trials_recording",
     "job": "sgw01-ali-family-partition-20260923bt",
+    "job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
+    "started_at_utc": "2026-09-23T08:16:48Z",
     "manifest": "handoff/k8s/sgw01-ali-family-partition-20260923bt.json",
     "source_commit": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d",
     "source_root": "/data/users/ali/sgw-01/source/68b9e100-bs",
@@ -686,7 +722,7 @@
       "kubernetes_failed_at_utc": "2026-09-23T06:33:03Z"
     }
   },
-  "next_authorized_step": "br native integrity passed, including both preserved valid physical rejections. Upload the exact registered bt config and launch its117 fixed remaining slots only after confirming zero prior live GPU allocations. Four GPUs maximum, no retries/refill, whole-registry storage reserve, shared stop sentinel and unchanged source/calibration/geometry. Historical/runtime/model release remains closed; no LAT rerun or threshold relaxation.",
+  "next_authorized_step": "Let bt process the117 fixed remaining slots and bu independently compile its initial/terminal evidence. Both run durably without this client. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. Historical source/frame/asset lineage remains the next separate CPU-only gate.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -955,7 +991,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Launch registered bt after exact config transfer and fresh resource gates; verify startup and first native capture. Preserve the2 br physical rejections and all24 complete trial videos. Prepare a fail-closed offline compiler without changing live worker source. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
+  "next_action": "Inspect bu initial-receipt.json or collector-error.json and bt shared infrastructure-stop.json; retain all ongoing videos and completed evidence. Collect terminal summaries when all four workers finish. Exact historical producer b3815553737b42dad20eabdfde81dfa66fdf41cae7abdb84b3fecbcb1eb2babf is present in this checkout and prior2d3a0b9 commit exists for bounded CPU-only lineage investigation. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

@@ -1,0 +1,35 @@
+{
+  "allocated_gpus": 0,
+  "automatic_retries": 0,
+  "behavioral_episodes": 0,
+  "child_exit_code": 1,
+  "deadline_seconds": 2400,
+  "extracted_sources": 0,
+  "job": "sgw01-ali-historical-stream-20260923bk",
+  "job_uid": "fb4c7c7b-a7aa-49e2-9b08-63753f2e4a6b",
+  "kubernetes_status_at_export": {
+    "conditions": [
+      {
+        "lastProbeTime": "2026-09-23T06:33:03Z",
+        "lastTransitionTime": "2026-09-23T06:33:03Z",
+        "message": "Job has reached the specified backoff limit",
+        "reason": "BackoffLimitExceeded",
+        "status": "True",
+        "type": "Failed"
+      }
+    ],
+    "failed": 1,
+    "ready": 0,
+    "startTime": "2026-09-23T06:22:38Z",
+    "terminating": 0,
+    "uncountedTerminatedPods": {}
+  },
+  "log": "cpu-20260923bk-extract.log",
+  "log_sha256": "6b9ea7f5b8423db318b5e48d63db79a2d2035dc19f713bd747211fccdaedf030",
+  "model_requests": 0,
+  "raw_root": "/data/users/ali/sgw-01/infrastructure/historical-stream-20260923bk",
+  "reason": "Transfer bundle omitted wheel-owned ijson.libs/libyajl-9393e5bd.so.2.1.1",
+  "release_permitted": false,
+  "schema_version": "sgw-01-historical-stream-process-outcome-v1",
+  "status": "failed_dependency_import_before_any_source_processing"
+}

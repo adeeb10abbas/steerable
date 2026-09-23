@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_below_release_gate_height_dist_native_visual_setup_accepted_qualification_unreleased",
-  "updated_at_utc": "2026-09-23T05:55:00Z",
+  "updated_at_utc": "2026-09-23T06:36:40Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -51,10 +51,14 @@
     "native_mailbox_cleanup_and_actual_binding_authority": "723e8050",
     "campaign_descriptor_hardening": "2aefd281",
     "historical_payload_provenance": "ceba0565",
-    "local_sgw_tests_passed": 295,
+    "bounded_historical_same_stream_extractor": "b5923f6ecec2a77f2af39d718e61f5fb6f526912",
+    "family_capture_materializer_and_six_trial_verifier": "5b21c8af",
+    "finite_family_slot_executor": "e1f8a212",
+    "preaction_guard_persisted_before_controller_planning": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
+    "local_sgw_tests_passed": 326,
     "local_sgw_tests_skipped_linux_identity": 1,
-    "last_full_test_source_commit": "f3664eb7fcb8f29ca40853a0e822f66b2f047752",
-    "last_full_test_scope": "Source-backed full suite before the subsequent historical-probe integration; focused suites are not added to this total.",
+    "last_full_test_source_commit": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
+    "last_full_test_scope": "Complete source-backed SGW suite after family executor, actual HEIGHT/DIST six-trial E2E, streaming rewrite and pre-controller guard persistence; 326 passed and one Linux-only skip. This does not release native execution or excuse the pending early-rejection verifier correction.",
     "subsequent_focused_d1_tests_passed": 44,
     "targeted_support_capture_repair_tests_passed": 31,
     "live_model_runtime_qualified": false,
@@ -396,18 +400,29 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "Four bi captures are artifact-valid and independently accepted for native visual setup only. bf judgments remain unchanged. Campaign descriptors are integrated; complete raw-verifier/materialization corrections await actual end-to-end six-trial regression and parent review. No HEIGHT/DIST candidate plan is frozen; parent alone owns launches.",
+    "fixture_scope": "Four bi captures are artifact-valid and independently accepted for native visual setup only. Real materialization/recorder/verifier E2E covers HEIGHT and DIST, six450-action trials, plate/support mappings, measured reset guards and zero controller calls on changed banana geometry. No HEIGHT/DIST candidate plan is frozen; parent alone owns launches.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
     "runtime_scope": "D1 accumulated native-latent decode and provenance are integrated, including distinct decoded_unmapped/decode_error/latent_only_retained states. Native startup, actual VAE execution and physical future time mapping remain unqualified. A real launch needs an explicit realistic finite SGW01_READINESS_TIMEOUT, not the default15-second budget. No model construction/server launch authorized.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
-    "worker_scope": "Native mailbox integration now includes atomic publication, at-most-once cleanup, separate fsynced cleanup/fault evidence, and actual binding/candidate/Downward-API identity checks through723e8050. No native receiver deployed; complete synthetic wiring is not a remote runtime release.",
+    "worker_scope": "Finite slot executor integrated with canonical paths, persistent child logs, owned process-group timeouts, no-refill accounting and default materializer/verifier E2E. Release-blocking correction remains: typed early rejection must independently recompute geometry, verify zero same-trial/future actions and validate preceding trial/media/input bindings instead of bypassing external verification. No native receiver or family campaign deployed.",
     "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
-    "historical_coverage_scope": "The24-layout WMF forecast registry is not V3-E004 coverage. All45 inventory sources remain unresolved. bj recovered15 precise semantics probes and5 exact E006 state payloads;7 larger state payloads exceeded the bounded export cap. Root-only evidence is not comparable centroid geometry. Source-defined reset/getter proofs and bounded streaming selectors are under investigation; no reruns or release.",
+    "historical_coverage_scope": "The24-layout WMF forecast registry is not V3-E004 coverage. All45 inventory sources remain unresolved for complete comparable geometry. bj recovered15 semantics probes and5 full E006 state payloads; bl now recovered bounded fields from all7 remaining files, hashing every source byte. Root-only/preflight records remain non-comparable. The additive exclusion audit found neither complete HEIGHT root intervals nor complete DIST no-plate inventories; no exemption, rerun or release.",
     "independent_scene_reviewer": "89af7b05-595a-43d4-977b-ae0b077d6e9f",
     "scene_review_scope": "The same independent reviewer sealed bi acceptance as ACCEPT_NATIVE_VISUAL_SETUP_ONLY for all4 captures and exactly reproduced all20 policy preprocessing images. This is not an additional rater, physical qualification, category recognition, live tensor parity or behavioral release. Plate-category/wrist-occlusion caveats and per-candidate banana clearance remain binding."
   },
   "active_task_gpu_jobs": [],
-  "active_task_cpu_jobs": [],
+  "active_task_cpu_jobs": [
+    {
+      "job": "sgw01-ali-historical-stream-20260923bl",
+      "job_uid": "d6f46ed7-06bb-49b3-a931-e11e47dbc083",
+      "status": "extraction_complete_bounded_600_second_accessor_only",
+      "pod": "sgw01-ali-historical-stream-20260923bl-m9dfw",
+      "pod_uid": "ce247e1a-85ca-4064-b637-3452eaf8c945",
+      "allocated_gpus": 0,
+      "automatic_retries": 0,
+      "deadline_seconds": 2400
+    }
+  ],
   "completed_capture_source_stages": [
     {
       "job": "sgw01-ali-source-stage-20260923bb",
@@ -479,7 +494,7 @@
     "qualified_candidates": 0,
     "release_permitted": false
   },
-  "latest_historical_payload_recovery": {
+  "historical_payload_recovery_bj": {
     "job": "sgw01-ali-historical-export-20260923bj",
     "job_uid": "586c16c7-98cb-4314-a464-592cfc4c6812",
     "completed_at_utc": "2026-09-23T05:48:17Z",
@@ -493,8 +508,35 @@
     "release_permitted": false,
     "coverage_complete": false
   },
-  "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_authorized_step": "Finish the exact capture-to-candidate-to-six-trial-to-external-verifier integration before freezing any HEIGHT/DIST100-slot plan. Independently recover historical geometry from named/hash-bound payloads. Do not rerun bh/bi/bj or LAT, promote native-only visual acceptance, or launch learned policy/runtime without its remaining release gates.",
+  "latest_historical_payload_recovery": {
+    "job": "sgw01-ali-historical-stream-20260923bl",
+    "job_uid": "d6f46ed7-06bb-49b3-a931-e11e47dbc083",
+    "extraction_completed_at_utc": "2026-09-23T06:32:28.181035+00:00",
+    "receipt": "infrastructure/cpu-20260923bl-historical-stream-outcome.json",
+    "receipt_sha256": "c1f89a29ce624991c1ee9908c6f058ea43bf17f525a2460b5b6d8eb60dbfc8a2",
+    "source_files_streamed_and_fully_hashed": 7,
+    "source_bytes": 1338347469,
+    "retained_payload_bytes": 444182,
+    "process_peak_rss_kib": 23964,
+    "archive": "/data/users/ali/sgw-01/infrastructure/historical-stream-20260923bl/fields.tar.gz",
+    "archive_sha256": "c4cf2f5417adb32382c15842debc046371cb52118d79a1a199b9d53239228178",
+    "archive_bytes": 37021,
+    "independently_verified_compact_files": 15,
+    "ijson_version": "3.5.1",
+    "isolated_complete_parser_archive_sha256": "eba26d2fd366a677278eedcab046c571e6613dec70eeeab3a9b9d54c4e9bf718",
+    "comparable_geometry_rows": 0,
+    "coverage_complete": false,
+    "release_permitted": false,
+    "preceding_failed_attempt": {
+      "job": "sgw01-ali-historical-stream-20260923bk",
+      "job_uid": "fb4c7c7b-a7aa-49e2-9b08-63753f2e4a6b",
+      "status": "failed_dependency_import_before_any_source_processing",
+      "receipt": "infrastructure/cpu-20260923bk-historical-stream-outcome.json",
+      "receipt_sha256": "d6bac5ecb5c16d88b1775a699483b39c7bc798dff89ad730bd2b2e9e9d8960c9",
+      "kubernetes_failed_at_utc": "2026-09-23T06:33:03Z"
+    }
+  },
+  "next_authorized_step": "Finish independent verification of genuine early geometry rejections, including same-trial zero actions and preceding trial/media bindings. Then freeze HEIGHT/DIST100-slot plans against exact bi captures and sealed reviews with unchanged seed20260922/order/no-refill, stage exact source from original b429ddd and execute finite model-blind qualification within4GPUs. Complete historical geometry/runtime/model gates separately; no learned-policy release, LAT refill or rerun.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -757,13 +799,13 @@
     "Historical-layout coverage remains incomplete. The recovered 24-layout cohort now has independently hash-bound roots, AABB-derived centers and separate reset displacement in infrastructure/historical-droid-layout-evidence-registry-v1.json. This does not establish exhaustive coverage or release.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Both native client paths now run complete 450-action engineering integrations through joint-position measurements, HTTP producers, trace readers, recorder and scorer with simulated physics/model computation. Native AppLauncher/RPC, D1 distributed startup, official decode/time mapping and all live model runtimes remain unqualified.",
-    "All four bf captures are artifact-valid, but independent scene review requires SGW-ENG-007 grounding/distractor repair and fresh capture/review before candidate freezing. No HEIGHT/DIST candidate plan or physical qualification exists. Original ar/bc infrastructure failures and bf review outcomes remain unchanged.",
+    "SGW-ENG-007 repair and bi native-only visual review are complete; original bf review remains unchanged. HEIGHT/DIST early physical rejection still needs independent complete raw verification before plan freezing and native qualification. No candidate plan or physical qualification exists.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Complete and verify the local SGW-ENG-007 scene repair, then commit/push and stage exact source through a fresh bounded CPU Job cloned directly from b429ddd. Compare the new geometry to bf under only disclosed changes; use fresh bounded capture roots and external media validation. Return actual media to the same independent reviewer. In parallel review local D1 decode/campaign/RPC slices and finish historical coverage. No learned inference, LAT refill or candidate freeze before required gates.",
+  "next_action": "Review the worker's pending complete early-rejection verifier correction, then stage exact integrated source and freeze/run finite HEIGHT/DIST model-blind plans under the remaining gates. Seven large historical payloads are now recovered as bounded root-only evidence, not comparable geometry or a coverage release. No learned inference, LAT refill, threshold relaxation or reuse of original attempt roots.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

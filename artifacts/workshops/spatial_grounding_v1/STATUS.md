@@ -558,6 +558,48 @@ forecast registry does not establish V3-E004 coverage. All 45 inventory sources
 still need complete coverage accounting. bh and bj accessors expired; the scoped
 cluster snapshot showed no running study Pod, GPU allocation or model server.
 
+### Complete bounded state recovery and remaining executor gate
+
+CPU attempt bk failed before processing any source: its isolated transfer
+bundle omitted the wheel's bundled YAJL library. The
+[failure outcome](infrastructure/cpu-20260923bk-historical-stream-outcome.json)
+and log are preserved. The corrected complete package passed all 24 wheel
+record hashes plus native Python 3.11 import/decode checks without modifying
+the shared native environment.
+
+Fresh attempt bl completed extraction at `06:32:28Z`. It streamed and hashed
+all **1,338,347,469 source bytes** across the seven previously oversized files,
+retaining 444,182 bytes of selected fields with a 23,964-KiB process peak RSS.
+The [outcome](infrastructure/cpu-20260923bl-historical-stream-outcome.json)
+binds the PVC archive and the 15 independently verified compact files.
+Extraction uses exact structural paths, RFC6901 pointers, bounded field
+retention and hashing of the same parsed byte stream. It explicitly includes
+R002's nested IK-environment reset and R003's failed diagnostic reset. Root-only
+states, source-defined reset comparisons and preflight identity do **not**
+become centroid/AABB geometry or accepted repaired states. No complete
+historical coverage or family release follows. The
+[exclusion audit](infrastructure/historical-layout-exclusion-audit-v1.json)
+also found no sufficient cohort-wide HEIGHT interval or DIST plate-absence
+proof. Raw historical files remain unchanged.
+
+The actual HEIGHT and DIST synthetic paths now exercise materialization,
+six 450-action recordings, plate/support mappings, fixed banana pose and
+measured table/clearance predicates at each fresh reset, and the normal raw
+verifier. Passing guards are persisted before controller planning; a measured
+banana change stops immediately with no controller call. The integrated
+source-backed suite at `9de6d9d7` passed 326 tests with one Linux-only skip.
+These are engineering checks, not native physical results.
+
+The finite executor has canonical paths, persistent/fsynced child logs,
+process-group timeouts and no-retry/no-refill accounting. A remaining
+release-blocking defect was identified in its early-rejection path: it must
+independently recompute the rejected geometry, prove zero actions in the
+rejected trial, and validate prior trials/media instead of accepting the
+child's declaration. That correction is still under review. No HEIGHT/DIST
+plan is frozen, no GPU is allocated and learned requests/episodes remain zero.
+At this checkpoint bl is only holding its finite 600-second CPU export window;
+bk is terminal failed. No behavioral queue is running unattended.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure

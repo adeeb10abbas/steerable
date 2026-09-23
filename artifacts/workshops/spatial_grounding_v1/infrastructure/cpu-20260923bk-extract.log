@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/inputs/run.py", line 14, in <module>
+    import ijson
+  File "/data/users/ali/sgw-01/infrastructure/historical-stream-20260923bk/parser/ijson/__init__.py", line 44, in <module>
+    backend = _default_backend()
+              ^^^^^^^^^^^^^^^^^^
+  File "/data/users/ali/sgw-01/infrastructure/historical-stream-20260923bk/parser/ijson/__init__.py", line 37, in _default_backend
+    return get_backend(os.environ['IJSON_BACKEND'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/users/ali/sgw-01/infrastructure/historical-stream-20260923bk/parser/ijson/__init__.py", line 32, in get_backend
+    return importlib.import_module('ijson.backends.' + backend)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/users/ali/vla_wam/envs/python-builds-robolab/cpython-3.11.13-linux-x86_64-gnu/lib/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/users/ali/sgw-01/infrastructure/historical-stream-20260923bk/parser/ijson/backends/yajl2_c.py", line 13, in <module>
+    from . import _yajl2
+ImportError: libyajl-9393e5bd.so.2.1.1: cannot open shared object file: No such file or directory

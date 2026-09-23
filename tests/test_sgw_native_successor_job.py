@@ -25,7 +25,8 @@ def _config(tmp_path: Path) -> Path:
         "native_command": [python, "-m", "experiments.workshops.spatial_grounding_v1.paper_engineering",
                            "--registration", str(registration),
                            "--output-root", "/data/users/ali/sgw-01/qualification/native-successor-example/evidence"],
-        "bt_node_names": ["bt-node-a", "bt-node-b"], "active_deadline_seconds": 7200,
+        "bt_node_names": ["bt-node-a", "bt-node-b"], "successor_node_name": "bt-node-b",
+        "active_deadline_seconds": 7200,
         "native_child_timeout_seconds": 4800, "storage_reserve_bytes": successor.MIN_STORAGE_RESERVE_BYTES,
     }
     path = tmp_path / "config.json"
@@ -44,6 +45,8 @@ def test_successor_requires_exact_nodes_and_bt_anti_affinity(tmp_path):
     pod = job["spec"]["template"]["spec"]
     assert job["spec"]["parallelism"] == job["spec"]["completions"] == 1
     assert job["spec"]["backoffLimit"] == 0
+    assert job["spec"]["suspend"] is True
+    assert pod["nodeName"] == "bt-node-b"
     assert pod["schedulerName"] == job["metadata"]["name"]
     assert pod["priority"] == 0 and "preemptionPolicy" not in pod
     assert len(job["metadata"]["annotations"]["sgw-01/config-sha256"]) == 64
@@ -62,6 +65,7 @@ def test_successor_requires_exact_nodes_and_bt_anti_affinity(tmp_path):
 
 @pytest.mark.parametrize("mutate", [
     lambda job: job["spec"].update({"parallelism": 2}),
+    lambda job: job["spec"].update({"suspend": False}),
     lambda job: job["spec"]["template"]["spec"].update({"schedulerName": "default-scheduler"}),
     lambda job: job["spec"]["template"]["spec"].update({"priority": 1}),
     lambda job: job["spec"]["template"]["spec"].update({"priorityClassName": "system-node-critical"}),

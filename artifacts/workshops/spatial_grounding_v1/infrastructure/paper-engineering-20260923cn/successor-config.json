@@ -1,0 +1,34 @@
+{
+  "schema_version": "sgw-01-native-successor-job-v2",
+  "job_name": "sgw01-ali-paper-engineering-20260923cn",
+  "source_path": "/data/users/ali/sgw-01/source/4f04e31e-cj",
+  "source_commit": "4f04e31ee0219dae052bba2ef95b9e2010dbceeb",
+  "source_receipt": "/data/users/ali/sgw-01/infrastructure/paper-engineering-20260923cj/source-receipt.json",
+  "source_receipt_sha256": "6fc36040ef0820054907c47e5f5febb1a0ca3cfc49d01a06954d0bc2583c5f3e",
+  "registration": "/data/users/ali/sgw-01/infrastructure/paper-engineering-20260923cj/registration.json",
+  "registration_sha256": "ec79b162dc7dbac10155ee62ee1962da617ffb0517b6b683387bf9f37dcecb92",
+  "output_root": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cn",
+  "robolab_root": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241",
+  "python": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
+  "assets_manifest": "/data/users/ali/sgw-01/preflight/a40-20260922e/assets.json",
+  "preflight_root": "/data/users/ali/sgw-01/preflight/a40-20260922e",
+  "native_command": [
+    "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
+    "-m",
+    "experiments.workshops.spatial_grounding_v1.paper_engineering",
+    "--registration",
+    "/data/users/ali/sgw-01/infrastructure/paper-engineering-20260923cj/registration.json",
+    "--output-root",
+    "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cn/evidence"
+  ],
+  "bt_node_names": [
+    "dcwipphhgc185.edc.nam.gm.com",
+    "dcwipphhgc191.edc.nam.gm.com",
+    "dcwipphhgc188.edc.nam.gm.com",
+    "dcwipphhgc189.edc.nam.gm.com"
+  ],
+  "active_deadline_seconds": 172800,
+  "native_child_timeout_seconds": 4800,
+  "storage_reserve_bytes": 4144643440640,
+  "successor_node_name": "dcwipphhgc191.edc.nam.gm.com"
+}

@@ -20,15 +20,17 @@ def _inputs():
     } for index in range(4)]
     job = {
         "metadata": {"name": "source", "uid": "source-job", "namespace": handoff.NAMESPACE},
-        "spec": {"completions": 4, "parallelism": 4, "completionMode": "Indexed", "backoffLimit": 0},
+        "spec": {"completions": 4, "parallelism": 4, "completionMode": "Indexed",
+                 "backoffLimit": 0, "podReplacementPolicy": "Failed"},
         "status": {},
     }
     target = {
-        "metadata": {"name": "successor-pod", "uid": "successor-pod-uid", "namespace": handoff.NAMESPACE,
-                     "ownerReferences": [{"kind": "Job", "uid": "target-job", "controller": True}]},
-        "spec": {"schedulerName": "sgw01-ali-example", "priority": 0,
-                 "containers": [{"resources": {"requests": {"nvidia.com/gpu": "1"}}}]},
-        "status": {"phase": "Pending"},
+        "metadata": {"name": "sgw01-ali-example", "uid": "target-job", "namespace": handoff.NAMESPACE},
+        "spec": {"suspend": True, "parallelism": 1, "completions": 1, "backoffLimit": 0,
+                 "template": {"spec": {"schedulerName": "sgw01-ali-example", "priority": 0,
+                             "nodeName": "node-2",
+                             "containers": [{"resources": {"requests": {"nvidia.com/gpu": "1"}}}]}}},
+        "status": {},
     }
     config = {
         "schema_version": handoff.SCHEMA, "namespace": handoff.NAMESPACE, "timeout_seconds": 3600,
@@ -37,8 +39,8 @@ def _inputs():
              "node": pod["spec"]["nodeName"], "index": index}
             for index, pod in enumerate(pods)
         ]},
-        "target": {"name": "successor-pod", "uid": "successor-pod-uid", "job_uid": "target-job",
-                   "scheduler_name": "sgw01-ali-example", "spec_sha256": handoff.digest(target["spec"])},
+        "target": {"name": "sgw01-ali-example", "uid": "target-job", "node": "node-2",
+                   "spec_sha256": handoff.digest(target["spec"])},
     }
     return config, job, pods, target
 
@@ -51,8 +53,10 @@ def _succeed(job, pods, index=2):
     }
 
 
-def test_no_binding_until_natural_success_is_acknowledged_by_job():
+def test_no_resume_until_selected_lane_naturally_succeeds_and_job_acknowledges():
     config, job, pods, target = _inputs()
+    assert handoff.select_node(config, job, pods, target) is None
+    _succeed(job, pods, 0)
     assert handoff.select_node(config, job, pods, target) is None
     _succeed(job, pods)
     job["status"].clear()
@@ -78,13 +82,16 @@ def test_failed_or_incomplete_source_is_not_capacity(status):
     lambda job, pods, target: job["metadata"].update(uid="replacement-job"),
     lambda job, pods, target: job["spec"].update(backoffLimit=1),
     lambda job, pods, target: job["spec"].update(parallelism=5),
+    lambda job, pods, target: job["spec"].update(podReplacementPolicy="TerminatingOrFailed"),
     lambda job, pods, target: pods[2]["metadata"].update(uid="replacement-pod"),
     lambda job, pods, target: pods[2]["metadata"].update(deletionTimestamp="now"),
     lambda job, pods, target: pods[2]["spec"].update(nodeName="unregistered-node"),
     lambda job, pods, target: target["metadata"].update(uid="replacement-target"),
-    lambda job, pods, target: target["spec"].update(nodeName="node-0"),
-    lambda job, pods, target: target["spec"].update(schedulerName="default-scheduler"),
-    lambda job, pods, target: target["spec"].update(priority=2000000000),
+    lambda job, pods, target: target["spec"]["template"]["spec"].update(nodeName="node-0"),
+    lambda job, pods, target: target["spec"]["template"]["spec"].update(schedulerName="default-scheduler"),
+    lambda job, pods, target: target["spec"]["template"]["spec"].update(priority=2000000000),
+    lambda job, pods, target: target["spec"].update(suspend=False),
+    lambda job, pods, target: target["status"].update(succeeded=1),
     lambda job, pods, target: target["spec"].update(unregistered_mutation=True),
 ])
 def test_identity_and_resource_changes_fail_closed(mutate):
@@ -117,7 +124,7 @@ class FakeKubernetes:
         self.resources = {
             handoff.api_path("jobs", job["metadata"]["name"]): copy.deepcopy(job),
             **{handoff.api_path("pods", pod["metadata"]["name"]): copy.deepcopy(pod) for pod in pods},
-            handoff.api_path("pods", target["metadata"]["name"]): copy.deepcopy(target),
+            handoff.api_path("jobs", target["metadata"]["name"]): copy.deepcopy(target),
         }
         self.calls = []
         self.lost_ack = lost_ack
@@ -127,32 +134,36 @@ class FakeKubernetes:
         self.calls.append((method, path, payload))
         if method == "GET":
             return copy.deepcopy(self.resources[path])
-        assert method == "POST" and path.endswith("/binding")
+        assert method == "PATCH"
         if self.refuse:
-            raise URLError("binding denied")
-        self.resources[path.removesuffix("/binding")]["spec"]["nodeName"] = payload["target"]["name"]
+            raise URLError("resume denied")
+        assert payload[:2] == [
+            {"op": "test", "path": "/metadata/uid", "value": self.resources[path]["metadata"]["uid"]},
+            {"op": "test", "path": "/spec", "value": self.resources[path]["spec"]},
+        ]
+        assert payload[2] == {"op": "replace", "path": "/spec/suspend", "value": False}
+        self.resources[path]["spec"]["suspend"] = False
         if self.lost_ack:
             raise URLError("acknowledgement lost")
         return {}
 
 
 @pytest.mark.parametrize("lost_ack", [False, True])
-def test_one_binding_only_and_durable_receipts(tmp_path, lost_ack):
+def test_one_resume_only_and_durable_receipts(tmp_path, lost_ack):
     config, job, pods, target = _inputs()
     _succeed(job, pods)
     api = FakeKubernetes(job, pods, target, lost_ack=lost_ack)
     handoff.run(config, tmp_path, api)
-    posts = [call for call in api.calls if call[0] == "POST"]
-    assert len(posts) == 1
-    assert posts[0][1] == handoff.api_path("pods", "successor-pod") + "/binding"
-    assert posts[0][2]["target"]["name"] == "node-2"
-    assert posts[0][2]["metadata"]["uid"] == "successor-pod-uid"
-    assert (tmp_path / "binding-intent.json").is_file()
+    patches = [call for call in api.calls if call[0] == "PATCH"]
+    assert len(patches) == 1
+    assert patches[0][1] == handoff.api_path("jobs", "sgw01-ali-example")
+    assert patches[0][2][0]["value"] == "target-job"
+    assert (tmp_path / "resume-intent.json").is_file()
     assert json.loads((tmp_path / "result.json").read_text())["release_permitted"] is False
-    assert all(call[0] in {"GET", "POST"} for call in api.calls)
+    assert all(call[0] in {"GET", "PATCH"} for call in api.calls)
 
 
-def test_binding_denial_is_not_success(tmp_path):
+def test_resume_denial_is_not_success(tmp_path):
     config, job, pods, target = _inputs()
     _succeed(job, pods)
     api = FakeKubernetes(job, pods, target, refuse=True)

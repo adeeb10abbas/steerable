@@ -1,4 +1,4 @@
-"""Render a one-GPU native Job for an explicit, non-preempting handoff binder."""
+"""Render a suspended, pre-bound one-GPU Job for a natural-completion handoff."""
 from __future__ import annotations
 
 import argparse
@@ -12,7 +12,7 @@ BT_JOB = "sgw01-ali-family-partition-20260923bt"
 IMAGE = "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
 PVC = "211247-prod-pvc"
 ROBOLAB_COMMIT = "0aef241fb088ca21bb4ebd24448940ed56620d17"
-SCHEMA = "sgw-01-native-successor-job-v1"
+SCHEMA = "sgw-01-native-successor-job-v2"
 MIN_STORAGE_RESERVE_BYTES = 3860 * 1024**3
 
 
@@ -58,6 +58,9 @@ def render(config_path: Path) -> dict[str, Any]:
         or len(set(nodes)) != len(nodes)
     ):
         raise ValueError("successor config lacks immutable source, command, or exact bt node allowlist")
+    successor_node = config.get("successor_node_name")
+    if successor_node not in nodes:
+        raise ValueError("successor must use one exact predecessor node")
     source_commit = _required_text(config.get("source_commit"), "source_commit")
     assets = _required_text(config.get("assets_manifest"), "assets_manifest")
     preflight = _required_text(config.get("preflight_root"), "preflight_root")
@@ -135,15 +138,18 @@ sync"""
                 "sgw-01/robolab-commit": ROBOLAB_COMMIT,
                 "sgw-01/active-deadline-seconds": str(deadline),
                 "sgw-01/storage-reserve-bytes": str(storage_reserve),
+                "sgw-01/successor-node": successor_node,
             },
         },
         "spec": {
             "parallelism": 1, "completions": 1, "backoffLimit": 0, "activeDeadlineSeconds": deadline,
+            "suspend": True,
             "template": {
                 "metadata": {"labels": {"owner": "ali", "app.kubernetes.io/name": "sgw-01",
                                          "purpose": "zero-model-native-engineering-successor"}},
                 "spec": {
                     "restartPolicy": "Never", "schedulerName": name, "priority": 0,
+                    "nodeName": successor_node,
                     "automountServiceAccountToken": False,
                     "activeDeadlineSeconds": deadline, "terminationGracePeriodSeconds": 180,
                     "nodeSelector": {"node-role.kubernetes.io/worker-gpu": ""},
@@ -217,10 +223,13 @@ def validate(job: Mapping[str, Any], *, nodes: list[str]) -> None:
     if (
         job.get("kind") != "Job" or job.get("metadata", {}).get("namespace") != NAMESPACE
         or spec.get("parallelism") != 1 or spec.get("completions") != 1 or spec.get("backoffLimit") != 0
+        or spec.get("suspend") is not True
         or pod.get("restartPolicy") != "Never"
         or not job.get("metadata", {}).get("name", "").startswith("sgw01-ali-")
         or pod.get("schedulerName") != job.get("metadata", {}).get("name")
-        or pod.get("priority") != 0 or pod.get("priorityClassName") or pod.get("nodeName")
+        or pod.get("priority") != 0 or pod.get("priorityClassName")
+        or pod.get("nodeName") not in nodes
+        or pod.get("nodeName") != job.get("metadata", {}).get("annotations", {}).get("sgw-01/successor-node")
         or pod.get("preemptionPolicy") not in (None, "PreemptLowerPriority")
         or spec.get("activeDeadlineSeconds") != pod.get("activeDeadlineSeconds")
         or str(spec.get("activeDeadlineSeconds")) != job.get("metadata", {}).get("annotations", {}).get("sgw-01/active-deadline-seconds")

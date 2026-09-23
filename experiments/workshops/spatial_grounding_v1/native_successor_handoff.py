@@ -1,9 +1,9 @@
-"""Bind one recorded SGW Pod after a recorded worker naturally succeeds.
+"""Resume one pre-bound SGW Job after its recorded worker naturally succeeds.
 
-The account needs GET on five named Pods and one Job, plus CREATE on the
-target Pod's binding subresource. No eviction, deletion, patch, or node
-provisioning operation is used. The default scheduler does not handle the
-target's unique schedulerName.
+The account needs GET on four named Pods and two Jobs, plus PATCH on the one
+target Job. The only mutation is an atomic UID/spec-guarded change of suspend
+from true to false. No Pod binding, eviction, deletion or node provisioning
+operation is used; the target Pod is pre-bound at noncritical priority zero.
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ from urllib.error import URLError
 from urllib.request import Request, urlopen
 
 NAMESPACE = "211247-prod"
-SCHEMA = "sgw-01-native-successor-handoff-v1"
+SCHEMA = "sgw-01-native-successor-handoff-v2"
 SERVICE_ACCOUNT = Path("/var/run/secrets/kubernetes.io/serviceaccount")
 
 
@@ -46,9 +46,10 @@ def validate_config(config: dict[str, Any]) -> None:
         or len({pod["name"] for pod in pods}) != len(pods)
         or len({pod["uid"] for pod in pods}) != len(pods)
         or {pod["index"] for pod in pods} != set(range(len(pods)))
-        or source["uid"] == target["job_uid"]
+        or source["uid"] == target["uid"]
         or target["name"] in {pod["name"] for pod in pods}
-        or not target["scheduler_name"].startswith("sgw01-ali-")
+        or not target["name"].startswith("sgw01-ali-")
+        or target["node"] not in {pod["node"] for pod in pods}
         or type(config["timeout_seconds"]) is not int
         or not 1 <= config["timeout_seconds"] <= 172800
         or not re.fullmatch(r"[0-9a-f]{64}", target["spec_sha256"])
@@ -90,6 +91,7 @@ def select_node(
         or job["spec"].get("completions") != count
         or job["spec"].get("parallelism") != count
         or not (job["spec"].get("backoffLimit") == 0 or job["spec"].get("backoffLimitPerIndex") == 0)
+        or job["spec"].get("podReplacementPolicy") != "Failed"
         or any(rule.get("action") == "Ignore" for rule in job["spec"].get("podFailurePolicy", {}).get("rules", []))
         or job["spec"].get("suspend", False)
         or len(source_pods) != count
@@ -100,15 +102,18 @@ def select_node(
         or target["metadata"]["name"] != expected["name"]
         or target["metadata"]["namespace"] != NAMESPACE
         or target["metadata"].get("deletionTimestamp")
-        or not _owner(target, expected["job_uid"])
-        or target["spec"].get("schedulerName") != expected["scheduler_name"]
-        or target["spec"].get("priority") != 0
-        or target["spec"].get("priorityClassName")
-        or target["spec"].get("nodeName")
-        or target["status"]["phase"] != "Pending"
+        or target["spec"].get("suspend") is not True
+        or target["spec"].get("parallelism") != 1
+        or target["spec"].get("completions") != 1
+        or target["spec"].get("backoffLimit") != 0
+        or target["spec"]["template"]["spec"].get("schedulerName") != expected["name"]
+        or target["spec"]["template"]["spec"].get("priority") != 0
+        or target["spec"]["template"]["spec"].get("priorityClassName")
+        or target["spec"]["template"]["spec"].get("nodeName") != expected["node"]
+        or any(target.get("status", {}).get(key) for key in ("startTime", "active", "succeeded", "failed", "terminating"))
         or digest(target["spec"]) != expected["spec_sha256"]
     ):
-        raise ValueError("target is not the exact registered unscheduled Pod")
+        raise ValueError("target is not the exact registered unstarted suspended Job")
     done = completed_indexes(job.get("status", {}).get("completedIndexes", ""), count)
     eligible: list[str] = []
     for record, pod in zip(source["pods"], source_pods):
@@ -133,7 +138,7 @@ def select_node(
             and statuses[0].get("restartCount") == 0
         ):
             eligible.append(record["node"])
-    return eligible[0] if eligible else None
+    return expected["node"] if expected["node"] in eligible else None
 
 
 class Kubernetes:
@@ -144,13 +149,13 @@ class Kubernetes:
         self.root = f"https://{host}:{os.environ['KUBERNETES_SERVICE_PORT_HTTPS']}"
         self.context = ssl.create_default_context(cafile=str(SERVICE_ACCOUNT / "ca.crt"))
 
-    def request(self, method: str, path: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    def request(self, method: str, path: str, payload: Any = None) -> dict[str, Any]:
         request = Request(
             self.root + path,
             data=json.dumps(payload).encode() if payload is not None else None,
             headers={
                 "Authorization": "Bearer " + (SERVICE_ACCOUNT / "token").read_text().strip(),
-                "Content-Type": "application/json",
+                "Content-Type": "application/json-patch+json" if method == "PATCH" else "application/json",
             },
             method=method,
         )
@@ -180,7 +185,7 @@ def run(config: dict[str, Any], output: Path, api: Kubernetes) -> None:
             api.request("GET", api_path("pods", record["name"]))
             for record in config["predecessor"]["pods"]
         ]
-        target_path = api_path("pods", config["target"]["name"])
+        target_path = api_path("jobs", config["target"]["name"])
         target = api.request("GET", target_path)
         node = select_node(config, job, pods, target)
         print(json.dumps({
@@ -189,29 +194,29 @@ def run(config: dict[str, Any], output: Path, api: Kubernetes) -> None:
             "target_node": node, "observed_at_unix": time.time(),
         }), flush=True)
         if node:
-            write_receipt(output / "binding-intent.json", {
+            write_receipt(output / "resume-intent.json", {
                 "config_sha256": digest(config), "node": node,
-                "predecessor_job": job, "predecessor_pods": pods, "target_pod": target,
+                "predecessor_job": job, "predecessor_pods": pods, "target_job": target,
             })
-            binding = {
-                "apiVersion": "v1", "kind": "Binding",
-                "metadata": {"name": config["target"]["name"], "namespace": NAMESPACE,
-                             "uid": config["target"]["uid"]},
-                "target": {"apiVersion": "v1", "kind": "Node", "name": node},
-            }
+            patch = [
+                {"op": "test", "path": "/metadata/uid", "value": config["target"]["uid"]},
+                {"op": "test", "path": "/spec", "value": target["spec"]},
+                {"op": "replace", "path": "/spec/suspend", "value": False},
+            ]
+            resumed_spec = {**target["spec"], "suspend": False}
             try:
-                api.request("POST", target_path + "/binding", binding)
+                api.request("PATCH", target_path, patch)
             except URLError:
-                # A dropped acknowledgement must not cause a second binding attempt.
+                # Reconcile a lost acknowledgement without submitting a second mutation.
                 observed = api.request("GET", target_path)
-                if observed["metadata"]["uid"] != config["target"]["uid"] or observed["spec"].get("nodeName") != node:
+                if observed["metadata"]["uid"] != config["target"]["uid"] or observed["spec"] != resumed_spec:
                     raise
             observed = api.request("GET", target_path)
-            if observed["metadata"]["uid"] != config["target"]["uid"] or observed["spec"].get("nodeName") != node:
-                raise RuntimeError("binding acknowledgement does not match the registered target")
+            if observed["metadata"]["uid"] != config["target"]["uid"] or observed["spec"] != resumed_spec:
+                raise RuntimeError("resume acknowledgement does not match the registered target")
             write_receipt(output / "result.json", {
-                "status": "bound_after_natural_predecessor_success", "node": node,
-                "target_pod": observed, "model_requests": 0, "release_permitted": False,
+                "status": "resumed_after_natural_predecessor_success", "node": node,
+                "target_job": observed, "model_requests": 0, "release_permitted": False,
             })
             return
         time.sleep(30)

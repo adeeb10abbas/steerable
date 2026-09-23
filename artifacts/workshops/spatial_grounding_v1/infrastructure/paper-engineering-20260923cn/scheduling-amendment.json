@@ -1,0 +1,31 @@
+{
+  "schema_version": "sgw-01-native-scheduling-amendment-v2",
+  "attempt_id": "SGW-ENG-008-LAT-057",
+  "registration_sha256": "ec79b162dc7dbac10155ee62ee1962da617ffb0517b6b683387bf9f37dcecb92",
+  "timing": "Before any new native simulator execution, controller action or model request.",
+  "reason": "The cluster also forbids granting pods/binding. The binding-only proposal could not be deployed. Use the explicitly admitted namespace permission to patch one named Job instead; do not request or bypass unavailable PriorityClass or Pod-binding permissions.",
+  "supersedes": "infrastructure/paper-engineering-20260923cl/scheduling-amendment.json",
+  "preserved_attempts": {
+    "ck": "Suspended after Pod admission rejected preemptionPolicy Never; zero Pods or native activity.",
+    "cl": "The native Pod was created Pending/UNSCHEDULED; its binding controller was never launched. Suspend this unused Job before enabling the replacement.",
+    "cm_binding_role": "Server rejected Role creation. Only the ServiceAccount was created; no binding, CPU controller or GPU allocation occurred.",
+    "transport_interruption": "Cluster connectivity failed transiently during config upload. It recovered, and the uploaded configuration's exact hash was verified."
+  },
+  "replacement": {
+    "gpu_job": "sgw01-ali-paper-engineering-20260923cn",
+    "created_suspended": true,
+    "selected_predecessor_index": 1,
+    "selected_predecessor_pod": "sgw01-ali-family-partition-20260923bt-1-4jkhg",
+    "selected_predecessor_uid": "e7904b8b-c201-4880-88ea-9e30d8c5d12c",
+    "node_name": "dcwipphhgc191.edc.nam.gm.com",
+    "selection": "Fix rank1 before this engineering outcome. Its last retained live queue count was ahead of the other ranks; this is a scheduling choice, not a scientific selection or guarantee that it finishes first.",
+    "controller_permission": "GET four named predecessor Pods and the predecessor/target Jobs; PATCH only the exact new target Job. No create/bind/delete/evict permissions.",
+    "only_mutation": "Atomic JSON Patch tests the target Job UID and complete frozen spec, then replaces spec.suspend true with false after rank1 has naturally succeeded with exit0 and its indexed Job acknowledges completion.",
+    "preemption_prevention": "The target template is pre-bound to that same node at noncritical priority0. It does not enter the default scheduler and the controller has no preemption operation. The API's computed PreemptLowerPriority field is unused.",
+    "gpu_ceiling": "Exactly one target GPU, only after that one of the four existing lanes has naturally completed. The four exact source Pods, zero-retry indexed Job and target spec are rechecked. Never use disappearance/failure as free capacity.",
+    "tradeoff": "Wait for this specific lane even if a different lane finishes earlier; do not alter or interrupt any original worker."
+  },
+  "native_execution_source": "4f04e31ee0219dae052bba2ef95b9e2010dbceeb",
+  "unchanged_scientific_scope": "One translated engineering layout, six fixed scripted trials, full raw/video retention and independent verification. Frozen pools/failures remain unchanged. Historical novelty is not required under SGW-REQ-001. No model request, fixture release or new candidate campaign is authorized.",
+  "release_permitted": false
+}

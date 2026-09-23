@@ -42,6 +42,7 @@ class SimulatorSnapshot:
     reset_root_poses: Mapping[str, Pose] | None = None
     termination_reason: str | None = None
     robot_body_frames: Mapping[str, Any] | None = None
+    robot_snapshot: Mapping[str, Any] | None = None
     context_measurements: Mapping[str, Any] | None = None
 
     def reset_snapshot(self) -> ResetSnapshot:

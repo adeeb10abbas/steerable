@@ -20,6 +20,7 @@ from .lat_candidate_generator import workspace_digest
 from .lat_workspace_capture import (
     _record, _root_local_offset, _vector, material_asset_paths, render_only_warmup,
 )
+from .native_geometry_measurements import camera_extrinsics, collision_geometry_local_bounds, robot_snapshot
 
 
 def _manifest(path: Path) -> dict[str, Any]:
@@ -297,6 +298,7 @@ def verify_capture_artifacts(path: Path) -> dict[str, Any]:
         or receipt.get("behavioral_episode_count") != 0
     ):
         raise ValueError("prospective capture receipt identity or zero-model boundary differs")
+    _validate_native_measurement_scope(receipt)
     root = path.parent.resolve()
     cameras = {"over_shoulder_left_camera", "wrist_cam", "over_shoulder_right_camera"}
     if set(receipt["views"]) != cameras:
@@ -330,6 +332,34 @@ def verify_capture_artifacts(path: Path) -> dict[str, Any]:
         _file(Path(dependency["real_path"]), dependency)
     return {"status": "verified_capture_artifacts_not_fixture_qualification",
             "verified_recording_files": count + 3, "receipt": _record(path)}
+
+
+def _validate_native_measurement_scope(receipt: Mapping[str, Any]) -> None:
+    robot = receipt.get("robot_snapshot")
+    cameras = receipt.get("camera_extrinsics")
+    collision = receipt.get("collision_geometry_local_bounds")
+    # Receipts produced before the additive engineering measurement contract
+    # remain evidence of their original capture scope; new captures write all
+    # three fields below and never interpret their absence as safe geometry.
+    if robot is None and cameras is None and collision is None:
+        return
+    if not isinstance(robot, Mapping) or robot.get("measurement_scope") != "native_robot_state_not_policy_input":
+        raise ValueError("prospective capture lacks native robot measurement scope")
+    asset = robot.get("asset_usd")
+    if not isinstance(asset, Mapping) or not isinstance(asset.get("available"), bool):
+        raise ValueError("prospective capture robot asset identity is malformed")
+    if asset["available"] and not all(isinstance(asset.get(key), value) for key, value in (("path", str), ("sha256", str), ("bytes", int))):
+        raise ValueError("prospective capture robot asset identity is incomplete")
+    if not isinstance(cameras, Mapping) or cameras.get("measurement_scope") != "native_camera_extrinsics_not_policy_input":
+        raise ValueError("prospective capture lacks native camera extrinsic measurement scope")
+    rows = cameras.get("cameras")
+    if not isinstance(rows, Mapping) or set(rows) != {"over_shoulder_left_camera", "wrist_cam", "over_shoulder_right_camera"}:
+        raise ValueError("prospective capture lacks fixed camera extrinsic inventory")
+    for name, row in rows.items():
+        if not isinstance(row, Mapping) or not isinstance(row.get("available"), bool):
+            raise ValueError(f"prospective capture {name} camera extrinsic row is malformed")
+    if not isinstance(collision, Mapping) or not isinstance(collision.get("available"), bool):
+        raise ValueError("prospective capture collision geometry measurement is malformed")
 
 
 def main() -> None:
@@ -379,6 +409,11 @@ def main() -> None:
             observation, warmup = render_only_warmup(env, observation, 120, args.output.parent / "render_diagnostic")
             warmup["material_assets"] = material_asset_paths(omni.usd.get_context().get_stage())
             world, origin = get_world(env), env.scene.env_origins[0].detach().cpu().numpy()
+            robot_state = robot_snapshot(env.scene, origin)
+            cameras = camera_extrinsics(
+                env.scene, ("over_shoulder_left_camera", "wrist_cam", "over_shoulder_right_camera"),
+            )
+            collision_geometry = collision_geometry_local_bounds(omni.usd.get_context().get_stage())
             names = manifest["native_import_contract"]["objects_of_interest"]
             object_rows = _capture_object_rows(world, names)
             contacts = _contact_inventory(get_contact_sensors, env.scene)
@@ -412,6 +447,9 @@ def main() -> None:
                 "study_source_commit": subprocess.check_output(["git", "-C", str(args.study_root), "rev-parse", "HEAD"], text=True).strip(),
                 "environment_seed": args.environment_seed,
                 "environment_origin_world_xyz_m": _vector(origin),
+                "robot_snapshot": robot_state,
+                "camera_extrinsics": cameras,
+                "collision_geometry_local_bounds": collision_geometry,
                 "objects": object_rows, "contact_sensor_inventory": contacts, "views": views,
                 "support_contact_measurements": support_contacts,
                 "banana_contact_measurements": banana_contacts,

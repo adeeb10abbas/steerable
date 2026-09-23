@@ -24,6 +24,7 @@ from .simulator_bridge import (
 from .task_definitions import RoboLabTaskDefinition
 from .robolab_measurements import articulation_body_frames, geometric_center_state
 from .lat_workspace_capture import _vector, render_only_warmup
+from .native_geometry_measurements import robot_snapshot
 
 
 class RoboLabLatEnvironment:
@@ -105,9 +106,17 @@ class RoboLabLatEnvironment:
                 "bbox_env_local_min_xyz_m": tuple(float(item) for item in np.min(corners_values, axis=0)),
                 "bbox_env_local_max_xyz_m": tuple(float(item) for item in np.max(corners_values, axis=0)),
             }
+        try:
+            current_robot_snapshot = robot_snapshot(self._env.scene, origin)
+        except (AttributeError, KeyError, RuntimeError) as error:
+            current_robot_snapshot = {
+                "available": False,
+                "reason": f"native robot snapshot unavailable: {error}",
+            }
         return SimulatorSnapshot(
             rows, simulated_time_s=self._steps * self._step_dt_s, reset_root_poses=reset_roots,
             robot_body_frames=articulation_body_frames(self._env.scene["robot"].data),
+            robot_snapshot=current_robot_snapshot,
             context_measurements=context_measurements,
         )
 

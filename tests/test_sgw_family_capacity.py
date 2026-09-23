@@ -152,6 +152,22 @@ def test_eleventh_prefix_retains_new_pass_and_three_rejections():
     assert result["live_workers_modified"] is False
 
 
+def test_twelfth_prefix_retains_one_pass_and_three_rejections():
+    result = audit(prefix_paths() + [
+        ROOT / INFRA / f"family-partition-20260923bt-prefix-{suffix}/manifest.json"
+        for suffix in ("ce", "cf", "cg", "ch")
+    ])
+    assert len(result["terminal_evidence"]) == 52
+    assert sum(row["accepted"] for row in result["terminal_evidence"]) == 15
+    height = result["families"]["HEIGHT"]["by_side"]
+    assert height["left"]["maximum_qualified_possible"] == 17
+    assert height["right"]["maximum_qualified_possible"] == 4
+    assert sum(row["unresolved_slots"] for row in height.values()) == 7
+    assert result["families"]["DIST"]["status"] == "not_ruled_out_not_a_release"
+    assert result["fixture_release_permitted"] is result["model_release_permitted"] is False
+    assert result["live_workers_modified"] is False
+
+
 def test_changed_projection_cannot_reclassify_a_valid_outcome(monkeypatch):
     import tools.audit_sgw_family_capacity as module
 

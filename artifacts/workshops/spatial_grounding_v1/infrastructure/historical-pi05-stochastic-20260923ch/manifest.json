@@ -1,0 +1,42 @@
+{
+  "schema_version": "sgw-01-pi05-stochastic-reset-recovery-evidence-v1",
+  "replayed_at_utc": "2026-09-23T13:11:39.218004+00:00",
+  "files": {
+    "resets.json": {"bytes": 2168898, "sha256": "685e5a913678500e52743fb5b6b31364b0af97ce2a8d5070101ec2872dc5ebf4"},
+    "runtime_identity.json": {"bytes": 4692, "sha256": "e73fe7a0cc22db09fa8fdc0babf80dd8ad3280d0502285c6ad1c4d822c7fa532"},
+    "eligibility_report.json": {"bytes": 4661, "sha256": "1108ff2c28c269f9dad307e80d363f93bb4ec7a9482894b74460da4281168b66"},
+    "evidence_manifest.json": {"bytes": 8413, "sha256": "6f192d8c179bd36bc8b4246b8013dbec5ec07ea81ec0ad9a2521776b5ba5cb98"},
+    "policy_runtime_attestation.json": {"bytes": 1811, "sha256": "d4c1e9dc0e70ec00967952c36af1f70f9bdf39dd752c60c3b0757ef16b098180"},
+    "audit.json": {"bytes": 3608, "sha256": "b50003b746e180a70144deaccd3df12938fd86780cafc0cb0f92be1e90bf35ac"},
+    "export_resets.py": {"sha256": "9bf14224f4de831aac8d14a57d48fbf12c5de54b5da9a69f1835a3bbb9b3430e"}
+  },
+  "audit_tool": {
+    "path": "tools/audit_sgw_pi05_stochastic_resets.py",
+    "sha256": "e19a6faa17bea3d9763f08baa74442f70044d68973e0bd22a7d8dd8bcc8777af"
+  },
+  "tests": {
+    "path": "tests/test_sgw_pi05_stochastic_resets.py",
+    "sha256": "49bab539ef800c61fd28c62c98cca6fe03738ef0b235ff5abeed87ef8d779921",
+    "selected_reset_capacity_collector_metric_suite_passed": 61
+  },
+  "pvc_replay": {
+    "root": "/data/users/ali/sgw-01/infrastructure/historical-pi05-stochastic-20260923ch",
+    "delta_archive": "replay-delta.tar.gz",
+    "delta_archive_sha256": "65831c4c6604697b48023c6e3fb1721ca1cb12b5073bd62af9c1503dc102ec5a",
+    "receipt": "replay-receipt.json",
+    "audit_capacity_and_five_raw_exports_byte_identical": true,
+    "additional_gpus": 0
+  },
+  "final_manifest_cells": 432,
+  "verified_original_reset_attestations": 864,
+  "registered_conditions": 54,
+  "distinct_numerical_root_pairs": 1,
+  "independent_historical_producer_anchor_established": false,
+  "cross_frame_comparison_qualified": false,
+  "proved_historical_nonmatches_added": 0,
+  "historical_population_coverage_complete": false,
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false,
+  "claim_boundary": "Named final-cell reset attestations only. Inherited runtime sources belong to Phase A; the nested stochastic attestation binds the policy server, not the D001 simulator bridge. Current source bytes and a launch directory name cannot replace a historical producer binding. Original full streams remain on PVC. No constructor, settle-window, partial reset stream, preflight or infrastructure population closure, independent-layout count, new root nonmatch, or SGW release."
+}

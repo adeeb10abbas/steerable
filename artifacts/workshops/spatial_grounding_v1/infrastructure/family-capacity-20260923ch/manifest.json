@@ -1,0 +1,58 @@
+{
+  "schema_version": "sgw-01-family-capacity-evidence-v1",
+  "observed_at_utc": "2026-09-23T12:55:06.202448+00:00",
+  "replayed_at_utc": "2026-09-23T13:11:39.218004+00:00",
+  "audit": {
+    "path": "audit.json",
+    "bytes": 27340,
+    "sha256": "a9214ed9ea342de416475a648f2c0c5ef761861506cfc24de93d0c871ff4bed0"
+  },
+  "worker_monitor": {
+    "path": "worker-monitor.json",
+    "sha256": "1925648de5e8dde3fb9a817655a8d9967990598a9d8c64ea911583a01eade572"
+  },
+  "new_terminal_evidence": {
+    "manifest_sha256": "9157b9966231c54baabde7f5a3d42aa29de397628577f373068644389b565947",
+    "slots": ["HEIGHT-079", "HEIGHT-081", "HEIGHT-082", "HEIGHT-083"],
+    "passed_trials": [4, 4, 6, 3],
+    "all_six_passes": 1,
+    "valid_physical_rejections": 3,
+    "original_trial_and_viewport_video_bindings_rehashed": 24,
+    "raw_state_and_score_projections_equal_retained_projection": true
+  },
+  "retained_totals_including_smoke": {
+    "completed_candidates": 52,
+    "all_six_pass": 15,
+    "physical_rejections": 37,
+    "complete_trials": 312,
+    "scripted_actions": 140400
+  },
+  "height_capacity": {
+    "maximum_qualified_left": 17,
+    "maximum_qualified_right": 4,
+    "required_left": 15,
+    "required_right": 14,
+    "maximum_qualified_total": 21,
+    "required_total": 29,
+    "blocked_by_total_and_right_stratum": true
+  },
+  "pvc_replay": {
+    "root": "/data/users/ali/sgw-01/infrastructure/historical-pi05-stochastic-20260923ch",
+    "delta_archive": "replay-delta.tar.gz",
+    "delta_archive_sha256": "65831c4c6604697b48023c6e3fb1721ca1cb12b5073bd62af9c1503dc102ec5a",
+    "receipt": "replay-receipt.json",
+    "byte_identical": true,
+    "additional_gpus": 0
+  },
+  "tests": {
+    "path": "tests/test_sgw_family_capacity.py",
+    "sha256": "04900cd45519d708776f99f69d5c020a28eae23bc83326e666ee0e7c342cefcf",
+    "selected_reset_capacity_collector_metric_suite_passed": 61
+  },
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false,
+  "live_workers_modified": false,
+  "authorizes_worker_interruption": false,
+  "claim_boundary": "The original finite queue remains unchanged. This is worker-verified qualification evidence and a necessary capacity bound, not final independent raw compilation, historical freshness or learned-model evidence. The later 13:08 monitor includes newly terminal HEIGHT086/089, outside this retained classification; rank3 has advanced to DIST002."
+}

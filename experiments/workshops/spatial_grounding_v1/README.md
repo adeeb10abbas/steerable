@@ -10,6 +10,10 @@ fixture exists yet.** Recorded model-blind candidate qualification is in progres
 individual physical passes do not release a family. Local synthetic tests are
 engineering checks, not study evidence. Runtime factories, server trace provenance, full resets, physical-time
 maps and the live simulator remain subject to qualification before release.
+The user's current direction is **RoboLab only and full benchmark qualification
+first**: no benchmark substitution or exploratory policy pilot. Manual scene
+designs are prospective proposals, not new gates or permission to rewrite
+frozen failures.
 
 Current restart state and cluster evidence:
 
@@ -99,6 +103,15 @@ current native bytes are not presented as historical import-byte attestations.
 The 108 records contain only two numerical root pairs and exclude no
 constructor, settle-window, preflight or infrastructure populations. Neither
 this necessary distance test nor its agreement case releases a fixture.
+
+`tools.audit_sgw_pi05_stochastic_resets --output <new-path>` reconstructs all
+864 named reset attestations from the 432 final V3-D001 cells and verifies
+their registered initial-state identities. It distinguishes the inherited
+Phase-A source map and separately attested policy server from the unanchored
+D001 simulator producer. The one repeated numerical root pair is not an
+independent-layout count or a qualified cross-frame comparison. The exporter
+rehashes original raw/capture streams on the existing CPU accessor; no
+simulator, model request, historical rewrite or release is involved.
 
 One selected proposal runs both goals three times in a fresh Isaac process:
 `model_blind_qualification --proposal-file <file> --candidate-id <id>`, with the

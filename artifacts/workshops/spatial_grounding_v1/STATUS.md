@@ -6,12 +6,12 @@ behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
 have verified receipts, views and complete videos. Native smoke br has completed
 24 full physical trials: two candidates pass all six trials and two are valid
 physical rejections. All four raw evidence chains passed independent rechecks.
-Including the first forty-four subsequent candidates, 48 HEIGHT/DIST candidates
-have completed 288 full trials: fourteen all-six passes and thirty-four physical
-rejections. There are 73 slots outside this retained terminal evidence;
+Including the first forty-eight subsequent candidates, 52 HEIGHT/DIST candidates
+have completed 312 full trials: fifteen all-six passes and thirty-seven physical
+rejections. There are 69 slots outside this retained terminal evidence;
 four durable GPU workers continue independently.
 HEIGHT's fixture gate is now blocked: its right-side best-case capacity is
-7, below the required 14, and its total capacity is at most 24 against 29.
+4, below the required 14, and its total capacity is at most 21 against 29.
 The running qualification queue remains unchanged;
 DIST's pool is not yet ruled out. Historical coverage and all learned-runtime
 release gates remain unresolved.
@@ -22,15 +22,15 @@ The supplied study is committed on
 implemented separate fixture, policy, persistence and analysis components.
 Implementation and synthetic tests do not establish scientific readiness.
 
-## Latest retained evidence (23 September, 12:46 UTC)
+## Latest retained evidence (23 September, 13:11 UTC)
 
-The eleventh prefix preserves HEIGHT069/070/072/076 with 4/6, 6/6, 5/6 and
-5/6 physical passes. All 24 original raw trial/state/score/video projections
-were checked. Including smoke, the retained total is 48 candidates, 288
-complete trials and 129,600 scripted actions. The replayed capacity bound is
-HEIGHT left17/right7; the frozen gate stays closed and DIST remains unresolved.
-At 12:46 UTC, workers had 11/12/11/12 completions with active079/086/082/089.
-HEIGHT081/083 were newly terminal but are not classified in this retained prefix.
+The twelfth prefix preserves HEIGHT079/081/082/083 with 4/6, 4/6, 6/6 and
+3/6 physical passes. All 24 original raw trial/state/score/video projections
+were checked. Including smoke, the retained total is 52 candidates, 312
+complete trials and 140,400 scripted actions. The replayed capacity bound is
+HEIGHT left17/right4; the frozen gate stays closed and DIST remains unresolved.
+At 13:08 UTC, workers had 12/13/12/13 completions with active HEIGHT084/091/088
+and DIST002. HEIGHT086/089 were newly terminal but are not classified in this prefix.
 There was no shared stop, terminal launcher receipt, collector error or final
 collector receipt. The original queue, controller and resource ceiling remain
 unchanged.
@@ -48,6 +48,16 @@ coverage or a fixture release. Constructor, settle-window, preflight and
 infrastructure states remain outside this selection. Both proof and capacity
 audit replay byte-identically on the PVC; all four native exports reproduce.
 
+The [stochastic reset recovery](infrastructure/historical-pi05-stochastic-20260923ch/manifest.json)
+retains all 864 named reset attestations from 432 final V3-D001 cells and
+reconciles their original raw/capture streams. These 54 registered conditions
+contain one numerical root pair, not 864 independent layouts. The inherited
+runtime binds Phase-A sources; its nested stochastic attestation binds the
+policy server, not the D001 simulator bridge. A current checkout or launch
+directory cannot substitute for a historical producer hash. The audit and
+all five raw exports replay byte-identically, but add **zero qualified
+cross-frame nonmatches** and do not close global historical coverage.
+
 The user's offer of manual scene setup is treated as targeted engineering
 help, not a human approval gate or authorization to rewrite frozen candidates.
 An existing HEIGHT063 lower-goal reset0 recording and exact scene/controller
@@ -62,6 +72,13 @@ The user explicitly selected **full benchmark qualification first**, not an
 exploratory learned-policy pilot. Side chat separately supplied four existing
 LAT/HEIGHT failure/control clips; that handoff is not duplicated or counted
 as new evidence here.
+The user also explicitly requires **RoboLab only**, with no LIBERO or other
+benchmark switch. Side chat reports a completed LAT/HEIGHT/DIST manual-design
+sheet and portable ZIP. Its proposed goal views are design aids, not new
+qualification gates or successful trials. Central reach around 0.5 m is a
+hypothesis, not a universal optimum or a causal explanation of these failures;
+current documentation does not authorize upgrading pinned RoboLab or changing
+the frozen 100-slot pools. This relay has not been independently reverified here.
 
 ## Current prospective freeze (23 September, 07:07 UTC)
 

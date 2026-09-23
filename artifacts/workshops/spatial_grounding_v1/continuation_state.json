@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_and_height_fixture_gates_closed_finite_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T12:46:26Z",
+  "updated_at_utc": "2026-09-23T13:11:39Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -73,6 +73,8 @@
     "combined_capacity_collector_historical_reset_separation_tests_passed": 75,
     "pi05_named_metric_separation_proof": "tools/prove_sgw_pi05_root_separation.py",
     "combined_capacity_collector_historical_metric_tests_passed": 87,
+    "pi05_stochastic_reset_audit": "tools/audit_sgw_pi05_stochastic_resets.py",
+    "stochastic_reset_capacity_collector_metric_targeted_tests_passed": 61,
     "family_capture_materializer_and_six_trial_verifier": "5b21c8af",
     "finite_family_slot_executor": "e1f8a212",
     "preaction_guard_persisted_before_controller_planning": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
@@ -814,20 +816,37 @@
       "including_native_smoke_and_all_prefixes": {"completed_candidates": 48, "all_six_pass": 14, "physical_rejected": 34, "completed_trials": 288, "controller_actions": 129600},
       "claim_boundary": "Four complete newly terminal candidates; all original state/score/video projections rehashed. Later monitor-only completions remain outside the classification. Final independent compilation remains pending."
     },
+    "verified_twelfth_prefix": {
+      "observed_at_utc": "2026-09-23T12:55:06.202448+00:00",
+      "manifest": "infrastructure/family-partition-20260923bt-prefix-ch/manifest.json",
+      "manifest_sha256": "9157b9966231c54baabde7f5a3d42aa29de397628577f373068644389b565947",
+      "pvc_copy": "/data/users/ali/sgw-01/infrastructure/historical-pi05-stochastic-20260923ch/replay/artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-ch",
+      "completed_remaining_slots_including_prior_prefixes": 48,
+      "remaining_slots_outside_retained_terminal_evidence": 69,
+      "completed_trials_this_prefix": 24,
+      "all_six_pass_slots": ["HEIGHT-082"],
+      "valid_physical_rejections": [
+        {"slot": "HEIGHT-079", "passed_trials": 4},
+        {"slot": "HEIGHT-081", "passed_trials": 4},
+        {"slot": "HEIGHT-083", "passed_trials": 3}
+      ],
+      "including_native_smoke_and_all_prefixes": {"completed_candidates": 52, "all_six_pass": 15, "physical_rejected": 37, "completed_trials": 312, "controller_actions": 140400},
+      "claim_boundary": "Four complete newly terminal candidates; original state/score/video projections rehashed. Later monitor-only completions remain outside the classification. Final independent compilation remains pending."
+    },
     "frozen_family_capacity": {
-      "audit": "infrastructure/family-capacity-20260923cg/audit.json",
-      "audit_sha256": "34851821cb0067b5be26d9592a870892fe7bbeee831dd7d455f36dd2ed44d08b",
-      "manifest": "infrastructure/family-capacity-20260923cg/manifest.json",
-      "manifest_sha256": "04ec30f0c712c5e69ec33b0579f67a4c68bbcec3f075f6ba5be6f605a8df543a",
-      "pvc_replay_root": "/data/users/ali/sgw-01/infrastructure/native-metric-20260923cg",
+      "audit": "infrastructure/family-capacity-20260923ch/audit.json",
+      "audit_sha256": "a9214ed9ea342de416475a648f2c0c5ef761861506cfc24de93d0c871ff4bed0",
+      "manifest": "infrastructure/family-capacity-20260923ch/manifest.json",
+      "manifest_sha256": "9a46b745bf6bfbfc2640911654758d55e2b320b352c59d881f458b5cf34505a6",
+      "pvc_replay_root": "/data/users/ali/sgw-01/infrastructure/historical-pi05-stochastic-20260923ch",
       "replayed_byte_identically": true,
       "HEIGHT": {
-        "left": {"physical_accepted": 12, "physical_rejected": 11, "unresolved": 5, "upper_bound": 17, "required": 15},
-        "right": {"physical_accepted": 1, "physical_rejected": 22, "unresolved": 6, "upper_bound": 7, "required": 14},
+        "left": {"physical_accepted": 13, "physical_rejected": 11, "unresolved": 4, "upper_bound": 17, "required": 15},
+        "right": {"physical_accepted": 1, "physical_rejected": 25, "unresolved": 3, "upper_bound": 4, "required": 14},
         "mathematically_blocked_at_this_prefix": true,
-        "maximum_qualified_total": 24,
+        "maximum_qualified_total": 21,
         "required_total": 29,
-        "unavoidable_right_stratum_shortfall": 7,
+        "unavoidable_right_stratum_shortfall": 10,
         "fixture_or_learned_branch_release_from_frozen_pool_permitted": false
       },
       "DIST": {
@@ -838,15 +857,15 @@
       "release_permitted": false
     },
     "latest_worker_monitor": {
-      "observed_at_utc": "2026-09-23T12:46:26.287180+00:00",
-      "receipt": "infrastructure/family-capacity-20260923cg/worker-monitor.json",
-      "active_slots": ["HEIGHT-079", "HEIGHT-086", "HEIGHT-082", "HEIGHT-089"],
-      "completed_slots_not_yet_in_retained_prefix": ["HEIGHT-081", "HEIGHT-083"],
+      "observed_at_utc": "2026-09-23T13:08:27.655173+00:00",
+      "receipt": "infrastructure/family-capacity-20260923ch/worker-monitor.json",
+      "active_slots": ["HEIGHT-084", "HEIGHT-091", "HEIGHT-088", "DIST-002"],
+      "completed_slots_not_yet_in_retained_prefix": ["HEIGHT-086", "HEIGHT-089"],
       "shared_infrastructure_stop_present": false,
       "terminal_launcher_receipts": 0
     },
     "last_read_only_monitor": {
-      "observed_at_utc": "2026-09-23T12:46:26.287180+00:00",
+      "observed_at_utc": "2026-09-23T13:08:27.655173+00:00",
       "shared_infrastructure_stop_present": false,
       "collector_terminal_or_error_record_present": false
     },
@@ -1200,10 +1219,41 @@
     "release_permitted": false,
     "scope": "A necessary root-position exclusion for DIST000 versus the source-bound V3-B002 final-cell post-settle population only, conditional on the recorded metre/root/precision API. No constructor, settle-window, preflight or infrastructure-attempt coverage and no108-independent-layout claim."
   },
+  "pi05_stochastic_reset_recovery": {
+    "manifest": "infrastructure/historical-pi05-stochastic-20260923ch/manifest.json",
+    "manifest_sha256": "9f7a4a539b4328ce3fabf20fdd2ba482ad1a5df188dea7ce0906a65dbb1582e4",
+    "resets": "infrastructure/historical-pi05-stochastic-20260923ch/resets.json",
+    "resets_sha256": "685e5a913678500e52743fb5b6b31364b0af97ce2a8d5070101ec2872dc5ebf4",
+    "audit": "infrastructure/historical-pi05-stochastic-20260923ch/audit.json",
+    "audit_sha256": "b50003b746e180a70144deaccd3df12938fd86780cafc0cb0f92be1e90bf35ac",
+    "replay_receipt_sha256": "d4c92a40e28892bcb6b9e6d5a2dd2d10e6b7570125da3e2e8ad402141434dde3",
+    "persistent_root": "/data/users/ali/sgw-01/infrastructure/historical-pi05-stochastic-20260923ch",
+    "final_manifest_cells": 432,
+    "verified_original_reset_attestations": 864,
+    "registered_conditions": 54,
+    "distinct_numerical_root_pairs": 1,
+    "audit_and_five_exports_reproduced_byte_identically_on_target": true,
+    "independent_historical_producer_anchor_established": false,
+    "cross_frame_comparison_qualified": false,
+    "proved_historical_nonmatches_added": 0,
+    "historical_population_coverage_complete": false,
+    "release_permitted": false,
+    "scope": "Final-cell attestations only. Original raw episode/state-capture streams reconcile. Inherited runtime binds Phase-A sources; nested stochastic runtime attestation binds its policy server, not the D001 simulator bridge. Current retained checkout6bd377f4 and launch directory4c7ad8b do not independently attest historical producer bytes. No partial-stream/constructor/settle/preflight/infrastructure coverage or new root exclusion."
+  },
   "manual_scene_help": {
     "status": "concrete_existing_failure_context_supplied_no_new_approval_gate",
     "user_selected_path": "Keep full benchmark qualification first",
     "exploratory_policy_pilot_authorized": false,
+    "user_platform_constraint": "RoboLab ONLY: no LIBERO or other benchmark switch; pinned RoboLab0aef241 remains unchanged.",
+    "reported_design_handoff": {
+      "source": "Side chat via SGW independent scene review; relay only",
+      "viewer": "http://127.0.0.1:53426/scene-design.html",
+      "portable_zip": "http://127.0.0.1:53426/robolab-scene-design.zip",
+      "persistent_source_directory": "/Users/SZ5VJY/.copilot/session-state/fb3e7648-10c4-451c-b904-206e38c4eb3b/files/lat-height-failure-viewer",
+      "reported_posthoc_diagnostic": "/Users/SZ5VJY/.copilot/session-state/fb3e7648-10c4-451c-b904-206e38c4eb3b/files/lat-proximity-diagnostic.json",
+      "independently_reverified_here": false,
+      "scope": "Three-row LAT/HEIGHT/DIST design sheet. Proposed neutral/goal views, HEIGHT elevation and DIST top/distance views are design pictures, not new gates or successes. Central reach near0.5m and clear swept paths are hypotheses, not a universal optimum or causal SGW diagnosis. Reported current documentation does not authorize upgrading pinned RoboLab or changing frozen slots."
+    },
     "separate_side_chat_visual_handoff_reported": "LAT057 pickup failure, LAT050 terminal angular-speed failure, HEIGHT001 lower-goal failing reset2 and passing reset0. Already supplied by Side chat; no duplicate export or independent verification claimed here.",
     "manifest": "infrastructure/manual-scene-context-20260923cg/manifest.json",
     "example": "HEIGHT-063 lower-goal reset0",
@@ -1214,9 +1264,9 @@
     "frozen_candidates_or_controller_modified": false,
     "scope": "Inspect scene/path clearance using copies of exact existing source and video. Offer does not authorize replacing frozen failures or waive history/runtime gates; future repairs require prospective disclosure."
   },
-  "next_authorized_step": "Keep full benchmark qualification first, as explicitly selected by the user; no exploratory policy pilot. Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. At the retained eleventh prefix,48 HEIGHT/DIST candidates have288 full recorded trials,14 all-six passes and34 valid rejections;73 slots remain outside this retained terminal evidence. HEIGHT is mathematically blocked: right bound7 against14 required and total bound24 against29 required. Do not release HEIGHT behavior or replace valid failures. At12:46 HEIGHT081/083 are newly complete but unexported/unclassified; active079/086/082/089. The original queue remains unchanged; DIST lacks fixture, historical and actual-runtime release. Monitor explicit stop/error receipts and preserve partials. Four GPUs maximum and no learned release. cg adds108 conditional DIST000/Pi05 root exclusions, not global coverage. The user's manual scene offer has concrete video/source examples; it is not a new approval gate or permission to rewrite frozen evidence. Do not duplicate Side chat's completed four-clip handoff.",
+  "next_authorized_step": "RoboLab only and full benchmark qualification first, as explicitly selected by the user; no exploratory policy pilot. Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. At the retained twelfth prefix,52 HEIGHT/DIST candidates have312 full recorded trials,15 all-six passes and37 valid rejections;69 slots remain outside this retained terminal evidence. HEIGHT is mathematically blocked: right bound4 against14 required and total bound21 against29 required. Do not release HEIGHT behavior or replace valid failures. At13:08 HEIGHT086/089 are newly complete but unexported/unclassified; active HEIGHT084/091/088 and DIST002. The original queue remains unchanged; DIST lacks fixture, historical and actual-runtime release. Monitor explicit stop/error receipts and preserve partials. Four GPUs maximum and no learned release. cg adds108 conditional DIST000/Pi05 root exclusions, not global coverage; ch recovers864 stochastic reset attestations but adds no qualified nonmatches. The user's manual design sheet is a proposal, not a new gate, benchmark switch or permission to rewrite frozen evidence. Do not duplicate the completed Side chat handoffs.",
   "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu -o wide",
-  "next_historical_trace": "cg supplies a source-bound numerical certificate and108 necessary DIST000/Pi05 final-cell exclusions under the recorded native API contract; current source RECORD checks do not attest historical imported native bytes. Extend only through independently bound producer/population evidence, not by relabeling this final-cell scope as constructor/settle/preflight/infrastructure coverage. cc GR00T Phase-A runtime patch remains independently unanchored. Phase-C GR00T seed8500 preflight binds eight task wrappers, not the live state producer. cb no-plate closure and R005 missing materialization states remain unresolved.",
+  "next_historical_trace": "ch verified all864 named V3-D001 final-cell reset attestations, but its inherited runtime anchors only Phase-A sources and nested stochastic attestation anchors only the policy server. No D001 producer anchor or numerical comparison was established. Trace the genuinely hash-bound Pi05 Phase-A bridge independently if extending the population; do not transplant its source identity to D001. cg's108 conditional DIST000/Pi05 V3-B002 nonmatches remain their separate bounded scope. Current native RECORD checks do not attest historical imported native bytes. GR00T runtime patch, R005 no-plate closure and missing materialization states remain unresolved.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",

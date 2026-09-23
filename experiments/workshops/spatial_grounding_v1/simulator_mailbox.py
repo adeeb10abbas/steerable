@@ -12,7 +12,7 @@ import json
 import os
 from pathlib import Path
 import time
-from typing import Any, Mapping
+from typing import Any, Callable, Mapping
 from types import SimpleNamespace
 import math
 import uuid
@@ -115,8 +115,10 @@ def _decode_tree(root: Path, value: Any) -> Any:
 
 
 class MailboxClient:
-    def __init__(self, *, root: Path, identity: Mapping[str, str], timeout_s: float = 30) -> None:
+    def __init__(self, *, root: Path, identity: Mapping[str, str], timeout_s: float = 30,
+                 metadata_refresh: Callable[[Path], None] | None = None) -> None:
         self.root, self.identity, self.timeout_s = Path(root), dict(identity), timeout_s
+        self.metadata_refresh = metadata_refresh
         self.command = 0; self._cache: dict[str, Any] | None = None; self._closed = False
         if (not self.root.is_dir() or not all(isinstance(v, str) and v for v in self.identity.values())
                 or isinstance(timeout_s, bool) or not isinstance(timeout_s, (int, float))
@@ -138,6 +140,12 @@ class MailboxClient:
         response = self.root / "responses" / f"{token}.json"
         end = time.monotonic() + self.timeout_s
         while not response.exists():
+            if self.metadata_refresh is not None:
+                try:
+                    self.metadata_refresh(response.parent)
+                except OSError as exc:
+                    self._closed = True
+                    raise MailboxError("mailbox metadata refresh failed") from exc
             if time.monotonic() >= end:
                 self._closed = True
                 raise MailboxError("mailbox action timed out; session is permanently closed")

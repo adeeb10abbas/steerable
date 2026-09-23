@@ -86,6 +86,37 @@ def test_receiver_rejects_duplicate_command_and_preserves_fault(tmp_path: Path) 
     assert (root / "faults" / "0001-reset.json").is_file()
 
 
+def test_metadata_refresh_exposes_response_without_reissuing_command(tmp_path):
+    for name in ("requests", "responses", "faults"):
+        (tmp_path / name).mkdir()
+    environment = FakeEnvironment()
+    receiver = MailboxReceiver(root=tmp_path, identity=IDENTITY, environment=environment)
+    refreshed = []
+
+    def refresh(directory):
+        refreshed.append(directory)
+        receiver.serve_one(sorted((tmp_path / "requests").glob("*.json"))[-1])
+
+    client = MailboxClient(root=tmp_path, identity=IDENTITY, metadata_refresh=refresh)
+    client.reset()
+    client.step(np.zeros(8, dtype=np.float32))
+    client.close()
+    assert refreshed == [tmp_path / "responses"] * 3
+    assert environment.step_count == 1
+    assert len(list((tmp_path / "requests").glob("*.json"))) == 3
+
+
+def test_metadata_refresh_error_permanently_closes_client(tmp_path):
+    def refresh(directory):
+        raise OSError("NFS metadata unavailable")
+
+    client = MailboxClient(root=tmp_path, identity=IDENTITY, metadata_refresh=refresh)
+    with pytest.raises(MailboxError, match="metadata refresh failed"):
+        client.reset()
+    with pytest.raises(MailboxError, match="session is closed"):
+        client.reset()
+
+
 def test_production_adapter_recorder_and_strict_scorer_over_mailbox(tmp_path: Path) -> None:
     root = tmp_path / "mail"; (root / "requests").mkdir(parents=True); (root / "responses").mkdir()
     process = multiprocessing.Process(target=_receiver, args=(str(root),)); process.start()

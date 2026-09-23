@@ -1,0 +1,43 @@
+{
+  "schema_version": "sgw-01-main-p-infrastructure-recovery-v1",
+  "id": "SGW-MAIN-N3-LAT-P-20260923DN",
+  "scope": "Continue five uncompleted original DM cells after a bookkeeping failure, not a new experiment or replay.",
+  "direction": "main_p_execution_20260923dm.json",
+  "prior_root": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm",
+  "new_root": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dn",
+  "known_outcome": {
+    "cell_id": "LAT-P01-N3-I-POS",
+    "status": "valid_model_failure",
+    "actions": 450,
+    "viewport_frames": 451,
+    "complete_viewport_video_retained": true,
+    "policy_responses": 15,
+    "manifest_sha256": "307f795df0f18b9e9037ec7992efbc8c79b69a533176f17f5e789c2852dad22e",
+    "result_sha256": "08e37500a301e18cb67c5a667634e5abd6b50881db9dc0f8dc44e5e305440edf",
+    "must_not_rerun": true
+  },
+  "infrastructure_failure": "An exclusive-create progress writer raised FileExistsError while entering cell two, after its empty attempt intent but before reset or any request/action for that cell.",
+  "repair": "Use the existing atomic replacement writer for mutable progress. Bind and preserve the verified completed prefix; continue only the remaining suffix. Integrate read-only NFS directory refresh into both workers.",
+  "remaining_cells_in_original_order": [
+    "LAT-P01-N3-D-POS",
+    "LAT-P01-N3-C-POS",
+    "LAT-P01-N3-C-NEG",
+    "LAT-P01-N3-D-NEG",
+    "LAT-P01-N3-I-NEG"
+  ],
+  "second_cell_attempt_id": "attempt-002",
+  "remaining_policy_request_ceiling": 75,
+  "original_total_policy_request_ceiling": 90,
+  "additional_episode_allocation": 0,
+  "automatic_retries": 0,
+  "preserve_completed_failure_and_all_raw_evidence": true,
+  "preserve_model_config_prompts_seeds_geometry_scorer": true,
+  "prediction_physical_scores_permitted": false,
+  "full_D_C_release": false,
+  "smolvla_must_remain_untouched": true,
+  "placements": {
+    "policy": "dcwipphai0061.edc.nam.gm.com",
+    "simulator": "dcwipphhgc188.edc.nam.gm.com"
+  },
+  "placement_boundary": "Only the two released owned lanes; fresh idle admission and exclusive claims still required. No speculative additional placements or preemption."
+}

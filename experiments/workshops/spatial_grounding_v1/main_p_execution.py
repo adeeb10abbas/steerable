@@ -16,10 +16,18 @@ import time
 import traceback
 import uuid
 
-from .contract import Cell, Release, canonical_bytes, sha256_file
+from .contract import Cell, Release, canonical_bytes, sha256_file, verify_completion_pointer
 from .family_campaign_executor import _fsync_json
 from .main_p_fixture_assignment import SCHEMA
 from .paper_engineering import bound_file, record
+from .recorder import atomic_json
+
+
+def publish_progress(root: Path, current_cell: str | None, completed: list):
+    atomic_json(root / "progress.json", {
+        "state": "complete" if current_cell is None else "executing_main_P",
+        "current_cell": current_cell, "completed_cells": completed,
+    })
 
 
 def wait_json(path: Path, root: Path, timeout: float = 1800):
@@ -64,10 +72,35 @@ def load_plan(path: Path):
         "sampling_seed": int(row["effective_policy_seed"]),
         "prediction_time_mapping_status": "unqualified",
     }) for row in rows)
+    resume = plan.get("resume")
+    if resume is not None:
+        bound_file(resume["prior_plan"])
+        completed = resume["completed"]
+        if ([entry["cell_id"] for entry in completed]
+                != [cell.cell_id for cell in cells[:len(completed)]]
+                or not 0 < len(completed) < len(cells)):
+            raise ValueError("resume must preserve an exact completed prefix")
+        for entry in completed:
+            pointer = json.loads(bound_file(entry["pointer"]).read_bytes())
+            result_path = Path(pointer["result"]["path"])
+            result = json.loads(result_path.read_bytes())
+            if (sha256_file(result_path) != pointer["result"]["sha256"]
+                    or result["cell_id"] != entry["cell_id"]
+                    or result["status"] != entry["status"]
+                    or result["status"] not in {"valid_success", "valid_model_failure", "censored"}
+                    or sha256_file(Path(pointer["manifest_path"])) != pointer["manifest_sha256"]):
+                raise ValueError("resume completed evidence changed")
+        cells = tuple(Cell({
+            **cell.row, "attempt_id": resume["attempt_ids"][cell.cell_id],
+        }) for cell in cells[len(completed):])
+        if (type(resume["consumed_policy_requests"]) is not int
+                or resume["consumed_policy_requests"] < 0
+                or resume["consumed_policy_requests"] + 15 * len(cells) > 90):
+            raise ValueError("resume would exceed the original request allocation")
     return plan, cells
 
 
-def prepare(plan_path: Path, root: Path):
+def prepare(plan_path: Path, root: Path, resume_from: Path | None = None):
     source = Path(__file__).resolve().parents[3]
     artifacts = source / "artifacts/workshops/spatial_grounding_v1"
     direction = artifacts / "main_p_execution_20260923dm.json"
@@ -94,17 +127,58 @@ def prepare(plan_path: Path, root: Path):
         "assets": engineering["assets"],
         "future_physical_scores_permitted": False,
     }
+    if resume_from is not None:
+        prior_path = resume_from / "execution-plan.json"
+        prior, prior_cells = load_plan(prior_path)
+        release = Release(
+            root=resume_from / "registration", release_id=prior_cells[0].row["release_id"],
+            hashes={"execution-plan.json": sha256_file(prior_path)},
+            cells=prior_cells, binding={"prediction_time_mapping_status": "unqualified"},
+        )
+        completed = list(prior.get("resume", {}).get("completed", []))
+        pending = []
+        for cell in prior_cells:
+            pointer = resume_from / "cells" / f"{cell.cell_id}.complete.json"
+            if pointer.is_file():
+                if pending:
+                    raise ValueError("cannot resume a non-prefix completion set")
+                value = verify_completion_pointer(release, pointer)
+                result = json.loads(Path(value["result"]["path"]).read_bytes())
+                completed.append({
+                    "cell_id": cell.cell_id, "status": result["status"],
+                    "pointer": record(pointer),
+                })
+            else:
+                pending.append(cell)
+        attempts = {}
+        for cell in pending:
+            existing = list((resume_from / "attempts" / cell.cell_id).glob("attempt-*"))
+            attempts[cell.cell_id] = f"attempt-{1 + max((int(p.name.split('-')[1]) for p in existing), default=0):03d}"
+        requests = len((resume_from / "policy/trace.jsonl").read_text().splitlines())
+        plan["resume"] = {
+            "prior_plan": record(prior_path), "prior_root": str(resume_from),
+            "completed": completed, "attempt_ids": attempts,
+            "consumed_policy_requests": requests + prior.get("resume", {}).get("consumed_policy_requests", 0),
+            "reason": "Coordinator recovery after infrastructure handoff failure; never replay completed cells.",
+        }
     _fsync_json(plan_path, plan)
     load_plan(plan_path)
-    print(json.dumps({"status": "prepared_six_MAIN_P_cells", "plan": record(plan_path)}))
+    if resume_from is not None:
+        _fsync_json(resume_from / "continuation-owner.json", {
+            "root": str(root), "plan": record(plan_path),
+            "scope": "remaining original cells only; no completed-cell replay",
+        })
+    print(json.dumps({"status": "prepared_remaining_MAIN_P_cells", "plan": record(plan_path)}))
 
 
 def simulator(plan_path: Path, root: Path):
     from .robolab_jointpos_environment import create_environment
     from .simulator_mailbox import MailboxReceiver
+    from .mailbox_visibility import DirectoryRefresher
     from isaaclab.app import AppLauncher
 
     plan, cells = load_plan(plan_path)
+    refresh = DirectoryRefresher()
     owner = json.loads((root / "claims/simulator/owner.json").read_bytes())
     binding_path = root / "environment-binding.json"
     binding = {
@@ -139,7 +213,7 @@ def simulator(plan_path: Path, root: Path):
                 (channel / name).mkdir()
             identity = {
                 "release_id": cell.row["release_id"], "cell_id": cell.cell_id,
-                "attempt_id": "attempt-001", "channel_nonce": uuid.uuid4().hex,
+                "attempt_id": cell.row.get("attempt_id", "attempt-001"), "channel_nonce": uuid.uuid4().hex,
                 "candidate_sha256": plan["candidate"]["sha256"],
                 "binding_sha256": sha256_file(binding_path),
                 "simulator_job_uid": owner["job_uid"],
@@ -151,17 +225,19 @@ def simulator(plan_path: Path, root: Path):
             deadline = time.monotonic() + 5400
             try:
                 while not receiver.closed:
+                    refresh(root)
                     if list(root.glob("failure-*.json")):
                         raise RuntimeError("peer failed; preserving the incomplete episode")
                     if time.monotonic() >= deadline:
                         raise TimeoutError("simulator episode deadline expired")
+                    refresh(channel / "requests")
                     for request in sorted((channel / "requests").glob("*.json")):
                         if int(request.name[:4]) > receiver.last:
                             receiver.serve_one(request)
                     time.sleep(0.01)
             finally:
                 receiver.close_environment()
-        _fsync_json(root / "simulator-complete.json", {"cells": 6})
+        _fsync_json(root / "simulator-complete.json", {"cells": len(cells)})
     except BaseException:
         _fsync_json(root / "failure-simulator.json", {
             "traceback": traceback.format_exc(), "partial_evidence_preserved": True,
@@ -179,6 +255,7 @@ def policy(plan_path: Path, root: Path):
     from .recorder import AttemptRecorder
     from .runtime import _NanoHttpTransport
     from .simulator_mailbox import MailboxClient
+    from .mailbox_visibility import DirectoryRefresher
     from .trace import read_trace_sidecar
     from .worker import _canonical_outcome, _run_with_deadline
 
@@ -201,7 +278,8 @@ def policy(plan_path: Path, root: Path):
     def environment_factory(*, cell, evidence_root):
         channel = root / "mailboxes" / cell.cell_id
         identity = wait_json(channel / "ready.json", root)
-        return MailboxClient(root=channel, identity=identity, timeout_s=180)
+        return MailboxClient(root=channel, identity=identity, timeout_s=180,
+                             metadata_refresh=DirectoryRefresher())
 
     adapter = ProductionAdapter(
         NanoPolicyAdapter, transport=transport, transport_factory=lambda **_: transport,
@@ -212,16 +290,14 @@ def policy(plan_path: Path, root: Path):
         hashes={"execution-plan.json": sha256_file(plan_path)},
         cells=cells, binding={"prediction_time_mapping_status": "unqualified"},
     )
-    _fsync_json(output / "ready.json", {"config": NANO_CONFIG, "maximum_requests": 90})
-    completed = []
+    _fsync_json(output / "ready.json", {"config": NANO_CONFIG, "maximum_requests": 15 * len(cells)})
+    completed = [{key: entry[key] for key in ("cell_id", "status")}
+                 for entry in plan.get("resume", {}).get("completed", [])]
     try:
         for cell in cells:
-            recorder = AttemptRecorder(release, cell, "attempt-001")
+            recorder = AttemptRecorder(release, cell, cell.row.get("attempt_id", "attempt-001"))
             recorder.begin()
-            _fsync_json(root / "progress.json", {
-                "state": "executing_main_P", "current_cell": cell.cell_id,
-                "completed_cells": completed,
-            })
+            publish_progress(root, cell.cell_id, completed)
             try:
                 reset = adapter.reset(cell, recorder)
                 outcome = _run_with_deadline(
@@ -232,6 +308,7 @@ def policy(plan_path: Path, root: Path):
                 outcome["prediction_physical_score"] = None
                 recorder.complete(outcome)
                 completed.append({"cell_id": cell.cell_id, "status": outcome["status"]})
+                publish_progress(root, cell.cell_id, completed)
             except BaseException as error:
                 recorder.event("execution_stopped_preserve_partial", error_type=type(error).__name__, error=str(error))
                 raise
@@ -239,9 +316,11 @@ def policy(plan_path: Path, root: Path):
                 if adapter.environment is not None:
                     adapter.environment.close()
                     adapter.environment = None
+        publish_progress(root, None, completed)
         _fsync_json(root / "policy-complete.json", {
             "completed_cells": completed, "prediction_physical_scores_permitted": False,
             "model_requests": len((output / "trace.jsonl").read_text().splitlines()),
+            "prior_model_requests": plan.get("resume", {}).get("consumed_policy_requests", 0),
         })
     finally:
         try:
@@ -257,14 +336,22 @@ def main():
     parser.add_argument("--role", choices=("prepare", "simulator", "policy"), required=True)
     parser.add_argument("--plan", type=Path, required=True)
     parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--resume-from", type=Path)
     args = parser.parse_args()
     try:
-        {"prepare": prepare, "simulator": simulator, "policy": policy}[args.role](args.plan, args.root)
+        if args.resume_from is not None and args.role != "prepare":
+            parser.error("--resume-from is only valid when preparing a new run")
+        if args.role == "prepare":
+            prepare(args.plan, args.root, args.resume_from)
+        else:
+            {"simulator": simulator, "policy": policy}[args.role](args.plan, args.root)
     except BaseException:
-        _fsync_json(args.root / f"failure-{args.role}.json", {
-            "role": args.role, "traceback": traceback.format_exc(),
-            "partial_evidence_preserved": True, "automatic_retry": False,
-        })
+        failure = args.root / f"failure-{args.role}.json"
+        if not failure.exists():
+            _fsync_json(failure, {
+                "role": args.role, "traceback": traceback.format_exc(),
+                "partial_evidence_preserved": True, "automatic_retry": False,
+            })
         raise
 
 

@@ -100,6 +100,16 @@ loads no model and never retries an action. The already-running native workers
 retain their original source identity; helper identity and startup receipts
 are separately retained. Do not restart or replay the live batch to apply it.
 
+DM completed the first 450-action episode and its451-frame video as a valid
+model failure. A mutable-progress file was incorrectly exclusive-created again
+before cell two's reset, stopping the handoff. The DN infrastructure recovery
+uses the existing atomic progress writer and binds the completed prefix with
+`prepare --resume-from <prior-run-root>`. It verifies that prefix, keeps its
+valid failure, claims one continuation, and runs only the five remaining cells
+under the original90-request total ceiling. The empty second-cell attempt is
+retained and its continuation is `attempt-002`. NFS directory refresh now runs
+inline, without external helper processes. No completed episode is replayed.
+
 Current restart state and cluster evidence:
 
 - [`STATUS.md`](../../../artifacts/workshops/spatial_grounding_v1/STATUS.md)

@@ -12,6 +12,8 @@ def main():
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--a40-nodes", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--batch", default="20260923dm")
+    parser.add_argument("--owned-lanes-only", action="store_true")
     args = parser.parse_args()
     simulator_base = yaml.safe_load(Path("handoff/k8s/sgw01-ali-family-native-smoke-20260923bn.yaml").read_text())
     policy_base = yaml.safe_load(Path("handoff/k8s/sgw01-ali-n3-fixedinput-20260923di.yaml").read_text())
@@ -20,8 +22,8 @@ def main():
         if not node["spec"].get("taints") and not node["spec"].get("unschedulable")
         and any(c["type"] == "Ready" and c["status"] == "True" for c in node["status"]["conditions"])
     ]
-    source = "/data/users/ali/sgw-01/source/main-p-20260923dm"
-    root = "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+    source = f"/data/users/ali/sgw-01/source/main-p-{args.batch}"
+    root = f"/data/users/ali/sgw-01/main/n3-lat-p-{args.batch}"
     script = r'''
 set -euo pipefail
 mkdir -p "$ROOT/admissions"
@@ -65,14 +67,19 @@ cd "$NATIVE_SOURCE"
         "simulator": sorted(nodes)[:12],
         "policy": ["dcwipphai0061.edc.nam.gm.com", "dcwipphai0063.edc.nam.gm.com"],
     }
+    if args.owned_lanes_only:
+        placements = {
+            "simulator": ["dcwipphhgc188.edc.nam.gm.com"],
+            "policy": ["dcwipphai0061.edc.nam.gm.com"],
+        }
     for role, targets in placements.items():
         for index, node in enumerate(targets):
-            name = f"sgw01-ali-main-p-20260923dm-{role}-{index:02d}"
+            name = f"sgw01-ali-main-p-{args.batch}-{role}-{index:02d}"
             base = simulator_base if role == "simulator" else policy_base
             job = {
                 "apiVersion": "batch/v1", "kind": "Job",
                 "metadata": {"name": name, "namespace": "211247-prod", "labels": {
-                    "owner": "ali", "app.kubernetes.io/name": "sgw-01", "sgw-main-batch": "20260923dm",
+                    "owner": "ali", "app.kubernetes.io/name": "sgw-01", "sgw-main-batch": args.batch,
                 }},
                 "spec": {"activeDeadlineSeconds": 14400, "backoffLimit": 0,
                          "template": copy.deepcopy(base["spec"]["template"])},

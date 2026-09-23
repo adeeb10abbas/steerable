@@ -441,11 +441,16 @@ attested source/entrypoint/checkpoint bytes, and exact
 `SGW01_D1_MODEL_PATH` before spawning any worker. Set
 `SGW01_D1_COLLECTIVE_TIMEOUT` to bound native process-group setup (default 300
 seconds), and provide `SGW01_D1_RANK_LOG_DIR`,
-`SGW01_D1_RANK_READY_DIR`, `SGW01_D1_SOURCE_COMMIT`,
-`SGW01_D1_CHECKPOINT_REVISION`, and an optional loopback
+`SGW01_D1_RANK_READY_DIR`, and an optional loopback
 `SGW01_D1_MASTER_PORT`. `OwnedD1RankLifecycle` launches only ranks 1..N-1 in
 their own process groups, passes the pinned rank identities and rendezvous
 variables, waits for per-rank JSON readiness, and records bounded logs. A
+rank-zero construction and readiness budget comes from the same
+`SGW01_READINESS_TIMEOUT` used by the parent launcher (default 15 seconds);
+native launches must explicitly budget checkpoint verification/loading.
+The startup guard requires the POSIX main thread rather than silently running
+unbounded elsewhere. Source/revision identity comes from verified checkout
+and checkpoint evidence, not caller-supplied claim strings. A
 worker readiness record must contain its rank plus the exact source commit and
 checkpoint revision. It must run the exported conditional `WebsocketPolicyServer._worker_loop`; rank zero alone constructs
 the HTTP listener. Readiness is checked against the frozen sampler values

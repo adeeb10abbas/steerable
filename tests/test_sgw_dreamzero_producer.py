@@ -304,7 +304,10 @@ def test_official_factory_accepts_owned_factory_config_without_changing_checkpoi
     module = types.ModuleType("socket_test_optimized_AR")
     module.__file__ = str(tmp_path / "socket_test_optimized_AR.py")
     module.init_mesh = lambda: "mock-device-mesh"
-    module.dist = types.SimpleNamespace(new_group=lambda **_: "mock-signal-group")
+    module.dist = types.SimpleNamespace(
+        new_group=lambda **_: "mock-signal-group",
+        init_process_group=lambda *args, **kwargs: None,
+    )
     module.datetime = __import__("datetime")
     module.EmbodimentTag = lambda value: value
     module.torch = types.SimpleNamespace(cuda=types.SimpleNamespace(is_available=lambda: True))

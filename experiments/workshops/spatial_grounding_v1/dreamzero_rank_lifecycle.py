@@ -248,8 +248,7 @@ class OwnedD1RankLifecycle:
     def startup_guard(self):
         """Bound rank-zero construction as part of the same startup budget."""
         if os.name != "posix" or threading.current_thread() is not threading.main_thread():
-            yield
-            return
+            raise AdapterError("D1 native startup guard requires the POSIX main thread")
         previous = signal.getsignal(signal.SIGALRM)
 
         def alarm_handler(signum: int, frame: object) -> None:

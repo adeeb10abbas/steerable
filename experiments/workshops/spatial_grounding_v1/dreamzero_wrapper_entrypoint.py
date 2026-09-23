@@ -165,6 +165,7 @@ def main() -> None:
             source_commit=identity["source_commit"],
             checkpoint_revision=identity["checkpoint_revision"],
             master_port=int(os.environ.get("SGW01_D1_MASTER_PORT", "29591")),
+            startup_timeout=float(os.environ.get("SGW01_READINESS_TIMEOUT", "15")),
         )
         lifecycle.configure_rank_zero()
         lifecycle.install_signal_cleanup()

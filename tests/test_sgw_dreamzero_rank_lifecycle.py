@@ -226,12 +226,34 @@ def test_rank_zero_startup_guard_bounds_native_construction(tmp_path: Path) -> N
         lifecycle.stop()
 
 
+def test_startup_guard_rejects_non_main_thread(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    lifecycle = OwnedD1RankLifecycle(
+        worker_argv=["true"],
+        world_size=2,
+        log_dir=tmp_path / "logs",
+        ready_dir=tmp_path / "ready",
+        source_commit=SOURCE,
+        checkpoint_revision=CHECKPOINT,
+    )
+    monkeypatch.setattr(
+        "experiments.workshops.spatial_grounding_v1.dreamzero_rank_lifecycle"
+        ".threading.current_thread",
+        lambda: object(),
+    )
+    with pytest.raises(AdapterError, match="POSIX main thread"):
+        with lifecycle.startup_guard():
+            pytest.fail("native construction must not run without a startup guard")
+
+
 def test_main_propagates_verified_identity_to_lifecycle(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     monkeypatch.setenv("SGW01_D1_WORLD_SIZE", "2")
     monkeypatch.setenv("SGW01_D1_HOST", "127.0.0.1")
     monkeypatch.setenv("SGW01_D1_PORT", "8123")
+    monkeypatch.setenv("SGW01_READINESS_TIMEOUT", "47.5")
     monkeypatch.setenv("SGW01_D1_RANK_LOG_DIR", str(tmp_path / "logs"))
     monkeypatch.setenv("SGW01_D1_RANK_READY_DIR", str(tmp_path / "ready"))
     monkeypatch.setenv("SGW01_TRACE_SIDECAR", str(tmp_path / "trace"))
@@ -281,6 +303,7 @@ def test_main_propagates_verified_identity_to_lifecycle(
         entrypoint.main()
     assert captured["source_commit"] == SOURCE
     assert captured["checkpoint_revision"] == CHECKPOINT
+    assert captured["startup_timeout"] == 47.5
 
 
 def test_owned_rank_lifecycle_synchronizes_cpu_inference_barrier(tmp_path: Path) -> None:

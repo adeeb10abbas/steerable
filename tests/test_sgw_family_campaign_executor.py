@@ -236,7 +236,7 @@ def test_default_executor_materializes_and_verifies_real_synthetic_family_pipeli
         family_campaign, "verify_capture_artifacts",
         lambda path: {"receipt": {"path": str(path), "sha256": family_campaign._sha256(path)}},
     )
-    review = _native_review(tmp_path, captures)
+    review = _native_review(tmp_path, "HEIGHT", captures)
     campaign_path = tmp_path / "campaign.json"
     family_campaign.compile_campaign(
         plan_path=plan_path, baseline_captures=captures, baseline_reviews={"left": review, "right": review},

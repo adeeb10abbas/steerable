@@ -1,0 +1,62 @@
+{
+  "schema_version": "sgw-01-lat-historical-layout-evidence-inventory-v1",
+  "audit_commit": "f177db308d34687a30b18f388519f999fc88e483",
+  "scope": {
+    "audited": [
+      "V3-E004 symmetric DROID layouts using rubiks_cube_banana_bowl.usda",
+      "V3-E006 frozen E004 full-reset reference binding",
+      "V3-E005 cross-arena scene candidate schema"
+    ],
+    "not_claimed": "This inventory does not claim to enumerate every historical DROID experiment. It identifies the committed records discovered in the directly relevant V3 Phase-E layout/reset lineage."
+  },
+  "records": [
+    {
+      "id": "v3e004-layout-candidate",
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+      "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33",
+      "available": {
+        "asset_identity": "rubiks_cube_banana_bowl.usda object bindings",
+        "poses": "control_poses and symmetric_poses cube/bowl x,y,z,yaw"
+      },
+      "insufficient_for_sgw_dedup": [
+        "The compact fields do not declare actor-root versus scoring-center semantics.",
+        "The compact fields omit full WXYZ actor-root quaternions.",
+        "The compact fields omit root-local geometric-center offsets."
+      ]
+    },
+    {
+      "id": "v3e006-e004-full-reset-reference",
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+      "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73",
+      "available": {
+        "actor_root": "hash-bound cube/bowl root_position and root_quaternion_wxyz values",
+        "raw_binding": "left_request0_reset_contract.json payload SHA-256 543db12c56ba477590d35d4b84ecb9004ce281a17ced157350c83a0af57a90fd"
+      },
+      "insufficient_for_sgw_dedup": [
+        "No cube/bowl root-local geometric-center offsets are recorded.",
+        "No matching SGW scoring-center contract is bound."
+      ],
+      "pvc_raw_path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/request0_pairs/v3e004__pi05__seed9400__s100/left_request0_reset_contract.json"
+    },
+    {
+      "id": "v3e005-cross-arena-scene-candidate",
+      "path": "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/layout/scene_candidate.json",
+      "classification": "schema-level multi-scene candidate; not a hash-bound LAT cube/bowl root-and-center registry",
+      "dedup_usable": false
+    }
+  ],
+  "required_extraction_for_release": {
+    "per_historical_layout": [
+      "layout identifier and hash-bound raw source record",
+      "cube and bowl actor-root position plus WXYZ quaternion in the same declared frame",
+      "cube and bowl root-local scoring-center offset from the exact asset geometry",
+      "asset/scene manifest hash and pinned simulator revision establishing that geometry"
+    ],
+    "failure_policy": "Do not convert historical x/y/z/yaw fields or infer offsets from a current asset. Missing source fields remain a coverage blocker."
+  },
+  "current_conclusion": {
+    "historical_coverage_complete": false,
+    "release_permitted": false,
+    "reason": "Committed Phase-E evidence is partial: E004 has actor-root evidence but no scoring-center offsets; E004 layout compact data has ambiguous coordinate semantics; E005 is not a LAT registry."
+  }
+}

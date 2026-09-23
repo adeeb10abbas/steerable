@@ -1,0 +1,62 @@
+{
+  "additional_request_allocation": 0,
+  "authority": "SGW-OPS-002 and renewed user direction to find other GPUs while leaving SmolVLA running.",
+  "automatic_retries": 0,
+  "base_manifest": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923di.yaml",
+  "base_manifest_sha256": "dd73ee014ed893bd1414eb08cd85f5a3b73ede2957d21a067183e79a5bd37b60",
+  "behavioral_episodes": 0,
+  "canonical_exclusive_claim": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/request-owner/successor",
+  "claim_boundary": "Node readiness and advertised capacity are discovery facts, not physical idleness. No occupied GPU or unrelated workload may be used.",
+  "entries": [
+    {
+      "job": "sgw01-ali-n3-fixedinput-20260923dk-00",
+      "node": "dcwipphai0056.edc.nam.gm.com",
+      "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-00"
+    },
+    {
+      "job": "sgw01-ali-n3-fixedinput-20260923dk-01",
+      "node": "dcwipphai0057.edc.nam.gm.com",
+      "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-01"
+    },
+    {
+      "job": "sgw01-ali-n3-fixedinput-20260923dk-02",
+      "node": "dcwipphai0059.edc.nam.gm.com",
+      "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-02"
+    },
+    {
+      "job": "sgw01-ali-n3-fixedinput-20260923dk-03",
+      "node": "dcwipphai0060.edc.nam.gm.com",
+      "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-03"
+    },
+    {
+      "job": "sgw01-ali-n3-fixedinput-20260923dk-04",
+      "node": "dcwipphai0061.edc.nam.gm.com",
+      "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-04"
+    },
+    {
+      "job": "sgw01-ali-n3-fixedinput-20260923dk-05",
+      "node": "dcwipphai0062.edc.nam.gm.com",
+      "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-05"
+    },
+    {
+      "job": "sgw01-ali-n3-fixedinput-20260923dk-06",
+      "node": "dcwipphai0063.edc.nam.gm.com",
+      "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-06"
+    },
+    {
+      "job": "sgw01-ali-n3-fixedinput-20260923dk-07",
+      "node": "dcwipphai0064.edc.nam.gm.com",
+      "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dk-07"
+    }
+  ],
+  "existing_training_modified": false,
+  "maximum_candidate_gpu_leases": 8,
+  "maximum_native_policy_owners": 1,
+  "maximum_total_policy_requests": 6,
+  "node_inventory_sha256": "16ae77c2de3fe78658cfe0d72d24cff887ed4cdd730d19f1bc940d1e480beffd",
+  "nonpreemption": "Priority0 pre-bound nodes with dedicated schedulerName; no scheduler victim selection.",
+  "registered_at_utc": "2026-09-23T22:51:53.085259+00:00",
+  "registration_id": "SGW-N3-FIXED-20260923CW",
+  "schema_version": "sgw-01-bounded-admission-batch-v1",
+  "selection_rule": "First candidate passing original asset/storage/physical-idle/UUID-lock gates and atomic mkdir owns the sole native start. Other candidates fail before model construction and must be released."
+}

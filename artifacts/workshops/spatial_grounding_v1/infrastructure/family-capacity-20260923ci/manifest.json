@@ -1,0 +1,41 @@
+{
+  "schema_version": "sgw-01-family-capacity-evidence-v1",
+  "observed_at_utc": "2026-09-23T13:20:12.236698+00:00",
+  "replayed_at_utc": "2026-09-23T13:33:21.190821+00:00",
+  "audit": {"path": "audit.json", "bytes": 28975, "sha256": "04705ffc0e821e023e4dd7fc673bb4e9205a80fea7815497b77ea71f2c49e4f5"},
+  "worker_monitor": {"path": "worker-monitor.json", "sha256": "4536107aea942c6a679bc261a695458bca1506d425645433bc0e77c845ed1dec"},
+  "raw_recheck": {"path": "raw-recheck.json", "sha256": "4e3abbf28aa84c929246d925695ad6b94e21e1ec3d148229eda588d38d8e8b29"},
+  "new_terminal_evidence": {
+    "manifest_sha256": "cc3a8aa5a8c00d70d64d1e6f2fe3dba9d1a97e04cacccc6fd81df0ac4066b61b",
+    "slots": ["HEIGHT-084", "HEIGHT-086", "HEIGHT-088", "HEIGHT-089"],
+    "passed_trials": [6, 6, 5, 4],
+    "all_six_passes": 2,
+    "valid_physical_rejections": 2,
+    "original_trial_and_viewport_video_bindings_rehashed": 24,
+    "raw_state_and_score_projections_equal_retained_projection": true
+  },
+  "retained_totals_including_smoke": {
+    "completed_candidates": 56, "all_six_pass": 17, "physical_rejections": 39,
+    "complete_trials": 336, "scripted_actions": 151200
+  },
+  "height_capacity": {
+    "maximum_qualified_left": 16, "maximum_qualified_right": 3,
+    "required_left": 15, "required_right": 14,
+    "maximum_qualified_total": 19, "required_total": 29,
+    "blocked_by_total_and_right_stratum": true
+  },
+  "pvc_replay": {
+    "root": "/data/users/ali/sgw-01/infrastructure/historical-pi05-phase-a-20260923ci",
+    "delta_archive": "replay-delta.tar.gz",
+    "delta_archive_sha256": "8470dac82189967ed5868f5fbaf5c07b1bf6dc68aefe1e6fb041d54c7966b23a",
+    "receipt": "replay-receipt.json", "byte_identical": true, "additional_gpus": 0
+  },
+  "tests": {
+    "path": "tests/test_sgw_family_capacity.py",
+    "sha256": "ccc44d2701c684f8d99047c9267b045f6036aa69ba6177816295b7d1c9f7dbab",
+    "selected_reset_capacity_collector_metric_suite_passed": 71
+  },
+  "model_requests": 0, "behavioral_episodes": 0, "release_permitted": false,
+  "live_workers_modified": false, "authorizes_worker_interruption": false,
+  "claim_boundary": "The original finite queue remains unchanged. More left-side passes cannot release HEIGHT's failed right stratum. Later monitor-only HEIGHT091/097 and DIST002 completions are unclassified here. At13:34 ranks1/2/3 were active on DIST006/007/008 while rank0 was still running HEIGHT090. No final independent compilation, historical freshness or learned-model evidence is claimed."
+}

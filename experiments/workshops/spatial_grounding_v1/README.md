@@ -113,6 +113,21 @@ independent-layout count or a qualified cross-frame comparison. The exporter
 rehashes original raw/capture streams on the existing CPU accessor; no
 simulator, model request, historical rewrite or release is involved.
 
+`tools.prove_sgw_pi05_phase_a_roots --output <new-path>` handles Phase A
+separately. It validates eight registered Git sources and the actual runtime
+patch independently anchored by the historical runtime and pair manifests.
+The full raw/capture/partial streams reconcile for 54 final cells and their
+54 preserved setup resets. Its conditional native-API DIST000 comparisons reuse
+the outward-rounded numerical certificate; neither this producer identity nor
+its repeated numerical root pair may be substituted for D001 evidence.
+
+The retained paper-informed design proposal targets the initial cube's
+geometric center approximately 0.50 m from a measured robot root in translation
+only. Derive the actor root from the measured local center offset and fixed
+orientation; do not use authoring X or a zero-origin guess. This is a design
+prior, not an added scorer threshold, universal optimum, native realization,
+new gate, or modification of frozen candidates.
+
 One selected proposal runs both goals three times in a fresh Isaac process:
 `model_blind_qualification --proposal-file <file> --candidate-id <id>`, with the
 required pinned runtime arguments. Every trial retains 450 issued commands,

@@ -1,0 +1,32 @@
+{
+  "schema_version": "sgw-01-reported-paper-informed-design-handoff-v1",
+  "status": "user_approved_design_direction_not_an_experiment_release",
+  "proposal": {
+    "path": "proposal.json",
+    "sha256": "5f6e34f122d5e5dd880014f3a474290ab09a6fee2108c2d505c601f3f31db3a2",
+    "original_path": "/Users/SZ5VJY/.copilot/session-state/fb3e7648-10c4-451c-b904-206e38c4eb3b/files/lat-height-failure-viewer/paper-informed-design.json"
+  },
+  "reported_user_direction": "okay then use the best measurements from that paper please",
+  "reported_source_review": "Side chat, relayed by SGW independent scene review; no new independent paper review claimed here",
+  "reported_portable_zip_sha256": "a5c794bd16cad48751346daaf4c328f7e7acb947956f43c164a3f849d99b1ce2",
+  "platform": "RoboLab only, pinned0aef241 unchanged",
+  "qualification_first": true,
+  "target": {
+    "cube_geometric_center_translation_distance_from_measured_robot_root_m": 0.5,
+    "role": "engineering starting prior, not a paper-certified optimum or success threshold",
+    "actor_root_pose_requires_measured_center_offset_and_retained_orientation": true,
+    "orientations_robot_and_cameras_unchanged": true
+  },
+  "reported_literature_corrections": [
+    "RoboLab2604.09860v4 Fig9 is a success-conditioned posterior for pi0/pi0.5/pi0-FAST on two banana tasks, not N3/D1 success versus pure distance.",
+    "RoboLab AppendixB's pose metric combines translation and rotational geodesic with weight1. Record those components separately and hold orientation fixed.",
+    "2602.17659v2 Fig5 concerns real FR3/Robotiq and fine-tuned pi0.5, randomized object positions and10 trials/instruction; not exact matched resets or N3/D1.",
+    "Same-object/different-goal contrasts are relevant, but cube contact alone cannot measure SGW spatial-goal grounding. Preserve registered relation trajectories and all physical failure categories."
+  ],
+  "frozen_candidates_or_thresholds_modified": false,
+  "new_scene_materialized": false,
+  "new_model_requests": 0,
+  "new_simulator_runs": 0,
+  "release_permitted": false,
+  "claim_boundary": "Retain the supplied proposal and corrections. Any actual redesign needs separate prospective disclosure and native realization, footprint/collision/reach/support checks and full qualification. This handoff adds no benchmark, model, CFG change, fine-tuning, task family, trial allocation or gate, and does not change the running queue."
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "sgw-01-pi05-phase-a-reset-metric-evidence-v1",
+  "replayed_at_utc": "2026-09-23T13:33:21.190821+00:00",
+  "files": {
+    "resets.json": {"bytes": 257095, "sha256": "a123a7ca525641b231c5d04311cefbcad8059f931c01952e657d2ce206c43bcb"},
+    "proof.json": {"bytes": 57026, "sha256": "4f62c6f2e163ffdac260f5ce1eb4780e9c9445f1c873fb24da543a4fa851b99c"},
+    "runtime_identity.json": {"bytes": 4692, "sha256": "e73fe7a0cc22db09fa8fdc0babf80dd8ad3280d0502285c6ad1c4d822c7fa532"},
+    "runtime_bridge.py": {"bytes": 15646, "sha256": "e65bede7466c6d9ddb49ab37f4b96f5e3945830f30005045352e320645759589"},
+    "export_resets.py": {"sha256": "656191c5427844c5fb248927ff4d541009adb88de2b75528fd3b29d53a38d684"},
+    "replay-receipt.json": {"sha256": "64c32a525f369f5e77fd83559b7bf7f52d4bbebea7774c81cc8012e8a2c81de1"}
+  },
+  "original_pair_manifest_binding": "All27 original pair-manifests/<seed>.json files are byte-bound by resets.json and the immutable final Phase-A catalog; each retains runtime instrumentation and full state-stream bindings.",
+  "proof_tool": {
+    "path": "tools/prove_sgw_pi05_phase_a_roots.py",
+    "sha256": "1b4a1ab56bb5cdc1fd1a690e5e4b390ab5edd204f1d53b65426d92765c53e346"
+  },
+  "tests": {
+    "path": "tests/test_sgw_pi05_phase_a_roots.py",
+    "sha256": "618e192c355b15442baf85e5ae47e49a96518eb7aaf4ac00b8b920ffc3900ffc",
+    "selected_reset_capacity_collector_metric_suite_passed": 71
+  },
+  "pvc_replay": {
+    "root": "/data/users/ali/sgw-01/infrastructure/historical-pi05-phase-a-20260923ci",
+    "delta_archive": "replay-delta.tar.gz",
+    "delta_archive_sha256": "8470dac82189967ed5868f5fbaf5c07b1bf6dc68aefe1e6fb041d54c7966b23a",
+    "receipt": "replay-receipt.json",
+    "proof_capacity_and_thirty_original_exports_byte_identical": true,
+    "additional_gpus": 0
+  },
+  "final_manifest_cells": 54,
+  "recorded_setup_reset_snapshots": 54,
+  "recorded_behavioral_initial_snapshots": 54,
+  "distinct_numerical_root_pairs": 1,
+  "independent_historical_runtime_producer_anchor_established": true,
+  "nonmatches_under_registered_native_api_contract": 108,
+  "historical_root_euclidean_error_bound_m": 0.0004990198224621055,
+  "minimum_separation_difference_lower_bound_m": 0.08362270982149245,
+  "historical_native_import_bytes_independently_attested": false,
+  "historical_population_coverage_complete": false,
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false,
+  "claim_boundary": "The actual Phase-A runtime patch is explicitly bound by runtime_instrumentation, every original pair manifest and each retained launch command. Its root getter/rotation AST matches the registered Git source. Two recorded pre-action states per final cell, not108 independent layouts; necessary DIST000 exclusions are conditional on the recorded native API. No constructor/intermediate-settle/preflight/infrastructure population closure or transplantation of this producer identity to D001."
+}

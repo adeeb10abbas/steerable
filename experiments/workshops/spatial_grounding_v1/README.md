@@ -322,23 +322,9 @@ The read-only server export proves the generic websocket boundary in
 conditional policy surface in `groot/vla/model/n1_5/sim_policy.py` (SHA
 `c7b692b84a03a70adc7e0d21fb7632a9866285645e8d43c916100e6f5fb7497a`), where
 `lazy_joint_forward_causal` returns unnormalized actions and `video_pred`.
-The first server-surface export did not include the tracked
-`eval_utils/serve_dreamzero_wan22.py` launcher or the concrete
-policy-construction/reset class. The subsequent launcher export is described
-below; the 14B equivalents remain the bounded CPU-only export needed to
-replace `SGW01_D1_SERVER_FACTORY`.
-
-The later read-only export now proves `eval_utils/serve_dreamzero_wan22.py`
-(SHA `9d0a33047039fea3d2174c1ab46259c3c9b6e4fc1b3f67b9c7e53efcb93a7c5f`)
-for the official Wan2.2 5B route. `OfficialDreamZero5BBackend` mirrors its
-`GrootSimPolicy` construction, `DreamZeroWan225BPolicy.infer`, and explicit
-`reset` behavior, including the optional raw video-prediction latent. This is
-kept separate and is not accepted by the D1 producer because the target
-checkpoint may be 14B. The exact 14B launcher/policy class and its direct
-imports remain required; likely bounded paths to export are
-`socket_test_optimized_AR.py`, `test_client_AR.py`, and their imported
-DreamZero policy/config modules discovered from that launcher, not the 5B
-launcher by substitution.
+The first server-surface export did not include the tracked 14B launcher or
+its concrete policy-construction class. The later AR export supplies the
+frozen 14B route described below; no 5B route is accepted here.
 
 The AR export now supplies the exact 14B wrapper at
 `socket_test_optimized_AR.py` (SHA
@@ -347,9 +333,10 @@ The AR export now supplies the exact 14B wrapper at
 frame accumulation, `GrootSimPolicy.lazy_joint_forward_causal` call, action
 conversion, session-change reset, and explicit `reset` state clearing. The
 entrypoint constructs the reviewed `GrootSimPolicy`, distributed signal group,
-and AR wrapper only after identity checks. It refuses to label the route
-qualified unless the constructed policy supplies an independently verified
-resolved configuration; the AR source itself does not expose the frozen
-guidance/step values. The bounded remaining source request is the concrete
-14B checkpoint configuration path/loader that establishes those values
-without overlaying protocol constants.
+and AR wrapper only after identity checks. Its checkpoint `config.json` is
+also read before model construction; the exported checkpoint reports
+`num_inference_timesteps=4` and `action_dim=32`, which fail the frozen D1
+16-step/8-dimensional gate. The binding therefore refuses construction and
+does not overlay protocol constants onto native state. Latent futures remain
+latents; decoded RGB evidence requires the official decoder path and is never
+fabricated.

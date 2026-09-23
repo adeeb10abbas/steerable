@@ -1,6 +1,8 @@
 import hashlib
 import json
 from pathlib import Path
+import threading
+from types import SimpleNamespace
 
 import pytest
 
@@ -55,19 +57,47 @@ def _config(tmp_path: Path, monkeypatch) -> tuple[Path, dict]:
             "status": "verified_evidence_not_fixture_release", "release_permitted": False,
             "model_request_count": 0, "behavioral_episode_count": 0,
             "family": row["family"], "design_id": row["design_id"],
+            "verification_sha256": "a" * 64,
         })
-        smoke.append({**row, "verification": str(verification)})
+        smoke.append({
+            **row, "root": str(root), "verification": str(verification),
+            "verification_file_sha256": hashlib.sha256(verification.read_bytes()).hexdigest(),
+            "verification_sha256": "a" * 64,
+        })
     config = _write(tmp_path / "config.json", {
         "freeze_receipt": str(freeze), "campaigns": {k: str(v) for k, v in campaigns.items()},
         "source_path": str(source), "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
         "controller_calibration": str(calibration), "capture_command": ["capture"], "qualification_command": ["qualify"],
-        "smoke_evidence": smoke, "workers": 4, "free_space_floor_bytes": 0, "declared_slot_bytes": 1,
+        "smoke_evidence": smoke, "workers": 4,
+        "free_space_floor_bytes": worker.MIN_FREE_SPACE_FLOOR_BYTES, "declared_slot_bytes": 1,
     })
+    monkeypatch.setattr(worker.shutil, "disk_usage", lambda _: SimpleNamespace(
+        free=worker.MIN_FREE_SPACE_FLOOR_BYTES + 117,
+    ))
     return config, _json(freeze)
 
 
 def _json(path: Path) -> dict:
     return json.loads(path.read_text())
+
+
+def _verifier(**kwargs):
+    kwargs["output"].parent.mkdir(parents=True, exist_ok=True)
+    kwargs["output"].write_text("{}")
+    return {
+        "status": "verified_evidence_not_fixture_release", "release_permitted": False,
+        "model_request_count": 0, "behavioral_episode_count": 0,
+        "family": "HEIGHT" if "HEIGHT" in str(kwargs["design_id"]) else "DIST",
+        "design_id": kwargs["design_id"], "verification_sha256": "a" * 64,
+    }
+
+
+def _pin_smoke_receipt(config: Path, index: int, value: dict) -> None:
+    raw = _json(config)
+    path = Path(raw["smoke_evidence"][index]["verification"])
+    _write(path, value)
+    raw["smoke_evidence"][index]["verification_file_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+    _write(config, raw)
 
 
 def test_partition_is_exact_disjoint_and_excludes_smoke(tmp_path, monkeypatch):
@@ -86,7 +116,8 @@ def test_missing_smoke_blocks_before_slot_runner(tmp_path, monkeypatch):
     config, _ = _config(tmp_path, monkeypatch)
     value = _json(config); value["smoke_evidence"].pop(); _write(config, value)
     with pytest.raises(ValueError, match="four independently"):
-        worker.run_partition(config_path=config, rank=0, root=tmp_path / "run", slot_runner=lambda **_: pytest.fail("run"))
+        worker.run_partition(config_path=config, rank=0, root=tmp_path / "run",
+                             slot_runner=lambda **_: pytest.fail("run"), verifier=_verifier)
 
 
 def test_smoke_slot_in_remaining_registry_is_rejected(tmp_path, monkeypatch):
@@ -98,7 +129,8 @@ def test_smoke_slot_in_remaining_registry_is_rejected(tmp_path, monkeypatch):
     _write(freeze_path, freeze)
     monkeypatch.setattr(worker, "FREEZE_SHA256", hashlib.sha256(freeze_path.read_bytes()).hexdigest())
     with pytest.raises(ValueError, match="malformed"):
-        worker.run_partition(config_path=config, rank=0, root=tmp_path / "run", slot_runner=lambda **_: pytest.fail("run"))
+        worker.run_partition(config_path=config, rank=0, root=tmp_path / "run",
+                             slot_runner=lambda **_: pytest.fail("run"), verifier=_verifier)
 
 
 def test_physical_rejection_continues_and_existing_root_refuses(tmp_path, monkeypatch):
@@ -107,10 +139,10 @@ def test_physical_rejection_continues_and_existing_root_refuses(tmp_path, monkey
     def runner(**kwargs):
         calls.append(kwargs["index"])
         return {"status": "physical_geometry_rejection_accounted_slot_no_refill"}
-    result = worker.run_partition(config_path=config, rank=0, root=tmp_path / "run", slot_runner=runner)
+    result = worker.run_partition(config_path=config, rank=0, root=tmp_path / "run", slot_runner=runner, verifier=_verifier)
     assert result["status"] == "complete" and calls
     with pytest.raises(FileExistsError, match="reuse"):
-        worker.run_partition(config_path=config, rank=0, root=tmp_path / "run", slot_runner=runner)
+        worker.run_partition(config_path=config, rank=0, root=tmp_path / "run", slot_runner=runner, verifier=_verifier)
 
 
 def test_infrastructure_failure_stops_peer_before_next_slot(tmp_path, monkeypatch):
@@ -124,6 +156,7 @@ def test_infrastructure_failure_stops_peer_before_next_slot(tmp_path, monkeypatc
         worker.run_partition(
             config_path=config, rank=0, root=root,
             slot_runner=failing_runner,
+            verifier=_verifier,
         )
     assert (root / "slots" / "height-003" / "partial-native-evidence.txt").read_text() == "preserve"
     if (root / "completed").exists():
@@ -132,14 +165,97 @@ def test_infrastructure_failure_stops_peer_before_next_slot(tmp_path, monkeypatc
     result = worker.run_partition(
         config_path=config, rank=1, root=tmp_path / "shared" / "rank-1",
         slot_runner=lambda **kwargs: peer_calls.append(kwargs) or {"status": "physical_geometry_rejection_accounted_slot_no_refill"},
+        verifier=_verifier,
     )
     assert result["status"] == "stopped_before_next_slot" and not peer_calls
 
 
-def test_smoke_verification_failure_blocks_before_slot_runner(tmp_path, monkeypatch):
+def test_mutated_smoke_receipt_blocks_before_slot_runner(tmp_path, monkeypatch):
     config, _ = _config(tmp_path, monkeypatch)
     value = _json(config)
     verification = Path(value["smoke_evidence"][0]["verification"])
     _write(verification, {"status": "bad"})
+    with pytest.raises(ValueError, match="identity differs"):
+        worker.run_partition(config_path=config, rank=0, root=tmp_path / "run",
+                             slot_runner=lambda **_: pytest.fail("run"), verifier=_verifier)
+
+
+@pytest.mark.parametrize("forged", [
+    {"status": "verified_evidence_not_fixture_release"},
+    {
+        "status": "verified_evidence_not_fixture_release", "release_permitted": False,
+        "model_request_count": 0, "behavioral_episode_count": 0,
+        "family": "DIST", "design_id": "HEIGHT-000", "verification_sha256": "a" * 64,
+    },
+])
+def test_rehashed_forged_smoke_receipt_still_blocks(tmp_path, monkeypatch, forged):
+    config, _ = _config(tmp_path, monkeypatch)
+    _pin_smoke_receipt(config, 0, forged)
     with pytest.raises(ValueError, match="not independently"):
-        worker.run_partition(config_path=config, rank=0, root=tmp_path / "run", slot_runner=lambda **_: pytest.fail("run"))
+        worker.run_partition(config_path=config, rank=0, root=tmp_path / "run",
+                             slot_runner=lambda **_: pytest.fail("run"), verifier=_verifier)
+
+
+def test_storage_reserves_all_117_slots(tmp_path, monkeypatch):
+    config, _ = _config(tmp_path, monkeypatch)
+    monkeypatch.setattr(worker.shutil, "disk_usage", lambda _: SimpleNamespace(
+        free=worker.MIN_FREE_SPACE_FLOOR_BYTES + 116,
+    ))
+    with pytest.raises(RuntimeError, match="storage allowance"):
+        worker.run_partition(config_path=config, rank=0, root=tmp_path / "run",
+                             slot_runner=lambda **_: pytest.fail("run"), verifier=_verifier)
+
+
+def test_authoritative_smoke_recheck_rejects_wrong_campaign_digest(tmp_path, monkeypatch):
+    config, _ = _config(tmp_path, monkeypatch)
+    def wrong_campaign_verifier(**kwargs):
+        result = _verifier(**kwargs)
+        result["verification_sha256"] = "b" * 64
+        return result
+    with pytest.raises(ValueError, match="raw evidence differs"):
+        worker.run_partition(config_path=config, rank=0, root=tmp_path / "run",
+                             slot_runner=lambda **_: pytest.fail("run"), verifier=wrong_campaign_verifier)
+
+
+def test_duplicate_rank_distinct_root_is_rejected(tmp_path, monkeypatch):
+    config, _ = _config(tmp_path, monkeypatch)
+    runner = lambda **_: {"status": "physical_geometry_rejection_accounted_slot_no_refill"}
+    worker.run_partition(config_path=config, rank=0, root=tmp_path / "shared" / "first",
+                         slot_runner=runner, verifier=_verifier)
+    with pytest.raises(FileExistsError):
+        worker.run_partition(config_path=config, rank=0, root=tmp_path / "shared" / "second",
+                             slot_runner=runner, verifier=_verifier)
+
+
+def test_concurrent_identity_and_stop_prevent_next_claim(tmp_path, monkeypatch):
+    config, _ = _config(tmp_path, monkeypatch)
+    entered, release = threading.Event(), threading.Event()
+    calls: list[int] = []
+    peer_error: list[Exception] = []
+
+    def peer_runner(**kwargs):
+        calls.append(kwargs["index"])
+        entered.set()
+        assert release.wait(3)
+        return {"status": "physical_geometry_rejection_accounted_slot_no_refill"}
+
+    def peer():
+        try:
+            worker.run_partition(config_path=config, rank=1, root=tmp_path / "shared" / "rank-1",
+                                 slot_runner=peer_runner, verifier=_verifier)
+        except Exception as error:  # pragma: no cover - assertion after join
+            peer_error.append(error)
+
+    thread = threading.Thread(target=peer)
+    thread.start()
+    assert entered.wait(3)
+    with pytest.raises(RuntimeError, match="origin failure"):
+        worker.run_partition(
+            config_path=config, rank=0, root=tmp_path / "shared" / "rank-0",
+            slot_runner=lambda **_: (_ for _ in ()).throw(RuntimeError("origin failure")),
+            verifier=_verifier,
+        )
+    release.set()
+    thread.join(3)
+    assert not thread.is_alive() and not peer_error and len(calls) == 1
+    assert _json(tmp_path / "shared" / "partition-binding.json")["workers"] == 4

@@ -6,6 +6,8 @@ coordinates four deterministic callers around the existing single-slot runner.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
+import fcntl
 import hashlib
 import json
 import os
@@ -15,9 +17,11 @@ import traceback
 from typing import Any, Callable, Mapping, Sequence
 
 from .family_campaign_executor import CALIBRATION_SHA256, run_slot
+from .family_campaign_verifier import verify_design
 
 FREEZE_SHA256 = "55b2dbbce2376b1c297180630238b09a83e8f226697f8da6a1814d748eebefd3"
 SCHEMA = "sgw-01-family-partition-worker-v1"
+MIN_FREE_SPACE_FLOOR_BYTES = 100 * 1024**3
 SMOKE_SLOTS = {
     ("HEIGHT", 0), ("HEIGHT", 1), ("DIST", 0), ("DIST", 3),
 }
@@ -43,6 +47,17 @@ def _fsync_json(path: Path, value: Mapping[str, Any]) -> None:
         os.fsync(descriptor)
     finally:
         os.close(descriptor)
+
+
+@contextmanager
+def _locked(root: Path):
+    root.mkdir(mode=0o700, parents=True, exist_ok=True)
+    with (root / ".partition.lock").open("a+", encoding="utf-8") as stream:
+        fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
 
 
 def _json(path: Path) -> dict[str, Any]:
@@ -100,7 +115,10 @@ def _campaigns(config: Mapping[str, Any], freeze: Mapping[str, Any]) -> dict[str
     return result
 
 
-def _smoke(config: Mapping[str, Any], freeze: Mapping[str, Any]) -> list[dict[str, Any]]:
+def _smoke(
+    config: Mapping[str, Any], freeze: Mapping[str, Any], campaigns: Mapping[str, Path], output_root: Path,
+    verifier: Callable[..., dict[str, Any]],
+) -> list[dict[str, Any]]:
     entries = config.get("smoke_evidence")
     if not isinstance(entries, list) or len(entries) != 4:
         raise ValueError("all four independently verified smoke evidence roots are required")
@@ -110,16 +128,29 @@ def _smoke(config: Mapping[str, Any], freeze: Mapping[str, Any]) -> list[dict[st
         if not isinstance(row, Mapping):
             raise ValueError("smoke evidence entry is malformed")
         family, index, design = row.get("family"), row.get("slot_index"), row.get("design_id")
-        verification = Path(row.get("verification", ""))
-        if expected.get((family, index)) != design or not verification.is_file():
+        verification, evidence_root = Path(row.get("verification", "")), Path(row.get("root", ""))
+        expected_file_sha, expected_digest = row.get("verification_file_sha256"), row.get("verification_sha256")
+        if (expected.get((family, index)) != design or not verification.is_file() or not evidence_root.is_dir()
+                or not isinstance(expected_file_sha, str) or not isinstance(expected_digest, str)
+                or _sha256(verification) != expected_file_sha):
             raise ValueError("smoke evidence identity differs from frozen registry")
         result = _json(verification)
         if (result.get("status") != "verified_evidence_not_fixture_release"
                 or result.get("family") != family or result.get("design_id") != design
                 or result.get("release_permitted") is not False
-                or result.get("model_request_count") != 0 or result.get("behavioral_episode_count") != 0):
+                or result.get("model_request_count") != 0 or result.get("behavioral_episode_count") != 0
+                or result.get("verification_sha256") != expected_digest):
             raise ValueError("smoke evidence is not independently verified zero-model evidence")
-        verified.append({"family": family, "slot_index": index, "design_id": design, "verification": _binding(verification)})
+        recheck = output_root / "smoke-rechecks" / f"{family.lower()}-{index:03d}.json"
+        fresh = verifier(campaign_path=campaigns[family], design_id=design, root=evidence_root, output=recheck)
+        if (fresh.get("verification_sha256") != expected_digest
+                or fresh.get("physical_geometry_rejection") is not None
+                and not isinstance(fresh.get("physical_geometry_rejection"), Mapping)):
+            raise ValueError("smoke raw evidence differs from authoritative verification")
+        verified.append({
+            "family": family, "slot_index": index, "design_id": design,
+            "verification": _binding(verification), "recheck": _binding(recheck),
+        })
     if {(row["family"], row["slot_index"]) for row in verified} != set(expected):
         raise ValueError("smoke evidence is incomplete or duplicated")
     return verified
@@ -142,37 +173,38 @@ def _config_bindings(config: Mapping[str, Any], freeze_path: Path, campaigns: Ma
     }
 
 
-def run_partition(*, config_path: Path, rank: int, root: Path, slot_runner: Callable[..., dict[str, Any]] = run_slot,
-                  ) -> dict[str, Any]:
+def run_partition(
+    *, config_path: Path, rank: int, root: Path, slot_runner: Callable[..., dict[str, Any]] = run_slot,
+    verifier: Callable[..., dict[str, Any]] = verify_design,
+) -> dict[str, Any]:
     """Run a disjoint finite slice; an infrastructure fault durably stops peers."""
     config = _json(config_path)
     freeze_path = Path(config.get("freeze_receipt", ""))
     freeze = _freeze(freeze_path)
     campaigns = _campaigns(config, freeze)
     bindings = _config_bindings(config, freeze_path, campaigns)
-    smoke = _smoke(config, freeze)
     workers = config.get("workers", 4)
     slots = partition_slots(freeze, rank=rank, workers=workers)
     floor, per_slot = config.get("free_space_floor_bytes"), config.get("declared_slot_bytes")
-    if type(floor) is not int or type(per_slot) is not int or floor < 0 or per_slot <= 0:
-        raise ValueError("partition requires nonnegative free-space floor and positive declared slot bytes")
+    if type(floor) is not int or type(per_slot) is not int or floor < MIN_FREE_SPACE_FLOOR_BYTES or per_slot <= 0:
+        raise ValueError("partition requires a non-lowerable 100 GiB free-space floor and positive declared slot bytes")
     if root.exists():
         raise FileExistsError("refusing to reuse a partition worker root")
+    root.mkdir(mode=0o700, parents=True)
+    smoke = _smoke(config, freeze, campaigns, root, verifier)
     binding_path = root.parent / "partition-binding.json"
     binding = {
         "schema_version": SCHEMA, "freeze_sha256": bindings["freeze"]["sha256"],
-        "bindings_sha256": _digest(bindings), "workers": workers,
+        "bindings_sha256": _digest(bindings), "config_sha256": _sha256(config_path), "workers": workers,
     }
-    if binding_path.exists():
-        if _json(binding_path) != binding:
-            raise ValueError("shared partition identity differs")
-    else:
-        try:
-            _fsync_json(binding_path, binding)
-        except FileExistsError:
+    rank_claim = root.parent / "rank-claims" / f"rank-{rank}.json"
+    with _locked(root.parent):
+        if binding_path.exists():
             if _json(binding_path) != binding:
-                raise ValueError("shared partition identity differs") from None
-    root.mkdir(mode=0o700, parents=True)
+                raise ValueError("shared partition identity differs")
+        else:
+            _fsync_json(binding_path, binding)
+        _fsync_json(rank_claim, {**binding, "rank": rank, "root": str(root.resolve())})
     receipt = root / "worker-receipt.json"
     _fsync_json(receipt, {
         "schema_version": SCHEMA, "rank": rank, "workers": workers, "slot_count": len(slots),
@@ -182,20 +214,20 @@ def run_partition(*, config_path: Path, rank: int, root: Path, slot_runner: Call
     sentinel = root.parent / "infrastructure-stop.json"
     completed = []
     try:
-        for ordinal, slot in enumerate(slots):
-            if sentinel.exists():
-                break
-            remaining = len(slots) - ordinal
-            free = shutil.disk_usage(root).free
-            required = floor + per_slot * remaining
-            if free < required:
-                raise RuntimeError(f"storage allowance blocked: {free} < {required}")
+        for slot in slots:
             slot_root = root / "slots" / f"{slot['family'].lower()}-{slot['slot_index']:03d}"
-            claim = root / "claims" / f"{slot['family'].lower()}-{slot['slot_index']:03d}.json"
-            _fsync_json(claim, {
-                "schema_version": SCHEMA, "rank": rank, "slot": slot, "bindings_sha256": _digest(bindings),
-                "free_bytes": free, "required_bytes": required, "status": "claimed",
-            })
+            claim = root.parent / "slot-claims" / f"{slot['family'].lower()}-{slot['slot_index']:03d}.json"
+            with _locked(root.parent):
+                if sentinel.exists():
+                    break
+                free = shutil.disk_usage(root).free
+                required = floor + per_slot * len(freeze["remaining_capture_eligible_slots"])
+                if free < required:
+                    raise RuntimeError(f"storage allowance blocked: {free} < {required}")
+                _fsync_json(claim, {
+                    "schema_version": SCHEMA, "rank": rank, "slot": slot, "bindings_sha256": _digest(bindings),
+                    "free_bytes": free, "required_bytes": required, "reserved_slots": 117, "status": "claimed",
+                })
             result = slot_runner(
                 campaign_path=campaigns[slot["family"]], index=slot["slot_index"], root=slot_root,
                 controller_calibration=Path(config["controller_calibration"]),
@@ -213,11 +245,12 @@ def run_partition(*, config_path: Path, rank: int, root: Path, slot_runner: Call
             })
             completed.append(slot)
     except Exception:
-        if not sentinel.exists():
-            _fsync_json(sentinel, {
-                "schema_version": SCHEMA, "origin_rank": rank, "completed_slots": completed,
-                "bindings_sha256": _digest(bindings), "error": traceback.format_exc(), "status": "infrastructure_stop",
-            })
+        with _locked(root.parent):
+            if not sentinel.exists():
+                _fsync_json(sentinel, {
+                    "schema_version": SCHEMA, "origin_rank": rank, "completed_slots": completed,
+                    "bindings_sha256": _digest(bindings), "error": traceback.format_exc(), "status": "infrastructure_stop",
+                })
         raise
     result = {
         "schema_version": SCHEMA, "rank": rank, "workers": workers, "completed_slots": completed,

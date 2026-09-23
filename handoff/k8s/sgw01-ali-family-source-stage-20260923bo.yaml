@@ -1,0 +1,157 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-family-source-stage-20260923bo
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 3000
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: finite-contact-order-repair-stage}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: stage
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              OUT=/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bo
+              BASE=/data/users/ali/sgw-01/source/b429ddd
+              TARGET=/data/users/ali/sgw-01/source/c3c976db-bo
+              SOURCE=c3c976db56fd694d2c5498a8409b08f9a510a41c
+              ROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              test ! -e "$OUT"
+              test ! -e "$TARGET"
+              test "$(git -C "$BASE" rev-parse HEAD)" = b429ddd8c3e7be59f63759c1820e352029e48b8c
+              test ! -e "$BASE/.git/objects/info/alternates"
+              mkdir "$OUT"
+              exec > >(tee "$OUT/stage.log") 2>&1
+              for i in $(seq 1 180); do
+                test ! -f "$OUT/transfer.complete" || break
+                sleep 2
+              done
+              test -f "$OUT/transfer.complete"
+              test "$(sha256sum "$OUT/update.bundle" | awk '{print $1}')" = 4cc96d2229da30f3ef20f5c08cc2a488e670ad581863338d45a248cc78fec3b0
+              git clone --shared --no-checkout "$BASE" "$TARGET"
+              git -C "$TARGET" bundle verify "$OUT/update.bundle"
+              git -C "$TARGET" fetch --no-tags "$OUT/update.bundle" HEAD
+              git -C "$TARGET" checkout --detach "$SOURCE"
+              test "$(git -C "$TARGET" rev-parse HEAD)" = "$SOURCE"
+              test -z "$(git -C "$TARGET" status --porcelain)"
+              test "$(git -C "$ROBOLAB" rev-parse HEAD)" = 0aef241fb088ca21bb4ebd24448940ed56620d17
+              test -z "$(git -C "$ROBOLAB" status --porcelain --untracked-files=no)"
+              cd "$TARGET"
+              export PYTHONPATH="$TARGET"
+              "$PY" tools/validate_vla_wam_v3_protocol.py --quiet
+              "$PY" tools/validate_vla_wam_v2_protocol.py > "$OUT/v2-validation.json"
+              "$PY" - "$OUT" "$TARGET" <<'PY'
+              from datetime import datetime, timezone
+              import hashlib, json, os, sys
+              from pathlib import Path
+              import yaml
+              from experiments.workshops.spatial_grounding_v1.height_dist_proposals import materialize_campaign_candidate
+
+              out, source = map(Path, sys.argv[1:])
+              def record(path):
+                  return {"path": str(path), "bytes": path.stat().st_size,
+                          "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+              def write(path, value):
+                  with path.open("x") as stream:
+                      json.dump(value, stream, indent=2, sort_keys=True, allow_nan=False)
+                      stream.write("\n"); stream.flush(); os.fsync(stream.fileno())
+              freeze = Path("/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/receipt.json")
+              assert record(freeze)["sha256"] == "55b2dbbce2376b1c297180630238b09a83e8f226697f8da6a1814d748eebefd3"
+              registry = json.loads(freeze.read_text())
+              calibration = source / "artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json"
+              replay = []
+              for index, selected in enumerate(registry["native_smoke_slots"]):
+                  old = Path("/data/users/ali/sgw-01/qualification/family-native-smoke-20260923bn") / str(index) / "evidence"
+                  assert not list((old / "trials").glob("*/reset-*/action-*.npy"))
+                  family = next(row for row in registry["families"] if row["family"] == selected["family"])
+                  candidate_path = out / f"replayed-candidate-{index}.json"
+                  candidate = materialize_campaign_candidate(
+                      plan_path=Path(family["plan"]["path"]), design_id=selected["design_id"],
+                      candidate_manifest_path=old / "candidate_manifest.json",
+                      candidate_capture_path=old / "candidate_capture.json",
+                      controller_calibration_path=calibration, output=candidate_path,
+                  )
+                  manifest = json.loads((old / "candidate_manifest.json").read_text())
+                  names = candidate["metadata"]["native_scene"]["object_names"]
+                  assert names == manifest["native_import_contract"]["objects_of_interest"]
+                  pairs = {f"{a}__{b}" for i, a in enumerate(names) for b in names[i + 1:]}
+                  assert all(s["contact_sensor_id"] in pairs for s in candidate["metadata"]["goal_supports"].values())
+                  replay.append({"slot": selected, "candidate": record(candidate_path), "contact_order_preserved": True})
+              template = source / "handoff/k8s/sgw01-ali-family-native-smoke-20260923bn.yaml"
+              job = yaml.safe_load(template.read_text())
+              job["metadata"]["name"] = "sgw01-ali-family-native-smoke-20260923bp"
+              job["spec"]["template"]["metadata"]["labels"]["purpose"] = "finite-native-contact-order-repair"
+              shell = job["spec"]["template"]["spec"]["containers"][0]["args"][0]
+              substitutions = {
+                  "/source/cdb7a55b-bm": "/source/c3c976db-bo",
+                  "cdb7a55b6cc71ac34828c96368850623102e7137": "c3c976db56fd694d2c5498a8409b08f9a510a41c",
+                  "family-native-smoke-20260923bn": "family-native-smoke-20260923bp",
+                  '"source_commit": registry["source_commit"],': '"source_commit": "c3c976db56fd694d2c5498a8409b08f9a510a41c", "plan_source_commit": registry["source_commit"],',
+              }
+              for before, after in substitutions.items():
+                  assert shell.count(before) == 1, before
+                  shell = shell.replace(before, after)
+              job["spec"]["template"]["spec"]["containers"][0]["args"][0] = shell
+              launcher = out / "native-smoke-bp.json"
+              write(launcher, job)
+              receipt = {
+                  "schema_version": "sgw-01-contact-order-repair-stage-v1",
+                  "source_commit": "c3c976db56fd694d2c5498a8409b08f9a510a41c", "source_root": str(source),
+                  "source_bundle": record(out / "update.bundle"), "unchanged_freeze": record(freeze),
+                  "actual_capture_materialization_replay": replay, "native_job_template": record(template),
+                  "native_repair_job": record(launcher), "substitutions": substitutions,
+                  "job_uid": os.environ["JOB_UID"], "pod_uid": os.environ["POD_UID"],
+                  "staged_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "allocated_gpus": 0, "model_requests": 0, "behavioral_episodes": 0, "release_permitted": False,
+              }
+              write(out / "receipt.json", receipt)
+              print(json.dumps(receipt, sort_keys=True), flush=True)
+              PY
+              sync
+              sleep 1800
+          env:
+            - {name: HOME, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: CUDA_VISIBLE_DEVICES, value: ""}
+            - {name: NVIDIA_VISIBLE_DEVICES, value: void}
+            - name: JOB_UID
+              valueFrom: {fieldRef: {fieldPath: "metadata.labels['batch.kubernetes.io/controller-uid']"}}
+            - name: POD_UID
+              valueFrom: {fieldRef: {fieldPath: metadata.uid}}
+          resources:
+            requests: {cpu: "1", memory: 2Gi}
+            limits: {cpu: "4", memory: 4Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: tmp
+          emptyDir: {}

@@ -70,3 +70,39 @@ def test_mutated_evidence_is_rejected(tmp_path, mutation, message):
     manifest_path.write_text(json.dumps(manifest))
     with pytest.raises(ValueError, match=message):
         audit(ROOT, target, PRIOR, INPUTS)
+
+
+def test_named_root_proof_covers_every_pair_without_claiming_population_coverage():
+    from tools.prove_sgw_observed_root_nonmatches import compile_proof
+
+    result = compile_proof()
+    assert result["historical_snapshot_count"] == 100
+    assert len(result["candidates"]) == 4
+    for candidate in result["candidates"]:
+        assert candidate["comparison_count"] == candidate["nonmatch_count"] == 100
+        assert candidate["unresolved_count"] == 0
+        assert all(max(row["max_component_differences_m"].values()) > 0.003
+                   for row in candidate["comparisons"])
+    assert result["historical_population_coverage_complete"] is False
+    assert result["release_permitted"] is False
+
+
+@pytest.mark.parametrize("mutation,message", [
+    ("frame", "native frame differs"),
+    ("duplicate", "candidate inventory differs"),
+])
+def test_named_root_proof_rejects_native_frame_drift(tmp_path, monkeypatch, mutation, message):
+    from tools import prove_sgw_observed_root_nonmatches as module
+
+    target = tmp_path / "frames"
+    shutil.copytree(module.FRAMES, target)
+    path = target / "manifest.json"
+    manifest = json.loads(path.read_text())
+    if mutation == "frame":
+        manifest["common_frame_id"] = "unverified_robot_base"
+    else:
+        manifest["records"][0] = manifest["records"][1]
+    path.write_text(json.dumps(manifest))
+    monkeypatch.setattr(module, "FRAMES", target)
+    with pytest.raises(ValueError, match=message):
+        module.compile_proof()

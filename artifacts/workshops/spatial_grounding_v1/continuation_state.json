@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_height_dist_remaining_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T08:58:41Z",
+  "updated_at_utc": "2026-09-23T09:18:29Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -54,6 +54,8 @@
     "bounded_historical_same_stream_extractor": "b5923f6ecec2a77f2af39d718e61f5fb6f526912",
     "opt_in_bounded_historical_lineage_extractor": "2818c18eacb286faa8dadd1982935150e0088ee0",
     "historical_lineage_stream_and_audit_tests_passed": 19,
+    "historical_root_nonmatch_primitive": "experiments/workshops/spatial_grounding_v1/historical_root_nonmatch.py",
+    "historical_root_and_lineage_targeted_tests_passed": 33,
     "family_capture_materializer_and_six_trial_verifier": "5b21c8af",
     "finite_family_slot_executor": "e1f8a212",
     "preaction_guard_persisted_before_controller_planning": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
@@ -425,7 +427,7 @@
       "job": "sgw01-ali-family-partition-20260923bt",
       "job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
       "started_at_utc": "2026-09-23T08:16:48Z",
-      "status": "first_four_remaining_candidates_complete_next_four_claimed_trials_recording",
+      "status": "eight_remaining_candidates_complete_four_next_slots_recording",
       "source_commit": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d",
       "raw_root": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt",
       "allocated_gpus": 4,
@@ -630,6 +632,22 @@
       "including_native_smoke": {"completed_candidates": 8, "all_six_pass": 3, "physical_rejected": 5, "completed_trials": 48},
       "claim_boundary": "Worker verification receipts and hash-bound qualification projections are retained. bu has not performed its final independent raw compilation."
     },
+    "verified_second_prefix": {
+      "observed_at_utc": "2026-09-23T09:18:29.493884+00:00",
+      "manifest": "infrastructure/family-partition-20260923bt-prefix-bw/manifest.json",
+      "manifest_sha256": "5450d30ee2ada65388b9f97e6293c63ad22f233172b79673dfe7ce7c4978b9f3",
+      "completed_remaining_slots_including_first_prefix": 8,
+      "remaining_slots_not_yet_terminal": 109,
+      "completed_trials_this_prefix": 24,
+      "all_six_pass_slots": ["HEIGHT-009", "HEIGHT-010"],
+      "valid_physical_rejections": [
+        {"slot": "HEIGHT-007", "passed_trials": 2},
+        {"slot": "HEIGHT-008", "passed_trials": 5}
+      ],
+      "next_claimed_slots": ["HEIGHT-012", "HEIGHT-013", "HEIGHT-014", "HEIGHT-015"],
+      "including_native_smoke_and_both_prefixes": {"completed_candidates": 12, "all_six_pass": 5, "physical_rejected": 7, "completed_trials": 72},
+      "claim_boundary": "Same worker-verification and hash-bound projection scope as the first prefix. Final independent raw compilation remains pending."
+    },
     "release_permitted": false
   },
   "completed_capture_source_stages": [
@@ -779,7 +797,23 @@
     "coverage_complete": false,
     "release_permitted": false
   },
-  "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. Historical producer/frame bindings are recovered for seven named sources; exact asset dependency/geometry and population coverage remain the next CPU-only work.",
+  "named_historical_root_nonmatches": {
+    "native_frame_manifest": "infrastructure/native-root-frames-20260923bw/manifest.json",
+    "native_frame_manifest_sha256": "9252c331fa8b3bd7553117818107884a7a8a2ab8cb6ae8761010cc2bc3ec01ee",
+    "proof": "infrastructure/native-root-frames-20260923bw/observed-root-nonmatches.json",
+    "proof_sha256": "124ee06790e4ffd1f64de8bcdc6459bc3b90691561af04c7f4bcdca3fcc78de5",
+    "native_candidates": ["HEIGHT-003", "HEIGHT-004", "HEIGHT-005", "HEIGHT-006"],
+    "named_historical_snapshots": 100,
+    "comparisons": 400,
+    "nonmatches": 400,
+    "unresolved_comparisons": 0,
+    "common_frame": "robolab_environment_local_world_axes_m",
+    "position_tolerance_m": 0.003,
+    "scope": "All400 named comparisons fail the necessary root-position match condition. Missing centroid offsets cannot reverse those separations. Near roots, unknown frames or missing required roots remain unresolved. No exhaustive cohort or historical-population coverage is inferred.",
+    "historical_population_coverage_complete": false,
+    "release_permitted": false
+  },
+  "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. CPU-only historical work must now establish complete named populations or other source-specific exclusions; the400 proved observed-root nonmatches do not by themselves close coverage.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -1042,13 +1076,13 @@
     "Historical-layout coverage remains incomplete. The recovered 24-layout cohort now has independently hash-bound roots, AABB-derived centers and separate reset displacement in infrastructure/historical-droid-layout-evidence-registry-v1.json. This does not establish exhaustive coverage or release.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Both native client paths now run complete 450-action engineering integrations through joint-position measurements, HTTP producers, trace readers, recorder and scorer with simulated physics/model computation. Native AppLauncher/RPC, D1 distributed startup, official decode/time mapping and all live model runtimes remain unqualified.",
-    "Native smoke integrity passed and bt is processing the remaining frozen HEIGHT/DIST candidates. The retained eight-candidate prefix contains three all-six passes and five valid physical rejections;113 remaining slots are not yet terminal. No29-layout family pool or historical/runtime release is established.",
+    "Native smoke integrity passed and bt is processing the remaining frozen HEIGHT/DIST candidates. The retained twelve-candidate prefix contains five all-six passes and seven valid physical rejections;109 remaining slots are not yet terminal. No29-layout family pool or historical/runtime release is established.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Inspect bu final-receipt.json/collector-error.json and bt infrastructure-stop.json without interrupting trials. The first four remaining slots are retained in the bv prefix; no valid rejection may be retried. For historical work, reproduce tools/audit_sgw_historical_lineage.py against the bv export, prior bl export, and bv inputs ConfigMap. All93 Git bindings and100 named zero-origin frame records are verified; three directly bound external files also match. Trace remaining asset dependencies/root-local geometry and complete source populations, without extrapolating one reset to all E004 or demanding a historical SGW identity. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
+  "next_action": "Inspect bu final-receipt.json/collector-error.json and bt infrastructure-stop.json without interrupting trials. Eight remaining slots are retained in the bv/bw prefixes; no valid rejection may be retried. Reproduce tools/prove_sgw_observed_root_nonmatches.py for the bounded400-comparison proof: the source-verified native getter returns world actor roots minus environment origins, and both sides record zero origins. Trace complete source populations or rigorous further exclusions next; root separation already disproves a duplicate of a named snapshot without needing its centroid, but cannot establish that all historical snapshots were supplied. No historical SGW identity, learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

@@ -167,6 +167,27 @@ root-local geometry or complete historical populations. Coverage stays closed.
 The extraction/audit checks pass 19 tests. The finite bs accessor also completed;
 bu remains the CPU-only PVC access path while waiting for the GPU workers.
 
+At 09:18 UTC, bt had completed the next four slots as well. HEIGHT 009/010
+passed all six trials; HEIGHT 007 passed two and HEIGHT 008 passed five,
+both valid rejections. Including smoke and both retained prefixes, twelve
+candidates have completed 72 full recorded trials: five all-six passes and
+seven physical rejections. The remaining 109 slots are not yet terminal;
+HEIGHT 012/013/014/015 are recording. The second prefix is retained in
+[`infrastructure/family-partition-20260923bt-prefix-bw/`](infrastructure/family-partition-20260923bt-prefix-bw/).
+
+The separate native-frame audit binds the exact RoboLab getter to commit
+`0aef241f`: it returns actor world roots minus the environment origin, without
+a robot-base rotation. Four retained HEIGHT captures and the 100 named
+historical snapshots record zero origins in those same axes. All 400
+cross-comparisons have a required actor root separated by more than the frozen
+3 mm tolerance, proving non-duplication of those particular snapshots even
+without their missing centroid offsets. Root agreement, missing required roots,
+or uncertain frames remain unresolved. The primitive is not wired into a
+release gate; complete historical populations remain unproved. The evidence
+and reproducible proof are in
+[`infrastructure/native-root-frames-20260923bw/`](infrastructure/native-root-frames-20260923bw/).
+All 33 targeted root/lineage checks pass; no model or fixture branch is released.
+
 ## Scientific accounting
 
 - Planned: **1,044** episodes (P 36, D 144, C 864).

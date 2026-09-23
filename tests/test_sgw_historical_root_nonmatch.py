@@ -134,3 +134,18 @@ def test_tolerance_is_not_caller_configurable():
         frame=FRAME,
     )
     assert result.status == "unresolved"
+
+
+def test_unordered_and_overflowing_coordinates_are_unresolved():
+    for value in ({0, 1, 2}, {0: 1, 1: 2, 2: 3}, (10**1000, 0, 0)):
+        result = prove_root_position_nonmatch(
+            {"cube": RootPosition(value, FRAME.frame_id)},
+            {"cube": pose(0)},
+            required_actors=("cube",),
+            frame=FRAME,
+        )
+        assert result.status == "unresolved"
+    assert prove_root_position_nonmatch(
+        {"cube": pose(-1e308)}, {"cube": pose(1e308)},
+        required_actors=("cube",), frame=FRAME,
+    ).status == "unresolved"

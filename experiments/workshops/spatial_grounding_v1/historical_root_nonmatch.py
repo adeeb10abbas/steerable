@@ -98,9 +98,12 @@ def prove_root_position_nonmatch(
             return RootNonmatchResult(
                 "unresolved", f"invalid root position for actor: {actor}"
             )
-        differences.append(
-            (actor, max(abs(a - b) for a, b in zip(old_position, new_position)))
-        )
+        difference = max(abs(a - b) for a, b in zip(old_position, new_position))
+        if not math.isfinite(difference):
+            return RootNonmatchResult(
+                "unresolved", f"nonfinite root-position difference for actor: {actor}"
+            )
+        differences.append((actor, difference))
 
     differing = tuple(
         actor
@@ -124,7 +127,7 @@ def prove_root_position_nonmatch(
 def _validated_position(
     position: Sequence[float],
 ) -> tuple[float, float, float] | None:
-    if isinstance(position, (str, bytes)):
+    if not isinstance(position, Sequence) or isinstance(position, (str, bytes)):
         return None
     try:
         if len(position) != 3:
@@ -132,6 +135,6 @@ def _validated_position(
         if any(isinstance(value, (bool, str, bytes)) for value in position):
             return None
         values = tuple(float(value) for value in position)
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         return None
     return values if all(math.isfinite(value) for value in values) else None

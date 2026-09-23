@@ -1,0 +1,2079 @@
+{
+  "asset_manifest_sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806",
+  "banana_contact_measurements": {
+    "height_lower_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "banana__height_lower_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "height_neutral_cube_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "banana__height_neutral_cube_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "height_reference_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "banana__height_reference_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "height_upper_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "banana__height_upper_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "table": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              -1.1839316584882909e-06,
+              -2.0951058559148805e-06,
+              2.3153040409088135
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": true,
+      "sensor": "banana__table",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    }
+  },
+  "behavioral_episode_count": 0,
+  "contact_sensor_inventory": [
+    "banana__height_lower_support",
+    "banana__height_neutral_cube_support",
+    "banana__height_reference_support",
+    "banana__height_upper_support",
+    "banana__table",
+    "bowl__banana",
+    "bowl__height_lower_support",
+    "bowl__height_neutral_cube_support",
+    "bowl__height_reference_support",
+    "bowl__height_upper_support",
+    "bowl__table",
+    "gripper__banana",
+    "gripper__bowl",
+    "gripper__height_lower_support",
+    "gripper__height_neutral_cube_support",
+    "gripper__height_reference_support",
+    "gripper__height_upper_support",
+    "gripper__rubiks_cube",
+    "gripper__table",
+    "height_lower_support__height_upper_support",
+    "height_neutral_cube_support__height_lower_support",
+    "height_neutral_cube_support__height_upper_support",
+    "height_reference_support__height_lower_support",
+    "height_reference_support__height_neutral_cube_support",
+    "height_reference_support__height_upper_support",
+    "rubiks_cube__banana",
+    "rubiks_cube__bowl",
+    "rubiks_cube__height_lower_support",
+    "rubiks_cube__height_neutral_cube_support",
+    "rubiks_cube__height_reference_support",
+    "rubiks_cube__height_upper_support",
+    "rubiks_cube__table",
+    "table__height_lower_support",
+    "table__height_neutral_cube_support",
+    "table__height_reference_support",
+    "table__height_upper_support"
+  ],
+  "environment_origin_world_xyz_m": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment_seed": 20260922,
+  "family": "HEIGHT",
+  "model_request_count": 0,
+  "objects": {
+    "banana": {
+      "bbox_env_local_max_xyz_m": [
+        0.8546850085258484,
+        0.4793199896812439,
+        0.08893656730651855
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.7453150153160095,
+        0.3006799817085266,
+        0.05000072345137596
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.800000011920929,
+        0.38999998569488525,
+        0.06946864724159241
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.800000011920929,
+        0.38999998569488525,
+        0.06946864724159241
+      ],
+      "root_quaternion_world_wxyz": [
+        0.9999781250953674,
+        -0.0026648887433111668,
+        -0.006051987875252962,
+        0.0001454032608307898
+      ]
+    },
+    "bowl": {
+      "bbox_env_local_max_xyz_m": [
+        0.510521650314331,
+        0.19128268957138062,
+        0.18754670023918152
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.3490082919597626,
+        0.03012930601835251,
+        0.1324532926082611
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.429764986038208,
+        0.11070599406957626,
+        0.1599999964237213
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.429764986038208,
+        0.11070599406957626,
+        0.1599999964237213
+      ],
+      "root_quaternion_world_wxyz": [
+        0.9999999403953552,
+        -5.8753543271450326e-05,
+        -0.00032362030469812453,
+        -0.00010501052747713402
+      ]
+    },
+    "height_lower_support": {
+      "bbox_env_local_max_xyz_m": [
+        0.6997649669647217,
+        -0.17929399013519287,
+        0.09090539067983627
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.5597649812698364,
+        -0.3192940056324005,
+        0.05000071972608566
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.629764974117279,
+        -0.2492939978837967,
+        0.07045305520296097
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.629764974117279,
+        -0.2492939978837967,
+        0.07045305520296097
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "height_neutral_cube_support": {
+      "bbox_env_local_max_xyz_m": [
+        0.31976500153541565,
+        -0.06929400563240051,
+        0.1309053897857666
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.21976499259471893,
+        -0.16929399967193604,
+        0.05000072717666626
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.2697649896144867,
+        -0.11929400265216827,
+        0.09045305848121643
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.2697649896144867,
+        -0.11929400265216827,
+        0.09045305848121643
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "height_reference_support": {
+      "bbox_env_local_max_xyz_m": [
+        0.5097649693489075,
+        0.19070599973201752,
+        0.1324532926082611
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.34976500272750854,
+        0.030706003308296204,
+        0.05000072345137596
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.429764986038208,
+        0.11070600152015686,
+        0.09122700989246368
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.429764986038208,
+        0.11070600152015686,
+        0.09122700989246368
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "height_upper_support": {
+      "bbox_env_local_max_xyz_m": [
+        0.6997649669647217,
+        0.280705988407135,
+        0.17090538144111633
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.5597649812698364,
+        0.14070600271224976,
+        0.05000071972608566
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.629764974117279,
+        0.21070599555969238,
+        0.1104530543088913
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.629764974117279,
+        0.21070599555969238,
+        0.1104530543088913
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "rubiks_cube": {
+      "bbox_env_local_max_xyz_m": [
+        0.2989729642868042,
+        -0.0903511568903923,
+        0.18909460306167603
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.24055704474449158,
+        -0.14823682606220245,
+        0.1309053897857666
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.2697649896144867,
+        -0.11929398775100708,
+        0.1599999964237213
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        -0.010159748770011363,
+        0.0289287532637624,
+        -0.0024039926342527334
+      ],
+      "root_position_env_local_xyz_m": [
+        0.2799346446990967,
+        -0.1482166349887848,
+        0.1624353677034378
+      ],
+      "root_quaternion_world_wxyz": [
+        0.9999990463256836,
+        -0.0009071399690583348,
+        0.001037940033711493,
+        8.44117093947716e-05
+      ]
+    },
+    "table": {
+      "bbox_env_local_max_xyz_m": [
+        0.8985843658447266,
+        0.5220682621002197,
+        0.05000072345137596
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.19858434796333313,
+        -0.4779317378997803,
+        -0.6499992609024048
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.5485843420028687,
+        0.02206825464963913,
+        -0.29999926686286926
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.3499999940395355,
+        0.0,
+        -0.3499999903142452
+      ],
+      "root_position_env_local_xyz_m": [
+        0.19858434796333313,
+        0.02206825464963913,
+        0.05000072345137596
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "overlay_manifest": {
+    "bytes": 8952,
+    "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/candidate_manifest.json",
+    "sha256": "739652b87092b9887e6c1601b7ff8f6806546c214716fbf4c3f79b07bac18f36"
+  },
+  "overlay_manifest_sha256": "d55ddb987bc03d97abda53e47ae886f95e7cf60b3d25b125be93a43ceb96b53d",
+  "receipt_sha256": "b8da854da7f7e71be0ec02a022015992e284ab61298c2233ed7f49c2eecc1e77",
+  "render_only_diagnostic": {
+    "material_assets": [
+      {
+        "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+        "authored_asset": "OmniPBR.mdl",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+      },
+      {
+        "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.inputs:diffuse_texture",
+        "authored_asset": "./textures/obj_000013.png",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000013.png"
+      },
+      {
+        "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+        "authored_asset": "OmniPBR.mdl",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+      },
+      {
+        "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.inputs:diffuse_texture",
+        "authored_asset": "./textures/obj_000030.png",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/textures/obj_000030.png"
+      },
+      {
+        "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+        "authored_asset": "OmniPBR.mdl",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+      },
+      {
+        "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.inputs:diffuse_texture",
+        "authored_asset": "./textures/obj_000010.png",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000010.png"
+      }
+    ],
+    "physics_actions": 0,
+    "render_frames": 120,
+    "simulation_time_unchanged": true,
+    "snapshots": [
+      {
+        "render_frame": 0,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0000.npy",
+            "sha256": "cef7172adc2619e4ad806a6a8e12549f48288f59468d50cf82ab65a27153b0fd"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_right_camera-0000.npy",
+            "sha256": "4bdcbf9a963a7cca0edd80c5bb8684ec1894c5e34ddd722393ca0736372408c0"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/wrist_cam-0000.npy",
+            "sha256": "3990811b3d3d92b2c09e4b6d53fb8344cf9a2d24c8442038c7e722fa98aca7e1"
+          }
+        }
+      },
+      {
+        "render_frame": 1,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0001.npy",
+            "sha256": "fa9f7a81040074786c64b9e362d5ba6e522ff33bd256817c6afd968d8d0543d0"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_right_camera-0001.npy",
+            "sha256": "f23626bf6fd8639420605112a93e88010cc6f7e6509e96e03d465390abe8ce72"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/wrist_cam-0001.npy",
+            "sha256": "2af193ed57c03de792d5e2221eb1edd6ac59515a3b9e31d9d03be2df99d7607f"
+          }
+        }
+      },
+      {
+        "render_frame": 2,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0002.npy",
+            "sha256": "7d25ea1b673a085c9caef87c346e0253f2d914b0e68dc30e948a0dd57040149b"
+          }
+        }
+      },
+      {
+        "render_frame": 3,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0003.npy",
+            "sha256": "91e1f93dbf73fef8978bd710069c984891a07fddeb6d8df7a16467c78f1fa696"
+          }
+        }
+      },
+      {
+        "render_frame": 4,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0004.npy",
+            "sha256": "5dda4206f8412d8e0ed98271758cbc96d0f1fe47f9077530e23ab351449bf161"
+          }
+        }
+      },
+      {
+        "render_frame": 5,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0005.npy",
+            "sha256": "dbee94fa28fc14335005c74286c21ee2db7623cd57b017d4ad75d0fbf034280f"
+          }
+        }
+      },
+      {
+        "render_frame": 6,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0006.npy",
+            "sha256": "c09936c0c8b2279e7d1cab9bc1bc29ee28662e7e5665a83390b830e0c17a3291"
+          }
+        }
+      },
+      {
+        "render_frame": 7,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0007.npy",
+            "sha256": "24978c8aecc0cde6b4f87998548d364205938eed9f35c9d34742704c3e6ada3d"
+          }
+        }
+      },
+      {
+        "render_frame": 8,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0008.npy",
+            "sha256": "db9cfdd78dff14b96787348e47e3f73822f408ba7933dcdcf4dd4ff1925d4ecd"
+          }
+        }
+      },
+      {
+        "render_frame": 9,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0009.npy",
+            "sha256": "e35f376524c50a8d86cbf5992d8b79b0574d765c6dc862594b73afb4e5c608c7"
+          }
+        }
+      },
+      {
+        "render_frame": 10,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0010.npy",
+            "sha256": "478ad7808421015df8f973e31a55693a013e8268e48f598f2e893733347ee1b9"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_right_camera-0010.npy",
+            "sha256": "6c401a019d19493191788e195a5dad6f57d9d49acb365d0ac4c7d5498b7768ac"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/wrist_cam-0010.npy",
+            "sha256": "3afc3c361d6809cbc6f2015f0359e9cf47268df5c7f0a929115f773a712401a4"
+          }
+        }
+      },
+      {
+        "render_frame": 11,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0011.npy",
+            "sha256": "9d18f3de9eaa50f660c7b81712aea65385644d95672d1f89840f3040bd6d906b"
+          }
+        }
+      },
+      {
+        "render_frame": 12,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0012.npy",
+            "sha256": "525560c54047e81186117ad353c1bcc82729a0fc23a608cafb33788a92007f5e"
+          }
+        }
+      },
+      {
+        "render_frame": 13,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0013.npy",
+            "sha256": "91d9b13ae8d01a463c42ea6693abad83a1745f5d90cb535da2d3c3ea996d37be"
+          }
+        }
+      },
+      {
+        "render_frame": 14,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0014.npy",
+            "sha256": "dcd3a090cc0ab917cbb28b545dd3cca04b1d05a98c59b8633a89f46929c8edbc"
+          }
+        }
+      },
+      {
+        "render_frame": 15,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0015.npy",
+            "sha256": "eb7169e1523e1aafa3b0bc7b2bd2eb206fe9a0451e1ba1d3a04049439f8cccf1"
+          }
+        }
+      },
+      {
+        "render_frame": 16,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0016.npy",
+            "sha256": "08ee220dd14ae960e8ca5d53775c5a53fc89f49bb98a216d213b8e7313bb2cb4"
+          }
+        }
+      },
+      {
+        "render_frame": 17,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0017.npy",
+            "sha256": "15a525b926f1e9c8fee8112ac9fa9eabe9bfe2970e193e6bb6e3df059052fb00"
+          }
+        }
+      },
+      {
+        "render_frame": 18,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0018.npy",
+            "sha256": "0de15addb47114664ca859ad3f927b9c04682498983cb4473b3c2c4ea8ddf5e0"
+          }
+        }
+      },
+      {
+        "render_frame": 19,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0019.npy",
+            "sha256": "67614cdda0b5d29db8945c8f7740ba56a4a8d1a25e3ad559804264e377df6c0e"
+          }
+        }
+      },
+      {
+        "render_frame": 20,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0020.npy",
+            "sha256": "23de9e026af00188b3901fd977ee6cc2d413869a5d83ab1bfb270adf49ff53b8"
+          }
+        }
+      },
+      {
+        "render_frame": 21,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0021.npy",
+            "sha256": "7eb2b43a4d2f4bfaa08e41018749d45c191117d05f5e7fb36a52bebb34a75b0b"
+          }
+        }
+      },
+      {
+        "render_frame": 22,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0022.npy",
+            "sha256": "fae606c371e28e79cb86991f04e068a93f7d7a45c06d7f6c3b48d62b99ab140d"
+          }
+        }
+      },
+      {
+        "render_frame": 23,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0023.npy",
+            "sha256": "8eda3393819088ee9c175a05f41234e9302acead7e7d1e1ee334d8f077ef61f9"
+          }
+        }
+      },
+      {
+        "render_frame": 24,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0024.npy",
+            "sha256": "e6e8d0eb8ad6ca2d41e16dbedd4bfb59560c2a628f4c44e9267d4df567c48f0f"
+          }
+        }
+      },
+      {
+        "render_frame": 25,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0025.npy",
+            "sha256": "48ee84fd785a2a3db23e7d99b854a919febfc93fa7a01530bdc76790572e30da"
+          }
+        }
+      },
+      {
+        "render_frame": 26,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0026.npy",
+            "sha256": "beff1888edd33136a1fba2abd4a809dafe1b2f0ddbcf473d7e0786fd4653359b"
+          }
+        }
+      },
+      {
+        "render_frame": 27,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0027.npy",
+            "sha256": "36390caed53af3648b46d018c6e6a56c3e0a1e469b77a74748f47daa9ac2074a"
+          }
+        }
+      },
+      {
+        "render_frame": 28,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0028.npy",
+            "sha256": "24865c3c7230b91287dd9b0263bdbc9bb162650371d85868be0edb50d2464c60"
+          }
+        }
+      },
+      {
+        "render_frame": 29,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0029.npy",
+            "sha256": "b897a749e98932206d12c881c4dc4f3ab3cde5ba12f5ae6b655d06923f64cdba"
+          }
+        }
+      },
+      {
+        "render_frame": 30,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0030.npy",
+            "sha256": "3d3b3615cd163e70ee7f4e2b5587e2e8f1643bdd094c11d752b0ee90b1d9aa73"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_right_camera-0030.npy",
+            "sha256": "8018c27295dfafddd3487a85f585939bfe9195be44309111926f7dd2279f0742"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/wrist_cam-0030.npy",
+            "sha256": "4d34f0d71639b8e080a1c7752b5eb17256e21c747a844e161eb57b011a550c88"
+          }
+        }
+      },
+      {
+        "render_frame": 31,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0031.npy",
+            "sha256": "3111ae0bfd9680099d065eb8e6c6efbffb4537aba49102e0ed43fa5f45c37267"
+          }
+        }
+      },
+      {
+        "render_frame": 32,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0032.npy",
+            "sha256": "c8154884e5eb785751b43f7207d739474d6fec57daedbcc66104f365cb5d2ebd"
+          }
+        }
+      },
+      {
+        "render_frame": 33,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0033.npy",
+            "sha256": "2ec46bef88b6c0add032203f9381361eed24468c9cd739b3a33975f7cd77ae2d"
+          }
+        }
+      },
+      {
+        "render_frame": 34,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0034.npy",
+            "sha256": "0a71d26a6fda27580dbe250697b483492e9038fefeaa9f64dd23b395a82a9c0c"
+          }
+        }
+      },
+      {
+        "render_frame": 35,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0035.npy",
+            "sha256": "dfd8b40ed17c8e41066c1889ded03486eab63d6f894720c0b8cbfcdef728e172"
+          }
+        }
+      },
+      {
+        "render_frame": 36,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0036.npy",
+            "sha256": "56654f0b75c6104e928c04b99f1ff30716d8708a865849fd601b271d2009b05a"
+          }
+        }
+      },
+      {
+        "render_frame": 37,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0037.npy",
+            "sha256": "be96ae0c4a3fc1cade92b0dee18c47e1f435fd3f478135d6022e49b34376a269"
+          }
+        }
+      },
+      {
+        "render_frame": 38,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0038.npy",
+            "sha256": "15b552d6a3c1f2dcaabc5f6ddbe360247f3eac349af4376aab46a3484f5e3f32"
+          }
+        }
+      },
+      {
+        "render_frame": 39,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0039.npy",
+            "sha256": "fed2f5f426df8ee5b1574ef2d730a6a461a70a09bd0e88c7da9f0fdf2d3694af"
+          }
+        }
+      },
+      {
+        "render_frame": 40,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0040.npy",
+            "sha256": "2667da96ae13718e1d16e5b36772c4f3d384407635c17540e07fca57b907647e"
+          }
+        }
+      },
+      {
+        "render_frame": 41,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0041.npy",
+            "sha256": "332b7b68db3c8ad6d5c9aa7bd68f4919dfb63b78f02c8d3af11dd45ea41e627c"
+          }
+        }
+      },
+      {
+        "render_frame": 42,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0042.npy",
+            "sha256": "5497add31f1aac90798f874b22b256d97916c22aab39d1240b38919996e25096"
+          }
+        }
+      },
+      {
+        "render_frame": 43,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0043.npy",
+            "sha256": "ceb4b4d0bb64ab1887832429ab785a89d07345499dd9e14dea94c423e3f0602f"
+          }
+        }
+      },
+      {
+        "render_frame": 44,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0044.npy",
+            "sha256": "8bc11e4eff0a9d9f85f7bbec5213629e55848d5022af2300e955d30f39d6fcc3"
+          }
+        }
+      },
+      {
+        "render_frame": 45,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0045.npy",
+            "sha256": "60c307626894418bb1bc242023f0aa9c74841638fab199cb56e35be343346ab0"
+          }
+        }
+      },
+      {
+        "render_frame": 46,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0046.npy",
+            "sha256": "fa51551b08f8c0207c02ec9ac22072892cd39528ed8377e992ec00bb6f6b7fd1"
+          }
+        }
+      },
+      {
+        "render_frame": 47,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0047.npy",
+            "sha256": "09d2b7ee991332c2c24dafdda4a965f15d6bd99ab60451ae2d9255e8152680e3"
+          }
+        }
+      },
+      {
+        "render_frame": 48,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0048.npy",
+            "sha256": "ba276350be28d3acf249d5be6c78652f845fbe64c3c26c9b11770a244819aa7a"
+          }
+        }
+      },
+      {
+        "render_frame": 49,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0049.npy",
+            "sha256": "0297ea547aea409679e0cdcb7bf25281eef9d4247962e97af740d1996b73f462"
+          }
+        }
+      },
+      {
+        "render_frame": 50,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0050.npy",
+            "sha256": "49fce23cfbb68bef508f487d53b6c8293536d955ad4f26ebb3698f34f6fbe972"
+          }
+        }
+      },
+      {
+        "render_frame": 51,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0051.npy",
+            "sha256": "03d9b616a3d6d7e3eedd3cc27217b1230be4b8397157c2a1da50278a7454798a"
+          }
+        }
+      },
+      {
+        "render_frame": 52,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0052.npy",
+            "sha256": "ddacc0690adf324c306556e2bc2e8433f23a30fc8c870714729fd3bb28340430"
+          }
+        }
+      },
+      {
+        "render_frame": 53,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0053.npy",
+            "sha256": "fe28a634fa0a31c75a309f0775f070da426da1b87429c15133ec4c3c85fd058a"
+          }
+        }
+      },
+      {
+        "render_frame": 54,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0054.npy",
+            "sha256": "680fd6f87b2b6a875611d5b67e09195a501dcc419e7b2281675911dfe4e8a039"
+          }
+        }
+      },
+      {
+        "render_frame": 55,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0055.npy",
+            "sha256": "733055021572d7fa734860496f41fc0882f07af3c0f6c694eec42b549d3387aa"
+          }
+        }
+      },
+      {
+        "render_frame": 56,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0056.npy",
+            "sha256": "3569adca170d39f432c06cc6e521184a95fa032c1ec971aafcdbf27af615e42c"
+          }
+        }
+      },
+      {
+        "render_frame": 57,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0057.npy",
+            "sha256": "92ccdc3890bdf750d48fafce9b274ce0081475c09799337b780c4aa350bd5cea"
+          }
+        }
+      },
+      {
+        "render_frame": 58,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0058.npy",
+            "sha256": "4621fe55b550f8a212100898f5a5dd053be5d4e5fc56107949d328ab939324a6"
+          }
+        }
+      },
+      {
+        "render_frame": 59,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0059.npy",
+            "sha256": "f7b138338959221124579388aeeb7654b7cf2314b374e2d72964e24b148e3b45"
+          }
+        }
+      },
+      {
+        "render_frame": 60,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0060.npy",
+            "sha256": "d74c74bb313c43fcf552e3d2e80c025e8dfd8a90d85387b19c7c620dd2f9cd96"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_right_camera-0060.npy",
+            "sha256": "09b710413addec53134743e834b7f77d49ed49781f6753323f66b0aacb1f8b40"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/wrist_cam-0060.npy",
+            "sha256": "ad382ff7a993f2e1a8966f44ae6bb50879f6b6380228ad6a0f8c99c69bd08a4f"
+          }
+        }
+      },
+      {
+        "render_frame": 61,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0061.npy",
+            "sha256": "47a9015ac0d8706e962e548a29fa5d95f0195dc046489b7478d574702815e5da"
+          }
+        }
+      },
+      {
+        "render_frame": 62,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0062.npy",
+            "sha256": "4b84ed6e38b0433df5ef0d3596a3a412f6046abdb21076f04a0874f93e6d6eca"
+          }
+        }
+      },
+      {
+        "render_frame": 63,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0063.npy",
+            "sha256": "0c14b21df9f853c04b7d083450a7c4a7eeaf0d5461e2081948c6942525f1e1b9"
+          }
+        }
+      },
+      {
+        "render_frame": 64,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0064.npy",
+            "sha256": "33f118b98996a6e2172601ef8830cf781f795ed5b723ccf18ab6ad3f4c90597f"
+          }
+        }
+      },
+      {
+        "render_frame": 65,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0065.npy",
+            "sha256": "38b11e6539064af10c39d097af09ed94e15da285a6ad35b960e5829010673ba5"
+          }
+        }
+      },
+      {
+        "render_frame": 66,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0066.npy",
+            "sha256": "76a0ba3bd8c6e0d56148bdf4c231197628c4ea86a9c1bae9fb3065e78486f981"
+          }
+        }
+      },
+      {
+        "render_frame": 67,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0067.npy",
+            "sha256": "c32fc21f257689bdd1d7d6ea73c19d446b5140a9e4722e8b059238e26bddd683"
+          }
+        }
+      },
+      {
+        "render_frame": 68,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0068.npy",
+            "sha256": "595a2a4b6dd4778c2ef7f6c0591c5bd5b0906476177318f599a49e27658cb26f"
+          }
+        }
+      },
+      {
+        "render_frame": 69,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0069.npy",
+            "sha256": "0472c76a8befc4537756f1a0a5c58845243f11474e16c45b1632ddfa6ab7924e"
+          }
+        }
+      },
+      {
+        "render_frame": 70,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0070.npy",
+            "sha256": "97136355d323f7615dc0858e880634aece9248faafb2319a4d66c8bfc7c4c25a"
+          }
+        }
+      },
+      {
+        "render_frame": 71,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0071.npy",
+            "sha256": "83df9fe6a8e19c00cf2960941f3f66d5ebba3dd7334d8743c3b519e9a28f8526"
+          }
+        }
+      },
+      {
+        "render_frame": 72,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0072.npy",
+            "sha256": "6b5a38a7a5117bdb6bf32c6fb55603e1a05dd58802e55e0ce52e454c5974eda9"
+          }
+        }
+      },
+      {
+        "render_frame": 73,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0073.npy",
+            "sha256": "be9c8a301fd898523f5b22a979080a93fa573502143292b95b2fc46da9a0cd11"
+          }
+        }
+      },
+      {
+        "render_frame": 74,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0074.npy",
+            "sha256": "8734475d3fe9169d1585b45dbbebc131234640d215bf03bae138f2b0d591d36a"
+          }
+        }
+      },
+      {
+        "render_frame": 75,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0075.npy",
+            "sha256": "5823e841ef5a7b02132e6445eb8a36bd892d67a6f81899919b5db61d72c3616c"
+          }
+        }
+      },
+      {
+        "render_frame": 76,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0076.npy",
+            "sha256": "bf65fb9b0055636e0695e79f5667efbafffa8289d8254ae2e45617bf3f1429d7"
+          }
+        }
+      },
+      {
+        "render_frame": 77,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0077.npy",
+            "sha256": "1fa7d808ed5be61d177a1db69d848264178835518dae7ef2124b60b78378017b"
+          }
+        }
+      },
+      {
+        "render_frame": 78,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0078.npy",
+            "sha256": "deaaf3247c56f38d865eea4c8c46d42d20b1ca2e6067c404dfdb39d71625fb4c"
+          }
+        }
+      },
+      {
+        "render_frame": 79,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0079.npy",
+            "sha256": "ebaec25324ef2db7db250365f706ba70aa6faa6cde905673bdad224f16c793d3"
+          }
+        }
+      },
+      {
+        "render_frame": 80,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0080.npy",
+            "sha256": "caf09dbdde8cab0dfc8c3ecbd06a342f9926b688810077c189d9a679df9340d3"
+          }
+        }
+      },
+      {
+        "render_frame": 81,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0081.npy",
+            "sha256": "56792e8e62102043a4e2bb4d79bbf75ff3adbc39283dd01c8bf8eafef1dde64c"
+          }
+        }
+      },
+      {
+        "render_frame": 82,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0082.npy",
+            "sha256": "fcd8c8a251dd56b5d98ee540d16d43fd3209a3864cf0dac33d93feab46b21ad1"
+          }
+        }
+      },
+      {
+        "render_frame": 83,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0083.npy",
+            "sha256": "7129d257ea6f47d124dfa6e565df04562e1949e045df15b48400d1bafd9ba7e2"
+          }
+        }
+      },
+      {
+        "render_frame": 84,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0084.npy",
+            "sha256": "50d9e02b45708ca6ac49330f552a3d7d2e1b39f94ef9be8114624f26d096e9f1"
+          }
+        }
+      },
+      {
+        "render_frame": 85,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0085.npy",
+            "sha256": "19cc2a50cd41736b4f9b8af05c8b6e2c1751c03faa4e365026a037e5914143ca"
+          }
+        }
+      },
+      {
+        "render_frame": 86,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0086.npy",
+            "sha256": "4dce49ed6573d709bb05b30f08189adc570fe760acb90feeedac84f6010b39c1"
+          }
+        }
+      },
+      {
+        "render_frame": 87,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0087.npy",
+            "sha256": "c6b5258c00f5a4ab2feba8fb094fa1e6d0cd6ac5d454f11d51247f85869f51f8"
+          }
+        }
+      },
+      {
+        "render_frame": 88,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0088.npy",
+            "sha256": "13dcdb19429ef39054c4b40ecc65f0e5cee7b9047a624b7b3e641472c4001e10"
+          }
+        }
+      },
+      {
+        "render_frame": 89,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0089.npy",
+            "sha256": "ad5f3afcf8153a24f80e2e04aa596a3300e6bc06402a13d8e3d68999bba87439"
+          }
+        }
+      },
+      {
+        "render_frame": 90,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0090.npy",
+            "sha256": "27513535e4ce44ef7ac156fd14b25b52a014d641044d8f631700a875446ddb6c"
+          }
+        }
+      },
+      {
+        "render_frame": 91,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0091.npy",
+            "sha256": "9922d52463ffdfae0782e931b8d2f434c9e418dce7d0eb1ac7b2394175924e62"
+          }
+        }
+      },
+      {
+        "render_frame": 92,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0092.npy",
+            "sha256": "519c98b8abc9efe36c4c4a6092b72e75a71dab49da36fef78533dbc2ec38197c"
+          }
+        }
+      },
+      {
+        "render_frame": 93,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0093.npy",
+            "sha256": "9afeb1dad89915ae0572d5b80b38bb3f292760a73eb5cf733e843651af61ad2a"
+          }
+        }
+      },
+      {
+        "render_frame": 94,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0094.npy",
+            "sha256": "90645a72747a0ccbf8e58026391d0f2bfd82515a1b41a4e7e73e939b0f6af5a1"
+          }
+        }
+      },
+      {
+        "render_frame": 95,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0095.npy",
+            "sha256": "4c7502f9cce0b27ad663f2947fbfdea5b009c1ab5b46806121393eb199b71b6e"
+          }
+        }
+      },
+      {
+        "render_frame": 96,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0096.npy",
+            "sha256": "6e94c635c17f915de617b04ac0914dee1c65eab5701d90c190ac2eade3034f47"
+          }
+        }
+      },
+      {
+        "render_frame": 97,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0097.npy",
+            "sha256": "7ab4c80047ef2715f3f7661b09afd07db5eb14e6de6d9f129ebfcc94ab8df50e"
+          }
+        }
+      },
+      {
+        "render_frame": 98,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0098.npy",
+            "sha256": "3a38928020437d8f1897aa8db715db9dadb893ce068696cc57f677b9771583bb"
+          }
+        }
+      },
+      {
+        "render_frame": 99,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0099.npy",
+            "sha256": "fc81d27bd6eddb4cd1366ade2ad7074c41de6ae2f49e8cf1ec41eb96d6063d0b"
+          }
+        }
+      },
+      {
+        "render_frame": 100,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0100.npy",
+            "sha256": "12984aeabf582b931728fce74ca5a2b056227ca39a26646b92b70706b774ed4c"
+          }
+        }
+      },
+      {
+        "render_frame": 101,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0101.npy",
+            "sha256": "5d5d3013d37fb5d7949b3adbbdfdddd9c9565e309db5e5c99d4ec5a8dbc818eb"
+          }
+        }
+      },
+      {
+        "render_frame": 102,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0102.npy",
+            "sha256": "3be7664c907fe8618d6f7e5c5f6a0a09288333836d7909f9d83cbc7c2e548d37"
+          }
+        }
+      },
+      {
+        "render_frame": 103,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0103.npy",
+            "sha256": "7eebff123f2d98b2a0cc8cf0e7ec3caf44cf9240172cb1fb1068a7728b0a2f1b"
+          }
+        }
+      },
+      {
+        "render_frame": 104,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0104.npy",
+            "sha256": "80e3c5602f3283bdda7d2c3f6e7e6cdb9d2c839d7ab2b1f49df6bcd5d15ab034"
+          }
+        }
+      },
+      {
+        "render_frame": 105,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0105.npy",
+            "sha256": "485846f47110c286b514b1742580bd44741cff33059acda650f783b068f52f53"
+          }
+        }
+      },
+      {
+        "render_frame": 106,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0106.npy",
+            "sha256": "fc423a4f340e848dc1c85cd6a6f6063b0d15c48b0337fb4b6585af21b63eea21"
+          }
+        }
+      },
+      {
+        "render_frame": 107,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0107.npy",
+            "sha256": "174cd6c602c6d01e58d8580afc929cd2205408d0e37f63c6a5d35bbad755679e"
+          }
+        }
+      },
+      {
+        "render_frame": 108,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0108.npy",
+            "sha256": "a07428ef9a3e087b9343a4c44ed5e432cf5425b2e6f11568220021b4ffff2711"
+          }
+        }
+      },
+      {
+        "render_frame": 109,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0109.npy",
+            "sha256": "0a5de55238245846bdc5abc47d039275209715b381e17f1d45f7326ac473ad4d"
+          }
+        }
+      },
+      {
+        "render_frame": 110,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0110.npy",
+            "sha256": "1091e76a2a18a4cc5e968df53d18c0eef3bb72e0a5260fd7888790d7fb71b21e"
+          }
+        }
+      },
+      {
+        "render_frame": 111,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0111.npy",
+            "sha256": "b124d2e27df50e3f5261acc71e3d72927978454d0ae209e134ac3d374929a31b"
+          }
+        }
+      },
+      {
+        "render_frame": 112,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0112.npy",
+            "sha256": "487f61b2c959256b92392fa94c81d5c7ddd253b74a3796ce03c8b62b6834b181"
+          }
+        }
+      },
+      {
+        "render_frame": 113,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0113.npy",
+            "sha256": "399cf99970bc181d7339f17372039cfcd1e0577f84928c796572295b86ca3898"
+          }
+        }
+      },
+      {
+        "render_frame": 114,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0114.npy",
+            "sha256": "99602941d6b8d7f58575697f5bafdda56c1dcf63ce5c29426cecc5bf8cc1501c"
+          }
+        }
+      },
+      {
+        "render_frame": 115,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0115.npy",
+            "sha256": "1ed33af9720b5a9b9155e3d877142195f18bc7a97e51cac0b930c11f4f06f771"
+          }
+        }
+      },
+      {
+        "render_frame": 116,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0116.npy",
+            "sha256": "a88d54f82478d5f5640cdd49e0d1285943e4cac765bb19da334048aef3e8fa33"
+          }
+        }
+      },
+      {
+        "render_frame": 117,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0117.npy",
+            "sha256": "963f639208736e254994f527b9e05994b7e45dc01227f295a6480f3fc77e38cd"
+          }
+        }
+      },
+      {
+        "render_frame": 118,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0118.npy",
+            "sha256": "97156bb8aecd45db9c0823faedcced6c0690307ae26cbfac7523b18fbca71288"
+          }
+        }
+      },
+      {
+        "render_frame": 119,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0119.npy",
+            "sha256": "07e330d94c2f7f7e86ac7e0d986bf0aee3603e07fa4708cba92f63475a8d4ff4"
+          }
+        }
+      },
+      {
+        "render_frame": 120,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_left_camera-0120.npy",
+            "sha256": "76035f4f493d1d3819b0339f378edd82f1d33ae089c091d1a4fcd2f794f7284f"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/over_shoulder_right_camera-0120.npy",
+            "sha256": "df152ffff0c196acd4aa8f197005bae346023835fe57e628b3de6f68c235fa54"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/wrist_cam-0120.npy",
+            "sha256": "ddc46db70a1de43f941e2b368464c7a66c94c7a07fa3fc5ff3f69613018ce5bd"
+          }
+        }
+      }
+    ],
+    "status": "render_only_diagnostic_not_visual_qualification",
+    "video_timing": "30_fps_display_only_no_physical_time_advance",
+    "viewport_video": {
+      "bytes": 218639,
+      "fps": 30,
+      "frame_count": 121,
+      "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/render_diagnostic/render_only.mp4",
+      "sha256": "222d3733562d72527417154c57efdec3c7ef275b67819134252dcafa25bafdb0"
+    }
+  },
+  "renderer_receipt": {
+    "bytes": 1764,
+    "path": "/data/users/ali/sgw-01/preflight/a40-20260922e/renderer.json",
+    "sha256": "e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5"
+  },
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "schema_version": "sgw-01-prospective-family-native-capture-v1",
+  "status": "prospective_native_capture_not_candidate_qualified",
+  "study_source_commit": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d",
+  "support_contact_measurements": {
+    "height_lower_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "rubiks_cube__height_lower_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "height_neutral_cube_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              -0.0004119272925890982,
+              -0.0013324045576155186,
+              1.9833134412765503
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": true,
+      "sensor": "rubiks_cube__height_neutral_cube_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "height_reference_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "rubiks_cube__height_reference_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "height_upper_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "rubiks_cube__height_upper_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    }
+  },
+  "usd_dependency_inventory": [
+    {
+      "bytes": 3631,
+      "exists": true,
+      "identifier": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective/height-left.usda",
+      "real_path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective/height-left.usda",
+      "sha256": "629859e5aa09fce65f63963d72f36ec54d53a65c256bde080af19e41fced829a"
+    },
+    {
+      "bytes": 1368,
+      "exists": true,
+      "identifier": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/candidate-overlay.usda",
+      "real_path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/candidate-overlay.usda",
+      "sha256": "00c8cab28b80df4f8737110111f7535633dfc0d58778de63c3da3ea421e84052"
+    },
+    {
+      "bytes": 17794512,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+      "sha256": "b7827de44e5051d8d7803507b9362dbf8521181996449a88934b59ceb0d54db6"
+    },
+    {
+      "bytes": 3569,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+      "sha256": "f5a00da4c05db6dd0441f8c76a886a898435e61890dd1f445ff7e8f79e1e2495"
+    },
+    {
+      "bytes": 7318,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+      "sha256": "46fd4ea678f0ced8f620f2a8ceb045d779e412bca881d5ec584ce4cadf18133a"
+    },
+    {
+      "bytes": 682045,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+      "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+    },
+    {
+      "bytes": 419223,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+      "sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9"
+    },
+    {
+      "bytes": 342393,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+      "sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e"
+    },
+    {
+      "bytes": 5373,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+      "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+    }
+  ],
+  "validated_slots": [],
+  "versions": {
+    "isaaclab": "2.2.0",
+    "isaacsim": "5.0.0.0",
+    "robolab": "0.2.1"
+  },
+  "views": {
+    "over_shoulder_left_camera": {
+      "lossless_array": {
+        "bytes": 2764928,
+        "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/views/over_shoulder_left_camera.npy",
+        "sha256": "76035f4f493d1d3819b0339f378edd82f1d33ae089c091d1a4fcd2f794f7284f"
+      },
+      "shape": [
+        720,
+        1280,
+        3
+      ]
+    },
+    "over_shoulder_right_camera": {
+      "lossless_array": {
+        "bytes": 2764928,
+        "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/views/over_shoulder_right_camera.npy",
+        "sha256": "df152ffff0c196acd4aa8f197005bae346023835fe57e628b3de6f68c235fa54"
+      },
+      "shape": [
+        720,
+        1280,
+        3
+      ]
+    },
+    "wrist_cam": {
+      "lossless_array": {
+        "bytes": 2764928,
+        "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-004/views/wrist_cam.npy",
+        "sha256": "ddc46db70a1de43f941e2b368464c7a66c94c7a07fa3fc5ff3f69613018ce5bd"
+      },
+      "shape": [
+        720,
+        1280,
+        3
+      ]
+    }
+  }
+}

@@ -155,6 +155,26 @@ artifact establishes all asset dependencies, measured root-local geometry or
 an exhaustive historical population. A failed historical reset need not have
 been behaviorally accepted or assigned an SGW identity to be comparable.
 
+`historical_root_nonmatch` proves only a necessary-condition exclusion in an
+explicit common coordinate frame. It uses the shared, fixed 3 mm threshold and
+validates every required root before returning a nonmatch. Nearby roots,
+missing actors, malformed positions and frame mismatches remain unresolved.
+It cannot establish duplication or exhaustive population coverage and is not
+wired into the fixture release path.
+
+The bounded proof for HEIGHT 003--006 against 100 source-bound snapshots is
+reproducible without a simulator:
+
+```bash
+.venv/bin/python -m tools.prove_sgw_observed_root_nonmatches \
+  --output /tmp/sgw-observed-root-nonmatches.json
+```
+
+Native and historical frame bindings are prerequisites to that proof. A
+strictly separated actor root rules out that specific within-tolerance layout
+match even when centroid offsets are unavailable; it does not prove that the
+historical snapshot population is complete.
+
 ## Execution order
 
 1. Obtain a genuinely idle, authorized RTX/Vulkan-capable allocation. A

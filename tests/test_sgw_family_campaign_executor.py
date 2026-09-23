@@ -34,6 +34,7 @@ def _patch_fixture(monkeypatch: pytest.MonkeyPatch, calibration: Path) -> None:
     original = executor._sha256
     monkeypatch.setattr(executor, "_sha256", lambda path: executor.CALIBRATION_SHA256 if Path(path) == calibration else original(Path(path)))
     def author(**kwargs):
+        assert kwargs["manifest_output"].name == "candidate_manifest.json"
         kwargs["output"].write_text("#usda")
         kwargs["manifest_output"].write_text("{}")
     monkeypatch.setattr(executor, "author_candidate_overlay", author)
@@ -147,6 +148,20 @@ def test_typed_physical_rejection_accounts_slot_without_controller_actions(tmp_p
     )
     assert result["status"] == "physical_geometry_rejection_accounted_slot_no_refill"
     assert result["physical_rejection"]["controller_actions_executed"] == 0
+
+
+def test_child_timeout_retains_fsynced_logs_and_fails_slot(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    campaign, calibration = _campaign(tmp_path), _calibration(tmp_path)
+    _patch_fixture(monkeypatch, calibration)
+    with pytest.raises(TimeoutError, match="wall-time"):
+        executor.run_slot(
+            campaign_path=campaign, index=0, root=tmp_path / "slot", controller_calibration=calibration,
+            capture_command=[sys.executable, "-c", "import time; print('native log', flush=True); time.sleep(5)"],
+            qualification_command=[sys.executable, "-c", "pass"], child_timeout_seconds=1,
+        )
+    process = json.loads((tmp_path / "slot" / "capture-process.json").read_text())
+    assert process["timed_out"] is True
+    assert Path(process["stdout"]["path"]).read_bytes()
 
 
 def test_geometric_rejection_is_accounted_without_child_or_refill(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

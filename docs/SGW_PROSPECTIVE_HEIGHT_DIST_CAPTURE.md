@@ -236,8 +236,11 @@ explicit child command arrays. It creates a fresh evidence root, authors the
 selected overlay, requires a fresh zero-model capture child, verifies capture
 after that child exits, lazily materializes its measured candidate, then runs
 one six-trial qualification child and externally verifies its retained output.
-Each child exit is recorded and fsynced. Exit zero without the required output
-is a technical failure, not a success.
+The authored manifest is always `candidate_manifest.json`, the canonical path
+consumed by `verify_design`. Each child has a finite 1--7200 second bound; its
+stdout/stderr stream directly to fsynced files, and an expired process group is
+terminated. Each child exit is recorded and fsynced. Exit zero without the
+required output is a technical failure, not a success.
 
 The qualification child must write and fsync one
 `goal-{sign:+d}/reset-{index}/preaction-geometry-guard.json` **after** each

@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import signal
 import subprocess
 import sys
 import traceback
@@ -78,9 +79,13 @@ def _materialize(*, plan: Path, design_id: str, manifest: Path, capture: Path, c
     )
 
 
-def _run_child(command: Sequence[str], *, label: str, root: Path, values: Mapping[str, str]) -> None:
+def _run_child(
+    command: Sequence[str], *, label: str, root: Path, values: Mapping[str, str], timeout_seconds: int,
+) -> None:
     if not command or any(not isinstance(item, str) or not item for item in command):
         raise ValueError(f"{label} child command is required")
+    if type(timeout_seconds) is not int or not 1 <= timeout_seconds <= 7200:
+        raise ValueError(f"{label} child requires a finite 1..7200 second wall-time bound")
     # Do not apply ``str.format`` to arbitrary child source snippets: native
     # command arguments may legitimately contain JSON braces. Only documented
     # named placeholders are substituted.
@@ -89,12 +94,33 @@ def _run_child(command: Sequence[str], *, label: str, root: Path, values: Mappin
         for key, value in values.items():
             item = item.replace("{" + key + "}", value)
         expanded.append(item)
-    result = subprocess.run(expanded, cwd=root, check=False, capture_output=True, text=True)
+    stdout_path, stderr_path = root / f"{label}.stdout.log", root / f"{label}.stderr.log"
+    with stdout_path.open("xb") as stdout, stderr_path.open("xb") as stderr:
+        process = subprocess.Popen(
+            expanded, cwd=root, stdout=stdout, stderr=stderr, start_new_session=True,
+        )
+        timed_out = False
+        try:
+            returncode = process.wait(timeout=timeout_seconds)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            os.killpg(process.pid, signal.SIGTERM)
+            try:
+                returncode = process.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                os.killpg(process.pid, signal.SIGKILL)
+                returncode = process.wait()
+        stdout.flush(); os.fsync(stdout.fileno())
+        stderr.flush(); os.fsync(stderr.fileno())
     _fsync_json(root / f"{label}-process.json", {
         "schema_version": EXECUTOR_SCHEMA, "label": label, "argv": expanded,
-        "returncode": result.returncode, "stdout": result.stdout, "stderr": result.stderr,
+        "returncode": returncode, "timed_out": timed_out, "timeout_seconds": timeout_seconds,
+        "stdout": {"path": str(stdout_path.resolve()), "sha256": _sha256(stdout_path), "bytes": stdout_path.stat().st_size},
+        "stderr": {"path": str(stderr_path.resolve()), "sha256": _sha256(stderr_path), "bytes": stderr_path.stat().st_size},
     })
-    if result.returncode != 0:
+    if timed_out:
+        raise TimeoutError(f"{label} native child exceeded its wall-time bound")
+    if returncode != 0:
         raise RuntimeError(f"{label} native child failed")
 
 
@@ -170,6 +196,7 @@ def _trial_guards(
 def run_slot(
     *, campaign_path: Path, index: int, root: Path, controller_calibration: Path,
     capture_command: Sequence[str], qualification_command: Sequence[str],
+    child_timeout_seconds: int = 1800,
     materialize: Callable[..., dict[str, Any]] = _materialize,
     verify: Callable[..., dict[str, Any]] = verify_design,
 ) -> dict[str, Any]:
@@ -208,13 +235,14 @@ def run_slot(
         if not plan.is_file() or _sha256(plan) != campaign["plan"]["sha256"]:
             raise ValueError("campaign plan source differs from immutable campaign binding")
         overlay = root / "candidate-overlay.usda"
-        manifest = root / "candidate-overlay.json"
+        manifest = root / "candidate_manifest.json"
         author_candidate_overlay(plan=json.loads(plan.read_text(encoding="utf-8")), design_id=str(job["design_id"]),
                                  output=overlay, manifest_output=manifest)
         values = {**common, "overlay": str(overlay), "overlay_manifest": str(manifest),
                   "capture": str(root / "candidate_capture.json"), "candidate": str(root / "candidate.json"),
                   "qualification": str(root / "qualification.json")}
-        _run_child(capture_command, label="capture", root=root, values=values)
+        _run_child(capture_command, label="capture", root=root, values=values,
+                   timeout_seconds=child_timeout_seconds)
         capture = Path(values["capture"])
         if not capture.is_file():
             raise RuntimeError("capture native child exited zero without candidate capture output")
@@ -222,7 +250,8 @@ def run_slot(
         verify_capture_artifacts(capture)
         materialize(plan=plan, design_id=str(job["design_id"]), manifest=manifest, capture=capture,
                     calibration=controller_calibration, output=Path(values["candidate"]))
-        _run_child(qualification_command, label="qualification", root=root, values=values)
+        _run_child(qualification_command, label="qualification", root=root, values=values,
+                   timeout_seconds=child_timeout_seconds)
         candidate_sha256 = _sha256(Path(values["candidate"]))
         candidate = json.loads(Path(values["candidate"]).read_text(encoding="utf-8"))
         candidate_capture_sha256 = candidate.get("metadata", {}).get("candidate_capture_sha256")
@@ -271,13 +300,15 @@ def main() -> None:
     parser.add_argument("--controller-calibration", type=Path, required=True)
     parser.add_argument("--capture-command-json", required=True)
     parser.add_argument("--qualification-command-json", required=True)
+    parser.add_argument("--child-timeout-seconds", type=int, default=1800)
     args = parser.parse_args()
     capture, qualification = json.loads(args.capture_command_json), json.loads(args.qualification_command_json)
     if not isinstance(capture, list) or not isinstance(qualification, list):
         raise ValueError("native child commands must be JSON string arrays")
     run_slot(campaign_path=args.campaign, index=args.index, root=args.root,
              controller_calibration=args.controller_calibration,
-             capture_command=capture, qualification_command=qualification)
+             capture_command=capture, qualification_command=qualification,
+             child_timeout_seconds=args.child_timeout_seconds)
 
 
 if __name__ == "__main__":

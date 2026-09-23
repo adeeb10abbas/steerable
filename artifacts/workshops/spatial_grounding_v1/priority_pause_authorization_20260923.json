@@ -1,0 +1,59 @@
+{
+  "schema_version": "sgw-01-administrative-priority-pause-authorization-v1",
+  "authorization_id": "SGW-OPS-003",
+  "study_id": "SGW-01",
+  "status": "approved_for_future_priority_decisions_not_activated",
+  "owner_approval_reference": {
+    "kind": "explicit_user_response_relayed_by_independent_scene_review",
+    "relay_session_id": "89af7b05-595a-43d4-977b-ae0b077d6e9f",
+    "relayed_at_utc": "2026-09-23T18:39:41.201Z",
+    "question": "Should we pause the older qualification queue at completed-candidate boundaries and prioritize the redesigned scene on our own GPUs? Completed evidence would be preserved, unfinished slots would remain unfinished—not counted as failures—and we would not touch other workloads.",
+    "response_verbatim": "Yes—prioritize the redesigned scene on our GPUs (Recommended)"
+  },
+  "corrective_relay": {
+    "immediate_pause_rationale_withdrawn": true,
+    "reason": "SGW-ENG-008-LAT-057 already completed on CT-1 and all six scripted trials were independently verified. Do not pause BT solely to repeat or start that completed attempt.",
+    "completed_evidence_commit": "a8459a8c97470f2959ca9b886333f5f290da7af8",
+    "future_safe_boundary_pause_authorization_remains_available": true
+  },
+  "scope": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "job": "sgw01-ali-family-partition-20260923bt",
+    "job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
+    "workers_root": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers",
+    "source_commit": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d"
+  },
+  "constraints": {
+    "current_complete_candidate_before_stop": true,
+    "mid_trial_or_candidate_termination_allowed": false,
+    "completed_outcomes_and_all_raw_media_preserved": true,
+    "unfinished_slots_remain_unfinished_not_failures": true,
+    "explicit_remaining_slot_accounting_required": true,
+    "worker_boundary_acknowledgements_and_gpu_release_required_before_reuse": true,
+    "duplicate_attempt_or_output_reuse_allowed": false,
+    "unowned_workload_modification_allowed": false,
+    "robolab_only": true,
+    "full_benchmark_qualification_first": true,
+    "model_or_campaign_release": false
+  },
+  "inspected_deployed_contract": {
+    "worker": "The exact source checks infrastructure-stop.json existence under .partition.lock only before claiming a new slot. It finishes the current candidate before writing stopped_before_next_slot. A future administrative sentinel must describe the true priority pause, not fabricate an infrastructure error.",
+    "launcher": "The unchanged BT launcher classifies any incomplete partition as infrastructure_stopped_partition and exits 1 even after a safe boundary acknowledgement. Preserve that original process record and distinguish an authorized administrative pause in a separate receipt; it is not a physical or model failure.",
+    "collector": "BU waits for all four launcher process_outcome.json files, rechecks raw completed evidence and preserves unstarted/partial accounting. It then treats an incomplete partition as a collector error. Preserve its original output and separately identify any administrative cause, without rewriting it or claiming full completion."
+  },
+  "reconciliation": {
+    "scope": "Read-only checks after the first relay and before the correction; no pause was applied.",
+    "shared_stop_sentinel_present": false,
+    "partition_completed_candidate_receipts_observed": 102,
+    "active_candidates_observed": ["DIST-070", "DIST-079", "DIST-072", "DIST-083"],
+    "raw_outcomes_reverified_in_this_reconciliation": false,
+    "bt_gpu_workers_running": 4,
+    "bu_cpu_collector_running": true,
+    "pause_sentinel_written": false,
+    "cluster_objects_modified": false,
+    "native_source_modified": false,
+    "new_native_attempt_started": false
+  },
+  "interpretation": "Supersedes the obligation to leave BT uninterrupted only when a future concrete priority decision actually activates the authorized boundary pause. The stale immediate ENG-008 rationale was withdrawn before mutation. BT/BU remain running. Expanded capacity authority SGW-OPS-002 and all scientific gates remain unchanged."
+}

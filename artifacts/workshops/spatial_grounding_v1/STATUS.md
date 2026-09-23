@@ -47,9 +47,8 @@ Implementation and synthetic tests do not establish scientific readiness.
 **Current resource authorization:** [SGW-OPS-002](operational_authorization_20260923_expanded.json)
 records the user's explicit permission to use as much verified idle existing
 capacity as needed. The four-GPU/two-model-worker authorization ceilings are
-superseded. The redesigned scene no longer needs to wait for an old worker.
-Use one additional verified idle GPU for the bounded engineering attempt,
-preserving existing workers and checking that no duplicate attempt has started.
+superseded. The bounded engineering attempt used one additional verified-idle
+GPU and is now complete; do not launch another copy.
 Other qualified work may scale through finite concrete allocations. Ownership,
 fresh idle checks, no preemption of unowned work, storage and stage gates remain;
 no new paid capacity or privilege escalation is authorized.
@@ -110,6 +109,45 @@ The next redesign milestone is a separately disclosed prospective campaign
 based on these native results, not another historical audit or a duplicate
 engineering attempt. No frozen pool is paused, refilled or relabeled, and no
 campaign or learned run is released by this engineering demonstration.
+
+## Priority reconciliation (23 September, 18:41 UTC)
+
+[SGW-OPS-003](priority_pause_authorization_20260923.json) retains the user's
+permission to pause our older queue **after each current candidate completes**
+for a future concrete priority decision. The immediate rationale was corrected:
+SGW-ENG-008 already completed. **No stop sentinel was written and no cluster
+resource was modified.** The read-only snapshot found all four BT workers and
+BU running, with 102 partition completion receipts and DIST070/079/072/083
+in progress. These are operational counts, not a newly reverified scientific
+prefix. Completed evidence stays intact; unfinished slots are never failures.
+
+The next concrete redesign deliverable is a **separate post-result LAT/HEIGHT
+qualification registration**: a hash-bound seeded candidate generator,
+family-appropriate landing/support geometry derived from actual native
+measurements, finite cap, deterministic selection and counterbalance.
+Robot/cameras/controller, physical thresholds, prompts and model counts remain
+unchanged. Native candidate checks must still establish 29 distinct qualifying
+layouts per family; the successful one-layout demonstration does not refill
+the old pools. BT/BU continue the original queue and its independent terminal
+accounting, including DIST. The user's subsequent priority is to execute the
+already registered **six nonbehavioral fixed-input requests per model**,
+starting with N3 when its actual source-bound image/proprio/reset inputs and
+idle allocation are ready. These learned requests are not behavioral episodes
+and do not wait for a 29-layout pool or historical novelty. Full-pool behavioral
+release remains separate. The user subsequently cancelled the separate
+engineering pilot and explicitly confirmed the MAIN P -> D -> C progression.
+Priority is now the six N3 requests registered in
+`n3_fixed_input_20260923cw.json`, then the existing MAIN N3/LAT P-stage six
+episodes under a distinct prospectively disclosed redesigned-scene assignment
+and scoped stage-ordering amendment. This neither repairs the old blocked LAT
+pool nor releases full confirmation. No learned request has completed at this
+registration freeze.
+
+The deployed stop hook can drain at candidate boundaries, but the old launcher
+and collector label incomplete partitions as generic infrastructure errors.
+If a future priority decision uses it, retain their original records and add
+an explicit administrative-pause receipt and remaining-slot ledger; do not
+invent infrastructure faults or relabel physical outcomes.
 
 ## Latest retained evidence (23 September, 13:34 UTC)
 

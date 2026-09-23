@@ -30,8 +30,28 @@ verified idle existing capacity as needed for bounded registered work; each
 actual allocation must still have finite concrete counts and fresh ownership,
 idle-device and storage evidence. Do not preempt other workloads, provision
 paid capacity, duplicate an attempt, or bypass the initial worker/stage gates.
-The redesigned native scene should use additional idle capacity rather than
-wait solely because four earlier qualification workers are active.
+The redesigned native engineering attempt already completed on additional
+idle capacity with six independently verified scripted passes. Do not repeat
+it. [SGW-OPS-003](../../../artifacts/workshops/spatial_grounding_v1/priority_pause_authorization_20260923.json)
+allows a future priority pause at completed-candidate boundaries, but its
+stale immediate rationale was withdrawn before mutation; BT/BU remain running.
+The next qualification deliverable is a separate prospective LAT/HEIGHT
+registration, not another engineering attempt. The user now prioritizes the
+already registered nonbehavioral fixed-input model checks, starting with N3
+when actual native inputs and runtime prerequisites pass; these do not require
+the 29-layout pool. They authorize no behavioral episode. The user cancelled
+the separate engineering pilot and confirmed the MAIN P -> D -> C progression.
+The next behavioral target is the existing six-episode N3/LAT P stage, requiring
+a distinct redesigned-scene assignment and prospective scoped stage-ordering
+disclosure before release, without replacing old pool failures or changing D/C.
+
+`nano_fixed_input` executes the registered six N3 requests from the retained
+native camera/proprio snapshot. It binds the source, checkpoint, prompts and
+physical verification, uses the owned loopback HTTP producer/reset boundary,
+and saves request intents, actions, original decoded futures and input latents
+on persistent storage. Native decoding stays enabled; the last three latents
+are re-decoded offline without additional policy requests. No simulator or
+behavioral actions are started, and output directories cannot be reused.
 
 Current restart state and cluster evidence:
 

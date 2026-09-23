@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "native_engineering_six_pass_verified_original_family_qualification_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T17:24:05Z",
+  "updated_at_utc": "2026-09-23T18:49:00Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -38,6 +38,14 @@
     "budget_mode": "existing_idle_capacity_no_aggregate_hour_cap",
     "allocation_scaling": "as_needed_verified_idle_capacity",
     "scope": "SGW-OPS-002 supersedes the four-GPU/two-model-worker authorization ceilings. Use finite concrete allocations from verified idle existing authorized capacity as needed, without preempting other workloads or provisioning paid capacity. Initial worker, storage, identity and stage-release gates remain."
+  },
+  "administrative_priority_pause_authorization": {
+    "id": "SGW-OPS-003",
+    "path": "priority_pause_authorization_20260923.json",
+    "status": "approved_for_future_priority_decisions_not_activated",
+    "pause_sentinel_written": false,
+    "cluster_objects_modified": false,
+    "current_decision": "Leave BT/BU uninterrupted: the proposed immediate reason to drain was stale because SGW-ENG-008 already completed. Preserve the user's safe candidate-boundary pause authority for a future concrete priority decision. No duplicate engineering start."
   },
   "implementation_slices": {
     "measurement_contract_and_prospective_capture": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
@@ -1332,7 +1340,30 @@
     "frozen_candidates_or_controller_modified": false,
     "scope": "Inspect scene/path clearance using copies of exact existing source and video. Offer does not authorize replacing frozen failures or waive history/runtime gates; future repairs require prospective disclosure."
   },
-  "next_authorized_step": "SGW-ENG-008 is complete: one native translated layout and six independently verified scripted passes. Do not relaunch it, clear its CS one-owner claim, restart CN/CP, or rewrite its preserved post-trial verification failure. Keep original BT/BU work intact and retain later original-family results through raw/video rechecks. Before any redesigned candidate campaign, record a separate prospective disclosure using actual native measurements, unchanged physical criteria and preserved original pools; this engineering result alone releases no campaign or model. RoboLab only, full benchmark qualification first and no exploratory policy pilot remain. SGW-OPS-002 permits useful finite allocations on as-needed verified-idle existing capacity, without preemption or paid provisioning. Preregistered nonbehavioral runtime checks need their own qualified inputs; learned requests remain zero. Historical novelty is not a release requirement.",
+  "next_authorized_step": "Run the already registered six N3 fixed-input requests under SGW-N3-FIXED-20260923CW, then prepare the MAIN N3/LAT P stage (six existing episodes), not a separate exploratory pilot. The user explicitly confirmed the main P->D->C priority. Freeze the distinct redesigned-scene fixture assignment and scoped staged-ordering disclosure before behavior; preserve physical checks, counterbalance/disjointness, later D/C scope, all original failed pools and fixed counts. This priority does not itself certify a release. SGW-ENG-008 is complete and must not be rerun. Leave BT/BU running unless a concrete future resource need activates the authorized completed-candidate administrative drain. Use finite useful allocations on verified-idle existing authorized capacity, without preemption, interference or paid provisioning. RoboLab only; no historical-novelty gate. No learned requests were completed at this update.",
+  "next_qualification_milestone": {
+    "status": "prospective_revision_not_yet_registered_or_launched",
+    "first_deliverable": "Separately disclose and freeze a post-result LAT/HEIGHT candidate-generation revision using SGW-ENG-008's actual translated geometry and measured center/root transforms. Specify family-appropriate landing/support geometry, unchanged robot/cameras/controller, seed, finite candidate cap, deterministic selection and required counterbalance before new candidate outcomes.",
+    "qualification_gate": "Native materialization, reset/recording integrity and both goals across three resets per candidate under the unchanged450-action cap; independently verify raw evidence and videos. A released family still needs29 distinct qualifying layouts with the registered strata. Preserve each original frozen pool and every failure; never count the one-layout engineering demonstration as a family release or refill.",
+    "parallel_existing_work": "BT continues the original frozen HEIGHT/DIST queue and BU performs terminal independent raw/video accounting. DIST eligibility depends on that actual accounting, not the102 observed completion receipts alone.",
+    "parallel_runtime_gate": "User prioritizes the already preregistered nonbehavioral fixed-input checks, starting with N3 when actual source-bound native image/proprio/reset inputs and idle capacity are ready. These do not wait for29 layouts or historical novelty. Qualify actual policy-server/observation/reset identities and recording/repeat/prompt-sensitivity plus exposed-future timing/decoding. Keep the registered12 requests, six per model, separate from behavioral episodes; do not manufacture optional decoding when the released interface requires it. Any conditional official-reference checks require their own registered condition.",
+    "behavioral_release_permitted": false,
+    "new_campaign_released": false
+  },
+  "immediate_nonbehavioral_priority": {
+    "status": "authorized_preregistered_inputs_and_live_runtime_not_yet_qualified",
+    "first_model": "N3",
+    "maximum_fixed_input_requests_per_model": 6,
+    "maximum_fixed_input_requests_total": 12,
+    "behavioral_episodes_authorized": 0,
+    "separate_six_episode_engineering_pilot": "cancelled_user_selected_main_P_D_C_progression",
+    "main_progression_user_confirmation": "amazing yes, let's prioritize getting results this is insane, use as many gpus as needed",
+    "main_P_scope": "Six existing N3/LAT P-stage episodes, not extra allocation. Require prospectively disclosed redesigned-scene assignment and scoped staged release before behavior; no full confirmation release implied.",
+    "fixed_input_registration": "artifacts/workshops/spatial_grounding_v1/n3_fixed_input_20260923cw.json",
+    "requires_full_29_layout_pool": false,
+    "requires_historical_novelty": false,
+    "next_step": "Bind actual retained native images/proprioception and the exact official N3 server/reset/recording interface, then use finite verified-idle existing capacity for the six registered requests. Persist intent before every request and raw outputs afterward; do not claim live qualification before actual evidence."
+  },
   "paper_engineering_attempt": {
     "id": "SGW-ENG-008-LAT-057",
     "registration": "infrastructure/paper-engineering-20260923cj/registration.json",
@@ -1658,14 +1689,14 @@
     }
   ],
   "blockers": [
-    "Immediate native milestone: no fresh SGW-ENG-008 reference/translated capture or both-goal demonstration is yet retained. SGW-OPS-002 permits additional verified idle capacity, so the old four-GPU wait is no longer a constraint. Main must safely replace obsolete waiting orchestration without duplicating the attempt, allocating an unowned busy GPU, or interrupting bt/bu.",
-    "Full benchmark fixture release: frozen LAT has20 passes/20 physical rejections/60 geometric rejections, below29. Retained HEIGHT's right-side upper bound3 is below14. DIST awaits full independent terminal accounting. The one-layout engineering attempt neither repairs those denominators nor authorizes a new campaign.",
+    "Next redesigned qualification campaign is not yet registered: SGW-ENG-008's native scene and six independently verified goal checks are complete. Freeze a separate post-result LAT/HEIGHT candidate-generation/geometry/selection revision before collecting new candidate outcomes; do not repeat ENG-008 or substitute its one layout for full qualification.",
+    "Full benchmark fixture release: frozen LAT has20 passes/20 physical rejections/60 geometric rejections, below29. Retained HEIGHT's right-side upper bound3 is below14. DIST awaits full independent terminal accounting. The completed one-layout engineering result neither repairs those denominators nor releases a new campaign.",
     "Live runtime release: native policy observation/mailbox loop and N3/D1 server identities, D1 distributed decode/physical-time mapping, fixed-input repeat and prompt sensitivity remain unqualified. Synthetic HTTP/450-action tests are not live qualification.",
     "Behavioral operation/release: fresh resource receipts, direct/pilot gates, measured deadlines/storage P95 and D/C estimates, and required prediction annotations remain after fixture/runtime release. Missing futures remain unavailable, never zero.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Execute the additional-idle-capacity authorization SGW-OPS-002: first exclude an already-started native attempt, then retire only obsolete waiting orchestration and start one bounded, source-bound SGW-ENG-008 native attempt on an additional verified idle GPU. Keep original bt/bu work untouched. Prioritize actual scene/goal evidence over more wait-controller tooling. Preserve all outputs and retain required model/fixture/runtime gates; neither extra capacity nor historical reuse authorizes unqualified policy inference.",
+  "next_action": "Execute SGW-N3-FIXED-20260923CW on verified-idle capacity. Then freeze and release only the eligible MAIN N3/LAT P-stage branch through a distinct redesigned-scene and scoped stage-ordering registration. Do not add the cancelled exploratory pilot, rerun ENG-008, rewrite old outcomes or imply full D/C qualification. Keep original BT/BU evidence and ownership intact; candidate-boundary priority pause is available if actually needed.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

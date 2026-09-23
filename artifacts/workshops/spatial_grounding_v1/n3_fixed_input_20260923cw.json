@@ -1,0 +1,57 @@
+{
+  "schema_version": "sgw-01-n3-fixed-input-registration-v1",
+  "registration_id": "SGW-N3-FIXED-20260923CW",
+  "registered_at_utc": "2026-09-23T18:49:00Z",
+  "authority": "Existing EXPERIMENT_SPEC section 6 six-request/model recording gate; explicit user priority for main P->D->C progression, not an additional exploratory cohort.",
+  "known_results": "The distinct SGW-ENG-008-LAT-057 redesigned native scene has six independently verified scripted passes. Its original post-trial object-order verification failure and CPU-only recovery remain preserved. No SGW learned request has run at this freeze.",
+  "maximum_model_requests": 6,
+  "behavioral_episodes": 0,
+  "executed_actions": 0,
+  "release_permitted": false,
+  "request_prompt_ids": ["LAT-D-POS", "LAT-D-POS", "LAT-D-NEG", "LAT-D-POS", "LAT-D-POS", "LAT-D-NEG"],
+  "sampling_seed": 1140,
+  "native_decode_video": true,
+  "decode_contract": "The pinned SGW native backend requires decode_video=True. Do not change its inference configuration to construct a no-decode condition. Retain the input to the unchanged native model.decode call in all six requests; after inference, re-decode the last three retained latents offline. These are decoder calls, not additional model-sampling requests.",
+  "reset_contract": "Each HTTP request starts after its own acknowledged wrapper reset. The pinned native service has history_length=1 and builds a fresh one-frame sample. All six requests reuse the same retained native image/proprio snapshot; there is no new physical reset, simulator process or behavioral action.",
+  "recording_contract": "Fsync request intent before each call; retain native HTTP action outputs, native trace, original 33-frame RGB futures, losslessly represented float32/float16/bfloat16 latents, offline redecodes, reset acknowledgements, actual dependencies/configuration and PID attestation. Raw arrays remain on PVC. Preserved native capture viewport evidence remains the actual source scene video, not a learned rollout.",
+  "failure_contract": "No automatic retry, extra draw, overwrite, adaptive prompt, model setting change or promotion to a behavioral release. Preserve partial output and exact requests-started count on runtime failure. Record nondeterminism and comparisons without manufacturing a pass.",
+  "model_config": {
+    "model": "N3",
+    "asset": "nvidia/Cosmos3-Nano-Policy-DROID",
+    "revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+    "source_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+    "guidance": 3,
+    "denoising_steps": 4,
+    "shift": 5,
+    "history_length": 1,
+    "conditioning_fps": 15,
+    "resolution": 480,
+    "returned_action_horizon": 32,
+    "executed_action_horizon": 32
+  },
+  "capture": {
+    "path": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cs/evidence/translated/capture.json",
+    "bytes": 89381,
+    "sha256": "7471b1d9f628c8d4fb764e57d55c241401b120f1f7f757ad96cf8119c2fc6f0e"
+  },
+  "engineering_verification": {
+    "path": "/data/users/ali/sgw-01/infrastructure/paper-engineering-recheck-20260923cu/qualification-verification.json",
+    "bytes": 5802,
+    "sha256": "7b1efdf51c28c2466837f219cd5c239c531a8a533bb3e02aafac6c86d0951b07"
+  },
+  "native_proprio_source": {
+    "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/robots/droid.py",
+    "bytes": 16098,
+    "sha256": "3c43b562cc22476135b7cd82c9c4c01ed361350eda25f3ef6669408ffce53e5d"
+  },
+  "native_server_source": {
+    "path": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b/cosmos_framework/scripts/action_policy_server_robolab.py",
+    "bytes": 28935,
+    "sha256": "024a6d19048a6ac732ca0b23e741b5da6d38424223783b944bf539b2b6bd9a24"
+  },
+  "prompts": {
+    "path": "/data/users/ali/sgw-01/source/n3-fixedinput-20260923cw/experiments/workshops/spatial_grounding_v1/spec/prompts.json",
+    "bytes": 5308,
+    "sha256": "f07dbda34feb915472fc329be203ec526a7589007485eeb8f237c19c8708b979"
+  }
+}

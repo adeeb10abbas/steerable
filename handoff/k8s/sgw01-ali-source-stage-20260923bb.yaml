@@ -1,0 +1,129 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-source-stage-20260923bb
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1800
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: capture-recovery-source-and-bounded-evidence-access}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: stage
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              OUT=/data/users/ali/sgw-01/infrastructure/source-stage-20260923bb
+              BASE=/data/users/ali/sgw-01/source/b429ddd
+              TARGET=/data/users/ali/sgw-01/source/80abe35-bb
+              SOURCE=80abe3545b7d3d80eb5b6b9ecc09209e1393318a
+              ROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              test ! -e "$OUT"
+              test ! -e "$TARGET"
+              test "$(git -C "$BASE" rev-parse HEAD)" = b429ddd8c3e7be59f63759c1820e352029e48b8c
+              test ! -e "$BASE/.git/objects/info/alternates"
+              mkdir "$OUT"
+              exec > >(tee "$OUT/stage.log") 2>&1
+              for attempt in {1..180}; do
+                if test -f "$OUT/transfer.complete"; then break; fi
+                sleep 2
+              done
+              test -f "$OUT/transfer.complete"
+              test "$(sha256sum "$OUT/update.bundle" | awk '{print $1}')" = 0ffc301fa57f54931432287972d446284b0b246e4360a5a1175fcb4691601d33
+              git clone --shared --no-checkout "$BASE" "$TARGET"
+              git -C "$TARGET" bundle verify "$OUT/update.bundle"
+              git -C "$TARGET" fetch --no-tags "$OUT/update.bundle" HEAD
+              git -C "$TARGET" checkout --detach "$SOURCE"
+              test "$(git -C "$TARGET" rev-parse HEAD)" = "$SOURCE"
+              test -z "$(git -C "$TARGET" status --porcelain)"
+              test "$(git -C "$ROBOLAB" rev-parse HEAD)" = 0aef241fb088ca21bb4ebd24448940ed56620d17
+              test -z "$(git -C "$ROBOLAB" status --porcelain --untracked-files=no)"
+              cd "$TARGET"
+              export PYTHONPATH="$TARGET"
+              "$PY" tools/validate_vla_wam_v3_protocol.py --quiet
+              "$PY" tools/validate_vla_wam_v2_protocol.py > "$OUT/v2-validation.json"
+              "$PY" - "$OUT" "$TARGET" "$ROBOLAB" <<'PY'
+              from datetime import datetime, timezone
+              import json, os, subprocess
+              from pathlib import Path
+              from types import SimpleNamespace
+              import sys
+              from experiments.workshops.spatial_grounding_v1.prospective_family_capture import _manifest, _validate_capture_bindings, verify_capture_artifacts
+              from experiments.workshops.spatial_grounding_v1.lat_workspace_capture import _record
+              out, source, robolab = map(Path, sys.argv[1:])
+              designs = Path("/data/users/ali/sgw-01/infrastructure/source-stage-20260923aq/prospective")
+              expected = {
+                  "height-left": "6c0eb9c3670bcb5537979c39c47fa36ed7d7a8c8316f57a4fa1c38d219191355",
+                  "height-right": "10b635b820894672f6945a6c79ffd371ba0e2492d17581748902099c01c1c4f3",
+                  "dist-left": "e09f5341d0073c502facfe2700e2a154b72c1f8605682a93fdf0158a5bab5b9a",
+                  "dist-right": "b66292071af9c56fa05e743cb1aa9886d6549aa6e5074bf5222f5c4a56d98399",
+              }
+              bindings = SimpleNamespace(robolab_root=robolab, assets_manifest=Path("/data/users/ali/sgw-01/preflight/a40-20260922e/assets.json"))
+              records = []
+              for key, digest in expected.items():
+                  path = designs / f"{key}.manifest.json"
+                  record = _record(path)
+                  if record["sha256"] != digest:
+                      raise ValueError("original baseline manifest changed")
+                  _validate_capture_bindings(bindings, _manifest(path))
+                  records.append(record)
+              receipt = {
+                  "status": "passed_exact_source_and_unchanged_baseline_bindings",
+                  "source_commit": subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip(),
+                  "source_root": str(source), "bundle": _record(out / "update.bundle"),
+                  "object_store_dependency": str(source.parent / "b429ddd"),
+                  "alternate_store_depth": 1, "baseline_manifests": records,
+                  "completed_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "bounded_evidence_access_seconds_after_stage": 1200,
+                  "allocated_gpus": 0, "model_requests": 0, "behavioral_episodes": 0,
+                  "release_permitted": False,
+              }
+              with (out / "receipt.json").open("x") as f:
+                  json.dump(receipt, f, indent=2, sort_keys=True)
+                  f.write("\n")
+                  f.flush()
+                  os.fsync(f.fileno())
+              print(json.dumps(receipt, sort_keys=True), flush=True)
+              PY
+              sync
+              sleep 1200
+          env:
+            - {name: HOME, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: CUDA_VISIBLE_DEVICES, value: ""}
+            - {name: NVIDIA_VISIBLE_DEVICES, value: void}
+          resources:
+            requests: {cpu: "250m", memory: 4Gi}
+            limits: {cpu: "2", memory: 4Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: tmp
+          emptyDir: {}

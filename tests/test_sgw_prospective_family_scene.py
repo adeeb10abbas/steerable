@@ -1,6 +1,7 @@
 import json
 import math
 from pathlib import Path
+import sys
 from types import SimpleNamespace
 
 import pytest
@@ -308,20 +309,54 @@ def test_capture_source_and_asset_bindings_are_checked_before_applauncher(tmp_pa
     source.parent.mkdir(parents=True)
     source.write_text("pinned scene source")
     assets = tmp_path / "assets.json"
-    assets.write_text("pinned assets")
+    asset = tmp_path / "base.usda"
+    asset.write_text("pinned asset bytes")
+    assets.write_text(json.dumps({
+        "scene": {"path": str(asset), "sha256": capture._sha256(asset), "bytes": asset.stat().st_size},
+        "assets": [],
+    }))
     args = SimpleNamespace(robolab_root=root, assets_manifest=assets)
     manifest = {
         "base_workspace_receipt": {
-            "asset_manifest_sha256": "assets-hash",
+            "asset_manifest_sha256": capture._sha256(assets),
             "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
         },
-        "native_import_contract": {"robolab_utils_sha256": "source-hash"},
+        "native_import_contract": {"robolab_utils_sha256": capture._sha256(source)},
     }
-    monkeypatch.setattr(capture, "_sha256", lambda path: {
-        assets: "assets-hash", source: "source-hash",
-    }[path])
     monkeypatch.setattr(capture.subprocess, "check_output", lambda *args, **kwargs: "0aef241fb088ca21bb4ebd24448940ed56620d17\n")
     _validate_capture_bindings(args, manifest)
     manifest["native_import_contract"]["robolab_utils_sha256"] = "wrong"
     with pytest.raises(ValueError, match="import_scene source"):
         _validate_capture_bindings(args, manifest)
+    manifest["native_import_contract"]["robolab_utils_sha256"] = capture._sha256(source)
+    asset.write_text("mutated asset bytes")
+    with pytest.raises(ValueError, match="asset payload differs"):
+        _validate_capture_bindings(args, manifest)
+
+
+def test_capture_enables_cameras_before_native_application_start(tmp_path, monkeypatch):
+    receipt = tmp_path / "renderer.json"
+    receipt.write_text(json.dumps({
+        "status": "passed_zero_model_renderer_preflight", "model_request_count": 0,
+    }))
+    args = SimpleNamespace(
+        headless=True, num_envs=1, renderer="realtime", rendering_type="balanced",
+        enable_cameras=False, renderer_receipt=receipt, overlay_manifest=receipt,
+    )
+    monkeypatch.setattr(capture, "parse_args", lambda: args)
+    monkeypatch.setattr(capture, "_manifest", lambda _: {})
+    monkeypatch.setattr(capture, "_validate_capture_bindings", lambda *args: None)
+    monkeypatch.setenv("SGW_PROSPECTIVE_OVERLAY_MANIFEST", "")
+    monkeypatch.setenv("SGW_PROSPECTIVE_OVERLAY_MANIFEST_SHA256", "")
+
+    class StopAtApplicationBoundary(Exception):
+        pass
+
+    def launcher(args):
+        assert args.enable_cameras is True
+        raise StopAtApplicationBoundary
+
+    monkeypatch.setitem(sys.modules, "isaaclab", SimpleNamespace())
+    monkeypatch.setitem(sys.modules, "isaaclab.app", SimpleNamespace(AppLauncher=launcher))
+    with pytest.raises(StopAtApplicationBoundary):
+        capture.main()

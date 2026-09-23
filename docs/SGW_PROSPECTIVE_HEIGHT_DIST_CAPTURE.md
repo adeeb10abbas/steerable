@@ -38,7 +38,8 @@ lane only after reviewing the generated manifest:
   --renderer-receipt /ABSOLUTE/passed-renderer.json \
   --overlay-manifest /data/users/ali/sgw-01/prospective/height-left.manifest.json \
   --output /data/users/ali/sgw-01/prospective/height-left/capture.json \
-  --headless --renderer realtime --rendering_type balanced --device cuda:0 --num_envs 1
+  --headless --renderer realtime --rendering-type balanced --rendering_mode balanced \
+  --device cuda:0 --num-envs 1
 ```
 
 Run DIST analogously with `--family DIST --bowl-side left|right`. The capture

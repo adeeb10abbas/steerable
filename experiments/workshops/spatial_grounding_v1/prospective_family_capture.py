@@ -14,7 +14,9 @@ from typing import Any, Mapping
 
 from .build_asset_manifest import is_git_worktree
 from .lat_candidate_generator import workspace_digest
-from .lat_workspace_capture import _record, _root_local_offset, _rotate_wxyz, _vector, render_only_warmup
+from .lat_workspace_capture import (
+    _record, _root_local_offset, _vector, material_asset_paths, render_only_warmup,
+)
 
 
 def _manifest(path: Path) -> dict[str, Any]:
@@ -117,6 +119,11 @@ def _validate_capture_bindings(args: argparse.Namespace, manifest: Mapping[str, 
     workspace = manifest["base_workspace_receipt"]
     if _sha256(args.assets_manifest) != workspace["asset_manifest_sha256"]:
         raise ValueError("assets manifest bytes do not match the measured workspace binding")
+    assets = json.loads(args.assets_manifest.read_text())
+    for record in (assets["scene"], *assets["assets"]):
+        path = Path(record["path"])
+        if not path.is_file() or path.stat().st_size != record["bytes"] or _sha256(path) != record["sha256"]:
+            raise ValueError(f"prospective capture asset payload differs from pinned manifest: {path}")
     scenes_utils = args.robolab_root / "robolab/core/scenes/utils.py"
     if not scenes_utils.is_file() or _sha256(scenes_utils) != manifest["native_import_contract"]["robolab_utils_sha256"]:
         raise ValueError("RoboLab import_scene source does not match the overlay binding")
@@ -156,6 +163,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    args.enable_cameras = True
     if not args.headless or args.num_envs != 1 or args.renderer != "realtime" or args.rendering_type != "balanced":
         raise ValueError("prospective capture requires one headless realtime/balanced RTX environment")
     renderer = json.loads(args.renderer_receipt.read_text(encoding="utf-8"))
@@ -172,6 +180,7 @@ def main() -> None:
         import numpy as np
         import robolab
         import robolab.constants
+        import omni.usd
         from robolab.constants import set_output_dir
         from robolab.core.environments.runtime import create_env
         from robolab.core.sensors.contact_sensor_utils import get_contact_sensors
@@ -190,6 +199,7 @@ def main() -> None:
         try:
             observation, _ = env.reset()
             observation, warmup = render_only_warmup(env, observation, 120, args.output.parent / "render_diagnostic")
+            warmup["material_assets"] = material_asset_paths(omni.usd.get_context().get_stage())
             world, origin = get_world(env), env.scene.env_origins[0].detach().cpu().numpy()
             names = manifest["native_import_contract"]["objects_of_interest"]
             object_rows = _capture_object_rows(world, names)

@@ -1,0 +1,27 @@
+{
+  "schema_version": "sgw-01-zero-request-recovery-placement-v1",
+  "status": "prospective_single_A100_80GB_admission_for_inference_only",
+  "registration_id": "SGW-N3-FIXED-20260923CW",
+  "prior_state": "DC/DF/DG/DH device admissions failed before any container, run directory or successor claim. DE is suspended after creating no Pod. The authenticated dependencies and offline CPU constructors are ready.",
+  "replacement": {
+    "job": "sgw01-ali-n3-fixedinput-20260923di",
+    "manifest": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923di.yaml",
+    "generated_from": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923dc.yaml",
+    "json_patch": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923di-placement.json",
+    "additional_manifest_change": "Expected physical device name is NVIDIA A100-SXM4-80GB.",
+    "node": "dcwipphai0055.edc.nam.gm.com",
+    "node_observation": "Ready, no scheduling taints or unschedulable flag, four advertised 80GB A100s, and no active GPU requests in the current namespace aggregate. Other namespaces and physical availability remain unknown until admission/idle verification.",
+    "authority": "SGW-OPS-002 permits existing verified-idle authorized capacity without restricting GPU product. This fixed-input job needs CUDA inference only, no Vulkan renderer or simulator.",
+    "requested_gpus": 1,
+    "automatic_retries": 0,
+    "deadline_seconds": 7200,
+    "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-di",
+    "exclusive_successor_claim_unchanged": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/request-owner/successor",
+    "native_source_inputs_config_and_six_request_limit": "unchanged",
+    "nonpreemption_and_actual_idle_storage_prior_owner_gates": "unchanged"
+  },
+  "model_requests_at_registration": 0,
+  "additional_request_allocation": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false
+}

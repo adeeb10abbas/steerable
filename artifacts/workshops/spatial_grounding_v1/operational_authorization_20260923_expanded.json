@@ -1,0 +1,56 @@
+{
+  "schema_version": "sgw-01-operational-authorization-v1",
+  "authorization_id": "SGW-OPS-002",
+  "study_id": "SGW-01",
+  "status": "approved",
+  "budget_mode": "existing_idle_capacity_no_aggregate_hour_cap",
+  "owner_approval_reference": {
+    "kind": "explicit_user_response",
+    "session_id": "fb3e7648-10c4-451c-b904-206e38c4eb3b",
+    "question": "May we use one temporary additional GPU from existing idle cluster capacity for the redesigned-scene check, raising our limit from four to five only for that attempt? This would not provision paid capacity or authorize unqualified policy runs.",
+    "response_verbatim": "use as MANY as neeeded!!!! the whole cluster is yours",
+    "confirmation_verbatim": "please get it running asap i am so tired"
+  },
+  "source_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
+  "source_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
+  "scope": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "pvc": "211247-prod-pvc",
+    "persistent_study_root": "/data/users/ali/sgw-01",
+    "models": ["N3", "D1"],
+    "initial_stages": ["model_blind_qualification", "runtime_qualification", "fixed_input_gate", "P"],
+    "later_stages_require_measured_engineering_release": ["D", "C"],
+    "maximum_registered_behavioral_episodes": 1044,
+    "maximum_attempts_per_behavioral_cell": 3
+  },
+  "constraints": {
+    "allocation_scaling": "as_needed_verified_idle_capacity",
+    "max_concurrent_model_workers": null,
+    "max_total_allocated_gpus": null,
+    "finite_concrete_allocation_plan_required": true,
+    "start_with_model_workers": 1,
+    "initial_single_model_worker_gate_unchanged": true,
+    "existing_authorized_cluster_capacity_only": true,
+    "fresh_idle_allocation_check_required": true,
+    "new_paid_capacity_allowed": false,
+    "new_cluster_provisioning_allowed": false,
+    "preempt_or_stop_unowned_workloads_allowed": false,
+    "bounded_job_deadline_required": true,
+    "automatic_infrastructure_retry_allowed": false,
+    "raw_output_on_persistent_storage_required": true,
+    "storage_reserve_and_stage_release_gates_unchanged": true
+  },
+  "interpretation": "The user authorizes useful scaling within verified idle existing capacity, rather than a global four-GPU/two-model-worker cap. Null authorization ceilings mean as-needed only under this explicit approved allocation_scaling mode; each actual runtime allocation still requires finite positive GPU/worker counts, ownership, fresh idle checks and storage/runtime evidence. This is not a request to occupy the entire cluster, bypass RBAC, preempt other workloads, or create more experiments.",
+  "immediate_priority": "Allocate additional verified idle capacity to the already registered redesigned-scene engineering attempt instead of waiting for the four original qualification workers. Keep those workers uninterrupted and retire only obsolete task-owned waiting orchestration as necessary to prevent duplicate starts.",
+  "supersedes": {
+    "path": "operational_authorization.json",
+    "sha256": "be524c776d84d78b487b4b356065752104065c88fe087ebb9bcd115dc15c4b85",
+    "fields": ["constraints.max_total_allocated_gpus", "constraints.max_concurrent_model_workers"],
+    "frozen_source_operations": "The original four-GPU/two-worker allocation limits are superseded prospectively; original protocol and authorization bytes remain unchanged."
+  },
+  "operational_resource_limits_amended": true,
+  "scientific_conditions_changed": false,
+  "original_protocol_edited": false,
+  "behavioral_cells_released_by_this_artifact": 0
+}

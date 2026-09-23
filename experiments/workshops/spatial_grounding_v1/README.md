@@ -24,6 +24,15 @@ historical-non-reuse clause. Distinct layouts within the new SGW cohort, physica
 qualification, current source/runtime identity and recording requirements remain.
 Existing historical audits are optional provenance, not work required to launch.
 
+**Current resource authorization:** [SGW-OPS-002](../../../artifacts/workshops/spatial_grounding_v1/operational_authorization_20260923_expanded.json)
+supersedes the four-GPU/two-model-worker authorization ceilings. Allocate
+verified idle existing capacity as needed for bounded registered work; each
+actual allocation must still have finite concrete counts and fresh ownership,
+idle-device and storage evidence. Do not preempt other workloads, provision
+paid capacity, duplicate an attempt, or bypass the initial worker/stage gates.
+The redesigned native scene should use additional idle capacity rather than
+wait solely because four earlier qualification workers are active.
+
 Current restart state and cluster evidence:
 
 - [`STATUS.md`](../../../artifacts/workshops/spatial_grounding_v1/STATUS.md)

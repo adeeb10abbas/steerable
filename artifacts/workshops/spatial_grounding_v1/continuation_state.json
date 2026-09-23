@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_and_height_gates_closed_qualification_and_native_handoff_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T16:05:06Z",
+  "updated_at_utc": "2026-09-23T16:26:20Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -33,10 +33,11 @@
   "synthetic_tests_are_scientific_evidence": false,
   "persistent_study_root": "/data/users/ali/sgw-01",
   "operational_authorization": {
-    "path": "operational_authorization.json",
-    "sha256": "be524c776d84d78b487b4b356065752104065c88fe087ebb9bcd115dc15c4b85",
+    "path": "operational_authorization_20260923_expanded.json",
+    "sha256": "20c0d1796ada4e8026f2dc06eacfd5428a73ff7eab14f137aebaf6a72f09e2f7",
     "budget_mode": "existing_idle_capacity_no_aggregate_hour_cap",
-    "scope": "Verified idle existing authorized cluster capacity only; no new paid capacity or cluster provisioning; frozen four-GPU/two-worker ceiling and all technical gates remain."
+    "allocation_scaling": "as_needed_verified_idle_capacity",
+    "scope": "SGW-OPS-002 supersedes the four-GPU/two-model-worker authorization ceilings. Use finite concrete allocations from verified idle existing authorized capacity as needed, without preempting other workloads or provisioning paid capacity. Initial worker, storage, identity and stage-release gates remain."
   },
   "implementation_slices": {
     "measurement_contract_and_prospective_capture": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
@@ -1328,7 +1329,7 @@
     "frozen_candidates_or_controller_modified": false,
     "scope": "Inspect scene/path clearance using copies of exact existing source and video. Offer does not authorize replacing frozen failures or waive history/runtime gates; future repairs require prospective disclosure."
   },
-  "next_authorized_step": "RoboLab only and full benchmark qualification first; no exploratory policy pilot. Keep bt/bu unchanged. SGW-ENG-008 source4f04e31e is staged, native Job cn is created suspended, and CPU handoff cp is healthy after its actual scoped-credential dry-run. Let it resume only the exact pre-bound cn Job after registered rank1 naturally succeeds; never manually resume early, add a fifth GPU or interrupt an episode. Retrieve its fresh measured reference/translated scene and six recorded scripted trials, then examine the actual geometry/goal evidence before considering a new campaign. Preserve all frozen failures/pools. The retained scientific prefix remains56 candidates/336 complete trials/17 all-six passes/39 physical rejections; later live completions are unclassified here. Historical novelty is not a release requirement under SGW-REQ-001. No new campaign or learned release is authorized by scheduling.",
+  "next_authorized_step": "RoboLab only and full benchmark qualification first; no exploratory policy pilot. SGW-OPS-002 explicitly authorizes as-needed verified idle existing capacity beyond four GPUs. Recheck whether SGW-ENG-008 has already started before changing orchestration. If not, retire only the obsolete task-owned cp waiting controller and keep its old target suspended, then allocate additional verified idle capacity for exactly one fresh-bound native engineering attempt rather than waiting for bt. Preserve original bt/bu workers and all evidence; no duplicate attempt or output root. Reuse staged source4f04e31e and the bounded six-trial registration where bindings remain valid. Use no unowned busy GPU, preemption, paid provisioning or privilege escalation. Retrieve actual reference/translated captures and both-goal evidence; resource authorization alone releases no fixture, model or new campaign. Historical novelty is not required under SGW-REQ-001. The retained56-candidate/336-trial prefix is unchanged by this operational authorization.",
   "paper_engineering_attempt": {
     "id": "SGW-ENG-008-LAT-057",
     "registration": "infrastructure/paper-engineering-20260923cj/registration.json",
@@ -1357,8 +1358,8 @@
     "handoff_client_connection_required": false,
     "completed_scripted_trials": 0,
     "prior_administrative_attempts": "ck/cl suspended without native execution; cm/co CPU dry-run failures retained. No failure is a model/scientific trial.",
-    "capacity_blocker": "The four bt GPU workers remain Running at the retained check. The live CPU handoff waits specifically for recorded rank1 to succeed and its indexed Job to acknowledge completion, then resumes only the exact pre-bound cn Job. No fifth GPU, default-scheduler preemption or interruption of bt/bu.",
-    "next_milestone": "Retrieve actual reference/translated capture, achieved cube-center distance and both-goal raw/video evidence after autonomous natural succession. Examine the measurements before any new campaign; no fixture or policy release is implied."
+    "capacity_blocker": "The former four-GPU ceiling and mandatory wait for bt are superseded by SGW-OPS-002. Additional verified idle capacity is authorized; actual allocation, non-preemption and source/output binding still require verification. Recheck the old target before retiring its waiting controller so no duplicate attempt starts.",
+    "next_milestone": "Use additional verified idle capacity to obtain actual reference/translated capture, achieved cube-center distance and both-goal raw/video evidence. Examine the measurements before any new campaign; no fixture or policy release is implied."
   },
   "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu sgw01-ali-paper-engineering-20260923cn sgw01-ali-paper-handoff-20260923cp -o wide",
   "next_historical_trace": "No historical-novelty audit is required for SGW release under the explicit user clarification SGW-REQ-001. Preserve all prior recoveries, incomplete coverage and provenance records unchanged; do not turn them into active release blockers. Current scene/model/runtime identity checks remain required.",
@@ -1627,14 +1628,14 @@
     }
   ],
   "blockers": [
-    "Immediate native milestone: SGW-ENG-008 has no fresh reference/translated capture or both-goal demonstration yet. Its native cn Job is created suspended and the cp handoff is healthy in-cluster, awaiting natural rank1 completion. Four GPUs remain allocated only to bt. Do not manually resume cn early, interrupt a worker or add capacity.",
+    "Immediate native milestone: no fresh SGW-ENG-008 reference/translated capture or both-goal demonstration is yet retained. SGW-OPS-002 permits additional verified idle capacity, so the old four-GPU wait is no longer a constraint. Main must safely replace obsolete waiting orchestration without duplicating the attempt, allocating an unowned busy GPU, or interrupting bt/bu.",
     "Full benchmark fixture release: frozen LAT has20 passes/20 physical rejections/60 geometric rejections, below29. Retained HEIGHT's right-side upper bound3 is below14. DIST awaits full independent terminal accounting. The one-layout engineering attempt neither repairs those denominators nor authorizes a new campaign.",
     "Live runtime release: native policy observation/mailbox loop and N3/D1 server identities, D1 distributed decode/physical-time mapping, fixed-input repeat and prompt sensitivity remain unqualified. Synthetic HTTP/450-action tests are not live qualification.",
     "Behavioral operation/release: fresh resource receipts, direct/pilot gates, measured deadlines/storage P95 and D/C estimates, and required prediction annotations remain after fixture/runtime release. Missing futures remain unavailable, never zero.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Monitor the autonomous cp handoff and native cn Job; no client is needed for their guarded natural succession. After rank1 naturally completes, retrieve the first actual native reference/translated capture and six-trial goal milestone. Continue original bt/bu collection without interruption and preserve every terminal prefix/partial. Keep model requests at zero until full benchmark and runtime release. Historical novelty is not a gate; do not resume those audits or expand a campaign before examining the new native evidence.",
+  "next_action": "Execute the additional-idle-capacity authorization SGW-OPS-002: first exclude an already-started native attempt, then retire only obsolete waiting orchestration and start one bounded, source-bound SGW-ENG-008 native attempt on an additional verified idle GPU. Keep original bt/bu work untouched. Prioritize actual scene/goal evidence over more wait-controller tooling. Preserve all outputs and retain required model/fixture/runtime gates; neither extra capacity nor historical reuse authorizes unqualified policy inference.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

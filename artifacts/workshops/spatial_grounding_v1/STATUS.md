@@ -39,6 +39,16 @@ Implementation and synthetic tests do not establish scientific readiness.
 
 ## Prospective engineering execution
 
+**Current resource authorization:** [SGW-OPS-002](operational_authorization_20260923_expanded.json)
+records the user's explicit permission to use as much verified idle existing
+capacity as needed. The four-GPU/two-model-worker authorization ceilings are
+superseded. The redesigned scene no longer needs to wait for an old worker.
+Use one additional verified idle GPU for the bounded engineering attempt,
+preserving existing workers and checking that no duplicate attempt has started.
+Other qualified work may scale through finite concrete allocations. Ownership,
+fresh idle checks, no preemption of unowned work, storage and stage gates remain;
+no new paid capacity or privilege escalation is authorized.
+
 The user's subsequent execution direction is now separately disclosed as
 [`SGW-ENG-008-LAT-057`](infrastructure/paper-engineering-20260923cj/registration.json).
 Its native path captures the preserved near-robot example without controller
@@ -48,16 +58,19 @@ six scripted trials. Root-offset conversion, raw/video retention and independent
 evidence verification are implemented; this is not another candidate campaign.
 No new native capture or successful goal is claimed yet.
 
-The exact native source `4f04e31e` is staged, and the
+The exact native source `4f04e31e` is staged. The previous
 [deployment receipt](infrastructure/paper-engineering-20260923cn/deployment-receipt.json)
-now records **a live, client-independent handoff**. Native Job `cn` is created
+recorded **a client-independent natural-release handoff**. Under that superseded
+allocation policy, native Job `cn` was created
 suspended and pre-bound to rank1's existing node. CPU Job `cp` passed its
 actual ServiceAccount resume dry-run and repeatedly observes all four `bt`
 workers still running. It can resume only that exact Job after rank1 naturally
 succeeds and its indexed Job acknowledges completion. The complete target spec
 is hash-checked, with atomic UID/resource-version guards. No create, bind,
 delete or eviction permission is granted, and no default-scheduler preemption
-is used. The original four GPUs and independent `bu` collector are unchanged.
+was used. The original four GPUs and independent `bu` collector are unchanged.
+These scheduling receipts remain provenance; SGW-OPS-002 authorizes replacing
+the obsolete wait safely, not duplicating or overwriting its native attempt.
 
 The rejected `ck`/`cl` scheduling routes and `cm`/`co` CPU dry-run attempts
 remain infrastructure provenance; none executed the new scene or a model.

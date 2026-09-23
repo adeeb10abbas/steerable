@@ -441,6 +441,18 @@ exhaustive historical deduplication. The full source-backed local SGW suite now
 has 224 passing checks and one Linux-only skip; no learned runtime is qualified.
 The single independent scene reviewer still awaits actual verified media.
 
+Diagnostic bc has now reproduced the unchanged height-left failure:
+[the native exception](infrastructure/a40-20260923bc-capture-failure.json)
+identifies a support contact sensor without a contact-reporter rigid body.
+Although native Python again exited zero,
+[the external validator rejected it](infrastructure/a40-20260923bc-process-outcome.json)
+and the Job failed at `04:22:51Z`. This is another preserved infrastructure
+attempt, not a physical failure. SGW-ENG-006 prospectively corrects newly
+authored supports to fixed kinematic rigid bodies, retaining dimensions,
+colors, poses and counterbalances. All original scenes remain immutable.
+Repaired captures will retain actual cube-support force matrices as well as
+the full warmup/video and views; no successful native capture is claimed yet.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure
@@ -470,12 +482,13 @@ and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-ak, ao, ar and as are terminal and must not be recreated. Stage the capture
-diagnostic repair through a new bounded CPU Job using the original `b429ddd`
-object store. After checking study-owned allocations, run one fresh bounded
-zero-model diagnostic against the **unchanged height-left baseline**. Persist
-the underlying exception before cleanup and require complete receipt/video
-verification outside native Python. Do not count a zero exit as valid capture.
+ak, ao, ar, as and bc are terminal and must not be recreated. Stage the
+SGW-ENG-006 support-body correction through a new bounded CPU Job using the
+original `b429ddd` object store. Compare newly authored baselines against all
+original dimensions, colors, poses, quaternions and counterbalances, allowing
+only fixed-kinematic support body flags to differ. Then use fresh bounded
+capture roots and require complete receipt/video verification outside native
+Python. Do not count a zero exit as valid capture.
 Only genuine complete media can go to the existing independent scene reviewer.
 Preserve all earlier outcomes and all 100 candidate poses; no learned-policy
 release exists.

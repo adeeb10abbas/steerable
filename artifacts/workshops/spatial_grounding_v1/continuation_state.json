@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_qualification_complete_release_blocked_height_dist_capture_infrastructure_recovery",
-  "updated_at_utc": "2026-09-23T04:11:05.006335+00:00",
+  "updated_at_utc": "2026-09-23T04:22:51Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -46,6 +46,7 @@
     "historical_root_and_aabb_geometry_registry": "6484f244",
     "local_sgw_tests_passed": 224,
     "local_sgw_tests_skipped_linux_identity": 1,
+    "targeted_support_capture_repair_tests_passed": 31,
     "live_model_runtime_qualified": false,
     "concrete_behavioral_allocation_receipt_exists": false
   },
@@ -398,17 +399,17 @@
   "active_task_gpu_jobs": [],
   "active_task_cpu_jobs": [
     {
-      "job": "sgw01-ali-evidence-reader-20260923aw",
-      "job_uid": "5d4dc4c2-a454-48bb-acf2-9d0eaa724d10",
-      "pod": "sgw01-ali-evidence-reader-20260923aw-n2dpc",
-      "pod_uid": "53039685-aa29-4719-9260-4a4e741301f4",
-      "started_at_utc": "2026-09-23T03:55:14Z",
-      "lifetime_seconds": 1800,
-      "pvc_read_only": true,
+      "job": "sgw01-ali-source-stage-20260923bb",
+      "pod": "sgw01-ali-source-stage-20260923bb-7wrzs",
+      "pod_uid": "da07cca7-352d-4578-be51-2ec0565ec5a3",
+      "source_staged_at_utc": "2026-09-23T04:21:29.138304+00:00",
+      "bounded_access_seconds_after_stage": 1200,
+      "source_root": "/data/users/ali/sgw-01/source/80abe35-bb",
       "allocated_gpus": 0,
       "automatic_retries": 0,
       "release_permitted": false,
-      "manifest": "handoff/k8s/sgw01-ali-evidence-reader-20260923aw.yaml"
+      "manifest": "handoff/k8s/sgw01-ali-source-stage-20260923bb.yaml",
+      "receipt": "infrastructure/cpu-20260923bb-source-stage.json"
     }
   ],
   "verification_recovery": {
@@ -547,6 +548,24 @@
     "frozen_height_dist_candidates": 0,
     "release_permitted": false
   },
+  "prospective_capture_diagnostic": {
+    "job": "sgw01-ali-capture-diagnostic-20260923bc",
+    "job_uid": "cbbc9da1-9f0e-4e5f-815c-42c511f7eee9",
+    "status": "failed_closed_native_contact_sensor_initialization_error",
+    "finished_at_utc": "2026-09-23T04:22:51Z",
+    "source_commit": "80abe3545b7d3d80eb5b6b9ecc09209e1393318a",
+    "baseline": "unchanged_original_height_left",
+    "raw_root": "/data/users/ali/sgw-01/qualification/prospective-diagnostic-20260923bc",
+    "native_exit_code": 0,
+    "failure_receipt": "infrastructure/a40-20260923bc-capture-failure.json",
+    "failure_receipt_sha256": "b8e425346ce443ccaf62d7ebf8a3785136624e621de68b03dbc94521a185d4af",
+    "process_outcome": "infrastructure/a40-20260923bc-process-outcome.json",
+    "process_outcome_sha256": "1df4bbd18403684aec54b21a5f3a4972eadc68cdba61381fa49a1d3bb1093e61",
+    "diagnosis": "The height_reference_support is a static collider with no contact-reporter rigid body, but native all-pairs construction attaches a body contact sensor to it.",
+    "valid_captures": 0,
+    "model_requests": 0,
+    "behavioral_episodes": 0
+  },
   "prospective_lat_proposals": {
     "path": "proposals/lat-20260922.json",
     "sha256": "5b47860f6eac16e318515534a918d9460677b58d6174b4b76a29f7cc6be34eb9",
@@ -610,6 +629,13 @@
       "evidence": "infrastructure/a40-20260923ar-missing-capture-evidence.json",
       "change": "Persist and fsync capture/cleanup exceptions before native application teardown, write complete capture receipts before teardown, and require a separate post-process artifact validator. First run one bounded diagnostic of the identical height-left design in a fresh root to reveal the native failure.",
       "unchanged": "Original ar evidence and exact four baseline manifests/USD bytes are preserved. No learned requests, scored controller actions, candidate-plan freeze, cap refill, scientific threshold or LAT rerun is authorized."
+    },
+    {
+      "id": "SGW-ENG-006",
+      "timing": "After bc reproduced the unchanged height-left failure with a durable native traceback and the external output check rejected native exit0; before repaired-baseline capture.",
+      "evidence": "infrastructure/a40-20260923bc-capture-failure.json",
+      "change": "Author fresh baseline revisions whose added supports have PhysicsRigidBodyAPI with kinematicEnabled=true. The native importer activates contact reporting on rigid bodies; static support colliders cannot host the registered sensors. Record actual filtered cube-support force matrices in new captures.",
+      "unchanged": "Preserve every original aq/ar/bc input and output. New stage must compare all support dimensions/colors/poses and actor poses/quaternions/counterbalances, allowing only the declared support body flags to differ. DIST plate remains dynamic. This is a prospective physical implementation repair, not a claim of physical equivalence or a candidate/behavioral release."
     }
   ],
   "blockers": [
@@ -617,13 +643,13 @@
     "Historical-layout coverage remains incomplete. The recovered 24-layout cohort now has independently hash-bound roots, AABB-derived centers and separate reset displacement in infrastructure/historical-droid-layout-evidence-registry-v1.json. This does not establish exhaustive coverage or release.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Both native client paths now run complete 450-action engineering integrations through joint-position measurements, HTTP producers, trace readers, recorder and scorer with simulated physics/model computation. Native AppLauncher/RPC, D1 distributed startup, official decode/time mapping and all live model runtimes remain unqualified.",
-    "The ar/as handoff completed, but every ar Pod exited zero without capture.json, original views or render-diagnostic arrays/video. All four attempts are infrastructure-invalid and preserved. Root cause remains unproven. Recover the identical baseline designs only in new bounded output roots with durable pre-cleanup error recording and post-process artifact verification.",
+    "All four ar attempts are infrastructure-invalid. Diagnostic bc reproduced the unchanged height-left contact-reporter failure and the external validator correctly rejected native exit0. Prepare fresh kinematic-support baseline revisions under SGW-ENG-006, retaining all original inputs/outputs and comparing geometry/poses before bounded capture. No native HEIGHT/DIST capture or candidate plan is yet valid.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Commit and stage the capture diagnostic repair through a new CPU Job using original object store b429ddd. Recheck study GPU allocations and run one bounded zero-model diagnostic against the unchanged height-left baseline in a fresh root. Require capture receipt, all original views and complete diagnostic media after native Python exits; retain failures. Do not recreate ak/ao/ar/as, rerun LAT, overwrite ar or launch learned inference. Continue the existing local RPC/rank workers; send only real hash-verified media to the single independent scene reviewer.",
+  "next_action": "Stage the SGW-ENG-006 support-body repair through a new bounded CPU Job using b429ddd. Author fresh baseline revisions and verify unchanged original dimensions/poses/quaternions/colors/counterbalances, with only fixed-kinematic support flags changed. After confirming allocation release, capture the four revised baselines in fresh bounded GPU roots with post-process media validation. Preserve ar/bc and all LAT results. No learned inference or candidate freeze; existing reviewer needs actual verified media.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

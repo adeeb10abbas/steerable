@@ -144,6 +144,29 @@ def _contact_inventory(get_contact_sensors: Any, scene: Any) -> list[str]:
     return sorted(name for name in get_contact_sensors(scene) if not name.endswith("__all_objs"))
 
 
+def _support_contact_measurements(sensors: Mapping[str, Any], supports: list[str]) -> dict[str, Any]:
+    import numpy as np
+
+    rows = {}
+    for support in supports:
+        names = (f"rubiks_cube__{support}", f"{support}__rubiks_cube")
+        sensor_name = next((name for name in names if name in sensors), None)
+        if sensor_name is None:
+            raise RuntimeError(f"missing measured cube contact sensor for {support}")
+        matrix = sensors[sensor_name].data.force_matrix_w
+        if matrix is None:
+            raise RuntimeError(f"missing filtered contact forces for {support}")
+        values = np.asarray(matrix.detach().cpu().numpy())
+        if values.ndim != 4 or values.shape[0] != 1 or values.shape[-1] != 3 or not values.size or not np.isfinite(values).all():
+            raise RuntimeError(f"invalid measured contact force matrix for {support}")
+        rows[support] = {
+            "sensor": sensor_name, "force_matrix_world_n": values.tolist(),
+            "shape": list(values.shape),
+            "nonzero_force_observed": bool(np.any(np.linalg.norm(values, axis=-1) > 0)),
+        }
+    return rows
+
+
 def _validate_capture_bindings(args: argparse.Namespace, manifest: Mapping[str, Any]) -> None:
     """Reject a capture before AppLauncher unless every native source binding matches."""
 
@@ -309,6 +332,10 @@ def main() -> None:
             names = manifest["native_import_contract"]["objects_of_interest"]
             object_rows = _capture_object_rows(world, names)
             contacts = _contact_inventory(get_contact_sensors, env.scene)
+            support_contacts = _support_contact_measurements(
+                get_contact_sensors(env.scene),
+                manifest["native_import_contract"]["kinematic_or_static_bodies"],
+            )
             views = {}
             root = args.output.parent / "views"
             root.mkdir(parents=True, exist_ok=False)
@@ -332,6 +359,7 @@ def main() -> None:
                 "environment_seed": args.environment_seed,
                 "environment_origin_world_xyz_m": _vector(origin),
                 "objects": object_rows, "contact_sensor_inventory": contacts, "views": views,
+                "support_contact_measurements": support_contacts,
                 "usd_dependency_inventory": _usd_dependencies(Path(manifest["overlay_usda"]["path"])),
                 "render_only_diagnostic": warmup, "validated_slots": [],
                 "versions": {name: importlib.metadata.version(name) for name in ("isaacsim", "isaaclab", "robolab")},

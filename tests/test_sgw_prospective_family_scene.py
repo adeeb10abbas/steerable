@@ -136,6 +136,7 @@ def test_dist_overlay_has_visual_plate_and_counterbalance(tmp_path):
 ])
 def test_real_measured_receipt_authors_supported_poses_and_goal_clearance(tmp_path, family, side):
     Usd = pytest.importorskip("pxr.Usd")
+    UsdPhysics = pytest.importorskip("pxr.UsdPhysics")
 
     receipt = Path(__file__).parents[1] / (
         "artifacts/workshops/spatial_grounding_v1/infrastructure/a40-20260922r-workspace.json"
@@ -147,6 +148,16 @@ def test_real_measured_receipt_authors_supported_poses_and_goal_clearance(tmp_pa
     )
     stage = Usd.Stage.Open(manifest["overlay_usda"]["path"])
     specs = {row["name"]: row for row in manifest["prospective_design"]["dimensions_and_poses"]}
+    supports = {name for name in specs if name != "plate"}
+    assert set(manifest["native_import_contract"]["kinematic_bodies"]) == supports
+    for name in supports:
+        prim = stage.GetPrimAtPath(f"/World/{name}")
+        assert prim.HasAPI(UsdPhysics.RigidBodyAPI)
+        assert UsdPhysics.RigidBodyAPI(prim).GetKinematicEnabledAttr().Get() is True
+        assert prim.GetChild("geometry").HasAPI(UsdPhysics.CollisionAPI)
+    if family == "DIST":
+        plate = stage.GetPrimAtPath("/World/plate")
+        assert UsdPhysics.RigidBodyAPI(plate).GetKinematicEnabledAttr().Get() is False
     roots = manifest["prospective_design"]["authored_actor_root_overrides_env_local_xyz_m"]
     centers = {}
     for name in ("rubiks_cube", "bowl"):
@@ -333,6 +344,22 @@ def test_capture_source_and_asset_bindings_are_checked_before_applauncher(tmp_pa
     asset.write_text("mutated asset bytes")
     with pytest.raises(ValueError, match="asset payload differs"):
         _validate_capture_bindings(args, manifest)
+
+
+def test_support_contacts_require_actual_filtered_forces():
+    import numpy as np
+    from test_sgw_render_warmup import Array
+
+    sensor = SimpleNamespace(data=SimpleNamespace(force_matrix_w=Array(np.array([[[[0., 0., 1.]]]]))))
+    sensors = {"rubiks_cube__height_neutral_cube_support": sensor}
+    rows = capture._support_contact_measurements(sensors, ["height_neutral_cube_support"])
+    assert rows["height_neutral_cube_support"]["force_matrix_world_n"] == [[[[0., 0., 1.]]]]
+    assert rows["height_neutral_cube_support"]["nonzero_force_observed"] is True
+    sensor.data.force_matrix_w = None
+    with pytest.raises(RuntimeError, match="missing filtered"):
+        capture._support_contact_measurements(sensors, ["height_neutral_cube_support"])
+    with pytest.raises(RuntimeError, match="missing measured"):
+        capture._support_contact_measurements(sensors, ["height_upper_support"])
 
 
 def test_capture_enables_cameras_before_native_application_start(tmp_path, monkeypatch):

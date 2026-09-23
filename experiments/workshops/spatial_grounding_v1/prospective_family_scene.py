@@ -72,6 +72,7 @@ def build_overlay(
             "robolab_utils_sha256": "6562517740be7c60e24e964afced5eac63bd00b4c5de0b6fee92295b87c81110",
             "dynamic_bodies": ["plate"] if family == "DIST" else [],
             "kinematic_or_static_bodies": [spec["name"] for spec in specs if spec["name"] != "plate"],
+            "kinematic_bodies": [spec["name"] for spec in specs if spec.get("kinematic_body")],
             "objects_of_interest": ["rubiks_cube", "bowl", "table", *(spec["name"] for spec in specs)],
         },
         "prospective_design": {
@@ -177,10 +178,10 @@ def _dist_specs(bowl_side: str, workspace: Mapping[str, Any]) -> tuple[list[dict
 
 
 def _box(name: str, center_m: tuple[float, float, float], size_m: tuple[float, float, float],
-         color: tuple[float, float, float], *, rigid: bool = False) -> dict[str, Any]:
+         color: tuple[float, float, float]) -> dict[str, Any]:
     return {
         "name": name, "center_m": list(center_m), "size_m": list(size_m),
-        "display_color_rgb": list(color), "rigid_body": rigid,
+        "display_color_rgb": list(color), "rigid_body": True, "kinematic_body": True,
     }
 
 def _disc(name: str, center_m: tuple[float, float, float], *, radius_m: float, thickness_m: float,
@@ -219,6 +220,7 @@ def _usda(
     def prim(spec: Mapping[str, Any]) -> str:
         center, color = spec["center_m"], spec["display_color_rgb"]
         rigid = '        prepend apiSchemas = ["PhysicsRigidBodyAPI"]\n' if spec["rigid_body"] else ""
+        kinematic = '        bool physics:kinematicEnabled = true\n' if spec.get("kinematic_body") else ""
         if spec.get("shape") == "cylinder":
             geometry = f'''        def Cylinder "geometry" (
             prepend apiSchemas = ["PhysicsCollisionAPI"]
@@ -241,7 +243,7 @@ def _usda(
         return f'''    def Xform "{spec["name"]}" (
 {rigid}    )
     {{
-        double3 xformOp:translate = ({center[0]}, {center[1]}, {center[2]})
+{kinematic}        double3 xformOp:translate = ({center[0]}, {center[1]}, {center[2]})
         uniform token[] xformOpOrder = ["xformOp:translate"]
 {geometry}
     }}'''

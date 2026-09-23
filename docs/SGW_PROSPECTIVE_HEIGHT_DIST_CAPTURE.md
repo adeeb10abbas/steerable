@@ -99,6 +99,29 @@ baseline in a new output directory. Capture failure recording fixes a
 diagnostic blind spot; it does not establish the native root cause before
 new evidence exists. No candidate cap, pose or scientific threshold changes.
 
+### Diagnosed contact-body repair (SGW-ENG-006)
+
+Diagnostic bc reproduced height-left using the original bytes. Its durable
+exception identifies a contact sensor on `height_reference_support` with no
+contact-reporter rigid body. The native process still exited zero, but the
+separate output validator correctly made the Job fail. The pinned importer
+activates rigid-body contact reporting; its all-pairs sensor builder cannot
+attach a body sensor to an ordinary static collider.
+
+New baseline revisions therefore author every added support with
+`PhysicsRigidBodyAPI` and `physics:kinematicEnabled = true`. They stay fixed
+instead of becoming gravity-driven dynamic objects; DIST's plate remains
+dynamic. This is a disclosed collision/contact implementation correction,
+not proof of identical physical behavior. New source-stage receipts must
+compare all dimensions, colors, poses, quaternions and counterbalances with
+the original four manifests, allowing only the support body flags to differ.
+Original aq/ar/bc inputs and outputs are never edited or reused as successful
+evidence. No HEIGHT/DIST candidate has yet been frozen.
+
+New captures additionally retain the actual filtered cube-support force
+matrices, including zero-valued contacts. A sensor name or a nonzero force at
+one reset is not six-trial reachability or fixture qualification.
+
 ## Prospective design-plan boundary
 
 After—and only after—the two native baseline captures for each family have

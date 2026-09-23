@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
-  "status": "native_engineering_six_pass_verified_original_family_qualification_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T19:19:00Z",
+  "status": "main_p_fixture_assigned_n3_startup_blocked_family_workers_administratively_paused_behavior_unreleased",
+  "updated_at_utc": "2026-09-23T20:49:00Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -42,12 +42,16 @@
   "administrative_priority_pause_authorization": {
     "id": "SGW-OPS-003",
     "path": "priority_pause_authorization_20260923.json",
-    "status": "activated_administrative_candidate_boundary_pause",
+    "status": "all_four_workers_acknowledged_complete_candidate_boundary_pause",
     "pause_sentinel_written": true,
     "bt_kubernetes_objects_modified": false,
     "activation_receipt": "infrastructure/administrative-pause-20260923cx/activation.json",
-    "acknowledged_ranks_at_latest_read": [1, 2],
-    "current_candidate_finishing_ranks_at_latest_read": [0, 3],
+    "boundary_receipt": "infrastructure/administrative-pause-20260923cx/boundaries/summary.json",
+    "boundary_receipt_sha256": "28abaefd73bd9b864b0b8dc2a062f17cd04bcd00cd3aeca31bc6c07c91463165",
+    "acknowledged_ranks_at_latest_read": [0, 1, 2, 3],
+    "current_candidate_finishing_ranks_at_latest_read": [],
+    "completed_operational_slots": 110,
+    "unstarted_pending_slots": 7,
     "current_decision": "The stale ENG-008 rationale was not acted on. After explicit MAIN P->D->C priority, write an honest administrative sentinel under the deployed shared lock; finish each current candidate, then stop before the next. Preserve original generic launcher/collector labels but classify cause via the separate administrative receipt. Pending slots remain pending, never scientific failures. No duplicate engineering start or mid-candidate termination."
   },
   "implementation_slices": {
@@ -457,25 +461,29 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "Four bi captures are accepted for native visual setup only. bm froze100 proposals per family. br completed24 full physical trials: HEIGHT000 and DIST000 pass all6; HEIGHT001 and DIST003 are valid5/6 rejections. All4 raw chains were independently reverified by bs. Historical deduplication and model release remain closed. Parent alone owns launches.",
+    "fixture_scope": "MAIN N3/LAT P assignment helper integrated from1c6fb520 with non-overwriting outputs. Exact retained redesigned capture and six-pass verification now bind only the six original LAT-P01 N3 P cells. No runtime release or learned request follows from this assignment. D/C qualification and within-study disjointness remain required; historical novelty is not a gate. Parent alone owns launches.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
-    "runtime_scope": "D1 accumulated native-latent decode and provenance are integrated, including distinct decoded_unmapped/decode_error/latent_only_retained states. Native startup, actual VAE execution and physical future time mapping remain unqualified. A real launch needs an explicit realistic finite SGW01_READINESS_TIMEOUT, not the default15-second budget. No model construction/server launch authorized.",
+    "runtime_scope": "Native worker bootstrap and allocated-device child environment support are integrated. N3 constructor failed before any request; auxiliary-asset access remains unresolved under the unchanged native configuration. D1 startup, actual VAE execution and physical future time mapping remain unqualified. No child has launch authority.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
-    "worker_scope": "bt runs117 remaining slots with exact worker source68b9e100, fresh per-slot GPU checks, global storage reserve, exclusive claims and shared stop sentinel. Corrected offline compiler integrated at a995e014;34 parent compiler/worker/executor tests pass. CPU-only bu independently compiles initial and terminal evidence; no source mutation, fixture/model release or child launch authority.",
+    "worker_scope": "All four BT workers acknowledged the administrative pause after their current complete candidates and terminated. Exactly110 operational slots are complete and7 unstarted DIST slots remain pending. CPU-only BU independently compiles terminal raw/video evidence; no source mutation, fixture/model release or child launch authority.",
     "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
     "historical_coverage_scope": "Archived provenance work only under SGW-REQ-001; complete historical geometry/population coverage is not required for SGW release. Preserve existing inventories and unresolved source facts without continuing novelty audits on the release critical path.",
     "independent_scene_reviewer": "89af7b05-595a-43d4-977b-ae0b077d6e9f",
     "scene_review_scope": "The same independent reviewer sealed bi acceptance as ACCEPT_NATIVE_VISUAL_SETUP_ONLY for all4 captures and exactly reproduced all20 policy preprocessing images. This is not an additional rater, physical qualification, category recognition, live tensor parity or behavioral release. Plate-category/wrist-occlusion caveats and per-candidate banana clearance remain binding."
   },
-  "active_task_gpu_jobs": [
+  "active_task_gpu_jobs": [],
+  "administratively_paused_gpu_jobs": [
     {
       "job": "sgw01-ali-family-partition-20260923bt",
       "job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
       "started_at_utc": "2026-09-23T08:16:48Z",
-      "status": "eight_remaining_candidates_complete_four_next_slots_recording",
+      "status": "all_four_pods_terminated_at_authorized_complete_candidate_boundaries",
+      "last_pod_terminated_at_utc": "2026-09-23T19:25:58Z",
+      "boundary_evidence": "infrastructure/administrative-pause-20260923cx/boundaries/summary.json",
       "source_commit": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d",
       "raw_root": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt",
-      "allocated_gpus": 4,
+      "allocated_gpus": 0,
+      "peak_allocated_gpus": 4,
       "model_workers": 0,
       "automatic_retries_per_index": 0,
       "job_deadline_seconds": 172800,
@@ -641,7 +649,13 @@
     "release_permitted": false
   },
   "remaining_family_partition": {
-    "status": "running_four_disjoint_workers_native_trials_recording",
+    "status": "administratively_paused_110_operational_slots_complete_7_unstarted_pending",
+    "terminal_boundary_receipt": "infrastructure/administrative-pause-20260923cx/boundaries/summary.json",
+    "completed_operational_slots_per_rank": [27, 28, 27, 28],
+    "unstarted_pending_DIST_slots_per_rank": [[86, 92, 98], [94], [90, 95], [96]],
+    "unfinished_claimed_slots": 0,
+    "active_worker_containers": 0,
+    "independent_final_raw_video_compilation": "BU_running_summary_not_yet_present_at_2049_UTC",
     "job": "sgw01-ali-family-partition-20260923bt",
     "job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
     "started_at_utc": "2026-09-23T08:16:48Z",
@@ -900,7 +914,7 @@
       "live_workers_modified": false,
       "release_permitted": false
     },
-    "latest_worker_monitor": {
+    "historical_worker_monitor_1334": {
       "observed_at_utc": "2026-09-23T13:34:04.684755+00:00",
       "receipt": "infrastructure/family-capacity-20260923ci/worker-monitor.json",
       "active_slots": ["HEIGHT-090", "DIST-006", "DIST-007", "DIST-008"],
@@ -908,10 +922,21 @@
       "shared_infrastructure_stop_present": false,
       "terminal_launcher_receipts": 0
     },
-    "last_read_only_monitor": {
+    "historical_read_only_monitor_1334": {
       "observed_at_utc": "2026-09-23T13:34:04.684755+00:00",
       "shared_infrastructure_stop_present": false,
       "collector_terminal_or_error_record_present": false
+    },
+    "latest_worker_monitor": {
+      "observed_at_utc": "2026-09-23T20:47:30.621967+00:00",
+      "receipt": "infrastructure/administrative-pause-20260923cx/boundaries/summary.json",
+      "active_slots": [],
+      "completed_operational_slots": 110,
+      "unstarted_pending_slots": 7,
+      "shared_infrastructure_stop_present": true,
+      "stop_cause": "ADMINISTRATIVE PRIORITY PAUSE",
+      "boundary_acknowledgements": 4,
+      "terminated_worker_pods": 4
     },
     "release_permitted": false
   },
@@ -1343,12 +1368,12 @@
     "frozen_candidates_or_controller_modified": false,
     "scope": "Inspect scene/path clearance using copies of exact existing source and video. Offer does not authorize replacing frozen failures or waive history/runtime gates; future repairs require prospective disclosure."
   },
-  "next_authorized_step": "N3 reached the native constructor on a verified-idle A40 but failed before any request. Preserve CW admission/CZ constructor failures and the persistent owner claim. Resolve authorized Hugging Face access to the unchanged constructor's missing Cosmos-Guardrail1 auxiliary asset, then disclose a zero-prior-request infrastructure recovery before executing the same six registered requests. Do not disable safety settings or bypass access controls. MAIN N3/LAT P remains next after actual technical release; no extra pilot, no full D/C release. BT administrative boundary pause was activated at19:00:41Z: ranks1/2 acknowledged after complete candidates at19:16, ranks0/3 still finishing at latest read. Do not kill them or count pending slots as failures. BU retains independent raw/video compilation. Use only verified-idle authorized existing capacity. No learned request or behavioral episode has completed.",
+  "next_authorized_step": "N3 remains blocked before its first request under the unchanged native auxiliary-asset configuration. User asked why the content-safety layer is needed; the explanation did not authorize a configuration change. Preserve CW/CZ failures and the owner claim. Resolve legitimate asset access or an explicitly authorized, disclosed runtime configuration before recording a distinct zero-prior-request recovery and executing the same six registered requests. MAIN N3/LAT P's prospective physical assignment is now frozen; fixed-input/runtime/time-map release remains pending, with no extra pilot or full D/C release. All four BT workers finished their current candidates and stopped:110 operational slots complete,7 unstarted pending, no unfinished claims. BU independently compiles raw/video evidence. Recheck actual GPU ownership/idleness before any new allocation. No learned request or behavioral episode has completed.",
   "next_qualification_milestone": {
     "status": "prospective_revision_not_yet_registered_or_launched",
     "first_deliverable": "Separately disclose and freeze a post-result LAT/HEIGHT candidate-generation revision using SGW-ENG-008's actual translated geometry and measured center/root transforms. Specify family-appropriate landing/support geometry, unchanged robot/cameras/controller, seed, finite candidate cap, deterministic selection and required counterbalance before new candidate outcomes.",
     "qualification_gate": "Native materialization, reset/recording integrity and both goals across three resets per candidate under the unchanged450-action cap; independently verify raw evidence and videos. A released family still needs29 distinct qualifying layouts with the registered strata. Preserve each original frozen pool and every failure; never count the one-layout engineering demonstration as a family release or refill.",
-    "parallel_existing_work": "BT is administratively pausing only after current complete candidates. BU performs terminal independent raw/video accounting. Preserve all completed outcomes and exact resumable pending slots; operational completion counts do not substitute for independently verified scientific results.",
+    "parallel_existing_work": "BT candidate-boundary pause is complete, with110 operational slots complete and7 unstarted pending. BU performs terminal independent raw/video accounting. Preserve all completed outcomes and exact resumable pending slots; operational completion counts do not substitute for independently verified scientific results.",
     "parallel_runtime_gate": "User prioritizes the already preregistered nonbehavioral fixed-input checks, starting with N3 when actual source-bound native image/proprio/reset inputs and idle capacity are ready. These do not wait for29 layouts or historical novelty. Qualify actual policy-server/observation/reset identities and recording/repeat/prompt-sensitivity plus exposed-future timing/decoding. Keep the registered12 requests, six per model, separate from behavioral episodes; do not manufacture optional decoding when the released interface requires it. Any conditional official-reference checks require their own registered condition.",
     "behavioral_release_permitted": false,
     "new_campaign_released": false
@@ -1369,6 +1394,24 @@
     "requires_full_29_layout_pool": false,
     "requires_historical_novelty": false,
     "next_step": "Obtain approved access/authentication for nvidia/Cosmos-Guardrail1 at d6d4bfa899a71454a700907664f3e88f503950cf (missing face_blur_filter/Resnet50_Final.pth); retain native safety configuration. Restore the existing native library/PATH/cache environment and all required auxiliary assets before another GPU launch. Preserve failed CZ output and claim; corrected launch must be separately recorded with zero prior requests verified."
+  },
+  "main_n3_lat_p_fixture_assignment": {
+    "id": "SGW-MAIN-N3-LAT-P-20260923",
+    "path": "main_n3_lat_p_assignment_20260923.json",
+    "file_sha256": "afa09c5dad2cf5adc9325398109b4194389cc80f14affb8b6be777aa2455238f",
+    "assignment_sha256": "d3ef7231da2ae7b6158ecf55f584801bff204042fab42be7adfb977d815dc71b",
+    "implementation_commit": "c8a54cbf9ad4913bb96750f329e4b18b53ee5e0e",
+    "persistent_path": "/data/users/ali/sgw-01/infrastructure/main-p-assignment-20260923da/assignment.json",
+    "status": "physical_assignment_frozen_not_runtime_release",
+    "candidate_id": "SGW-ENG-008-LAT-057",
+    "layout_id": "LAT-P01",
+    "existing_main_P_cells": 6,
+    "additional_episode_allocation": 0,
+    "selection_disclosure": "After six scripted passes and before any learned outcome. Original rejected LAT057 and blocked pools remain unchanged. Reserve against later D/C duplicate-within-tolerance reuse.",
+    "runtime_release_permitted": false,
+    "pending": ["passed_native_fixed_input_receipt", "passed_runtime_receipt", "passed_time_map_receipt"],
+    "model_requests": 0,
+    "behavioral_episodes": 0
   },
   "paper_engineering_attempt": {
     "id": "SGW-ENG-008-LAT-057",
@@ -1702,7 +1745,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Resolve the exact native auxiliary-asset Hugging Face access blocker before retrying N3 construction. Preserve zero-request CW/CZ failures and owner claim. Record remaining BT candidate-boundary acknowledgements and explicit pending-slot ledger; keep BU independent collection intact. Prepare only the existing MAIN N3/LAT P branch under its distinct prospective redesigned-scene/staged-ordering assignment. No extra pilot or full confirmation release.",
+  "next_action": "Resolve N3's auxiliary-asset access or obtain explicit authorization for a disclosed runtime configuration change; none was made in response to the user's explanatory question. Preserve CW/CZ failures and claim. Main P's six-cell physical assignment is frozen but unreleased. All BT candidate-boundary acknowledgements and seven resumable pending slots are now recorded; leave BU independent collection intact. No new GPU launch, extra pilot or full confirmation release.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

@@ -33,8 +33,12 @@ paid capacity, duplicate an attempt, or bypass the initial worker/stage gates.
 The redesigned native engineering attempt already completed on additional
 idle capacity with six independently verified scripted passes. Do not repeat
 it. [SGW-OPS-003](../../../artifacts/workshops/spatial_grounding_v1/priority_pause_authorization_20260923.json)
-allows a future priority pause at completed-candidate boundaries, but its
-stale immediate rationale was withdrawn before mutation; BT/BU remain running.
+allowed a later priority pause at completed-candidate boundaries. The stale
+engineering rationale was not acted on; the renewed main-experiment priority
+subsequently activated it. All four BT workers finished their current
+candidates and stopped: 110 operational slots complete, seven unstarted
+pending, no unfinished claims. BU's independent raw/video compilation remains
+running; pending slots are not scientific failures.
 The next qualification deliverable is a separate prospective LAT/HEIGHT
 registration, not another engineering attempt. The user now prioritizes the
 already registered nonbehavioral fixed-input model checks, starting with N3
@@ -44,6 +48,13 @@ the separate engineering pilot and confirmed the MAIN P -> D -> C progression.
 The next behavioral target is the existing six-episode N3/LAT P stage, requiring
 a distinct redesigned-scene assignment and prospective scoped stage-ordering
 disclosure before release, without replacing old pool failures or changing D/C.
+The [physical assignment](../../../artifacts/workshops/spatial_grounding_v1/main_n3_lat_p_assignment_20260923.json)
+is now frozen from the exact retained capture and six-pass verification.
+`main_p_fixture_assignment.write_assignment` preserves the six original queue
+rows and reserves the layout against later D/C reuse. Materialization requires
+an independently qualified N3 time map, refuses an existing LAT-P01 binding,
+and does not grant runtime release. No new simulator trial is needed merely
+to reproduce the assignment.
 
 `nano_fixed_input` executes the registered six N3 requests from the retained
 native camera/proprio snapshot. It binds the source, checkpoint, prompts and
@@ -56,9 +67,13 @@ behavioral actions are started, and output directories cannot be reused.
 The first actual native constructor attempt stopped before any request. The
 missing native `libxcb` search path is resolved by the existing Ubuntu 22.04
 native libraries; the remaining prerequisite is approved Hugging Face access
-to the pinned Cosmos-Guardrail1 auxiliary asset. Preserve this zero-request
-failure and its owner claim. Do not disable safety settings or bypass access
-controls to resume. See the current execution capsule in
+to the pinned Cosmos-Guardrail1 auxiliary asset under the unchanged native
+configuration. This auxiliary content filter is not a scientific or robot
+collision-safety gate. The user's explanatory question authorized no change:
+preserve the zero-request failure and its owner claim, do not automatically
+change the runtime, and never bypass repository access controls. An alternative
+runtime configuration would need explicit authorization and prospective
+disclosure. See the current execution capsule in
 `artifacts/workshops/spatial_grounding_v1/infrastructure/n3-fixed-input-20260923cw/`.
 
 Current restart state and cluster evidence:

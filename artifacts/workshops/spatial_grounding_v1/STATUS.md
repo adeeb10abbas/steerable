@@ -2,8 +2,10 @@
 
 **The new 0.50 m native engineering layout passed all six recorded scripted
 checks: both goals, three resets each. It ran on an additional verified-idle
-A40, leaving the original four workers untouched. This is one engineering
-layout outside the frozen pools, not a benchmark or learned-policy release.**
+A40 without interrupting the original four workers. Those workers have since
+completed their current candidates and acknowledged the separately authorized
+administrative pause. The redesigned layout is now prospectively assigned to
+the existing six N3/LAT P cells, but no learned-policy run is released.**
 
 **LAT qualification is complete: 20 all-six passes and 20 physical rejections,
 including candidate 032, plus 60 geometric rejections. The frozen 29-layout
@@ -13,12 +15,13 @@ have verified receipts, views and complete videos. Native smoke br has completed
 physical rejections. All four raw evidence chains passed independent rechecks.
 Including the first fifty-two subsequent candidates, 56 HEIGHT/DIST candidates
 have completed 336 full trials: seventeen all-six passes and thirty-nine physical
-rejections. There are 65 slots outside this retained terminal evidence;
-four durable GPU workers continue independently.
+rejections. That retained scientific prefix is unchanged. The final worker
+accounting now contains 110 completed operational slots and seven unstarted
+pending slots; BU is independently compiling the remaining raw/video evidence.
 HEIGHT's fixture gate is now blocked: its right-side best-case capacity is
 3, below the required 14, and its total capacity is at most 19 against 29.
-The running qualification queue remains unchanged;
-DIST's pool is not yet ruled out. Historical layout uniqueness is not a release
+The qualification queue is administratively paused, not rewritten;
+DIST's pool is not yet ruled out by the retained prefix. Historical layout uniqueness is not a release
 requirement; the learned-runtime release gates remain unresolved.
 Learned-policy requests and episodes remain at zero.**
 
@@ -180,6 +183,33 @@ Ranks 0 and 3 were still completing their candidates at the latest read.
 Unstarted slots stay pending; no candidate was killed and no new scientific
 failure is inferred from the pause. BU's independent final collection remains
 required.
+
+### 20:49 UTC: boundary pause complete; MAIN P physical assignment frozen
+
+All four workers acknowledged `stopped_before_next_slot` after completing the
+four candidates active at the stop request. The last Pod terminated at
+19:25:58 UTC. [Boundary accounting](infrastructure/administrative-pause-20260923cx/boundaries/summary.json)
+reconciles all 117 assigned slots: **110 operationally complete, seven
+unstarted pending, zero unfinished claims**. Pending DIST slots are
+086/092/098 on rank 0, 094 on rank 1, 090/095 on rank 2, and 096 on rank 3.
+Their unfinished status is not a scientific failure. Original generic launcher
+errors remain preserved alongside the administrative cause. No GPU worker
+remains active; any new allocation still requires a fresh ownership/idle check.
+BU remains running and has not yet produced its final independent summary.
+
+The [prospective MAIN P assignment](main_n3_lat_p_assignment_20260923.json)
+binds the actual hash-verified redesigned capture and six-pass qualification
+receipt to the **six existing N3/LAT P cells** in their original
+I+/D+/C+/C-/D-/I- order. IDs, prompts, seeds and episode allocation are unchanged.
+Selection after known scripted outcomes is disclosed; the layout is reserved
+against later D/C duplicate-within-tolerance reuse. The rejected original
+LAT057 and old blocked pools remain untouched.
+
+This is a physical assignment, not a runtime release. N3 still has **zero
+learned requests** and requires actual fixed-input, runtime and time-map
+evidence. The user asked why the auxiliary content filter is needed; no runtime
+configuration change was authorized or made. The current native startup
+access blocker remains, and no new GPU or simulator was launched here.
 
 ## Latest retained evidence (23 September, 13:34 UTC)
 

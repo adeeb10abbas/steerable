@@ -1,0 +1,190 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-family-source-stage-20260923bs
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 4800
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: finite-partition-source-and-smoke-verification}
+    spec:
+      restartPolicy: Never
+      activeDeadlineSeconds: 4700
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: stage
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              OUT=/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bs
+              BASE=/data/users/ali/sgw-01/source/b429ddd
+              TARGET=/data/users/ali/sgw-01/source/68b9e100-bs
+              SOURCE=68b9e1004ef289d320bfbdbfdf272b2c3cd9440d
+              ROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              test ! -e "$OUT"
+              test ! -e "$TARGET"
+              test "$(git -C "$BASE" rev-parse HEAD)" = b429ddd8c3e7be59f63759c1820e352029e48b8c
+              test ! -e "$BASE/.git/objects/info/alternates"
+              mkdir "$OUT"
+              exec > >(tee "$OUT/stage.log") 2>&1
+              for i in $(seq 1 180); do
+                test ! -f "$OUT/transfer.complete" || break
+                sleep 2
+              done
+              test -f "$OUT/transfer.complete"
+              test "$(sha256sum "$OUT/update.bundle" | awk '{print $1}')" = 5029fb4d54f8a34b24db73101a85ff4d21b082400fc6da7ed085f759094ebef5
+              git clone --shared --no-checkout "$BASE" "$TARGET"
+              git -C "$TARGET" bundle verify "$OUT/update.bundle"
+              git -C "$TARGET" fetch --no-tags "$OUT/update.bundle" HEAD
+              git -C "$TARGET" checkout --detach "$SOURCE"
+              test "$(git -C "$TARGET" rev-parse HEAD)" = "$SOURCE"
+              test -z "$(git -C "$TARGET" status --porcelain)"
+              test "$(git -C "$ROBOLAB" rev-parse HEAD)" = 0aef241fb088ca21bb4ebd24448940ed56620d17
+              test -z "$(git -C "$ROBOLAB" status --porcelain --untracked-files=no)"
+              cd "$TARGET"
+              export PYTHONPATH="$TARGET"
+              "$PY" tools/validate_vla_wam_v3_protocol.py --quiet
+              "$PY" tools/validate_vla_wam_v2_protocol.py > "$OUT/v2-validation.json"
+              "$PY" -m experiments.workshops.spatial_grounding_v1.family_partition_worker --help > "$OUT/worker-help.txt"
+              "$PY" - "$OUT" "$TARGET" <<'PY'
+              from datetime import datetime, timezone
+              import hashlib, json, os, shutil, sys, tarfile, time
+              from pathlib import Path
+              from experiments.workshops.spatial_grounding_v1.family_campaign_verifier import verify_design
+              out, source = map(Path, sys.argv[1:])
+              def record(path):
+                  digest = hashlib.sha256()
+                  with path.open("rb") as stream:
+                      for block in iter(lambda: stream.read(1024 * 1024), b""):
+                          digest.update(block)
+                  return {"path": str(path), "bytes": path.stat().st_size, "sha256": digest.hexdigest()}
+              def write(path, value):
+                  path.parent.mkdir(parents=True, exist_ok=True)
+                  with path.open("x") as stream:
+                      json.dump(value, stream, indent=2, sort_keys=True, allow_nan=False)
+                      stream.write("\n"); stream.flush(); os.fsync(stream.fileno())
+              freeze = Path("/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/receipt.json")
+              assert record(freeze)["sha256"] == "55b2dbbce2376b1c297180630238b09a83e8f226697f8da6a1814d748eebefd3"
+              registry = json.loads(freeze.read_text())
+              campaigns = {row["family"]: Path(row["campaign"]["path"]) for row in registry["families"]}
+              smoke = Path("/data/users/ali/sgw-01/qualification/family-native-smoke-20260923br")
+              deadline = time.monotonic() + 900
+              while not all((smoke / str(i) / "process_outcome.json").is_file() for i in range(4)):
+                  if time.monotonic() >= deadline:
+                      raise TimeoutError("native smoke has not produced four terminal outcomes")
+                  time.sleep(10)
+              proofs = []
+              for index, slot in enumerate(registry["native_smoke_slots"]):
+                  parent = smoke / str(index)
+                  root = parent / "evidence"
+                  outcome = json.loads((parent / "process_outcome.json").read_text())
+                  if outcome["status"] != "externally_verified_native_smoke_not_release":
+                      raise RuntimeError(f"smoke index {index} is infrastructure-invalid")
+                  expected = json.loads((root / "family_verification.json").read_text())
+                  fresh = verify_design(campaign_path=campaigns[slot["family"]], design_id=slot["design_id"],
+                                        root=root, output=out / "rechecks" / f"{index}.json")
+                  assert fresh == expected
+                  result = json.loads((root / "qualification.json").read_text())
+                  proofs.append({
+                      **slot, "root": str(root), "verification": record(root / "family_verification.json"),
+                      "verification_sha256": fresh["verification_sha256"],
+                      "qualification_status": result["status"], "trial_count": len(fresh["trials"]),
+                      "started_at_utc": outcome["started_at_utc"], "finished_at_utc": outcome["finished_at_utc"],
+                      "recheck": record(out / "rechecks" / f"{index}.json"),
+                  })
+                  print(json.dumps(proofs[-1], sort_keys=True), flush=True)
+              export = out / "compact"
+              export.mkdir()
+              records = []
+              for index in range(4):
+                  parent = smoke / str(index)
+                  names = ["launch.json", "process_outcome.json", "storage_preflight.json",
+                           "gpu_selection.json", "gpu_identity.csv", "worker.log",
+                           "evidence/candidate_manifest.json", "evidence/candidate_capture.json",
+                           "evidence/candidate.json", "evidence/qualification.json",
+                           "evidence/controller.json", "evidence/family_verification.json",
+                           "evidence/executor-receipt.json", "evidence/capture-process.json",
+                           "evidence/qualification-process.json", "evidence/capture.stdout.log",
+                           "evidence/capture.stderr.log", "evidence/qualification.stdout.log",
+                           "evidence/qualification.stderr.log"]
+                  names += [str(path.relative_to(parent)) for pattern in (
+                      "evidence/trials/*/reset-*/trial.json",
+                      "evidence/trials/*/reset-*/preaction-geometry-guard.json",
+                      "evidence/reset_warmup/*/reset-*/warmup.json",
+                  ) for path in parent.glob(pattern)]
+                  for name in names:
+                      path = parent / name
+                      if not path.is_file():
+                          raise FileNotFoundError(path)
+                      binding = record(path)
+                      relative = f"{index}/{name}"
+                      copied = not name.endswith(".log") or binding["bytes"] <= 2 * 1024**2
+                      if copied:
+                          destination = export / relative
+                          destination.parent.mkdir(parents=True, exist_ok=True)
+                          shutil.copyfile(path, destination)
+                      records.append({**binding, "export_path": relative if copied else None})
+              write(export / "manifest.json", {
+                  "schema_version": "sgw-01-native-smoke-compact-export-v1",
+                  "raw_root": str(smoke), "files": records, "smoke_proofs": proofs,
+                  "raw_frames_states_actions_and_videos_remain_on_pvc": True,
+                  "model_requests": 0, "behavioral_episodes": 0, "release_permitted": False,
+              })
+              with tarfile.open(out / "compact.tar.gz", "x:gz") as archive:
+                  archive.add(export, arcname="native-smoke-20260923br")
+              receipt = {
+                  "schema_version": "sgw-01-partition-source-and-smoke-stage-v1",
+                  "source_commit": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d", "source_root": str(source),
+                  "source_bundle": record(out / "update.bundle"), "unchanged_freeze": record(freeze),
+                  "smoke_proofs": proofs, "compact_export": record(out / "compact.tar.gz"),
+                  "job_uid": os.environ["JOB_UID"], "pod_uid": os.environ["POD_UID"],
+                  "staged_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "allocated_gpus": 0, "model_requests": 0, "behavioral_episodes": 0, "release_permitted": False,
+              }
+              write(out / "receipt.json", receipt)
+              print(json.dumps(receipt, sort_keys=True), flush=True)
+              PY
+              sync
+              sleep 1800
+          env:
+            - {name: HOME, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: CUDA_VISIBLE_DEVICES, value: ""}
+            - {name: NVIDIA_VISIBLE_DEVICES, value: void}
+            - name: JOB_UID
+              valueFrom: {fieldRef: {fieldPath: "metadata.labels['batch.kubernetes.io/controller-uid']"}}
+            - name: POD_UID
+              valueFrom: {fieldRef: {fieldPath: metadata.uid}}
+          resources:
+            requests: {cpu: "1", memory: 2Gi}
+            limits: {cpu: "4", memory: 4Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: tmp
+          emptyDir: {}

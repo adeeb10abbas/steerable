@@ -1,0 +1,1838 @@
+{
+  "baseline_capture_verification": {
+    "left": {
+      "receipt": {
+        "bytes": 77371,
+        "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/0-height-left/capture.json",
+        "sha256": "d8c961be41b65d4d6860f550466a2a0b000d44bd147f631901f6de31d98b9148"
+      },
+      "status": "verified_capture_artifacts_not_fixture_qualification",
+      "verified_recording_files": 137
+    },
+    "right": {
+      "receipt": {
+        "bytes": 77512,
+        "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/1-height-right/capture.json",
+        "sha256": "35327020323b406969eef7613d94946bd776001567d0dcc4e223dfc3330ad3b7"
+      },
+      "status": "verified_capture_artifacts_not_fixture_qualification",
+      "verified_recording_files": 137
+    }
+  },
+  "baseline_scene_review": {
+    "left": {
+      "capture_sha256": "d8c961be41b65d4d6860f550466a2a0b000d44bd147f631901f6de31d98b9148",
+      "disposition": "ACCEPT_NATIVE_VISUAL_SETUP_ONLY",
+      "path": "/data/users/ali/sgw-01/source/cdb7a55b-bm/artifacts/workshops/spatial_grounding_v1/infrastructure/independent-scene-review-20260923bi/sgw-bi-review-analysis/independent_scene_review_manifest.json",
+      "scene": "0-height-left",
+      "scope": "native_visual_setup_only_not_candidate_physical_or_model_acceptance",
+      "sha256": "8a5d5f82edb73cd774c82e093646604dc90e560cd3696b715dac7eba007476ba"
+    },
+    "right": {
+      "capture_sha256": "35327020323b406969eef7613d94946bd776001567d0dcc4e223dfc3330ad3b7",
+      "disposition": "ACCEPT_NATIVE_VISUAL_SETUP_ONLY",
+      "path": "/data/users/ali/sgw-01/source/cdb7a55b-bm/artifacts/workshops/spatial_grounding_v1/infrastructure/independent-scene-review-20260923bi/sgw-bi-review-analysis/independent_scene_review_manifest.json",
+      "scene": "1-height-right",
+      "scope": "native_visual_setup_only_not_candidate_physical_or_model_acceptance",
+      "sha256": "8a5d5f82edb73cd774c82e093646604dc90e560cd3696b715dac7eba007476ba"
+    }
+  },
+  "behavioral_episode_count": 0,
+  "campaign_sha256": "4ba446ae1ecd5f05881dac4a26e7f32847f5f5165e5f75cf5f169072238ac523",
+  "family": "HEIGHT",
+  "fixed_slot_count": 100,
+  "jobs": [
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-000",
+      "design_sha256": "3d66da07b82994bcc5da635a97516c90164084cd7a4ae60ea0e946b12570e727",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-001",
+      "design_sha256": "0fc51691f7f1e9e53e075ff2697f62029e4abe5a9f7c6381a73578f2c6e73cc3",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-002",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-003",
+      "design_sha256": "7d8e2490d9c9a3fb72bd9e8041bd15d319ab8be891cfbd3836160629977ef643",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-004",
+      "design_sha256": "52e5aced539e4206076295ee4da006af72c6b7c8c0d8430d61054309a3e29e84",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-005",
+      "design_sha256": "7f4d9edca2f488f3dcdac19d021baee53e177629c397a53196e2bcfab46972f0",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-006",
+      "design_sha256": "7dd9ed805221d2345bb68362abc86b712f91c904dc92fe582bed59c0f6482adf",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-007",
+      "design_sha256": "224c1180b0a5a7cc5fdf6445fbd0c43f29aa494c64f70e97bbd3b02dd16c1653",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-008",
+      "design_sha256": "6055d55015167ae25e4db43b3a905c2584216d003803963e13f20613a41c7cd8",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-009",
+      "design_sha256": "4f1b051e3f36d26b85dd0dccc5d2a78678c984d7ea7e726ee42ee0f649003f3b",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-010",
+      "design_sha256": "8376891a0e434b278a2bc082b146925e833a76086f9374829cff10d7aa0c5009",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-011",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-012",
+      "design_sha256": "b4b8555965b3b0dd9a24d377c3a9bf2ef5797d67c314b703f68d7a18d1a04859",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-013",
+      "design_sha256": "bf656da88150c2a11ba133a4f0bf711472436e9d4a44afa19037beacc81a7ac9",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-014",
+      "design_sha256": "ce04ff3b4b72751326e7e4773d16fd5cf1cab5638d1609bf9ee25faac2f2b6f1",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-015",
+      "design_sha256": "3f203113b8e8abbfbc67c89737e3908d83a59b8867cc2e3f32f789b07987e238",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-016",
+      "design_sha256": "c9a15c0f0190ce4a924f7cd2f0706168607741e4bf38bb61528071d09c5a88a2",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-017",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-018",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-019",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-020",
+      "design_sha256": "58ef5900ccbca03282308102fcf8742b4419470b8089245a2f6c21150f7001d1",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-021",
+      "design_sha256": "d6d8fa5e73b23b415db243e1906da7a53fedf6e1d4b43c2fee1f6c52c09ae71d",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-022",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-023",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-024",
+      "design_sha256": "5e2af322fa71ad840491c5facaddc4aefa8b927f708ac11ee705187edda99b4c",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-025",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-026",
+      "design_sha256": "a8fdf118bcc76a441f3efbdc2a8d69b93f1921348212d79bb347aaa8d86267f6",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-027",
+      "design_sha256": "192c49f48c6892af35a389abfc85ed3359f9649ca43e740af96910b485797981",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-028",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-029",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-030",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-031",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-032",
+      "design_sha256": "c3b7f9a38408e520036d1fff92c36f38e81562f622090aede041987168860d76",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-033",
+      "design_sha256": "783be0363a8d1b3a3cfdc421914ecee7f1a4601b20db6638f80aa14553ce8c18",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-034",
+      "design_sha256": "4232651b36f4e1a94fb9a04786608413d312dff14ab4c53b2c79f396cef887ee",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-035",
+      "design_sha256": "31eadea725019cc6a8ce5f27da625b452d0c9d8aee53fd75d5f23486bf890a09",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-036",
+      "design_sha256": "8591b9a8d653debefb642b037b587566444eeaf1e33c8bd2c00200b35204a341",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-037",
+      "design_sha256": "069f91a6b77b9d15384e50501fca0344923180772563aedcb5f386709bcdd168",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-038",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-039",
+      "design_sha256": "0c4f6bd44b0521d4a3993ea773bdf49e2a35e9d6ba02290660d5a9b6933cafaa",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-040",
+      "design_sha256": "ccf7dcf53b56be0de55736f7ec766055ddd6c81b188435f630d6e0df5c4f8a94",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-041",
+      "design_sha256": "eabdeb0d131dbddd861fccaea67bcea841dda76840011148710d44b309c0b5bc",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-042",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-043",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-044",
+      "design_sha256": "590c25e7099bef7040373fbb24f4da16de3572a8b26cdf58594f877375caa7c4",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-045",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-046",
+      "design_sha256": "7cee913fe6058353e0f74cdc1989287ab89308a6239224092473004fb84b8cf8",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-047",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-048",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-049",
+      "design_sha256": "e18bc7ae5b522ee0000313d0b382b70b6877e5615de79f7f46e915342d341b70",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-050",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-051",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-052",
+      "design_sha256": "a275eca363bd40d7ec2f6461ba388f352b770ad5fc3e6153e492459d2ac6aed5",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-053",
+      "design_sha256": "4eb8030af10be0f74a130284ca074b4a69f6a6a10c6b27b2196e6090a05a57d3",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-054",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-055",
+      "design_sha256": "e637d903695b98006a5131aa9c17a8617ffe52cdf27a1a3ba0233ef30d937bb6",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-056",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-057",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-058",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-059",
+      "design_sha256": "228c161a2191a696d9a9b953ec542d04ad11ec645565859d5c8bf2b199368635",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-060",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-061",
+      "design_sha256": "fb10da8d76d5b459f48ca7d0ee6b2c03746f12374b463f1e9c2a527c60a3ca8c",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-062",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-063",
+      "design_sha256": "726c2af021ab593974c71cd883822c95a9c1136764d3aa17211d115eac9174bf",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-064",
+      "design_sha256": "28e3ab1a814d43ea262cdf4d3f2a72396f51c0ab269e0499a989bfc09da79fb3",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-065",
+      "design_sha256": "00282d02336658ac4bacae0dca10b27ecc8e080c015d0278f4f0ea9c45838f9c",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-066",
+      "design_sha256": "6806779a770a7fbd642d2216a2c9875a674f381b4678a1a10495fca65d1d4d60",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-067",
+      "design_sha256": "640c3667023a7ad7d3240e6de726779b56e61368f3608777f34dcbdc2e27aa82",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-068",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-069",
+      "design_sha256": "16ad0ad461f640802e1b6e8c706539d0422916b58351330c41b6632cc2bf86bb",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-070",
+      "design_sha256": "a7a7fc9d8ef722eca1f17323090a96700e6a48b4b6f33540f241bcb33bcd0639",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-071",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-072",
+      "design_sha256": "cbffd0e5cc433f920f98b3ce95ab864922c4427f13381cf4012a71fda059793a",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-073",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-074",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-075",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-076",
+      "design_sha256": "b1938fd53a11915f4806cef7b66ced792322927675a5cf68065b6a27fade53c1",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-077",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-078",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-079",
+      "design_sha256": "cf167641884d5931c6f9bac6246f2ce6309cf70499dbcb3925b6b150c2f0248e",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-080",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-081",
+      "design_sha256": "360b1bf53b3300c1e8f090444f2e8864ee3c9350ad09b77a38795974473e52f9",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-082",
+      "design_sha256": "a86ae5e374400fe49978fc896520973cb543ce49d34f0bf6529f16727e37e41e",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-083",
+      "design_sha256": "1480647267778cd3392c2c59739a4584d61dfc9e96c37b7584539846c68eadab",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-084",
+      "design_sha256": "22449df1cab482265fc46a9962c9b0631698253568925392a4d348a24874a6ae",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-085",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-086",
+      "design_sha256": "159518f46f6e42d4bf3acc5b1bd870fe78757cccbf7f2739b54aa0eeb2fe468f",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-087",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-088",
+      "design_sha256": "8df3a98af08df5a410fbe1d1250669eab1e6e50c89b04a907c170569e6619660",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-089",
+      "design_sha256": "1158787b60630d8736a3ae7760575df1b2ebbc7ef644a8882899ae9994c8d348",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-090",
+      "design_sha256": "65f2220811c0e785cbbb119d6b1793c2b42b9942fa369c6b7dd6400e3dc0ee11",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-091",
+      "design_sha256": "bcf2fb56bce13d5945385570c439748843da57cadb018f4a5da54d620613cb3f",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-092",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-093",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-094",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-095",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-096",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-HEIGHT-DESIGN-097",
+      "design_sha256": "9a491ca6763da74ab1c160b0f68fcb05cd9372b4f32c86fe2eac6712230b0145",
+      "family": "HEIGHT",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+      "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-098",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-HEIGHT-DESIGN-099",
+      "family": "HEIGHT",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    }
+  ],
+  "model_request_count": 0,
+  "plan": {
+    "path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/height-plan.json",
+    "plan_sha256": "30d5759c57de7920785636732acae11038cfd5726e84c4af87135f6d2291be6f",
+    "sha256": "4cb646b854c83e09470bf358c201719f652bef03ab7daf9a7c8eadbd55f5b784"
+  },
+  "release_permitted": false,
+  "schema_version": "sgw-01-family-finite-campaign-v1",
+  "status": "compiled_native_visual_setup_baselines_not_authorized_to_launch_or_release"
+}

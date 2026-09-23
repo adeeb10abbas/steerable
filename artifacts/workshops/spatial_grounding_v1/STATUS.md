@@ -13,6 +13,29 @@ The supplied study is committed on
 implemented separate fixture, policy, persistence and analysis components.
 Implementation and synthetic tests do not establish scientific readiness.
 
+## Current prospective freeze (23 September, 07:07 UTC)
+
+CPU-only stage bm restored tested source `cdb7a55b` and froze exactly 100
+proposals per family with unchanged seed `20260922`, exact bi captures, and
+their sealed native-only reviews. HEIGHT has 57 capture-eligible proposals
+(28 left, 29 right) and 43 geometric rejections; DIST has 64 (45 left, 19
+right) and 36 geometric rejections. All rejected slots remain consumed.
+The exact plans, campaigns and receipt are retained in
+[`infrastructure/family-plan-freeze-20260923bm/`](infrastructure/family-plan-freeze-20260923bm/).
+Geometric eligibility is not physical qualification.
+
+The native canonical-root and early-rejection verification corrections are
+integrated. The full source-backed suite passes 326 tests, with one
+Linux-specific identity skip. Registered Job bn selects the first eligible
+slot per family/side before physical outcomes: HEIGHT 000/001 and DIST
+000/003. It is bounded to four A40 GPUs, zero model workers, no automatic
+retries and six fixed trials per candidate unless a measured, independently
+verified geometry rejection terminates the candidate. It retains all raw
+frames, states, actions and trial/warmup videos on the PVC. The other 117
+capture-eligible slots remain unlaunched until actual smoke integrity passes.
+Historical coverage, learned runtime, pilot and behavioral release gates are
+unchanged.
+
 ## Scientific accounting
 
 - Planned: **1,044** episodes (P 36, D 144, C 864).

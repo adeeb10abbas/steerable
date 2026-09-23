@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_below_release_gate_height_dist_native_visual_setup_accepted_qualification_unreleased",
-  "updated_at_utc": "2026-09-23T06:42:31Z",
+  "updated_at_utc": "2026-09-23T07:09:58Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -57,8 +57,8 @@
     "preaction_guard_persisted_before_controller_planning": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
     "local_sgw_tests_passed": 326,
     "local_sgw_tests_skipped_linux_identity": 1,
-    "last_full_test_source_commit": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
-    "last_full_test_scope": "Complete source-backed SGW suite after family executor, actual HEIGHT/DIST six-trial E2E, streaming rewrite and pre-controller guard persistence; 326 passed and one Linux-only skip. This does not release native execution or excuse the pending early-rejection verifier correction.",
+    "last_full_test_source_commit": "cdb7a55b6cc71ac34828c96368850623102e7137",
+    "last_full_test_scope": "Complete source-backed SGW suite after independent early-rejection/prefix verification and native canonical-root/phase-directory corrections: 326 passed and one Linux-only identity skip in 242.19 seconds. This does not establish native qualification or release learned inference.",
     "subsequent_focused_d1_tests_passed": 44,
     "targeted_support_capture_repair_tests_passed": 31,
     "live_model_runtime_qualified": false,
@@ -400,18 +400,47 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "Four bi captures are artifact-valid and independently accepted for native visual setup only. Real materialization/recorder/verifier E2E covers HEIGHT and DIST, six450-action trials, plate/support mappings, measured reset guards and zero controller calls on changed banana geometry. No HEIGHT/DIST candidate plan is frozen; parent alone owns launches.",
+    "fixture_scope": "Four bi captures are artifact-valid and independently accepted for native visual setup only. bm froze both100-slot plans: HEIGHT57 capture-eligible/43 geometric rejections; DIST64/36. No native candidate has been physically qualified. Parent alone owns launches.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
     "runtime_scope": "D1 accumulated native-latent decode and provenance are integrated, including distinct decoded_unmapped/decode_error/latent_only_retained states. Native startup, actual VAE execution and physical future time mapping remain unqualified. A real launch needs an explicit realistic finite SGW01_READINESS_TIMEOUT, not the default15-second budget. No model construction/server launch authorized.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
-    "worker_scope": "Corrections integrated through cdb7a55b: complete rejected reset/RGB/video/warmup verification, exact guard identity, preceding physical/reset gates, typed-prefix external handoff, exact native candidate-file/canonical-root CLI, and phase-separated capture_native/native directories. Targeted regression68passed. Next is source staging and finite plan freeze, then native smoke of first eligible slot per family/side. No learned-runtime release.",
+    "worker_scope": "Corrections integrated through cdb7a55b: complete rejected reset/RGB/video/warmup verification, exact guard identity, preceding physical/reset gates, typed-prefix external handoff, exact native candidate-file/canonical-root CLI, and phase-separated capture_native/native directories. Full source-backed regression326passed/1skip. Source staging and finite plan freeze completed; four native smoke slots preregistered. No learned-runtime release.",
     "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
     "historical_coverage_scope": "The24-layout WMF forecast registry is not V3-E004 coverage. All45 inventory sources remain unresolved for complete comparable geometry. bj recovered15 semantics probes and5 full E006 state payloads; bl now recovered bounded fields from all7 remaining files, hashing every source byte. Root-only/preflight records remain non-comparable. The additive exclusion audit found neither complete HEIGHT root intervals nor complete DIST no-plate inventories; no exemption, rerun or release.",
     "independent_scene_reviewer": "89af7b05-595a-43d4-977b-ae0b077d6e9f",
     "scene_review_scope": "The same independent reviewer sealed bi acceptance as ACCEPT_NATIVE_VISUAL_SETUP_ONLY for all4 captures and exactly reproduced all20 policy preprocessing images. This is not an additional rater, physical qualification, category recognition, live tensor parity or behavioral release. Plate-category/wrist-occlusion caveats and per-candidate banana clearance remain binding."
   },
   "active_task_gpu_jobs": [],
-  "active_task_cpu_jobs": [],
+  "active_task_cpu_jobs": [
+    {
+      "job": "sgw01-ali-family-source-stage-20260923bm",
+      "job_uid": "ab57c90d-1917-42ce-a8a6-e6edcb33ed15",
+      "pod": "sgw01-ali-family-source-stage-20260923bm-2cwjn",
+      "pod_uid": "c6f6c50b-b30d-41b6-9bab-90abbebf95b7",
+      "status": "freeze_complete_finite_export_window_active",
+      "allocated_gpus": 0,
+      "frozen_at_utc": "2026-09-23T07:07:41.464867+00:00",
+      "bounded_export_window_seconds": 1200
+    }
+  ],
+  "prospective_family_plan_freeze": {
+    "receipt": "infrastructure/family-plan-freeze-20260923bm/receipt.json",
+    "receipt_sha256": "55b2dbbce2376b1c297180630238b09a83e8f226697f8da6a1814d748eebefd3",
+    "source_commit": "cdb7a55b6cc71ac34828c96368850623102e7137",
+    "source_root": "/data/users/ali/sgw-01/source/cdb7a55b-bm",
+    "raw_root": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm",
+    "seed": 20260922,
+    "maximum_slots_per_family": 100,
+    "height": {"capture_eligible": 57, "geometric_rejections": 43, "left": 28, "right": 29},
+    "dist": {"capture_eligible": 64, "geometric_rejections": 36, "left": 45, "right": 19},
+    "native_smoke_design_ids": ["SGW-HEIGHT-DESIGN-000", "SGW-HEIGHT-DESIGN-001", "SGW-DIST-DESIGN-000", "SGW-DIST-DESIGN-003"],
+    "native_smoke_manifest": "handoff/k8s/sgw01-ali-family-native-smoke-20260923bn.yaml",
+    "native_smoke_status": "registered_not_launched",
+    "remaining_capture_eligible_slots": 117,
+    "physically_qualified_candidates": 0,
+    "historical_coverage_complete": false,
+    "release_permitted": false
+  },
   "completed_capture_source_stages": [
     {
       "job": "sgw01-ali-source-stage-20260923bb",
@@ -528,7 +557,7 @@
       "kubernetes_failed_at_utc": "2026-09-23T06:33:03Z"
     }
   },
-  "next_authorized_step": "Stage tested source cdb7a55b through the finite zero-GPU bm Job, cloned directly from original b429ddd. Freeze both100-slot plans with seed20260922 against exact bi captures and sealed native-only reviews. Independently inspect/export the freeze before launching a bounded four-A40 native smoke using the first eligible slot per family/side. Every valid failure remains in the finite no-refill ledger. Historical/model/runtime gates remain separate; no learned-policy release or LAT rerun.",
+  "next_authorized_step": "Launch registered bn native smoke at the four exact first-per-side slots in the verified bm freeze. At most four A40 GPUs, zero model workers, no retries/refill; native capture, canonical materialization, six fixed trials or verified terminal rejection, and independent raw-evidence verification. Preserve every video/failure/partial. Inspect smoke integrity before authorizing any of the remaining117 slots. Historical/model/runtime gates remain separate; no learned-policy release or LAT rerun.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -791,13 +820,13 @@
     "Historical-layout coverage remains incomplete. The recovered 24-layout cohort now has independently hash-bound roots, AABB-derived centers and separate reset displacement in infrastructure/historical-droid-layout-evidence-registry-v1.json. This does not establish exhaustive coverage or release.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Both native client paths now run complete 450-action engineering integrations through joint-position measurements, HTTP producers, trace readers, recorder and scorer with simulated physics/model computation. Native AppLauncher/RPC, D1 distributed startup, official decode/time mapping and all live model runtimes remain unqualified.",
-    "SGW-ENG-007 repair and bi native-only visual review are complete; original bf review remains unchanged. Native campaign corrections are locally verified, but no actual HEIGHT/DIST plan or physical qualification yet exists. The next bounded stage freezes plans before native smoke; local checks do not establish native physical feasibility.",
+    "SGW-ENG-007 repair and bi native-only visual review are complete; original bf review remains unchanged. bm froze exact100-slot HEIGHT/DIST plans, but no native candidate is physically qualified. Four registered native smoke slots must establish pipeline integrity before remaining qualification work; local checks and geometric acceptance are not physical feasibility.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Stage cdb7a55b and freeze finite HEIGHT/DIST plans using handoff/k8s/sgw01-ali-family-source-stage-20260923bm.yaml; inspect exact outputs before the registered native smoke. Seven large historical payloads remain bounded root-only evidence, not comparable geometry or a coverage release. No learned inference, LAT refill, threshold relaxation or reuse of original attempt roots.",
+  "next_action": "Launch and inspect handoff/k8s/sgw01-ali-family-native-smoke-20260923bn.yaml against the exact bm freeze. Seven large historical payloads remain bounded root-only evidence, not comparable geometry or a coverage release. No learned inference, LAT refill, threshold relaxation or reuse of original attempt roots.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

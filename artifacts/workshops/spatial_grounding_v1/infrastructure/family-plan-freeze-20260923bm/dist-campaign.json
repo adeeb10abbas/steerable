@@ -1,0 +1,1971 @@
+{
+  "baseline_capture_verification": {
+    "left": {
+      "receipt": {
+        "bytes": 80277,
+        "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/capture.json",
+        "sha256": "beb0991e7f11bbd57f4e762627ceffd478aeeab1e91a6f4f65723e2c41d31b32"
+      },
+      "status": "verified_capture_artifacts_not_fixture_qualification",
+      "verified_recording_files": 137
+    },
+    "right": {
+      "receipt": {
+        "bytes": 80421,
+        "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/3-dist-right/capture.json",
+        "sha256": "7a8ace8867e0e1807518b9ca073c2004fc80fe9b9c11a1a489d57a49857ee19a"
+      },
+      "status": "verified_capture_artifacts_not_fixture_qualification",
+      "verified_recording_files": 137
+    }
+  },
+  "baseline_scene_review": {
+    "left": {
+      "capture_sha256": "beb0991e7f11bbd57f4e762627ceffd478aeeab1e91a6f4f65723e2c41d31b32",
+      "disposition": "ACCEPT_NATIVE_VISUAL_SETUP_ONLY",
+      "path": "/data/users/ali/sgw-01/source/cdb7a55b-bm/artifacts/workshops/spatial_grounding_v1/infrastructure/independent-scene-review-20260923bi/sgw-bi-review-analysis/independent_scene_review_manifest.json",
+      "scene": "2-dist-left",
+      "scope": "native_visual_setup_only_not_candidate_physical_or_model_acceptance",
+      "sha256": "8a5d5f82edb73cd774c82e093646604dc90e560cd3696b715dac7eba007476ba"
+    },
+    "right": {
+      "capture_sha256": "7a8ace8867e0e1807518b9ca073c2004fc80fe9b9c11a1a489d57a49857ee19a",
+      "disposition": "ACCEPT_NATIVE_VISUAL_SETUP_ONLY",
+      "path": "/data/users/ali/sgw-01/source/cdb7a55b-bm/artifacts/workshops/spatial_grounding_v1/infrastructure/independent-scene-review-20260923bi/sgw-bi-review-analysis/independent_scene_review_manifest.json",
+      "scene": "3-dist-right",
+      "scope": "native_visual_setup_only_not_candidate_physical_or_model_acceptance",
+      "sha256": "8a5d5f82edb73cd774c82e093646604dc90e560cd3696b715dac7eba007476ba"
+    }
+  },
+  "behavioral_episode_count": 0,
+  "campaign_sha256": "5fe6c90b72e1d120382c12251404d01b861d72bf33e17483f10e79454978c044",
+  "family": "DIST",
+  "fixed_slot_count": 100,
+  "jobs": [
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-000",
+      "design_sha256": "c27850dfe076b313b3dea2e3d0cb1ae2c5959b3426985549c631a30bc8ae9242",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-001",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-002",
+      "design_sha256": "c3fe4af83bfb03129731bf6872c9b308a50a945cd8f212bcda11d114d75ea421",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-003",
+      "design_sha256": "7010cdc165c9a68f0f875d5b527bae715f5557f555efcf563583d85412065d36",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-004",
+      "design_sha256": "cbfce108f3c4f4bb6fd9aca6c5dfd298b75347e7c4101b2aac5c3ee1352cb511",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-005",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-006",
+      "design_sha256": "c4482df4e7336b923719614c29571914f294235ce4854b29b66828c4dff90adc",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-007",
+      "design_sha256": "3307b58243a6507e4fb64f46ffb72eb6bf5d7ea482d68fb586fcc64737af7bc7",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-008",
+      "design_sha256": "5ad04e059f6122354821a10bee1a53d5af6fb5e3130bac8eeeaa2bf6914f7929",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-009",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-010",
+      "design_sha256": "5e123aec77e4a16c76350e0b264700d36059f1c345434641b0873a1cbab30095",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-011",
+      "design_sha256": "318993b2d54d4f5efa186f60be1657c899f948579cef474798fc0429a3bfe2af",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-012",
+      "design_sha256": "8f0e68aef86bf369663f33524fe812f6be8eec9323c199e395776777f66f498a",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-013",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-014",
+      "design_sha256": "8f88312132d158abd8b3c8ba4129891afe27b61093c6027f4d052c690fa2b90d",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-015",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-016",
+      "design_sha256": "c4f95320d8fd53e86df3f025e4d669283b319c4ab88e24cd3f6471053541cbce",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-017",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-018",
+      "design_sha256": "dc9255c571e38fcf364f5b4f68639a6a197edf4331bea2aeef01b37060bf77c7",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-019",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-020",
+      "design_sha256": "f7338dd06ad4915964ea97b92128c8c98307db7d8fc3ef7210c362e8e3a4203a",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-021",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-022",
+      "design_sha256": "6853a3f99caf2179f5a90f1299b43ba3bfb8c75591df96d3b81c4bec9b9eecd7",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-023",
+      "design_sha256": "d866ccc1de7e000561afe5aed4ab36d5a02269235e4e9b589f210128a6e5baf9",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-024",
+      "design_sha256": "db70e82e9216392c27d11746f0cd03e8075d98f5464b1477c09a84df0bffa63d",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-025",
+      "design_sha256": "ef07496508a7cb69144dd9eccbcdafc775d7f6b4e16d3f2ec2091483ea6313a5",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-026",
+      "design_sha256": "d29da8d56aa4022adb19907dbd3e2e81a792887aa0c741a3d5f4ba07f865ca87",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-027",
+      "design_sha256": "49bda435de873535107ee0c275d4a782ada7400a88d7ea2babd83f7dadaf5f16",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-028",
+      "design_sha256": "91b06bf090c0d987448831a8a27bf660119efad16df6a57e3fafdffb4833751b",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-029",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-030",
+      "design_sha256": "274ca11a6ea900daba65d0d06013ec93bebf3dd52675103197d9cbda90bbd036",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-031",
+      "design_sha256": "c87f5e6445cdf6b4ba1a1d6746be31dd9401348f13755f2fb08f53b283adce12",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-032",
+      "design_sha256": "49c2df5fb357ff623261eec7f31c056d698d9df018943b6ba820a1ac9354eec3",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-033",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-034",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-035",
+      "design_sha256": "b5d88ee9e8bb93bad0092e5537408243389a0694835601cac9ce4186ca402945",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-036",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-037",
+      "design_sha256": "1459382f39ae27cbf69a25c71ba5bd04ecf2dee5a71726a5b41092e16588cee6",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-038",
+      "design_sha256": "c374add1b3e9b9a5913e62739ad37a6c9fa05f032824e1ea6c5aa68c063a1377",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-039",
+      "design_sha256": "5305daa6a570fe35212ec65861e74076c97363c098bc521db1603489c698fd2a",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-040",
+      "design_sha256": "f04e03b3e96012cd60c07bd839db0b68ca666b7b80eec20a6580b1bbf7741143",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-041",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-042",
+      "design_sha256": "4c0d04317bf271456176d6b416c10e304e82023fed2da96e38fa12c2dcf2ed72",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-043",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-044",
+      "design_sha256": "92171b115631ecfc8adc2c9c5753346121117eba683dba31e0a54805e6067f39",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-045",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-046",
+      "design_sha256": "d3c43ac83dc52719c5e0af8dbfdc992d3b813a1aa75e4dcf88969145c482363d",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-047",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-048",
+      "design_sha256": "7fc46bdfc436bc8d27ea2e5552d08402f9c6fb916b0d3f7193f136f992d29a81",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-049",
+      "design_sha256": "d982366540735134083ee738d50c3c6eda3ac3e59d1c5d472271bf3035484fe6",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-050",
+      "design_sha256": "fa68ba669ff1c2c9fcfbb46d93ee8b749dc24095f18da2d2ee8c273c465de2d1",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-051",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-052",
+      "design_sha256": "733ab27b4a509e2c6622c0860ef5d1592e6d070eae9cf598af748a04978a24a7",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-053",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-054",
+      "design_sha256": "a76d1c63a364cac123306f65dc31854bcda2a543472249a7cabba2676e2281d9",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-055",
+      "design_sha256": "861d58a0a539d5aa748a5f76cfdfab62f0fdc651a2a0041077310938317ebc27",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-056",
+      "design_sha256": "ed33b797455c94723a508d035bce494aa78be8370ad74a6170a6ba05b4939546",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-057",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-058",
+      "design_sha256": "6db14eb3f1717840bc0b9ae210981cce825b3da9ff5524f4a39f7de5ccfef4e4",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-059",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-060",
+      "design_sha256": "3a361d3acca63b78500913f7fa790891a44cf46455c34bb7f9f89c5a70043088",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-061",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-062",
+      "design_sha256": "ff8b4d4992c2449174f0971663ce04ab74c2f86faba6fa3a436dc80e473a8c06",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-063",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-064",
+      "design_sha256": "ce08fda70cf29a59353c8c7f188c9b48cf2c6d22d8a1834408b20f97e169d593",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-065",
+      "design_sha256": "3ea534eb9c13aae24fc18d11506a6281506623c669173ba460875120c5820b7c",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-066",
+      "design_sha256": "23c72b2239556d7167a0d93a0d7bddfdbcf31962e7bb37dcac82bbdfbbfa0663",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-067",
+      "design_sha256": "2195ab9ee350932cbcc55582246b78fb14e9ae77c4f7576e60c32b65ea6f7814",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-068",
+      "design_sha256": "6b45e3b8b901db1cc8442fc36cea84c97d9fd8c942c838724f45e5580db3d27c",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-069",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-070",
+      "design_sha256": "053087f733a42b8efd8f6cd71d174c03c0e8ca3359285d49075fdb3a075bf24a",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-071",
+      "design_sha256": "2fc76098771c7aaf2a8dd5bf450c9fec97b5657e66e3e2b8e7cf591fe430d985",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-072",
+      "design_sha256": "45f97a94a418d51fbad21ca10af7a1fd14f3cb0a8d48795de3a6ce7bed6f18f4",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-073",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-074",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-075",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-076",
+      "design_sha256": "83560590cad6adabf1f0a8af9125b88de34fb965f5f9bcbbde0373e618858d63",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-077",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-078",
+      "design_sha256": "71fc97871806349ee723bda0eb8b26e805a9dd33acb01de003da39a6aeb0ec32",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-079",
+      "design_sha256": "4c95a167966edd142a88b200f0821937ef69a258eb5d1a0abf2c1d1b0d3a095a",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-080",
+      "design_sha256": "36dd967f543e0525edae942d523221536becb76e7ddfeb27517826206049aba3",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-081",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-082",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-083",
+      "design_sha256": "625e7303a846281aa0ca9deddd5067ca2ee90dc0d2d55249d96fc9790ee1e0f9",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-084",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "left",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-085",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-086",
+      "design_sha256": "1ea7a6006e8ac8c5ccece181de9eb140966d27c20b1a3aa60191472f093f0cd1",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-087",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-088",
+      "design_sha256": "326246c7b4f567ece55f5edf0766503b340a2336c336fbba006ae6f0f39c0186",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-089",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-090",
+      "design_sha256": "d46ab4ebfae7ee54f64616aabfae3f0d5f96c942e630f5537d372c9bacceb5fc",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-091",
+      "design_sha256": "51d49b2ef6e520f33c18c90f0cc64c43dc1b2d9eed61606cca2784139758b602",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-092",
+      "design_sha256": "1a23e2d0874a8eb3d18765f8471d79c7cf9845d23f55f88b5d6743d4766cf423",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-093",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-094",
+      "design_sha256": "5980c7c538b633ac27b3601b76b7af401703132501788bf413138b6c85846539",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-095",
+      "design_sha256": "619ca64a822ebd4f86e3c12f5f464f2a86c5db94c377ea52bcea9ffd055e6f03",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "right",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-096",
+      "design_sha256": "3558dab2730e8d0169069b606e11e2779c1605cfcceb595a3dd2f6499ce48b5e",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-097",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    },
+    {
+      "candidate_overlay_status": "prospective_candidate_design_requires_zero_model_capture",
+      "design_id": "SGW-DIST-DESIGN-098",
+      "design_sha256": "c512733d2bbc2f6bea4ef5be56b47f1a305060eae4d103624c9a79830b655164",
+      "family": "DIST",
+      "fixed_trial_contract": {
+        "action_cap": 450,
+        "controller": "existing_calibrated_family_abs_ik",
+        "fresh_resets_per_goal": 3,
+        "goal_signs": [
+          1,
+          -1
+        ],
+        "retain_trial_and_warmup_video": true,
+        "retry_permitted": false,
+        "total_scripted_trials": 6
+      },
+      "plan_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+      "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+      "required_postprocess": {
+        "required_output": "family_verification.json",
+        "status": "blocked_pending_external_exit_zero_and_artifact_verification"
+      },
+      "side": "left",
+      "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture"
+    },
+    {
+      "design_id": "SGW-DIST-DESIGN-099",
+      "family": "DIST",
+      "retry_permitted": false,
+      "side": "right",
+      "status": "geometrically_rejected_slot_no_refill"
+    }
+  ],
+  "model_request_count": 0,
+  "plan": {
+    "path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-plan.json",
+    "plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+    "sha256": "979a976c0c2c1e7e93b29378870c7f7c8b4618dc1ccfc94b916c4d53d1347cad"
+  },
+  "release_permitted": false,
+  "schema_version": "sgw-01-family-finite-campaign-v1",
+  "status": "compiled_native_visual_setup_baselines_not_authorized_to_launch_or_release"
+}

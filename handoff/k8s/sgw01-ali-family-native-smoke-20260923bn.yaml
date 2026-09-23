@@ -1,0 +1,214 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-family-native-smoke-20260923bn
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01, app.kubernetes.io/managed-by: ali-research}
+spec:
+  completionMode: Indexed
+  completions: 4
+  parallelism: 4
+  backoffLimitPerIndex: 0
+  maxFailedIndexes: 4
+  podReplacementPolicy: Failed
+  activeDeadlineSeconds: 4800
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: finite-native-family-smoke}
+    spec:
+      restartPolicy: Never
+      activeDeadlineSeconds: 4500
+      terminationGracePeriodSeconds: 180
+      automountServiceAccountToken: false
+      nodeSelector: {node-role.kubernetes.io/worker-gpu: ""}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: nvidia.com/gpu.product
+                    operator: In
+                    values: [NVIDIA-A40]
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: qualify
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              STUDY=/data/users/ali/sgw-01/source/cdb7a55b-bm
+              ROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              PREFLIGHT=/data/users/ali/sgw-01/preflight/a40-20260922e
+              FREEZE=/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/receipt.json
+              test "$(sha256sum "$FREEZE" | awk '{print $1}')" = 55b2dbbce2376b1c297180630238b09a83e8f226697f8da6a1814d748eebefd3
+              case "$JOB_COMPLETION_INDEX" in
+                0|1|2|3) ;;
+                *) echo "Unregistered smoke index" >&2; exit 1 ;;
+              esac
+              BASE=/data/users/ali/sgw-01/qualification/family-native-smoke-20260923bn
+              mkdir -p "$BASE"
+              OUT="$BASE/$JOB_COMPLETION_INDEX"
+              mkdir "$OUT"
+              export STUDY ROBOLAB PY PREFLIGHT FREEZE OUT
+              exec > >(tee "$OUT/worker.log") 2>&1
+              "$PY" - <<'PY'
+              from datetime import datetime, timezone
+              import json, os, shutil
+              from pathlib import Path
+              free = shutil.disk_usage(os.environ["OUT"]).free
+              required = (100 + 4 * 32) * 1024**3
+              receipt = {
+                  "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "pod": os.environ["POD_NAME"], "pod_uid": os.environ["POD_UID"],
+                  "job_uid": os.environ["JOB_UID"], "index": int(os.environ["JOB_COMPLETION_INDEX"]),
+                  "free_bytes": free, "required_free_bytes": required,
+                  "allowance": "100 GiB floor plus 32 GiB per four bounded zero-model smoke candidates; not behavioral P95 qualification",
+                  "model_requests": 0, "behavioral_episodes": 0,
+                  "status": "passed_conservative_smoke_space_check" if free >= required else "insufficient_space",
+              }
+              with (Path(os.environ["OUT"]) / "storage_preflight.json").open("x") as f:
+                  json.dump(receipt, f, indent=2, sort_keys=True)
+                  f.write("\n"); f.flush(); os.fsync(f.fileno())
+              if free < required:
+                  raise RuntimeError("insufficient space for four native smoke candidates plus reserve")
+              PY
+              test "$(git -C "$STUDY" rev-parse HEAD)" = cdb7a55b6cc71ac34828c96368850623102e7137
+              test -z "$(git -C "$STUDY" status --porcelain)"
+              test "$(git -C "$ROBOLAB" rev-parse HEAD)" = 0aef241fb088ca21bb4ebd24448940ed56620d17
+              test -z "$(git -C "$ROBOLAB" status --porcelain --untracked-files=no)"
+              test "$(sha256sum "$PREFLIGHT/renderer.json" | awk '{print $1}')" = e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5
+              export XDG_CACHE_HOME="$OUT/cache/xdg" WARP_CACHE_PATH="$OUT/cache/warp" MPLCONFIGDIR="$OUT/cache/matplotlib"
+              mkdir -p "$HOME/.cache" "$XDG_CACHE_HOME" "$WARP_CACHE_PATH" "$MPLCONFIGDIR"
+              cd "$STUDY"
+              "$PY" tools/validate_vla_wam_v3_protocol.py --quiet
+              "$PY" tools/validate_vla_wam_v2_protocol.py > "$OUT/v2_validation.json"
+              export PYTHONPATH="$STUDY:$ROBOLAB"
+              export CUDA_VISIBLE_DEVICES
+              CUDA_VISIBLE_DEVICES=$("$PY" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output "$OUT/gpu_selection.json")
+              mkdir -p /data/users/ali/sgw-01/locks
+              exec 9>"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock"
+              flock --nonblock 9
+              nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total,memory.used,utilization.gpu --format=csv,noheader | tee "$OUT/gpu_identity.csv"
+              "$PY" - <<'PY'
+              from datetime import datetime, timezone
+              import hashlib, json, os, traceback
+              from pathlib import Path
+              from experiments.workshops.spatial_grounding_v1.family_campaign_executor import run_slot
+
+              out, study, robolab, preflight = [Path(os.environ[k]) for k in ("OUT", "STUDY", "ROBOLAB", "PREFLIGHT")]
+              freeze = Path(os.environ["FREEZE"])
+              assert hashlib.sha256(freeze.read_bytes()).hexdigest() == "55b2dbbce2376b1c297180630238b09a83e8f226697f8da6a1814d748eebefd3"
+              registry = json.loads(freeze.read_text())
+              selected = registry["native_smoke_slots"][int(os.environ["JOB_COMPLETION_INDEX"])]
+              family = next(row for row in registry["families"] if row["family"] == selected["family"])
+              for key in ("plan", "campaign"):
+                  binding = family[key]
+                  data = Path(binding["path"]).read_bytes()
+                  assert len(data) == binding["bytes"] and hashlib.sha256(data).hexdigest() == binding["sha256"]
+              campaign = Path(family["campaign"]["path"])
+              job = json.loads(campaign.read_text())["jobs"][selected["slot_index"]]
+              assert all(job[key] == selected[key] for key in ("family", "design_id", "side"))
+              prefix = ["/usr/bin/env", "-C", str(robolab), os.environ["PY"], "-m"]
+              native = ["--headless", "--num-envs", "1", "--device", "cuda:0",
+                        "--renderer", "realtime", "--rendering-type", "balanced", "--rendering_mode", "balanced"]
+              capture = prefix + ["experiments.workshops.spatial_grounding_v1.prospective_family_capture",
+                  "--study-root", "{study_root}", "--robolab-root", str(robolab),
+                  "--assets-manifest", str(preflight / "assets.json"),
+                  "--renderer-receipt", str(preflight / "renderer.json"),
+                  "--overlay-manifest", "{overlay_manifest}", "--output", "{capture}",
+                  "--kit_args=--portable-root={root}/kit_capture --/rtx/verifyDriverVersion/enabled=false"] + native
+              qualification = prefix + ["experiments.workshops.spatial_grounding_v1.model_blind_qualification",
+                  "--family", "{family}", "--candidate-file", "{candidate}", "--candidate-id", "{candidate_id}",
+                  "--candidate-manifest", "{overlay_manifest}", "--candidate-capture", "{capture}",
+                  "--output-root", "{root}", "--controller-calibration", "{calibration}",
+                  "--bridge-factory", "experiments.workshops.spatial_grounding_v1.robolab_height_dist_qualification:create_bridge",
+                  "--controller-factory", "experiments.workshops.spatial_grounding_v1.robolab_height_dist_qualification:create_controller",
+                  "--robolab-root", str(robolab), "--assets-manifest", str(preflight / "assets.json"),
+                  "--kit_args=--portable-root={root}/kit_qualification --/rtx/verifyDriverVersion/enabled=false"] + native
+              receipt = {
+                  "selected_slot": selected, "source_commit": registry["source_commit"],
+                  "freeze_sha256": hashlib.sha256(freeze.read_bytes()).hexdigest(),
+                  "capture_command": capture, "qualification_command": qualification,
+                  "child_timeout_seconds": 1800, "model_requests": 0, "behavioral_episodes": 0,
+                  "release_permitted": False, "job_uid": os.environ["JOB_UID"], "pod_uid": os.environ["POD_UID"],
+                  "started_at_utc": datetime.now(timezone.utc).isoformat(),
+              }
+              def write(name, value):
+                  with (out / name).open("x") as f:
+                      json.dump(value, f, indent=2, sort_keys=True, allow_nan=False)
+                      f.write("\n"); f.flush(); os.fsync(f.fileno())
+              write("launch.json", receipt)
+              try:
+                  result = run_slot(
+                      campaign_path=campaign, index=selected["slot_index"], root=out / "evidence",
+                      controller_calibration=study / "artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json",
+                      capture_command=capture, qualification_command=qualification, child_timeout_seconds=1800,
+                  )
+                  receipt.update(status="externally_verified_native_smoke_not_release", executor=result)
+              except BaseException:
+                  receipt.update(status="infrastructure_invalid_native_smoke", traceback=traceback.format_exc())
+                  raise
+              finally:
+                  receipt["finished_at_utc"] = datetime.now(timezone.utc).isoformat()
+                  write("process_outcome.json", receipt)
+              PY
+              sync
+          env:
+            - name: JOB_COMPLETION_INDEX
+              valueFrom: {fieldRef: {fieldPath: "metadata.annotations['batch.kubernetes.io/job-completion-index']"}}
+            - name: JOB_UID
+              valueFrom: {fieldRef: {fieldPath: "metadata.labels['batch.kubernetes.io/controller-uid']"}}
+            - name: POD_NAME
+              valueFrom: {fieldRef: {fieldPath: metadata.name}}
+            - name: POD_UID
+              valueFrom: {fieldRef: {fieldPath: metadata.uid}}
+            - {name: HOME, value: /home/ali}
+            - {name: USER, value: ali}
+            - {name: LOGNAME, value: ali}
+            - {name: TMPDIR, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: NVIDIA_DRIVER_CAPABILITIES, value: "compute,utility,graphics,display"}
+            - {name: OMNI_KIT_ACCEPT_EULA, value: "YES"}
+            - {name: ACCEPT_EULA, value: "Y"}
+            - {name: VK_ICD_FILENAMES, value: /etc/vulkan/icd.d/nvidia_icd.json}
+            - name: LD_LIBRARY_PATH
+              value: /data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu
+          resources:
+            requests: {cpu: "16", memory: 64Gi, nvidia.com/gpu: "1"}
+            limits: {cpu: "32", memory: 128Gi, nvidia.com/gpu: "1"}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: dshm, mountPath: /dev/shm}
+            - {name: tmp, mountPath: /tmp}
+            - {name: vartmp, mountPath: /var/tmp}
+            - {name: home, mountPath: /home/ali}
+            - {name: userdb, mountPath: /etc/passwd, subPath: passwd, readOnly: true}
+            - {name: userdb, mountPath: /etc/group, subPath: group, readOnly: true}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: dshm
+          emptyDir: {medium: Memory, sizeLimit: 32Gi}
+        - name: tmp
+          emptyDir: {}
+        - name: vartmp
+          emptyDir: {}
+        - name: home
+          emptyDir: {}
+        - name: userdb
+          configMap: {name: 211247-ali-b200-1gpu-userdb}

@@ -259,3 +259,40 @@ def test_concurrent_identity_and_stop_prevent_next_claim(tmp_path, monkeypatch):
     thread.join(3)
     assert not thread.is_alive() and not peer_error and len(calls) == 1
     assert _json(tmp_path / "shared" / "partition-binding.json")["workers"] == 4
+
+
+def test_startup_recheck_failure_stops_inflight_peer_before_next_claim(tmp_path, monkeypatch):
+    config, _ = _config(tmp_path, monkeypatch)
+    entered, release = threading.Event(), threading.Event()
+    calls: list[int] = []
+    peer_error: list[Exception] = []
+
+    def peer_runner(**kwargs):
+        calls.append(kwargs["index"])
+        entered.set()
+        assert release.wait(3)
+        return {"status": "physical_geometry_rejection_accounted_slot_no_refill"}
+
+    def peer():
+        try:
+            worker.run_partition(
+                config_path=config, rank=1, root=tmp_path / "shared" / "rank-1",
+                slot_runner=peer_runner, verifier=_verifier,
+            )
+        except Exception as error:  # pragma: no cover - asserted after join
+            peer_error.append(error)
+
+    thread = threading.Thread(target=peer)
+    thread.start()
+    assert entered.wait(3)
+    with pytest.raises(RuntimeError, match="recheck failure"):
+        worker.run_partition(
+            config_path=config, rank=0, root=tmp_path / "shared" / "rank-0",
+            slot_runner=lambda **_: pytest.fail("slot runner must not start"),
+            verifier=lambda **_: (_ for _ in ()).throw(RuntimeError("recheck failure")),
+        )
+    release.set()
+    thread.join(3)
+    sentinel = _json(tmp_path / "shared" / "infrastructure-stop.json")
+    assert not thread.is_alive() and not peer_error and len(calls) == 1
+    assert sentinel["origin_rank"] == 0 and "recheck failure" in sentinel["error"]

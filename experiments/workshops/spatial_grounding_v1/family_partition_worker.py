@@ -173,47 +173,61 @@ def _config_bindings(config: Mapping[str, Any], freeze_path: Path, campaigns: Ma
     }
 
 
+def _publish_stop(*, shared_root: Path, rank: int, bindings_sha256: str | None,
+                  completed: Sequence[Mapping[str, Any]], error: str) -> None:
+    """Publish a single durable stop record without replacing another worker's."""
+    sentinel = shared_root / "infrastructure-stop.json"
+    with _locked(shared_root):
+        if not sentinel.exists():
+            _fsync_json(sentinel, {
+                "schema_version": SCHEMA, "origin_rank": rank, "completed_slots": list(completed),
+                "bindings_sha256": bindings_sha256, "error": error, "status": "infrastructure_stop",
+            })
+
+
 def run_partition(
     *, config_path: Path, rank: int, root: Path, slot_runner: Callable[..., dict[str, Any]] = run_slot,
     verifier: Callable[..., dict[str, Any]] = verify_design,
 ) -> dict[str, Any]:
     """Run a disjoint finite slice; an infrastructure fault durably stops peers."""
-    config = _json(config_path)
-    freeze_path = Path(config.get("freeze_receipt", ""))
-    freeze = _freeze(freeze_path)
-    campaigns = _campaigns(config, freeze)
-    bindings = _config_bindings(config, freeze_path, campaigns)
-    workers = config.get("workers", 4)
-    slots = partition_slots(freeze, rank=rank, workers=workers)
-    floor, per_slot = config.get("free_space_floor_bytes"), config.get("declared_slot_bytes")
-    if type(floor) is not int or type(per_slot) is not int or floor < MIN_FREE_SPACE_FLOOR_BYTES or per_slot <= 0:
-        raise ValueError("partition requires a non-lowerable 100 GiB free-space floor and positive declared slot bytes")
     if root.exists():
         raise FileExistsError("refusing to reuse a partition worker root")
     root.mkdir(mode=0o700, parents=True)
-    smoke = _smoke(config, freeze, campaigns, root, verifier)
-    binding_path = root.parent / "partition-binding.json"
-    binding = {
-        "schema_version": SCHEMA, "freeze_sha256": bindings["freeze"]["sha256"],
-        "bindings_sha256": _digest(bindings), "config_sha256": _sha256(config_path), "workers": workers,
-    }
-    rank_claim = root.parent / "rank-claims" / f"rank-{rank}.json"
-    with _locked(root.parent):
-        if binding_path.exists():
-            if _json(binding_path) != binding:
-                raise ValueError("shared partition identity differs")
-        else:
-            _fsync_json(binding_path, binding)
-        _fsync_json(rank_claim, {**binding, "rank": rank, "root": str(root.resolve())})
-    receipt = root / "worker-receipt.json"
-    _fsync_json(receipt, {
-        "schema_version": SCHEMA, "rank": rank, "workers": workers, "slot_count": len(slots),
-        "slot_order": slots, "bindings": bindings, "smoke_verifications": smoke,
-        "free_space_floor_bytes": floor, "declared_slot_bytes": per_slot, "status": "running",
-    })
     sentinel = root.parent / "infrastructure-stop.json"
-    completed = []
+    bindings_sha256: str | None = None
+    completed: list[dict[str, Any]] = []
     try:
+        config = _json(config_path)
+        freeze_path = Path(config.get("freeze_receipt", ""))
+        freeze = _freeze(freeze_path)
+        campaigns = _campaigns(config, freeze)
+        bindings = _config_bindings(config, freeze_path, campaigns)
+        bindings_sha256 = _digest(bindings)
+        workers = config.get("workers", 4)
+        slots = partition_slots(freeze, rank=rank, workers=workers)
+        floor, per_slot = config.get("free_space_floor_bytes"), config.get("declared_slot_bytes")
+        if type(floor) is not int or type(per_slot) is not int or floor < MIN_FREE_SPACE_FLOOR_BYTES or per_slot <= 0:
+            raise ValueError("partition requires a non-lowerable 100 GiB free-space floor and positive declared slot bytes")
+        smoke = _smoke(config, freeze, campaigns, root, verifier)
+        binding_path = root.parent / "partition-binding.json"
+        binding = {
+            "schema_version": SCHEMA, "freeze_sha256": bindings["freeze"]["sha256"],
+            "bindings_sha256": bindings_sha256, "config_sha256": _sha256(config_path), "workers": workers,
+        }
+        rank_claim = root.parent / "rank-claims" / f"rank-{rank}.json"
+        with _locked(root.parent):
+            if binding_path.exists():
+                if _json(binding_path) != binding:
+                    raise ValueError("shared partition identity differs")
+            else:
+                _fsync_json(binding_path, binding)
+            _fsync_json(rank_claim, {**binding, "rank": rank, "root": str(root.resolve())})
+        receipt = root / "worker-receipt.json"
+        _fsync_json(receipt, {
+            "schema_version": SCHEMA, "rank": rank, "workers": workers, "slot_count": len(slots),
+            "slot_order": slots, "bindings": bindings, "smoke_verifications": smoke,
+            "free_space_floor_bytes": floor, "declared_slot_bytes": per_slot, "status": "running",
+        })
         for slot in slots:
             slot_root = root / "slots" / f"{slot['family'].lower()}-{slot['slot_index']:03d}"
             claim = root.parent / "slot-claims" / f"{slot['family'].lower()}-{slot['slot_index']:03d}.json"
@@ -225,7 +239,7 @@ def run_partition(
                 if free < required:
                     raise RuntimeError(f"storage allowance blocked: {free} < {required}")
                 _fsync_json(claim, {
-                    "schema_version": SCHEMA, "rank": rank, "slot": slot, "bindings_sha256": _digest(bindings),
+                    "schema_version": SCHEMA, "rank": rank, "slot": slot, "bindings_sha256": bindings_sha256,
                     "free_bytes": free, "required_bytes": required, "reserved_slots": 117, "status": "claimed",
                 })
             result = slot_runner(
@@ -245,12 +259,10 @@ def run_partition(
             })
             completed.append(slot)
     except Exception:
-        with _locked(root.parent):
-            if not sentinel.exists():
-                _fsync_json(sentinel, {
-                    "schema_version": SCHEMA, "origin_rank": rank, "completed_slots": completed,
-                    "bindings_sha256": _digest(bindings), "error": traceback.format_exc(), "status": "infrastructure_stop",
-                })
+        _publish_stop(
+            shared_root=root.parent, rank=rank, bindings_sha256=bindings_sha256,
+            completed=completed, error=traceback.format_exc(),
+        )
         raise
     result = {
         "schema_version": SCHEMA, "rank": rank, "workers": workers, "completed_slots": completed,

@@ -429,3 +429,21 @@ the cache/reset/postprocessing authority; its subclass only replaces the
 network query and reset boundary with the owned HTTP producer. Each request
 passes the SGW request/reset/cell bindings through that boundary, and the
 producer's durable trace remains the attribution authority.
+
+## D1 rank lifecycle
+
+The HTTP wrapper is rank zero and remains the process launched by the SGW
+runtime, so its PID/socket attestation stays exact. For a real two-rank launch,
+set `SGW01_D1_WORLD_SIZE=2`, `SGW01_D1_RANK_WORKER_ARGV` to the reviewed
+non-zero-rank command, and provide `SGW01_D1_RANK_LOG_DIR`,
+`SGW01_D1_RANK_READY_DIR`, `SGW01_D1_SOURCE_COMMIT`,
+`SGW01_D1_CHECKPOINT_REVISION`, and an optional loopback
+`SGW01_D1_MASTER_PORT`. `OwnedD1RankLifecycle` launches only ranks 1..N-1 in
+their own process groups, passes the pinned rank identities and rendezvous
+variables, waits for per-rank JSON readiness, and records bounded logs. A
+worker readiness record must contain its rank plus the exact source commit and
+checkpoint revision. It must run the exported conditional
+`WebsocketPolicyServer._worker_loop`; rank zero alone constructs the HTTP
+listener. Startup timeout, worker failure, and shutdown timeout all clean up
+only the owned process groups. Decoder and future time-map qualification remain
+separate gates.

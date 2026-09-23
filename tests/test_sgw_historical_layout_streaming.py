@@ -183,3 +183,75 @@ def test_reject_before_building_large_selected_array(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match="retained-byte"):
         extract_state_payload(path, expected_sha256=digest, expected_bytes=size, limits={"max_object_bytes": 32})
     assert len(events) < 12
+
+
+def test_lineage_is_opt_in_and_keeps_exact_source_paths(tmp_path):
+    payload = _payload()
+    bindings = {"control_scene_asset": {"path": "/bound/scene.usda", "sha256": "a" * 64, "bytes": 12}}
+    payload["execution_evidence"]["input_bindings"] = bindings
+    payload["execution_evidence"]["construction_source"] = {"path": "/bound/producer.py", "sha256": "b" * 64}
+    payload["execution_evidence"]["environment"] = {"DO_NOT_EXPORT": "unrelated"}
+    frame = {"scene_env_origin_world_m": [0, 0, 0], "passed": True}
+    fresh = payload["attempts"][0]["stages"]["canonical_carry"]["fresh_reset"]
+    fresh["base_link_to_eef_frame_identity"] = frame
+    payload["unrelated"] = {"input_bindings": {"smuggled": True}, "base_link_to_eef_frame_identity": frame}
+    path = tmp_path / "state.json"
+    digest, size = _write(path, payload)
+    old = extract_state_payload(path, expected_sha256=digest, expected_bytes=size)
+    assert "source_lineage" not in old and "frame_identity" not in old
+    result = extract_state_payload(path, expected_sha256=digest, expected_bytes=size, include_lineage=True)
+    assert result["source_lineage"][0] == {
+        "json_pointer": "/execution_evidence/input_bindings", "value": bindings,
+    }
+    assert len(result["source_lineage"]) == 2
+    assert result["frame_identity"] == [{
+        "json_pointer": "/attempts/0/stages/canonical_carry/fresh_reset/base_link_to_eef_frame_identity",
+        "value": frame,
+    }]
+    assert result["fresh_reset_objects"] == old["fresh_reset_objects"]
+    assert result["comparable_geometry_rows"] == []
+
+
+def test_lineage_uses_existing_bounds_and_exact_stream_hash(tmp_path):
+    payload = _payload()
+    payload["execution_evidence"]["input_bindings"] = {"path": "x" * 1000}
+    path = tmp_path / "state.json"
+    digest, size = _write(path, payload)
+    with pytest.raises(ValueError, match="source lineage"):
+        extract_state_payload(path, expected_sha256=digest, expected_bytes=size, include_lineage=True,
+                              limits={"max_comparison_bytes": 100})
+    with pytest.raises(ValueError, match="sha256 mismatch"):
+        extract_state_payload(path, expected_sha256="0" * 64, expected_bytes=size, include_lineage=True)
+
+
+def test_lineage_rejects_duplicate_and_wrong_shape(tmp_path):
+    path = tmp_path / "state.json"
+    raw = b'{"execution_evidence":{"input_bindings":{},"input_bindings":{}}}'
+    path.write_bytes(raw)
+    with pytest.raises(ValueError, match="duplicate selected lineage"):
+        extract_state_payload(path, expected_sha256=hashlib.sha256(raw).hexdigest(),
+                              expected_bytes=len(raw), include_lineage=True)
+    digest, size = _write(path, {"execution_evidence": {"input_bindings": []}})
+    with pytest.raises(ValueError, match="must be an object"):
+        extract_state_payload(path, expected_sha256=digest, expected_bytes=size, include_lineage=True)
+
+
+def test_frame_lineage_covers_solve_and_diagnostic_reset_paths(tmp_path):
+    frame = {"scene_env_origin_world_m": [1, 2, 3], "passed": False}
+    fresh = {"base_link_to_eef_frame_identity": frame}
+    path = tmp_path / "state.json"
+    digest, size = _write(path, {
+        "attempts": [{"stages": {"carry": {
+            "ik_solve_environment": {"fresh_reset": fresh},
+            "candidate_state": fresh,
+        }}}],
+        "known_reachable_diagnostics": [{"fresh_reset": fresh, "candidate_state": fresh}],
+    })
+    result = extract_state_payload(path, expected_sha256=digest, expected_bytes=size, include_lineage=True)
+    assert [row["json_pointer"] for row in result["frame_identity"]] == [
+        "/attempts/0/stages/carry/ik_solve_environment/fresh_reset/base_link_to_eef_frame_identity",
+        "/attempts/0/stages/carry/candidate_state/base_link_to_eef_frame_identity",
+        "/known_reachable_diagnostics/0/fresh_reset/base_link_to_eef_frame_identity",
+    ]
+    assert all(row["value"] == frame for row in result["frame_identity"])
+    assert result["comparable_geometry_rows"] == []

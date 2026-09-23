@@ -29,6 +29,10 @@ IDENTITY_PATHS = {
     ("geometry_attachment_preflight", "geometry_identity_sha256"),
     ("geometry_attachment_preflight", "collision_geometry_resolution", "geometry_identity_sha256"),
 }
+LINEAGE_PATHS = {
+    ("execution_evidence", "construction_source"),
+    ("execution_evidence", "input_bindings"),
+}
 PathTokens = tuple[str | int, ...]
 
 
@@ -114,7 +118,9 @@ def _pointer(path: PathTokens) -> str:
     return "/" + "/".join(str(part).replace("~", "~0").replace("/", "~1") for part in path)
 
 
-def _selection(path: PathTokens) -> tuple[str, str] | None:
+def _selection(path: PathTokens, *, include_lineage: bool = False) -> tuple[str, str] | None:
+    if include_lineage and path in LINEAGE_PATHS:
+        return "source_lineage", "max_comparison_bytes"
     relative = ()
     if (
         len(path) >= 6 and path[0] == "attempts" and isinstance(path[1], int)
@@ -139,6 +145,12 @@ def _selection(path: PathTokens) -> tuple[str, str] | None:
             return "candidate_state_objects", "max_object_bytes"
     if relative == ("fresh_reset", "e004_full_reset_comparison"):
         return "full_reset_comparisons", "max_comparison_bytes"
+    if (
+        include_lineage and len(relative) == 2
+        and relative[0] in {"fresh_reset", "candidate_state"}
+        and relative[1] == "base_link_to_eef_frame_identity"
+    ):
+        return "frame_identity", "max_comparison_bytes"
     if path == ("execution_evidence", "last_reference_bounds_evidence"):
         return "reference_bounds", "max_bounds_bytes"
     if path in IDENTITY_PATHS:
@@ -158,8 +170,11 @@ class _Selected:
 def extract_state_payload(
     path: Path, *, expected_sha256: str, expected_bytes: int,
     limits: dict[str, int] | None = None,
+    include_lineage: bool = False,
 ) -> dict[str, Any]:
-    """Publish only after EOF verifies the exact bytes consumed by the parser."""
+    """Hash the parsed stream; optional lineage retains bindings, not coverage authority."""
+    if type(include_lineage) is not bool:
+        raise ValueError("lineage selection must be an explicit boolean")
     active_limits = {**DEFAULT_LIMITS, **(limits or {})}
     if set(active_limits) != set(DEFAULT_LIMITS) or any(
         type(value) is not int or value <= 0 for value in active_limits.values()
@@ -171,6 +186,9 @@ def extract_state_payload(
         key: [] for key in ("fresh_reset_objects", "candidate_state_objects",
                            "full_reset_comparisons", "reference_bounds", "geometry_preflight_identity")
     }
+    if include_lineage:
+        result.update(source_lineage=[], frame_identity=[])
+    lineage_pointers: set[PathTokens] = set()
     objects: dict[tuple[str, PathTokens], dict[str, Any]] = {}
     object_bytes: dict[tuple[str, PathTokens], int] = {}
     selected: _Selected | None = None
@@ -179,10 +197,18 @@ def extract_state_payload(
         reader = _HashingReader(stream, expected_bytes)
         for location, event, value in _path_events(reader):
             if selected is None:
-                match = None if event in {"map_key", "end_map", "end_array"} else _selection(location)
+                match = None if event in {"map_key", "end_map", "end_array"} else _selection(
+                    location, include_lineage=include_lineage,
+                )
                 if match is None:
                     continue
                 kind, limit = match
+                if kind in {"source_lineage", "frame_identity"}:
+                    if location in lineage_pointers:
+                        raise ValueError("duplicate selected lineage field in source JSON")
+                    if event != "start_map":
+                        raise ValueError("selected lineage field must be an object")
+                    lineage_pointers.add(location)
                 if kind == "geometry_preflight_identity" and event in {"start_map", "start_array"}:
                     raise ValueError("geometry identity must be a bounded scalar")
                 if kind == "geometry_preflight_identity" and len(result[kind]) >= active_limits["max_geometry_identity_scalars"]:
@@ -223,7 +249,10 @@ def extract_state_payload(
         reader.verify(expected_sha256)
     return {
         "source_sha256": expected_sha256, "source_bytes": expected_bytes,
-        "selection_contract": "exact_producer_paths_ijson_same_stream_hash_v1",
+        "selection_contract": (
+            "exact_producer_paths_ijson_same_stream_hash_with_lineage_v2" if include_lineage
+            else "exact_producer_paths_ijson_same_stream_hash_v1"
+        ),
         "retention_limits": active_limits,
         **result,
         "missing_pointer_groups": [

@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_height_dist_remaining_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T09:40:09Z",
+  "updated_at_utc": "2026-09-23T09:49:19Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -864,6 +864,25 @@
     "coverage_complete": false,
     "release_permitted": false
   },
+  "failed_attempt_native_inventory": {
+    "label": "historical-r005-attempt01-20260923by",
+    "execution": "finite_read_only_CPU_exec_in_existing_bu_pod_no_new_job",
+    "manifest": "infrastructure/historical-r005-attempt01-20260923by/manifest.json",
+    "manifest_sha256": "ff7a6ecfa2cafa1698e6918bcfd75d0b2824a1671a621ec9d7f5510be310edad",
+    "inventory": "infrastructure/historical-r005-attempt01-20260923by/inventory.json",
+    "inventory_sha256": "1bfdfba81f1b177a080ccc73ad99366a8c3bc924f3343e3a74b28b443e4539de",
+    "persistent_root": "/data/users/ali/sgw-01/infrastructure/historical-r005-attempt01-20260923by",
+    "reproduced_byte_identically_at_utc": "2026-09-23T09:49:19Z",
+    "recorded_environment_lifecycles": 20,
+    "hash_verified_IK_only_hdf5_files": 8,
+    "hash_verified_hdf5_bytes": 2943214,
+    "source_defined_rank4_snapshots": 6,
+    "materialization_hdf5_present": false,
+    "hdf5_coordinate_frame_qualified": false,
+    "missing_rank1_to_3_materialization_states_recovered": false,
+    "coverage_complete": false,
+    "release_permitted": false
+  },
   "named_historical_root_nonmatches": {
     "native_frame_manifest": "infrastructure/native-root-frames-20260923bw/manifest.json",
     "native_frame_manifest_sha256": "9252c331fa8b3bd7553117818107884a7a8a2ab8cb6ae8761010cc2bc3ec01ee",
@@ -882,6 +901,7 @@
   },
   "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. CPU-only historical work must account for earlier infrastructure attempts, including R005 98f0234 attempt01 and its missing rank1-3 state payloads. bx now accounts for149 snapshots/101 recorded lifecycles in seven named later executions, not complete historical coverage. The400 prior nonmatches remain limited to their original100 snapshots.",
   "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu -o wide",
+  "next_historical_trace": "The R005 attempt01 failure report and all8 native HDF5 files are hash-bound in the by inventory. They are IK-only and cannot substitute for missing rank1-3 materialization states. Trace the exact historical recorder's root-pose coordinate semantics before using HDF5 channels;6 rank4 source snapshots have verified zero-origin frame records. Keep all other historical cohorts and earlier attempts explicitly unresolved until accounted for.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",

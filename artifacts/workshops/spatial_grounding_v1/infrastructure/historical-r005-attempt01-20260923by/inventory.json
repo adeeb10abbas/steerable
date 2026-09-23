@@ -1,0 +1,4067 @@
+{
+  "behavioral_episodes": 0,
+  "claim_boundary": "The same hash-verified failure bytes bind eight IK-only HDF5 files. Their finite raw float32 root channels and two initial samples are retained without assigning a common frame. Six source-defined snapshots survive for rank4. These do not recover rank1-3 materialization states, diagnostic snapshots, or complete historical populations.",
+  "construction_source": {
+    "bytes": 115451,
+    "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/experiments/v3/phase_e/canonical_stage_localization_v3e006_r005/state_repair_gate.py",
+    "sha256": "ac6ae458accaa1428e4f51cb44fb07115b5ad746bc746c33970221519477ea3b",
+    "study_commit": "98f0234cd124d24004fd0053bc8f61f71e8dd50b"
+  },
+  "environment_lifecycle": [
+    {
+      "candidate_rank": 0,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 1,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank00__canonical_grasp__known_reachable_diagnostic_01_left",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank00__canonical_grasp__known_reachable_diagnostic_01_left",
+      "python_object_id": 139727113735056,
+      "role": "known_reachable_diagnostic_01_left",
+      "seed": 13000,
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 0,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 2,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank00__canonical_grasp__known_reachable_diagnostic_02_right",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank00__canonical_grasp__known_reachable_diagnostic_02_right",
+      "python_object_id": 139727116791504,
+      "role": "known_reachable_diagnostic_02_right",
+      "seed": 13000,
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 0,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 3,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank00__canonical_carry__known_reachable_diagnostic_03_left",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank00__canonical_carry__known_reachable_diagnostic_03_left",
+      "python_object_id": 139727393602128,
+      "role": "known_reachable_diagnostic_03_left",
+      "seed": 13000,
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 0,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 4,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank00__canonical_carry__known_reachable_diagnostic_04_right",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank00__canonical_carry__known_reachable_diagnostic_04_right",
+      "python_object_id": 139727115992976,
+      "role": "known_reachable_diagnostic_04_right",
+      "seed": 13000,
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 1,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 5,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank01__canonical_grasp__ik_solve",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank01__canonical_grasp__ik_solve",
+      "python_object_id": 139727116335696,
+      "role": "ik_solve",
+      "seed": 13000,
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 1,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 6,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank01__canonical_grasp__materialization",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank01__canonical_grasp__materialization",
+      "python_object_id": 139727113671760,
+      "role": "materialization",
+      "seed": 13000,
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 1,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 7,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank01__canonical_carry__ik_solve",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank01__canonical_carry__ik_solve",
+      "python_object_id": 139667918524496,
+      "role": "ik_solve",
+      "seed": 13000,
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 1,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 8,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank01__canonical_carry__materialization",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank01__canonical_carry__materialization",
+      "python_object_id": 139664540706128,
+      "role": "materialization",
+      "seed": 13000,
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 2,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 9,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank02__canonical_grasp__ik_solve",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank02__canonical_grasp__ik_solve",
+      "python_object_id": 139667919467280,
+      "role": "ik_solve",
+      "seed": 13000,
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 2,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 10,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank02__canonical_grasp__materialization",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank02__canonical_grasp__materialization",
+      "python_object_id": 139727116278544,
+      "role": "materialization",
+      "seed": 13000,
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 2,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 11,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank02__canonical_carry__ik_solve",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank02__canonical_carry__ik_solve",
+      "python_object_id": 139665893688592,
+      "role": "ik_solve",
+      "seed": 13000,
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 2,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 12,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank02__canonical_carry__materialization",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank02__canonical_carry__materialization",
+      "python_object_id": 139666694107920,
+      "role": "materialization",
+      "seed": 13000,
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 3,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 13,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank03__canonical_grasp__ik_solve",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank03__canonical_grasp__ik_solve",
+      "python_object_id": 139665621638672,
+      "role": "ik_solve",
+      "seed": 13000,
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 3,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 14,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank03__canonical_grasp__materialization",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank03__canonical_grasp__materialization",
+      "python_object_id": 139665620510032,
+      "role": "materialization",
+      "seed": 13000,
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 3,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 15,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank03__canonical_carry__ik_solve",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank03__canonical_carry__ik_solve",
+      "python_object_id": 139666692117136,
+      "role": "ik_solve",
+      "seed": 13000,
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 3,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 16,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank03__canonical_carry__materialization",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank03__canonical_carry__materialization",
+      "python_object_id": 139667919513232,
+      "role": "materialization",
+      "seed": 13000,
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 4,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 17,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank04__canonical_grasp__ik_solve",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank04__canonical_grasp__ik_solve",
+      "python_object_id": 139666653206864,
+      "role": "ik_solve",
+      "seed": 13000,
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 4,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 18,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank04__canonical_grasp__materialization",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank04__canonical_grasp__materialization",
+      "python_object_id": 139666651758480,
+      "role": "materialization",
+      "seed": 13000,
+      "stage": "canonical_grasp"
+    },
+    {
+      "candidate_rank": 4,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 19,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank04__canonical_carry__ik_solve",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank04__canonical_carry__ik_solve",
+      "python_object_id": 139666676515280,
+      "role": "ik_solve",
+      "seed": 13000,
+      "stage": "canonical_carry"
+    },
+    {
+      "candidate_rank": 4,
+      "closed_before_next_environment": true,
+      "construction": "fresh create_env instance dedicated to exactly one rank, stage, and construction role",
+      "construction_horizon_activation": {
+        "behavioral_horizon_mutated": false,
+        "common_step_counter_before_and_after": 0,
+        "episode_length_buf_before_and_after": [
+          0.0
+        ],
+        "only_mutated_field": "env.cfg.episode_length_s",
+        "original_episode_length_s": 30.0,
+        "original_max_episode_length_steps": 450,
+        "registered_episode_length_s": 60.0,
+        "registered_margin_steps": 105,
+        "registered_max_episode_length_steps": 900,
+        "registered_worst_case_steps": 795,
+        "status": "registered_construction_timeout_extended_before_first_reset_or_step",
+        "step_dt_s": 0.06666666666666667,
+        "termination_config_byte_equal": true,
+        "termination_contract_after": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        },
+        "termination_contract_before": {
+          "active_terms": [
+            "success",
+            "time_out"
+          ],
+          "termination_config": {
+            "success": {
+              "func": "robolab.core.task.conditionals:object_left_of",
+              "params": {
+                "frame_of_reference": "robot",
+                "mirrored": false,
+                "object": "rubiks_cube",
+                "reference_object": "bowl",
+                "require_gripper_detached": true
+              },
+              "time_out": false
+            },
+            "time_out": {
+              "func": "isaaclab.envs.mdp.terminations:time_out",
+              "params": {},
+              "time_out": true
+            }
+          },
+          "termination_config_canonical_sha256": "1826904001203e55eae8b1d6255fb3f9197908513c176c4dcfad7c2ff3e3ed4c"
+        }
+      },
+      "contact_sensor_coverage_passed": true,
+      "contact_sensors_initialized_in_this_environment": true,
+      "created": true,
+      "environment_ordinal": 20,
+      "episode_length_after_sensor_initialization_reset": [
+        0.0
+      ],
+      "fresh_reset_completed_in_this_environment": true,
+      "label": "rank04__canonical_carry__materialization",
+      "native_output_dir": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank04__canonical_carry__materialization",
+      "python_object_id": 139666699059280,
+      "role": "materialization",
+      "seed": 13000,
+      "stage": "canonical_carry"
+    }
+  ],
+  "failure_report": {
+    "bytes": 25614537,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/state_construction_failure.json",
+    "sha256": "e858a4431bd0451a1e380d66c8c5d05c5486718f5b23388f874d24a7d271ae8e"
+  },
+  "hdf5_coordinate_frame_qualified": false,
+  "historical_population_coverage_complete": false,
+  "input_bindings": {
+    "candidate_schedule": {
+      "bytes": 118513,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/gates/candidate_schedule.json",
+      "sha256": "f730c91987451d32f0a8814d27d9ec7bfad1a455bf3adae6a8381df7d62f5709"
+    },
+    "control_scene_asset": {
+      "bytes": 5373,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/scenes/rubiks_cube_banana_bowl.usda",
+      "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+    },
+    "e004_candidate": {
+      "bytes": 12706,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+      "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+    },
+    "e004_full_reset_reference": {
+      "bytes": 17364,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+      "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+    },
+    "frozen_e004_bounds_source": {
+      "bytes": 27086,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/experiments/v3/phase_e/symmetric_layout_cohort_v3e004/model_blind_droid_gate.py",
+      "sha256": "b3815553737b42dad20eabdfde81dfa66fdf41cae7abdb84b3fecbcb1eb2babf"
+    },
+    "ood_freeze": {
+      "bytes": 707097,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+      "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+    },
+    "original_v3e006_closure_binding": {
+      "bytes": 6457,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/original_v3e006_closure_binding.json",
+      "sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf"
+    },
+    "paired_scene_asset": {
+      "bytes": 6021,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/experiments/v3/phase_e/bilateral_symmetry_null_control_v3e003/scene_assets/rubiks_cube_banana_pair_bowl.usda",
+      "sha256": "73ac533ccf505f9d71124b3da9aee328d3ebd32fffbd75bc88f32f0d15b20eec"
+    },
+    "r004_predecessor_results": {
+      "bytes": 3165,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r004/results/results.json",
+      "sha256": "aa5eebfd76064b4aa2664b5d296461fd2a8cdbbf489175b3148475f9a2546006"
+    },
+    "repair_registration": {
+      "bytes": 10813,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/repair_registration.json",
+      "sha256": "9604bf773091df5be1bc33b6845e502f52b224524e59dafeb19af458330b6373"
+    },
+    "residual_correction_source": {
+      "bytes": 4867,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/experiments/v3/phase_e/canonical_stage_localization_v3e006_r005/residual_correction.py",
+      "sha256": "cb57cf4bd404a21d73efec511a64effd3ed85deecb3b39a232efb745561efa7a"
+    },
+    "runtime_contract": {
+      "bytes": 9131,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/exact_pi05_runtime_contract.json",
+      "sha256": "df0b126fdf3ad3919a7074d04c1a539dc1ddd28f8bd780fe934ed30001f7d6c4"
+    },
+    "source_push_gate": {
+      "bytes": 4392,
+      "path": "/data/users/ali/vla_wam/src/v3e006-r005-98f0234/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/source_push_gate.json",
+      "sha256": "a3d08989ff1cddba6af1a692384110ae045996d4018552da4b8a15e6bde504a0"
+    }
+  },
+  "materialization_hdf5_present": false,
+  "model_requests": 0,
+  "native_hdf5": [
+    {
+      "binding": {
+        "bytes": 369030,
+        "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank01__canonical_carry__ik_solve/data.hdf5",
+        "sha256": "7b59913404edf7a817523829ed8c8e413ed18b8d57070d8b65c88b0bcab08e4b"
+      },
+      "objects": {
+        "banana": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5389167666435242,
+            -0.22004880011081696,
+            0.06818506866693497
+          ],
+          "recorded_position_component_min": [
+            0.5388951897621155,
+            -0.2200579196214676,
+            0.06815359741449356
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "banana_right": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana_right/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5388491749763489,
+            0.22002355754375458,
+            0.06818433105945587
+          ],
+          "recorded_position_component_min": [
+            0.5388359427452087,
+            0.2200181931257248,
+            0.06816531717777252
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana_right/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "bowl": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/bowl/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.4425602853298187,
+            2.124521415680647e-05,
+            0.077351413667202
+          ],
+          "recorded_position_component_min": [
+            0.44255873560905457,
+            1.949432771652937e-05,
+            0.07735055685043335
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/bowl/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "rubiks_cube": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/rubiks_cube/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.3156053423881531,
+            -0.0002349596470594406,
+            0.13379566371440887
+          ],
+          "recorded_position_component_min": [
+            0.3037191927433014,
+            -0.0576736256480217,
+            0.08110485225915909
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/rubiks_cube/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        }
+      },
+      "relative_path": "native/rank01__canonical_carry__ik_solve/data.hdf5"
+    },
+    {
+      "binding": {
+        "bytes": 366195,
+        "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank01__canonical_grasp__ik_solve/data.hdf5",
+        "sha256": "a7980c56ba7e58930cd3252c7b7b645e2f700fc9464dbda08c68d4c5e486a4db"
+      },
+      "objects": {
+        "banana": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5389167666435242,
+            -0.22004880011081696,
+            0.06818506866693497
+          ],
+          "recorded_position_component_min": [
+            0.5388951897621155,
+            -0.2200579196214676,
+            0.06815359741449356
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "banana_right": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana_right/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5388491749763489,
+            0.22002355754375458,
+            0.06818433105945587
+          ],
+          "recorded_position_component_min": [
+            0.5388359427452087,
+            0.2200181931257248,
+            0.06816531717777252
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana_right/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "bowl": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/bowl/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.4425602853298187,
+            2.124521415680647e-05,
+            0.077351413667202
+          ],
+          "recorded_position_component_min": [
+            0.44255873560905457,
+            1.949432771652937e-05,
+            0.07735055685043335
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/bowl/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "rubiks_cube": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/rubiks_cube/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.3064673840999603,
+            0.0006324984133243561,
+            0.10535488277673721
+          ],
+          "recorded_position_component_min": [
+            0.3037191927433014,
+            -0.0003772880882024765,
+            0.08110485225915909
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/rubiks_cube/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        }
+      },
+      "relative_path": "native/rank01__canonical_grasp__ik_solve/data.hdf5"
+    },
+    {
+      "binding": {
+        "bytes": 368287,
+        "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank02__canonical_carry__ik_solve/data.hdf5",
+        "sha256": "31f40e11fceaf08b9b4d93eef3afe677082e41560d1c9115823b706fbc52b0ca"
+      },
+      "objects": {
+        "banana": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5389167666435242,
+            -0.22004880011081696,
+            0.06818506866693497
+          ],
+          "recorded_position_component_min": [
+            0.5388951897621155,
+            -0.2200579196214676,
+            0.06815359741449356
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "banana_right": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana_right/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5388491749763489,
+            0.22002355754375458,
+            0.06818433105945587
+          ],
+          "recorded_position_component_min": [
+            0.5388359427452087,
+            0.2200181931257248,
+            0.06816531717777252
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana_right/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "bowl": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/bowl/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.4425602853298187,
+            2.124521415680647e-05,
+            0.077351413667202
+          ],
+          "recorded_position_component_min": [
+            0.44255873560905457,
+            1.949432771652937e-05,
+            0.07735055685043335
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/bowl/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "rubiks_cube": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/rubiks_cube/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.31561538577079773,
+            0.013826429843902588,
+            0.13177531957626343
+          ],
+          "recorded_position_component_min": [
+            0.3037191927433014,
+            -0.00023616105318069458,
+            0.08110485225915909
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/rubiks_cube/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        }
+      },
+      "relative_path": "native/rank02__canonical_carry__ik_solve/data.hdf5"
+    },
+    {
+      "binding": {
+        "bytes": 368095,
+        "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank02__canonical_grasp__ik_solve/data.hdf5",
+        "sha256": "e3313d98015178efb0d3b77083b7ddfa08f962accc3f737fbf694e8e9953ebda"
+      },
+      "objects": {
+        "banana": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5389167666435242,
+            -0.22004880011081696,
+            0.06818506866693497
+          ],
+          "recorded_position_component_min": [
+            0.5388951897621155,
+            -0.2200579196214676,
+            0.06815359741449356
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "banana_right": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana_right/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5388491749763489,
+            0.22002355754375458,
+            0.06818433105945587
+          ],
+          "recorded_position_component_min": [
+            0.5388359427452087,
+            0.2200181931257248,
+            0.06816531717777252
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana_right/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "bowl": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/bowl/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.4425602853298187,
+            2.124521415680647e-05,
+            0.077351413667202
+          ],
+          "recorded_position_component_min": [
+            0.44255873560905457,
+            1.949432771652937e-05,
+            0.07735055685043335
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/bowl/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "rubiks_cube": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/rubiks_cube/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.30846479535102844,
+            -0.0002349596470594406,
+            0.10741671919822693
+          ],
+          "recorded_position_component_min": [
+            0.3037191927433014,
+            -0.05534205958247185,
+            0.08110485225915909
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/rubiks_cube/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        }
+      },
+      "relative_path": "native/rank02__canonical_grasp__ik_solve/data.hdf5"
+    },
+    {
+      "binding": {
+        "bytes": 368287,
+        "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank03__canonical_carry__ik_solve/data.hdf5",
+        "sha256": "77a1f24bae267d0c6f7490c19e82ec07369ad726b3e9cc0c9c18f115708ff500"
+      },
+      "objects": {
+        "banana": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5389167666435242,
+            -0.22004880011081696,
+            0.06818506866693497
+          ],
+          "recorded_position_component_min": [
+            0.5388951897621155,
+            -0.2200579196214676,
+            0.06815359741449356
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "banana_right": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana_right/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5388491749763489,
+            0.22002355754375458,
+            0.06818433105945587
+          ],
+          "recorded_position_component_min": [
+            0.5388359427452087,
+            0.2200181931257248,
+            0.06816531717777252
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana_right/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "bowl": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/bowl/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.4425602853298187,
+            2.124521415680647e-05,
+            0.077351413667202
+          ],
+          "recorded_position_component_min": [
+            0.44255873560905457,
+            1.949432771652937e-05,
+            0.07735055685043335
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/bowl/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "rubiks_cube": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/rubiks_cube/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.31561538577079773,
+            0.013826429843902588,
+            0.13177531957626343
+          ],
+          "recorded_position_component_min": [
+            0.3037191927433014,
+            -0.00023616105318069458,
+            0.08110485225915909
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/rubiks_cube/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        }
+      },
+      "relative_path": "native/rank03__canonical_carry__ik_solve/data.hdf5"
+    },
+    {
+      "binding": {
+        "bytes": 366195,
+        "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank03__canonical_grasp__ik_solve/data.hdf5",
+        "sha256": "6bef58a5a6417f4e658952d6195ff53b461825aed2ee550b1541e65a09e4d0bb"
+      },
+      "objects": {
+        "banana": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5389167666435242,
+            -0.22004880011081696,
+            0.06818506866693497
+          ],
+          "recorded_position_component_min": [
+            0.5388951897621155,
+            -0.2200579196214676,
+            0.06815359741449356
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "banana_right": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana_right/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5388491749763489,
+            0.22002355754375458,
+            0.06818433105945587
+          ],
+          "recorded_position_component_min": [
+            0.5388359427452087,
+            0.2200181931257248,
+            0.06816531717777252
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana_right/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "bowl": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/bowl/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.4425602853298187,
+            2.124521415680647e-05,
+            0.077351413667202
+          ],
+          "recorded_position_component_min": [
+            0.44255873560905457,
+            1.949432771652937e-05,
+            0.07735055685043335
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/bowl/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "rubiks_cube": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/rubiks_cube/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.3064673840999603,
+            0.0006324984133243561,
+            0.10535488277673721
+          ],
+          "recorded_position_component_min": [
+            0.3037191927433014,
+            -0.0003772880882024765,
+            0.08110485225915909
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/rubiks_cube/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        }
+      },
+      "relative_path": "native/rank03__canonical_grasp__ik_solve/data.hdf5"
+    },
+    {
+      "binding": {
+        "bytes": 369030,
+        "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank04__canonical_carry__ik_solve/data.hdf5",
+        "sha256": "b26016e8d78384f7c6eb6324ba7ec9b85ded0b3fbf9ce114d2978ff781945a20"
+      },
+      "objects": {
+        "banana": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5389167666435242,
+            -0.22004880011081696,
+            0.06818506866693497
+          ],
+          "recorded_position_component_min": [
+            0.5388951897621155,
+            -0.2200579196214676,
+            0.06815359741449356
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "banana_right": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana_right/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5388491749763489,
+            0.22002355754375458,
+            0.06818433105945587
+          ],
+          "recorded_position_component_min": [
+            0.5388359427452087,
+            0.2200181931257248,
+            0.06816531717777252
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana_right/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "bowl": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/bowl/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.4425602853298187,
+            2.124521415680647e-05,
+            0.077351413667202
+          ],
+          "recorded_position_component_min": [
+            0.44255873560905457,
+            1.949432771652937e-05,
+            0.07735055685043335
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/bowl/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "rubiks_cube": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/rubiks_cube/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.3156053423881531,
+            -0.0002349596470594406,
+            0.13379566371440887
+          ],
+          "recorded_position_component_min": [
+            0.3037191927433014,
+            -0.0576736256480217,
+            0.08110485225915909
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/rubiks_cube/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        }
+      },
+      "relative_path": "native/rank04__canonical_carry__ik_solve/data.hdf5"
+    },
+    {
+      "binding": {
+        "bytes": 368095,
+        "path": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/98f0234-a40r06-attempt01/raw/native/rank04__canonical_grasp__ik_solve/data.hdf5",
+        "sha256": "db6b43b54b22ba0265c6e95461751eb39a90dbd16989cb8d868394f687011b22"
+      },
+      "objects": {
+        "banana": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              -0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5389167666435242,
+            -0.22004880011081696,
+            0.06818506866693497
+          ],
+          "recorded_position_component_min": [
+            0.5388951897621155,
+            -0.2200579196214676,
+            0.06815359741449356
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "banana_right": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/banana_right/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ],
+            [
+              0.538878858089447,
+              0.2199999988079071,
+              0.0684281587600708,
+              1.0,
+              0.0,
+              0.0,
+              -0.00016153979231603444
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.5388491749763489,
+            0.22002355754375458,
+            0.06818433105945587
+          ],
+          "recorded_position_component_min": [
+            0.5388359427452087,
+            0.2200181931257248,
+            0.06816531717777252
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/banana_right/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "bowl": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/bowl/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.44258353114128113,
+              0.0,
+              0.07732785493135452,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.4425602853298187,
+            2.124521415680647e-05,
+            0.077351413667202
+          ],
+          "recorded_position_component_min": [
+            0.44255873560905457,
+            1.949432771652937e-05,
+            0.07735055685043335
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/bowl/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        },
+        "rubiks_cube": {
+          "dtype": "float32",
+          "initial_dataset": "/data/demo_0/initial_state/rigid_object/rubiks_cube/root_pose",
+          "initial_root_pose_samples": [
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.303364634513855,
+              0.0,
+              0.08113233000040054,
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "recorded_position_component_max": [
+            0.30846479535102844,
+            -0.0002349596470594406,
+            0.10741671919822693
+          ],
+          "recorded_position_component_min": [
+            0.3037191927433014,
+            -0.05534205958247185,
+            0.08110485225915909
+          ],
+          "state_dataset": "/data/demo_0/states/rigid_object/rubiks_cube/root_pose",
+          "state_shape": [
+            500,
+            7
+          ]
+        }
+      },
+      "relative_path": "native/rank04__canonical_grasp__ik_solve/data.hdf5"
+    }
+  ],
+  "partial_snapshots": [
+    {
+      "frame_identity": {
+        "base_link_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "base_link_quaternion_world_wxyz": [
+          0.7071064710617065,
+          1.2300273510845727e-07,
+          0.7071071267127991,
+          -4.332177994115227e-08
+        ],
+        "expected_eef_frame_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "expected_eef_frame_quaternion_world_wxyz": [
+          2.8798506147742737e-07,
+          0.7071066980242101,
+          -0.7071068643487209,
+          -3.6766601462056874e-07
+        ],
+        "live_eef_frame_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "live_eef_frame_quaternion_world_wxyz": [
+          -2.980232238769531e-07,
+          -0.7071067690849304,
+          0.70710688829422,
+          2.980232238769531e-07
+        ],
+        "orientation_composition_residual_deg": 9.035490975690204e-06,
+        "orientation_residual_deg_inclusive": 0.0001,
+        "passed": true,
+        "position_composition_residual_m": 0.0,
+        "position_residual_m_inclusive": 1e-06,
+        "position_semantics": "env-local world-axis coordinates, matching RoboLab recorder subtraction of scene.env_origins",
+        "registered_eef_offset_position_base_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "registered_eef_offset_quaternion_wxyz": [
+          0.5,
+          -0.5,
+          0.5,
+          -0.5
+        ],
+        "scene_env_origin_world_m": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "json_pointer": "/partial_stage_evidence/canonical_grasp/ik_solve_environment/fresh_reset",
+      "objects": {
+        "banana": {
+          "angular_velocity_rad_s": [
+            0.0549914687871933,
+            0.11568718403577805,
+            0.0002946267486549914
+          ],
+          "linear_velocity_m_s": [
+            0.0015403189463540912,
+            -0.0008682616171427071,
+            -8.414476178586483e-05
+          ],
+          "position_world_m": [
+            0.5388960242271423,
+            -0.2200489491224289,
+            0.06818463653326035
+          ],
+          "quaternion_world_wxyz": [
+            0.9999987483024597,
+            -0.0006669877911917865,
+            -0.0012351912446320057,
+            -0.000676264869980514
+          ]
+        },
+        "banana_right": {
+          "angular_velocity_rad_s": [
+            0.05323103815317154,
+            0.11395800858736038,
+            -1.7012003809213638e-05
+          ],
+          "linear_velocity_m_s": [
+            0.0014709174865856767,
+            -0.000850939133670181,
+            -9.161030902760103e-05
+          ],
+          "position_world_m": [
+            0.5388376116752625,
+            0.22002282738685608,
+            0.06818217039108276
+          ],
+          "quaternion_world_wxyz": [
+            0.9999990463256836,
+            -0.0006458660354837775,
+            -0.0011876515345647931,
+            -0.00015891340444795787
+          ]
+        },
+        "bowl": {
+          "angular_velocity_rad_s": [
+            0.010137573815882206,
+            -0.008712245151400566,
+            -0.002034465316683054
+          ],
+          "linear_velocity_m_s": [
+            -0.0007195926737040281,
+            -0.0003118336317129433,
+            -8.23651353130117e-05
+          ],
+          "position_world_m": [
+            0.44255998730659485,
+            2.038001548498869e-05,
+            0.0773511528968811
+          ],
+          "quaternion_world_wxyz": [
+            0.9999997615814209,
+            -0.00037832773523405194,
+            -0.00044675744720734656,
+            6.823341891504242e-08
+          ]
+        },
+        "rubiks_cube": {
+          "angular_velocity_rad_s": [
+            -0.040263693779706955,
+            0.1140323132276535,
+            -0.0261894091963768
+          ],
+          "linear_velocity_m_s": [
+            0.002278698608279228,
+            0.000987989827990532,
+            -0.0009862259030342102
+          ],
+          "position_world_m": [
+            0.30372101068496704,
+            -0.00023611821234226227,
+            0.08110499382019043
+          ],
+          "quaternion_world_wxyz": [
+            0.9999991655349731,
+            -0.0005083224968984723,
+            0.000912723655346781,
+            -0.0006402093567885458
+          ]
+        }
+      }
+    },
+    {
+      "frame_identity": {
+        "base_link_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "base_link_quaternion_world_wxyz": [
+          0.7071064710617065,
+          1.2300273510845727e-07,
+          0.7071071267127991,
+          -4.332177994115227e-08
+        ],
+        "expected_eef_frame_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "expected_eef_frame_quaternion_world_wxyz": [
+          2.8798506147742737e-07,
+          0.7071066980242101,
+          -0.7071068643487209,
+          -3.6766601462056874e-07
+        ],
+        "live_eef_frame_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "live_eef_frame_quaternion_world_wxyz": [
+          -2.980232238769531e-07,
+          -0.7071067690849304,
+          0.70710688829422,
+          2.980232238769531e-07
+        ],
+        "orientation_composition_residual_deg": 9.035490975690204e-06,
+        "orientation_residual_deg_inclusive": 0.0001,
+        "passed": true,
+        "position_composition_residual_m": 0.0,
+        "position_residual_m_inclusive": 1e-06,
+        "position_semantics": "env-local world-axis coordinates, matching RoboLab recorder subtraction of scene.env_origins",
+        "registered_eef_offset_position_base_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "registered_eef_offset_quaternion_wxyz": [
+          0.5,
+          -0.5,
+          0.5,
+          -0.5
+        ],
+        "scene_env_origin_world_m": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "json_pointer": "/partial_stage_evidence/canonical_grasp/materialization_environment/fresh_reset",
+      "objects": {
+        "banana": {
+          "angular_velocity_rad_s": [
+            0.0549914687871933,
+            0.11568718403577805,
+            0.0002946267486549914
+          ],
+          "linear_velocity_m_s": [
+            0.0015403189463540912,
+            -0.0008682616171427071,
+            -8.414476178586483e-05
+          ],
+          "position_world_m": [
+            0.5388960242271423,
+            -0.2200489491224289,
+            0.06818463653326035
+          ],
+          "quaternion_world_wxyz": [
+            0.9999987483024597,
+            -0.0006669877911917865,
+            -0.0012351912446320057,
+            -0.000676264869980514
+          ]
+        },
+        "banana_right": {
+          "angular_velocity_rad_s": [
+            0.05323103815317154,
+            0.11395800858736038,
+            -1.7012003809213638e-05
+          ],
+          "linear_velocity_m_s": [
+            0.0014709174865856767,
+            -0.000850939133670181,
+            -9.161030902760103e-05
+          ],
+          "position_world_m": [
+            0.5388376116752625,
+            0.22002282738685608,
+            0.06818217039108276
+          ],
+          "quaternion_world_wxyz": [
+            0.9999990463256836,
+            -0.0006458660354837775,
+            -0.0011876515345647931,
+            -0.00015891340444795787
+          ]
+        },
+        "bowl": {
+          "angular_velocity_rad_s": [
+            0.010137573815882206,
+            -0.008712245151400566,
+            -0.002034465316683054
+          ],
+          "linear_velocity_m_s": [
+            -0.0007195926737040281,
+            -0.0003118336317129433,
+            -8.23651353130117e-05
+          ],
+          "position_world_m": [
+            0.44255998730659485,
+            2.038001548498869e-05,
+            0.0773511528968811
+          ],
+          "quaternion_world_wxyz": [
+            0.9999997615814209,
+            -0.00037832773523405194,
+            -0.00044675744720734656,
+            6.823341891504242e-08
+          ]
+        },
+        "rubiks_cube": {
+          "angular_velocity_rad_s": [
+            -0.040263693779706955,
+            0.1140323132276535,
+            -0.0261894091963768
+          ],
+          "linear_velocity_m_s": [
+            0.002278698608279228,
+            0.000987989827990532,
+            -0.0009862259030342102
+          ],
+          "position_world_m": [
+            0.30372101068496704,
+            -0.00023611821234226227,
+            0.08110499382019043
+          ],
+          "quaternion_world_wxyz": [
+            0.9999991655349731,
+            -0.0005083224968984723,
+            0.000912723655346781,
+            -0.0006402093567885458
+          ]
+        }
+      }
+    },
+    {
+      "frame_identity": {
+        "base_link_position_world_m": [
+          0.3241637945175171,
+          -0.022107722237706184,
+          0.25046661496162415
+        ],
+        "base_link_quaternion_world_wxyz": [
+          0.6570114493370056,
+          -0.023146843537688255,
+          0.753454864025116,
+          -0.01029773149639368
+        ],
+        "expected_eef_frame_position_world_m": [
+          0.3241637945175171,
+          -0.022107722237706184,
+          0.25046661496162415
+        ],
+        "expected_eef_frame_quaternion_world_wxyz": [
+          0.06494399173330428,
+          0.711657678427297,
+          -0.6988085670048334,
+          -0.031499418309958914
+        ],
+        "live_eef_frame_position_world_m": [
+          0.3241637945175171,
+          -0.022107722237706184,
+          0.25046661496162415
+        ],
+        "live_eef_frame_quaternion_world_wxyz": [
+          -0.06494396924972534,
+          -0.711657702922821,
+          0.6988086104393005,
+          0.03149944543838501
+        ],
+        "orientation_composition_residual_deg": 4.517745487845101e-06,
+        "orientation_residual_deg_inclusive": 0.0001,
+        "passed": true,
+        "position_composition_residual_m": 0.0,
+        "position_residual_m_inclusive": 1e-06,
+        "position_semantics": "env-local world-axis coordinates, matching RoboLab recorder subtraction of scene.env_origins",
+        "registered_eef_offset_position_base_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "registered_eef_offset_quaternion_wxyz": [
+          0.5,
+          -0.5,
+          0.5,
+          -0.5
+        ],
+        "scene_env_origin_world_m": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "json_pointer": "/partial_stage_evidence/canonical_grasp/candidate_state",
+      "objects": {
+        "banana": {
+          "angular_velocity_rad_s": [
+            0.0571281872689724,
+            0.11879871785640717,
+            0.0006762545090168715
+          ],
+          "linear_velocity_m_s": [
+            0.0013132885796949267,
+            -0.0010658125393092632,
+            -5.4992196965031326e-05
+          ],
+          "position_world_m": [
+            0.5388962030410767,
+            -0.22004900872707367,
+            0.0681840255856514
+          ],
+          "quaternion_world_wxyz": [
+            0.9999988675117493,
+            -0.0006619954947382212,
+            -0.0012226169928908348,
+            -0.000676281051710248
+          ]
+        },
+        "banana_right": {
+          "angular_velocity_rad_s": [
+            0.055934593081474304,
+            0.11823335289955139,
+            0.00011407867714297026
+          ],
+          "linear_velocity_m_s": [
+            0.0013008995447307825,
+            -0.0010426787193864584,
+            -5.9629099268931895e-05
+          ],
+          "position_world_m": [
+            0.5388373732566833,
+            0.22002293169498444,
+            0.06818197667598724
+          ],
+          "quaternion_world_wxyz": [
+            0.9999991059303284,
+            -0.0006447866908274591,
+            -0.0011851047165691853,
+            -0.0001588989543961361
+          ]
+        },
+        "bowl": {
+          "angular_velocity_rad_s": [
+            0.0035371677950024605,
+            -0.00974093098193407,
+            0.00038729707011952996
+          ],
+          "linear_velocity_m_s": [
+            -0.0009098995942622423,
+            -0.00021387873857747763,
+            4.5021079131402075e-06
+          ],
+          "position_world_m": [
+            0.4425595998764038,
+            2.0653242245316505e-05,
+            0.07735112309455872
+          ],
+          "quaternion_world_wxyz": [
+            0.9999998211860657,
+            -0.0003805455635301769,
+            -0.00044753955444321036,
+            4.288216643999476e-07
+          ]
+        },
+        "rubiks_cube": {
+          "angular_velocity_rad_s": [
+            0.2860866189002991,
+            0.09691858291625977,
+            -0.707612156867981
+          ],
+          "linear_velocity_m_s": [
+            -0.0006039035506546497,
+            0.00434144027531147,
+            0.001550179673358798
+          ],
+          "position_world_m": [
+            0.2998488247394562,
+            -0.023247255012392998,
+            0.08654911816120148
+          ],
+          "quaternion_world_wxyz": [
+            0.9970982074737549,
+            -0.036659594625234604,
+            0.06665258854627609,
+            -0.0029186869505792856
+          ]
+        }
+      }
+    },
+    {
+      "frame_identity": {
+        "base_link_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "base_link_quaternion_world_wxyz": [
+          0.7071064710617065,
+          1.2300273510845727e-07,
+          0.7071071267127991,
+          -4.332177994115227e-08
+        ],
+        "expected_eef_frame_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "expected_eef_frame_quaternion_world_wxyz": [
+          2.8798506147742737e-07,
+          0.7071066980242101,
+          -0.7071068643487209,
+          -3.6766601462056874e-07
+        ],
+        "live_eef_frame_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "live_eef_frame_quaternion_world_wxyz": [
+          -2.980232238769531e-07,
+          -0.7071067690849304,
+          0.70710688829422,
+          2.980232238769531e-07
+        ],
+        "orientation_composition_residual_deg": 9.035490975690204e-06,
+        "orientation_residual_deg_inclusive": 0.0001,
+        "passed": true,
+        "position_composition_residual_m": 0.0,
+        "position_residual_m_inclusive": 1e-06,
+        "position_semantics": "env-local world-axis coordinates, matching RoboLab recorder subtraction of scene.env_origins",
+        "registered_eef_offset_position_base_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "registered_eef_offset_quaternion_wxyz": [
+          0.5,
+          -0.5,
+          0.5,
+          -0.5
+        ],
+        "scene_env_origin_world_m": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "json_pointer": "/partial_stage_evidence/canonical_carry/ik_solve_environment/fresh_reset",
+      "objects": {
+        "banana": {
+          "angular_velocity_rad_s": [
+            0.0549914687871933,
+            0.11568718403577805,
+            0.0002946267486549914
+          ],
+          "linear_velocity_m_s": [
+            0.0015403189463540912,
+            -0.0008682616171427071,
+            -8.414476178586483e-05
+          ],
+          "position_world_m": [
+            0.5388960242271423,
+            -0.2200489491224289,
+            0.06818463653326035
+          ],
+          "quaternion_world_wxyz": [
+            0.9999987483024597,
+            -0.0006669877911917865,
+            -0.0012351912446320057,
+            -0.000676264869980514
+          ]
+        },
+        "banana_right": {
+          "angular_velocity_rad_s": [
+            0.05323103815317154,
+            0.11395800858736038,
+            -1.7012003809213638e-05
+          ],
+          "linear_velocity_m_s": [
+            0.0014709174865856767,
+            -0.000850939133670181,
+            -9.161030902760103e-05
+          ],
+          "position_world_m": [
+            0.5388376116752625,
+            0.22002282738685608,
+            0.06818217039108276
+          ],
+          "quaternion_world_wxyz": [
+            0.9999990463256836,
+            -0.0006458660354837775,
+            -0.0011876515345647931,
+            -0.00015891340444795787
+          ]
+        },
+        "bowl": {
+          "angular_velocity_rad_s": [
+            0.010137573815882206,
+            -0.008712245151400566,
+            -0.002034465316683054
+          ],
+          "linear_velocity_m_s": [
+            -0.0007195926737040281,
+            -0.0003118336317129433,
+            -8.23651353130117e-05
+          ],
+          "position_world_m": [
+            0.44255998730659485,
+            2.038001548498869e-05,
+            0.0773511528968811
+          ],
+          "quaternion_world_wxyz": [
+            0.9999997615814209,
+            -0.00037832773523405194,
+            -0.00044675744720734656,
+            6.823341891504242e-08
+          ]
+        },
+        "rubiks_cube": {
+          "angular_velocity_rad_s": [
+            -0.040263693779706955,
+            0.1140323132276535,
+            -0.0261894091963768
+          ],
+          "linear_velocity_m_s": [
+            0.002278698608279228,
+            0.000987989827990532,
+            -0.0009862259030342102
+          ],
+          "position_world_m": [
+            0.30372101068496704,
+            -0.00023611821234226227,
+            0.08110499382019043
+          ],
+          "quaternion_world_wxyz": [
+            0.9999991655349731,
+            -0.0005083224968984723,
+            0.000912723655346781,
+            -0.0006402093567885458
+          ]
+        }
+      }
+    },
+    {
+      "frame_identity": {
+        "base_link_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "base_link_quaternion_world_wxyz": [
+          0.7071064710617065,
+          1.2300273510845727e-07,
+          0.7071071267127991,
+          -4.332177994115227e-08
+        ],
+        "expected_eef_frame_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "expected_eef_frame_quaternion_world_wxyz": [
+          2.8798506147742737e-07,
+          0.7071066980242101,
+          -0.7071068643487209,
+          -3.6766601462056874e-07
+        ],
+        "live_eef_frame_position_world_m": [
+          0.3597031235694885,
+          3.300374373793602e-08,
+          0.47176671028137207
+        ],
+        "live_eef_frame_quaternion_world_wxyz": [
+          -2.980232238769531e-07,
+          -0.7071067690849304,
+          0.70710688829422,
+          2.980232238769531e-07
+        ],
+        "orientation_composition_residual_deg": 9.035490975690204e-06,
+        "orientation_residual_deg_inclusive": 0.0001,
+        "passed": true,
+        "position_composition_residual_m": 0.0,
+        "position_residual_m_inclusive": 1e-06,
+        "position_semantics": "env-local world-axis coordinates, matching RoboLab recorder subtraction of scene.env_origins",
+        "registered_eef_offset_position_base_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "registered_eef_offset_quaternion_wxyz": [
+          0.5,
+          -0.5,
+          0.5,
+          -0.5
+        ],
+        "scene_env_origin_world_m": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "json_pointer": "/partial_stage_evidence/canonical_carry/materialization_environment/fresh_reset",
+      "objects": {
+        "banana": {
+          "angular_velocity_rad_s": [
+            0.0549914687871933,
+            0.11568718403577805,
+            0.0002946267486549914
+          ],
+          "linear_velocity_m_s": [
+            0.0015403189463540912,
+            -0.0008682616171427071,
+            -8.414476178586483e-05
+          ],
+          "position_world_m": [
+            0.5388960242271423,
+            -0.2200489491224289,
+            0.06818463653326035
+          ],
+          "quaternion_world_wxyz": [
+            0.9999987483024597,
+            -0.0006669877911917865,
+            -0.0012351912446320057,
+            -0.000676264869980514
+          ]
+        },
+        "banana_right": {
+          "angular_velocity_rad_s": [
+            0.05323103815317154,
+            0.11395800858736038,
+            -1.7012003809213638e-05
+          ],
+          "linear_velocity_m_s": [
+            0.0014709174865856767,
+            -0.000850939133670181,
+            -9.161030902760103e-05
+          ],
+          "position_world_m": [
+            0.5388376116752625,
+            0.22002282738685608,
+            0.06818217039108276
+          ],
+          "quaternion_world_wxyz": [
+            0.9999990463256836,
+            -0.0006458660354837775,
+            -0.0011876515345647931,
+            -0.00015891340444795787
+          ]
+        },
+        "bowl": {
+          "angular_velocity_rad_s": [
+            0.010137573815882206,
+            -0.008712245151400566,
+            -0.002034465316683054
+          ],
+          "linear_velocity_m_s": [
+            -0.0007195926737040281,
+            -0.0003118336317129433,
+            -8.23651353130117e-05
+          ],
+          "position_world_m": [
+            0.44255998730659485,
+            2.038001548498869e-05,
+            0.0773511528968811
+          ],
+          "quaternion_world_wxyz": [
+            0.9999997615814209,
+            -0.00037832773523405194,
+            -0.00044675744720734656,
+            6.823341891504242e-08
+          ]
+        },
+        "rubiks_cube": {
+          "angular_velocity_rad_s": [
+            -0.040263693779706955,
+            0.1140323132276535,
+            -0.0261894091963768
+          ],
+          "linear_velocity_m_s": [
+            0.002278698608279228,
+            0.000987989827990532,
+            -0.0009862259030342102
+          ],
+          "position_world_m": [
+            0.30372101068496704,
+            -0.00023611821234226227,
+            0.08110499382019043
+          ],
+          "quaternion_world_wxyz": [
+            0.9999991655349731,
+            -0.0005083224968984723,
+            0.000912723655346781,
+            -0.0006402093567885458
+          ]
+        }
+      }
+    },
+    {
+      "frame_identity": {
+        "base_link_position_world_m": [
+          0.3182680904865265,
+          -0.025276051834225655,
+          0.2833845019340515
+        ],
+        "base_link_quaternion_world_wxyz": [
+          0.6876932978630066,
+          0.014194301329553127,
+          0.724977970123291,
+          -0.0358252115547657
+        ],
+        "expected_eef_frame_position_world_m": [
+          0.3182680904865265,
+          -0.025276051834225655,
+          0.2833845019340515
+        ],
+        "expected_eef_frame_quaternion_world_wxyz": [
+          0.02945779046118968,
+          0.6813258594744052,
+          -0.7313453710316322,
+          -0.007826880809877146
+        ],
+        "live_eef_frame_position_world_m": [
+          0.3182680904865265,
+          -0.025276051834225655,
+          0.2833845019340515
+        ],
+        "live_eef_frame_quaternion_world_wxyz": [
+          -0.02945774793624878,
+          -0.6813259124755859,
+          0.7313454151153564,
+          0.00782686471939087
+        ],
+        "orientation_composition_residual_deg": 5.122641877509564e-06,
+        "orientation_residual_deg_inclusive": 0.0001,
+        "passed": true,
+        "position_composition_residual_m": 0.0,
+        "position_residual_m_inclusive": 1e-06,
+        "position_semantics": "env-local world-axis coordinates, matching RoboLab recorder subtraction of scene.env_origins",
+        "registered_eef_offset_position_base_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "registered_eef_offset_quaternion_wxyz": [
+          0.5,
+          -0.5,
+          0.5,
+          -0.5
+        ],
+        "scene_env_origin_world_m": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "json_pointer": "/partial_stage_evidence/canonical_carry/candidate_state",
+      "objects": {
+        "banana": {
+          "angular_velocity_rad_s": [
+            0.05201917141675949,
+            0.10771606117486954,
+            6.194310117280111e-06
+          ],
+          "linear_velocity_m_s": [
+            0.0016646794974803925,
+            -0.0007933982415124774,
+            -0.00012319532106630504
+          ],
+          "position_world_m": [
+            0.5388956069946289,
+            -0.2200489342212677,
+            0.06818485260009766
+          ],
+          "quaternion_world_wxyz": [
+            0.9999988675117493,
+            -0.0006673653842881322,
+            -0.0012383190914988518,
+            -0.0006759411189705133
+          ]
+        },
+        "banana_right": {
+          "angular_velocity_rad_s": [
+            0.05172799155116081,
+            0.11152632534503937,
+            0.00012020908616250381
+          ],
+          "linear_velocity_m_s": [
+            0.001667021424509585,
+            -0.000803768343757838,
+            -0.00013506344112101942
+          ],
+          "position_world_m": [
+            0.5388372540473938,
+            0.22002290189266205,
+            0.06818246096372604
+          ],
+          "quaternion_world_wxyz": [
+            0.9999991059303284,
+            -0.000647744454909116,
+            -0.0011925954604521394,
+            -0.00015888741472736
+          ]
+        },
+        "bowl": {
+          "angular_velocity_rad_s": [
+            -0.0065103378146886826,
+            0.0037957248277962208,
+            0.0021399729885160923
+          ],
+          "linear_velocity_m_s": [
+            -7.71623890614137e-05,
+            0.00032873390591703355,
+            -0.0001568380685057491
+          ],
+          "position_world_m": [
+            0.44255974888801575,
+            2.037850208580494e-05,
+            0.07735121250152588
+          ],
+          "quaternion_world_wxyz": [
+            0.9999997615814209,
+            -0.0003784604778047651,
+            -0.0004473180742934346,
+            -3.231046008522753e-08
+          ]
+        },
+        "rubiks_cube": {
+          "angular_velocity_rad_s": [
+            0.0066567775793373585,
+            -0.01677967794239521,
+            -0.005513262934982777
+          ],
+          "linear_velocity_m_s": [
+            -0.0011459792731329799,
+            -0.00045496676466427743,
+            -0.00013051790301688015
+          ],
+          "position_world_m": [
+            0.3064284026622772,
+            -0.043090950697660446,
+            0.08110611885786057
+          ],
+          "quaternion_world_wxyz": [
+            0.9993013739585876,
+            -0.0005400648806244135,
+            0.0008637211285531521,
+            0.037356771528720856
+          ]
+        }
+      }
+    }
+  ],
+  "release_permitted": false,
+  "retained_partial_rank": 4,
+  "schema_version": "sgw-01-r005-failed-attempt-native-inventory-v1"
+}

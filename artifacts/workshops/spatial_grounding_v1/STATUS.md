@@ -225,6 +225,19 @@ The exact ledger, source and raw failure-report bindings are retained in the
 new audit. All 43 targeted extraction/lineage/root tests pass; learned runtime,
 historical coverage and fixture release remain unresolved.
 
+The follow-up read-only by inventory rehashed R005 attempt01's 25,614,537-byte
+failure report and all eight bound native HDF5 files (2,943,214 bytes). They
+contain finite float32 actor-root channels and two initial samples, but are
+**IK-only**: no materialization HDF5 is present. Six source-defined snapshots
+survive for rank 4, with passed zero-origin frame records. Neither those
+snapshots nor IK telemetry recover the missing rank 1--3 materialization
+states. The HDF5 coordinate frame remains unqualified. The compact inventory,
+its exact inspector and source bindings are retained in
+[`infrastructure/historical-r005-attempt01-20260923by/`](infrastructure/historical-r005-attempt01-20260923by/)
+and on the PVC. At 09:49 UTC, file-based replay reproduced the inventory
+byte-for-byte after correcting a recorded inspector-filename import collision.
+No new pod, simulator, model request or behavioral episode was created.
+
 ## Scientific accounting
 
 - Planned: **1,044** episodes (P 36, D 144, C 864).

@@ -1,0 +1,27 @@
+{
+  "schema_version": "sgw-01-zero-request-recovery-placement-v1",
+  "status": "prospective_bounded_B200_admission_after_unavailable_A40_lanes",
+  "registration_id": "SGW-N3-FIXED-20260923CW",
+  "prior_admissions": "DC/DF/DG all failed device admission before a container or successor claim existed. Removing archived terminal BT rank0 did not establish availability. DE created no Pod because priority admission rejected Never; DE is suspended. No further A40 admission loop is planned.",
+  "replacement": {
+    "job": "sgw01-ali-n3-fixedinput-20260923dh",
+    "manifest": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923dh.yaml",
+    "generated_from": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923dc.yaml",
+    "json_patch": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923dh-placement.json",
+    "additional_manifest_change": "Expected physical device name is NVIDIA B200, already allowed by the original CW launch; no policy code/configuration changes.",
+    "node": "dcwipphhgc227.edc.nam.gm.com",
+    "node_observation": "Ready, advertises eight NVIDIA B200 devices; current namespace aggregate active GPU requests total two. These are discovery facts, not proof of availability or idleness across the cluster.",
+    "requested_gpus": 1,
+    "automatic_retries": 0,
+    "deadline_seconds": 7200,
+    "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dh",
+    "exclusive_successor_claim_unchanged": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/request-owner/successor",
+    "native_source_inputs_config_and_six_request_limit": "unchanged",
+    "nonpreemption_and_actual_idle_storage_prior_owner_gates": "unchanged",
+    "unrelated_workloads": "No workload contents inspected, stopped, modified, or used; only node and namespace aggregate resource metadata informed placement."
+  },
+  "model_requests_at_registration": 0,
+  "additional_request_allocation": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false
+}

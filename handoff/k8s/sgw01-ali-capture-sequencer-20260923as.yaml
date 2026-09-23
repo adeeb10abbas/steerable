@@ -1,0 +1,110 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sgw01-ali-capture-sequencer-20260923as
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sgw01-ali-capture-sequencer-20260923as
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+rules:
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    resourceNames: ["sgw01-ali-lat-batch-20260923ak"]
+    verbs: ["get"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    resourceNames: ["sgw01-ali-prospective-capture-20260923ar"]
+    verbs: ["get", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sgw01-ali-capture-sequencer-20260923as
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+subjects:
+  - kind: ServiceAccount
+    name: sgw01-ali-capture-sequencer-20260923as
+    namespace: 211247-prod
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: sgw01-ali-capture-sequencer-20260923as
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-capture-sequencer-20260923as
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 18600
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: finite-zero-model-capture-sequencer}
+    spec:
+      serviceAccountName: sgw01-ali-capture-sequencer-20260923as
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: sequence
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              test "$(sha256sum /control/capture_sequencer.py | awk '{print $1}')" = 70e80f81360bd48994d8f348b8771782ff5b4145680efa838b1e9d4dbae7e0f4
+              exec /data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python /control/capture_sequencer.py \
+                --plan /control/plan.json \
+                --expected-plan-sha256 35f38e092107f863f8cda8b83723c916457e8517957be013179fade695cb8035 \
+                --output /data/users/ali/sgw-01/infrastructure/capture-sequencer-20260923as
+          env:
+            - {name: HOME, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: PYTHONUNBUFFERED, value: "1"}
+            - {name: CUDA_VISIBLE_DEVICES, value: ""}
+          resources:
+            requests: {cpu: "1", memory: 256Mi}
+            limits: {cpu: "1", memory: 512Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: control, mountPath: /control, readOnly: true}
+            - {name: api, mountPath: /var/run/sgw-kubernetes, readOnly: true}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: control
+          configMap: {name: sgw01-ali-capture-sequencer-20260923as}
+        - name: api
+          projected:
+            sources:
+              - serviceAccountToken: {path: token, expirationSeconds: 3600}
+              - configMap:
+                  name: kube-root-ca.crt
+                  items: [{key: ca.crt, path: ca.crt}]
+        - name: tmp
+          emptyDir: {}

@@ -1,0 +1,142 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-historical-export-20260923bj
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1200
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: bounded-historical-payload-export}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: export
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              OUT=/data/users/ali/sgw-01/infrastructure/historical-export-20260923bj
+              test ! -e "$OUT"
+              test "$(sha256sum /inputs/requests.json | awk '{print $1}')" = d818ec5aaa760964d73bd1ffb79eef30af08eb3be5c070e15e4075c4a65de736
+              mkdir "$OUT"
+              exec > >(tee "$OUT/export.log") 2>&1
+              /data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python - "$OUT" <<'PY'
+              from datetime import datetime, timezone
+              import hashlib, json, os, sys, tarfile
+              from pathlib import Path
+              out = Path(sys.argv[1])
+              request_path = Path("/inputs/requests.json")
+              requests = json.loads(request_path.read_text())["indispensable_external_requests"]
+              assert len(requests) == 15
+              allowed = Path("/data/users/ali/vla_wam/raw")
+              rows, total = [], 0
+              for index, request in enumerate(requests):
+                  assert request["request_scope"] == "exact_file_only"
+                  assert request["hash_binding_status"] == "hash_anchored"
+                  path = Path(request["path"])
+                  assert path.is_absolute() and path.resolve().is_relative_to(allowed)
+                  row = dict(request)
+                  if not path.is_file():
+                      row["export_status"] = "source_missing"
+                  else:
+                      with path.open("rb") as stream:
+                          raw = stream.read(8 * 1024**2 + 1)
+                      if len(raw) > 8 * 1024**2 or total + len(raw) > 32 * 1024**2:
+                          row["export_status"] = "source_exceeds_bounded_export_size"
+                      else:
+                          actual = hashlib.sha256(raw).hexdigest()
+                          row.update({"actual_sha256": actual, "bytes": len(raw)})
+                          if actual != request["expected_sha256"]:
+                              row["export_status"] = "source_hash_mismatch"
+                          else:
+                              name = f"{index:02d}-payload{path.suffix}"
+                              with (out / name).open("xb") as stream:
+                                  stream.write(raw)
+                                  stream.flush()
+                                  os.fsync(stream.fileno())
+                              total += len(raw)
+                              row.update({"export_status": "exported_hash_verified_payload", "export_path": name})
+                  rows.append(row)
+              manifest = {
+                  "schema_version": "sgw-01-bounded-historical-payload-export-v1",
+                  "request_sha256": hashlib.sha256(request_path.read_bytes()).hexdigest(),
+                  "job_uid": os.environ["JOB_UID"], "pod_uid": os.environ["POD_UID"],
+                  "exported_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "records": rows, "total_exported_bytes": total,
+                  "model_requests": 0, "behavioral_episodes": 0, "allocated_gpus": 0,
+                  "release_permitted": False,
+                  "coverage_status": "named_semantics_probes_only_not_exhaustive_historical_coverage",
+              }
+              with (out / "manifest.json").open("x") as stream:
+                  json.dump(manifest, stream, indent=2, sort_keys=True)
+                  stream.write("\n")
+                  stream.flush()
+                  os.fsync(stream.fileno())
+              archive = out / "payloads.tar.gz"
+              with tarfile.open(archive, "x:gz") as bundle:
+                  bundle.add(out / "manifest.json", arcname="manifest.json")
+                  for row in rows:
+                      if "export_path" in row:
+                          bundle.add(out / row["export_path"], arcname=row["export_path"])
+              with archive.open("rb") as stream:
+                  os.fsync(stream.fileno())
+                  digest = hashlib.file_digest(stream, "sha256").hexdigest()
+              receipt = {
+                  "path": str(archive), "bytes": archive.stat().st_size, "sha256": digest,
+                  "statuses": {status: sum(row["export_status"] == status for row in rows)
+                               for status in sorted({row["export_status"] for row in rows})},
+                  "release_permitted": False, "model_requests": 0, "behavioral_episodes": 0,
+              }
+              with (out / "receipt.json").open("x") as stream:
+                  json.dump(receipt, stream, indent=2, sort_keys=True)
+                  stream.write("\n")
+                  stream.flush()
+                  os.fsync(stream.fileno())
+              print(json.dumps(receipt, sort_keys=True), flush=True)
+              PY
+              sync
+              sleep 600
+          env:
+            - {name: HOME, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: CUDA_VISIBLE_DEVICES, value: ""}
+            - {name: NVIDIA_VISIBLE_DEVICES, value: void}
+            - name: JOB_UID
+              valueFrom: {fieldRef: {fieldPath: "metadata.labels['batch.kubernetes.io/controller-uid']"}}
+            - name: POD_UID
+              valueFrom: {fieldRef: {fieldPath: metadata.uid}}
+          resources:
+            requests: {cpu: "250m", memory: 1Gi}
+            limits: {cpu: "2", memory: 1Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+            - {name: requests, mountPath: /inputs, readOnly: true}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: tmp
+          emptyDir: {}
+        - name: requests
+          configMap: {name: sgw01-ali-history-requests-20260923bj}

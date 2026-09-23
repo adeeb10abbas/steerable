@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import datetime
+import hashlib
+import os
 from pathlib import Path
 import socket
 import subprocess
@@ -352,14 +354,15 @@ def test_owned_rank_lifecycle_synchronizes_cpu_inference_barrier(tmp_path: Path)
 
 
 def test_exported_ar_source_keeps_rank0_server_and_worker_loop_split() -> None:
-    export = Path(
-        "/Users/SZ5VJY/.copilot/session-state/"
-        "c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/"
-        "sgw-native-d1-ar-server-ak.json"
+    export_name = os.environ.get("SGW01_D1_AR_SOURCE_AUDIT", "")
+    export = Path(export_name) if export_name else None
+    if export is None or not export.is_file():
+        pytest.skip("set SGW01_D1_AR_SOURCE_AUDIT to the authorized D1 source audit")
+    entry = json.loads(export.read_text())["files"]["socket_test_optimized_AR.py"]
+    assert hashlib.sha256(entry["text"].encode()).hexdigest() == (
+        "7ef17f66064bac8defafc1a84551089b124546729a98be8c0515b33d2e159d48"
     )
-    if not export.exists():
-        pytest.skip("authorized D1 source export is not present")
-    source = json.loads(export.read_text())["files"]["socket_test_optimized_AR.py"]["text"]
+    source = entry["text"]
     assert "asyncio.run(server._worker_loop())" in source
     assert "if rank == 0:" in source
     assert "RoboarenaServer(" in source

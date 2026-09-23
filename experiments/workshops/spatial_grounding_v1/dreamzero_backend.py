@@ -303,19 +303,32 @@ def decode_official_future(policy: Any) -> dict[str, Any]:
     latents = list(getattr(policy, "video_across_time", []) or [])
     if not latents:
         return {"future_status": "not_exposed", "future": None, "future_latent": None}
+    latent = latents[0]
+    concatenated = len(latents) <= 1
     try:
-        latent = latents[0]
         if len(latents) > 1:
-            import torch
+            torch = getattr(policy, "_torch", None)
+            if torch is None:
+                import torch
 
             latent = torch.cat(latents, dim=2)
+            concatenated = True
         action_head = policy._policy.trained_model.action_head
-        decoded = action_head.vae.decode(
-            latent,
-            tiled=action_head.tiled,
-            tile_size=(action_head.tile_size_height, action_head.tile_size_width),
-            tile_stride=(action_head.tile_stride_height, action_head.tile_stride_width),
+        torch = getattr(policy, "_torch", None)
+        if torch is None:
+            import torch
+        context = (
+            torch.inference_mode
+            if hasattr(torch, "inference_mode")
+            else torch.no_grad
         )
+        with context():
+            decoded = action_head.vae.decode(
+                latent,
+                tiled=action_head.tiled,
+                tile_size=(action_head.tile_size_height, action_head.tile_size_width),
+                tile_stride=(action_head.tile_stride_height, action_head.tile_stride_width),
+            )
         frames = decoded.permute(0, 2, 3, 4, 1)[0]
         frames = ((frames.float() + 1) * 127.5).clamp(0, 255).to("cpu").numpy().astype(np.uint8)
         latent_cpu = latent.detach().to("cpu")
@@ -328,20 +341,22 @@ def decode_official_future(policy: Any) -> dict[str, Any]:
                 "future_encoding": "decoded_rgb_uint8",
                 "latent_encoding": "native_latent_tensor_cpu",
                 "time_mapping_status": "unmapped",
+                "stream_provenance": "accumulated_native_stream_context_inclusive",
             },
         }
     except Exception as exc:
-        latent = latents[-1]
-        if hasattr(latent, "detach"):
+        if hasattr(latent, "detach") and concatenated:
             latent = latent.detach().to("cpu")
         return {
             "future_status": "decode_error",
             "future": None,
-            "future_latent": latent,
+            "future_latent": latent if concatenated else None,
+            "future_latent_chunks": None if concatenated else latents,
             "future_metadata": {
                 "decoded": False,
                 "latent_encoding": "native_latent_tensor_cpu",
                 "time_mapping_status": "unmapped",
+                "stream_provenance": "accumulated_native_stream_context_inclusive",
                 "decode_error": f"{type(exc).__name__}: {exc}",
             },
         }

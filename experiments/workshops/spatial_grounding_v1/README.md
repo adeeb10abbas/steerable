@@ -423,10 +423,14 @@ actual returned action shape rather than overlaying protocol values. The
 official AR route decodes accumulated latent chunks only through
 `trained_model.action_head.vae.decode` with its native tiling parameters. The
 producer retains separate decoded-`uint8` RGB and CPU-latent artifacts with
-independent hashes and encodings. Missing futures are `not_exposed`; decode
-failures retain the latent and record `decode_error`. Decoded futures currently
-carry `time_mapping_status=unmapped`, so they are unscorable until the released
-interface proves physical target time and action-prefix mapping.
+independent hashes and encodings. The provenance identifies decoded frames as
+an accumulated native stream that includes context/past, not a request-local
+forecast. Missing futures are `not_exposed`; decode failures retain the full
+accumulated latent stream and record `decode_error`. BF16 latents are widened
+losslessly to float32 storage with their original dtype recorded. Decoded
+futures currently carry `time_mapping_status=unmapped`, so they are unscorable
+until the released interface proves physical target time and action-prefix
+mapping.
 
 For release wiring, set `SGW01_D1_HTTP_URL` to the loopback URL owned by
 `dreamzero_wrapper_entrypoint.py`. The official RoboLab client class remains

@@ -91,6 +91,25 @@ def read_trace_sidecar(
         ):
             raise AdapterError("native future latent artifact is missing or hash-mismatched")
         record["future_latent"] = np.load(latent_artifact, allow_pickle=False)
-    elif record.get("future_status") not in {"not_exposed", "decode_error"}:
+    latent_chunks = record.get("future_latent_chunks")
+    if latent_chunks is not None:
+        if not isinstance(latent_chunks, list) or not latent_chunks:
+            raise AdapterError("native future latent chunk manifest is invalid")
+        record["future_latent_chunks"] = []
+        for chunk in latent_chunks:
+            if not isinstance(chunk, Mapping):
+                raise AdapterError("native future latent chunk record is invalid")
+            chunk_path = Path(str(chunk.get("path", "")))
+            if (
+                not chunk_path.is_file()
+                or chunk.get("sha256") != _sha256(chunk_path)
+            ):
+                raise AdapterError("native future latent chunk is missing or hash-mismatched")
+            record["future_latent_chunks"].append(np.load(chunk_path, allow_pickle=False))
+    if (
+        not future_path
+        and not latent_path
+        and record.get("future_status") not in {"not_exposed", "decode_error"}
+    ):
         raise AdapterError("native trace must explicitly classify missing future evidence")
     return record

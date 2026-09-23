@@ -191,8 +191,21 @@ class DreamZeroEvidenceProducer:
                     future_array = future.detach().cpu().numpy()
                 else:
                     future_array = np.asarray(future)
-                if future_array.ndim < 1 or future_array.dtype != np.uint8:
-                    raise AdapterError("D1 decoded future must be a non-empty uint8 array")
+                if (
+                    future_array.ndim != 4
+                    or future_array.shape[0] < 1
+                    or future_array.shape[1] < 1
+                    or future_array.shape[2] < 1
+                    or future_array.shape[3] not in {3, 4}
+                    or future_array.dtype != np.uint8
+                ):
+                    raise AdapterError("D1 decoded future must be non-empty THWC RGB(A) uint8")
+                if future_status != "decoded_unmapped":
+                    raise AdapterError("D1 decoded future has contradictory status")
+                if future_metadata.get("decoded") is not True:
+                    raise AdapterError("D1 decoded future lacks decoded provenance")
+                if future_metadata.get("time_mapping_status") != "unmapped":
+                    raise AdapterError("D1 decoded future timing must remain unmapped")
                 self.future_dir.mkdir(parents=True, exist_ok=True)
                 path = self.future_dir / f"{wrapper_request_id}.npy"
                 np.save(path, future_array, allow_pickle=False)
@@ -205,12 +218,25 @@ class DreamZeroEvidenceProducer:
                     "future_sha256": _sha(path.read_bytes()),
                     "future_encoding": "decoded_rgb_uint8",
                 })
+            elif future_status == "decoded_unmapped" or future_metadata.get("decoded") is True:
+                raise AdapterError("D1 future metadata claims decoded RGB without an artifact")
             latent = result.get("future_latent")
             if latent is not None:
+                latent_dtype = str(getattr(latent, "dtype", "unknown"))
                 if hasattr(latent, "detach"):
-                    latent_array = latent.detach().cpu().numpy()
+                    latent_cpu = latent.detach().cpu()
+                    try:
+                        latent_array = latent_cpu.numpy()
+                        latent_storage_dtype = str(latent_array.dtype)
+                    except TypeError:
+                        widened = latent_cpu.float()
+                        latent_array = (
+                            widened.numpy() if hasattr(widened, "numpy") else np.asarray(widened)
+                        )
+                        latent_storage_dtype = str(latent_array.dtype)
                 else:
                     latent_array = np.asarray(latent)
+                    latent_storage_dtype = str(latent_array.dtype)
                 if latent_array.ndim < 1:
                     raise AdapterError("D1 native future latent must be an array")
                 self.future_dir.mkdir(parents=True, exist_ok=True)
@@ -223,7 +249,45 @@ class DreamZeroEvidenceProducer:
                     "future_latent_shape": list(latent_array.shape),
                     "future_latent_sha256": _sha(latent_path.read_bytes()),
                     "future_latent_encoding": "native_latent_array_cpu",
+                    "future_latent_original_dtype": latent_dtype,
+                    "future_latent_storage_dtype": latent_storage_dtype,
                 })
+            latent_chunks = result.get("future_latent_chunks")
+            if latent_chunks is not None:
+                if not isinstance(latent_chunks, (list, tuple)) or not latent_chunks:
+                    raise AdapterError("D1 native future latent chunks are invalid")
+                self.future_dir.mkdir(parents=True, exist_ok=True)
+                chunk_records = []
+                for chunk_index, chunk in enumerate(latent_chunks):
+                    original_dtype = str(getattr(chunk, "dtype", "unknown"))
+                    if hasattr(chunk, "detach"):
+                        chunk_cpu = chunk.detach().cpu()
+                        try:
+                            chunk_array = chunk_cpu.numpy()
+                            storage_dtype = str(chunk_array.dtype)
+                        except TypeError:
+                            widened = chunk_cpu.float()
+                            chunk_array = (
+                                widened.numpy() if hasattr(widened, "numpy") else np.asarray(widened)
+                            )
+                            storage_dtype = str(chunk_array.dtype)
+                    else:
+                        chunk_array = np.asarray(chunk)
+                        storage_dtype = str(chunk_array.dtype)
+                    if chunk_array.ndim < 1:
+                        raise AdapterError("D1 native future latent chunk is invalid")
+                    chunk_path = self.future_dir / f"{wrapper_request_id}.latent-{chunk_index}.npy"
+                    np.save(chunk_path, chunk_array, allow_pickle=False)
+                    with chunk_path.open("rb") as handle:
+                        os.fsync(handle.fileno())
+                    chunk_records.append({
+                        "path": str(chunk_path),
+                        "shape": list(chunk_array.shape),
+                        "sha256": _sha(chunk_path.read_bytes()),
+                        "original_dtype": original_dtype,
+                        "storage_dtype": storage_dtype,
+                    })
+                record["future_latent_chunks"] = chunk_records
             self.trace_path.parent.mkdir(parents=True, exist_ok=True)
             with self.trace_path.open("a", encoding="utf-8") as handle:
                 handle.write(json.dumps(record, sort_keys=True) + "\n")

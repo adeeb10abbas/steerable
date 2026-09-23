@@ -44,7 +44,9 @@ class _Backend:
         self.predict_calls.append((observation, prompt, sampling_seed, kwargs))
         return {
             "actions": np.full((24, 8), len(self.predict_calls), dtype=np.float32),
-            "future": np.arange(6, dtype=np.uint8),
+            "future": np.zeros((2, 2, 2, 3), dtype=np.uint8),
+            "future_status": "decoded_unmapped",
+            "future_metadata": {"decoded": True, "time_mapping_status": "unmapped"},
             "session_id": observation["session_id"],
         }
 
@@ -233,15 +235,56 @@ def test_dreamzero_future_missing_and_decode_error_are_explicit(tmp_path: Path) 
         assert ("future_latent_path" in record) is has_latent
 
 
-def test_dreamzero_source_uses_official_vae_decode_boundary() -> None:
-    export = Path(
-        "/Users/SZ5VJY/.copilot/session-state/"
-        "c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/"
-        "sgw-native-d1-ar-server-ak.json"
+def test_dreamzero_bfloat16_latent_is_losslessly_widened_with_provenance(tmp_path: Path) -> None:
+    class BFloatTensor:
+        dtype = "torch.bfloat16"
+
+        def detach(self):
+            return self
+
+        def cpu(self):
+            return self
+
+        def numpy(self):
+            raise TypeError("BFloat16 is not supported")
+
+        def float(self):
+            return np.zeros((1, 16, 3, 44, 80), dtype=np.float32)
+
+    class Backend(_Backend):
+        def predict(self, observation, prompt, sampling_seed, **kwargs):
+            return {
+                "actions": np.zeros((24, 8), dtype=np.float32),
+                "future_status": "decode_error",
+                "future_latent": BFloatTensor(),
+                "future_metadata": {
+                    "decoded": False,
+                    "time_mapping_status": "unmapped",
+                },
+            }
+
+    producer = DreamZeroEvidenceProducer(
+        Backend(),
+        trace_path=tmp_path / "trace.jsonl",
+        future_dir=tmp_path / "future",
+        attestation_path=tmp_path / "attestation.json",
     )
-    if not export.exists():
-        pytest.skip("authorized D1 source export is not present")
-    source = json.loads(export.read_text())["files"]["socket_test_optimized_AR.py"]["text"]
+    reset = producer.reset({"camera_name": "over_shoulder_left_camera"})
+    producer.predict(_packet(reset["reset_id"], 0, "bfloat16"))
+    record = json.loads((tmp_path / "trace.jsonl").read_text())
+    assert record["future_latent_original_dtype"] == "torch.bfloat16"
+    assert record["future_latent_storage_dtype"] == "float32"
+
+
+def test_dreamzero_source_uses_official_vae_decode_boundary() -> None:
+    export_name = os.environ.get("SGW01_D1_AR_SOURCE_AUDIT", "")
+    export = Path(export_name) if export_name else None
+    if export is None or not export.is_file():
+        pytest.skip("set SGW01_D1_AR_SOURCE_AUDIT to the authorized D1 source audit")
+    manifest = json.loads(export.read_text())
+    entry = manifest["files"]["socket_test_optimized_AR.py"]
+    assert hashlib.sha256(entry["text"].encode()).hexdigest() == dreamzero_backend.D1_14B_ENTRYPOINT_SHA256
+    source = entry["text"]
     assert "torch.cat(self.video_across_time, dim=2)" in source
     assert "action_head.vae.decode(" in source
     assert 'rearrange(frames, "B C T H W -> B T H W C")' in source
@@ -249,6 +292,13 @@ def test_dreamzero_source_uses_official_vae_decode_boundary() -> None:
 
 
 def test_dreamzero_synthetic_official_decode_retains_rgb_and_latent() -> None:
+    class InferenceMode:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
     class Tensor:
         def __init__(self, value):
             self.value = np.asarray(value)
@@ -295,6 +345,7 @@ def test_dreamzero_synthetic_official_decode_retains_rgb_and_latent() -> None:
     policy = types.SimpleNamespace(
         video_across_time=[Tensor(np.zeros((1, 16, 1, 2, 2), dtype=np.float32))],
         _policy=types.SimpleNamespace(trained_model=types.SimpleNamespace(action_head=head)),
+        _torch=types.SimpleNamespace(inference_mode=lambda: InferenceMode()),
     )
     decoded = dreamzero_backend.decode_official_future(policy)
     assert decoded["future_status"] == "decoded_unmapped"
@@ -302,6 +353,85 @@ def test_dreamzero_synthetic_official_decode_retains_rgb_and_latent() -> None:
     assert decoded["future"].shape == (2, 2, 2, 3)
     assert decoded["future_metadata"]["time_mapping_status"] == "unmapped"
     assert decoded["future_latent"].value.shape == (1, 16, 1, 2, 2)
+
+
+def test_dreamzero_real_torch_cpu_decode_uses_inference_mode() -> None:
+    torch = pytest.importorskip("torch")
+
+    class VAE(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.ones(()))
+            self.seen_inference = False
+
+        def decode(self, latent, **kwargs):
+            self.seen_inference = not torch.is_grad_enabled()
+            return torch.zeros((1, 3, 2, 2, 2), dtype=torch.float32)
+
+    vae = VAE()
+    head = types.SimpleNamespace(
+        vae=vae, tiled=False, tile_size_height=34, tile_size_width=34,
+        tile_stride_height=18, tile_stride_width=16,
+    )
+    policy = types.SimpleNamespace(
+        video_across_time=[torch.zeros((1, 16, 1, 2, 2))],
+        _policy=types.SimpleNamespace(trained_model=types.SimpleNamespace(action_head=head)),
+        _torch=torch,
+    )
+    decoded = dreamzero_backend.decode_official_future(policy)
+    assert decoded["future_status"] == "decoded_unmapped"
+    assert vae.seen_inference is True
+
+
+def test_dreamzero_decode_error_keeps_accumulated_latent_stream() -> None:
+    class Tensor:
+        def __init__(self, value):
+            self.value = np.asarray(value)
+
+        def detach(self):
+            return self
+
+        def to(self, device):
+            return self
+
+    class Torch:
+        class Mode:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+        @staticmethod
+        def inference_mode():
+            return Torch.Mode()
+
+        @staticmethod
+        def cat(values, dim):
+            return Tensor(np.concatenate([value.value for value in values], axis=dim))
+
+    class VAE:
+        def decode(self, latent, **kwargs):
+            raise RuntimeError("synthetic VAE failure")
+
+    head = types.SimpleNamespace(
+        vae=VAE(), tiled=False, tile_size_height=34, tile_size_width=34,
+        tile_stride_height=18, tile_stride_width=16,
+    )
+    policy = types.SimpleNamespace(
+        video_across_time=[
+            Tensor(np.zeros((1, 16, 1, 2, 2))),
+            Tensor(np.ones((1, 16, 1, 2, 2))),
+        ],
+        _policy=types.SimpleNamespace(trained_model=types.SimpleNamespace(action_head=head)),
+        _torch=Torch,
+    )
+    result = dreamzero_backend.decode_official_future(policy)
+    assert result["future_status"] == "decode_error"
+    assert result["future_latent"].value.shape[2] == 2
+    assert result["future_metadata"]["stream_provenance"] == (
+        "accumulated_native_stream_context_inclusive"
+    )
 
 
 def test_dreamzero_http_watchdog_fails_when_rank_dies(tmp_path: Path) -> None:

@@ -294,7 +294,9 @@ def _is_noop_method(method: Callable[..., Any]) -> bool:
     return bool(body) and all(isinstance(node, ast.Pass) for node in body)
 
 
-def _launch_owned_server(argv: list[str], log_dir: Path) -> subprocess.Popen[bytes]:
+def _launch_owned_server(
+    argv: list[str], log_dir: Path, *, child_env: Mapping[str, str] | None = None
+) -> subprocess.Popen[bytes]:
     log_dir.mkdir(parents=True, exist_ok=True)
     stdout = (log_dir / "server.stdout.log").open("ab")
     stderr = (log_dir / "server.stderr.log").open("ab")
@@ -305,6 +307,7 @@ def _launch_owned_server(argv: list[str], log_dir: Path) -> subprocess.Popen[byt
             stdout=stdout,
             stderr=stderr,
             start_new_session=True,
+            env=dict(child_env) if child_env is not None else None,
         )
     finally:
         stdout.close()
@@ -829,7 +832,14 @@ def create_runtime(*, model: str, config: Mapping[str, Any]) -> NativeRuntime:
     attestation_path = Path(_required_env("SGW01_SERVER_ATTESTATION"))
     server_process: subprocess.Popen[bytes] | None = None
     try:
-        server_process = _launch_owned_server(argv, log_dir)
+        child_env = None
+        policy_gpu = os.environ.get("SGW01_POLICY_CUDA_VISIBLE_DEVICES", "").strip()
+        if policy_gpu:
+            if not policy_gpu.isdigit():
+                raise AdapterError("SGW01_POLICY_CUDA_VISIBLE_DEVICES must be a numeric GPU index")
+            child_env = dict(os.environ)
+            child_env["CUDA_VISIBLE_DEVICES"] = policy_gpu
+        server_process = _launch_owned_server(argv, log_dir, child_env=child_env)
         attestation = _read_server_attestation(attestation_path, server_process)
         if (
             attestation.get("model") != model

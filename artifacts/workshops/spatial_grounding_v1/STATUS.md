@@ -600,6 +600,15 @@ plan is frozen, no GPU is allocated and learned requests/episodes remain zero.
 At this checkpoint bl is only holding its finite 600-second CPU export window;
 bk is terminal failed. No behavioral queue is running unattended.
 
+The actual native CLI also needs explicit canonical campaign integration:
+its existing inputs are a family candidate directory or LAT-style proposal
+wrapper, not the executor's `candidate.json`, and it requires a new output
+root although overlay/capture already created that root. Moving nested output
+afterward would invalidate absolute raw-state/warmup bindings. The worker is
+wiring exact candidate-file input and strict no-overwrite handling of the
+existing campaign root; the synthetic helper-only child E2E was not proof of
+this native CLI compatibility.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure

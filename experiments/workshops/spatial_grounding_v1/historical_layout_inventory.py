@@ -13,10 +13,46 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
-from .historical_layout_dedup import REPO_ROOT, SOURCE_SPECS as LEGACY_SOURCE_SPECS
-
-
-SOURCE_SPECS = LEGACY_SOURCE_SPECS + (
+REPO_ROOT = Path(__file__).resolve().parents[3]
+SOURCE_SPECS = (
+    ("V2-A001-pi0-fast", "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json", "complete"),
+    ("V2-A005-groot-n17", "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json", "complete"),
+    ("V2-A005-cosmos-edge", "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_direct_gate.json", "complete"),
+    ("V2-A007-dreamzero", "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json", "complete"),
+    ("V2-A010-pi05", "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json", "complete"),
+    ("V2-A011-cosmos-nano", "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json", "complete"),
+    ("V2-A015-cosmos-nano-g1", "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_v2a015_no_cfg_g1_result.json", "complete"),
+    ("V2-A015-dreamzero-s2", "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_v2a015_action_cfg_s2_result.json", "complete"),
+    ("V3-A-phase-a-groot", "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_evidence_hash_manifest.json", "complete"),
+    ("V3-A-phase-a-edge", "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_evidence_hash_manifest.json", "complete"),
+    ("V3-A-phase-a-nano", "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_evidence_hash_manifest.json", "complete"),
+    ("V3-A-phase-a-dreamzero", "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_evidence_hash_manifest.json", "complete"),
+    ("V3-A-phase-a-pi05", "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_evidence_hash_manifest.json", "complete"),
+    ("V3-C-groot", "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_evidence_manifest.json", "complete"),
+    ("V3-C-edge", "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_evidence_manifest.json", "complete"),
+    ("V3-C-nano", "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_evidence_manifest.json", "complete"),
+    ("V3-E004", "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/evidence_manifest.json", "complete"),
+    ("V3-E006", "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json", "reference_only"),
+    ("V3-A002-public-old-name-config", "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_evidence_hash_manifest.json", "complete"),
+    ("V3-B001-nano-position-reflection", "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json", "complete"),
+    ("V3-B003-dreamzero-position-reflection", "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json", "complete"),
+    ("V3-B004-nano-lateral-dose-failed-closed", "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/model_blind_calibration_failure_report.json", "failed_closed"),
+    ("V3-B005-nano-lateral-dose", "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/nano_lateral_v3b005_manifest.json", "complete"),
+    ("V3-D001-pi05-stochastic", "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/evidence_manifest.json", "complete"),
+    ("V3-E001-prompt-noise", "artifacts/vla_wam_shared_v3/phase_e/fixed_observation_prompt_noise_v3e001/evidence_manifest.json", "complete"),
+    ("V3-E002-reference-controller", "artifacts/vla_wam_shared_v3/phase_e/reference_controller_symmetry_v3e002/evidence_manifest.json", "complete"),
+    ("V3-E003-bilateral-symmetry-null", "artifacts/vla_wam_shared_v3/phase_e/bilateral_symmetry_null_control_v3e003/evidence_manifest.json", "complete"),
+    ("V3-E006-canonical-results", "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/results/evidence_manifest.json", "complete"),
+    ("V3-E006-source-lineage", "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/source_lineage.json", "lineage_only"),
+) + tuple(
+    (
+        f"V3-E006-repair-r{index:03d}",
+        f"artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r{index:03d}/results/"
+        + ("results.json" if index in (10, 11) else "evidence_manifest.json"),
+        "repair_record",
+    )
+    for index in range(1, 13)
+) + (
     (
         "V3-B002-pi05-position-reflection",
         "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_manifest.json",
@@ -70,6 +106,8 @@ def _path_evidence(index: Mapping[str, Any]) -> list[dict[str, Any]]:
         if not isinstance(value, str) or not value.startswith(("/data/", "/mnt/", "/scratch/")):
             continue
         lowered = value.lower()
+        if "robotwin" in lowered:
+            continue
         if not any(token in lowered for token in ("reset", "layout", "trajectory", "fixture", "manifest", "result.json")):
             continue
         parent = pointer.rsplit("/", 1)[0]

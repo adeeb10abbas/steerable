@@ -344,6 +344,12 @@ Historical layout coverage is still incomplete. The new diagnostic comparator
 cannot release a family based on an arbitrary subset, empty registry or
 unverified hash strings. Its source inventory identifies the precise missing
 historical root/center bindings; model-family release remains blocked.
+The additive [45-record source inventory](infrastructure/historical-droid-layout-source-inventory-v2.json)
+now provides hash-bound source records and exact raw reset/layout paths,
+including the separately named V3-B002 gates. It reproduces without replacing
+the original comparator or earlier inventory. All 45 source records still
+carry unresolved layout coverage; enumerating sources is not completed
+deduplication.
 
 ### Durable next capture phase and integration checkpoint
 

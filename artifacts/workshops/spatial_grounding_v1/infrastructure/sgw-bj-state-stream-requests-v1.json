@@ -11,14 +11,22 @@
     {"cohort_id":"V3-E006-repair-r009","path":"/data/users/ali/vla_wam/raw/v3e006_r009/state_repair/2edc2a5-a40r06-attempt01/raw/state_repair_result.json","expected_bytes":460849073,"expected_sha256":"0753b4fe44ed479d4575804f3b5f38e3244a1cea25de3f1a8564dca4cd26ab3c"},
     {"cohort_id":"V3-E006-repair-r012","path":"/data/users/ali/vla_wam/raw/v3e006_r012/state_repair/219c7a2-a40r06-attempt01/raw/state_repair_result.json","expected_bytes":462260724,"expected_sha256":"a556be5fb67e95687ba390b689c3f7f676b20d21475fd2357ae1429c7b424c56"}
   ],
-  "retained_selectors": [
-    "attempts.item.stages.item.fresh_reset.objects.item",
-    "attempts.item.stages.item.candidate_state.objects.item",
-    "attempts.item.stages.item.fresh_reset.e004_full_reset_comparison",
-    "execution_evidence.last_reference_bounds_evidence",
-    "geometry_attachment_preflight.*identity_sha256"
+  "selection_contract": "exact_producer_paths_ijson_same_stream_hash_v1",
+  "retained_json_pointer_patterns": [
+    "/attempts/{index}/stages/{stage}/fresh_reset/objects/{actor}/{field}",
+    "/attempts/{index}/stages/{stage}/candidate_state/objects/{actor}/{field}",
+    "/attempts/{index}/stages/{stage}/fresh_reset/e004_full_reset_comparison",
+    "/attempts/{index}/stages/{stage}/ik_solve_environment/fresh_reset/objects/{actor}/{field}",
+    "/attempts/{index}/stages/{stage}/ik_solve_environment/fresh_reset/e004_full_reset_comparison",
+    "/known_reachable_diagnostics/{index}/fresh_reset/objects/{actor}/{field}",
+    "/known_reachable_diagnostics/{index}/fresh_reset/e004_full_reset_comparison",
+    "/execution_evidence/last_reference_bounds_evidence",
+    "/geometry_attachment_preflight/geometry_attachment_preflight_contract_sha256",
+    "/geometry_attachment_preflight/geometry_identity_sha256",
+    "/geometry_attachment_preflight/collision_geometry_resolution/geometry_identity_sha256"
   ],
-  "limits_bytes": {"object":131072,"comparison":262144,"reference_bounds":262144},
+  "retained_object_fields": ["angular_velocity_rad_s", "linear_velocity_m_s", "position_world_m", "quaternion_world_wxyz"],
+  "retention_limits": {"max_object_bytes":131072,"max_comparison_bytes":262144,"max_bounds_bytes":262144,"max_records":4096,"max_total_bytes":8388608,"max_geometry_identity_scalars":64},
   "bounded_schema_findings": [
     {"cohort_id":"V3-E006-repair-r001","export_path":"00-state.json","sha256":"947b2f2292a6cbc827e7431ef5f4caaf524dfb87cf5ffe1ec09a7eddd04f0703","bytes":895621,"finding":"fresh_reset object roots and source-defined full-reset comparison present; no centroid/AABB"},
     {"cohort_id":"V3-E006-repair-r002","export_path":"01-state.json","sha256":"afb8c3ba2b53f1513bd22fd6135b16cbfe3e4dd9de3fe3d818ac05e458311fe7","bytes":7103108,"finding":"fresh_reset object roots and source-defined full-reset comparison present; no centroid/AABB"},

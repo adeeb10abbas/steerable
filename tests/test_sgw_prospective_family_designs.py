@@ -112,6 +112,28 @@ def test_plan_rejects_mutated_bound_baseline_bytes(tmp_path):
         )
 
 
+def test_duplicate_screen_includes_previously_rejected_slots(tmp_path, monkeypatch):
+    from experiments.workshops.spatial_grounding_v1 import prospective_family_designs as module
+
+    captures, manifests = _baseline_files(tmp_path, "HEIGHT")
+    screen = module._geometric_rejection
+    calls = []
+
+    def reject_first(*args, **kwargs):
+        calls.append(len(args[5]))
+        return "first_slot_geometry_rejected" if len(calls) == 1 else screen(*args, **kwargs)
+
+    monkeypatch.setattr(module, "_geometric_rejection", reject_first)
+    monkeypatch.setattr(module, "_translation", lambda *args: [0.0, 0.0])
+    plan = build_design_plan(
+        family="HEIGHT", seed=91, count=2,
+        baseline_capture_paths=captures, baseline_manifest_paths=manifests,
+    )
+    assert calls == [0, 1]
+    assert plan["designs"][1]["geometric_rejection"] == "duplicate_layout_within_3mm_2deg"
+    assert plan["geometric_rejection_count"] == 2
+
+
 @pytest.mark.parametrize("layer", ("overlay_usda", "base_scene"))
 def test_candidate_authoring_rejects_mutated_inherited_baseline_usd(tmp_path, layer):
     captures, manifests = _baseline_files(tmp_path, "HEIGHT")

@@ -6,7 +6,6 @@ import pytest
 
 from experiments.workshops.spatial_grounding_v1.historical_layout_streaming import (
     extract_state_payload,
-    verify_source,
 )
 
 
@@ -61,9 +60,10 @@ def test_nested_arrays_and_pointer_groups(tmp_path):
 
 def test_tail_mutation_is_rejected(tmp_path):
     path = tmp_path / "state.json"
-    digest, size = _write(path, _payload())
+    payload = {**_payload(), "unselected_tail": "a" * 150000}
+    digest, size = _write(path, payload)
     mutated = bytearray(path.read_bytes())
-    mutated[-1] = ord(" ")
+    mutated[mutated.rfind(b"a")] = ord("b")
     path.write_bytes(mutated)
     with pytest.raises(ValueError, match="sha256 mismatch"):
         extract_state_payload(path, expected_sha256=digest, expected_bytes=size)
@@ -86,3 +86,95 @@ def test_missing_pointer_accounting(tmp_path):
     assert "fresh_reset_objects" in result["missing_pointer_groups"]
     assert "reference_bounds" in result["missing_pointer_groups"]
     assert result["comparable_geometry_rows"] == []
+
+
+def test_exact_paths_nested_maps_and_dotted_keys_are_preserved(tmp_path):
+    payload = _payload()
+    stage = payload["attempts"][0]["stages"].pop("canonical_carry")
+    payload["attempts"][0]["stages"]["a.b/~"] = stage
+    obj = stage["fresh_reset"]["objects"]["a/b~c"]
+    obj["unselected"] = {"position_world_m": [99, 99, 99], "deep": {"quaternion_world_wxyz": [9]}}
+    obj["quaternion_world_wxyz"] = [1.0, 0.0, 0.0, 0.0]
+    obj["linear_velocity_m_s"] = [[0.1, 0.2], [0.3, 0.4]]
+    payload["unrelated"] = {
+        "fresh_reset": {"e004_full_reset_comparison": {"smuggled": True}},
+        "last_reference_bounds_evidence": {"smuggled": True},
+        "geometry_identity_sha256": "not a preflight identity",
+    }
+    path = tmp_path / "state.json"
+    digest, size = _write(path, payload)
+    result = extract_state_payload(path, expected_sha256=digest, expected_bytes=size)
+    row = result["fresh_reset_objects"][0]
+    assert row["json_pointer"] == "/attempts/0/stages/a.b~1~0/fresh_reset/objects/a~1b~0c"
+    assert row["value"] == {key: value for key, value in obj.items() if key != "unselected"}
+    assert len(result["full_reset_comparisons"]) == 2
+    assert len(result["reference_bounds"]) == len(result["geometry_preflight_identity"]) == 1
+
+
+def test_only_the_parsed_stream_is_opened_and_hashed(tmp_path, monkeypatch):
+    path = tmp_path / "state.json"
+    digest, size = _write(path, _payload())
+    original_open = Path.open
+    opens = []
+
+    def observed_open(self, *args, **kwargs):
+        if self == path:
+            opens.append(args)
+        return original_open(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", observed_open)
+    result = extract_state_payload(path, expected_sha256=digest, expected_bytes=size)
+    assert result["source_sha256"] == digest
+    assert opens == [("rb",)]
+
+
+def test_source_defined_solve_environment_and_diagnostic_resets(tmp_path):
+    fresh = _payload()["attempts"][0]["stages"]["canonical_carry"]["fresh_reset"]
+    payload = {
+        "attempts": [{"stages": {"carry": {"ik_solve_environment": {"fresh_reset": fresh}}}}],
+        "known_reachable_diagnostics": [{"fresh_reset": fresh}, {"fresh_reset": fresh}],
+    }
+    path = tmp_path / "state.json"
+    digest, size = _write(path, payload)
+    result = extract_state_payload(path, expected_sha256=digest, expected_bytes=size)
+    assert [row["json_pointer"] for row in result["fresh_reset_objects"]] == [
+        "/attempts/0/stages/carry/ik_solve_environment/fresh_reset/objects/a~1b~0c",
+        "/known_reachable_diagnostics/0/fresh_reset/objects/a~1b~0c",
+        "/known_reachable_diagnostics/1/fresh_reset/objects/a~1b~0c",
+    ]
+    assert len(result["full_reset_comparisons"]) == 3
+
+
+@pytest.mark.parametrize("limits,reason", [
+    ({"max_total_bytes": 1}, "aggregate-byte"),
+    ({"max_records": 1}, "record limit"),
+    ({"max_geometry_identity_scalars": 1}, "identity scalar"),
+])
+def test_all_retained_groups_share_global_limits(tmp_path, limits, reason):
+    payload = _payload()
+    payload["geometry_attachment_preflight"]["geometry_attachment_preflight_contract_sha256"] = "b" * 64
+    path = tmp_path / "state.json"
+    digest, size = _write(path, payload)
+    with pytest.raises(ValueError, match=reason):
+        extract_state_payload(path, expected_sha256=digest, expected_bytes=size, limits=limits)
+
+
+def test_reject_before_building_large_selected_array(tmp_path, monkeypatch):
+    from experiments.workshops.spatial_grounding_v1 import historical_layout_streaming as module
+
+    payload = _payload()
+    payload["attempts"][0]["stages"]["canonical_carry"]["fresh_reset"]["objects"]["a/b~c"]["position_world_m"] = list(range(10000))
+    path = tmp_path / "state.json"
+    digest, size = _write(path, payload)
+    events = []
+    builder = module.ObjectBuilder
+
+    class TrackedBuilder(builder):
+        def event(self, event, value):
+            events.append(event)
+            return super().event(event, value)
+
+    monkeypatch.setattr(module, "ObjectBuilder", TrackedBuilder)
+    with pytest.raises(ValueError, match="retained-byte"):
+        extract_state_payload(path, expected_sha256=digest, expected_bytes=size, limits={"max_object_bytes": 32})
+    assert len(events) < 12

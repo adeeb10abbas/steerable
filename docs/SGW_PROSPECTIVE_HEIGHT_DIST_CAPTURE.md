@@ -147,6 +147,10 @@ one reset is not six-trial reachability or fixture qualification.
 
 ## Prospective design-plan boundary
 
+All proposed slots enter within-plan duplicate detection, including slots
+already rejected by a geometric screen. A later near-duplicate cannot replace
+a rejected slot. Historical coverage remains a separate release requirement.
+
 After—and only after—the two native baseline captures for each family have
 been reviewed, `prospective_family_designs.py` may produce a fixed 1–100-slot
 design plan. Local tests use **synthetic capture-schema fixtures**, not native

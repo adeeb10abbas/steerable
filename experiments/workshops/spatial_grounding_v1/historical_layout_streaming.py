@@ -1,14 +1,16 @@
-"""Bounded, hash-verified extraction for large E006 state-repair JSON files."""
+"""Bounded extraction of exact fields from hash-verified E006 state JSON."""
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 import hashlib
 import json
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, BinaryIO, Iterator
 
 import ijson
 from ijson.common import ObjectBuilder
+
 
 DEFAULT_LIMITS = {
     "max_object_bytes": 128 * 1024,
@@ -19,211 +21,207 @@ DEFAULT_LIMITS = {
     "max_geometry_identity_scalars": 64,
 }
 OBJECT_FIELDS = {
-    "position_world_m",
-    "quaternion_world_wxyz",
-    "linear_velocity_m_s",
-    "angular_velocity_rad_s",
+    "position_world_m", "quaternion_world_wxyz",
+    "linear_velocity_m_s", "angular_velocity_rad_s",
 }
+IDENTITY_PATHS = {
+    ("geometry_attachment_preflight", "geometry_attachment_preflight_contract_sha256"),
+    ("geometry_attachment_preflight", "geometry_identity_sha256"),
+    ("geometry_attachment_preflight", "collision_geometry_resolution", "geometry_identity_sha256"),
+}
+PathTokens = tuple[str | int, ...]
 
 
-def _items(path: Path, prefix: str) -> Iterable[Any]:
-    with path.open("rb") as handle:
-        yield from ijson.items(handle, prefix, use_float=True)
+class _HashingReader:
+    def __init__(self, stream: BinaryIO, expected_bytes: int) -> None:
+        self.stream = stream
+        self.expected_bytes = expected_bytes
+        self.size = 0
+        self.digest = hashlib.sha256()
+
+    def read(self, size: int = -1) -> bytes:
+        raw = self.stream.read(size)
+        self.size += len(raw)
+        self.digest.update(raw)
+        if self.size > self.expected_bytes:
+            raise ValueError("source size mismatch: parsed stream exceeds expected bytes")
+        return raw
+
+    def readinto(self, buffer: bytearray) -> int:
+        raw = self.read(len(buffer))
+        buffer[:len(raw)] = raw
+        return len(raw)
+
+    def verify(self, expected_sha256: str) -> None:
+        if self.size != self.expected_bytes:
+            raise ValueError(f"source size mismatch: expected {self.expected_bytes}, got {self.size}")
+        if self.digest.hexdigest() != expected_sha256:
+            raise ValueError("source sha256 mismatch for the actual parsed stream")
 
 
 def verify_source(path: Path, expected_sha256: str, expected_bytes: int) -> str:
-    digest = hashlib.sha256()
-    size = 0
-    with path.open("rb") as handle:
-        for block in iter(lambda: handle.read(1024 * 1024), b""):
-            size += len(block)
-            digest.update(block)
-    actual = digest.hexdigest()
-    if size != expected_bytes:
-        raise ValueError(f"source size mismatch: expected {expected_bytes}, got {size}")
-    if actual != expected_sha256:
-        raise ValueError(f"source sha256 mismatch: expected {expected_sha256}, got {actual}")
-    return actual
+    with path.open("rb") as stream:
+        reader = _HashingReader(stream, expected_bytes)
+        while reader.read(1024 * 1024):
+            pass
+        reader.verify(expected_sha256)
+        return reader.digest.hexdigest()
 
 
-def _escape(token: str) -> str:
-    return token.replace("~", "~0").replace("/", "~1")
+@dataclass
+class _Container:
+    path: PathTokens
+    kind: str
+    key: str | None = None
+    next_index: int = 0
 
 
-def _pointer(prefix: str, indices: dict[str, int]) -> str:
-    parts = prefix.split(".")
-    out = []
-    for i, part in enumerate(parts):
-        if part == "item":
-            out.append(str(indices[".".join(parts[:i])]))
+def _path_events(reader: _HashingReader) -> Iterator[tuple[PathTokens, str, Any]]:
+    stack: list[_Container] = []
+    started = False
+    for event, value in ijson.basic_parse(reader, use_float=True):
+        if not started:
+            if event != "start_map":
+                raise ValueError("state payload must be a JSON object")
+            started = True
+        if event == "map_key":
+            stack[-1].key = value
+            yield stack[-1].path, event, value
+            continue
+        if event in {"end_map", "end_array"}:
+            yield stack.pop().path, event, value
+            continue
+        if not stack:
+            path = ()
+        elif stack[-1].kind == "map":
+            parent = stack[-1]
+            if parent.key is None:
+                raise ValueError("object value has no JSON key")
+            path = parent.path + (parent.key,)
+            parent.key = None
         else:
-            out.append(_escape(part))
-    return "/" + "/".join(out)
+            parent = stack[-1]
+            path = parent.path + (parent.next_index,)
+            parent.next_index += 1
+        if event in {"start_map", "start_array"}:
+            if len(stack) >= 128:
+                raise ValueError("source nesting exceeds the bounded parser depth")
+            stack.append(_Container(path, "map" if event == "start_map" else "array"))
+        yield path, event, value
 
 
-def _item_index(prefix: str, event: str, indices: dict[str, int]) -> None:
-    if event in {"map_key", "end_map", "end_array"} or not prefix.endswith(".item"):
-        return
-    base = prefix.rsplit(".item", 1)[0]
-    indices[base] = indices.get(base, -1) + 1
+def _pointer(path: PathTokens) -> str:
+    return "/" + "/".join(str(part).replace("~", "~0").replace("/", "~1") for part in path)
 
 
-def _match_object(parts: list[str]) -> bool:
-    return (
-        len(parts) == 7
-        and parts[0:3] == ["attempts", "item", "stages"]
-        and parts[4:6] in (["fresh_reset", "objects"], ["candidate_state", "objects"])
-        and parts[2] == "stages"
-    )
-
-
-def _object_kind(parts: list[str]) -> str | None:
-    if len(parts) != 7 or parts[0:3] != ["attempts", "item", "stages"]:
-        return None
-    if parts[4:6] == ["fresh_reset", "objects"]:
-        return "fresh_reset_objects"
-    if parts[4:6] == ["candidate_state", "objects"]:
-        return "candidate_state_objects"
+def _selection(path: PathTokens) -> tuple[str, str] | None:
+    relative = ()
+    if (
+        len(path) >= 6 and path[0] == "attempts" and isinstance(path[1], int)
+        and path[2] == "stages" and isinstance(path[3], str)
+    ):
+        relative = path[4:]
+        if relative[0] == "ik_solve_environment":
+            relative = relative[1:]
+    elif len(path) >= 4 and path[0] == "known_reachable_diagnostics" and isinstance(path[1], int):
+        relative = path[2:]
+    if len(relative) == 4 and relative[1] == "objects" and relative[3] in OBJECT_FIELDS:
+        if relative[0] == "fresh_reset":
+            return "fresh_reset_objects", "max_object_bytes"
+        if relative[0] == "candidate_state":
+            return "candidate_state_objects", "max_object_bytes"
+    if relative == ("fresh_reset", "e004_full_reset_comparison"):
+        return "full_reset_comparisons", "max_comparison_bytes"
+    if path == ("execution_evidence", "last_reference_bounds_evidence"):
+        return "reference_bounds", "max_bounds_bytes"
+    if path in IDENTITY_PATHS:
+        return "geometry_preflight_identity", "max_object_bytes"
     return None
 
 
-def _stream_selected(path: Path, limits: dict[str, int]) -> dict[str, list[dict[str, Any]]]:
-    result = {
-        "fresh_reset_objects": [],
-        "candidate_state_objects": [],
-        "full_reset_comparisons": [],
-        "reference_bounds": [],
-    }
-    indices: dict[str, int] = {}
-    active: dict[str, Any] | None = None
-    total_bytes = 0
-    identity: list[dict[str, Any]] = []
-    with path.open("rb") as handle:
-        for prefix, event, value in ijson.parse(handle, use_float=True):
-            _item_index(prefix, event, indices)
-            parts = prefix.split(".")
-            kind = _object_kind(parts) if event == "start_map" else None
-            if active is None and kind:
-                active = {
-                    "kind": kind,
-                    "pointer": _pointer(prefix, indices),
-                    "fields": {},
-                    "field_values": None,
-                    "bytes": 0,
-                }
-                continue
-            if active is None and event == "start_map" and (
-                prefix.endswith(".fresh_reset.e004_full_reset_comparison")
-                or prefix.endswith(".last_reference_bounds_evidence")
-            ):
-                kind = "full_reset_comparisons" if prefix.endswith("comparison") else "reference_bounds"
-                active = {
-                    "kind": kind,
-                    "pointer": _pointer(prefix, indices),
-                    "builder": ObjectBuilder(),
-                    "depth": 1,
-                    "bytes": 0,
-                }
-                active["builder"].event(event, value)
-                continue
-            if active is not None:
-                if active["kind"].endswith("objects"):
-                    if event == "map_key":
-                        active["field"] = value if value in OBJECT_FIELDS else None
-                        active["field_values"] = [] if active["field"] is not None else None
-                    elif active.get("field") is not None:
-                        active["bytes"] += len(repr(value).encode())
-                        if active["bytes"] > limits["max_object_bytes"]:
-                            raise ValueError(f"{active['kind'].replace('_', ' ')} exceeds retained-byte limit")
-                        if event in {"number", "string", "boolean", "null"}:
-                            if active["field_values"] is not None:
-                                active["field_values"].append(value)
-                            else:
-                                active["fields"][active["field"]] = value
-                        elif event == "end_array":
-                            active["fields"][active["field"]] = active["field_values"]
-                            active["field_values"] = None
-                            active["field"] = None
-                    if event == "end_map":
-                        value_out = active["fields"]
-                        if len(result[active["kind"]]) >= limits["max_records"]:
-                            raise ValueError("retained record limit exceeded")
-                        total_bytes += len(json.dumps(value_out, allow_nan=False).encode())
-                        if total_bytes > limits["max_total_bytes"]:
-                            raise ValueError("retained aggregate-byte limit exceeded")
-                        result[active["kind"]].append(
-                            {"json_pointer": active["pointer"], "value": value_out}
-                        )
-                        active = None
-                else:
-                    encoded_size = len(repr(value).encode())
-                    active["bytes"] += encoded_size
-                    if active["bytes"] > limits[
-                        "max_comparison_bytes" if active["kind"] == "full_reset_comparisons" else "max_bounds_bytes"
-                    ]:
-                        raise ValueError(f"{active['kind'].replace('_', ' ')} exceeds retained-byte limit")
-                    active["builder"].event(event, value)
-                    if event in {"start_map", "start_array"}:
-                        active["depth"] += 1
-                    elif event in {"end_map", "end_array"}:
-                        active["depth"] -= 1
-                    if active["depth"] == 0:
-                        value_out = active["builder"].value
-                        total_bytes += len(json.dumps(value_out, allow_nan=False).encode())
-                        if total_bytes > limits["max_total_bytes"]:
-                            raise ValueError("retained aggregate-byte limit exceeded")
-                        result[active["kind"]].append(
-                            {"json_pointer": active["pointer"], "value": value_out}
-                        )
-                        active = None
-                continue
-            if event in {"string", "number", "boolean"} and (
-                prefix.endswith("geometry_identity_sha256")
-                or prefix.endswith("geometry_attachment_preflight_contract_sha256")
-            ):
-                if len(identity) >= limits["max_geometry_identity_scalars"]:
-                    raise ValueError("geometry identity scalar limit exceeded")
-                identity.append({"json_pointer": _pointer(prefix, indices), "value": value})
-    if active is not None:
-        raise ValueError("unterminated selected subtree")
-    result["geometry_preflight_identity"] = identity
-    return result
+@dataclass
+class _Selected:
+    path: PathTokens
+    kind: str
+    limit: str
+    builder: ObjectBuilder
+    charged_bytes: int = 0
 
 
 def extract_state_payload(
-    path: Path,
-    *,
-    expected_sha256: str,
-    expected_bytes: int,
+    path: Path, *, expected_sha256: str, expected_bytes: int,
     limits: dict[str, int] | None = None,
 ) -> dict[str, Any]:
-    """Stream/hash the complete source and publish only bounded selected fields."""
-
-    active = {**DEFAULT_LIMITS, **(limits or {})}
-    digest = hashlib.sha256()
-    size = 0
-    with path.open("rb") as handle:
-        for block in iter(lambda: handle.read(1024 * 1024), b""):
-            size += len(block)
-            digest.update(block)
-    if size != expected_bytes:
-        raise ValueError(f"source size mismatch: expected {expected_bytes}, got {size}")
-    if digest.hexdigest() != expected_sha256:
-        raise ValueError(f"source sha256 mismatch: expected {expected_sha256}, got {digest.hexdigest()}")
-    selected = _stream_selected(path, active)
-    missing = [
-        name for name in (
-            "fresh_reset_objects",
-            "candidate_state_objects",
-            "full_reset_comparisons",
-            "reference_bounds",
-        ) if not selected[name]
-    ]
+    """Publish only after EOF verifies the exact bytes consumed by the parser."""
+    active_limits = {**DEFAULT_LIMITS, **(limits or {})}
+    if set(active_limits) != set(DEFAULT_LIMITS) or any(
+        type(value) is not int or value <= 0 for value in active_limits.values()
+    ):
+        raise ValueError("retention limits must be known positive integers")
+    if type(expected_bytes) is not int or expected_bytes <= 0:
+        raise ValueError("expected source size must be a positive integer")
+    result: dict[str, list[dict[str, Any]]] = {
+        key: [] for key in ("fresh_reset_objects", "candidate_state_objects",
+                           "full_reset_comparisons", "reference_bounds", "geometry_preflight_identity")
+    }
+    objects: dict[tuple[str, PathTokens], dict[str, Any]] = {}
+    object_bytes: dict[tuple[str, PathTokens], int] = {}
+    selected: _Selected | None = None
+    record_count = total_bytes = 0
+    with path.open("rb") as stream:
+        reader = _HashingReader(stream, expected_bytes)
+        for location, event, value in _path_events(reader):
+            if selected is None:
+                match = None if event in {"map_key", "end_map", "end_array"} else _selection(location)
+                if match is None:
+                    continue
+                kind, limit = match
+                if kind == "geometry_preflight_identity" and event in {"start_map", "start_array"}:
+                    raise ValueError("geometry identity must be a bounded scalar")
+                if kind == "geometry_preflight_identity" and len(result[kind]) >= active_limits["max_geometry_identity_scalars"]:
+                    raise ValueError("geometry identity scalar limit exceeded")
+                if not kind.endswith("objects") or (kind, location[:-1]) not in objects:
+                    record_count += 1
+                    if record_count > active_limits["max_records"]:
+                        raise ValueError("retained record limit exceeded")
+                selected = _Selected(location, kind, limit, ObjectBuilder())
+                total_bytes += len(_pointer(location).encode()) + 64
+            cost = len(json.dumps(value, allow_nan=False, ensure_ascii=False).encode()) + 2
+            selected.charged_bytes += cost
+            total_bytes += cost
+            charge = selected.charged_bytes
+            if selected.kind.endswith("objects"):
+                charge += object_bytes.get((selected.kind, selected.path[:-1]), 0)
+            if charge > active_limits[selected.limit]:
+                raise ValueError(f"{selected.kind.replace('_', ' ')} exceeds retained-byte limit")
+            if total_bytes > active_limits["max_total_bytes"]:
+                raise ValueError("retained aggregate-byte limit exceeded")
+            selected.builder.event(event, value)
+            if location == selected.path and event not in {"start_map", "start_array", "map_key"}:
+                if selected.kind.endswith("objects"):
+                    key = selected.kind, selected.path[:-1]
+                    if key not in objects:
+                        objects[key] = {"json_pointer": _pointer(key[1]), "value": {}}
+                        result[selected.kind].append(objects[key])
+                    field = selected.path[-1]
+                    if field in objects[key]["value"]:
+                        raise ValueError("duplicate selected object field in source JSON")
+                    objects[key]["value"][field] = selected.builder.value
+                    object_bytes[key] = charge
+                else:
+                    result[selected.kind].append({
+                        "json_pointer": _pointer(selected.path), "value": selected.builder.value,
+                    })
+                selected = None
+        reader.verify(expected_sha256)
     return {
-        "source_sha256": expected_sha256,
-        "source_bytes": expected_bytes,
-        **selected,
-        "missing_pointer_groups": missing,
+        "source_sha256": expected_sha256, "source_bytes": expected_bytes,
+        "selection_contract": "exact_producer_paths_ijson_same_stream_hash_v1",
+        "retention_limits": active_limits,
+        **result,
+        "missing_pointer_groups": [
+            kind for kind in result if kind != "geometry_preflight_identity" and not result[kind]
+        ],
         "comparable_geometry_rows": [],
         "semantic_status": "root_only_or_preflight_evidence_not_comparable_geometry",
     }

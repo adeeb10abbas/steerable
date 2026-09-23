@@ -85,9 +85,9 @@ def build_design_plan(
             row["status"] = "prospective_design_requires_zero_model_capture"
             row["candidate_overlay_status"] = CANDIDATE_STATUS
             accepted.append(row["design_id"])
-            fingerprints.append({"roots": roots})
         else:
             row["geometric_rejection"] = rejection
+        fingerprints.append({"roots": roots})
         rows.append(row)
     value = {
         "schema_version": PLAN_SCHEMA,

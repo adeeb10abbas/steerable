@@ -97,6 +97,24 @@ def test_missing_family_measurements_is_an_explicit_blocker():
         propose_family_layouts(_workspace(), family="HEIGHT", seed=7, count=1)
 
 
+def test_measured_center_must_close_from_root_and_offset():
+    workspace = _workspace()
+    row = _height_row()
+    row["scoring_centers_env_local_xyz_m"]["bowl"] = [.5, 0, .101]
+    workspace["height_layout_measurements"] = [row]
+
+    with pytest.raises(ValueError, match="does not close"):
+        propose_family_layouts(workspace, family="HEIGHT", seed=7, count=1)
+
+
+def test_duplicate_capture_layout_ids_are_rejected():
+    workspace = _workspace()
+    workspace["height_layout_measurements"] = [_height_row(), _height_row()]
+
+    with pytest.raises(ValueError, match="duplicate layout IDs"):
+        propose_family_layouts(workspace, family="HEIGHT", seed=7, count=1)
+
+
 def test_cli_writes_explicitly_unqualified_proposals(tmp_path, monkeypatch):
     workspace = _workspace()
     workspace["height_layout_measurements"] = [_height_row()]

@@ -5,9 +5,10 @@ six-cell blocks and 1,044 planned episodes were reproduced byte-for-byte.
 Neither the imported specification nor historical V2/V3 protocols are edited
 by this implementation.
 
-**No SGW-01 learned-policy request, behavioral episode, or physically qualified
-fixture exists yet.** Local synthetic tests are engineering checks, not study
-evidence. Runtime factories, server trace provenance, full resets, physical-time
+**No SGW-01 learned-policy request, behavioral episode, or released family
+fixture exists yet.** Recorded model-blind candidate qualification is in progress;
+individual physical passes do not release a family. Local synthetic tests are
+engineering checks, not study evidence. Runtime factories, server trace provenance, full resets, physical-time
 maps and the live simulator remain subject to qualification before release.
 
 Current restart state and cluster evidence:
@@ -60,8 +61,8 @@ verification and model loading within the bounded Job deadline.
 `lat_workspace_capture` records the actual scene after that probe passes;
 `lat_proposals`, `lat_candidate_generator`, `robolab_lat_qualification` and
 `model_blind_qualification` are the model-blind LAT qualification path.
-HEIGHT/DIST have contracts and selection checks, **not qualified physical
-fixtures**. Do not substitute repeated LAT layouts for those branches.
+HEIGHT/DIST native candidate qualification is running, but **no family fixture
+is released**. Do not substitute repeated LAT layouts for those branches.
 
 The prospective generator includes geometric rejections within its 100-candidate
 cap, records their reasons, and never refills rejected slots. Its table and
@@ -129,6 +130,30 @@ to `model_blind_qualification` for this new recipe. The recorder saves the
 controller identity before acting and includes it in the qualification receipt.
 Omitting the flag retains the original, unqualified recipe for provenance;
 neither recipe is a learned-policy action mapping.
+
+### Bounded historical lineage
+
+`historical_layout_streaming.extract_state_payload(..., include_lineage=True)`
+adds exact producer/input bindings and source-defined frame records to the
+same-stream-hashed extraction. The default selection remains unchanged.
+Lineage extraction is bounded and excludes unrelated environment or invocation
+fields; it does not confer historical coverage or release authority.
+
+Reproduce the retained seven-source audit into a fresh output file:
+
+```bash
+.venv/bin/python tools/audit_sgw_historical_lineage.py \
+  --export-root artifacts/workshops/spatial_grounding_v1/infrastructure/historical-lineage-20260923bv \
+  --prior-export-root artifacts/workshops/spatial_grounding_v1/infrastructure/historical-state-fields-20260923bl \
+  --inputs handoff/k8s/sgw01-ali-historical-lineage-inputs-20260923bv.json \
+  --output /tmp/sgw-historical-lineage-audit.json
+```
+
+The audit checks exact Git objects, preserved prior selections, and named
+frame evidence. Direct external-file hashes have a separate receipt. Neither
+artifact establishes all asset dependencies, measured root-local geometry or
+an exhaustive historical population. A failed historical reset need not have
+been behaviorally accepted or assigned an SGW identity to be comparable.
 
 ## Execution order
 

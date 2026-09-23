@@ -140,6 +140,33 @@ Its hash-verified output is retained in
 The collector is now waiting for terminal worker receipts before the separate
 final compilation.
 
+By 08:53 UTC, each bt worker had completed its first remaining slot and
+automatically claimed its next one. HEIGHT 006 passed all six trials;
+HEIGHT 003 passed four, and HEIGHT 004/005 each passed five. These three
+rejections remain consumed, with complete 450-action trials and videos.
+The retained worker-verified prefix, including smoke, is eight candidates:
+three all-six passes and five physical rejections across 48 complete trials.
+The remaining 113 slots are not yet terminal. Compact verdicts, exact
+qualification hashes and video bindings are in
+[`infrastructure/family-partition-20260923bt-prefix-bv/`](infrastructure/family-partition-20260923bt-prefix-bv/).
+This prefix is not bu's final independent raw compilation.
+
+CPU-only bv completed at 08:44:42 UTC and released its resources. It rehashed
+the same seven historical repair sources (1,338,347,469 bytes), retaining
+663,728 bytes of selected fields and newly explicit source/frame bindings.
+Every previous bl field is unchanged. The reproducible source audit matches
+all 93 in-repository bindings against their exact recorded Git revisions.
+All 100 named frame identities pass and record zero environment origins.
+The producers explicitly read object actor roots from `root_pos_w`; their
+separately named EEF fields do not redefine object-root coordinates.
+The three distinct directly bound external files also match their retained
+historical hashes. Evidence is in
+[`infrastructure/historical-lineage-20260923bv/`](infrastructure/historical-lineage-20260923bv/).
+These facts resolve selected provenance gaps, not missing asset dependencies,
+root-local geometry or complete historical populations. Coverage stays closed.
+The extraction/audit checks pass 19 tests. The finite bs accessor also completed;
+bu remains the CPU-only PVC access path while waiting for the GPU workers.
+
 ## Scientific accounting
 
 - Planned: **1,044** episodes (P 36, D 144, C 864).

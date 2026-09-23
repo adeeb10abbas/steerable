@@ -1,0 +1,905 @@
+{
+  "auditor_sha256": "af752860f4df6af7561bebd817c9f0ff8b1081c7eaac09a18528eab8bd378108",
+  "behavioral_episodes": 0,
+  "claim_boundary": "The exact producers read native world actor roots; the separately named EEF fields must not redefine object-root semantics. Origin records apply only to their named snapshots. Source/scene bindings are not an exhaustive layout population, asset-payload verification, or measured root-local center geometry. No historical acceptance or SGW identity is required for later comparison.",
+  "export_manifest_sha256": "6fae51f4abf2e2b11ac1db599c09eb769e5c3f344e0ad7c192aad88b7378d2ed",
+  "historical_population_coverage_complete": false,
+  "inputs_manifest_sha256": "8a34b6b865300036dd0ead16f5704c552503287e3e797936265cc3aabc0e9165",
+  "model_requests": 0,
+  "prior_export_manifest_sha256": "4c2f0b0ee34d8ab9aeddd22d7a8ba707daf0bf6e894fc4134a60549faee531a1",
+  "records": [
+    {
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_object_records": 0,
+      "cohort_id": "V3-E006-repair-r004",
+      "external_bindings_not_verified_by_this_audit": [
+        {
+          "bytes": 5373,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "role": "control_scene_asset",
+          "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+        }
+      ],
+      "frame_record_count": 12,
+      "fresh_reset_object_records": 48,
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "prior_selected_fields_unchanged": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r004/state_repair/2d3a0b9-a40r06-attempt01/raw/state_repair_result.json",
+      "raw_source_bytes": 49224089,
+      "raw_source_sha256": "54c2335c5c4339037bd5f7e7e76ab15c5485191d82de253cc61d27dd66ddb81d",
+      "selected_export_sha256": "bb5de50d47ace1d9cf70b5376d4323b147fa12059589280f53758a794997a9a2",
+      "source_commit": "2d3a0b99cc1bdcd136c168475497e9cfa5d7ee3a",
+      "source_expressions": {
+        "environment_origin": {
+          "expression": "\"scene_env_origin_world_m\": env_origin.tolist()",
+          "line": 748
+        },
+        "object_position": {
+          "expression": "\"position_world_m\": _host(data.root_pos_w[0])",
+          "line": 905
+        },
+        "object_quaternion": {
+          "expression": "\"quaternion_world_wxyz\": _host(data.root_quat_w[0])",
+          "line": 906
+        }
+      },
+      "verified_git_bindings": [
+        {
+          "bytes": 110168,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r004/state_repair_gate.py",
+          "role": "construction_source",
+          "sha256": "78a83b46537dd5dcbfc9b96431bda31e02ed8d28909cea827880ec1574efb87f"
+        },
+        {
+          "bytes": 114468,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r004/gates/candidate_schedule.json",
+          "role": "candidate_schedule",
+          "sha256": "46ae56c0d49d6f51ca2f10f1aaf1b38d8c98c9120d30a206ac90e99773186423"
+        },
+        {
+          "bytes": 12706,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+          "role": "e004_candidate",
+          "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+        },
+        {
+          "bytes": 17364,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+          "role": "e004_full_reset_reference",
+          "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+        },
+        {
+          "bytes": 27086,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/model_blind_droid_gate.py",
+          "role": "frozen_e004_bounds_source",
+          "sha256": "b3815553737b42dad20eabdfde81dfa66fdf41cae7abdb84b3fecbcb1eb2babf"
+        },
+        {
+          "bytes": 707097,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+          "role": "ood_freeze",
+          "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+        },
+        {
+          "bytes": 6457,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/original_v3e006_closure_binding.json",
+          "role": "original_v3e006_closure_binding",
+          "sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf"
+        },
+        {
+          "bytes": 6021,
+          "path": "experiments/v3/phase_e/bilateral_symmetry_null_control_v3e003/scene_assets/rubiks_cube_banana_pair_bowl.usda",
+          "role": "paired_scene_asset",
+          "sha256": "73ac533ccf505f9d71124b3da9aee328d3ebd32fffbd75bc88f32f0d15b20eec"
+        },
+        {
+          "bytes": 4357,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/results/results.json",
+          "role": "r003_predecessor_results",
+          "sha256": "d30ed1dae4f69992cf257b9430fc9165129185d2be9a2af3bc1a2dd9ea5d1261"
+        },
+        {
+          "bytes": 9750,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r004/repair_registration.json",
+          "role": "repair_registration",
+          "sha256": "0989c4e7052bce85dc44b653690ee61b4cbb298dcc97a3285d1d982c52b9365c"
+        },
+        {
+          "bytes": 4867,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r004/residual_correction.py",
+          "role": "residual_correction_source",
+          "sha256": "0276e936f364ac8186e520727c0463a58e69d998fd3fdec16ec756139120b009"
+        },
+        {
+          "bytes": 9131,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/exact_pi05_runtime_contract.json",
+          "role": "runtime_contract",
+          "sha256": "df0b126fdf3ad3919a7074d04c1a539dc1ddd28f8bd780fe934ed30001f7d6c4"
+        },
+        {
+          "bytes": 4326,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r004/source_push_gate.json",
+          "role": "source_push_gate",
+          "sha256": "32b994d457a94b4ff2932a8cfd5d1002ce2ae2d91cd3c56bacc7942fd5ec277a"
+        }
+      ]
+    },
+    {
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_object_records": 32,
+      "cohort_id": "V3-E006-repair-r005",
+      "external_bindings_not_verified_by_this_audit": [
+        {
+          "bytes": 5373,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "role": "control_scene_asset",
+          "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+        }
+      ],
+      "frame_record_count": 20,
+      "fresh_reset_object_records": 48,
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "prior_selected_fields_unchanged": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r005/state_repair/66d307f-a40r06-attempt02/raw/state_repair_result.json",
+      "raw_source_bytes": 129804204,
+      "raw_source_sha256": "4cb6c3e7e19e510e2422368131c06074014ba5173caf2134b7d6b456043afc01",
+      "selected_export_sha256": "7a7e195968d2bcb240a5ee4d7fe97affb6a39cd29e559343918fa1804500f379",
+      "source_commit": "66d307fe57c07dfb9b8eaa7ad069d3c6b0996ad4",
+      "source_expressions": {
+        "environment_origin": {
+          "expression": "\"scene_env_origin_world_m\": env_origin.tolist()",
+          "line": 870
+        },
+        "object_position": {
+          "expression": "\"position_world_m\": _host(data.root_pos_w[0])",
+          "line": 1027
+        },
+        "object_quaternion": {
+          "expression": "\"quaternion_world_wxyz\": _host(data.root_quat_w[0])",
+          "line": 1028
+        }
+      },
+      "verified_git_bindings": [
+        {
+          "bytes": 116438,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r005/state_repair_gate.py",
+          "role": "construction_source",
+          "sha256": "77d1c04caf4eb24e8089c11a6efeb67351e20949c14bea758da78914be1b3856"
+        },
+        {
+          "bytes": 118513,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/gates/candidate_schedule.json",
+          "role": "candidate_schedule",
+          "sha256": "f730c91987451d32f0a8814d27d9ec7bfad1a455bf3adae6a8381df7d62f5709"
+        },
+        {
+          "bytes": 12706,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+          "role": "e004_candidate",
+          "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+        },
+        {
+          "bytes": 17364,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+          "role": "e004_full_reset_reference",
+          "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+        },
+        {
+          "bytes": 27086,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/model_blind_droid_gate.py",
+          "role": "frozen_e004_bounds_source",
+          "sha256": "b3815553737b42dad20eabdfde81dfa66fdf41cae7abdb84b3fecbcb1eb2babf"
+        },
+        {
+          "bytes": 707097,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+          "role": "ood_freeze",
+          "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+        },
+        {
+          "bytes": 6457,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/original_v3e006_closure_binding.json",
+          "role": "original_v3e006_closure_binding",
+          "sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf"
+        },
+        {
+          "bytes": 6021,
+          "path": "experiments/v3/phase_e/bilateral_symmetry_null_control_v3e003/scene_assets/rubiks_cube_banana_pair_bowl.usda",
+          "role": "paired_scene_asset",
+          "sha256": "73ac533ccf505f9d71124b3da9aee328d3ebd32fffbd75bc88f32f0d15b20eec"
+        },
+        {
+          "bytes": 3165,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r004/results/results.json",
+          "role": "r004_predecessor_results",
+          "sha256": "aa5eebfd76064b4aa2664b5d296461fd2a8cdbbf489175b3148475f9a2546006"
+        },
+        {
+          "bytes": 10813,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/repair_registration.json",
+          "role": "repair_registration",
+          "sha256": "9604bf773091df5be1bc33b6845e502f52b224524e59dafeb19af458330b6373"
+        },
+        {
+          "bytes": 4867,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r005/residual_correction.py",
+          "role": "residual_correction_source",
+          "sha256": "cb57cf4bd404a21d73efec511a64effd3ed85deecb3b39a232efb745561efa7a"
+        },
+        {
+          "bytes": 9131,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/exact_pi05_runtime_contract.json",
+          "role": "runtime_contract",
+          "sha256": "df0b126fdf3ad3919a7074d04c1a539dc1ddd28f8bd780fe934ed30001f7d6c4"
+        },
+        {
+          "bytes": 6222,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/source_push_gate_v2.json",
+          "role": "source_push_gate",
+          "sha256": "76ae6d0d0e0c821cbd52ba6b729e08859bbc9a59daa11a83f9f1a94801e14af8"
+        }
+      ]
+    },
+    {
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_object_records": 32,
+      "cohort_id": "V3-E006-repair-r006",
+      "external_bindings_not_verified_by_this_audit": [
+        {
+          "bytes": 5373,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "role": "control_scene_asset",
+          "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+        }
+      ],
+      "frame_record_count": 20,
+      "fresh_reset_object_records": 48,
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "prior_selected_fields_unchanged": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r006/state_repair/eea3bb3-a40r06-attempt02/raw/state_repair_result.json",
+      "raw_source_bytes": 145618163,
+      "raw_source_sha256": "7eae75c38a7b65ba4b8fbc44f3ca4c565c3af5675134c93570b1dc0e85176011",
+      "selected_export_sha256": "7714c6bb5b356a869000bc780d91fde1556d6c1b8bab1cbd31a206000055bb62",
+      "source_commit": "eea3bb30307e25824af63f93787b3f98dd65c632",
+      "source_expressions": {
+        "environment_origin": {
+          "expression": "\"scene_env_origin_world_m\": env_origin.tolist()",
+          "line": 886
+        },
+        "object_position": {
+          "expression": "\"position_world_m\": _host(data.root_pos_w[0])",
+          "line": 1109
+        },
+        "object_quaternion": {
+          "expression": "\"quaternion_world_wxyz\": _host(data.root_quat_w[0])",
+          "line": 1110
+        }
+      },
+      "verified_git_bindings": [
+        {
+          "bytes": 120617,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r006/state_repair_gate.py",
+          "role": "construction_source",
+          "sha256": "54c39ae5326c7ce0ffdf5d5632536cedaedd2ff22e81207c89ccd1e18a7ee4be"
+        },
+        {
+          "bytes": 123081,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r006/gates/candidate_schedule.json",
+          "role": "candidate_schedule",
+          "sha256": "c630dd42e8723d55b850866dab87c1d6c24f7c70d68af8e37aa561b3668b1804"
+        },
+        {
+          "bytes": 12706,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+          "role": "e004_candidate",
+          "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+        },
+        {
+          "bytes": 17364,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+          "role": "e004_full_reset_reference",
+          "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+        },
+        {
+          "bytes": 27086,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/model_blind_droid_gate.py",
+          "role": "frozen_e004_bounds_source",
+          "sha256": "b3815553737b42dad20eabdfde81dfa66fdf41cae7abdb84b3fecbcb1eb2babf"
+        },
+        {
+          "bytes": 707097,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+          "role": "ood_freeze",
+          "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+        },
+        {
+          "bytes": 6457,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/original_v3e006_closure_binding.json",
+          "role": "original_v3e006_closure_binding",
+          "sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf"
+        },
+        {
+          "bytes": 6021,
+          "path": "experiments/v3/phase_e/bilateral_symmetry_null_control_v3e003/scene_assets/rubiks_cube_banana_pair_bowl.usda",
+          "role": "paired_scene_asset",
+          "sha256": "73ac533ccf505f9d71124b3da9aee328d3ebd32fffbd75bc88f32f0d15b20eec"
+        },
+        {
+          "bytes": 28480,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/results/results.json",
+          "role": "r005_predecessor_results",
+          "sha256": "550665a234c378cbcb5c8022d16249a980d1a5b5368b08900568c959c51fb9f2"
+        },
+        {
+          "bytes": 13073,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r006/repair_registration.json",
+          "role": "repair_registration",
+          "sha256": "fd2bd7fe9a7759d9621f7a26c4855e43fce64b6569146230e791eb42a5304162"
+        },
+        {
+          "bytes": 4867,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r006/residual_correction.py",
+          "role": "residual_correction_source",
+          "sha256": "8378c7191b824a2b74a2d5d6247d7e6b8d9dc29b883eebfa30dda9d192514980"
+        },
+        {
+          "bytes": 9131,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/exact_pi05_runtime_contract.json",
+          "role": "runtime_contract",
+          "sha256": "df0b126fdf3ad3919a7074d04c1a539dc1ddd28f8bd780fe934ed30001f7d6c4"
+        },
+        {
+          "bytes": 4837,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r006/source_push_gate.json",
+          "role": "source_push_gate",
+          "sha256": "a0be3672e05efebea99213092ea948e0ef9d126b275049ab959881611384b33e"
+        }
+      ]
+    },
+    {
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_object_records": 32,
+      "cohort_id": "V3-E006-repair-r007",
+      "external_bindings_not_verified_by_this_audit": [
+        {
+          "bytes": 5373,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "role": "control_scene_asset",
+          "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+        }
+      ],
+      "frame_record_count": 12,
+      "fresh_reset_object_records": 16,
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "prior_selected_fields_unchanged": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r007/state_repair/2c7c528-a40r06-attempt01/raw/state_repair_result.json",
+      "raw_source_bytes": 25886628,
+      "raw_source_sha256": "f20314dcd32d9d6503dd5c2bd3777a08563fea3ca2a47c5f91bc26f4483a5cd6",
+      "selected_export_sha256": "c44913d35d51d86c1604088c59056edcb04d8964ac59e24db8dc7d492b687267",
+      "source_commit": "2c7c528c63541284ce0cf3b6394f4f3db5869d32",
+      "source_expressions": {
+        "environment_origin": {
+          "expression": "\"scene_env_origin_world_m\": env_origin.tolist()",
+          "line": 890
+        },
+        "object_position": {
+          "expression": "\"position_world_m\": _host(data.root_pos_w[0])",
+          "line": 1113
+        },
+        "object_quaternion": {
+          "expression": "\"quaternion_world_wxyz\": _host(data.root_quat_w[0])",
+          "line": 1114
+        }
+      },
+      "verified_git_bindings": [
+        {
+          "bytes": 125924,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r007/state_repair_gate.py",
+          "role": "construction_source",
+          "sha256": "71c21ce04706f27c0edf99fef6f25e9f34ccdc7b374975d53ad4b12b928d2fa8"
+        },
+        {
+          "bytes": 136796,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r007/gates/candidate_schedule.json",
+          "role": "candidate_schedule",
+          "sha256": "24e9e393afd4e663baf7501415748337c2e8b09860030f5a73082897294c8b1f"
+        },
+        {
+          "bytes": 12706,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+          "role": "e004_candidate",
+          "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+        },
+        {
+          "bytes": 17364,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+          "role": "e004_full_reset_reference",
+          "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+        },
+        {
+          "bytes": 27086,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/model_blind_droid_gate.py",
+          "role": "frozen_e004_bounds_source",
+          "sha256": "b3815553737b42dad20eabdfde81dfa66fdf41cae7abdb84b3fecbcb1eb2babf"
+        },
+        {
+          "bytes": 707097,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+          "role": "ood_freeze",
+          "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+        },
+        {
+          "bytes": 6457,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/original_v3e006_closure_binding.json",
+          "role": "original_v3e006_closure_binding",
+          "sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf"
+        },
+        {
+          "bytes": 6021,
+          "path": "experiments/v3/phase_e/bilateral_symmetry_null_control_v3e003/scene_assets/rubiks_cube_banana_pair_bowl.usda",
+          "role": "paired_scene_asset",
+          "sha256": "73ac533ccf505f9d71124b3da9aee328d3ebd32fffbd75bc88f32f0d15b20eec"
+        },
+        {
+          "bytes": 28767,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r006/results/results.json",
+          "role": "r006_predecessor_results",
+          "sha256": "3c58721d11f669243690aaf3619121d1c348bf788ca56aacd2a009f727065e63"
+        },
+        {
+          "bytes": 15491,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r007/repair_registration.json",
+          "role": "repair_registration",
+          "sha256": "0bcf21a402c3c46be41896ab766d468cd1ece7dd4dee56c480d7012b0d4e4eb6"
+        },
+        {
+          "bytes": 4867,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r007/residual_correction.py",
+          "role": "residual_correction_source",
+          "sha256": "1ccff6737c451fe96156cf8c35989110f58a490f77873c6e364bc6a54b9edfd0"
+        },
+        {
+          "bytes": 9131,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/exact_pi05_runtime_contract.json",
+          "role": "runtime_contract",
+          "sha256": "df0b126fdf3ad3919a7074d04c1a539dc1ddd28f8bd780fe934ed30001f7d6c4"
+        },
+        {
+          "bytes": 5295,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r007/source_push_gate_v2.json",
+          "role": "source_push_gate",
+          "sha256": "386cc701d3a184988b3fd42cbd83ade886b9f89b7aad49a773ef18c80f4a1307"
+        }
+      ]
+    },
+    {
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_object_records": 32,
+      "cohort_id": "V3-E006-repair-r008",
+      "external_bindings_not_verified_by_this_audit": [
+        {
+          "bytes": 5373,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "role": "control_scene_asset",
+          "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+        }
+      ],
+      "frame_record_count": 12,
+      "fresh_reset_object_records": 16,
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "prior_selected_fields_unchanged": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r008/state_repair/ae06a1f-a40r06-attempt01/raw/state_repair_result.json",
+      "raw_source_bytes": 64704588,
+      "raw_source_sha256": "58f8e54994348634d8793f0448c49144b35ab3b601065ab4be298cbd9ebc6548",
+      "selected_export_sha256": "6037ec9ed23888b307772a9c6d20895d1d897f0fb7d72c648e26f56a1b2afd64",
+      "source_commit": "ae06a1ff2154b4ae07ddf9624e179b08e9befed9",
+      "source_expressions": {
+        "environment_origin": {
+          "expression": "\"scene_env_origin_world_m\": env_origin.tolist()",
+          "line": 918
+        },
+        "object_position": {
+          "expression": "\"position_world_m\": _host(data.root_pos_w[0])",
+          "line": 1141
+        },
+        "object_quaternion": {
+          "expression": "\"quaternion_world_wxyz\": _host(data.root_quat_w[0])",
+          "line": 1142
+        }
+      },
+      "verified_git_bindings": [
+        {
+          "bytes": 132476,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r008/state_repair_gate.py",
+          "role": "construction_source",
+          "sha256": "b93907f0df640efcff97cb4acbe31fb3df1b217b79a43d852755575b379072b8"
+        },
+        {
+          "bytes": 152173,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r008/gates/candidate_schedule.json",
+          "role": "candidate_schedule",
+          "sha256": "4eebc9240e87e74fc75ec0dbfe161015332d1e7b0be8dfb37788ceac805bfa1b"
+        },
+        {
+          "bytes": 12706,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+          "role": "e004_candidate",
+          "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+        },
+        {
+          "bytes": 17364,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+          "role": "e004_full_reset_reference",
+          "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+        },
+        {
+          "bytes": 27086,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/model_blind_droid_gate.py",
+          "role": "frozen_e004_bounds_source",
+          "sha256": "b3815553737b42dad20eabdfde81dfa66fdf41cae7abdb84b3fecbcb1eb2babf"
+        },
+        {
+          "bytes": 707097,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+          "role": "ood_freeze",
+          "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+        },
+        {
+          "bytes": 6457,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/original_v3e006_closure_binding.json",
+          "role": "original_v3e006_closure_binding",
+          "sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf"
+        },
+        {
+          "bytes": 6021,
+          "path": "experiments/v3/phase_e/bilateral_symmetry_null_control_v3e003/scene_assets/rubiks_cube_banana_pair_bowl.usda",
+          "role": "paired_scene_asset",
+          "sha256": "73ac533ccf505f9d71124b3da9aee328d3ebd32fffbd75bc88f32f0d15b20eec"
+        },
+        {
+          "bytes": 26048,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r007/results/results.json",
+          "role": "r007_predecessor_results",
+          "sha256": "3a6ab612919fd9e5eeef2f4bd030b74c25f6b6f871b6c25c13f92efac5ba9b7d"
+        },
+        {
+          "bytes": 16361,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r008/repair_registration.json",
+          "role": "repair_registration",
+          "sha256": "74cdb1317cb451605a583b5305e9456a4df056db71237ce4fa06297b6322024c"
+        },
+        {
+          "bytes": 4867,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r008/residual_correction.py",
+          "role": "residual_correction_source",
+          "sha256": "b0c3ff8ccbeec1b2f0a6fc3dccee6cf29ef40c3a33ee74b9f4e01ce341f992db"
+        },
+        {
+          "bytes": 9131,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/exact_pi05_runtime_contract.json",
+          "role": "runtime_contract",
+          "sha256": "df0b126fdf3ad3919a7074d04c1a539dc1ddd28f8bd780fe934ed30001f7d6c4"
+        },
+        {
+          "bytes": 4882,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r008/source_push_gate.json",
+          "role": "source_push_gate",
+          "sha256": "946f8f5eb7cdf0a2308f5925a41532e89267e222ee32629b586b1398e7d1c79b"
+        }
+      ]
+    },
+    {
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_object_records": 32,
+      "cohort_id": "V3-E006-repair-r009",
+      "external_bindings_not_verified_by_this_audit": [
+        {
+          "bytes": 5373,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "role": "control_scene_asset",
+          "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+        },
+        {
+          "bytes": 682045,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/objects/hot3d/rubiks_cube.usd",
+          "role": "cube_collision_usd",
+          "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+        },
+        {
+          "bytes": 14156362,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/robots/franka_robotiq_2f_85_flattened.usd",
+          "role": "robot_collision_usd",
+          "sha256": "f555695465687548a1bd31b5e3f30385182d476a67c17080b7820ad0ef747e41"
+        }
+      ],
+      "frame_record_count": 12,
+      "fresh_reset_object_records": 16,
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "prior_selected_fields_unchanged": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r009/state_repair/2edc2a5-a40r06-attempt01/raw/state_repair_result.json",
+      "raw_source_bytes": 460849073,
+      "raw_source_sha256": "0753b4fe44ed479d4575804f3b5f38e3244a1cea25de3f1a8564dca4cd26ab3c",
+      "selected_export_sha256": "70264f493ddf69c56f20fcb546f7a5811da78985c3fad8a910d15ec7e3e0cd49",
+      "source_commit": "2edc2a5182d84c6dd0e82053d900f7497c07c06d",
+      "source_expressions": {
+        "environment_origin": {
+          "expression": "\"scene_env_origin_world_m\": env_origin.tolist()",
+          "line": 945
+        },
+        "object_position": {
+          "expression": "\"position_world_m\": _host(data.root_pos_w[0])",
+          "line": 1170
+        },
+        "object_quaternion": {
+          "expression": "\"quaternion_world_wxyz\": _host(data.root_quat_w[0])",
+          "line": 1171
+        }
+      },
+      "verified_git_bindings": [
+        {
+          "bytes": 164968,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r009/state_repair_gate.py",
+          "role": "construction_source",
+          "sha256": "625a7e05700059202aec45ef077dfc82431f2482ad52e4b4588a581e1e793974"
+        },
+        {
+          "bytes": 162948,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r009/gates/candidate_schedule.json",
+          "role": "candidate_schedule",
+          "sha256": "8451ef035998d888ebaa9e0932ff5b883604fcc6eea784916ea5db8f2db6473e"
+        },
+        {
+          "bytes": 12706,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+          "role": "e004_candidate",
+          "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+        },
+        {
+          "bytes": 17364,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+          "role": "e004_full_reset_reference",
+          "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+        },
+        {
+          "bytes": 27086,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/model_blind_droid_gate.py",
+          "role": "frozen_e004_bounds_source",
+          "sha256": "b3815553737b42dad20eabdfde81dfa66fdf41cae7abdb84b3fecbcb1eb2babf"
+        },
+        {
+          "bytes": 707097,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+          "role": "ood_freeze",
+          "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+        },
+        {
+          "bytes": 6457,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/original_v3e006_closure_binding.json",
+          "role": "original_v3e006_closure_binding",
+          "sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf"
+        },
+        {
+          "bytes": 6021,
+          "path": "experiments/v3/phase_e/bilateral_symmetry_null_control_v3e003/scene_assets/rubiks_cube_banana_pair_bowl.usda",
+          "role": "paired_scene_asset",
+          "sha256": "73ac533ccf505f9d71124b3da9aee328d3ebd32fffbd75bc88f32f0d15b20eec"
+        },
+        {
+          "bytes": 12605,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r009/pinch_geometry.py",
+          "role": "pinch_geometry_source",
+          "sha256": "3231c0b3fcb5f8436991983656911d4991264bc5ddd4e02b6d0c3870325794f0"
+        },
+        {
+          "bytes": 26420,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r008/results/results.json",
+          "role": "r008_predecessor_results",
+          "sha256": "5f86b77b721806b0c19416b622e9a6aab68b13de6d596a6dadec89ed41a081d5"
+        },
+        {
+          "bytes": 19659,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r009/repair_registration.json",
+          "role": "repair_registration",
+          "sha256": "0574d912357924a13956723a6b9dca1a836d338407b3b0e8f0318609af8ade58"
+        },
+        {
+          "bytes": 4867,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r009/residual_correction.py",
+          "role": "residual_correction_source",
+          "sha256": "3fdc56bce6322a7700df87ad01b6bf3bd0b788d1bdedc37d8d874adcefa7e910"
+        },
+        {
+          "bytes": 9131,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/exact_pi05_runtime_contract.json",
+          "role": "runtime_contract",
+          "sha256": "df0b126fdf3ad3919a7074d04c1a539dc1ddd28f8bd780fe934ed30001f7d6c4"
+        },
+        {
+          "bytes": 5111,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r009/source_push_gate.json",
+          "role": "source_push_gate",
+          "sha256": "3c19e7e91ced216ffb6b10e46d9cd9428173feec90a719a9d58a24213520d8b9"
+        }
+      ]
+    },
+    {
+      "all_frame_identity_checks_passed": true,
+      "candidate_state_object_records": 32,
+      "cohort_id": "V3-E006-repair-r012",
+      "external_bindings_not_verified_by_this_audit": [
+        {
+          "bytes": 5373,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/scenes/rubiks_cube_banana_bowl.usda",
+          "role": "control_scene_asset",
+          "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+        },
+        {
+          "bytes": 682045,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/objects/hot3d/rubiks_cube.usd",
+          "role": "cube_collision_usd",
+          "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+        },
+        {
+          "bytes": 14156362,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/robots/franka_robotiq_2f_85_flattened.usd",
+          "role": "robot_collision_usd",
+          "sha256": "f555695465687548a1bd31b5e3f30385182d476a67c17080b7820ad0ef747e41"
+        }
+      ],
+      "frame_record_count": 12,
+      "fresh_reset_object_records": 16,
+      "observed_scene_environment_origins_world_m": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "prior_selected_fields_unchanged": true,
+      "raw_source": "/data/users/ali/vla_wam/raw/v3e006_r012/state_repair/219c7a2-a40r06-attempt01/raw/state_repair_result.json",
+      "raw_source_bytes": 462260724,
+      "raw_source_sha256": "a556be5fb67e95687ba390b689c3f7f676b20d21475fd2357ae1429c7b424c56",
+      "selected_export_sha256": "c39324d62c6df2254f7d0f674fc86cd10ddf831a28b8e4bcb8d64c9d65545118",
+      "source_commit": "219c7a2d302ef2e0d3e2f1e9f0998cd8b9158270",
+      "source_expressions": {
+        "environment_origin": {
+          "expression": "\"scene_env_origin_world_m\": env_origin.tolist()",
+          "line": 999
+        },
+        "object_position": {
+          "expression": "\"position_world_m\": _host(data.root_pos_w[0])",
+          "line": 1224
+        },
+        "object_quaternion": {
+          "expression": "\"quaternion_world_wxyz\": _host(data.root_quat_w[0])",
+          "line": 1225
+        }
+      },
+      "verified_git_bindings": [
+        {
+          "bytes": 181707,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r012/state_repair_gate.py",
+          "role": "construction_source",
+          "sha256": "526107bf08a1c3e667124d59c696bc1bab06c30759111ffd428f47ff515b239c"
+        },
+        {
+          "bytes": 185340,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r012/gates/candidate_schedule.json",
+          "role": "candidate_schedule",
+          "sha256": "986c322fc9580a841fd119b5d0c81c8ff787d227085a0e5f94332287c1087291"
+        },
+        {
+          "bytes": 12706,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+          "role": "e004_candidate",
+          "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+        },
+        {
+          "bytes": 17364,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+          "role": "e004_full_reset_reference",
+          "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+        },
+        {
+          "bytes": 27086,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/model_blind_droid_gate.py",
+          "role": "frozen_e004_bounds_source",
+          "sha256": "b3815553737b42dad20eabdfde81dfa66fdf41cae7abdb84b3fecbcb1eb2babf"
+        },
+        {
+          "bytes": 707097,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+          "role": "ood_freeze",
+          "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+        },
+        {
+          "bytes": 6457,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/original_v3e006_closure_binding.json",
+          "role": "original_v3e006_closure_binding",
+          "sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf"
+        },
+        {
+          "bytes": 6021,
+          "path": "experiments/v3/phase_e/bilateral_symmetry_null_control_v3e003/scene_assets/rubiks_cube_banana_pair_bowl.usda",
+          "role": "paired_scene_asset",
+          "sha256": "73ac533ccf505f9d71124b3da9aee328d3ebd32fffbd75bc88f32f0d15b20eec"
+        },
+        {
+          "bytes": 15036,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r012/pinch_geometry.py",
+          "role": "pinch_geometry_source",
+          "sha256": "d914190a55a285f63b2c702ac8399943c9012fd7a8a50f5529f483de9b64efb5"
+        },
+        {
+          "bytes": 7358,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r011/results/results.json",
+          "role": "r011_predecessor_results",
+          "sha256": "f6e869939d5003c175abb21c0544d2d02313fe00e7a0dd7831d60e0c7f192054"
+        },
+        {
+          "bytes": 26735,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r012/repair_registration.json",
+          "role": "repair_registration",
+          "sha256": "5cafc8e63e70ff519c250d8140dc62e5f133918dc3086df79cc3e553cb9bd5ae"
+        },
+        {
+          "bytes": 4867,
+          "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r012/residual_correction.py",
+          "role": "residual_correction_source",
+          "sha256": "bb8b5f398489eae95d763511b2f092a84b912e8c708788c0e2c117259a96f199"
+        },
+        {
+          "bytes": 9131,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/exact_pi05_runtime_contract.json",
+          "role": "runtime_contract",
+          "sha256": "df0b126fdf3ad3919a7074d04c1a539dc1ddd28f8bd780fe934ed30001f7d6c4"
+        },
+        {
+          "bytes": 5201,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r012/source_push_gate.json",
+          "role": "source_push_gate",
+          "sha256": "149358af6c730ac1b1fc87c52b4540aad8cb011787331a695195b18b521168e5"
+        }
+      ]
+    }
+  ],
+  "release_permitted": false,
+  "schema_version": "sgw-01-historical-source-lineage-audit-v1",
+  "status": "verified_selected_source_lineage_not_complete_geometry_or_population_coverage"
+}

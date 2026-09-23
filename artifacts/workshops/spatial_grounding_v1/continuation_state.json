@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_height_dist_remaining_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T08:29:28Z",
+  "updated_at_utc": "2026-09-23T08:58:41Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -52,6 +52,8 @@
     "campaign_descriptor_hardening": "2aefd281",
     "historical_payload_provenance": "ceba0565",
     "bounded_historical_same_stream_extractor": "b5923f6ecec2a77f2af39d718e61f5fb6f526912",
+    "opt_in_bounded_historical_lineage_extractor": "2818c18eacb286faa8dadd1982935150e0088ee0",
+    "historical_lineage_stream_and_audit_tests_passed": 19,
     "family_capture_materializer_and_six_trial_verifier": "5b21c8af",
     "finite_family_slot_executor": "e1f8a212",
     "preaction_guard_persisted_before_controller_planning": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
@@ -414,7 +416,7 @@
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
     "worker_scope": "bt runs117 remaining slots with exact worker source68b9e100, fresh per-slot GPU checks, global storage reserve, exclusive claims and shared stop sentinel. Corrected offline compiler integrated at a995e014;34 parent compiler/worker/executor tests pass. CPU-only bu independently compiles initial and terminal evidence; no source mutation, fixture/model release or child launch authority.",
     "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
-    "historical_coverage_scope": "All45 inventory sources remain unresolved for complete comparable geometry; the24-layout WMF registry is not V3-E004 coverage. bl recovered bounded fields from all7 large sources with complete stream hashes. Audit correction: historical behavioral acceptance/release is not required to compare a failed/preflight reset. Complete frame/asset/layout lineage and a complete named population are required for coverage. Observed root gaps alone do not establish cohort exclusion; no exemption or release is claimed.",
+    "historical_coverage_scope": "All45 inventory sources remain unresolved for complete comparable geometry; the24-layout WMF registry is not V3-E004 coverage. bv rehashed the same7 sources and retained explicit producer/input/frame lineage, leaving all bl fields identical. All93 in-repository bindings match exact historical Git objects;100 named frame identities pass with zero environment origins. Three distinct directly bound external files also match their retained hashes. Asset dependency/geometry and population completeness remain unresolved. No historical behavioral acceptance or SGW identity is required for comparison; no cohort exclusion or release is claimed.",
     "independent_scene_reviewer": "89af7b05-595a-43d4-977b-ae0b077d6e9f",
     "scene_review_scope": "The same independent reviewer sealed bi acceptance as ACCEPT_NATIVE_VISUAL_SETUP_ONLY for all4 captures and exactly reproduced all20 policy preprocessing images. This is not an additional rater, physical qualification, category recognition, live tensor parity or behavioral release. Plate-category/wrist-occlusion caveats and per-candidate banana clearance remain binding."
   },
@@ -423,7 +425,7 @@
       "job": "sgw01-ali-family-partition-20260923bt",
       "job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
       "started_at_utc": "2026-09-23T08:16:48Z",
-      "status": "four_idle_checks_and_smoke_rechecks_passed_all_four_native_captures_complete_trials_recording",
+      "status": "first_four_remaining_candidates_complete_next_four_claimed_trials_recording",
       "source_commit": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d",
       "raw_root": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt",
       "allocated_gpus": 4,
@@ -529,21 +531,22 @@
       "initial_snapshot": {"proposed": 200, "geometric_rejections": 79, "physical_accepted": 2, "physical_rejected": 2, "in_progress_slots": 4, "unstarted_slots": 113, "infrastructure_invalid_slots": 0},
       "worker_source_mutated": false,
       "release_permitted": false
-    },
+    }
+  ],
+  "completed_family_source_stages": [
     {
       "job": "sgw01-ali-family-source-stage-20260923bs",
       "job_uid": "40fcbc2c-a5f0-401d-8058-d4806e08e094",
       "pod": "sgw01-ali-family-source-stage-20260923bs-5xsdq",
       "pod_uid": "7709208c-cdca-4a71-9dd5-97f73e44dcb1",
-      "status": "all_four_smoke_raw_rechecks_complete_finite_export_window_active",
+      "status": "all_four_smoke_raw_rechecks_complete_export_window_closed",
+      "completed_at_utc": "2026-09-23T08:42:54Z",
       "allocated_gpus": 0,
       "staged_at_utc": "2026-09-23T08:12:51.393259+00:00",
       "bounded_export_window_seconds": 1800,
       "receipt": "infrastructure/family-source-stage-20260923bs/receipt.json",
       "receipt_sha256": "df3ffda569ac8d0ec30d01c221b2a35ec1c4331b404bca1aca33aaf0630b34c8"
-    }
-  ],
-  "completed_family_source_stages": [
+    },
     {
       "job": "sgw01-ali-family-source-stage-20260923bq",
       "job_uid": "c386c1dd-13ae-4330-82ef-3148221fcbf9",
@@ -609,6 +612,24 @@
     "pod_deadline_seconds": 171900,
     "native_child_timeout_seconds": 2400,
     "required_free_gib_before_each_claim": 3844,
+    "verified_prefix": {
+      "observed_at_utc": "2026-09-23T08:53:53.949978+00:00",
+      "manifest": "infrastructure/family-partition-20260923bt-prefix-bv/manifest.json",
+      "manifest_sha256": "a6d52dd182367ad1b91634b745a5f3e19cc1e9959bcbabdbc8bfe66b218ccb0b",
+      "completed_remaining_slots": 4,
+      "remaining_slots_not_yet_terminal": 113,
+      "completed_trials": 24,
+      "controller_actions": 10800,
+      "all_six_pass_slots": ["HEIGHT-006"],
+      "valid_physical_rejections": [
+        {"slot": "HEIGHT-003", "passed_trials": 4},
+        {"slot": "HEIGHT-004", "passed_trials": 5},
+        {"slot": "HEIGHT-005", "passed_trials": 5}
+      ],
+      "next_claimed_slots": ["HEIGHT-007", "HEIGHT-008", "HEIGHT-009", "HEIGHT-010"],
+      "including_native_smoke": {"completed_candidates": 8, "all_six_pass": 3, "physical_rejected": 5, "completed_trials": 48},
+      "claim_boundary": "Worker verification receipts and hash-bound qualification projections are retained. bu has not performed its final independent raw compilation."
+    },
     "release_permitted": false
   },
   "completed_capture_source_stages": [
@@ -696,7 +717,7 @@
     "release_permitted": false,
     "coverage_complete": false
   },
-  "latest_historical_payload_recovery": {
+  "historical_payload_recovery_bl": {
     "job": "sgw01-ali-historical-stream-20260923bl",
     "job_uid": "d6f46ed7-06bb-49b3-a931-e11e47dbc083",
     "kubernetes_completed_at_utc": "2026-09-23T06:42:31Z",
@@ -727,7 +748,38 @@
       "kubernetes_failed_at_utc": "2026-09-23T06:33:03Z"
     }
   },
-  "next_authorized_step": "Let bt process the117 fixed remaining slots and bu independently compile its initial/terminal evidence. Both run durably without this client. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. Historical source/frame/asset lineage remains the next separate CPU-only gate.",
+  "latest_historical_payload_recovery": {
+    "job": "sgw01-ali-historical-lineage-20260923bv",
+    "job_uid": "f97205ed-aa9c-4f1f-8495-be199e0cfb91",
+    "pod": "sgw01-ali-historical-lineage-20260923bv-2zd5q",
+    "pod_uid": "a684cb3a-b012-4f15-ba49-f6d574093434",
+    "started_at_utc": "2026-09-23T08:42:26Z",
+    "extraction_completed_at_utc": "2026-09-23T08:44:39.615064+00:00",
+    "kubernetes_completed_at_utc": "2026-09-23T08:44:42Z",
+    "kubernetes_terminal_status": "Complete",
+    "allocated_gpus": 0,
+    "source_commit": "2818c18eacb286faa8dadd1982935150e0088ee0",
+    "source_files_streamed_and_fully_hashed": 7,
+    "source_bytes": 1338347469,
+    "retained_payload_bytes": 663728,
+    "manifest": "infrastructure/historical-lineage-20260923bv/manifest.json",
+    "manifest_sha256": "6fae51f4abf2e2b11ac1db599c09eb769e5c3f344e0ad7c192aad88b7378d2ed",
+    "receipt": "infrastructure/historical-lineage-20260923bv/receipt.json",
+    "receipt_sha256": "74b643b562cbea8e88029eb6f8b891ee4355a10d03f389bedb3a6bee6d174f6a",
+    "source_audit": "infrastructure/historical-lineage-20260923bv/source_audit.json",
+    "source_audit_sha256": "fd60aa3bf3ecd2f9b710f18e3605b5180d9fc5cea57721e04a809b5fa002154d",
+    "verified_git_bindings": 93,
+    "named_frame_identity_records": 100,
+    "all_named_frame_identities_passed": true,
+    "observed_scene_environment_origins_world_m": [[0, 0, 0]],
+    "external_file_verification": "infrastructure/historical-lineage-20260923bv/external-bindings.json",
+    "external_file_verification_sha256": "124a97dc230b510465fc28444a7d0de0eb17a0e0e530a8727c776327c4a0af2c",
+    "distinct_directly_bound_external_files_verified": 3,
+    "prior_selected_fields_unchanged": true,
+    "coverage_complete": false,
+    "release_permitted": false
+  },
+  "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. Historical producer/frame bindings are recovered for seven named sources; exact asset dependency/geometry and population coverage remain the next CPU-only work.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -990,13 +1042,13 @@
     "Historical-layout coverage remains incomplete. The recovered 24-layout cohort now has independently hash-bound roots, AABB-derived centers and separate reset displacement in infrastructure/historical-droid-layout-evidence-registry-v1.json. This does not establish exhaustive coverage or release.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Both native client paths now run complete 450-action engineering integrations through joint-position measurements, HTTP producers, trace readers, recorder and scorer with simulated physics/model computation. Native AppLauncher/RPC, D1 distributed startup, official decode/time mapping and all live model runtimes remain unqualified.",
-    "SGW-ENG-007 repair and bi native-only visual review are complete; original bf review remains unchanged. bm froze exact100-slot HEIGHT/DIST plans, but no native candidate is physically qualified. Four registered native smoke slots must establish pipeline integrity before remaining qualification work; local checks and geometric acceptance are not physical feasibility.",
+    "Native smoke integrity passed and bt is processing the remaining frozen HEIGHT/DIST candidates. The retained eight-candidate prefix contains three all-six passes and five valid physical rejections;113 remaining slots are not yet terminal. No29-layout family pool or historical/runtime release is established.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "bu initial snapshot is verified and committed; inspect its future final-receipt.json/collector-error.json and bt shared infrastructure-stop.json without interrupting active trials. Historical next trace: exact2d3a0b9 contains r004/repair_registration.json, source_push_gate.json, and r004/state_repair_gate.py; its raw-output binding block at lines532-544 names E004 reference and both scene assets, while snapshot roots come from root_pos_w. The exact E004 full reset reference exists at artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json. Follow these CPU-only lineage bindings, not an invented historical SGW identity. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
+  "next_action": "Inspect bu final-receipt.json/collector-error.json and bt infrastructure-stop.json without interrupting trials. The first four remaining slots are retained in the bv prefix; no valid rejection may be retried. For historical work, reproduce tools/audit_sgw_historical_lineage.py against the bv export, prior bl export, and bv inputs ConfigMap. All93 Git bindings and100 named zero-origin frame records are verified; three directly bound external files also match. Trace remaining asset dependencies/root-local geometry and complete source populations, without extrapolating one reset to all E004 or demanding a historical SGW identity. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

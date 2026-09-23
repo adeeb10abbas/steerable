@@ -6,9 +6,9 @@ behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
 have verified receipts, views and complete videos. Native smoke br has completed
 24 full physical trials: two candidates pass all six trials and two are valid
 physical rejections. All four raw evidence chains passed independent rechecks.
-Including the first twenty-four subsequent candidates, 28 HEIGHT/DIST candidates
-have completed 168 full trials: eleven all-six passes and seventeen physical
-rejections. Four durable GPU workers continue the remaining 93 frozen slots.
+Including the first twenty-eight subsequent candidates, 32 HEIGHT/DIST candidates
+have completed 192 full trials: twelve all-six passes and twenty physical
+rejections. Four durable GPU workers continue the remaining 89 frozen slots.
 Historical coverage and all learned-runtime release gates remain open.
 Learned-policy requests and episodes remain at zero.**
 
@@ -330,6 +330,43 @@ DIST historical exclusion therefore remains unresolved. The exact historical
 materialization finalizer also returns normally when its gates fail; its
 completion cannot justify extending the fresh-reset bounds to later states.
 No measured pose, global historical coverage or learned release is added.
+
+At 11:03 UTC, the seventh wave was retained: HEIGHT 040 passed all six trials;
+HEIGHT 039/041/044 each passed five and remain valid physical rejections.
+Including smoke, 32 candidates now have **192 full recorded trials** and
+86,400 scripted actions: twelve all-six passes and twenty rejections. All 24
+new raw trial/video projections and canonical worker digests agree.
+[`infrastructure/family-partition-20260923bt-prefix-cc/`](infrastructure/family-partition-20260923bt-prefix-cc/)
+is retained locally and on the PVC. At 11:02 UTC, HEIGHT 046/049/052/053 were
+active and the shared infrastructure stop was absent. The independent final
+collector remains pending; no valid rejection is retried.
+At 11:15 UTC, HEIGHT 049/053 had also completed but were not yet included in
+this retained prefix. HEIGHT 046/059/052/063 were active, with no shared stop,
+terminal launcher, collector error or final receipt.
+
+The cc CPU recovery also retains every GR00T Phase-A final-manifest initial
+reset: **54 accepted historical cells plus their 54 named pre-inference
+warmups**, matched to the frozen authorized-new queue. Complete raw state
+streams were hash-verified and reconciled before selecting the reset rows.
+All 108 records have the same numerical cube/bowl root pair in the declared
+robot-base frame, with root separation about 0.139295386 m. They are not
+108 independent layouts, new episodes, or exhaustive coverage of preflights,
+infrastructure attempts and constructor transients. Evidence and the
+reproducible source/population audit are in
+[`infrastructure/historical-groot-resets-20260923cc/`](infrastructure/historical-groot-resets-20260923cc/)
+and on the PVC; all nine exporter outputs reproduced byte-identically there.
+
+The actual retained runtime bridge differs from the recorded Git bridge by
+the previously documented two-reset sidecar handling and instrumentation.
+Its actor-root getter and normalized inverse-rotation ASTs match the original
+source. The contemporaneous patch files have now been retained and rehashed,
+but no independent historical hash anchor for those files has been established.
+The recovery therefore adds **zero qualified cross-frame exclusions**.
+A separately tested actor-separation primitive can avoid requiring the same
+coordinate frame when both metre-frame metrics and numerical error bounds
+are independently qualified. It is not applied as a qualified proof here or
+wired into fixture release. The focused recovery/point/bound/separation suite
+passes 65 checks; global coverage and all learned-policy gates remain open.
 
 ## Scientific accounting
 

@@ -238,6 +238,32 @@ Configured initial poses are not recovered measured states. Moreover, the
 historical materialization finalizer returns even when its gates fail, so
 normal completion cannot extend the settled-reset bounds to constructed states.
 
+GR00T Phase A now has a complete selection of the **54 final-manifest cell
+initial resets and their 54 named warmups**, with each full state stream
+reconciled before selection:
+
+```bash
+.venv/bin/python -m tools.audit_sgw_groot_reset_population \
+  --output /tmp/sgw-groot-reset-population.json
+```
+
+These 108 records contain one distinct numerical cube/bowl root pair in their
+declared robot-base frame, not 108 independent layouts. They do not cover
+infrastructure-invalid attempts, preflights or constructor transients. The
+retained runtime reset-sidecar patch preserves the original getter and
+normalized-rotation ASTs, but its source files lack an independently established
+historical hash anchor in the final manifest. No world-frame relabeling or
+cross-frame exclusion is claimed.
+
+The separate `historical_root_separation` primitive supplies a necessary
+distance-based exclusion for future qualified inputs in different orthonormal
+metre frames. A match within the unchanged componentwise tolerance bounds the
+possible change in actor-pair separation. Both frames and each root's numerical
+error bound must be independently justified; the primitive accounts for both
+roots on both sides and returns only `nonmatch` or `unresolved`. It neither
+establishes provenance nor releases fixtures, and has not been applied as a
+qualified exclusion to these recovered GR00T records.
+
 ## Execution order
 
 1. Obtain a genuinely idle, authorized RTX/Vulkan-capable allocation. A

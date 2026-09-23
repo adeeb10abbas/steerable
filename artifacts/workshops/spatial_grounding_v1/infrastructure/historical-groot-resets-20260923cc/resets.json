@@ -1,0 +1,3998 @@
+{
+  "captured_initial_resets": 54,
+  "captured_warmup_resets": 54,
+  "claim_boundary": "Every final-manifest authorized-new GR00T Phase-A cell and its named warmup sidecar, not preflights, infrastructure-invalid attempts, constructor transients or other cohorts. Roots are preserved in the raw capture's declared robot-base frame, not relabeled world. Retained runtime patch files are freshly hash-recorded recovery evidence; this exporter does not infer an independent historical hash anchor for them.",
+  "complete_declared_final_manifest_cell_selection": true,
+  "config_projections": {
+    "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e": {
+      "rigid_object_names": [
+        "banana",
+        "bowl",
+        "rubiks_cube",
+        "table"
+      ],
+      "robot_initial_state": {
+        "ang_vel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "joint_pos": {
+          "finger_joint": 0.0,
+          "left_inner.*": 0.0,
+          "panda_joint1": 0.0,
+          "panda_joint2": -0.6283185307179586,
+          "panda_joint3": 0.0,
+          "panda_joint4": -2.5132741228718345,
+          "panda_joint5": 0.0,
+          "panda_joint6": 1.8849555921538759,
+          "panda_joint7": 0,
+          "right_inner.*": 0.0,
+          "right_outer.*": 0.0
+        },
+        "joint_vel": {
+          ".*": 0.0
+        },
+        "lin_vel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pos": [
+          0,
+          0,
+          0
+        ],
+        "rot": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "robot_spawn": {
+        "activate_contact_sensors": true,
+        "articulation_props": {
+          "articulation_enabled": null,
+          "enabled_self_collisions": false,
+          "fix_root_link": null,
+          "sleep_threshold": null,
+          "solver_position_iteration_count": 64,
+          "solver_velocity_iteration_count": 0,
+          "stabilization_threshold": null
+        },
+        "collision_props": null,
+        "copy_from_source": true,
+        "deformable_props": null,
+        "fixed_tendons_props": null,
+        "func": "isaaclab.sim.spawners.from_files.from_files:spawn_from_usd",
+        "joint_drive_props": null,
+        "mass_props": null,
+        "rigid_props": {
+          "angular_damping": null,
+          "disable_gravity": true,
+          "enable_gyroscopic_forces": null,
+          "kinematic_enabled": null,
+          "linear_damping": null,
+          "max_angular_velocity": null,
+          "max_contact_impulse": null,
+          "max_depenetration_velocity": 5.0,
+          "max_linear_velocity": null,
+          "retain_accelerations": null,
+          "rigid_body_enabled": null,
+          "sleep_threshold": null,
+          "solver_position_iteration_count": null,
+          "solver_velocity_iteration_count": null,
+          "stabilization_threshold": null
+        },
+        "scale": null,
+        "semantic_tags": null,
+        "spatial_tendons_props": null,
+        "usd_path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/robots/franka_robotiq_2f_85_flattened.usd",
+        "variants": null,
+        "visible": true,
+        "visual_material": null,
+        "visual_material_path": "material"
+      },
+      "scene_entry_names": [
+        "banana",
+        "banana__bowl",
+        "banana__table",
+        "bowl",
+        "bowl__table",
+        "clone_in_fabric",
+        "dome_light",
+        "egocentric_mirrored_camera",
+        "env_spacing",
+        "filter_collisions",
+        "frames",
+        "gripper__all_objs",
+        "gripper__banana",
+        "gripper__bowl",
+        "gripper__rubiks_cube",
+        "gripper__table",
+        "lazy_sensor_update",
+        "num_envs",
+        "over_shoulder_left_camera",
+        "replicate_physics",
+        "robot",
+        "rubiks_cube",
+        "rubiks_cube__banana",
+        "rubiks_cube__bowl",
+        "rubiks_cube__table",
+        "scene",
+        "sphere_light",
+        "table",
+        "wrist_cam"
+      ],
+      "scene_spawn": {
+        "activate_contact_sensors": true,
+        "articulation_props": null,
+        "collision_props": null,
+        "copy_from_source": true,
+        "deformable_props": null,
+        "fixed_tendons_props": null,
+        "func": "isaaclab.sim.spawners.from_files.from_files:spawn_from_usd",
+        "joint_drive_props": null,
+        "mass_props": null,
+        "rigid_props": null,
+        "scale": null,
+        "semantic_tags": null,
+        "spatial_tendons_props": null,
+        "usd_path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/scenes/rubiks_cube_banana_bowl.usda",
+        "variants": null,
+        "visible": true,
+        "visual_material": null,
+        "visual_material_path": "material"
+      },
+      "terminations": {
+        "success": {
+          "func": "robolab.core.task.conditionals:object_right_of",
+          "params": {
+            "frame_of_reference": "robot",
+            "mirrored": false,
+            "object": "rubiks_cube",
+            "reference_object": "bowl",
+            "require_gripper_detached": true
+          },
+          "time_out": false
+        },
+        "time_out": {
+          "func": "isaaclab.envs.mdp.terminations:time_out",
+          "params": {},
+          "time_out": true
+        }
+      }
+    },
+    "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c": {
+      "rigid_object_names": [
+        "banana",
+        "bowl",
+        "rubiks_cube",
+        "table"
+      ],
+      "robot_initial_state": {
+        "ang_vel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "joint_pos": {
+          "finger_joint": 0.0,
+          "left_inner.*": 0.0,
+          "panda_joint1": 0.0,
+          "panda_joint2": -0.6283185307179586,
+          "panda_joint3": 0.0,
+          "panda_joint4": -2.5132741228718345,
+          "panda_joint5": 0.0,
+          "panda_joint6": 1.8849555921538759,
+          "panda_joint7": 0,
+          "right_inner.*": 0.0,
+          "right_outer.*": 0.0
+        },
+        "joint_vel": {
+          ".*": 0.0
+        },
+        "lin_vel": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pos": [
+          0,
+          0,
+          0
+        ],
+        "rot": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "robot_spawn": {
+        "activate_contact_sensors": true,
+        "articulation_props": {
+          "articulation_enabled": null,
+          "enabled_self_collisions": false,
+          "fix_root_link": null,
+          "sleep_threshold": null,
+          "solver_position_iteration_count": 64,
+          "solver_velocity_iteration_count": 0,
+          "stabilization_threshold": null
+        },
+        "collision_props": null,
+        "copy_from_source": true,
+        "deformable_props": null,
+        "fixed_tendons_props": null,
+        "func": "isaaclab.sim.spawners.from_files.from_files:spawn_from_usd",
+        "joint_drive_props": null,
+        "mass_props": null,
+        "rigid_props": {
+          "angular_damping": null,
+          "disable_gravity": true,
+          "enable_gyroscopic_forces": null,
+          "kinematic_enabled": null,
+          "linear_damping": null,
+          "max_angular_velocity": null,
+          "max_contact_impulse": null,
+          "max_depenetration_velocity": 5.0,
+          "max_linear_velocity": null,
+          "retain_accelerations": null,
+          "rigid_body_enabled": null,
+          "sleep_threshold": null,
+          "solver_position_iteration_count": null,
+          "solver_velocity_iteration_count": null,
+          "stabilization_threshold": null
+        },
+        "scale": null,
+        "semantic_tags": null,
+        "spatial_tendons_props": null,
+        "usd_path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/robots/franka_robotiq_2f_85_flattened.usd",
+        "variants": null,
+        "visible": true,
+        "visual_material": null,
+        "visual_material_path": "material"
+      },
+      "scene_entry_names": [
+        "banana",
+        "banana__bowl",
+        "banana__table",
+        "bowl",
+        "bowl__table",
+        "clone_in_fabric",
+        "dome_light",
+        "egocentric_mirrored_camera",
+        "env_spacing",
+        "filter_collisions",
+        "frames",
+        "gripper__all_objs",
+        "gripper__banana",
+        "gripper__bowl",
+        "gripper__rubiks_cube",
+        "gripper__table",
+        "lazy_sensor_update",
+        "num_envs",
+        "over_shoulder_left_camera",
+        "replicate_physics",
+        "robot",
+        "rubiks_cube",
+        "rubiks_cube__banana",
+        "rubiks_cube__bowl",
+        "rubiks_cube__table",
+        "scene",
+        "sphere_light",
+        "table",
+        "wrist_cam"
+      ],
+      "scene_spawn": {
+        "activate_contact_sensors": true,
+        "articulation_props": null,
+        "collision_props": null,
+        "copy_from_source": true,
+        "deformable_props": null,
+        "fixed_tendons_props": null,
+        "func": "isaaclab.sim.spawners.from_files.from_files:spawn_from_usd",
+        "joint_drive_props": null,
+        "mass_props": null,
+        "rigid_props": null,
+        "scale": null,
+        "semantic_tags": null,
+        "spatial_tendons_props": null,
+        "usd_path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/scenes/rubiks_cube_banana_bowl.usda",
+        "variants": null,
+        "visible": true,
+        "visual_material": null,
+        "visual_material_path": "material"
+      },
+      "terminations": {
+        "success": {
+          "func": "robolab.core.task.conditionals:object_left_of",
+          "params": {
+            "frame_of_reference": "robot",
+            "mirrored": false,
+            "object": "rubiks_cube",
+            "reference_object": "bowl",
+            "require_gripper_detached": true
+          },
+          "time_out": false
+        },
+        "time_out": {
+          "func": "isaaclab.envs.mdp.terminations:time_out",
+          "params": {},
+          "time_out": true
+        }
+      }
+    }
+  },
+  "final_manifest": {
+    "bytes": 212852,
+    "path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_evidence_hash_manifest.json",
+    "sha256": "c7ebddea0413090b18cec6e2044251e929aeef77d24fa0102fdd4f9ac63c09bd"
+  },
+  "historical_population_coverage_complete": false,
+  "new_behavioral_episodes": 0,
+  "new_model_requests": 0,
+  "pair_manifests": [
+    {
+      "bytes": 7624,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8303/attempt02/compiled/seed8303_pair_manifest.json",
+      "sha256": "d3daddab5bc1860b2eed86754ea6dc7fce0b55db0b9405e7284f1258da1759c2"
+    },
+    {
+      "bytes": 7626,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8304/attempt01/compiled/seed8304_pair_manifest.json",
+      "sha256": "3d9edece405143d37b5a0d5fe4ebc3f255b0f189f6ac874cd9b0382a9d4d2d68"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8305/attempt01/compiled/seed8305_pair_manifest.json",
+      "sha256": "5cd75433ef94090983e57af74a03a9e51880598ac4e78bb76cbbb2acc66b9cfa"
+    },
+    {
+      "bytes": 7626,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8306/attempt01/compiled/seed8306_pair_manifest.json",
+      "sha256": "1c235b6960f55e4dffac1b6c0774dfc204d5ad1db8294be2f63018be26d4e067"
+    },
+    {
+      "bytes": 7624,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8307/attempt01/compiled/seed8307_pair_manifest.json",
+      "sha256": "2b93389b373b13cfbfa977c3204b87a204659bfe8d18fee59410cf297474c820"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8308/attempt01/compiled/seed8308_pair_manifest.json",
+      "sha256": "cd292a2527b545ec5dd9faa51ef91e98225e2bea315ca37aef8b162e3bbb1b41"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8309/attempt01/compiled/seed8309_pair_manifest.json",
+      "sha256": "65a217ad37b2527d4edbeddd2df753e418554ec15acfbfc00481be1ce48bf19c"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8310/attempt01/compiled/seed8310_pair_manifest.json",
+      "sha256": "bed72ae09cbd9d9c0f1f4c95b85c438b7007efffb53baddb709b3e6bfece11e9"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8311/attempt01/compiled/seed8311_pair_manifest.json",
+      "sha256": "287f0e44ce6d93c55f006fc875cbc5f4ae3c83f911d8f3572989dcf8e9e41660"
+    },
+    {
+      "bytes": 7622,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8312/attempt01/compiled/seed8312_pair_manifest.json",
+      "sha256": "a53241ffab6d7020f14af4995cfa1f7b630eac8bc7cb4cd1759a0363e11d813c"
+    },
+    {
+      "bytes": 7626,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8313/attempt01/compiled/seed8313_pair_manifest.json",
+      "sha256": "4029878d63ec9a03b69104eac2fdc567d7e6ec4d3cb22ef0f5f032f5581941f8"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8314/attempt01/compiled/seed8314_pair_manifest.json",
+      "sha256": "1b64be70d16e9e9d6c5ecec6e0863f340faf395b3418b8d111bc437e02c7d6fa"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8315/attempt01/compiled/seed8315_pair_manifest.json",
+      "sha256": "50fbed9024e1bc9d0bbcdf4e79dfb91e8ca69d119571ebdb2dacac223a04d82a"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8316/attempt01/compiled/seed8316_pair_manifest.json",
+      "sha256": "2accbb685beb3535e3e4ba117f0d3a1e549438bc7fcc4a17fc48ad01efc9705c"
+    },
+    {
+      "bytes": 7624,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8317/attempt01/compiled/seed8317_pair_manifest.json",
+      "sha256": "cf1e4dbeeb78ae130e27f5b21104f1cd82ce5b9cf900857c88ee0ee1ca676127"
+    },
+    {
+      "bytes": 7624,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8318/attempt01/compiled/seed8318_pair_manifest.json",
+      "sha256": "f01a610b08fa2e068f39eaa9abcfdb58e03ff21c6a012f2cb23d7c38cbc17617"
+    },
+    {
+      "bytes": 7624,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8319/attempt01/compiled/seed8319_pair_manifest.json",
+      "sha256": "998defc5e94189775f34f10a577e6d5df6746c327ef7c59364eabfc5e1b25bd3"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8320/attempt01/compiled/seed8320_pair_manifest.json",
+      "sha256": "0554f9ede582dd9e0e1dc1db9718440c41fd67ce553d2ddbd526d733e677c435"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8321/attempt01/compiled/seed8321_pair_manifest.json",
+      "sha256": "85885327fd0c6614d626cc9d8e65b43a8ee6804ee180715a81fb47405168ba2a"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8322/attempt01/compiled/seed8322_pair_manifest.json",
+      "sha256": "14ad22a2a860cb9b29b8f9a2b9e19eb4b3a216cd3c0eed3504cf2d594a163c16"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8323/attempt01/compiled/seed8323_pair_manifest.json",
+      "sha256": "8ae14c21457886fd75b00a525fa43b469d6bbf8937ee8aaeec618efe5e60a3c8"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8324/attempt01/compiled/seed8324_pair_manifest.json",
+      "sha256": "48547fc7129d3d5b7f759ebdea45a09864eeacccd1ac30634b5af413675f65f7"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8325/attempt01/compiled/seed8325_pair_manifest.json",
+      "sha256": "7a17402feb628be3895cbf9b3c0d5d2f64dc6e167b253de7611cec10a5c8d437"
+    },
+    {
+      "bytes": 7626,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8326/attempt01/compiled/seed8326_pair_manifest.json",
+      "sha256": "033424dcb61261f7505bdff624b0c9f081050ab2eba28cc1a51dbc2bcb9aae03"
+    },
+    {
+      "bytes": 7625,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8327/attempt01/compiled/seed8327_pair_manifest.json",
+      "sha256": "3037f0ea50a7396c56059287eef4747481252e4491c6e39e17c77836fb7fe1e7"
+    },
+    {
+      "bytes": 7624,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8328/attempt01/compiled/seed8328_pair_manifest.json",
+      "sha256": "48aa83384e49f986d492dee847475f24bb348f81eccfa05136279ceb15c3e97b"
+    },
+    {
+      "bytes": 7624,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8329/attempt01/compiled/seed8329_pair_manifest.json",
+      "sha256": "0a1a45a34c306ca8147eae922ec731415979bd17fd9c8addbda94f4566046661"
+    }
+  ],
+  "queue": {
+    "bytes": 1252888,
+    "path": "/data/users/ali/vla_wam/src/steerable/artifacts/vla_wam_shared_v3/phase_a_cells.jsonl",
+    "sha256": "8350b98f958424b56b66e67e8c70ec3951d27f4ae257476d6f08c0aaa873cb7c"
+  },
+  "recorded_source_study_commit": "0b24153a2ba1fff9173fc47937ad291d24959e72",
+  "records": [
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8303/attempt02/simulator/state_capture/seed8303_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8303_attempt02/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "061ab9bbde26a692ef210062555d66b0d74e9d6463bf9b368ddcf50d3274966e"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8303:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8303,
+      "state_stream": {
+        "bytes": 99971,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8303/attempt02/simulator/state_capture/seed8303_left_states.partial.jsonl",
+        "sha256": "53b1a3aee14da148d5f8806ec1a74fa20fefa52367bff19ebf38512f7e1bb83f"
+      },
+      "state_trace": {
+        "bytes": 137447,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8303/attempt02/simulator/state_capture/seed8303_left.json",
+        "sha256": "e65b6e84a48be31567afaed18c5630707f5913d4ca46f4462789d7d79f576081"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8303/attempt02/simulator/state_capture/seed8303_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8303/attempt02/simulator/state_capture/seed8303_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8303_attempt02/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "daad3b01e5713562b3b1a08bfea052e3150da14a2ac73e47875a4bb354ccda28"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8303:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8303,
+      "state_stream": {
+        "bytes": 99996,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8303/attempt02/simulator/state_capture/seed8303_right_states.partial.jsonl",
+        "sha256": "7d16b4f2623d885c1231bf5ac25a3992cf1ae04e347c10b5ab6261688e61ae63"
+      },
+      "state_trace": {
+        "bytes": 137469,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8303/attempt02/simulator/state_capture/seed8303_right.json",
+        "sha256": "c47fba8e2336926a3a885e5e9388b65d4d257d20d737c1a8df074554344f3740"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8303/attempt02/simulator/state_capture/seed8303_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8304/attempt01/simulator/state_capture/seed8304_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8304_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "eecc602108b12f14e36c45fe7acc5c83b40945e283eda670d76b868254dc23c2"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8304:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8304,
+      "state_stream": {
+        "bytes": 100001,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8304/attempt01/simulator/state_capture/seed8304_left_states.partial.jsonl",
+        "sha256": "a325faf55f9379b042dcd4d7212a92b2df6d7dfb8b0565a4f637889c1c34fb9e"
+      },
+      "state_trace": {
+        "bytes": 137479,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8304/attempt01/simulator/state_capture/seed8304_left.json",
+        "sha256": "d1485f2e6ad6f41b21f91b2d819d9b3b74b5b795ab0d8a50660060baa2571385"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8304/attempt01/simulator/state_capture/seed8304_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8304/attempt01/simulator/state_capture/seed8304_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8304_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "ebb392a5e170ee33ac3b369aba9a506bed24c4b95d4d1dfa8c38e229a270ffd3"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8304:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8304,
+      "state_stream": {
+        "bytes": 100042,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8304/attempt01/simulator/state_capture/seed8304_right_states.partial.jsonl",
+        "sha256": "5e6d96a142e0896f6439d89987a74a9a9a08485de49efdbfbcbdfe8dec462cbc"
+      },
+      "state_trace": {
+        "bytes": 137521,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8304/attempt01/simulator/state_capture/seed8304_right.json",
+        "sha256": "f1152760943d2f7ee76a517aa28a87f0e4a4e914cf25c1107ef3276a92428927"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8304/attempt01/simulator/state_capture/seed8304_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8305/attempt01/simulator/state_capture/seed8305_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8305_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "410903750b6bad0ec44e8169bb52386e6dcf2a9d6f1214f3b0ec8dce8323bfa3"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8305:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8305,
+      "state_stream": {
+        "bytes": 100020,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8305/attempt01/simulator/state_capture/seed8305_left_states.partial.jsonl",
+        "sha256": "cff1af7cc42cf398258d7685477af473798fe9983da24bfae7a9340d31e1955e"
+      },
+      "state_trace": {
+        "bytes": 137499,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8305/attempt01/simulator/state_capture/seed8305_left.json",
+        "sha256": "02f1d664311beb4dcac1df9e8df9a6647d68ed0672f6ae4a4032eb21cab567e7"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8305/attempt01/simulator/state_capture/seed8305_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8305/attempt01/simulator/state_capture/seed8305_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8305_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "7159ea57cc7ac8077671ddb95462b78d8beea4f2d64cce7cd46e6dd959a1d5a5"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8305:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8305,
+      "state_stream": {
+        "bytes": 99994,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8305/attempt01/simulator/state_capture/seed8305_right_states.partial.jsonl",
+        "sha256": "ff6edbdec67ecaf97413772852dee6460f101b8696913f61273affc403d2e03d"
+      },
+      "state_trace": {
+        "bytes": 137465,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8305/attempt01/simulator/state_capture/seed8305_right.json",
+        "sha256": "dd7b83c531cee16a5fa1f470a2fa14c385e191309400d9071509674f2b4ddf2e"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8305/attempt01/simulator/state_capture/seed8305_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8306/attempt01/simulator/state_capture/seed8306_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8306_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "c6c133e30897c46ec5a3284f785f9a3fa602c3b32504fa535b0b5adbc56ca4ea"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8306:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8306,
+      "state_stream": {
+        "bytes": 100021,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8306/attempt01/simulator/state_capture/seed8306_left_states.partial.jsonl",
+        "sha256": "292a80dc19bc522103a6c6fb5f6c5f11d96fdd00c596d71b4871411e8045147a"
+      },
+      "state_trace": {
+        "bytes": 137497,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8306/attempt01/simulator/state_capture/seed8306_left.json",
+        "sha256": "c35a9b7e7ec3276f8cc43bd9ed42767d1b117ad826b290e5b005801d89316c52"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8306/attempt01/simulator/state_capture/seed8306_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8306/attempt01/simulator/state_capture/seed8306_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8306_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "325fc9aa5d8357408ccbaf3bb8d69a44ffb032a91535c9fcfb32cc85e103b7d0"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8306:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8306,
+      "state_stream": {
+        "bytes": 100002,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8306/attempt01/simulator/state_capture/seed8306_right_states.partial.jsonl",
+        "sha256": "1f4ba2e117ab391d528a8d63704d4a66e36d652693c7585ac89422e9ca715b4e"
+      },
+      "state_trace": {
+        "bytes": 137482,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8306/attempt01/simulator/state_capture/seed8306_right.json",
+        "sha256": "481acd2b73febea088ca417a47388188ffc5b639abfc07c22734f4ee0c79097b"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8306/attempt01/simulator/state_capture/seed8306_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8307/attempt01/simulator/state_capture/seed8307_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8307_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "05988e2c2b1562bee0cd19ad1f65d1fc0bfcb3dcbf2733ee4f6919dae035e82e"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8307:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8307,
+      "state_stream": {
+        "bytes": 99899,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8307/attempt01/simulator/state_capture/seed8307_left_states.partial.jsonl",
+        "sha256": "b1efc9f275cf35053e863b5d87d3a982fae2e057b0c5036eb48c8777fc8b2a11"
+      },
+      "state_trace": {
+        "bytes": 137375,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8307/attempt01/simulator/state_capture/seed8307_left.json",
+        "sha256": "6c567dd9dec22fc76356d76f5efbf59d78406e9aa2149f792f5dc3a65f306712"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8307/attempt01/simulator/state_capture/seed8307_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8307/attempt01/simulator/state_capture/seed8307_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8307_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "ba46f2d8238af002e72b176bffad6efb6b45f213e1ec881d0f583a8631d95dde"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8307:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8307,
+      "state_stream": {
+        "bytes": 99885,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8307/attempt01/simulator/state_capture/seed8307_right_states.partial.jsonl",
+        "sha256": "9182385c627779af19c98e9f694d6c65649d1bc22e4cd669046f8935c51464e9"
+      },
+      "state_trace": {
+        "bytes": 137364,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8307/attempt01/simulator/state_capture/seed8307_right.json",
+        "sha256": "222facf773b4060429a1f61e0c5fd2d8eb344c49be6becb90e3262efc777c03d"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8307/attempt01/simulator/state_capture/seed8307_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8308/attempt01/simulator/state_capture/seed8308_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8308_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "9a24879f7be2d97c775e32dd43ab9009bdb881d8332de17d5f2ed14892286098"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8308:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8308,
+      "state_stream": {
+        "bytes": 100009,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8308/attempt01/simulator/state_capture/seed8308_left_states.partial.jsonl",
+        "sha256": "48c1a5a40af2752c6318b5787c860d06750652a681cdbc5bf643fe5d9d108d55"
+      },
+      "state_trace": {
+        "bytes": 137487,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8308/attempt01/simulator/state_capture/seed8308_left.json",
+        "sha256": "323665dc1028e0039e06d22a68946c2c8680e018f7ca5e92c67a312b1c96c22b"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8308/attempt01/simulator/state_capture/seed8308_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8308/attempt01/simulator/state_capture/seed8308_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8308_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "6faa71c9a49067f9391cfc3b3d3ac4f7a17c0718cf468954717b700f2ff73b09"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8308:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8308,
+      "state_stream": {
+        "bytes": 99908,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8308/attempt01/simulator/state_capture/seed8308_right_states.partial.jsonl",
+        "sha256": "862f1e233b1b86eb7946fe8ef9462fbe5aba6e5b3d17efa2cad9c26ad62e2b5c"
+      },
+      "state_trace": {
+        "bytes": 137390,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8308/attempt01/simulator/state_capture/seed8308_right.json",
+        "sha256": "a46fae1789ac184f8a464068d11400317d13f47b3c1aedb0cc26298a17625f71"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8308/attempt01/simulator/state_capture/seed8308_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8309/attempt01/simulator/state_capture/seed8309_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8309_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "9da992e91b4e2228cbb8cbf8bde777237e79843a1c94680780555500753f42cc"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8309:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8309,
+      "state_stream": {
+        "bytes": 99999,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8309/attempt01/simulator/state_capture/seed8309_left_states.partial.jsonl",
+        "sha256": "04fd2def17a1ac7212e5cb37460c87d0bddc998a018fc5e642855267499e0d9b"
+      },
+      "state_trace": {
+        "bytes": 137477,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8309/attempt01/simulator/state_capture/seed8309_left.json",
+        "sha256": "19d76979fcbbf4ad2ff8d1f55427ed0c9291a110c6b6ef187e86708ceb648f7d"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8309/attempt01/simulator/state_capture/seed8309_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8309/attempt01/simulator/state_capture/seed8309_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8309_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "97cbc932edf6a5b4c3f1cb473cda319fd5c81b4951bc36fb141e8ef5c3417eac"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8309:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8309,
+      "state_stream": {
+        "bytes": 100016,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8309/attempt01/simulator/state_capture/seed8309_right_states.partial.jsonl",
+        "sha256": "df406585c6a4f66108be1ef67e9b516f95e9078316905b05c5b7236a30806cbf"
+      },
+      "state_trace": {
+        "bytes": 137484,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8309/attempt01/simulator/state_capture/seed8309_right.json",
+        "sha256": "a2023f81d3c8d43a546260d36c080f60bf9100c6625fc9c81881079a34c60a4b"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8309/attempt01/simulator/state_capture/seed8309_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8310/attempt01/simulator/state_capture/seed8310_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8310_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "469145562cb7bc54a388b0e765e8a3424ba7c81645538ad2e626f306f1101c8b"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8310:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8310,
+      "state_stream": {
+        "bytes": 100008,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8310/attempt01/simulator/state_capture/seed8310_left_states.partial.jsonl",
+        "sha256": "e83007cbf2c4000d5912a58860eb8f47bfd75f9045c5bc3fd60b4d20ad7eace9"
+      },
+      "state_trace": {
+        "bytes": 137487,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8310/attempt01/simulator/state_capture/seed8310_left.json",
+        "sha256": "b5773fd3fd04dbde25f13ba9af0a84f1cfd17892dbf92b14e4b50da5d2005bb9"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8310/attempt01/simulator/state_capture/seed8310_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8310/attempt01/simulator/state_capture/seed8310_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8310_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "8d1458ef5a2109deaa71a1a4a3e51a789aa1ce63732f93543cea87d7da86fc26"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8310:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8310,
+      "state_stream": {
+        "bytes": 99997,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8310/attempt01/simulator/state_capture/seed8310_right_states.partial.jsonl",
+        "sha256": "b32a223d9352022adeed9a462203247eb840c36eabe27abcb5816abd5354c6de"
+      },
+      "state_trace": {
+        "bytes": 137476,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8310/attempt01/simulator/state_capture/seed8310_right.json",
+        "sha256": "7f93cf0612070ec0f3dca37aaed46f7cf2ff831a2edab421b4eb1082f0ebe71e"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8310/attempt01/simulator/state_capture/seed8310_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8311/attempt01/simulator/state_capture/seed8311_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8311_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "c990f3f32b7ba87333fd8dae4855a4e58fc1f95bf3ac37055debe2c5429b8929"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8311:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8311,
+      "state_stream": {
+        "bytes": 99972,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8311/attempt01/simulator/state_capture/seed8311_left_states.partial.jsonl",
+        "sha256": "8723c9be956954140c17ef1392aadfcaa0243efdb0bcc41163e35336f02106d8"
+      },
+      "state_trace": {
+        "bytes": 137450,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8311/attempt01/simulator/state_capture/seed8311_left.json",
+        "sha256": "c9df5972026d2d84502f1981e78a59cbc79a7d716085f92171fe8969513a91c6"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8311/attempt01/simulator/state_capture/seed8311_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8311/attempt01/simulator/state_capture/seed8311_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8311_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "97945321fe6415f7e385f6c5771eb5fddb73ddf4072ba455dbcb432e0d1710d1"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8311:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8311,
+      "state_stream": {
+        "bytes": 100017,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8311/attempt01/simulator/state_capture/seed8311_right_states.partial.jsonl",
+        "sha256": "cc7fb668fe01774089d341c11b2c8a94d166c8fb5da3590b8df2e7706ff012d3"
+      },
+      "state_trace": {
+        "bytes": 137491,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8311/attempt01/simulator/state_capture/seed8311_right.json",
+        "sha256": "c84b456e2b9fe1de444db478db9c09cc56450df75d4e9f748f90181aca25cd07"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8311/attempt01/simulator/state_capture/seed8311_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 280,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8312/attempt01/simulator/state_capture/seed8312_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8312_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "e2270314a5341c43c0f8f784f3774c882b269021a09fe1d4b1829a0404dd11fd"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8312:left",
+      "relation": "left",
+      "sample_count": 281,
+      "seed": 8312,
+      "state_stream": {
+        "bytes": 62367,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8312/attempt01/simulator/state_capture/seed8312_left_states.partial.jsonl",
+        "sha256": "9141b71fc9a77aa1eadc87169b933254196d5a21b90a99ad386f7d159821ec56"
+      },
+      "state_trace": {
+        "bytes": 86174,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8312/attempt01/simulator/state_capture/seed8312_left.json",
+        "sha256": "20aad10a679f792e6647522109a20b6a8cdf1b84e990da7f039bc7715b21877c"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8312/attempt01/simulator/state_capture/seed8312_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8312/attempt01/simulator/state_capture/seed8312_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8312_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "d2478299a75403ca793be02308a1b62149b78022b633335f8448d4d6efa90cf7"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8312:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8312,
+      "state_stream": {
+        "bytes": 100020,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8312/attempt01/simulator/state_capture/seed8312_right_states.partial.jsonl",
+        "sha256": "3ba028ced8f5e64b424e7ac22bf80f73d39ce72417cbb0d39289bf66ff309344"
+      },
+      "state_trace": {
+        "bytes": 137494,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8312/attempt01/simulator/state_capture/seed8312_right.json",
+        "sha256": "17c630340a6aab812f79d28a3b9db65a9d5edb1b4b551451674a3300d46dbf8d"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8312/attempt01/simulator/state_capture/seed8312_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8313/attempt01/simulator/state_capture/seed8313_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8313_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "851c22f7fa9af955da893574d105f692bd7feacacb0a8d0f934ba8043b81358c"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8313:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8313,
+      "state_stream": {
+        "bytes": 100011,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8313/attempt01/simulator/state_capture/seed8313_left_states.partial.jsonl",
+        "sha256": "cd47364258ec2d1f7baccaf501108cbb98c920d3d97dfc0117514a46c08d35bd"
+      },
+      "state_trace": {
+        "bytes": 137487,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8313/attempt01/simulator/state_capture/seed8313_left.json",
+        "sha256": "9b686d394f51bca73435cb30e13a711bec5ee130eca246dc772a639bdcbd738e"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8313/attempt01/simulator/state_capture/seed8313_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8313/attempt01/simulator/state_capture/seed8313_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8313_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "c1f04eaf75c769399618aed48994205cdb653e43e9167fc187619cb80d3bf1c7"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8313:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8313,
+      "state_stream": {
+        "bytes": 100001,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8313/attempt01/simulator/state_capture/seed8313_right_states.partial.jsonl",
+        "sha256": "eb6ebd0d9e38c5f31a3f786fb72e50475734de228e068532b60886fc9ab768f1"
+      },
+      "state_trace": {
+        "bytes": 137484,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8313/attempt01/simulator/state_capture/seed8313_right.json",
+        "sha256": "84d38048f8521bf0de28eb41903d36091454e20c23a38fedf293fac515b25159"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8313/attempt01/simulator/state_capture/seed8313_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8314/attempt01/simulator/state_capture/seed8314_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8314_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "24413c9f89dadfaf7934c50b33dd328d494f2975d5a9c8a552ac806a820d3b50"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8314:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8314,
+      "state_stream": {
+        "bytes": 99962,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8314/attempt01/simulator/state_capture/seed8314_left_states.partial.jsonl",
+        "sha256": "5b94937c30ec0557671c479fc9c821979587756b44073716ec1bc7a2a9fd97aa"
+      },
+      "state_trace": {
+        "bytes": 137441,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8314/attempt01/simulator/state_capture/seed8314_left.json",
+        "sha256": "9493563e5961a451bb6420800eecbda8f1838c8c7fa616c720532a718847ae61"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8314/attempt01/simulator/state_capture/seed8314_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8314/attempt01/simulator/state_capture/seed8314_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8314_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "b84e715caa3e0cf7ce2e9b3bb6ffe4c0e03779b819b906edfeed6e8360e06ac8"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8314:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8314,
+      "state_stream": {
+        "bytes": 100021,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8314/attempt01/simulator/state_capture/seed8314_right_states.partial.jsonl",
+        "sha256": "3cab80efc7f70b84d0d4a4b5d82f0856b431ef4751a93cf060dd365278b5f384"
+      },
+      "state_trace": {
+        "bytes": 137493,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8314/attempt01/simulator/state_capture/seed8314_right.json",
+        "sha256": "fc20893dd24dbc9ceca7aeea268d0a88f935cabe8536885b8dd9cc902d5c8afa"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8314/attempt01/simulator/state_capture/seed8314_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8315/attempt01/simulator/state_capture/seed8315_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8315_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "6770bc6498c661b0219ed40ffbce1c8fc09bb2719e4990f2be5df2f9157b630a"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8315:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8315,
+      "state_stream": {
+        "bytes": 99996,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8315/attempt01/simulator/state_capture/seed8315_left_states.partial.jsonl",
+        "sha256": "601bbbcc638791b5926b950c2136681edaa90bc59fc71631f63651da26df32a6"
+      },
+      "state_trace": {
+        "bytes": 137468,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8315/attempt01/simulator/state_capture/seed8315_left.json",
+        "sha256": "1a7ccf131c9c6eb3ea564d9e51cd9a3b14c394efe5549691bd53737f5d8f482f"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8315/attempt01/simulator/state_capture/seed8315_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8315/attempt01/simulator/state_capture/seed8315_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8315_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "fa1ff3112d4258a53d60c3891b6ca541ab25ced520941c03939b288b67157a83"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8315:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8315,
+      "state_stream": {
+        "bytes": 100014,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8315/attempt01/simulator/state_capture/seed8315_right_states.partial.jsonl",
+        "sha256": "96ff43e8995d3c9c08eb0aaa0dceec6b3d4f8d6f0152d687ae9d6d044e13fa00"
+      },
+      "state_trace": {
+        "bytes": 137487,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8315/attempt01/simulator/state_capture/seed8315_right.json",
+        "sha256": "27da71ad8b1bc07e05d0f8524c1610a40992b5a48c560306981ace157004c3c0"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8315/attempt01/simulator/state_capture/seed8315_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8316/attempt01/simulator/state_capture/seed8316_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8316_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "6217f23e7a3422ca985a7ee7b39f7f4f5e41e818546619276cd9e156304fad05"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8316:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8316,
+      "state_stream": {
+        "bytes": 99932,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8316/attempt01/simulator/state_capture/seed8316_left_states.partial.jsonl",
+        "sha256": "786047afe7b2c54bae7a06efc4d8efa3e41be6ee5e62d28d466214ef97898aa6"
+      },
+      "state_trace": {
+        "bytes": 137411,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8316/attempt01/simulator/state_capture/seed8316_left.json",
+        "sha256": "c542d3ca37f564b2609378e82776e181e4da524c667f96ccd17a87dbedd847f8"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8316/attempt01/simulator/state_capture/seed8316_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8316/attempt01/simulator/state_capture/seed8316_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8316_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "2f2e0e7daffe7e783b4c7bbaba9067c3218a952c12fb05d0beba796ffa6e7347"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8316:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8316,
+      "state_stream": {
+        "bytes": 100093,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8316/attempt01/simulator/state_capture/seed8316_right_states.partial.jsonl",
+        "sha256": "167369fe267c533b2ac1236d8fb4279cca26e59e88f0c543ba146c75ea5b3b13"
+      },
+      "state_trace": {
+        "bytes": 137567,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8316/attempt01/simulator/state_capture/seed8316_right.json",
+        "sha256": "7465f03ec0f6e3f95c74d2ddce3a927f8ed27d8d63c074554abdb3cabdcd5e95"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8316/attempt01/simulator/state_capture/seed8316_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 401,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8317/attempt01/simulator/state_capture/seed8317_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8317_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "0cd924834f657007f398e0808d5d2ad7cc8b8ea415f1b0f452ef2f79ef79a67d"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8317:left",
+      "relation": "left",
+      "sample_count": 402,
+      "seed": 8317,
+      "state_stream": {
+        "bytes": 89194,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8317/attempt01/simulator/state_capture/seed8317_left_states.partial.jsonl",
+        "sha256": "366a9f007db457e56761f2c4d08a7d15b772face598e55c992b1190eb02d40bc"
+      },
+      "state_trace": {
+        "bytes": 122684,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8317/attempt01/simulator/state_capture/seed8317_left.json",
+        "sha256": "e87dce1362ee68c25591a7aaf6ea768cf689517a434ca5b570e67d33014f89b9"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8317/attempt01/simulator/state_capture/seed8317_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8317/attempt01/simulator/state_capture/seed8317_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8317_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "872b8e2a578221ae6ebd57c5de2704f7414364e12a640e7f254fecb5e2dcb531"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8317:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8317,
+      "state_stream": {
+        "bytes": 99984,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8317/attempt01/simulator/state_capture/seed8317_right_states.partial.jsonl",
+        "sha256": "578729e5eba164bbe7011b7ae3ecff2e9e816258bdd2ba456d641c62cc3255f5"
+      },
+      "state_trace": {
+        "bytes": 137463,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8317/attempt01/simulator/state_capture/seed8317_right.json",
+        "sha256": "4d2b2895cc26423b7443bb92af18cef40cef07e9eceb48e66f9befc0b34d69e0"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8317/attempt01/simulator/state_capture/seed8317_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8318/attempt01/simulator/state_capture/seed8318_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8318_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "fbeaa490a32f1543b641aaacab981d6b61158c938592be1f51c16db746e812ba"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8318:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8318,
+      "state_stream": {
+        "bytes": 99924,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8318/attempt01/simulator/state_capture/seed8318_left_states.partial.jsonl",
+        "sha256": "94af05204b2bee737fb51411221f038259be18fca0a605fcd5423f49c51dbd9e"
+      },
+      "state_trace": {
+        "bytes": 137403,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8318/attempt01/simulator/state_capture/seed8318_left.json",
+        "sha256": "ce9820213a4e7ef7a7232daca67193e2b3baf6cef8de1cce4021a3cb6a661327"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8318/attempt01/simulator/state_capture/seed8318_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8318/attempt01/simulator/state_capture/seed8318_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8318_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "9ab256ae668265a6d807de5b66db4ac3040f8a14519a62624e32cd38b0ba6bf6"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8318:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8318,
+      "state_stream": {
+        "bytes": 99946,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8318/attempt01/simulator/state_capture/seed8318_right_states.partial.jsonl",
+        "sha256": "6a0968234175d4c449a6e72f77ed3b880e0ef4e3f636372f3b80543f67d18fc8"
+      },
+      "state_trace": {
+        "bytes": 137429,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8318/attempt01/simulator/state_capture/seed8318_right.json",
+        "sha256": "d9b846095ce0ad4eea4e32c8833d5406d42a1546fa8d2f954de18c73e49d9460"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8318/attempt01/simulator/state_capture/seed8318_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8319/attempt01/simulator/state_capture/seed8319_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8319_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "db8f24e4fa501e2383146082939b8c9ee1a1b67a28bd2e5d355bdf372a07dccb"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8319:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8319,
+      "state_stream": {
+        "bytes": 99970,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8319/attempt01/simulator/state_capture/seed8319_left_states.partial.jsonl",
+        "sha256": "4f69c2de99c1b7bb31e0227e5669be0c3e7a00065fad008ed2fe4ecd7f7c3119"
+      },
+      "state_trace": {
+        "bytes": 137449,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8319/attempt01/simulator/state_capture/seed8319_left.json",
+        "sha256": "d073ae331f2f9515210d14ae079db15c157db9b79165d1b2e89b0034b71616d2"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8319/attempt01/simulator/state_capture/seed8319_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8319/attempt01/simulator/state_capture/seed8319_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8319_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "204e7b0993922286787c80183428b123bc3e5cf79b4601e2257ab8576318a1c1"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8319:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8319,
+      "state_stream": {
+        "bytes": 99986,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8319/attempt01/simulator/state_capture/seed8319_right_states.partial.jsonl",
+        "sha256": "e70f7e42c7526eb26f7905910db2ba330faf3deb1b24bd68453e46d91e99751a"
+      },
+      "state_trace": {
+        "bytes": 137469,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8319/attempt01/simulator/state_capture/seed8319_right.json",
+        "sha256": "e5231ec4f1f3ca2efbdb773647000d9630b246629a3a9107b9e0a428e5b2e8b4"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8319/attempt01/simulator/state_capture/seed8319_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8320/attempt01/simulator/state_capture/seed8320_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8320_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "03e943f3af13fdfcc7d91ba7c0276d697fd911273eaf6596aefa92567d5f8039"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8320:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8320,
+      "state_stream": {
+        "bytes": 99948,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8320/attempt01/simulator/state_capture/seed8320_left_states.partial.jsonl",
+        "sha256": "ad018e6fd3b9b85db75a5af8d16dd14f3daaa613f2237a93d1d1bea74b658bdc"
+      },
+      "state_trace": {
+        "bytes": 137427,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8320/attempt01/simulator/state_capture/seed8320_left.json",
+        "sha256": "5212ec6711e7350010d348799eda3c7338922add289f18f44612436d58c8a7c6"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8320/attempt01/simulator/state_capture/seed8320_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8320/attempt01/simulator/state_capture/seed8320_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8320_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "5f758f09b3d190ef8faa18db9c923b3d73b688eca68f9abd042b49ba929a101b"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8320:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8320,
+      "state_stream": {
+        "bytes": 100023,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8320/attempt01/simulator/state_capture/seed8320_right_states.partial.jsonl",
+        "sha256": "da2210a2f6ef9a5f99d325c3e9767e1be6b4f51a311465b061a942da1221e641"
+      },
+      "state_trace": {
+        "bytes": 137494,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8320/attempt01/simulator/state_capture/seed8320_right.json",
+        "sha256": "54c3536e18d1b6daa5282d76a0266f6dcf7901106ee176b33af87d5ccce08a4d"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8320/attempt01/simulator/state_capture/seed8320_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8321/attempt01/simulator/state_capture/seed8321_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8321_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "8521178f8aa26bf51945af5d4d0b09006917cd00a0375b041659c59edfcf3525"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8321:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8321,
+      "state_stream": {
+        "bytes": 99954,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8321/attempt01/simulator/state_capture/seed8321_left_states.partial.jsonl",
+        "sha256": "2173f197d9db051644d64ba808f48c316da185b2de7d7e1598c5fe4efc9eba51"
+      },
+      "state_trace": {
+        "bytes": 137433,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8321/attempt01/simulator/state_capture/seed8321_left.json",
+        "sha256": "65e402b74c32bbf429393cd410d6b4922301da2028382cfd8847553cf0a1d52d"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8321/attempt01/simulator/state_capture/seed8321_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8321/attempt01/simulator/state_capture/seed8321_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8321_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "d10958a13056a6f9b5f5112b1d01efc4eb967faf17bf6da9f4ad9b8753f0466a"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8321:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8321,
+      "state_stream": {
+        "bytes": 100045,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8321/attempt01/simulator/state_capture/seed8321_right_states.partial.jsonl",
+        "sha256": "19f1c900751e69bb8a039316a572e2d99610c82c4df437bc4bc919e87782ab3d"
+      },
+      "state_trace": {
+        "bytes": 137515,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8321/attempt01/simulator/state_capture/seed8321_right.json",
+        "sha256": "3e426bf55916ac29c1bb45309b29bb76ea16299dc928566f1507e7043530dd2b"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8321/attempt01/simulator/state_capture/seed8321_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8322/attempt01/simulator/state_capture/seed8322_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8322_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "1e11b29bcf59bf555fa757784608dbff997a675b6f4ec6b837f2526e21597bd5"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8322:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8322,
+      "state_stream": {
+        "bytes": 99946,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8322/attempt01/simulator/state_capture/seed8322_left_states.partial.jsonl",
+        "sha256": "d7de92a2f8ee2da7c3e9c69e6bcc65e69f0f3989688a22d593d95dab76281725"
+      },
+      "state_trace": {
+        "bytes": 137422,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8322/attempt01/simulator/state_capture/seed8322_left.json",
+        "sha256": "617e04e503fb25b8a394d6715451c097ee83ea9edc9bd3fb82e09b8a97e84222"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8322/attempt01/simulator/state_capture/seed8322_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8322/attempt01/simulator/state_capture/seed8322_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8322_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "8a14feaf6a0063e72e8eb8ff483611be0e3f70a5db08bd3a3bfa3d4b064e7fd1"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8322:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8322,
+      "state_stream": {
+        "bytes": 100084,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8322/attempt01/simulator/state_capture/seed8322_right_states.partial.jsonl",
+        "sha256": "0e28231bbc21b764e930cf5557c707d7bdf3c8dab4c56e80b83fb67f185b8239"
+      },
+      "state_trace": {
+        "bytes": 137549,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8322/attempt01/simulator/state_capture/seed8322_right.json",
+        "sha256": "076a87da14048fe95d49ba05e56066999aafa3ab4640fe64708b36198a84e8eb"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8322/attempt01/simulator/state_capture/seed8322_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8323/attempt01/simulator/state_capture/seed8323_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8323_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "0bae53b768e5f78c1af2f5ae94a4dc198a57cbad14ca41e10aa66cd00738a3b8"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8323:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8323,
+      "state_stream": {
+        "bytes": 100026,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8323/attempt01/simulator/state_capture/seed8323_left_states.partial.jsonl",
+        "sha256": "247026ab8ce38c4adf98971fa14a10a8dc79daea6af5e6658a1d52d82806bfca"
+      },
+      "state_trace": {
+        "bytes": 137493,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8323/attempt01/simulator/state_capture/seed8323_left.json",
+        "sha256": "549c68362a391b850aaa6e881c8a14f390e0f0311531e6c91227993ec0a0dd8f"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8323/attempt01/simulator/state_capture/seed8323_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8323/attempt01/simulator/state_capture/seed8323_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8323_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "6c2db5d6dd42495196c13a575a6741b28f8abbfc6eb4e339a2e0e1e20bf6357d"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8323:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8323,
+      "state_stream": {
+        "bytes": 99999,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8323/attempt01/simulator/state_capture/seed8323_right_states.partial.jsonl",
+        "sha256": "f241729953381f97749e9a1d3de48ed6aa6ebc5243d82ec7777d0ff30e567f19"
+      },
+      "state_trace": {
+        "bytes": 137479,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8323/attempt01/simulator/state_capture/seed8323_right.json",
+        "sha256": "52aaa02f7ea05f52da88ede35ed3feb15ebbd7ac1ac9f16442c98c20f5376b6e"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8323/attempt01/simulator/state_capture/seed8323_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8324/attempt01/simulator/state_capture/seed8324_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8324_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "597bda568d99b7c3907968fbfa38f5135330f3109598075db5d15e7d525d310d"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8324:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8324,
+      "state_stream": {
+        "bytes": 99947,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8324/attempt01/simulator/state_capture/seed8324_left_states.partial.jsonl",
+        "sha256": "01fbd12c92153f0e1a1601a71ad4fabc5d224718557c3bfd35eacc548cabd8b0"
+      },
+      "state_trace": {
+        "bytes": 137419,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8324/attempt01/simulator/state_capture/seed8324_left.json",
+        "sha256": "71fd5239423ff1426a7ca445244273bcfb954f1274e8f2082c03aaf67ddc539e"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8324/attempt01/simulator/state_capture/seed8324_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8324/attempt01/simulator/state_capture/seed8324_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8324_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "3354ef949474013d1ddc968e3f9b548f5b07d915c4a5364273aa0e65ba0a51a6"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8324:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8324,
+      "state_stream": {
+        "bytes": 100055,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8324/attempt01/simulator/state_capture/seed8324_right_states.partial.jsonl",
+        "sha256": "5bbbf5e904ddd9254fc2494b3513afa2f2aef6f70011509566bb74201d09676a"
+      },
+      "state_trace": {
+        "bytes": 137528,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8324/attempt01/simulator/state_capture/seed8324_right.json",
+        "sha256": "276f846a3c12eccc6d76e5ab48a7a750c92f9950fc568d169e2e511ca213c7bb"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8324/attempt01/simulator/state_capture/seed8324_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 411,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8325/attempt01/simulator/state_capture/seed8325_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8325_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "f6f988505219f87fe066a1e78a03731c60b7c479af42947ef9f59aa5dac52167"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8325:left",
+      "relation": "left",
+      "sample_count": 412,
+      "seed": 8325,
+      "state_stream": {
+        "bytes": 91338,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8325/attempt01/simulator/state_capture/seed8325_left_states.partial.jsonl",
+        "sha256": "71dc7b7e1e4d20f603506d4cfd8c82d32052927c595cc539da806ce93888d7bd"
+      },
+      "state_trace": {
+        "bytes": 125665,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8325/attempt01/simulator/state_capture/seed8325_left.json",
+        "sha256": "22d72b1a5dbcedfa5a8bb3d2084232d7b03eac2b848170eeb2693c255a8ba8d2"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8325/attempt01/simulator/state_capture/seed8325_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8325/attempt01/simulator/state_capture/seed8325_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8325_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "97ac2dc906449ca13dec5986ae321be0f7c2c0f3e3609fa61ec22818afe53db5"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8325:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8325,
+      "state_stream": {
+        "bytes": 100037,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8325/attempt01/simulator/state_capture/seed8325_right_states.partial.jsonl",
+        "sha256": "4f371a7b6c72fe23d56770cfa6d3e6b5c118d6cb9e64d752e3b17c68dfcdb4e2"
+      },
+      "state_trace": {
+        "bytes": 137507,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8325/attempt01/simulator/state_capture/seed8325_right.json",
+        "sha256": "9a682b68d1e19d2b20f8797d20308eff7cc9668d36a516071cedf68b4b240257"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8325/attempt01/simulator/state_capture/seed8325_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8326/attempt01/simulator/state_capture/seed8326_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8326_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "916a3cec3a4e7fd7d174e150a7ffd65143bb58832952b2af5d03d0d5c59306d5"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8326:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8326,
+      "state_stream": {
+        "bytes": 100084,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8326/attempt01/simulator/state_capture/seed8326_left_states.partial.jsonl",
+        "sha256": "40354e2db6623010a152b4dd2f20fe431151c4da2be59cf0995db131fbb09197"
+      },
+      "state_trace": {
+        "bytes": 137531,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8326/attempt01/simulator/state_capture/seed8326_left.json",
+        "sha256": "60560d4f4f3e3ddfc2b289f99603f2541bd19cfea4d7f18dd20774f82001834b"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8326/attempt01/simulator/state_capture/seed8326_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8326/attempt01/simulator/state_capture/seed8326_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8326_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "ba0e955873434b5fcb7746bb4d18bf53220e61a57bdcc858f6fea34e2326ea6f"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8326:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8326,
+      "state_stream": {
+        "bytes": 100027,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8326/attempt01/simulator/state_capture/seed8326_right_states.partial.jsonl",
+        "sha256": "1ba17abd183b64236f58a9d9f61b0145df36dd41d2da28bf342713684964285a"
+      },
+      "state_trace": {
+        "bytes": 137500,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8326/attempt01/simulator/state_capture/seed8326_right.json",
+        "sha256": "5fc7a020e27121a2536befad8b4a3ab9b79f5a1d193dc1c09542ef28960e769e"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8326/attempt01/simulator/state_capture/seed8326_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8327/attempt01/simulator/state_capture/seed8327_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8327_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "297ef7ec1f84728e51a969c09d606076162d85daa4a213c8da44130558205442"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8327:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8327,
+      "state_stream": {
+        "bytes": 99975,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8327/attempt01/simulator/state_capture/seed8327_left_states.partial.jsonl",
+        "sha256": "77dce502aba8adb374c2450d94ee40a1411649f00f116db77b8a51a74cc855b2"
+      },
+      "state_trace": {
+        "bytes": 137453,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8327/attempt01/simulator/state_capture/seed8327_left.json",
+        "sha256": "663f0107f081a7fe3bbbfca362d4b467325f5f2f0c366c5affafe4da4e28f1d1"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8327/attempt01/simulator/state_capture/seed8327_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8327/attempt01/simulator/state_capture/seed8327_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8327_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "44f0f6b135a5d69588a7fef7d4616cb681e2ea3fc01b248bd9b15d3ad4cfc7df"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8327:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8327,
+      "state_stream": {
+        "bytes": 100359,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8327/attempt01/simulator/state_capture/seed8327_right_states.partial.jsonl",
+        "sha256": "b349a55c4769638f5fa95aa7df5e5d6cd290f1b449f21476a2337e67a91e1b14"
+      },
+      "state_trace": {
+        "bytes": 137651,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8327/attempt01/simulator/state_capture/seed8327_right.json",
+        "sha256": "7ebf9196846799cdbc625b9d14ff4b35b3315869399e8020d21e96e35c9ef621"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8327/attempt01/simulator/state_capture/seed8327_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8328/attempt01/simulator/state_capture/seed8328_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8328_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "e8116b7f76e8a14e370f75092c0d654a38a7cc8e6ba2a1fe31035c7f19d76b47"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8328:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8328,
+      "state_stream": {
+        "bytes": 99984,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8328/attempt01/simulator/state_capture/seed8328_left_states.partial.jsonl",
+        "sha256": "dfb3e53a1ff4c57ffe684190639370bfd84a8c36907d9e8e7d0f520191fd3ffd"
+      },
+      "state_trace": {
+        "bytes": 137462,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8328/attempt01/simulator/state_capture/seed8328_left.json",
+        "sha256": "d004a07c5581dca509f2a073e4ad7f8141dba1cdd3c9a23df1dd8b3f28c4684a"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8328/attempt01/simulator/state_capture/seed8328_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8328/attempt01/simulator/state_capture/seed8328_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8328_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "db2abb5b9d146f84ca06302d05f58c8d6bec4001d76c025c0f16a60c8524f851"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8328:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8328,
+      "state_stream": {
+        "bytes": 99959,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8328/attempt01/simulator/state_capture/seed8328_right_states.partial.jsonl",
+        "sha256": "8a92f989660d9158764d6c34f57afba574964047a69f9dc19844776cb797547b"
+      },
+      "state_trace": {
+        "bytes": 137439,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8328/attempt01/simulator/state_capture/seed8328_right.json",
+        "sha256": "f9c218bff99185ae99a526deb0186d6b9a74bd6359463582de9fdad687f66a30"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8328/attempt01/simulator/state_capture/seed8328_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8329/attempt01/simulator/state_capture/seed8329_left_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39623,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8329_attempt01/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "4c6af406aeee52417fc037ebe133a483d7acee77f952916890d811b77d2c61b0"
+      },
+      "environment_config_projection_sha256": "75652fa18a03ac918d74a66f3f5c0489125b45393f3dceff351ad7626dd5075c",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8329:left",
+      "relation": "left",
+      "sample_count": 451,
+      "seed": 8329,
+      "state_stream": {
+        "bytes": 99965,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8329/attempt01/simulator/state_capture/seed8329_left_states.partial.jsonl",
+        "sha256": "ad1d3f1ac7bd6c919d0546a72d7c7ea55fe0e239f85dd0753753582a19e16cf2"
+      },
+      "state_trace": {
+        "bytes": 137443,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8329/attempt01/simulator/state_capture/seed8329_left.json",
+        "sha256": "9e829c3e99dec740559acd09d5ff20021ef9086ba735eac9bfbf5926d492745a"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8329/attempt01/simulator/state_capture/seed8329_left_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    },
+    {
+      "actions_executed": 450,
+      "capture_contract": {
+        "contact": "instrumentation_unavailable; never substituted with grasp",
+        "coordinates": "robot-base frame from Isaac root pose wxyz inverse rotation",
+        "detached_release": "robolab.core.task.conditionals.object_dropped",
+        "failure_stage_pickup_proxy": "sustained 3 cm object lift from initial state",
+        "partial_state_stream": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8329/attempt01/simulator/state_capture/seed8329_right_states.partial.jsonl"
+      },
+      "environment_config": {
+        "bytes": 39630,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v3_groot_seed8329_attempt01/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "da343d357aff3dce84e8869c17dd52fb7dc0f90c6974f028d12dc9dcb79f656f"
+      },
+      "environment_config_projection_sha256": "36e44ecbe69461a08370df7c92f9927ba07014aae3a8069fe0903b8e0396d12e",
+      "episode_initial": {
+        "action_step": 0,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "registered_cell_id": "v3:droid:groot_n17_droid_vla:seed8329:right",
+      "relation": "right",
+      "sample_count": 451,
+      "seed": 8329,
+      "state_stream": {
+        "bytes": 99987,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8329/attempt01/simulator/state_capture/seed8329_right_states.partial.jsonl",
+        "sha256": "e876c357b90c5be1b37f4f99414e56e9e43f260ed107c45753f62dcbdadc9345"
+      },
+      "state_trace": {
+        "bytes": 137470,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8329/attempt01/simulator/state_capture/seed8329_right.json",
+        "sha256": "72a9734bae927e4a8b19bff8df8e994f144f2fdcd15a96e8c8570556786e9dce"
+      },
+      "warmup_reset": {
+        "action_step": 0,
+        "final_detached_release": true,
+        "grippers_open": true,
+        "object_xyz": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ],
+        "reference_xyz": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ]
+      },
+      "warmup_trace": {
+        "bytes": 220,
+        "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/phase_a/seed8329/attempt01/simulator/state_capture/seed8329_right_warmup_reset0.jsonl",
+        "sha256": "c2810da8eebbc99f8edac72d3f80805b1724619e240ea42df353b4039b977007"
+      }
+    }
+  ],
+  "release_permitted": false,
+  "retained_runtime_sources": [
+    {
+      "bytes": 1315,
+      "export_path": "runtime/manifest.json",
+      "historical_hash_anchor_in_final_manifest": false,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/runtime/instrumentation_attempt02/manifest.json",
+      "sha256": "aa64926f274f51b63f4ebe36051c8620d40d57ab4c8720ad1e770c4c76d76712"
+    },
+    {
+      "bytes": 15599,
+      "export_path": "runtime/robolab_bridge_runtime.py",
+      "historical_hash_anchor_in_final_manifest": false,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/runtime/instrumentation_attempt02/robolab_bridge_runtime.py",
+      "sha256": "0f25838de210797a7fe160f0e2d8124b276c46f8e7c4cdb7063c845baabd17db"
+    },
+    {
+      "bytes": 556,
+      "export_path": "runtime/launcher_manifest.json",
+      "historical_hash_anchor_in_final_manifest": false,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/runtime/instrumentation_attempt02/launcher_manifest.json",
+      "sha256": "165062a79eaffc0191857fb8e4c6495e2097ba669675666a3f73058071c80d88"
+    },
+    {
+      "bytes": 3315,
+      "export_path": "runtime/launch_groot_v3_pair.sh",
+      "historical_hash_anchor_in_final_manifest": false,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/runtime/instrumentation_attempt02/launch_groot_v3_pair.sh",
+      "sha256": "ea3f07024f2619e1a5f03375bfeee8a06276a97fc94d1cc462e2dbe671609b1d"
+    },
+    {
+      "bytes": 690,
+      "export_path": "runtime/validator_manifest.json",
+      "historical_hash_anchor_in_final_manifest": false,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/runtime/instrumentation_attempt02/validator_manifest.json",
+      "sha256": "890b6b467e159314e70534f2b8f39b0204680bdfeaf5c332e6ecdcec966776e8"
+    },
+    {
+      "bytes": 11270,
+      "export_path": "runtime/validate_compile_groot_v3_pair.py",
+      "historical_hash_anchor_in_final_manifest": false,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/runtime/instrumentation_attempt02/validate_compile_groot_v3_pair.py",
+      "sha256": "6d3a96ab21c2358687c01ee2c6a871602e8b527dda07229fcc9de998ef92c897"
+    },
+    {
+      "bytes": 590,
+      "export_path": "runtime/queue_manifest.json",
+      "historical_hash_anchor_in_final_manifest": false,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/runtime/instrumentation_attempt02/queue_manifest.json",
+      "sha256": "31dbd7300f40a9e25cc042d0b2b7424252a1d1bfc1e8bf7faa0642ccdde8ca77"
+    },
+    {
+      "bytes": 2407,
+      "export_path": "runtime/run_groot_v3_queue_8304_8329.sh",
+      "historical_hash_anchor_in_final_manifest": false,
+      "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/runtime/instrumentation_attempt02/run_groot_v3_queue_8304_8329.sh",
+      "sha256": "73cd841cdcd85d86ae167b83beaf445ebce7e32eb6116b94e469bbd91b1fdb76"
+    }
+  ],
+  "root_frame_cross_comparison_qualified": false,
+  "schema_version": "sgw-01-groot-phase-a-reset-recovery-v1"
+}

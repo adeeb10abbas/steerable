@@ -1,0 +1,29 @@
+{
+  "schema_version": "vla-wam-v3-runtime-instrumentation-patch-v1",
+  "created_at_utc": "2026-08-05T11:50:27Z",
+  "model_id": "groot_n17_droid_vla",
+  "purpose": "Preserve RoboLab's two frozen pre-inference resets while making the provisional v3 state-capture sidecar compatible with them.",
+  "frozen_source": {
+    "path": "/data/users/ali/vla_wam/src/steerable/experiments/v3/groot_droid/robolab_bridge.py",
+    "sha256": "b99dd19a20362abb13d992653c07f7464dbbb3ff92ecb9e050ac5cfa3cfd9b57"
+  },
+  "runtime_source": {
+    "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/runtime/instrumentation_attempt02/robolab_bridge_runtime.py",
+    "sha256": "0f25838de210797a7fe160f0e2d8124b276c46f8e7c4cdb7063c845baabd17db"
+  },
+  "change_scope": [
+    "Track the number of pre-inference resets in the evidence proxy.",
+    "Retain the first reset as a warm-up JSONL sidecar.",
+    "Start the behavioral state stream after RoboLab's second identical seeded reset.",
+    "Reject any reset after an action was observed."
+  ],
+  "behavioral_invariants": {
+    "environment_reset_calls_removed_or_added": 0,
+    "prompt_changes": 0,
+    "action_changes": 0,
+    "success_predicate_changes": 0,
+    "termination_changes": 0,
+    "seed_changes": 0
+  },
+  "triggering_invalid_attempt": "v3-groot-seed8303-pair-attempt01"
+}

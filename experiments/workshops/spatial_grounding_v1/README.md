@@ -322,8 +322,20 @@ The read-only server export proves the generic websocket boundary in
 conditional policy surface in `groot/vla/model/n1_5/sim_policy.py` (SHA
 `c7b692b84a03a70adc7e0d21fb7632a9866285645e8d43c916100e6f5fb7497a`), where
 `lazy_joint_forward_causal` returns unnormalized actions and `video_pred`.
-The export did not include the tracked `eval_utils/serve_dreamzero_wan22.py`
-launcher or the concrete policy-construction/reset class. Those exact files,
-plus their directly imported constructors, are the bounded remaining
-CPU-only export needed to replace `SGW01_D1_SERVER_FACTORY`; until then the
-entrypoint is intentionally fail-closed.
+The first server-surface export did not include the tracked
+`eval_utils/serve_dreamzero_wan22.py` launcher or the concrete
+policy-construction/reset class. The subsequent launcher export is described
+below; the 14B equivalents remain the bounded CPU-only export needed to
+replace `SGW01_D1_SERVER_FACTORY`.
+
+The later read-only export now proves `eval_utils/serve_dreamzero_wan22.py`
+(SHA `9d0a33047039fea3d2174c1ab46259c3c9b6e4fc1b3f67b9c7e53efcb93a7c5f`)
+for the official Wan2.2 5B route. `OfficialDreamZero5BBackend` mirrors its
+`GrootSimPolicy` construction, `DreamZeroWan225BPolicy.infer`, and explicit
+`reset` behavior, including the optional raw video-prediction latent. This is
+kept separate and is not accepted by the D1 producer because the target
+checkpoint may be 14B. The exact 14B launcher/policy class and its direct
+imports remain required; likely bounded paths to export are
+`socket_test_optimized_AR.py`, `test_client_AR.py`, and their imported
+DreamZero policy/config modules discovered from that launcher, not the 5B
+launcher by substitution.

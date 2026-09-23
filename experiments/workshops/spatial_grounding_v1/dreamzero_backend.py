@@ -26,6 +26,7 @@ D1_SERVER_SURFACE = {
     "eval_utils/policy_client.py": "4f9f062bdc5bec081a459b75a29825c0438f15d22da601e20305e843cd05b5f1",
     "groot/vla/model/n1_5/sim_policy.py": "c7b692b84a03a70adc7e0d21fb7632a9866285645e8d43c916100e6f5fb7497a",
 }
+D1_5B_ENTRYPOINT_SHA256 = "9d0a33047039fea3d2174c1ab46259c3c9b6e4fc1b3f67b9c7e53efcb93a7c5f"
 
 
 class DreamZeroBackend(Protocol):
@@ -118,6 +119,14 @@ def _verify_exported_server_surface(source_root: Path) -> None:
             raise AdapterError(f"pinned D1 server source file hash mismatch: {relative}")
 
 
+def _verify_5b_entrypoint(source_root: Path) -> None:
+    path = source_root / "eval_utils/serve_dreamzero_wan22.py"
+    if not path.is_file():
+        raise AdapterError("official DreamZero 5B entrypoint is missing")
+    if hashlib.sha256(path.read_bytes()).hexdigest() != D1_5B_ENTRYPOINT_SHA256:
+        raise AdapterError("official DreamZero 5B entrypoint hash mismatch")
+
+
 def build_pinned_dreamzero_backend() -> DreamZeroBackend:
     """Verify identity, then invoke only an explicitly reviewed native factory."""
     identity = _verify_dreamzero_identity()
@@ -143,6 +152,87 @@ def build_pinned_dreamzero_backend() -> DreamZeroBackend:
     if not callable(getattr(native, "predict", None)) or not callable(getattr(native, "reset", None)):
         raise AdapterError("reviewed D1 native binding must provide predict and reset")
     return _FactoryBackend(native, config)
+
+
+class OfficialDreamZero5BBackend:
+    """Exact exported Wan2.2-5B wrapper, kept separate from D1 qualification.
+
+    The target D1 checkpoint is not proven to use this route.  This binding is
+    useful only when a caller explicitly selects the exported 5B entrypoint.
+    """
+
+    def __init__(self, policy: Any, *, source_root: str, checkpoint_path: str) -> None:
+        self.policy = policy
+        self.source_root = source_root
+        self.checkpoint_path = checkpoint_path
+        self.resolved_config = {
+            "model": "D1",
+            "variant": "official_wan22_5b",
+            "source_commit": DREAMZERO_CONFIG["source_commit"],
+            "checkpoint_revision": DREAMZERO_CONFIG["revision"],
+            "action_path": "official_conditional_no_custom_s2",
+        }
+
+    def predict(self, observation: Mapping[str, Any], prompt: str, sampling_seed: int, **kwargs: Any) -> Mapping[str, Any]:
+        del sampling_seed, kwargs
+        native_observation = dict(observation)
+        native_observation["prompt"] = prompt
+        action = self.policy.infer(native_observation)
+        output: dict[str, Any] = {"actions": np.asarray(action, dtype=np.float32)}
+        latents = getattr(self.policy, "_video_pred_latents", [])
+        if latents:
+            output["future"] = latents[-1]
+        session_id = observation.get("session_id")
+        if isinstance(session_id, str):
+            output["session_id"] = session_id
+        return output
+
+    def reset(self, session_id: str | None) -> Mapping[str, Any]:
+        self.policy.reset({"session_id": session_id})
+        return {"evicted_session_id": session_id, "route": "DreamZeroWan225BPolicy.reset"}
+
+
+def build_official_5b_dreamzero_backend() -> OfficialDreamZero5BBackend:
+    """Construct the exported 5B route only; never use as the 14B D1 default."""
+    identity = _verify_dreamzero_identity()
+    source_root = Path(identity["source_root"])
+    _verify_exported_server_surface(source_root)
+    _verify_5b_entrypoint(source_root)
+    model_path = os.environ.get("SGW01_D1_MODEL_PATH", "").strip()
+    if not model_path:
+        raise AdapterError("SGW01_D1_MODEL_PATH is required for explicit 5B construction")
+    try:
+        module = importlib.import_module("eval_utils.serve_dreamzero_wan22")
+        policy_cls = getattr(module, "DreamZeroWan225BPolicy")
+        groot_cls = getattr(module, "GrootSimPolicy")
+        embodiment = getattr(module, "EmbodimentTag")
+        module._maybe_init_distributed()
+        device_mesh = module.init_device_mesh("cuda", mesh_shape=(1,), mesh_dim_names=("ip",))
+        groot_policy = groot_cls(
+            embodiment_tag=embodiment("oxe_droid"),
+            model_path=model_path,
+            tokenizer_path_override=os.environ.get("SGW01_D1_TOKENIZER_PATH") or None,
+            device="cuda",
+            device_mesh=device_mesh,
+        )
+        height, width = module._get_expected_video_resolution(groot_policy)
+        policy = policy_cls(
+            groot_policy=groot_policy,
+            image_height=height,
+            image_width=width,
+            embodiment_tag="oxe_droid",
+            save_video_pred=True,
+            video_output_dir=os.environ.get("SGW01_D1_VIDEO_OUTPUT_DIR", "./video_pred_output"),
+        )
+    except AdapterError:
+        raise
+    except Exception as exc:
+        raise AdapterError("official exported DreamZero 5B construction failed") from exc
+    return OfficialDreamZero5BBackend(
+        policy,
+        source_root=str(source_root),
+        checkpoint_path=identity["checkpoint_path"],
+    )
 
 
 def validate_dreamzero_result(result: Mapping[str, Any]) -> tuple[np.ndarray, Any | None]:

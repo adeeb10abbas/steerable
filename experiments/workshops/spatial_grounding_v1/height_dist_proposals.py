@@ -176,6 +176,7 @@ def materialize_campaign_candidate(
             counterbalance_key: baseline["counterbalance"][counterbalance_key],
             "goal_supports": goal_supports,
             "baseline_banana_pose": _captured_pose(objects.get("banana"), "banana"),
+            "geometry_guard_support_ids": manifest["native_import_contract"]["kinematic_or_static_bodies"],
             "geometric_screen_status": "passed",
             "historical_layout_fingerprint": None,
         },

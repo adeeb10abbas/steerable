@@ -286,12 +286,13 @@ def _verification(campaign_sha256, root):
     return value
 
 
-def test_complete_synthetic_height_campaign_chain_and_adversarial_bindings(tmp_path, monkeypatch):
+@pytest.mark.parametrize("family", ("HEIGHT", "DIST"))
+def test_complete_synthetic_family_campaign_chain_and_adversarial_bindings(tmp_path, monkeypatch, family):
     """Exercise materialization -> real recorder -> canonical family verification."""
 
-    captures, manifests = _baseline_files(tmp_path, "HEIGHT")
+    captures, manifests = _baseline_files(tmp_path, family)
     plan = build_design_plan(
-        family="HEIGHT", seed=91, count=4, baseline_capture_paths=captures, baseline_manifest_paths=manifests,
+        family=family, seed=91, count=4, baseline_capture_paths=captures, baseline_manifest_paths=manifests,
     )
     plan_path = tmp_path / "plan.json"
     plan_path.write_text(json.dumps(plan))
@@ -319,7 +320,7 @@ def test_complete_synthetic_height_campaign_chain_and_adversarial_bindings(tmp_p
         family_campaign, "verify_capture_artifacts",
         lambda path: {"receipt": {"path": str(path), "sha256": family_campaign._sha256(path)}},
     )
-    review = _native_review(tmp_path, {"left": captures["left"], "right": captures["right"]})
+    review = _native_review(tmp_path, family, {"left": captures["left"], "right": captures["right"]})
     campaign_path = tmp_path / "campaign.json"
     compile_campaign(
         plan_path=plan_path, baseline_captures=captures, baseline_reviews={"left": review, "right": review},
@@ -366,6 +367,15 @@ def test_complete_synthetic_height_campaign_chain_and_adversarial_bindings(tmp_p
 
     # Restore passing output, then exercise capture/raw-media/plan/calibration failures.
     _produce_family_qualification(root, candidate, calibration, reject_reset=False)
+    geometry_rejection, controller_calls = _produce_family_qualification(
+        root, candidate, calibration, reject_reset=False, reject_geometry=True,
+    )
+    assert geometry_rejection["physical_geometry_rejection_before_actions"]["rejection_scope"] == "reset"
+    assert controller_calls == []
+    guard = json.loads((root / "trials/goal-+1/reset-0/preaction-geometry-guard.json").read_text())
+    assert guard["status"] == "physical_geometry_rejection_before_actions"
+    assert guard["controller_actions_executed"] == 0
+    _produce_family_qualification(root, candidate, calibration, reject_reset=False)
     raw = root / "trials/goal-+1/reset-0/frame-0001.npy"
     saved_raw = raw.read_bytes()
     raw.write_bytes(b"corrupt")
@@ -377,10 +387,10 @@ def test_complete_synthetic_height_campaign_chain_and_adversarial_bindings(tmp_p
         verify_design(campaign_path=campaign_path, design_id=design["design_id"], root=root, output=root / "corrupt-capture.json")
 
 
-def _native_review(tmp_path, captures):
+def _native_review(tmp_path, family, captures):
     path = tmp_path / "review.json"
     path.write_text(json.dumps({"scenes": [
-        {"scene": f"synthetic-height-{side}", "capture": {"sha256": family_campaign._sha256(capture)},
+        {"scene": f"synthetic-{family.lower()}-{side}", "capture": {"sha256": family_campaign._sha256(capture)},
          "disposition": "ACCEPT_NATIVE_VISUAL_SETUP_ONLY"}
         for side, capture in captures.items()
     ]}))
@@ -396,6 +406,8 @@ def _candidate_capture(baseline_path, manifest, design, output):
     for name, pose in design["authored_scored_object_roots"].items():
         objects[name]["root_position_env_local_xyz_m"] = pose["position_m"]
         objects[name]["root_quaternion_world_wxyz"] = pose["quaternion_wxyz"]
+        if objects[name].get("geometric_center_offset_root_local_xyz_m") == [0, 0, 0]:
+            objects[name]["geometric_center_env_local_xyz_m"] = list(pose["position_m"])
     for name, spec in specs.items():
         if name in objects:
             continue
@@ -407,12 +419,33 @@ def _candidate_capture(baseline_path, manifest, design, output):
             "bbox_env_local_min_xyz_m": [center[i] - size[i] / 2 for i in range(3)],
             "bbox_env_local_max_xyz_m": [center[i] + size[i] / 2 for i in range(3)],
         }
-    # Synthetic *measured* capture rows retain valid released HEIGHT centers.
+    if "plate" in objects and "bbox_env_local_min_xyz_m" not in objects["plate"]:
+        center = objects["plate"]["geometric_center_env_local_xyz_m"] = objects["plate"]["root_position_env_local_xyz_m"]
+        objects["plate"]["bbox_env_local_min_xyz_m"] = [center[0] - .06, center[1] - .06, center[2] - .006]
+        objects["plate"]["bbox_env_local_max_xyz_m"] = [center[0] + .06, center[1] + .06, center[2] + .006]
+    if manifest["family"] == "DIST":
+        bowl = objects["bowl"]["geometric_center_env_local_xyz_m"]
+        plate = objects["plate"]["geometric_center_env_local_xyz_m"]
+        cube = objects["rubiks_cube"]
+        offset = cube["geometric_center_offset_root_local_xyz_m"]
+        from experiments.workshops.spatial_grounding_v1.fixtures import _rotate
+        rotated_offset = _rotate(tuple(cube["root_quaternion_world_wxyz"]), tuple(offset))
+        midpoint = [(bowl[i] + plate[i]) / 2 for i in range(3)]
+        cube["geometric_center_env_local_xyz_m"] = midpoint
+        cube["root_position_env_local_xyz_m"] = [midpoint[i] - rotated_offset[i] for i in range(3)]
+    # Synthetic measured capture rows retain valid released goal centers.
     cube_center = objects["rubiks_cube"]["geometric_center_env_local_xyz_m"]
     cube_bottom = objects["rubiks_cube"]["bbox_env_local_min_xyz_m"][2]
     center_above_bottom = cube_center[2] - cube_bottom
-    bowl_z = objects["bowl"]["geometric_center_env_local_xyz_m"][2]
-    for name, target_z in (("height_upper_support", bowl_z + .04), ("height_lower_support", bowl_z - .04)):
+    if manifest["family"] == "HEIGHT":
+        bowl_z = objects["bowl"]["geometric_center_env_local_xyz_m"][2]
+        targets = (("height_upper_support", None, None, bowl_z + .04), ("height_lower_support", None, None, bowl_z - .04))
+    else:
+        targets = (
+            ("dist_bowl_landing_support", *objects["bowl"]["geometric_center_env_local_xyz_m"][:2], cube_center[2]),
+            ("dist_plate_landing_support", *objects["plate"]["geometric_center_env_local_xyz_m"][:2], cube_center[2]),
+        )
+    for name, target_x, target_y, target_z in targets:
         row = objects[name]
         height = row["bbox_env_local_max_xyz_m"][2] - row["bbox_env_local_min_xyz_m"][2]
         top = target_z - center_above_bottom
@@ -420,6 +453,13 @@ def _candidate_capture(baseline_path, manifest, design, output):
         row["bbox_env_local_min_xyz_m"][2] = top - height
         row["geometric_center_env_local_xyz_m"][2] = top - height / 2
         row["root_position_env_local_xyz_m"][2] = row["geometric_center_env_local_xyz_m"][2]
+        if target_x is not None:
+            for key in ("root_position_env_local_xyz_m", "geometric_center_env_local_xyz_m"):
+                row[key][0], row[key][1] = target_x, target_y
+            width = row["bbox_env_local_max_xyz_m"][0] - row["bbox_env_local_min_xyz_m"][0]
+            depth = row["bbox_env_local_max_xyz_m"][1] - row["bbox_env_local_min_xyz_m"][1]
+            row["bbox_env_local_min_xyz_m"][0:2] = [target_x - width / 2, target_y - depth / 2]
+            row["bbox_env_local_max_xyz_m"][0:2] = [target_x + width / 2, target_y + depth / 2]
     value["objects"] = objects
     value["overlay_manifest_sha256"] = manifest["manifest_sha256"]
     value["usd_dependency_inventory"].append({"real_path": manifest["overlay_usda"]["path"], "sha256": manifest["overlay_usda"]["sha256"]})
@@ -432,19 +472,28 @@ def _candidate_capture(baseline_path, manifest, design, output):
     return output
 
 
-def _produce_family_qualification(root, candidate_value, calibration_path, *, reject_reset):
+def _produce_family_qualification(root, candidate_value, calibration_path, *, reject_reset, reject_geometry=False):
     from experiments.workshops.spatial_grounding_v1.fixtures import FixtureCandidate
 
     candidate = FixtureCandidate.from_json(candidate_value)
     class Environment(NativeReceiptEnvironment):
+        def objects(self, *args, **kwargs):
+            rows = super().objects(*args, **kwargs)
+            if self.candidate.family == "DIST":
+                from experiments.workshops.spatial_grounding_v1.simulator_bridge import ObjectState
+                rows["plate"] = ObjectState(self.candidate.scoring_poses()["plate"], 0.0, 0.0, True, False)
+            return rows
         def _context(self):
             objects = json.loads((root / "candidate_capture.json").read_text())["objects"]
-            return {name: {
+            rows = {name: {
                 key: row[key] for key in ("root_position_env_local_xyz_m", "root_quaternion_world_wxyz",
                                            "geometric_center_env_local_xyz_m", "bbox_env_local_min_xyz_m", "bbox_env_local_max_xyz_m")
             } for name, row in objects.items()
               if all(key in row for key in ("root_position_env_local_xyz_m", "root_quaternion_world_wxyz",
                                              "geometric_center_env_local_xyz_m", "bbox_env_local_min_xyz_m", "bbox_env_local_max_xyz_m"))}
+            if reject_geometry:
+                rows["banana"]["root_position_env_local_xyz_m"][0] += .01
+            return rows
         def reset(self):
             result = super().reset()
             snapshot = replace(result.snapshot, context_measurements=self._context())
@@ -458,17 +507,29 @@ def _produce_family_qualification(root, candidate_value, calibration_path, *, re
             self.steps += 1
             cube = self.candidate.scoring_poses()["rubiks_cube"].position_m
             bowl = self.candidate.scoring_poses()["bowl"].position_m
-            z = cube[2] + (.04 * self.goal if self.steps > 3 else .04)
-            state = self.objects(lift=z - cube[2], supported=self.steps > 3, attached=self.steps <= 3)
+            if self.candidate.family == "DIST" and self.steps > 3:
+                support = self.candidate.metadata["goal_supports"][
+                    "near_bowl" if self.goal == 1 else "near_plate"
+                ]["cube_center_env_local_xyz_m"]
+                state = self.objects()
+                from experiments.workshops.spatial_grounding_v1.simulator_bridge import ObjectState
+                state["rubiks_cube"] = ObjectState(
+                    type(state["rubiks_cube"].pose)(tuple(support), (1, 0, 0, 0)), 0.0, 0.0, True, False,
+                )
+            else:
+                z = cube[2] + (.04 * self.goal if self.steps > 3 else .04)
+                state = self.objects(lift=z - cube[2], supported=self.steps > 3, attached=self.steps <= 3)
             return SimulatorSnapshot(state, self.steps / 15, context_measurements=self._context())
     class Bridge:
         def create_environment(self, task, seed):
             return Environment(candidate, root / "reset-warmup")
     calibration = json.loads(calibration_path.read_text())
     identity = {"recipe": calibration["schema_version"], "calibration_sha256": hashlib.sha256(calibration_path.read_bytes()).hexdigest(), "calibration": calibration}
+    controller_calls = []
     class Controller:
         def __init__(self): self.identity = identity
         def actions_for_goal(self, environment, _candidate, sign):
+            controller_calls.append((sign, environment.steps))
             environment.goal = sign
             return [np.asarray([[0, 0, 0, 1, 0, 0, 0, 0]], dtype=np.float32) for _ in range(450)]
     shutil.rmtree(root / "trials", ignore_errors=True)
@@ -476,3 +537,4 @@ def _produce_family_qualification(root, candidate_value, calibration_path, *, re
     atomic_json(root / "controller.json", identity)
     result = qualify_candidate(candidate, Bridge(), Controller(), seed=candidate.seed, evidence_root=root / "trials")
     atomic_json(root / "qualification.json", result)
+    return result, controller_calls

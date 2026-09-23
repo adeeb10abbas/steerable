@@ -15,10 +15,12 @@ from typing import Any, Mapping
 
 import numpy as np
 
-from .fixtures import ACTION_CAP, FixtureCandidate, FixtureError, validate_reset
+from .fixtures import ACTION_CAP, FixtureCandidate, FixtureError, Pose, pose_error, validate_reset
 from .recorder import atomic_json, encode_viewport_video
 from .scoring import GoalSpec, OutcomeStatus, score_episode
-from .simulator_bridge import SimulatorBridge, ScriptedController, SimulatorSnapshot, load_candidate_file, load_factory
+from .simulator_bridge import (
+    PhysicalGeometryRejection, SimulatorBridge, ScriptedController, SimulatorSnapshot, load_candidate_file, load_factory,
+)
 from .task_definitions import build_task_definition
 
 
@@ -28,6 +30,60 @@ class QualificationError(RuntimeError):
 
 def _state(snapshot: SimulatorSnapshot, index: int) -> dict[str, Any]:
     return snapshot.scoring_state(index)
+
+
+def validate_preaction_reset_geometry(snapshot: SimulatorSnapshot, candidate: FixtureCandidate) -> PhysicalGeometryRejection | None:
+    """Screen measured reset geometry before requesting a controller plan."""
+
+    if candidate.family not in {"HEIGHT", "DIST"}:
+        return None
+    context = snapshot.context_measurements
+    expected = candidate.metadata.get("baseline_banana_pose")
+    supports = candidate.metadata.get("geometry_guard_support_ids")
+    if not isinstance(context, Mapping) or not isinstance(expected, Mapping) or not isinstance(supports, list):
+        raise QualificationError("family reset lacks measured banana geometry guard inputs")
+    required = {"banana", "table", *supports}
+    if not required.issubset(context):
+        raise QualificationError("family reset lacks measured banana/table/support context")
+    try:
+        observed = Pose.from_json({
+            "position_m": context["banana"]["root_position_env_local_xyz_m"],
+            "quaternion_wxyz": context["banana"]["root_quaternion_world_wxyz"],
+        })
+        reference = Pose.from_json(expected)
+    except (KeyError, TypeError, ValueError) as error:
+        raise QualificationError("family reset banana pose is malformed") from error
+    position_error, angle_error = pose_error(observed, reference)
+    if position_error > .003 or angle_error > 2.0:
+        return PhysicalGeometryRejection(scope="reset", reason="banana_pose_differs_from_fixed_baseline")
+    table_minimum, table_maximum = _context_bounds(context["table"], "table")
+    banana_minimum, banana_maximum = _context_bounds(context["banana"], "banana")
+    if (
+        banana_minimum[0] < table_minimum[0] or banana_maximum[0] > table_maximum[0]
+        or banana_minimum[1] < table_minimum[1] or banana_maximum[1] > table_maximum[1]
+    ):
+        return PhysicalGeometryRejection(scope="reset", reason="banana_leaves_measured_table_bounds")
+    for name in supports:
+        minimum, maximum = _context_bounds(context[name], name)
+        dx = max(minimum[0] - banana_maximum[0], banana_minimum[0] - maximum[0], 0.0)
+        dy = max(minimum[1] - banana_maximum[1], banana_minimum[1] - maximum[1], 0.0)
+        if math.hypot(dx, dy) < .02:
+            return PhysicalGeometryRejection(scope="reset", reason=f"banana_clearance_below_20mm:{name}")
+    return None
+
+
+def _context_bounds(row: Any, name: str) -> tuple[list[float], list[float]]:
+    if not isinstance(row, Mapping):
+        raise QualificationError(f"family reset lacks {name} geometry")
+    minimum, maximum = row.get("bbox_env_local_min_xyz_m"), row.get("bbox_env_local_max_xyz_m")
+    if (
+        not isinstance(minimum, (list, tuple)) or not isinstance(maximum, (list, tuple))
+        or len(minimum) != 3 or len(maximum) != 3
+        or any(not isinstance(value, (int, float)) or not math.isfinite(value) for value in (*minimum, *maximum))
+        or any(low > high for low, high in zip(minimum, maximum, strict=True))
+    ):
+        raise QualificationError(f"family reset has malformed {name} bounds")
+    return list(minimum), list(maximum)
 
 
 def _write_preaction_geometry_guard(
@@ -152,13 +208,16 @@ def qualify_candidate(
                 atomic_json(evidence.path / "reset.json", dict(reset.receipt))
                 try:
                     evidence.observe(reset.snapshot, environment.render_viewport())
+                    rejection = validate_preaction_reset_geometry(reset.snapshot, candidate)
+                    if rejection is not None:
+                        raise rejection
+                    actions = list(controller.actions_for_goal(environment, candidate, goal_sign))
+                    if len(actions) != ACTION_CAP:
+                        raise QualificationError("scripted plan must cover exactly 450 controller actions")
                     _write_preaction_geometry_guard(
                         evidence.path, candidate, goal_sign, reset_index,
                         physical_geometry_rejection=None,
                     )
-                    actions = list(controller.actions_for_goal(environment, candidate, goal_sign))
-                    if len(actions) != ACTION_CAP:
-                        raise QualificationError("scripted plan must cover exactly 450 controller actions")
                     for index, action in enumerate(actions, 1):
                         evidence.command(index, action)
                         snapshot = environment.step(action)
@@ -171,6 +230,33 @@ def qualify_candidate(
                     )
                     if score.status is not OutcomeStatus.VALID_MODEL:
                         raise QualificationError(f"incomplete physical trace: {score.infrastructure_reason}")
+                except PhysicalGeometryRejection as rejection:
+                    _write_preaction_geometry_guard(
+                        evidence.path, candidate, goal_sign, reset_index,
+                        physical_geometry_rejection={"scope": rejection.scope, "reason": rejection.reason},
+                    )
+                    result = evidence.finish({
+                        "status": "physical_geometry_rejection_before_actions", "passed": False,
+                        "goal_sign": goal_sign, "reset_index": reset_index, "reset_receipt": dict(reset.receipt),
+                        "actions_executed": 0, "requested_margin_m": None,
+                        "physical_geometry_rejection": {"rejection_scope": rejection.scope, "reason": rejection.reason},
+                    })
+                    sign_checks.append(result)
+                    checks.extend(sign_checks)
+                    return {
+                        "schema_version": "sgw-01-model-blind-fixture-qualification-v1",
+                        "status": "rejected_model_blind_fixture_candidate",
+                        "model_request_count": 0, "behavioral_episode_count": 0,
+                        "candidate_id": candidate.candidate_id, "family": candidate.family, "seed": seed,
+                        "candidate_sha256": hashlib.sha256(json.dumps(asdict(candidate), sort_keys=True).encode()).hexdigest(),
+                        "controller_identity": getattr(controller, "identity", {"recipe": "unattested_controller"}),
+                        "action_cap": ACTION_CAP, "checks": checks,
+                        "physical_geometry_rejection_before_actions": {
+                            "goal_sign": goal_sign, "reset_index": reset_index,
+                            "rejection_scope": rejection.scope, "reason": rejection.reason,
+                            "controller_actions_executed": 0,
+                        },
+                    }
                 except Exception:
                     evidence.finish({
                         "status": "infrastructure_invalid_qualification",

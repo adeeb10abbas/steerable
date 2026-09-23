@@ -17,6 +17,8 @@ from .prospective_family_designs import (
 from .qualification_batch_verifier import VerificationError, verify_trial_evidence
 from .robolab_height_dist_qualification import CALIBRATION_SCHEMA, validate_candidate_inputs
 from .lat_candidate_generator import workspace_digest
+from .model_blind_qualification import QualificationError, validate_preaction_reset_geometry
+from .simulator_bridge import SimulatorSnapshot
 
 
 def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Path) -> dict[str, Any]:
@@ -68,7 +70,7 @@ def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Pa
             )
         except VerificationError as error:
             raise ValueError(f"raw trial integrity or physical scoring differs: {error}") from error
-        _verify_reset_banana_geometry(trial.parent, manifest)
+        _verify_reset_banana_geometry(trial.parent, candidate)
         reset_groups[check["goal_sign"]].append(reset)
         _verify_aggregate_trial(check, report)
         trial_sha256 = _sha256(trial)
@@ -237,15 +239,19 @@ def _verify_banana_clearance(objects: Mapping[str, Any], support_names: list[str
             raise ValueError(f"measured candidate banana clearance is below 20 mm for {name}")
 
 
-def _verify_reset_banana_geometry(trial: Path, manifest: Mapping[str, Any]) -> None:
+def _verify_reset_banana_geometry(trial: Path, candidate: FixtureCandidate) -> None:
     """Require each physical reset to retain its own banana/table/support geometry."""
 
     raw = json.loads((trial / "state-0000.json").read_text(encoding="utf-8")).get("raw_snapshot")
     context = raw.get("context_measurements") if isinstance(raw, Mapping) else None
-    required = {"banana", "table"} | set(manifest["native_import_contract"]["kinematic_or_static_bodies"])
-    if not isinstance(context, Mapping) or not required.issubset(context):
+    if not isinstance(context, Mapping):
         raise ValueError("raw reset snapshot lacks measured banana/table/support geometry")
-    _verify_banana_clearance(context, manifest["native_import_contract"]["kinematic_or_static_bodies"])
+    try:
+        rejection = validate_preaction_reset_geometry(SimulatorSnapshot(objects={}, context_measurements=context), candidate)
+    except QualificationError as error:
+        raise ValueError(f"raw reset geometry evidence is malformed: {error}") from error
+    if rejection is not None:
+        raise ValueError(f"raw reset is a physical geometry rejection: {rejection.reason}")
 
 
 def _verify_preaction_guard(trial: Path, candidate: FixtureCandidate, check: Mapping[str, Any]) -> None:

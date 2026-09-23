@@ -185,6 +185,13 @@ def test_exported_official_client_runs_owned_http_cache_postprocess_and_reset(tm
         "logging": __import__("logging"),
         "time": __import__("time"),
         "dataclasses": __import__("dataclasses"),
+        "PING_INTERVAL_SECS": 60,
+        "PING_TIMEOUT_SECS": 600,
+        "CONNECT_TIMEOUT_SECS": 300,
+        "RECV_TIMEOUT_SECS": 300,
+        "MAX_CONNECT_RETRIES": 5,
+        "MAX_INFER_RETRIES": 3,
+        "RETRY_BACKOFF_BASE_SECS": 2,
     }
     base_class = next(
         node for node in ast.parse(base_text).body

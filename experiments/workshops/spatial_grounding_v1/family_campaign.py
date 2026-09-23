@@ -21,17 +21,21 @@ def compile_campaign(
     if output.exists():
         raise FileExistsError("refusing to overwrite a finite family campaign")
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
-    if plan.get("schema_version") != PLAN_SCHEMA or plan.get("plan_sha256") != _digest(plan, "plan_sha256"):
-        raise ValueError("prospective design plan is malformed")
-    if not 1 <= plan.get("design_slot_count", 0) <= 100:
-        raise ValueError("campaign requires a fixed 1..100-slot plan")
+    _validate_finite_plan(plan)
     if set(baseline_captures) != {"left", "right"}:
         raise ValueError("both independently verified baseline captures are required")
     if set(baseline_reviews) != {"left", "right"}:
         raise ValueError("both independent reviewed baseline decisions are required")
-    verified = {side: verify_capture_artifacts(Path(path)) for side, path in baseline_captures.items()}
+    verified = {
+        side: _bound_baseline_capture(
+            plan, side, Path(baseline_captures[side]), verify_capture_artifacts(Path(baseline_captures[side])),
+        )
+        for side in ("left", "right")
+    }
     reviewed = {
-        side: _reviewed_baseline(Path(baseline_reviews[side]), Path(baseline_captures[side]))
+        side: _reviewed_baseline(
+            Path(baseline_reviews[side]), Path(baseline_captures[side]), plan["baselines"][side]["capture"],
+        )
         for side in ("left", "right")
     }
     jobs = []
@@ -81,7 +85,7 @@ def compile_campaign(
     return value
 
 
-def _reviewed_baseline(path: Path, capture_path: Path) -> dict[str, Any]:
+def _reviewed_baseline(path: Path, capture_path: Path, plan_capture: Mapping[str, Any]) -> dict[str, Any]:
     """Require an independent scene-review decision beyond hash-valid media."""
 
     if not path.is_file():
@@ -90,11 +94,58 @@ def _reviewed_baseline(path: Path, capture_path: Path) -> dict[str, Any]:
     if value.get("status") != "accepted_model_blind_scene_baseline_for_prospective_design":
         raise ValueError("artifact-valid baseline is not an independently accepted scene baseline")
     capture = value.get("baseline_capture")
-    if not isinstance(capture, Mapping) or capture.get("sha256") != _sha256(capture_path):
+    if (
+        not isinstance(capture, Mapping)
+        or capture.get("sha256") != _sha256(capture_path)
+        or capture.get("sha256") != plan_capture.get("sha256")
+        or str(capture_path.resolve()) != plan_capture.get("path")
+    ):
         raise ValueError("baseline scene review is not bound to its capture receipt")
     if value.get("model_request_count") != 0 or value.get("behavioral_episode_count") != 0:
         raise ValueError("baseline scene review must remain model blind")
     return {"path": str(path.resolve()), "sha256": _sha256(path), "status": value["status"]}
+
+
+def _validate_finite_plan(plan: Mapping[str, Any]) -> None:
+    """Require every registered fixed slot exactly once before campaign compilation."""
+
+    if plan.get("schema_version") != PLAN_SCHEMA or plan.get("plan_sha256") != _digest(plan, "plan_sha256"):
+        raise ValueError("prospective design plan is malformed")
+    count = plan.get("design_slot_count")
+    designs = plan.get("designs")
+    if not isinstance(count, int) or not 1 <= count <= 100 or not isinstance(designs, list) or len(designs) != count:
+        raise ValueError("campaign requires a complete fixed 1..100-slot design list")
+    identifiers = [row.get("design_id") for row in designs if isinstance(row, Mapping)]
+    if len(identifiers) != count or any(not isinstance(item, str) or not item for item in identifiers) or len(set(identifiers)) != count:
+        raise ValueError("campaign design list has duplicate or missing design IDs")
+    accepted = [
+        row["design_id"] for row in designs
+        if row.get("status") == "prospective_design_requires_zero_model_capture"
+    ]
+    if plan.get("accepted_design_ids") != accepted or plan.get("accepted_design_count") != len(accepted):
+        raise ValueError("campaign accepted design registry differs from fixed design list")
+    if plan.get("geometric_rejection_count") != count - len(accepted):
+        raise ValueError("campaign geometric rejection count differs from fixed design list")
+    baselines = plan.get("baselines")
+    if not isinstance(baselines, Mapping) or set(baselines) != {"left", "right"}:
+        raise ValueError("campaign plan lacks both registered baseline bindings")
+
+
+def _bound_baseline_capture(
+    plan: Mapping[str, Any], side: str, path: Path, verified: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Bind supplied capture bytes to the plan's exact side-specific reference."""
+
+    binding = plan["baselines"][side]
+    capture = binding.get("capture") if isinstance(binding, Mapping) else None
+    if not isinstance(capture, Mapping):
+        raise ValueError(f"campaign plan {side} baseline lacks capture binding")
+    if str(path.resolve()) != capture.get("path") or _sha256(path) != capture.get("sha256"):
+        raise ValueError(f"supplied {side} baseline capture differs from the plan binding")
+    receipt = verified.get("receipt") if isinstance(verified, Mapping) else None
+    if not isinstance(receipt, Mapping) or receipt.get("sha256") != capture["sha256"]:
+        raise ValueError(f"verified {side} baseline receipt differs from the plan binding")
+    return dict(verified)
 
 
 def verify_external_postprocess(*, campaign_path: Path, output: Path, returncode: int, verification_path: Path) -> dict[str, Any]:
@@ -110,8 +161,7 @@ def verify_external_postprocess(*, campaign_path: Path, output: Path, returncode
     if not verification_path.is_file():
         raise RuntimeError("external postprocess exited zero without its verification artifact")
     verification = json.loads(verification_path.read_text(encoding="utf-8"))
-    if verification.get("campaign_sha256") != campaign["campaign_sha256"]:
-        raise RuntimeError("external verification is not bound to this campaign")
+    _validate_external_verification(verification, campaign["campaign_sha256"])
     value = {
         "schema_version": "sgw-01-family-external-postprocess-v1",
         "campaign_sha256": campaign["campaign_sha256"],
@@ -123,6 +173,52 @@ def verify_external_postprocess(*, campaign_path: Path, output: Path, returncode
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return value
+
+
+def _validate_external_verification(verification: Mapping[str, Any], campaign_sha256: str) -> None:
+    """Reject success-shaped output unless the external verifier retained evidence."""
+
+    if (
+        verification.get("schema_version") != "sgw-01-family-campaign-verification-v1"
+        or verification.get("campaign_sha256") != campaign_sha256
+        or verification.get("status") != "verified_evidence_not_fixture_release"
+        or verification.get("release_permitted") is not False
+        or verification.get("model_request_count") != 0
+        or verification.get("behavioral_episode_count") != 0
+        or verification.get("verification_sha256") != _digest(verification, "verification_sha256")
+    ):
+        raise RuntimeError("external verification is not a bound campaign evidence result")
+    required_hashes = ("candidate_capture_sha256", "qualification_sha256")
+    if any(not isinstance(verification.get(key), str) or len(verification[key]) != 64 for key in required_hashes):
+        raise RuntimeError("external verification lacks bound capture and qualification evidence")
+    trials = verification.get("trials")
+    if not isinstance(trials, list) or len(trials) != 6:
+        raise RuntimeError("external verification lacks six retained trial evidence records")
+    identities = {(row.get("goal_sign"), row.get("reset_index")) for row in trials if isinstance(row, Mapping)}
+    if identities != {(sign, reset) for sign in (1, -1) for reset in range(3)}:
+        raise RuntimeError("external verification trial identities differ from the fixed contract")
+    if any(not isinstance(row.get("trial_sha256"), str) or len(row["trial_sha256"]) != 64 for row in trials):
+        raise RuntimeError("external verification has malformed trial evidence hashes")
+    for key, expected_hash in (
+        ("candidate_capture", verification["candidate_capture_sha256"]),
+        ("qualification", verification["qualification_sha256"]),
+    ):
+        _verify_evidence_file(verification.get(key), expected_hash)
+    for row in trials:
+        _verify_evidence_file(row, row["trial_sha256"])
+
+
+def _verify_evidence_file(record: Any, expected_sha256: str) -> None:
+    if not isinstance(record, Mapping):
+        raise RuntimeError("external verification lacks retained evidence file record")
+    path = Path(str(record.get("path", "")))
+    if (
+        not path.is_file()
+        or record.get("sha256") != expected_sha256
+        or record.get("bytes") != path.stat().st_size
+        or _sha256(path) != expected_sha256
+    ):
+        raise RuntimeError("external verification evidence file differs from its retained record")
 
 
 def _sha256(path: Path) -> str:

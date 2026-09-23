@@ -56,20 +56,31 @@ def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Pa
         warmup = receipt.get("reset_receipt", {}).get("render_only_warmup")
         warmup_video = _bound_file(root, warmup.get("viewport_video") if isinstance(warmup, Mapping) else None)
         _decode_video(warmup_video, 121)
-        trial_reports.append({"goal_sign": check["goal_sign"], "reset_index": check["reset_index"], "trial_sha256": _sha256(trial)})
+        trial_sha256 = _sha256(trial)
+        trial_reports.append({
+            "goal_sign": check["goal_sign"], "reset_index": check["reset_index"],
+            "trial_sha256": trial_sha256, "sha256": trial_sha256, "bytes": trial.stat().st_size,
+        })
     value = {
         "schema_version": "sgw-01-family-campaign-verification-v1",
         "campaign_sha256": campaign["campaign_sha256"],
         "design_id": design_id,
         "family": campaign["family"],
+        "evidence_root": str(root.resolve()),
         "candidate_capture_sha256": _sha256(candidate_capture),
         "qualification_sha256": _sha256(qualification),
-        "trials": trial_reports,
+        "candidate_capture": _record(candidate_capture),
+        "qualification": _record(qualification),
+        "trials": [
+            {**row, "path": str((root / "trials" / f"goal-{row['goal_sign']:+d}" / f"reset-{row['reset_index']}" / "trial.json").resolve())}
+            for row in trial_reports
+        ],
         "status": "verified_evidence_not_fixture_release",
         "model_request_count": 0,
         "behavioral_episode_count": 0,
         "release_permitted": False,
     }
+    value["verification_sha256"] = _digest(value, "verification_sha256")
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return value
@@ -94,3 +105,7 @@ def _decode_video(path: Path, frames: int) -> None:
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _record(path: Path) -> dict[str, Any]:
+    return {"path": str(path.resolve()), "sha256": _sha256(path), "bytes": path.stat().st_size}

@@ -1,0 +1,3754 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-00",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "0"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc169.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-00",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-01",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc170.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-01",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-02",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "2"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc171.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-02",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-03",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "3"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc184.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-03",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-04",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "4"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc185.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-04",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-05",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "5"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc186.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-05",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-06",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "6"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc187.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-06",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-07",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "7"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc188.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-07",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-08",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "8"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc189.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-08",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-09",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "9"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc190.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-09",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-10",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "10"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc191.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-10",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-simulator-11",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "owner": "ali",
+              "app.kubernetes.io/name": "sgw-01",
+              "purpose": "finite-native-family-smoke",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "restartPolicy": "Never",
+            "terminationGracePeriodSeconds": 180,
+            "automountServiceAccountToken": false,
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "securityContext": {
+              "fsGroup": 2518800,
+              "supplementalGroups": [
+                2518800
+              ],
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              }
+            },
+            "containers": [
+              {
+                "name": "qualify",
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "env": [
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "TMPDIR",
+                    "value": "/tmp"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility,graphics,display"
+                  },
+                  {
+                    "name": "OMNI_KIT_ACCEPT_EULA",
+                    "value": "YES"
+                  },
+                  {
+                    "name": "ACCEPT_EULA",
+                    "value": "Y"
+                  },
+                  {
+                    "name": "VK_ICD_FILENAMES",
+                    "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "simulator"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "11"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  }
+                ],
+                "resources": {
+                  "requests": {
+                    "cpu": "16",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "limits": {
+                    "cpu": "32",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "name": "workspace",
+                    "mountPath": "/data"
+                  },
+                  {
+                    "name": "dshm",
+                    "mountPath": "/dev/shm"
+                  },
+                  {
+                    "name": "tmp",
+                    "mountPath": "/tmp"
+                  },
+                  {
+                    "name": "vartmp",
+                    "mountPath": "/var/tmp"
+                  },
+                  {
+                    "name": "home",
+                    "mountPath": "/home/ali"
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/passwd",
+                    "subPath": "passwd",
+                    "readOnly": true
+                  },
+                  {
+                    "name": "userdb",
+                    "mountPath": "/etc/group",
+                    "subPath": "group",
+                    "readOnly": true
+                  }
+                ]
+              }
+            ],
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "name": "dshm",
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "32Gi"
+                }
+              },
+              {
+                "name": "tmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "vartmp",
+                "emptyDir": {}
+              },
+              {
+                "name": "home",
+                "emptyDir": {}
+              },
+              {
+                "name": "userdb",
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                }
+              }
+            ],
+            "nodeName": "dcwipphhgc192.edc.nam.gm.com",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-simulator-11",
+            "priority": 0
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-policy-00",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/name": "sgw-01",
+              "owner": "ali",
+              "purpose": "nonbehavioral-fixed-input",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "automountServiceAccountToken": false,
+            "containers": [
+              {
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "env": [
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  },
+                  {
+                    "name": "PATH",
+                    "value": "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "PYTHONUNBUFFERED",
+                    "value": "1"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility"
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "policy"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "0"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  }
+                ],
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "name": "fixed-input",
+                "resources": {
+                  "limits": {
+                    "cpu": "16",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "requests": {
+                    "cpu": "8",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "mountPath": "/data",
+                    "name": "workspace"
+                  },
+                  {
+                    "mountPath": "/dev/shm",
+                    "name": "dshm"
+                  },
+                  {
+                    "mountPath": "/tmp",
+                    "name": "tmp"
+                  },
+                  {
+                    "mountPath": "/home/ali",
+                    "name": "home"
+                  },
+                  {
+                    "mountPath": "/etc/passwd",
+                    "name": "userdb",
+                    "readOnly": true,
+                    "subPath": "passwd"
+                  },
+                  {
+                    "mountPath": "/etc/group",
+                    "name": "userdb",
+                    "readOnly": true,
+                    "subPath": "group"
+                  }
+                ]
+              }
+            ],
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "nodeName": "dcwipphai0061.edc.nam.gm.com",
+            "priority": 0,
+            "restartPolicy": "Never",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-policy-00",
+            "securityContext": {
+              "fsGroup": 2518800,
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              },
+              "supplementalGroups": [
+                2518800
+              ]
+            },
+            "terminationGracePeriodSeconds": 180,
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "16Gi"
+                },
+                "name": "dshm"
+              },
+              {
+                "emptyDir": {},
+                "name": "tmp"
+              },
+              {
+                "emptyDir": {},
+                "name": "home"
+              },
+              {
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                },
+                "name": "userdb"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "name": "sgw01-ali-main-p-20260923dm-policy-01",
+        "namespace": "211247-prod",
+        "labels": {
+          "owner": "ali",
+          "app.kubernetes.io/name": "sgw-01",
+          "sgw-main-batch": "20260923dm"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 14400,
+        "backoffLimit": 0,
+        "template": {
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/name": "sgw-01",
+              "owner": "ali",
+              "purpose": "nonbehavioral-fixed-input",
+              "sgw-main-batch": "20260923dm"
+            }
+          },
+          "spec": {
+            "automountServiceAccountToken": false,
+            "containers": [
+              {
+                "args": [
+                  "\nset -euo pipefail\nmkdir -p \"$ROOT/admissions\"\nOUT=\"$ROOT/admissions/$ROLE-$INDEX\"\nmkdir \"$OUT\"\nexport OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\ntest \"$(git -C \"$SOURCE\" rev-parse HEAD)\" = \"$SOURCE_COMMIT\"\ntest -z \"$(git -C \"$SOURCE\" status --porcelain)\"\nexport XDG_CACHE_HOME=\"$OUT/cache\" TORCHINDUCTOR_CACHE_DIR=\"$OUT/cache/torchinductor\"\nexport WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nexport SGW01_NANO_OUTPUT_DIR=\"$OUT/native-loader\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\nexport PYTHONPATH=\"$SOURCE:$NATIVE_SOURCE\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/idle.json\")\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nmkdir \"$ROOT/claims/$ROLE\"\n\"$PY\" - <<'PY'\nfrom pathlib import Path\nimport json,os,shutil,time\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json\nroot=Path(os.environ[\"ROOT\"])\nfree=shutil.disk_usage(root).free\nif free < 4144643440640:\n    raise RuntimeError(\"persistent recording reserve unavailable\")\n_fsync_json(root/\"claims\"/os.environ[\"ROLE\"]/\"owner.json\",{\n    \"role\":os.environ[\"ROLE\"],\"pod\":os.environ[\"POD_NAME\"],\"pod_uid\":os.environ[\"POD_UID\"],\n    \"job_uid\":os.environ[\"JOB_UID\"],\"source_commit\":os.environ[\"SOURCE_COMMIT\"],\n    \"started_at_unix\":time.time(),\"free_bytes\":free,\n    \"idle\":json.loads((Path(os.environ[\"OUT\"])/\"idle.json\").read_text()),\n    \"scope\":\"six original MAIN N3 LAT P cells only\",\"automatic_retries\":0,\n})\nPY\ncd \"$NATIVE_SOURCE\"\n\"$PY\" -u -m experiments.workshops.spatial_grounding_v1.main_p_execution --role \"$ROLE\" --plan \"$ROOT/execution-plan.json\" --root \"$ROOT\"\n"
+                ],
+                "command": [
+                  "/bin/bash",
+                  "-ec"
+                ],
+                "env": [
+                  {
+                    "name": "SOURCE",
+                    "value": "/data/users/ali/sgw-01/source/main-p-20260923dm"
+                  },
+                  {
+                    "name": "PY",
+                    "value": "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python"
+                  },
+                  {
+                    "name": "SGW01_NANO_SOURCE_ROOT",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "SGW01_NANO_CHECKPOINT_PATH",
+                    "value": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid"
+                  },
+                  {
+                    "name": "HF_HOME",
+                    "value": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+                  },
+                  {
+                    "name": "UV_CACHE_DIR",
+                    "value": "/data/users/ali/vla_wam/cache/uv-cosmos"
+                  },
+                  {
+                    "name": "PATH",
+                    "value": "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+                  },
+                  {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+                  },
+                  {
+                    "name": "HOME",
+                    "value": "/home/ali"
+                  },
+                  {
+                    "name": "USER",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "LOGNAME",
+                    "value": "ali"
+                  },
+                  {
+                    "name": "PYTHONUNBUFFERED",
+                    "value": "1"
+                  },
+                  {
+                    "name": "HF_HUB_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "TRANSFORMERS_OFFLINE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NVIDIA_DRIVER_CAPABILITIES",
+                    "value": "compute,utility"
+                  },
+                  {
+                    "name": "POD_NAME",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.name"
+                      }
+                    }
+                  },
+                  {
+                    "name": "POD_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.uid"
+                      }
+                    }
+                  },
+                  {
+                    "name": "ROOT",
+                    "value": "/data/users/ali/sgw-01/main/n3-lat-p-20260923dm"
+                  },
+                  {
+                    "name": "SOURCE_COMMIT",
+                    "value": "b346a1bc47cd8985b185eb4cc9208902aab93e78"
+                  },
+                  {
+                    "name": "ROLE",
+                    "value": "policy"
+                  },
+                  {
+                    "name": "INDEX",
+                    "value": "1"
+                  },
+                  {
+                    "name": "NATIVE_SOURCE",
+                    "value": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b"
+                  },
+                  {
+                    "name": "PYTHONDONTWRITEBYTECODE",
+                    "value": "1"
+                  },
+                  {
+                    "name": "JOB_UID",
+                    "valueFrom": {
+                      "fieldRef": {
+                        "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                      }
+                    }
+                  }
+                ],
+                "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+                "name": "fixed-input",
+                "resources": {
+                  "limits": {
+                    "cpu": "16",
+                    "memory": "128Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "requests": {
+                    "cpu": "8",
+                    "memory": "64Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "securityContext": {
+                  "allowPrivilegeEscalation": false,
+                  "capabilities": {
+                    "drop": [
+                      "ALL"
+                    ]
+                  },
+                  "runAsGroup": 2518800,
+                  "runAsNonRoot": true,
+                  "runAsUser": 816149040
+                },
+                "volumeMounts": [
+                  {
+                    "mountPath": "/data",
+                    "name": "workspace"
+                  },
+                  {
+                    "mountPath": "/dev/shm",
+                    "name": "dshm"
+                  },
+                  {
+                    "mountPath": "/tmp",
+                    "name": "tmp"
+                  },
+                  {
+                    "mountPath": "/home/ali",
+                    "name": "home"
+                  },
+                  {
+                    "mountPath": "/etc/passwd",
+                    "name": "userdb",
+                    "readOnly": true,
+                    "subPath": "passwd"
+                  },
+                  {
+                    "mountPath": "/etc/group",
+                    "name": "userdb",
+                    "readOnly": true,
+                    "subPath": "group"
+                  }
+                ]
+              }
+            ],
+            "imagePullSecrets": [
+              {
+                "name": "artifactory-ci-pull-secret"
+              }
+            ],
+            "nodeName": "dcwipphai0063.edc.nam.gm.com",
+            "priority": 0,
+            "restartPolicy": "Never",
+            "schedulerName": "sgw01-ali-main-p-20260923dm-policy-01",
+            "securityContext": {
+              "fsGroup": 2518800,
+              "seccompProfile": {
+                "type": "RuntimeDefault"
+              },
+              "supplementalGroups": [
+                2518800
+              ]
+            },
+            "terminationGracePeriodSeconds": 180,
+            "volumes": [
+              {
+                "name": "workspace",
+                "persistentVolumeClaim": {
+                  "claimName": "211247-prod-pvc"
+                }
+              },
+              {
+                "emptyDir": {
+                  "medium": "Memory",
+                  "sizeLimit": "16Gi"
+                },
+                "name": "dshm"
+              },
+              {
+                "emptyDir": {},
+                "name": "tmp"
+              },
+              {
+                "emptyDir": {},
+                "name": "home"
+              },
+              {
+                "configMap": {
+                  "name": "211247-ali-b200-1gpu-userdb"
+                },
+                "name": "userdb"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

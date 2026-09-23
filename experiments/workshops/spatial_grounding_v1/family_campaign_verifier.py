@@ -8,10 +8,9 @@ import math
 from pathlib import Path
 from typing import Any, Mapping
 
-import imageio.v2 as iio
-
 from .fixtures import ACTION_CAP, FixtureCandidate, FixtureError, Pose, validate_reset
 from .family_campaign import SCHEMA
+from .prospective_family_capture import verify_capture_artifacts
 from .prospective_family_designs import (
     CANDIDATE_STATUS, _aabb_xy_clearance_m, _candidate_manifest, _digest, require_design_capture,
 )
@@ -38,6 +37,7 @@ def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Pa
     if not candidate_manifest.is_file() or not candidate_capture.is_file() or not materialized_candidate.is_file() or not qualification.is_file():
         raise ValueError("candidate manifest, capture, materialization, and qualification outputs are all required")
     manifest = _candidate_manifest(candidate_manifest)
+    verify_capture_artifacts(candidate_capture)
     capture = require_design_capture(candidate_manifest_path=candidate_manifest, capture_path=candidate_capture)
     candidate_value = json.loads(materialized_candidate.read_text(encoding="utf-8"))
     candidate = FixtureCandidate.from_json(candidate_value)
@@ -63,10 +63,11 @@ def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Pa
             raise ValueError("qualification trial receipt is missing")
         try:
             report, reset = verify_trial_evidence(
-                evidence_root=root, trial=trial, check=check, candidate=candidate,
+                evidence_root=root, trial=trial.parent, check=check, candidate=candidate,
             )
         except VerificationError as error:
             raise ValueError(f"raw trial integrity or physical scoring differs: {error}") from error
+        _verify_reset_banana_geometry(trial.parent, manifest)
         reset_groups[check["goal_sign"]].append(reset)
         _verify_aggregate_trial(check, report)
         trial_sha256 = _sha256(trial)
@@ -121,7 +122,20 @@ def _verify_design_chain(
     job: Mapping[str, Any], manifest: Mapping[str, Any], capture: Mapping[str, Any], capture_file_sha256: str,
     candidate_value: Mapping[str, Any], candidate: FixtureCandidate, result: Mapping[str, Any],
 ) -> None:
-    if manifest.get("status") != CANDIDATE_STATUS or manifest.get("design_id") != job["design_id"]:
+    plan_path = Path(str(job.get("plan_path", "")))
+    if not plan_path.is_file():
+        raise ValueError("campaign job lacks its frozen plan path")
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    row = next((value for value in plan.get("designs", []) if value.get("design_id") == job["design_id"]), None)
+    if (
+        not isinstance(row, Mapping)
+        or manifest.get("status") != CANDIDATE_STATUS
+        or manifest.get("design_id") != job["design_id"]
+        or manifest.get("plan_sha256") != plan.get("plan_sha256")
+        or manifest.get("design_sha256") != _digest(row)
+        or job.get("plan_sha256") != plan.get("plan_sha256")
+        or job.get("design_sha256") != _digest(row)
+    ):
         raise ValueError("candidate overlay does not bind the selected campaign design")
     if candidate.family != job["family"] or result.get("candidate_id") != candidate.candidate_id:
         raise ValueError("materialized candidate identity differs from campaign qualification")
@@ -153,7 +167,17 @@ def _verified_calibration(root: Path, candidate: FixtureCandidate, result: Mappi
         or calibration.get("receipt_sha256") != workspace_digest(calibration)
     ):
         raise ValueError("controller calibration identity is malformed")
-    if candidate.metadata.get("controller_calibration_sha256") != controller.get("calibration_sha256"):
+    record = candidate.metadata.get("controller_calibration")
+    if not isinstance(record, Mapping):
+        raise ValueError("materialized candidate lacks bound calibration file")
+    calibration_path = Path(str(record.get("path", "")))
+    if (
+        not calibration_path.is_file()
+        or record.get("sha256") != _sha256(calibration_path)
+        or record.get("bytes") != calibration_path.stat().st_size
+        or controller.get("calibration_sha256") != _sha256(calibration_path)
+        or candidate.metadata.get("controller_calibration_sha256") != _sha256(calibration_path)
+    ):
         raise ValueError("materialized candidate calibration binding differs from qualification")
     return controller
 
@@ -203,6 +227,17 @@ def _verify_banana_clearance(objects: Mapping[str, Any], support_names: list[str
             raise ValueError(f"measured candidate banana clearance is below 20 mm for {name}")
 
 
+def _verify_reset_banana_geometry(trial: Path, manifest: Mapping[str, Any]) -> None:
+    """Require each physical reset to retain its own banana/table/support geometry."""
+
+    raw = json.loads((trial / "state-0000.json").read_text(encoding="utf-8")).get("raw_snapshot")
+    context = raw.get("context_measurements") if isinstance(raw, Mapping) else None
+    required = {"banana", "table"} | set(manifest["native_import_contract"]["kinematic_or_static_bodies"])
+    if not isinstance(context, Mapping) or not required.issubset(context):
+        raise ValueError("raw reset snapshot lacks measured banana/table/support geometry")
+    _verify_banana_clearance(context, manifest["native_import_contract"]["kinematic_or_static_bodies"])
+
+
 def _bbox(row: Any, name: str) -> tuple[list[float], list[float]]:
     if not isinstance(row, Mapping):
         raise ValueError(f"candidate capture lacks measured {name}")
@@ -227,9 +262,6 @@ def _pose_error(observed: Pose, expected: Pose) -> tuple[float, float]:
 
 
 def _verify_aggregate_trial(check: Mapping[str, Any], report: Mapping[str, Any]) -> None:
-    passed = bool(report["score"]["requested_success"])
-    if check.get("passed") is not passed:
-        raise ValueError("aggregate pass differs from recomputed physical score")
     if check.get("score") != report["score"] or check.get("requested_margin_m") != report["score"]["terminal_margin_m"]:
         raise ValueError("aggregate score differs from recomputed physical score")
 
@@ -265,23 +297,6 @@ def _finite_vector(value: Any, length: int) -> bool:
     return isinstance(value, list) and len(value) == length and all(
         isinstance(item, (int, float)) and math.isfinite(item) for item in value
     )
-
-
-def _bound_file(root: Path, record: Any) -> Path:
-    if not isinstance(record, Mapping):
-        raise ValueError("video receipt is missing")
-    path = Path(record.get("path", ""))
-    path = path if path.is_absolute() else root / path
-    if not path.is_file() or path.stat().st_size != record.get("bytes") or _sha256(path) != record.get("sha256"):
-        raise ValueError("retained video differs from receipt")
-    return path
-
-
-def _decode_video(path: Path, frames: int) -> None:
-    with iio.get_reader(path) as reader:
-        decoded = sum(1 for _ in reader)
-    if decoded != frames:
-        raise ValueError("retained video frame count differs from physical trace")
 
 
 def _sha256(path: Path) -> str:

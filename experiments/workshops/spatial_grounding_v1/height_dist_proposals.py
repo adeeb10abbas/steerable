@@ -16,6 +16,12 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from .fixtures import FixtureCandidate
+from .lat_candidate_generator import workspace_digest
+from .prospective_family_capture import verify_capture_artifacts
+from .prospective_family_designs import (
+    CANDIDATE_STATUS, _candidate_manifest, _digest as _design_digest, require_design_capture,
+)
+from .grasp_calibration import SCHEMA as CALIBRATION_SCHEMA
 
 
 def propose_family_layouts(workspace: Mapping[str, Any], *, family: str, seed: int, count: int = 100) -> list[dict[str, Any]]:
@@ -93,6 +99,186 @@ def _candidate_from_measurement(row: Any, workspace: Mapping[str, Any], *, famil
         if max(abs(observed - expected) for observed, expected in zip(center, pose.position_m, strict=True)) > 1e-6:
             raise ValueError(f"{family} {name} scoring center does not close from root pose and offset")
     return candidate
+
+
+def materialize_campaign_candidate(
+    *, plan_path: Path, design_id: str, candidate_manifest_path: Path, candidate_capture_path: Path,
+    controller_calibration_path: Path, output: Path,
+) -> dict[str, Any]:
+    """Create one immutable measured family candidate from its captured overlay.
+
+    This is intentionally a one-design bridge, not a plan freezer or launcher.
+    Every pose, center offset, support surface, and native scene name is read
+    from the fresh zero-model capture of the exact authored overlay.
+    """
+
+    if output.exists():
+        raise FileExistsError("refusing to overwrite materialized campaign candidate")
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    if plan.get("plan_sha256") != _design_digest(plan, "plan_sha256"):
+        raise ValueError("campaign materialization plan digest differs")
+    row = next((item for item in plan.get("designs", []) if item.get("design_id") == design_id), None)
+    if not isinstance(row, Mapping) or row.get("status") != "prospective_design_requires_zero_model_capture":
+        raise ValueError("campaign materialization requires an accepted prospective design")
+    manifest = _candidate_manifest(candidate_manifest_path)
+    if (
+        manifest.get("status") != CANDIDATE_STATUS
+        or manifest.get("design_id") != design_id
+        or manifest.get("plan_sha256") != plan["plan_sha256"]
+        or manifest.get("design_sha256") != _design_digest(row)
+    ):
+        raise ValueError("candidate overlay does not bind the frozen plan/design row")
+    verify_capture_artifacts(candidate_capture_path)
+    capture = require_design_capture(
+        candidate_manifest_path=candidate_manifest_path, capture_path=candidate_capture_path,
+    )
+    if capture["family"] != plan.get("family"):
+        raise ValueError("candidate capture family differs from the frozen design plan")
+    calibration_raw = controller_calibration_path.read_bytes()
+    calibration = json.loads(calibration_raw)
+    if (
+        calibration.get("schema_version") != CALIBRATION_SCHEMA
+        or calibration.get("receipt_sha256") != workspace_digest(calibration)
+    ):
+        raise ValueError("controller calibration file is malformed")
+    objects = capture.get("objects")
+    if not isinstance(objects, Mapping):
+        raise ValueError("candidate capture lacks measured object rows")
+    names = ("rubiks_cube", "bowl") + (("plate",) if plan["family"] == "DIST" else ())
+    poses = {name: _captured_pose(objects.get(name), name) for name in names}
+    offsets = {name: _captured_vector(objects.get(name), "geometric_center_offset_root_local_xyz_m", name) for name in names}
+    centers = {name: _captured_vector(objects.get(name), "geometric_center_env_local_xyz_m", name) for name in names}
+    goal_supports = _measured_goal_supports(plan["family"], objects, capture)
+    baseline = _baseline_manifest(manifest)
+    counterbalance_key = "upper_support_side" if plan["family"] == "HEIGHT" else "bowl_side"
+    candidate = {
+        "candidate_id": f"{plan['family']}-CANDIDATE-{design_id}",
+        "family": plan["family"],
+        "seed": row["seed"],
+        "task_asset": manifest["overlay_usda"]["path"],
+        "asset_manifest_sha256": manifest["base_workspace_receipt"]["asset_manifest_sha256"],
+        "object_poses": poses,
+        "metadata": {
+            "status": "unqualified_proposal_starting_physical_validation",
+            "prospective_design_id": design_id,
+            "prospective_plan_sha256": plan["plan_sha256"],
+            "candidate_overlay_manifest_sha256": manifest["manifest_sha256"],
+            "candidate_capture_sha256": _sha256(candidate_capture_path),
+            "candidate_capture_receipt_sha256": capture["receipt_sha256"],
+            "controller_calibration_sha256": _sha256(controller_calibration_path),
+            "controller_calibration": _record(controller_calibration_path),
+            "scoring_center_offsets_root_local_m": offsets,
+            "native_scene": {
+                "asset": manifest["overlay_usda"]["path"],
+                "object_names": sorted(objects),
+            },
+            counterbalance_key: baseline["counterbalance"][counterbalance_key],
+            "goal_supports": goal_supports,
+            "geometric_screen_status": "passed",
+            "historical_layout_fingerprint": None,
+        },
+    }
+    measurement = {
+        "layout_id": design_id,
+        "object_root_poses": poses,
+        "scoring_center_offsets_root_local_m": offsets,
+        "scoring_centers_env_local_xyz_m": centers,
+        "native_scene": candidate["metadata"]["native_scene"],
+        "goal_supports": goal_supports,
+        counterbalance_key: candidate["metadata"][counterbalance_key],
+    }
+    if plan["family"] == "HEIGHT":
+        _validate_height_measurements(measurement)
+    else:
+        _validate_dist_measurements(measurement)
+    FixtureCandidate.from_json(candidate)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(candidate, sort_keys=True, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    return candidate
+
+
+def _baseline_manifest(manifest: Mapping[str, Any]) -> dict[str, Any]:
+    source = manifest.get("source_baseline")
+    record = source.get("overlay_manifest") if isinstance(source, Mapping) else None
+    if not isinstance(record, Mapping):
+        raise ValueError("candidate overlay lacks bound baseline manifest")
+    path = Path(str(record.get("path", "")))
+    if not path.is_file() or _sha256(path) != record.get("sha256"):
+        raise ValueError("candidate overlay baseline manifest bytes differ")
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value.get("counterbalance"), Mapping):
+        raise ValueError("candidate overlay baseline lacks counterbalance")
+    return value
+
+
+def _captured_pose(row: Any, name: str) -> dict[str, list[float]]:
+    return {
+        "position_m": _captured_vector(row, "root_position_env_local_xyz_m", name),
+        "quaternion_wxyz": _captured_quaternion(row, name),
+    }
+
+
+def _captured_vector(row: Any, field: str, name: str) -> list[float]:
+    if not isinstance(row, Mapping):
+        raise ValueError(f"candidate capture lacks measured {name}")
+    value = row.get(field)
+    _finite_vector(value, f"candidate capture {name} {field}")
+    return [float(item) for item in value]
+
+
+def _captured_quaternion(row: Any, name: str) -> list[float]:
+    if not isinstance(row, Mapping):
+        raise ValueError(f"candidate capture lacks measured {name}")
+    value = row.get("root_quaternion_world_wxyz")
+    if not isinstance(value, list) or len(value) != 4 or not all(isinstance(item, (int, float)) and math.isfinite(item) for item in value):
+        raise ValueError(f"candidate capture {name} quaternion must be finite")
+    norm = math.sqrt(sum(float(item) ** 2 for item in value))
+    if abs(norm - 1.0) > 1e-6:
+        raise ValueError(f"candidate capture {name} quaternion must be normalized")
+    return [float(item) for item in value]
+
+
+def _measured_goal_supports(family: str, objects: Mapping[str, Any], capture: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
+    mapping = (
+        {"higher": "height_upper_support", "lower": "height_lower_support"}
+        if family == "HEIGHT"
+        else {"near_bowl": "dist_bowl_landing_support", "near_plate": "dist_plate_landing_support"}
+    )
+    cube = objects.get("rubiks_cube")
+    cube_center = _captured_vector(cube, "geometric_center_env_local_xyz_m", "rubiks_cube")
+    cube_minimum = _captured_vector(cube, "bbox_env_local_min_xyz_m", "rubiks_cube")
+    center_above_bottom = cube_center[2] - cube_minimum[2]
+    contacts = capture.get("support_contact_measurements")
+    if not isinstance(contacts, Mapping):
+        raise ValueError("candidate capture lacks measured support contact inventory")
+    result = {}
+    for goal, name in mapping.items():
+        support = objects.get(name)
+        minimum = _captured_vector(support, "bbox_env_local_min_xyz_m", name)
+        maximum = _captured_vector(support, "bbox_env_local_max_xyz_m", name)
+        if any(low > high for low, high in zip(minimum, maximum, strict=True)):
+            raise ValueError(f"candidate capture has invalid {name} bounds")
+        contact = contacts.get(name)
+        if not isinstance(contact, Mapping) or not isinstance(contact.get("sensor"), str) or not contact["sensor"]:
+            raise ValueError(f"candidate capture lacks measured cube contact sensor for {name}")
+        result[goal] = {
+            "support_surface_id": name,
+            "contact_sensor_id": contact["sensor"],
+            "cube_center_env_local_xyz_m": [
+                (minimum[0] + maximum[0]) / 2,
+                (minimum[1] + maximum[1]) / 2,
+                maximum[2] + center_above_bottom,
+            ],
+        }
+    return result
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _record(path: Path) -> dict[str, Any]:
+    return {"path": str(path.resolve()), "sha256": _sha256(path), "bytes": path.stat().st_size}
 
 
 def _require_common_workspace(workspace: Mapping[str, Any]) -> None:

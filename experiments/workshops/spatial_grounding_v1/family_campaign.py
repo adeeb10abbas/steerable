@@ -35,6 +35,7 @@ def compile_campaign(
     reviewed = {
         side: _reviewed_baseline(
             Path(baseline_reviews[side]), Path(baseline_captures[side]), plan["baselines"][side]["capture"],
+            family=plan["family"], side=side,
         )
         for side in ("left", "right")
     }
@@ -45,6 +46,9 @@ def compile_campaign(
                 "design_id": row["design_id"],
                 "family": plan["family"],
                 "side": row["side"],
+                "plan_path": str(plan_path.resolve()),
+                "plan_sha256": plan["plan_sha256"],
+                "design_sha256": _digest(row),
                 "status": "blocked_pending_candidate_overlay_and_fresh_zero_model_capture",
                 "candidate_overlay_status": CANDIDATE_STATUS,
                 "fixed_trial_contract": {
@@ -78,7 +82,7 @@ def compile_campaign(
         "jobs": jobs,
         "model_request_count": 0,
         "behavioral_episode_count": 0,
-        "status": "compiled_reviewed_baselines_not_authorized_to_launch_or_release",
+        "status": "compiled_native_visual_setup_baselines_not_authorized_to_launch_or_release",
         "release_permitted": False,
     }
     value["campaign_sha256"] = _digest(value, "campaign_sha256")
@@ -87,15 +91,39 @@ def compile_campaign(
     return value
 
 
-def _reviewed_baseline(path: Path, capture_path: Path, plan_capture: Mapping[str, Any]) -> dict[str, Any]:
-    """Require an independent scene-review decision beyond hash-valid media."""
+def _reviewed_baseline(
+    path: Path, capture_path: Path, plan_capture: Mapping[str, Any], *, family: str, side: str,
+) -> dict[str, Any]:
+    """Bind one sealed native-visual judgment to the exact baseline receipt.
+
+    Native visual setup is intentionally narrower than candidate, physical,
+    policy, or category-recognition acceptance.  This gate permits only
+    prospective design authoring from the reviewed baseline.
+    """
 
     if not path.is_file():
         raise FileNotFoundError(f"independent baseline scene review is missing: {path}")
     value = json.loads(path.read_text(encoding="utf-8"))
-    if value.get("status") != "accepted_model_blind_scene_baseline_for_prospective_design":
-        raise ValueError("artifact-valid baseline is not an independently accepted scene baseline")
-    capture = value.get("baseline_capture")
+    scenes = value.get("scenes")
+    if not isinstance(scenes, list):
+        raise ValueError("independent review lacks sealed scene judgments")
+    expected_scene_suffix = f"{family.lower()}-{side}"
+    matches = [
+        row for row in scenes
+        if isinstance(row, Mapping)
+        and isinstance(row.get("capture"), Mapping)
+        and row["capture"].get("sha256") == _sha256(capture_path)
+        and isinstance(row.get("scene"), str)
+        and row["scene"].lower().endswith(expected_scene_suffix)
+    ]
+    if len(matches) != 1:
+        raise ValueError("sealed review must select exactly one scene for the baseline capture")
+    judgment = matches[0]
+    if (
+        judgment.get("disposition") != "ACCEPT_NATIVE_VISUAL_SETUP_ONLY"
+    ):
+        raise ValueError("sealed review scene family/side is not native-visual accepted for this plan")
+    capture = judgment["capture"]
     if (
         not isinstance(capture, Mapping)
         or capture.get("sha256") != _sha256(capture_path)
@@ -103,9 +131,12 @@ def _reviewed_baseline(path: Path, capture_path: Path, plan_capture: Mapping[str
         or str(capture_path.resolve()) != plan_capture.get("path")
     ):
         raise ValueError("baseline scene review is not bound to its capture receipt")
-    if value.get("model_request_count") != 0 or value.get("behavioral_episode_count") != 0:
-        raise ValueError("baseline scene review must remain model blind")
-    return {"path": str(path.resolve()), "sha256": _sha256(path), "status": value["status"]}
+    return {
+        "path": str(path.resolve()), "sha256": _sha256(path),
+        "scene": judgment["scene"], "capture_sha256": capture["sha256"],
+        "disposition": judgment["disposition"],
+        "scope": "native_visual_setup_only_not_candidate_physical_or_model_acceptance",
+    }
 
 
 def _validate_finite_plan(plan: Mapping[str, Any]) -> None:

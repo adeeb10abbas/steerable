@@ -35,16 +35,19 @@ def _plan(tmp_path, captures):
 
 
 def _reviews(tmp_path, captures):
-    paths = {}
-    for side, capture in captures.items():
-        path = tmp_path / f"{side}.review.json"
-        path.write_text(json.dumps({
-            "status": "accepted_model_blind_scene_baseline_for_prospective_design",
-            "baseline_capture": {"sha256": family_campaign._sha256(capture)},
-            "model_request_count": 0, "behavioral_episode_count": 0,
-        }))
-        paths[side] = path
-    return paths
+    path = tmp_path / "sealed-native-visual-review.json"
+    path.write_text(json.dumps({
+        "schema_version": "synthetic-sealed-native-visual-review-v1",
+        "scenes": [
+            {
+                "scene": f"synthetic-height-{side}",
+                "capture": {"sha256": family_campaign._sha256(capture)},
+                "disposition": "ACCEPT_NATIVE_VISUAL_SETUP_ONLY",
+            }
+            for side, capture in captures.items()
+        ],
+    }))
+    return {"left": path, "right": path}
 
 
 def test_campaign_compiles_fixed_slots_only_after_verified_baselines(tmp_path, monkeypatch):
@@ -63,7 +66,7 @@ def test_campaign_compiles_fixed_slots_only_after_verified_baselines(tmp_path, m
         output=tmp_path / "campaign.json",
     )
 
-    assert campaign["status"] == "compiled_reviewed_baselines_not_authorized_to_launch_or_release"
+    assert campaign["status"] == "compiled_native_visual_setup_baselines_not_authorized_to_launch_or_release"
     assert [job["status"] for job in campaign["jobs"]] == [
         "blocked_pending_candidate_overlay_and_fresh_zero_model_capture",
         "geometrically_rejected_slot_no_refill",
@@ -81,7 +84,7 @@ def test_artifact_valid_baselines_cannot_replace_independent_scene_review(tmp_pa
         family_campaign, "verify_capture_artifacts",
         lambda path: {"receipt": {"path": str(path), "sha256": family_campaign._sha256(path)}},
     )
-    with pytest.raises(ValueError, match="independently accepted"):
+    with pytest.raises(ValueError, match="sealed scene judgments"):
         compile_campaign(
             plan_path=plan, baseline_captures={"left": left, "right": right},
             baseline_reviews={"left": left, "right": right}, output=tmp_path / "campaign.json",
@@ -183,9 +186,9 @@ def test_campaign_rejects_swapped_plan_capture_or_review(tmp_path, monkeypatch):
             output=tmp_path / "campaign.json",
         )
     left_review = json.loads(reviews["left"].read_text())
-    left_review["baseline_capture"]["sha256"] = family_campaign._sha256(right)
+    left_review["scenes"][0]["capture"]["sha256"] = family_campaign._sha256(right)
     reviews["left"].write_text(json.dumps(left_review))
-    with pytest.raises(ValueError, match="baseline scene review"):
+    with pytest.raises(ValueError, match="sealed review"):
         compile_campaign(
             plan_path=plan, baseline_captures={"left": left, "right": right}, baseline_reviews=reviews,
             output=tmp_path / "review-campaign.json",

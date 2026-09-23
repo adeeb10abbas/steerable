@@ -64,6 +64,7 @@ class RoboLabLatEnvironment:
         )
         rows: dict[str, ObjectState] = {}
         reset_roots: dict[str, Pose] = {}
+        context_measurements: dict[str, Any] = {}
         origin = self._env.scene.env_origins[0].detach().cpu().numpy()
         for name in self._candidate.object_poses:
             root_position, quaternion = world.get_pose(name, env_id=0)
@@ -91,9 +92,23 @@ class RoboLabLatEnvironment:
                     else False
                 ),
             )
+        for name in self._candidate.metadata.get("native_scene", {}).get("object_names", ()):
+            if name in rows:
+                continue
+            root_position, quaternion = world.get_pose(name, env_id=0)
+            corners, geometric_center = world.get_bbox(name, env_id=0)
+            corners_values = np.asarray(corners.detach().cpu().numpy(), dtype=np.float64).reshape(-1, 3)
+            context_measurements[name] = {
+                "root_position_env_local_xyz_m": tuple(float(item) for item in root_position.detach().cpu().tolist()),
+                "root_quaternion_world_wxyz": tuple(float(item) for item in quaternion.detach().cpu().tolist()),
+                "geometric_center_env_local_xyz_m": tuple(float(item) for item in geometric_center.tolist()),
+                "bbox_env_local_min_xyz_m": tuple(float(item) for item in np.min(corners_values, axis=0)),
+                "bbox_env_local_max_xyz_m": tuple(float(item) for item in np.max(corners_values, axis=0)),
+            }
         return SimulatorSnapshot(
             rows, simulated_time_s=self._steps * self._step_dt_s, reset_root_poses=reset_roots,
             robot_body_frames=articulation_body_frames(self._env.scene["robot"].data),
+            context_measurements=context_measurements,
         )
 
     def _support_sensor_names(self) -> tuple[str, ...]:

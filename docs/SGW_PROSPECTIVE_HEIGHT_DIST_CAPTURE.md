@@ -153,6 +153,20 @@ design plan. Local tests use **synthetic capture-schema fixtures**, not native
 evidence. A prospective plan is not an observed capture, a measured layout,
 a reachable fixture, or a released candidate.
 
+### Sealed native-visual review binding
+
+`family_campaign.py` accepts a sealed independent review manifest only by
+selecting exactly one `scenes[]` entry whose capture SHA-256 matches the
+side-specific baseline receipt already bound in the frozen plan. The selected
+entry must be `ACCEPT_NATIVE_VISUAL_SETUP_ONLY` and its scene label must agree
+with the plan's family and side. The same sealed manifest may supply both
+side inputs; it is never treated as a blanket approval.
+
+This is a **native visual setup** gate for prospective design preparation
+only. It does not accept a candidate, establish physical reachability or
+reset validity, close the plate-category/occlusion caveat, authorize model
+runtime use, or satisfy historical-layout evidence gates.
+
 Each plan binds both side-specific capture receipts, their baseline overlay
 manifests, every captured USD dependency hash, the base scene/workspace/source
 and asset identities, and a fixed seed. It applies only bounded XY rigid

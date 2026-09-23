@@ -167,8 +167,8 @@ def _trial_guards(
     root: Path, *, design_id: str, candidate_sha256: str, candidate_capture_sha256: str,
 ) -> PhysicalGeometryRejection | None:
     """Validate guards exactly where each independent reset occurs."""
-    for goal_sign in (1, -1):
-        for reset_index in range(3):
+    identities = [(goal_sign, reset_index) for goal_sign in (1, -1) for reset_index in range(3)]
+    for offset, (goal_sign, reset_index) in enumerate(identities):
             trial_root = root / f"goal-{goal_sign:+d}" / f"reset-{reset_index}"
             guard = trial_root / "preaction-geometry-guard.json"
             if not guard.is_file():
@@ -181,6 +181,10 @@ def _trial_guards(
             if rejection is not None:
                 if rejection.goal_sign != goal_sign or rejection.reset_index != reset_index:
                     raise RuntimeError("physical geometry rejection has a different trial identity")
+                for future_goal, future_reset in identities[offset + 1:]:
+                    future = root / f"goal-{future_goal:+d}" / f"reset-{future_reset}"
+                    if future.exists() and any(future.glob("action-*.npy")):
+                        raise RuntimeError("physical geometry rejection was followed by controller actions")
                 return rejection
             _validate_guard_common(
                 value, design_id=design_id, candidate_sha256=candidate_sha256,

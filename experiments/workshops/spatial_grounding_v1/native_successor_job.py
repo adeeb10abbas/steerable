@@ -1,4 +1,4 @@
-"""Render and validate a bounded, non-policy one-GPU SGW native successor Job."""
+"""Render a one-GPU native Job for an explicit, non-preempting handoff binder."""
 from __future__ import annotations
 
 import argparse
@@ -104,6 +104,7 @@ mkdir -p /data/users/ali/sgw-01/locks
 exec 9>"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock"
 flock --nonblock 9
 nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total,memory.used,utilization.gpu --format=csv,noheader > "$OUT/gpu_identity.csv"
+test "$(nvidia-smi --query-gpu=name --format=csv,noheader -i "$CUDA_VISIBLE_DEVICES")" = "NVIDIA A40"
 "$PY" - "$OUT" "$SGW_NATIVE_COMMAND_JSON" "$SGW_NATIVE_CHILD_TIMEOUT_SECONDS" <<'PY'
 from datetime import datetime, timezone
 import json, os, subprocess, sys, traceback
@@ -142,7 +143,8 @@ sync"""
                 "metadata": {"labels": {"owner": "ali", "app.kubernetes.io/name": "sgw-01",
                                          "purpose": "zero-model-native-engineering-successor"}},
                 "spec": {
-                    "restartPolicy": "Never", "preemptionPolicy": "Never", "automountServiceAccountToken": False,
+                    "restartPolicy": "Never", "schedulerName": name, "priority": 0,
+                    "automountServiceAccountToken": False,
                     "activeDeadlineSeconds": deadline, "terminationGracePeriodSeconds": 180,
                     "nodeSelector": {"node-role.kubernetes.io/worker-gpu": ""},
                     "affinity": {
@@ -215,7 +217,11 @@ def validate(job: Mapping[str, Any], *, nodes: list[str]) -> None:
     if (
         job.get("kind") != "Job" or job.get("metadata", {}).get("namespace") != NAMESPACE
         or spec.get("parallelism") != 1 or spec.get("completions") != 1 or spec.get("backoffLimit") != 0
-        or pod.get("restartPolicy") != "Never" or pod.get("preemptionPolicy") != "Never"
+        or pod.get("restartPolicy") != "Never"
+        or not job.get("metadata", {}).get("name", "").startswith("sgw01-ali-")
+        or pod.get("schedulerName") != job.get("metadata", {}).get("name")
+        or pod.get("priority") != 0 or pod.get("priorityClassName") or pod.get("nodeName")
+        or pod.get("preemptionPolicy") not in (None, "PreemptLowerPriority")
         or spec.get("activeDeadlineSeconds") != pod.get("activeDeadlineSeconds")
         or str(spec.get("activeDeadlineSeconds")) != job.get("metadata", {}).get("annotations", {}).get("sgw-01/active-deadline-seconds")
         or pod.get("automountServiceAccountToken") is not False

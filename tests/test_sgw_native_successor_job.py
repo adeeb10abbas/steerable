@@ -43,7 +43,9 @@ def test_successor_requires_exact_nodes_and_bt_anti_affinity(tmp_path):
     successor.validate(job, nodes=["bt-node-a", "bt-node-b"])
     pod = job["spec"]["template"]["spec"]
     assert job["spec"]["parallelism"] == job["spec"]["completions"] == 1
-    assert job["spec"]["backoffLimit"] == 0 and pod["preemptionPolicy"] == "Never"
+    assert job["spec"]["backoffLimit"] == 0
+    assert pod["schedulerName"] == job["metadata"]["name"]
+    assert pod["priority"] == 0 and "preemptionPolicy" not in pod
     assert len(job["metadata"]["annotations"]["sgw-01/config-sha256"]) == 64
     terms = pod["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"]
     assert [term["matchFields"] for term in terms] == [
@@ -60,8 +62,15 @@ def test_successor_requires_exact_nodes_and_bt_anti_affinity(tmp_path):
 
 @pytest.mark.parametrize("mutate", [
     lambda job: job["spec"].update({"parallelism": 2}),
-    lambda job: job["spec"]["template"]["spec"].update({"preemptionPolicy": "PreemptLowerPriority"}),
+    lambda job: job["spec"]["template"]["spec"].update({"schedulerName": "default-scheduler"}),
+    lambda job: job["spec"]["template"]["spec"].update({"priority": 1}),
+    lambda job: job["spec"]["template"]["spec"].update({"priorityClassName": "system-node-critical"}),
+    lambda job: job["spec"]["template"]["spec"].update({"nodeName": "bt-node-a"}),
     lambda job: job["spec"]["template"]["spec"]["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"][0]["matchFields"][0].update({"values": []}),
+    lambda job: job["spec"]["template"]["spec"]["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"][0]["matchFields"][0].update({"values": ["bt-node-a", "bt-node-b"]}),
+    lambda job: job["spec"]["template"]["spec"]["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"][-1]["matchFields"][0].update({"values": ["unowned-node"]}),
+    lambda job: job["spec"]["template"]["spec"]["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"][-1].pop("matchExpressions"),
+    lambda job: job["spec"]["template"]["spec"]["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"].pop(),
     lambda job: job["spec"]["template"]["spec"]["affinity"]["podAntiAffinity"].pop("requiredDuringSchedulingIgnoredDuringExecution"),
     lambda job: job["spec"]["template"]["spec"]["affinity"]["nodeAffinity"]["requiredDuringSchedulingIgnoredDuringExecution"]["nodeSelectorTerms"].append({}),
     lambda job: job["spec"].update({"activeDeadlineSeconds": 1}),

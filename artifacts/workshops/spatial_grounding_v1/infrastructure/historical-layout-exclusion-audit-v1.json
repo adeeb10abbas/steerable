@@ -1,0 +1,93 @@
+{
+  "schema_version": "sgw-01-historical-layout-exclusion-audit-v1",
+  "purpose": "diagnostic_only_historical_layout_exclusion",
+  "created_at": "2026-09-23T06:23:25Z",
+  "source_policy": {
+    "arena": "droid_robolab_only",
+    "robotwin_included": false,
+    "no_protocol_changes": true,
+    "no_release_claim": true,
+    "root_only_is_non_comparable": true,
+    "configured_coordinates_are_not_measured": true,
+    "reset_displacement_is_not_root_local_geometry": true
+  },
+  "frozen_rules": {
+    "reset_position_tolerance_m": 0.003,
+    "reset_angle_tolerance_degrees": 2,
+    "height_relation": "cube.z - bowl.z",
+    "dist_relation": "distance(cube, plate) - distance(cube, bowl)",
+    "dist_required_anchors": [
+      "bowl",
+      "plate"
+    ]
+  },
+  "height": {
+    "status": "no_sufficient_cohort_wide_exclusion_proof",
+    "claim": "none",
+    "sufficient_proof_rule": "A complete historical cohort must have hash-bound measured actor-root coordinates, source-defined reset identity, and exact asset identity. Conservative historical root-coordinate bounds must then be disjoint from the prospective root-coordinate bounds by more than 0.003 m in at least one required component.",
+    "observed_evidence": [
+      {
+        "source_path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json",
+        "interpretation": "prospective E004 registration and not a complete historical cohort inventory",
+        "limitation": "does not establish cohort-wide historical reset/root bounds"
+      },
+      {
+        "source_path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+        "source_sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33",
+        "interpretation": "hash-bound candidate/control and level poses for E004",
+        "limitation": "prospective layout evidence; not evidence covering the historical source inventory"
+      },
+      {
+        "source_path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+        "interpretation": "explicit measured root positions and quaternions for the E006 full-reset reference",
+        "limitation": "root-only reference; no complete historical cohort bounds or root-local geometric centers"
+      },
+      {
+        "source_path": "experiments/workshops/spatial_grounding_v1/historical_layout_evidence.py",
+        "interpretation": "comparable rows require explicit root position, root quaternion, and geometric offset under one hash-linked source schema",
+        "limitation": "partial root/reset evidence cannot be promoted to comparable geometry or an exclusion"
+      }
+    ],
+    "missing_proof_inputs": [
+      "complete per-cohort hash-bound registered scene/fixture asset manifest",
+      "complete per-cohort measured reset records with cube and bowl root XYZ plus quaternion",
+      "source-defined reset predicate and scene/frame identity for each cohort",
+      "complete historical root-coordinate extrema and prospective root-coordinate bounds in the same frame"
+    ]
+  },
+  "dist": {
+    "status": "unresolved_not_excluded",
+    "claim": "none",
+    "sufficient_proof_rule": "A no-plate exclusion would require a complete hash-bound historical fixture/asset inventory and runtime reset identity proving that the exact scored reference set contains no plate. Otherwise the historical source is incomparable for DIST, not safely declared non-duplicate.",
+    "observed_evidence": [
+      {
+        "source_path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+        "interpretation": "the shown E004 control inventory names banana, bowl, and rubiks_cube",
+        "limitation": "E004 is prospective and its registration explicitly permits an inventory transition; this is not a complete historical no-plate proof"
+      },
+      {
+        "source_path": "experiments/workshops/spatial_grounding_v1/scoring.py",
+        "interpretation": "DIST scoring requires a plate position",
+        "limitation": "missing plate evidence cannot be converted to a zero or a non-duplicate label"
+      },
+      {
+        "source_path": "experiments/workshops/spatial_grounding_v1/spec/EXPERIMENT_SPEC.md",
+        "interpretation": "DIST requires both bowl and visually distinct plate as reachable task anchors",
+        "limitation": "historical absence of a verified plate makes the source non-comparable unless complete fixture identity proves the intended comparison"
+      }
+    ],
+    "missing_proof_inputs": [
+      "complete hash-bound historical scene/fixture asset manifest including object names and asset IDs",
+      "runtime reset result bound to that manifest and source commit",
+      "explicit proof that the historical scored reference set did or did not contain a plate",
+      "prospective fixture identity used by the duplicate comparator"
+    ]
+  },
+  "conclusion": {
+    "coverage_status": "incomplete_unresolved_historical_layout_coverage",
+    "release_authorization": false,
+    "comparable_pose_rows_added": 0,
+    "thresholds_changed": false,
+    "next_authoritative_action": "Obtain the named hash-bound cohort-wide manifests and reset/root records through the parent CPU export lane; do not infer bounds, centers, plate identity, or exclusions from partial records."
+  }
+}

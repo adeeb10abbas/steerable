@@ -182,6 +182,26 @@ maximum coordinate error at most 3 mm and orientation error at most 2 degrees,
 regardless of side label.
 
 An accepted design remains `prospective_design_requires_zero_model_capture`.
+
+## Durable per-slot executor
+
+`family_campaign_executor` operates one immutable campaign index only. It
+authors `candidate_manifest.json`, starts separate capture and qualification
+children under finite 1--7200 second process-group bounds, streams each
+child's stdout/stderr into fsynced evidence files, and rejects exit zero unless
+the expected artifacts verify after exit. It does not create Jobs, select GPUs,
+authorize a candidate, or issue model requests.
+
+For each qualification reset, the native producer must fsync
+`trials/goal-{sign:+d}/reset-{index}/preaction-geometry-guard.json` only after
+retaining that trial's `state-0000.json` and before controller planning/action.
+The receipt binds the materialized candidate, source capture, goal/reset, and
+that exact reset-state path/hash/size. A typed
+`physical_geometry_rejection_before_actions` with zero controller actions is
+accounted as a no-refill physical slot outcome; missing, malformed, mismatched,
+or post-rejection controller evidence is technical-invalid. This structural
+receipt alone is not a substitute for the producer's fresh measured banana,
+table, and support geometry check.
 It must first author a no-overwrite candidate overlay and then collect a
 **fresh zero-model capture of that exact overlay**. Candidate capture verifies
 the candidate overlay and all mutable inherited baseline layers immediately

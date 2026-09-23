@@ -165,6 +165,20 @@ def _validate_guard_common(
         raise RuntimeError("qualification pre-action raw reset evidence is absent or hash-mismatched")
 
 
+def _candidate_identity(path: Path) -> tuple[str, str]:
+    """Match the qualification producer/verifier candidate serialization."""
+    from dataclasses import asdict
+    from .fixtures import FixtureCandidate
+
+    value = json.loads(path.read_text(encoding="utf-8"))
+    candidate = FixtureCandidate.from_json(value)
+    digest = hashlib.sha256(json.dumps(asdict(candidate), sort_keys=True).encode()).hexdigest()
+    capture = candidate.metadata.get("candidate_capture_sha256")
+    if not isinstance(capture, str) or len(capture) != 64:
+        raise RuntimeError("materialized candidate lacks bound capture hash")
+    return digest, capture
+
+
 def _trial_guards(
     root: Path, *, design_id: str, candidate_sha256: str, candidate_capture_sha256: str,
 ) -> PhysicalGeometryRejection | None:
@@ -225,6 +239,7 @@ def run_slot(
             "campaign": str(campaign_path.resolve()), "campaign_sha256": campaign["campaign_sha256"],
             "index": str(index), "design_id": str(job["design_id"]), "root": str(root.resolve()),
             "calibration": str(controller_calibration.resolve()),
+            "study_root": str(Path(__file__).resolve().parents[3]),
         }
         if job.get("status") == "geometrically_rejected_slot_no_refill":
             value = {
@@ -258,13 +273,9 @@ def run_slot(
                     calibration=controller_calibration, output=Path(values["candidate"]))
         _run_child(qualification_command, label="qualification", root=root, values=values,
                    timeout_seconds=child_timeout_seconds)
-        candidate_sha256 = _sha256(Path(values["candidate"]))
-        candidate = json.loads(Path(values["candidate"]).read_text(encoding="utf-8"))
-        candidate_capture_sha256 = candidate.get("metadata", {}).get("candidate_capture_sha256")
-        if not isinstance(candidate_capture_sha256, str) or len(candidate_capture_sha256) != 64:
-            raise RuntimeError("materialized candidate lacks bound capture hash")
+        candidate_sha256, candidate_capture_sha256 = _candidate_identity(Path(values["candidate"]))
         rejected = _trial_guards(
-            root, design_id=str(job["design_id"]), candidate_sha256=candidate_sha256,
+            root / "trials", design_id=str(job["design_id"]), candidate_sha256=candidate_sha256,
             candidate_capture_sha256=candidate_capture_sha256,
         )
         if rejected is not None:

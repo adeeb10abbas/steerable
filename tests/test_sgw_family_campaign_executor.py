@@ -42,6 +42,10 @@ def _patch_fixture(monkeypatch: pytest.MonkeyPatch, calibration: Path) -> None:
         "experiments.workshops.spatial_grounding_v1.prospective_family_capture.verify_capture_artifacts",
         lambda path: {"verified": str(path)},
     )
+    monkeypatch.setattr(
+        executor, "_candidate_identity",
+        lambda path: (executor._sha256(path), json.loads(Path(path).read_text())["metadata"]["candidate_capture_sha256"]),
+    )
 
 
 def _success_commands() -> tuple[list[str], list[str]]:
@@ -53,7 +57,7 @@ def _success_commands() -> tuple[list[str], list[str]]:
         sys.executable, "-c",
         (
             "import hashlib,json,pathlib,sys;"
-            "q,c,r=map(pathlib.Path,sys.argv[1:]);q.write_text('{}');v=json.loads(c.read_text());"
+            "q,c,r=map(pathlib.Path,sys.argv[1:]);q.write_text('{}');r=r/'trials';v=json.loads(c.read_text());"
             "[(lambda d,s:(d.mkdir(parents=True), (d/'state-0000.json').write_text('{}'),"
             "(d/'preaction-geometry-guard.json').write_text(json.dumps({'schema_version':'sgw-01-family-preaction-geometry-guard-v1',"
             "'design_id':'HEIGHT-001','candidate_sha256':hashlib.sha256(c.read_bytes()).hexdigest(),"
@@ -128,7 +132,7 @@ def test_typed_physical_rejection_accounts_slot_without_controller_actions(tmp_p
         sys.executable, "-c",
         (
             "import hashlib,json,pathlib,sys;"
-            "q,c,r=map(pathlib.Path,sys.argv[1:]);q.write_text('{}');r=r/'goal-+1'/'reset-0';r.mkdir(parents=True);s=r/'state-0000.json';s.write_text('{}');"
+            "q,c,r=map(pathlib.Path,sys.argv[1:]);q.write_text('{}');r=r/'trials'/'goal-+1'/'reset-0';r.mkdir(parents=True);s=r/'state-0000.json';s.write_text('{}');"
             "v=json.loads(c.read_text());json.dump({'schema_version':'sgw-01-family-preaction-geometry-guard-v1',"
             "'design_id':'HEIGHT-001','candidate_sha256':hashlib.sha256(c.read_bytes()).hexdigest(),"
             "'candidate_capture_sha256':v['metadata']['candidate_capture_sha256'],'goal_sign':1,'reset_index':0,"
@@ -211,6 +215,67 @@ def test_child_timeout_retains_fsynced_logs_and_fails_slot(tmp_path: Path, monke
     process = json.loads((tmp_path / "slot" / "capture-process.json").read_text())
     assert process["timed_out"] is True
     assert Path(process["stdout"]["path"]).read_bytes()
+
+
+def test_default_executor_materializes_and_verifies_real_synthetic_family_pipeline(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Exercise default author/materialize/verify functions across child boundaries."""
+    from test_sgw_family_campaign import _native_review
+    from test_sgw_prospective_family_designs import _baseline_files
+    from experiments.workshops.spatial_grounding_v1 import family_campaign, family_campaign_verifier, height_dist_proposals
+    from experiments.workshops.spatial_grounding_v1.prospective_family_designs import build_design_plan
+
+    captures, manifests = _baseline_files(tmp_path, "HEIGHT")
+    plan = build_design_plan(
+        family="HEIGHT", seed=91, count=4, baseline_capture_paths=captures, baseline_manifest_paths=manifests,
+    )
+    plan_path = tmp_path / "plan.json"
+    plan_path.write_text(json.dumps(plan))
+    monkeypatch.setattr(
+        family_campaign, "verify_capture_artifacts",
+        lambda path: {"receipt": {"path": str(path), "sha256": family_campaign._sha256(path)}},
+    )
+    review = _native_review(tmp_path, captures)
+    campaign_path = tmp_path / "campaign.json"
+    family_campaign.compile_campaign(
+        plan_path=plan_path, baseline_captures=captures, baseline_reviews={"left": review, "right": review},
+        output=campaign_path,
+    )
+    verified_capture = lambda path: {"receipt": {"sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest()}}
+    monkeypatch.setattr(height_dist_proposals, "verify_capture_artifacts", verified_capture)
+    monkeypatch.setattr(
+        "experiments.workshops.spatial_grounding_v1.prospective_family_capture.verify_capture_artifacts",
+        verified_capture,
+    )
+    monkeypatch.setattr(family_campaign_verifier, "verify_capture_artifacts", verified_capture)
+
+    capture_child = tmp_path / "capture_child.py"
+    capture_child.write_text(
+        "import json, sys\nfrom pathlib import Path\n"
+        "sys.path[:0]=[sys.argv[1], str(Path(sys.argv[1])/'tests')]\n"
+        "from test_sgw_family_campaign import _candidate_capture\n"
+        "plan=json.loads(Path(sys.argv[2]).read_text()); design=next(x for x in plan['designs'] if x['design_id']==sys.argv[3])\n"
+        "manifest=json.loads(Path(sys.argv[4]).read_text())\n"
+        "_candidate_capture(Path(design['baseline']['capture']['path']), manifest, design, Path(sys.argv[5]))\n"
+    )
+    qualification_child = tmp_path / "qualification_child.py"
+    qualification_child.write_text(
+        "import json, sys\nfrom pathlib import Path\n"
+        "sys.path[:0]=[sys.argv[1], str(Path(sys.argv[1])/'tests')]\n"
+        "from test_sgw_family_campaign import _produce_family_qualification\n"
+        "_produce_family_qualification(Path(sys.argv[2]), json.loads(Path(sys.argv[3]).read_text()), Path(sys.argv[4]), reject_reset=False)\n"
+    )
+    calibration = Path("artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json").resolve()
+    result = executor.run_slot(
+        campaign_path=campaign_path, index=0, root=tmp_path / "slot", controller_calibration=calibration,
+        capture_command=[sys.executable, str(capture_child), "{study_root}", str(plan_path), "{design_id}",
+                         "{overlay_manifest}", "{capture}"],
+        qualification_command=[sys.executable, str(qualification_child), "{study_root}", "{root}",
+                               "{candidate}", "{calibration}"],
+        child_timeout_seconds=120,
+    )
+    assert result["status"] == "externally_verified_candidate_slot_not_fixture_or_behavioral_release"
 
 
 def test_geometric_rejection_is_accounted_without_child_or_refill(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

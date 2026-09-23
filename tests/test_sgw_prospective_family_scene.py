@@ -529,6 +529,7 @@ finally:
 
 
 def test_capture_output_check_requires_actual_receipt_and_complete_video(tmp_path):
+    pytest.importorskip("pxr.Usd")
     import numpy as np
     from test_sgw_render_warmup import Array
 

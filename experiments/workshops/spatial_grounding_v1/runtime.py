@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import ast
 import base64
+import hashlib
 from dataclasses import dataclass
 import importlib
 import inspect
@@ -30,6 +31,10 @@ import numpy as np
 
 from .adapters import AdapterError, DREAMZERO_CONFIG, NANO_CONFIG
 
+D1_ROBOLAB_CLIENT_COMMIT = "0aef241fb088ca21bb4ebd24448940ed56620d17"
+D1_CLIENT_SOURCE_SHA256 = "96de16927536f2b48427a6a2dcc3111d03204e1832e50e159cadf67b3fe956ac"
+D1_BASE_CLIENT_SOURCE_SHA256 = "6d357550f55763d6c23dc7d9efb85af9e7821f5b0d0edf76213e6b2d9d7b3f29"
+
 
 def _required_env(name: str) -> str:
     value = os.environ.get(name, "").strip()
@@ -49,6 +54,80 @@ def _load_callable(spec: str, label: str) -> Callable[..., Any]:
     if not callable(function):
         raise AdapterError(f"{label} is not callable: {spec}")
     return function
+
+
+def _verify_dreamzero_identity() -> dict[str, str]:
+    source_root = Path(_required_env("SGW01_D1_SERVER_SOURCE_ROOT")).resolve()
+    client_source_root = Path(_required_env("SGW01_D1_CLIENT_SOURCE_ROOT")).resolve()
+    checkpoint_root = Path(_required_env("SGW01_D1_CHECKPOINT_PATH")).resolve()
+    source = _verify_git_checkout(
+        source_root, DREAMZERO_CONFIG["source_commit"], "DreamZero server"
+    )
+    client_source = _verify_git_checkout(
+        client_source_root, D1_ROBOLAB_CLIENT_COMMIT, "RoboLab client"
+    )
+    if source != DREAMZERO_CONFIG["source_commit"]:
+        raise AdapterError("DreamZero source checkout is not the pinned commit")
+    manifest_path = Path(__file__).resolve().parents[3] / (
+        "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "dreamzero_official_source_checkpoint_manifest.json"
+    )
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise AdapterError("cannot read pinned DreamZero identity manifest") from exc
+    checkpoint = manifest.get("checkpoint")
+    if not isinstance(checkpoint, Mapping):
+        raise AdapterError("DreamZero identity manifest lacks checkpoint payload")
+    expected_files = checkpoint.get("files")
+    if not isinstance(expected_files, list):
+        raise AdapterError("DreamZero identity manifest lacks file hashes")
+    for item in expected_files:
+        if not isinstance(item, Mapping):
+            raise AdapterError("DreamZero checkpoint manifest entry is invalid")
+        relative = item.get("path")
+        expected_sha = item.get("sha256")
+        expected_bytes = item.get("bytes")
+        path = checkpoint_root / str(relative)
+        if not isinstance(relative, str) or not isinstance(expected_sha, str) or not path.is_file():
+            raise AdapterError(f"DreamZero checkpoint file is missing: {relative}")
+        if not isinstance(expected_bytes, int) or path.stat().st_size != expected_bytes:
+            raise AdapterError(f"DreamZero checkpoint byte count mismatch: {relative}")
+        digest = hashlib.sha256()
+        with path.open("rb") as handle:
+            for block in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(block)
+        if digest.hexdigest() != expected_sha:
+            raise AdapterError(f"DreamZero checkpoint hash mismatch: {relative}")
+    return {
+        "source_commit": source,
+        "client_source_commit": client_source,
+        "checkpoint_revision": str(checkpoint.get("revision")),
+        "checkpoint_content_sha256": str(checkpoint.get("aggregate_sha256")),
+        "source_root": str(source_root),
+        "checkpoint_path": str(checkpoint_root),
+    }
+
+
+def _verify_git_checkout(root: Path, expected: str, label: str) -> str:
+    try:
+        revision = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+        subprocess.run(
+            ["git", "-C", str(root), "diff", "--quiet", "HEAD", "--"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise AdapterError(f"{label} source checkout is missing, dirty, or unreadable") from exc
+    if revision != expected:
+        raise AdapterError(f"{label} source checkout is not pinned")
+    return revision
 
 
 def _proc_start_time(pid: int) -> str:
@@ -486,15 +565,35 @@ class _OfficialDreamZeroClient:
     """Official conditional DreamZero client with raw 24x8 capture."""
 
     def __init__(self, host: str, port: int, trace_reader: Callable[..., Any]) -> None:
+        self.identity = _verify_dreamzero_identity()
         try:
             from policies.dreamzero.client import DreamZeroClient
         except ImportError as exc:
             raise AdapterError("pinned DreamZero client is unavailable") from exc
+        client_module = importlib.import_module("policies.dreamzero.client")
+        client_origin = Path(str(getattr(client_module, "__file__", ""))).resolve()
+        try:
+            client_origin.relative_to(Path(_required_env("SGW01_D1_CLIENT_SOURCE_ROOT")).resolve())
+        except ValueError as exc:
+            raise AdapterError("DreamZero client import is outside the pinned source checkout") from exc
+        if self.identity["checkpoint_revision"] != DREAMZERO_CONFIG["revision"]:
+            raise AdapterError("DreamZero checkpoint revision is not pinned")
 
         class Client(DreamZeroClient):
             def __init__(self, **kwargs: Any) -> None:
                 self.returned_chunks: list[np.ndarray] = []
+                self.processed_chunks: list[np.ndarray] = []
+                self.returned_future: Any | None = None
+                self.raw_response: Any | None = None
                 super().__init__(**kwargs)
+
+            def _query_server(self, request: dict[str, Any]) -> Any:
+                self.raw_response = super()._query_server(request)
+                if isinstance(self.raw_response, Mapping):
+                    self.returned_future = self.raw_response.get(
+                        "future", self.raw_response.get("video")
+                    )
+                return self.raw_response
 
             def _unpack_response(self, response: Any) -> np.ndarray:
                 raw = np.asarray(super()._unpack_response(response), dtype=np.float32)
@@ -502,6 +601,13 @@ class _OfficialDreamZeroClient:
                     raise AdapterError("official D1 response is not finite 24x8")
                 self.returned_chunks.append(raw.copy())
                 return raw
+
+            def _postprocess_chunk(self, chunk: np.ndarray) -> np.ndarray:
+                processed = np.asarray(super()._postprocess_chunk(chunk), dtype=np.float32)
+                if processed.shape != (24, 8) or not np.isfinite(processed).all():
+                    raise AdapterError("official D1 processed chunk is not finite 24x8")
+                self.processed_chunks.append(processed.copy())
+                return processed
 
         self.client = Client(
             remote_host=host,
@@ -513,20 +619,59 @@ class _OfficialDreamZeroClient:
             resize="pad",
             cam2_source="right",
         )
+        if getattr(self.client, "open_loop_horizon", None) != DREAMZERO_CONFIG["executed_action_horizon"]:
+            raise AdapterError("official D1 client cadence is not pinned to 8 actions")
         self.trace_reader = trace_reader
+        self._request_count = 0
 
     def __call__(self, request: Mapping[str, Any]) -> Mapping[str, Any]:
         observation = request.get("observation")
         if not isinstance(observation, Mapping):
             raise AdapterError("D1 observation must be a mapping for the native client")
         self.client.returned_chunks.clear()
-        result = self.client.infer(observation, str(request["prompt"]))
-        if len(self.client.returned_chunks) != 1:
+        self.client.processed_chunks.clear()
+        self.client.returned_future = None
+        started_ns = time.time_ns()
+        # RoboLab BaseClient.infer returns one action per call. With the
+        # pinned open_loop_horizon=8, eight calls consume the native cache:
+        # only the first call performs a server query and captures its fresh
+        # 24x8 response; the remaining seven calls take cached actions.
+        executed_actions: list[np.ndarray] = []
+        for _ in range(DREAMZERO_CONFIG["executed_action_horizon"]):
+            result = self.client.infer(observation, str(request["prompt"]))
+            if not isinstance(result, Mapping) or "action" not in result:
+                raise AdapterError("official D1 infer did not return an action mapping")
+            action = np.asarray(result["action"], dtype=np.float32)
+            if action.shape != (8,) or not np.isfinite(action).all():
+                raise AdapterError("official D1 infer returned an invalid action")
+            executed_actions.append(action.copy())
+        finished_ns = time.time_ns()
+        if len(self.client.returned_chunks) != 1 or len(self.client.processed_chunks) != 1:
             raise AdapterError("official D1 client exposed an unexpected number of returned chunks")
-        actions = self.client.returned_chunks[-1]
+        raw_actions = self.client.returned_chunks[-1]
+        actions = self.client.processed_chunks[-1]
+        executed = np.stack(executed_actions, axis=0)
+        if not np.array_equal(executed, actions[:8]):
+            raise AdapterError("official D1 infer actions diverge from processed chunk")
         response = {
             "actions": actions,
+            "raw_actions": raw_actions,
+            "executed_actions": executed,
+            "returned_horizon": 24,
+            "executed_horizon": 8,
+            "effective_noise_seed": DREAMZERO_CONFIG["effective_noise_seed"],
+            "action_guidance": DREAMZERO_CONFIG["action_guidance"],
+            "request_started_ns": started_ns,
+            "request_finished_ns": finished_ns,
+            "request_duration_ns": finished_ns - started_ns,
         }
+        if self.client.returned_future is not None:
+            response["future"] = np.asarray(self.client.returned_future)
+            response["future_status"] = "exposed_and_retained"
+        else:
+            response["future_status"] = "not_exposed"
+        self._request_count = getattr(self, "_request_count", 0) + 1
+        response["request_count"] = self._request_count
         trace = self.trace_reader(request=request, response=response)
         if not isinstance(trace, Mapping):
             raise AdapterError("DreamZero trace reader did not return actual request binding")
@@ -536,8 +681,13 @@ class _OfficialDreamZeroClient:
         reset = getattr(self.client, "reset", None)
         if not callable(reset):
             raise AdapterError("native DreamZero client lacks a verified reset method")
+        if _is_noop_method(reset):
+            raise AdapterError("official DreamZero reset method is a no-op")
         reset()
         self.client.returned_chunks.clear()
+        self.client.processed_chunks.clear()
+        self.client.returned_future = None
+        self._request_count = 0
 
 
 @dataclass

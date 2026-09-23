@@ -236,3 +236,59 @@ equal Job start time plus `activeDeadlineSeconds`. Numeric-capped reservations
 must include their own worst-case allocation and match the owner's actual cap.
 All unfinished attempts recheck space, approvals, and remaining Job time;
 completed partitions return without constructing an adapter.
+## D1 runtime identity and cadence
+
+The official DreamZero client is loaded only after three external identity
+inputs are supplied: `SGW01_D1_SERVER_SOURCE_ROOT` must be the clean DreamZero
+server checkout at commit `ab790c198fbce33503358efbbd4187ce9a89adf3`,
+`SGW01_D1_CLIENT_SOURCE_ROOT` must be the clean RoboLab checkout at
+`0aef241fb088ca21bb4ebd24448940ed56620d17`, and
+`SGW01_D1_CHECKPOINT_PATH` must match the immutable checkpoint file manifest
+and revision `96ad344138c66e82536422432ad742f015784942`.
+
+The authorized source export is
+`a6666f0aba72463cc4381c2bc0af14dfc956acb77ca728350211a421698fdfe6`;
+the client and base-client file hashes are
+`96de16927536f2b48427a6a2dcc3111d03204e1832e50e159cadf67b3fe956ac` and
+`6d357550f55763d6c23dc7d9efb85af9e7821f5b0d0edf76213e6b2d9d7b3f29`.
+These are qualification gates, not download instructions.
+
+RoboLab's base client returns one processed action per `infer` call. The D1
+wrapper configures `open_loop_horizon=8`; it calls the native client eight
+times per SGW request, retains raw and postprocessed 24x8 chunks, and exposes
+the postprocessed chunk for execution. The first call refreshes the native
+cache and the next seven consume it. The wrapper also verifies that the eight
+official infer returns equal the processed chunk prefix, then retains those
+eight executed actions separately. Reset must evict the server session and
+clear local chunk state. Live server trace, reset eviction, decoded-future
+evidence, and checkpoint attestation remain required before D1 qualification.
+
+## Independent qualification verification
+
+`qualification_batch_verifier` checks the frozen batch/proposal/calibration
+hashes, exact candidate and controller identities, every trial and warmup file,
+raw-to-scored state correspondence, action bindings, physical timestamps,
+reset comparisons, and full video decoding. It recomputes the unchanged scorer.
+A strict stability failure is a verified physical rejection, not a technical
+error. Missing/partial evidence never becomes a physical failure.
+
+Run it in a CPU-only process against the persistent raw tree:
+
+```bash
+python -m experiments.workshops.spatial_grounding_v1.qualification_batch_verifier \
+  --plan artifacts/workshops/spatial_grounding_v1/qualification_batches/lat-remaining-20260923.json \
+  --expected-plan-sha256 f5007f84d26f27946b38f2053ca7d640b56e50e92ae3d09a0261feb45f88275e \
+  --proposals artifacts/workshops/spatial_grounding_v1/proposals/lat-20260922.json \
+  --controller-calibration artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json \
+  --raw-root /data/users/ali/sgw-01/qualification/lat-batch-20260923ak \
+  --output <new-verification-report.json>
+```
+
+The report never releases a family. Source/launch attestation, historical
+deduplication and model-runtime release remain separate gates. Reverification
+reads existing evidence only; it never reruns a physical trial.
+For a durable CPU Job, `--wait-until-utc <timezone-qualified-deadline>` verifies
+new completed candidates once and fsyncs a compact per-candidate report beside
+the final output. The bounded wait neither retries a simulator nor treats
+unpublished candidates as physical failures. An incomplete final batch exits
+nonzero while preserving every report.

@@ -255,3 +255,78 @@ def test_frame_lineage_covers_solve_and_diagnostic_reset_paths(tmp_path):
     ]
     assert all(row["value"] == frame for row in result["frame_identity"])
     assert result["comparable_geometry_rows"] == []
+
+
+def test_population_opt_in_retains_materialization_resets_and_lifecycle(tmp_path):
+    payload = _payload()
+    stage = payload["attempts"][0]["stages"]["canonical_carry"]
+    frame = {"scene_env_origin_world_m": [0, 0, 0], "passed": True}
+    lifecycle = {"environment_ordinal": 1, "role": "materialization", "created": True}
+    stage["materialization_environment"] = {
+        "fresh_reset": {"objects": {"cube": {"position_world_m": [0.1, 0.2, 0.3]}},
+                        "base_link_to_eef_frame_identity": frame},
+        "environment_lifecycle": lifecycle,
+    }
+    stage["ik_solution"] = {"passed": True, "unselected_trace": list(range(500))}
+    stage["candidate_state"]["passed"] = False
+    payload["known_reachable_diagnostics"] = [{"environment_lifecycle": lifecycle}]
+    payload["attempts"][0]["candidate_rank"] = 1
+    payload["status"] = "candidate_budget_exhausted"
+    payload["execution_evidence"]["environment_lifecycle"] = [lifecycle]
+    path = tmp_path / "state.json"
+    digest, size = _write(path, payload)
+    old = extract_state_payload(path, expected_sha256=digest, expected_bytes=size, include_lineage=True)
+    result = extract_state_payload(path, expected_sha256=digest, expected_bytes=size,
+                                   include_lineage=True, include_population=True)
+    assert len(result["fresh_reset_objects"]) == len(old["fresh_reset_objects"]) + 1
+    assert result["fresh_reset_objects"][1]["json_pointer"] == (
+        "/attempts/0/stages/canonical_carry/materialization_environment/fresh_reset/objects/cube"
+    )
+    assert result["environment_lifecycle"][0]["value"] == [lifecycle]
+    assert result["snapshot_environment_bindings"][0]["value"] == lifecycle
+    assert result["snapshot_environment_bindings"][1]["json_pointer"] == (
+        "/known_reachable_diagnostics/0/environment_lifecycle"
+    )
+    assert len(result["stage_outcomes"]) == 2
+    assert len(result["population_accounting"]) == 2
+    assert len(result["frame_identity"]) == 1
+    assert "population_accounting" not in old
+    assert result["selection_contract"] == "exact_producer_paths_ijson_same_stream_hash_with_population_v3"
+    for group in ("fresh_reset_objects", "candidate_state_objects", "full_reset_comparisons",
+                  "reference_bounds", "geometry_preflight_identity", "source_lineage", "frame_identity"):
+        assert all(row in result[group] for row in old[group])
+    assert result["comparable_geometry_rows"] == []
+
+
+def test_population_requires_lineage_and_bounded_lifecycle_shape(tmp_path):
+    path = tmp_path / "state.json"
+    digest, size = _write(path, {"execution_evidence": {"environment_lifecycle": {}}})
+    with pytest.raises(ValueError, match="requires an explicit boolean"):
+        extract_state_payload(path, expected_sha256=digest, expected_bytes=size, include_population=True)
+    with pytest.raises(ValueError, match="lifecycle must be an array"):
+        extract_state_payload(path, expected_sha256=digest, expected_bytes=size,
+                              include_lineage=True, include_population=True)
+
+
+@pytest.mark.parametrize("raw,reason", [
+    (b'{"status":"closed","status":"closed"}', "duplicate selected lineage"),
+    (b'{"status":{}}', "must be scalar"),
+    (b'{"known_reachable_diagnostics":[{"environment_lifecycle":[]}]}', "must be an object"),
+])
+def test_population_rejects_duplicate_or_malformed_metadata(tmp_path, raw, reason):
+    path = tmp_path / "state.json"
+    path.write_bytes(raw)
+    with pytest.raises(ValueError, match=reason):
+        extract_state_payload(path, expected_sha256=hashlib.sha256(raw).hexdigest(),
+                              expected_bytes=len(raw), include_lineage=True, include_population=True)
+
+
+def test_population_lifecycle_uses_existing_retention_limits(tmp_path):
+    path = tmp_path / "state.json"
+    digest, size = _write(path, {"execution_evidence": {
+        "environment_lifecycle": [{"label": "x" * 1000}],
+    }})
+    with pytest.raises(ValueError, match="environment lifecycle exceeds retained-byte"):
+        extract_state_payload(path, expected_sha256=digest, expected_bytes=size,
+                              include_lineage=True, include_population=True,
+                              limits={"max_comparison_bytes": 100})

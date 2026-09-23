@@ -139,6 +139,14 @@ same-stream-hashed extraction. The default selection remains unchanged.
 Lineage extraction is bounded and excludes unrelated environment or invocation
 fields; it does not confer historical coverage or release authority.
 
+Adding `include_population=True` retains the source-defined
+`materialization_environment/fresh_reset` paths, environment lifecycles and
+bounded scalar attempt outcomes. This is a separate v3 extraction contract;
+the v1/v2 selections remain unchanged. The earlier 100-snapshot export omitted
+materialization-environment resets and is explicitly not an exhaustive
+population. Lifecycle accounting must also address earlier infrastructure
+attempts; extraction alone cannot release fixtures or learned inference.
+
 Reproduce the retained seven-source audit into a fresh output file:
 
 ```bash

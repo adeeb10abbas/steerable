@@ -33,6 +33,14 @@ LINEAGE_PATHS = {
     ("execution_evidence", "construction_source"),
     ("execution_evidence", "input_bindings"),
 }
+POPULATION_SCALARS = {
+    ("status",), ("repair_candidate_evaluation_count",), ("candidate_budget",),
+    ("diagnostic_budget",), ("accepted_candidate_rank",),
+    *((f"r{revision:03d}_live_diagnostic_count",) for revision in (4, 5, 6, 7, 8, 9, 12)),
+}
+POPULATION_GROUPS = (
+    "population_accounting", "environment_lifecycle", "snapshot_environment_bindings", "stage_outcomes",
+)
 PathTokens = tuple[str | int, ...]
 
 
@@ -118,21 +126,42 @@ def _pointer(path: PathTokens) -> str:
     return "/" + "/".join(str(part).replace("~", "~0").replace("/", "~1") for part in path)
 
 
-def _selection(path: PathTokens, *, include_lineage: bool = False) -> tuple[str, str] | None:
+def _selection(
+    path: PathTokens, *, include_lineage: bool = False, include_population: bool = False,
+) -> tuple[str, str] | None:
     if include_lineage and path in LINEAGE_PATHS:
         return "source_lineage", "max_comparison_bytes"
+    if include_population:
+        if path in POPULATION_SCALARS or (
+            len(path) == 3 and path[0] == "attempts"
+            and isinstance(path[1], int) and path[2] == "candidate_rank"
+        ):
+            return "population_accounting", "max_object_bytes"
+        if path == ("execution_evidence", "environment_lifecycle"):
+            return "environment_lifecycle", "max_comparison_bytes"
     relative = ()
     if (
         len(path) >= 6 and path[0] == "attempts" and isinstance(path[1], int)
         and path[2] == "stages" and isinstance(path[3], str)
     ):
         relative = path[4:]
-        if relative[0] == "ik_solve_environment":
+        if include_population and len(relative) == 2:
+            if relative[0] in {"ik_solve_environment", "materialization_environment"} and relative[1] == "environment_lifecycle":
+                return "snapshot_environment_bindings", "max_comparison_bytes"
+            if relative[0] in {"ik_solution", "candidate_state"} and relative[1] in {
+                "passed", "failure_reason", "candidate_rejection", "unchanged_scientific_gate_evaluated",
+            }:
+                return "stage_outcomes", "max_object_bytes"
+        if relative[0] == "ik_solve_environment" or (
+            include_population and relative[0] == "materialization_environment"
+        ):
             if relative[1] != "fresh_reset":
                 return None
             relative = relative[1:]
-    elif len(path) >= 4 and path[0] == "known_reachable_diagnostics" and isinstance(path[1], int):
+    elif len(path) >= 3 and path[0] == "known_reachable_diagnostics" and isinstance(path[1], int):
         relative = path[2:]
+        if include_population and relative == ("environment_lifecycle",):
+            return "snapshot_environment_bindings", "max_comparison_bytes"
         if relative[0] != "fresh_reset":
             return None
     if (
@@ -171,10 +200,13 @@ def extract_state_payload(
     path: Path, *, expected_sha256: str, expected_bytes: int,
     limits: dict[str, int] | None = None,
     include_lineage: bool = False,
+    include_population: bool = False,
 ) -> dict[str, Any]:
-    """Hash the parsed stream; optional lineage retains bindings, not coverage authority."""
+    """Hash the parsed stream; optional provenance never confers coverage authority."""
     if type(include_lineage) is not bool:
         raise ValueError("lineage selection must be an explicit boolean")
+    if type(include_population) is not bool or (include_population and not include_lineage):
+        raise ValueError("population extraction requires an explicit boolean and source/frame lineage")
     active_limits = {**DEFAULT_LIMITS, **(limits or {})}
     if set(active_limits) != set(DEFAULT_LIMITS) or any(
         type(value) is not int or value <= 0 for value in active_limits.values()
@@ -188,6 +220,8 @@ def extract_state_payload(
     }
     if include_lineage:
         result.update(source_lineage=[], frame_identity=[])
+    if include_population:
+        result.update({key: [] for key in POPULATION_GROUPS})
     lineage_pointers: set[PathTokens] = set()
     objects: dict[tuple[str, PathTokens], dict[str, Any]] = {}
     object_bytes: dict[tuple[str, PathTokens], int] = {}
@@ -198,16 +232,20 @@ def extract_state_payload(
         for location, event, value in _path_events(reader):
             if selected is None:
                 match = None if event in {"map_key", "end_map", "end_array"} else _selection(
-                    location, include_lineage=include_lineage,
+                    location, include_lineage=include_lineage, include_population=include_population,
                 )
                 if match is None:
                     continue
                 kind, limit = match
-                if kind in {"source_lineage", "frame_identity"}:
+                if kind in {"source_lineage", "frame_identity", *POPULATION_GROUPS}:
                     if location in lineage_pointers:
                         raise ValueError("duplicate selected lineage field in source JSON")
-                    if event != "start_map":
+                    if kind in {"source_lineage", "frame_identity", "snapshot_environment_bindings"} and event != "start_map":
                         raise ValueError("selected lineage field must be an object")
+                    if kind == "environment_lifecycle" and event != "start_array":
+                        raise ValueError("environment lifecycle must be an array")
+                    if kind in {"population_accounting", "stage_outcomes"} and event in {"start_map", "start_array"}:
+                        raise ValueError("population accounting/outcome field must be scalar")
                     lineage_pointers.add(location)
                 if kind == "geometry_preflight_identity" and event in {"start_map", "start_array"}:
                     raise ValueError("geometry identity must be a bounded scalar")
@@ -250,7 +288,8 @@ def extract_state_payload(
     return {
         "source_sha256": expected_sha256, "source_bytes": expected_bytes,
         "selection_contract": (
-            "exact_producer_paths_ijson_same_stream_hash_with_lineage_v2" if include_lineage
+            "exact_producer_paths_ijson_same_stream_hash_with_population_v3" if include_population
+            else "exact_producer_paths_ijson_same_stream_hash_with_lineage_v2" if include_lineage
             else "exact_producer_paths_ijson_same_stream_hash_v1"
         ),
         "retention_limits": active_limits,

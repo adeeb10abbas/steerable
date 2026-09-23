@@ -1,0 +1,43 @@
+{
+  "schema_version": "sgw-01-zero-request-recovery-placement-v1",
+  "status": "prospective_admission_after_releasing_archived_terminal_owned_pod",
+  "registration_id": "SGW-N3-FIXED-20260923CW",
+  "prior_df_admission": {
+    "job": "sgw01-ali-n3-fixedinput-20260923df",
+    "pod": "sgw01-ali-n3-fixedinput-20260923df-78v6g",
+    "node": "dcwipphhgc185.edc.nam.gm.com",
+    "reason": "UnexpectedAdmissionError: requested one GPU, zero devices available",
+    "container_started": false
+  },
+  "terminal_owned_pod_cleanup": {
+    "pod": "sgw01-ali-family-partition-20260923bt-0-vfrxn",
+    "pod_uid": "47875bb1-e784-486a-adde-3f4fd5311960",
+    "job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
+    "status_before_cleanup": "Failed; all containers terminated; parent Job terminal FailedIndexes",
+    "action": "Deleted only this already terminated task-owned Pod after preserving metadata/logs. No running candidate or process was terminated.",
+    "metadata_backup": "/data/users/ali/sgw-01/infrastructure/n3-auxiliary-assets-20260923db/retired-bt0-pod.json",
+    "log_backup": "/data/users/ali/sgw-01/infrastructure/n3-auxiliary-assets-20260923db/retired-bt0.log",
+    "retained_launcher_log_sha256": "f25bad56fafa4f6416c12ce8fd7aa15defc28c7230a6278cdb31b3b720633bd7",
+    "retained_process_outcome_sha256": "b5d61ce1f3ca7edc5cf45580d5fea1179b1b2e62504f79c9eaf7fac90b5fcc23",
+    "collector_contract": "BU waits on and compiles persistent launcher/worker files, never the retired Kubernetes Pod. Those files and every raw candidate output remain untouched.",
+    "hypothesis_not_claimed_as_fact": "A terminal Pod may still retain a device allocation. Its deletion does not establish GPU availability; the next admission and physical idle guard must still pass."
+  },
+  "replacement": {
+    "job": "sgw01-ali-n3-fixedinput-20260923dg",
+    "manifest": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923dg.yaml",
+    "generated_from": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923dc.yaml",
+    "json_patch": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923dg-placement.json",
+    "node": "dcwipphhgc185.edc.nam.gm.com",
+    "requested_gpus": 1,
+    "automatic_retries": 0,
+    "deadline_seconds": 7200,
+    "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dg",
+    "exclusive_successor_claim_unchanged": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/request-owner/successor",
+    "native_source_inputs_config_and_six_request_limit": "unchanged",
+    "nonpreemption_and_actual_idle_storage_prior_owner_gates": "unchanged"
+  },
+  "model_requests_at_registration": 0,
+  "additional_request_allocation": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false
+}

@@ -1,0 +1,217 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    sgw-01/allocation-authority: SGW-OPS-002
+    sgw-01/registration-sha256: efa2fa67f7b797f1d56b388aeecc595ab7598473c41b00a5e6fee9145e498919
+    sgw-01/scope: One disclosed zero-request infrastructure recovery; same six requests;
+      native configuration unchanged
+    sgw-01/source-commit: 383beb7447170a505d33059c6be46e9ba363ec58
+  labels:
+    app.kubernetes.io/name: sgw-01
+    owner: ali
+  name: sgw01-ali-n3-fixedinput-20260923dg
+  namespace: 211247-prod
+spec:
+  activeDeadlineSeconds: 7200
+  backoffLimit: 0
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sgw-01
+        owner: ali
+        purpose: nonbehavioral-fixed-input
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - args:
+        - |
+          set -euo pipefail
+          mkdir "$OUT"
+          exec > >(tee "$OUT/job.log") 2>&1
+          cd "$SOURCE"
+          test "$(git rev-parse HEAD)" = 383beb7447170a505d33059c6be46e9ba363ec58
+          test -z "$(git status --porcelain)"
+          test "$(sha256sum "$REGISTRATION" | cut -d' ' -f1)" = efa2fa67f7b797f1d56b388aeecc595ab7598473c41b00a5e6fee9145e498919
+          test "$(sha256sum "$AUX/manifest.json" | cut -d' ' -f1)" = 9ec7c8ab51b9081fdbfe74808eabae4194f13d75775145d38246e176078c9bac
+          test "$(sha256sum "$AUX/cpu-preflight.json" | cut -d' ' -f1)" = 37d10767663f4ea3254838bf1fa2d95f1f3b87384f830697638bd3f6f86992f8
+          export PYTHONPATH="$SOURCE:$SGW01_NANO_SOURCE_ROOT"
+          export XDG_CACHE_HOME="$OUT/cache" TORCHINDUCTOR_CACHE_DIR="$OUT/cache/torchinductor" SGW01_NANO_OUTPUT_DIR="$OUT/native-loader"
+          mkdir -p "$HOME/.cache" "$XDG_CACHE_HOME"
+          "$PY" tools/validate_vla_wam_v3_protocol.py --quiet
+          "$PY" tools/validate_vla_wam_v2_protocol.py > "$OUT/v2-validation.json"
+          "$PY" - "$OUT" "$AUX" <<'PY'
+          from pathlib import Path
+          import hashlib, json, os, shutil, sys, time
+          from experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json
+          out,aux=map(Path,sys.argv[1:])
+          prior=out.parent/"run-cz"
+          owner=json.loads((out.parent/"request-owner/owner.json").read_text())
+          pod=json.loads((aux/"prior-pod.json").read_text())
+          assert owner["pod_uid"]==pod["metadata"]["uid"]=="df31b5db-4cf8-4f46-b904-29475d005923"
+          assert pod["status"]["phase"]=="Failed"
+          assert all("terminated" in row["state"] for row in pod["status"]["containerStatuses"])
+          assert json.loads((prior/"process-outcome.json").read_text())["exit_code"]==1
+          assert json.loads((prior/"evidence/failure.json").read_text())["model_requests_started"]==0
+          assert not list((prior/"evidence").glob("request-*/intent.json"))
+          assert not (prior/"evidence/trace.jsonl").exists()
+          assert not (prior/"evidence/loaded-runtime.json").exists()
+          assert json.loads((aux/"cpu-preflight.json").read_text())["status"]=="native_auxiliary_constructors_passed_offline_on_cpu"
+          manifest=json.loads((aux/"manifest.json").read_text())
+          assert manifest["status"]=="native_auxiliary_assets_downloaded_and_hashed"
+          for asset in manifest["assets"]:
+              for row in asset["files"]:
+                  path=Path(asset["snapshot"])/row["path"]
+                  assert path.stat().st_size==row["bytes"]
+                  sha=hashlib.sha256()
+                  with path.open("rb") as stream:
+                      for block in iter(lambda:stream.read(8*1024*1024),b""):
+                          sha.update(block)
+                  assert sha.hexdigest()==row["sha256"]
+          free=shutil.disk_usage(out).free; required=4144643440640
+          _fsync_json(out/"storage.json",{"free_bytes":free,"required_free_bytes":required,"observed_at_unix":time.time(),"status":"passed" if free>=required else "blocked"})
+          if free<required: raise RuntimeError("persistent storage reserve unavailable")
+          _fsync_json(out/"recovery-preflight.json",{"status":"prior_owner_terminal_zero_requests_auxiliary_assets_verified","prior_owner":owner,"prior_output":str(prior),"maximum_remaining_requests":6,"additional_request_allocation":0,"runtime_configuration_changed":False,"behavioral_episodes":0})
+          PY
+          CUDA_VISIBLE_DEVICES=$("$PY" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output "$OUT/idle.json")
+          export CUDA_VISIBLE_DEVICES
+          test "$(nvidia-smi --query-gpu=name --format=csv,noheader -i "$CUDA_VISIBLE_DEVICES")" = "NVIDIA A40"
+          exec 9>"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock"
+          flock --nonblock 9
+          mkdir "$CLAIM"
+          "$PY" - "$CLAIM" "$OUT" <<'PY'
+          import json,os,sys
+          from pathlib import Path
+          from experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json
+          claim,out=map(Path,sys.argv[1:])
+          _fsync_json(claim/"owner.json",{"pod_name":os.environ["POD_NAME"],"pod_uid":os.environ["POD_UID"],"source_commit":"383beb7447170a505d33059c6be46e9ba363ec58","registration_id":"SGW-N3-FIXED-20260923CW","predecessor_owner":str(claim.parent/"owner.json"),"recovery_output":str(out),"idle":json.loads((out/"idle.json").read_text()),"maximum_model_requests":6,"additional_request_allocation":0,"behavioral_episodes":0})
+          PY
+          nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total,memory.used,utilization.gpu --format=csv,noheader > "$OUT/gpu-identity.csv"
+          set +e
+          "$PY" -u -m experiments.workshops.spatial_grounding_v1.nano_fixed_input --registration "$REGISTRATION" --output "$OUT/evidence"
+          RC=$?
+          set -e
+          "$PY" - "$OUT" "$RC" <<'PY'
+          import sys,time
+          from pathlib import Path
+          from experiments.workshops.spatial_grounding_v1.family_campaign_executor import _fsync_json
+          _fsync_json(Path(sys.argv[1])/"process-outcome.json",{"exit_code":int(sys.argv[2]),"completed_at_unix":time.time(),"behavioral_episodes":0,"request_count_authority":"evidence per-request intents/results and trace, never launcher exit","retry_permitted":False})
+          PY
+          sync
+          exit "$RC"
+        command:
+        - /bin/bash
+        - -ec
+        env:
+        - name: SOURCE
+          value: /data/users/ali/sgw-01/source/n3-fixedinput-20260923cw
+        - name: REGISTRATION
+          value: /data/users/ali/sgw-01/source/n3-fixedinput-20260923cw/artifacts/workshops/spatial_grounding_v1/n3_fixed_input_20260923cw.json
+        - name: OUT
+          value: /data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-dg
+        - name: CLAIM
+          value: /data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/request-owner/successor
+        - name: AUX
+          value: /data/users/ali/sgw-01/infrastructure/n3-auxiliary-assets-20260923db
+        - name: PY
+          value: /data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python
+        - name: SGW01_NANO_SOURCE_ROOT
+          value: /data/users/ali/vla_wam/external/cosmos-framework-411d25b
+        - name: SGW01_NANO_CHECKPOINT_PATH
+          value: /data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid
+        - name: HF_HOME
+          value: /data/users/ali/vla_wam/cache/huggingface-cosmos
+        - name: UV_CACHE_DIR
+          value: /data/users/ali/vla_wam/cache/uv-cosmos
+        - name: PATH
+          value: /data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+        - name: LD_LIBRARY_PATH
+          value: /data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu
+        - name: HOME
+          value: /home/ali
+        - name: USER
+          value: ali
+        - name: LOGNAME
+          value: ali
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: HF_HUB_OFFLINE
+          value: "1"
+        - name: TRANSFORMERS_OFFLINE
+          value: "1"
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: compute,utility
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_UID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
+        image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+        name: fixed-input
+        resources:
+          limits:
+            cpu: "16"
+            memory: 128Gi
+            nvidia.com/gpu: "1"
+          requests:
+            cpu: "8"
+            memory: 64Gi
+            nvidia.com/gpu: "1"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsGroup: 2518800
+          runAsNonRoot: true
+          runAsUser: 816149040
+        volumeMounts:
+        - mountPath: /data
+          name: workspace
+        - mountPath: /dev/shm
+          name: dshm
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /home/ali
+          name: home
+        - mountPath: /etc/passwd
+          name: userdb
+          readOnly: true
+          subPath: passwd
+        - mountPath: /etc/group
+          name: userdb
+          readOnly: true
+          subPath: group
+      imagePullSecrets:
+      - name: artifactory-ci-pull-secret
+      nodeName: dcwipphhgc185.edc.nam.gm.com
+      priority: 0
+      restartPolicy: Never
+      schedulerName: sgw01-ali-n3-fixedinput-20260923dg
+      securityContext:
+        fsGroup: 2518800
+        seccompProfile:
+          type: RuntimeDefault
+        supplementalGroups:
+        - 2518800
+      terminationGracePeriodSeconds: 180
+      volumes:
+      - name: workspace
+        persistentVolumeClaim:
+          claimName: 211247-prod-pvc
+      - emptyDir:
+          medium: Memory
+          sizeLimit: 16Gi
+        name: dshm
+      - emptyDir: {}
+        name: tmp
+      - emptyDir: {}
+        name: home
+      - configMap:
+          name: 211247-ali-b200-1gpu-userdb
+        name: userdb

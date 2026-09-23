@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import socket
+import subprocess
 import sys
 import time
 
@@ -24,11 +26,16 @@ def _worker_argv(body: str) -> list[str]:
 def test_owned_rank_lifecycle_starts_and_reaps_workers(tmp_path: Path) -> None:
     body = (
         "import json, os, pathlib, time\n"
+        "import subprocess\n"
         "p=pathlib.Path(os.environ['SGW01_D1_RANK_READY_DIR']) / "
         "f\"rank-{os.environ['SGW01_D1_RANK']}.json\"\n"
-        "p.write_text(json.dumps({'rank': int(os.environ['SGW01_D1_RANK']), "
+        "st=subprocess.check_output(['ps','-p',str(os.getpid()),'-o','lstart='],text=True).strip()\n"
+        "cfg={'worker':'cpu','rank': int(os.environ['SGW01_D1_RANK'])}\n"
+        "p.write_text(json.dumps({'rank': int(os.environ['SGW01_D1_RANK']), 'pid': os.getpid(), 'start_time': st, "
+        "'run_nonce': os.environ['SGW01_D1_RUN_NONCE'], "
         "'source_commit': os.environ['SGW01_D1_SOURCE_COMMIT'], "
-        "'checkpoint_revision': os.environ['SGW01_D1_CHECKPOINT_REVISION']}))\n"
+        "'checkpoint_revision': os.environ['SGW01_D1_CHECKPOINT_REVISION'], 'native_config': cfg, "
+        "'native_config_sha256': __import__('hashlib').sha256((json.dumps(cfg,sort_keys=True,separators=(',',':'))+'\\n').encode()).hexdigest()}))\n"
         "time.sleep(30)\n"
     )
     lifecycle = OwnedD1RankLifecycle(
@@ -42,6 +49,7 @@ def test_owned_rank_lifecycle_starts_and_reaps_workers(tmp_path: Path) -> None:
         shutdown_timeout=2,
     )
     lifecycle.start()
+    lifecycle.await_ready()
     workers = list(lifecycle.workers)
     pids = [worker.process.pid for worker in workers]
     assert len(pids) == 2
@@ -61,8 +69,10 @@ def test_owned_rank_lifecycle_cleans_up_on_worker_failure(tmp_path: Path) -> Non
         startup_timeout=1,
         shutdown_timeout=1,
     )
+    lifecycle.start()
     with pytest.raises(AdapterError, match="exited during startup"):
-        lifecycle.start()
+        lifecycle.await_ready()
+    lifecycle.stop()
     assert lifecycle.workers == []
     assert (tmp_path / "logs" / "rank-1.stderr.log").is_file()
 
@@ -79,8 +89,10 @@ def test_owned_rank_lifecycle_timeout_reaps_children(tmp_path: Path) -> None:
         startup_timeout=0.1,
         shutdown_timeout=1,
     )
+    lifecycle.start()
     with pytest.raises(AdapterError, match="timed out"):
-        lifecycle.start()
+        lifecycle.await_ready()
+    lifecycle.stop()
     assert lifecycle.workers == []
 
 
@@ -95,6 +107,51 @@ def test_owned_rank_lifecycle_rejects_non_loopback_rendezvous(tmp_path: Path) ->
             checkpoint_revision=CHECKPOINT,
             master_addr="0.0.0.0",
         )
+
+
+def test_owned_rank_lifecycle_synchronizes_cpu_inference_barrier(tmp_path: Path) -> None:
+    coordinator = socket.socket()
+    coordinator.bind(("127.0.0.1", 0))
+    coordinator.listen(2)
+    port = coordinator.getsockname()[1]
+    body = (
+        "import json, os, pathlib, socket, subprocess\n"
+        "s=socket.create_connection((os.environ['MASTER_ADDR'], int(os.environ['MASTER_PORT'])))\n"
+        "s.sendall((os.environ['SGW01_D1_RANK']+'\\n').encode())\n"
+        "st=subprocess.check_output(['ps','-p',str(os.getpid()),'-o','lstart='],text=True).strip()\n"
+        "cfg={'worker':'cpu','rank': int(os.environ['SGW01_D1_RANK'])}\n"
+        "p=pathlib.Path(os.environ['SGW01_D1_RANK_READY_DIR']) / f\"rank-{os.environ['SGW01_D1_RANK']}.json\"\n"
+        "p.write_text(json.dumps({'rank':int(os.environ['SGW01_D1_RANK']),'pid':os.getpid(),'start_time':st,"
+        "'run_nonce':os.environ['SGW01_D1_RUN_NONCE'],'source_commit':os.environ['SGW01_D1_SOURCE_COMMIT'],"
+        "'checkpoint_revision':os.environ['SGW01_D1_CHECKPOINT_REVISION'],'native_config':cfg,"
+        "'native_config_sha256':__import__('hashlib').sha256((json.dumps(cfg,sort_keys=True,separators=(',',':'))+'\\n').encode()).hexdigest()}))\n"
+        "s.recv(16); s.sendall(b'done')\n"
+    )
+    lifecycle = OwnedD1RankLifecycle(
+        worker_argv=_worker_argv(body),
+        world_size=3,
+        log_dir=tmp_path / "logs",
+        ready_dir=tmp_path / "ready",
+        source_commit=SOURCE,
+        checkpoint_revision=CHECKPOINT,
+        master_port=port,
+        startup_timeout=2,
+        shutdown_timeout=2,
+    )
+    try:
+        lifecycle.start()
+        connections = [coordinator.accept()[0] for _ in range(2)]
+        assert {conn.recv(16).decode().strip() for conn in connections} == {"1", "2"}
+        lifecycle.await_ready()
+        for conn in connections:
+            conn.sendall(b"infer")
+        assert {conn.recv(16) for conn in connections} == {b"done"}
+        lifecycle.assert_healthy()
+        for conn in connections:
+            conn.close()
+    finally:
+        lifecycle.stop()
+        coordinator.close()
 
 
 def test_exported_ar_source_keeps_rank0_server_and_worker_loop_split() -> None:

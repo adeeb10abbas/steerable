@@ -222,7 +222,15 @@ class DreamZeroEvidenceProducer:
             }
 
 
-def make_dreamzero_http_server(producer: DreamZeroEvidenceProducer, *, host: str, port: int) -> ThreadingHTTPServer:
+def make_dreamzero_http_server(
+    producer: DreamZeroEvidenceProducer,
+    *,
+    host: str,
+    port: int,
+    healthcheck: Callable[[], None] | None = None,
+) -> ThreadingHTTPServer:
+    if host not in {"127.0.0.1", "localhost", "::1"}:
+        raise AdapterError("owned D1 HTTP server must bind loopback")
     class Handler(BaseHTTPRequestHandler):
         def _json(self, status: int, value: Mapping[str, Any]) -> None:
             body = json.dumps(value, default=lambda item: np.asarray(item).tolist()).encode()
@@ -234,6 +242,8 @@ def make_dreamzero_http_server(producer: DreamZeroEvidenceProducer, *, host: str
 
         def do_POST(self) -> None:  # noqa: N802
             try:
+                if healthcheck is not None:
+                    healthcheck()
                 packet = json.loads(self.rfile.read(int(self.headers.get("Content-Length", "0"))).decode())
                 if not isinstance(packet, Mapping):
                     raise AdapterError("D1 HTTP packet must be an object")

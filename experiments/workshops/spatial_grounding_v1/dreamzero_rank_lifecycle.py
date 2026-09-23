@@ -9,6 +9,7 @@ cleans them up on every exit path.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -28,6 +29,25 @@ class RankWorker:
     start_time: str
     stdout_path: Path
     stderr_path: Path
+
+
+def _json_sha(value: Mapping[str, object]) -> str:
+    return hashlib.sha256(
+        (json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n").encode()
+    ).hexdigest()
+
+
+def _set_parent_death_signal() -> None:
+    if os.name != "posix":
+        return
+    try:
+        import ctypes
+        import signal as _signal
+
+        libc = ctypes.CDLL(None)
+        libc.prctl(1, int(_signal.SIGTERM), 0, 0, 0)
+    except (AttributeError, OSError):
+        return
 
 
 def _proc_start_time(pid: int) -> str:
@@ -51,12 +71,17 @@ def _proc_start_time(pid: int) -> str:
 
 
 def _kill_owned(worker: RankWorker, sig: int) -> None:
-    try:
-        if _proc_start_time(worker.process.pid) != worker.start_time:
-            return
-        os.killpg(os.getpgid(worker.process.pid), sig)
-    except (OSError, ProcessLookupError):
+    if worker.process.poll() is not None:
         return
+    observed = _proc_start_time(worker.process.pid)
+    if observed != worker.start_time:
+        raise AdapterError(f"rank {worker.rank} process identity changed during cleanup")
+    try:
+        os.killpg(os.getpgid(worker.process.pid), sig)
+    except ProcessLookupError:
+        return
+    except OSError as exc:
+        raise AdapterError(f"rank {worker.rank} cleanup signal failed") from exc
 
 
 class OwnedD1RankLifecycle:
@@ -71,6 +96,7 @@ class OwnedD1RankLifecycle:
         ready_dir: Path,
         source_commit: str,
         checkpoint_revision: str,
+        native_config: Mapping[str, object] | None = None,
         master_addr: str = "127.0.0.1",
         master_port: int = 29591,
         startup_timeout: float = 30.0,
@@ -90,13 +116,38 @@ class OwnedD1RankLifecycle:
         self.ready_dir = Path(ready_dir)
         self.source_commit = source_commit
         self.checkpoint_revision = checkpoint_revision
+        self.native_config = dict(native_config or {})
+        self.run_nonce = f"d1-{os.getpid()}-{time.time_ns()}"
         self.master_addr = master_addr
         self.master_port = int(master_port)
         self.startup_timeout = startup_timeout
         self.shutdown_timeout = shutdown_timeout
         self.workers: list[RankWorker] = []
+        self._stopped = False
+        self._previous_handlers: dict[int, object] = {}
+
+    def configure_rank_zero(self) -> None:
+        os.environ.update({
+            "RANK": "0",
+            "LOCAL_RANK": "0",
+            "WORLD_SIZE": str(self.world_size),
+            "MASTER_ADDR": self.master_addr,
+            "MASTER_PORT": str(self.master_port),
+            "SGW01_D1_RUN_NONCE": self.run_nonce,
+        })
+
+    def install_signal_cleanup(self) -> None:
+        def handle(signum: int, frame: object) -> None:
+            del frame
+            self.stop()
+            raise SystemExit(128 + signum)
+
+        for signum in (signal.SIGTERM, signal.SIGINT):
+            self._previous_handlers[signum] = signal.getsignal(signum)
+            signal.signal(signum, handle)
 
     def start(self) -> None:
+        self.configure_rank_zero()
         self.log_dir.mkdir(parents=True, exist_ok=True)
         self.ready_dir.mkdir(parents=True, exist_ok=True)
         try:
@@ -116,6 +167,7 @@ class OwnedD1RankLifecycle:
                     "SGW01_D1_RANK_READY_DIR": str(self.ready_dir),
                     "SGW01_D1_SOURCE_COMMIT": self.source_commit,
                     "SGW01_D1_CHECKPOINT_REVISION": self.checkpoint_revision,
+                    "SGW01_D1_RUN_NONCE": self.run_nonce,
                 })
                 process = subprocess.Popen(
                     list(self.worker_argv),
@@ -124,6 +176,7 @@ class OwnedD1RankLifecycle:
                     stderr=stderr,
                     env=env,
                     start_new_session=True,
+                    preexec_fn=_set_parent_death_signal if os.name == "posix" else None,
                 )
                 stdout.close()
                 stderr.close()
@@ -137,14 +190,14 @@ class OwnedD1RankLifecycle:
                     stdout_path=stdout_path,
                     stderr_path=stderr_path,
                 ))
-            self._await_ready()
         except Exception:
             self.stop()
             raise
 
-    def _await_ready(self) -> None:
+    def await_ready(self) -> None:
         deadline = time.monotonic() + self.startup_timeout
         expected = set(range(1, self.world_size))
+        workers_by_rank = {worker.rank: worker for worker in self.workers}
         while time.monotonic() < deadline:
             for worker in self.workers:
                 if worker.process.poll() is not None:
@@ -160,8 +213,15 @@ class OwnedD1RankLifecycle:
                 if (
                     isinstance(payload, Mapping)
                     and isinstance(payload.get("rank"), int)
+                    and payload.get("rank") in workers_by_rank
+                    and payload.get("run_nonce") == self.run_nonce
+                    and payload.get("pid") == workers_by_rank[payload["rank"]].process.pid
+                    and payload.get("start_time") == workers_by_rank[payload["rank"]].start_time
                     and payload.get("source_commit") == self.source_commit
                     and payload.get("checkpoint_revision") == self.checkpoint_revision
+                    and isinstance(payload.get("native_config"), Mapping)
+                    and payload.get("native_config_sha256")
+                    == _json_sha(payload["native_config"])
                 ):
                     ready.add(payload["rank"])
             if ready == expected:
@@ -170,23 +230,44 @@ class OwnedD1RankLifecycle:
         missing = sorted(expected - ready)
         raise AdapterError(f"D1 rank worker startup timed out; missing ready ranks {missing}")
 
+    def assert_healthy(self) -> None:
+        for worker in self.workers:
+            if worker.process.poll() is not None:
+                raise AdapterError(
+                    f"D1 rank {worker.rank} exited while server was live; see {worker.stderr_path}"
+                )
+
     def stop(self) -> None:
+        if self._stopped:
+            return
         workers = list(self.workers)
         self.workers.clear()
+        errors: list[str] = []
         for worker in workers:
             if worker.process.poll() is None:
-                _kill_owned(worker, signal.SIGTERM)
+                try:
+                    _kill_owned(worker, signal.SIGTERM)
+                except AdapterError as exc:
+                    errors.append(str(exc))
         deadline = time.monotonic() + self.shutdown_timeout
         for worker in workers:
             remaining = max(0.0, deadline - time.monotonic())
             try:
                 worker.process.wait(timeout=remaining)
             except subprocess.TimeoutExpired:
-                _kill_owned(worker, signal.SIGKILL)
+                try:
+                    _kill_owned(worker, signal.SIGKILL)
+                except AdapterError as exc:
+                    errors.append(str(exc))
                 try:
                     worker.process.wait(timeout=2)
                 except subprocess.TimeoutExpired:
-                    pass
+                    errors.append(f"rank {worker.rank} failed to reap after SIGKILL")
+            if worker.process.poll() is None:
+                errors.append(f"rank {worker.rank} remained alive during cleanup")
+        self._stopped = True
+        if errors:
+            raise AdapterError("; ".join(errors))
 
     def __enter__(self) -> "OwnedD1RankLifecycle":
         self.start()

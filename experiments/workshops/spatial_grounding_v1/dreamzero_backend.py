@@ -30,6 +30,18 @@ D1_SERVER_SURFACE = {
 D1_14B_ENTRYPOINT_SHA256 = "7ef17f66064bac8defafc1a84551089b124546729a98be8c0515b33d2e159d48"
 
 
+def configure_official_startup() -> None:
+    """Apply the exact AR entrypoint flags before any native construction."""
+    os.environ["ENABLE_DIT_CACHE"] = "true"
+    os.environ["ATTENTION_BACKEND"] = "TE"
+    try:
+        import torch
+
+        torch._dynamo.config.recompile_limit = 800
+    except ImportError:
+        return
+
+
 class DreamZeroBackend(Protocol):
     source_root: str
     checkpoint_path: str
@@ -154,6 +166,7 @@ def _read_native_checkpoint_config(checkpoint_path: str) -> dict[str, Any]:
 
 def build_pinned_dreamzero_backend() -> DreamZeroBackend:
     """Verify identity, then invoke only an explicitly reviewed native factory."""
+    configure_official_startup()
     identity = _verify_dreamzero_identity()
     _verify_exported_server_surface(Path(identity["source_root"]))
     factory_spec = os.environ.get("SGW01_D1_SERVER_FACTORY", "").strip()
@@ -245,6 +258,7 @@ def build_official_14b_dreamzero_backend(
     config: DreamZeroServerConfig | None = None,
 ) -> OfficialDreamZero14BBackend:
     """Construct the exact AR 14B route after identity and config checks."""
+    configure_official_startup()
     identity = _verify_dreamzero_identity()
     if config is not None and (
         Path(config.checkpoint_path).resolve() != Path(identity["checkpoint_path"]).resolve()

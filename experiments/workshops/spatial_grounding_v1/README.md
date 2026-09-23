@@ -434,8 +434,9 @@ producer's durable trace remains the attribution authority.
 
 The HTTP wrapper is rank zero and remains the process launched by the SGW
 runtime, so its PID/socket attestation stays exact. For a real two-rank launch,
-set `SGW01_D1_WORLD_SIZE=2`, `SGW01_D1_RANK_WORKER_ARGV` to the reviewed
-non-zero-rank command, and provide `SGW01_D1_RANK_LOG_DIR`,
+set `SGW01_D1_WORLD_SIZE=2` (the entrypoint defaults the worker command to its
+own exact `--rank-worker` path; `SGW01_D1_RANK_WORKER_ARGV` may override it only
+with a reviewed equivalent), and provide `SGW01_D1_RANK_LOG_DIR`,
 `SGW01_D1_RANK_READY_DIR`, `SGW01_D1_SOURCE_COMMIT`,
 `SGW01_D1_CHECKPOINT_REVISION`, and an optional loopback
 `SGW01_D1_MASTER_PORT`. `OwnedD1RankLifecycle` launches only ranks 1..N-1 in

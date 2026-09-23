@@ -220,3 +220,39 @@ gate from these files. It separately requires current measured banana/table
 containment and 20-mm support clearance. Any mismatch is technical-invalid
 evidence; a valid scripted physical rejection remains distinct and still
 never grants a fixture or behavioral release.
+
+# Durable family campaign executor
+
+`python -m experiments.workshops.spatial_grounding_v1.family_campaign_executor`
+is a prospective, coordinator-operated runner for one immutable HEIGHT or DIST
+campaign index. It is **not launched by this repository** and does not create
+Kubernetes resources, choose GPUs, or authorize a candidate, fixture, or
+behavioral release.
+
+The executor accepts the frozen campaign, exactly one registered zero-based
+index, the exact controller calibration
+`107442ccca01c4ac44ec6e1cb9674d51dbcd8663288a851dc54fa91a124f93d7`, and two
+explicit child command arrays. It creates a fresh evidence root, authors the
+selected overlay, requires a fresh zero-model capture child, verifies capture
+after that child exits, lazily materializes its measured candidate, then runs
+one six-trial qualification child and externally verifies its retained output.
+Each child exit is recorded and fsynced. Exit zero without the required output
+is a technical failure, not a success.
+
+The qualification child must write
+`preaction-geometry-guard.json` before it sends a controller action. The guard
+must bind the design ID and measured candidate bytes, state
+`measured_banana_geometry_valid_before_actions`, and record
+`actions_started: false`. It must contain the six ordered `(goal_sign,
+reset_index)` records, each with that status, `actions_started: false`, and a
+SHA-256 of its retained raw reset snapshot. The child itself must evaluate
+fresh per-reset banana, table, and support geometry before starting each
+450-action sequence; an external verifier is intentionally too late to make
+that safe.
+
+Geometric or measured physical/reset rejection consumes its pre-registered
+slot with no refill. Missing, partial, malformed, or technically invalid
+evidence writes a durable failure receipt and stops the slot without an
+automatic retry. The campaign ceiling remains at most 100 slots per family,
+with at most four single-A40 pods and zero model workers/requests under a
+separately authorized coordinator plan.

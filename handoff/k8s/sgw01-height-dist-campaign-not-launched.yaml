@@ -1,0 +1,31 @@
+# NOT-LAUNCHED TEMPLATE. Coordinator must bind immutable source inputs and
+# independently authorize any Job creation. This file is not a release.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-height-dist-campaign-REPLACE_INDEX
+  labels:
+    app.kubernetes.io/name: sgw-01
+    sgw01/scope: zero-model-family-qualification-only
+spec:
+  suspend: true
+  backoffLimit: 0
+  activeDeadlineSeconds: REPLACE_FINITE_SECONDS
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: native-family-runner
+          image: REPLACE_IMMUTABLE_IMAGE_DIGEST
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+          command: ["REPLACE_COORDINATOR_BOUND_ENTRYPOINT"]
+          env:
+            - name: JOB_UID
+              # Kubernetes cannot expose owner Job UID with fieldRef. The
+              # coordinator must inject the already-attested concrete Job UID.
+              value: REPLACE_BOUND_JOB_UID
+            - name: POD_UID
+              valueFrom:
+                fieldRef: {fieldPath: metadata.uid}

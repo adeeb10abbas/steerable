@@ -49,3 +49,29 @@ inventory. Before candidate proposals, a parent-reviewed capture must prove
 the named supports have usable cube-contact sensors, each final support is
 reachable and released, the plate is visually distinct in actual views, and
 the counterbalanced neutral starts are physically valid.
+
+## Durable bounded sequencing
+
+The four source/asset-bound designs are staged at
+`/data/users/ali/sgw-01/infrastructure/source-stage-20260923aq/prospective`,
+using exact source `ff2c361d51b3fe370cef2ec2b07347082a4ea5d4`.
+`sgw01-ali-prospective-capture-20260923ar` is created **suspended**, with four
+fixed indexes, no retries, and a 2,400-second Job deadline. Every capture keeps
+its own render-only video, lossless frames, material inventory and raw receipt
+on the PVC. These are not behavioral episodes or qualified candidate layouts.
+
+`capture_sequencer.py` runs in a finite CPU-only Job independently of the
+laptop. It checks exact Job UIDs and frozen specification hashes, and only
+unsuspends ar after all 39 ak indexes complete and active/terminating
+allocations are zero. Failure, changed identity, or a deadline blocks the
+handoff. The next Job still performs a fresh idle-GPU check and exclusive
+GPU-UUID lock. No other study GPU phase may be launched concurrently with
+this two-Job chain.
+
+The controller's dedicated ServiceAccount can only read ak and read/patch ar;
+it cannot create Jobs, read secrets, list other workloads, or launch learned
+inference. Its projected API token rotates and is not stored in Git or
+receipts. Both GPU Jobs retain `automountServiceAccountToken: false`.
+Completing this chain authorizes **evidence review only**. Candidate freezing,
+scripted qualification, historical deduplication and model-runtime gates
+remain separate.

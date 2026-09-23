@@ -11,7 +11,9 @@ import numpy as np
 import pytest
 
 from experiments.workshops.spatial_grounding_v1 import simulator_mailbox, native_mailbox_receiver
-from experiments.workshops.spatial_grounding_v1.native_mailbox_receiver import _load_bound_cell, verify_receiver_completion
+from experiments.workshops.spatial_grounding_v1.native_mailbox_receiver import (
+    _load_bound_cell, _verify_native_authority, verify_receiver_completion,
+)
 from experiments.workshops.spatial_grounding_v1.simulator_mailbox import MailboxClient, MailboxError, MailboxReceiver, create_mailbox_environment
 from experiments.workshops.spatial_grounding_v1.adapters import NanoPolicyAdapter, ProductionAdapter
 from experiments.workshops.spatial_grounding_v1.contract import Cell, load_release
@@ -120,6 +122,16 @@ def test_explicit_factory_requires_hash_bound_identity(tmp_path: Path, monkeypat
     cell = SimpleNamespace(row={"cell_id": IDENTITY["cell_id"]})
     client = create_mailbox_environment(cell=cell, evidence_root=tmp_path)
     assert client.identity == IDENTITY
+    with pytest.raises(MailboxError, match="candidate_sha256"):
+        create_mailbox_environment(
+            cell=SimpleNamespace(row={"cell_id": "c", "candidate_sha256": "wrong"}),
+            evidence_root=tmp_path,
+        )
+    with pytest.raises(MailboxError, match="binding_sha256"):
+        create_mailbox_environment(
+            cell=SimpleNamespace(row={"cell_id": "c", "binding_sha256": "wrong"}),
+            evidence_root=tmp_path,
+        )
 
 
 def test_atomic_no_overwrite_publication_never_exposes_partial_json(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -184,6 +196,59 @@ def test_receiver_binds_identity_to_hashed_release_cell_bytes(tmp_path: Path) ->
         _load_bound_cell(cell, hashlib.sha256(cell.read_bytes()).hexdigest(), IDENTITY)
 
 
+def test_native_preflight_rejects_self_consistent_wrong_candidate_before_app(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from experiments.workshops.spatial_grounding_v1 import robolab_jointpos_environment
+    import hashlib
+    binding_path = tmp_path / "binding.json"
+    binding_path.write_text("{}")
+    actual_binding = hashlib.sha256(binding_path.read_bytes()).hexdigest()
+    identity = {**IDENTITY, "binding_sha256": actual_binding, "candidate_sha256": "declared-but-wrong"}
+    cell = {"cell_id": "c", "candidate_sha256": "declared-but-wrong", "binding_sha256": actual_binding}
+    monkeypatch.setenv("SGW01_ENV_BINDING", str(binding_path))
+    monkeypatch.setenv("JOB_UID", "j")
+    monkeypatch.setenv("POD_UID", "p")
+    class Binding:
+        def cell(self, _cell):
+            return {"candidate_file_sha256": "actual-candidate"}, object()
+    monkeypatch.setattr(robolab_jointpos_environment.JointPositionBinding, "load", classmethod(lambda cls: Binding()))
+    with pytest.raises(Exception, match="actual selected native candidate"):
+        _verify_native_authority(cell, identity)
+
+
+def test_native_preflight_requires_actual_downward_api_identity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("JOB_UID", "other-job")
+    monkeypatch.setenv("POD_UID", "p")
+    with pytest.raises(Exception, match="Downward API"):
+        _verify_native_authority({}, IDENTITY)
+
+
+def test_native_authority_rejection_precedes_app_construction(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = tmp_path / "mail"
+    launches: list[object] = []
+    module = types.ModuleType("isaaclab.app")
+    module.AppLauncher = lambda *_: launches.append(object())
+    monkeypatch.setitem(sys.modules, "isaaclab.app", module)
+    monkeypatch.setattr(native_mailbox_receiver, "_load_identity", lambda *_: IDENTITY)
+    monkeypatch.setattr(native_mailbox_receiver, "_load_bound_cell", lambda *_: {})
+    monkeypatch.setattr(
+        native_mailbox_receiver, "_verify_native_authority",
+        lambda *_: (_ for _ in ()).throw(native_mailbox_receiver.AdapterError("actual binding mismatch")),
+    )
+    monkeypatch.setattr(sys, "argv", ["receiver", "--mailbox-root", str(root),
+                                      "--identity", "identity.json", "--identity-sha256", "a" * 64,
+                                      "--release-cell-json", "cell.json", "--release-cell-sha256", "b" * 64,
+                                      "--deadline-seconds", "2"])
+    with pytest.raises(Exception, match="actual binding mismatch"):
+        native_mailbox_receiver.main()
+    assert not launches and not root.exists()
+
+
 @pytest.mark.parametrize("failed_cleanup", ["environment", "app"])
 def test_native_cleanup_failure_is_preserved_and_never_retried(tmp_path: Path, monkeypatch, failed_cleanup):
     from experiments.workshops.spatial_grounding_v1 import robolab_jointpos_environment
@@ -215,6 +280,7 @@ def test_native_cleanup_failure_is_preserved_and_never_retried(tmp_path: Path, m
     monkeypatch.setattr(robolab_jointpos_environment, "create_environment", create_environment)
     monkeypatch.setattr(native_mailbox_receiver, "_load_identity", lambda *_: IDENTITY)
     monkeypatch.setattr(native_mailbox_receiver, "_load_bound_cell", lambda *_: {})
+    monkeypatch.setattr(native_mailbox_receiver, "_verify_native_authority", lambda *_: None)
     monkeypatch.setattr(sys, "argv", ["receiver", "--mailbox-root", str(root),
                                     "--identity", "identity.json", "--identity-sha256", "a" * 64,
                                     "--release-cell-json", "cell.json", "--release-cell-sha256", "b" * 64,

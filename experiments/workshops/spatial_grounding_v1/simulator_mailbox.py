@@ -206,6 +206,10 @@ def create_mailbox_environment(*, cell: Any, evidence_root: Path) -> MailboxClie
                 "binding_sha256", "simulator_job_uid", "simulator_pod_uid")
     if any(not isinstance(identity.get(key), str) or not identity[key] for key in required):
         raise MailboxError("mailbox identity is incomplete")
+    for key in ("candidate_sha256", "binding_sha256"):
+        released = row.get(key)
+        if released is not None and released != identity[key]:
+            raise MailboxError(f"mailbox identity does not bind released {key}")
     # Evidence root is intentionally not used as a remote authority. The
     # recorder retains B200-side artifacts while the immutable mailbox root
     # holds A40-side raw request/response evidence.

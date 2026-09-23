@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import time
 import traceback
@@ -78,6 +79,24 @@ def _load_bound_cell(path: Path, expected_sha256: str, identity: dict[str, str])
     return cell
 
 
+def _verify_native_authority(cell: dict[str, Any], identity: dict[str, str]) -> None:
+    """Bind mailbox labels to the exact native binding before AppLauncher."""
+    job_uid, pod_uid = os.environ.get("JOB_UID"), os.environ.get("POD_UID")
+    if (not isinstance(job_uid, str) or not job_uid or not isinstance(pod_uid, str) or not pod_uid
+            or identity["simulator_job_uid"] != job_uid or identity["simulator_pod_uid"] != pod_uid):
+        raise AdapterError("receiver mailbox identity differs from Downward API Job/pod identity")
+    from .robolab_jointpos_environment import JointPositionBinding, _sha256
+    binding_path = Path(os.environ.get("SGW01_ENV_BINDING", "")).resolve()
+    if not binding_path.is_file():
+        raise AdapterError("receiver has no concrete joint-position binding path")
+    binding = JointPositionBinding.load()
+    if _sha256(binding_path) != identity["binding_sha256"]:
+        raise AdapterError("mailbox identity binding hash differs from actual joint-position binding")
+    record, _candidate = binding.cell(cell)
+    if record.get("candidate_file_sha256") != identity["candidate_sha256"]:
+        raise AdapterError("mailbox identity candidate hash differs from actual selected native candidate")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--mailbox-root", type=Path, required=True)
@@ -91,6 +110,7 @@ def main() -> None:
         raise AdapterError("receiver requires a new mailbox root and finite positive deadline")
     identity = _load_identity(args.identity, args.identity_sha256)
     cell = _load_bound_cell(args.release_cell_json, args.release_cell_sha256, identity)
+    _verify_native_authority(cell, identity)
     args.mailbox_root.mkdir(mode=0o700)
     for name in ("requests", "responses", "faults"):
         (args.mailbox_root / name).mkdir()

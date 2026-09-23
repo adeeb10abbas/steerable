@@ -254,6 +254,13 @@ and absence of a failure receipt before it treats a receiver process as
 complete. These receipts are not interchangeable with zero-model capture
 artifacts or a scored behavioral completion.
 
+Before importing or constructing `AppLauncher`, the receiver loads the actual
+`SGW01_ENV_BINDING`, verifies its hash and selected
+`candidate_file_sha256` against the identity, and compares the identity Job and
+Pod UIDs with mandatory `JOB_UID`/`POD_UID` Downward-API values. The
+coordinator must inject those values; an identity record merely claiming them
+is insufficient.
+
 The mailbox never starts a model, provides a network listener, retries an
 action, or attests the remote simulator as a local policy process. A timeout,
 duplicate command, identity/hash mismatch, malformed array, receiver fault, or

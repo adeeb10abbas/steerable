@@ -1,0 +1,85 @@
+{
+  "scope": "RoboLab-only design brief. No scene modifications, new experiments, simulator upgrades, or release.",
+  "picture_checklist_is": "Suggested human design handoff, not an additional frozen experimental requirement.",
+  "official_robolab_docs_commit": "ad45d4f974725d020f82c2b0d77d78533aeba2b3",
+  "official_project": "https://research.nvidia.com/labs/srl/projects/robolab/",
+  "paper_object_position_section": "https://arxiv.org/html/2604.09860#S4.SS3.SSS0.Px3",
+  "paper_caveat": "RoboLab Figure 9 is a success-conditioned pose-distance posterior for pi-family models on two banana tasks. Appendix B mixes translation and orientation. A 0.50 m translational pickup target with fixed orientation is an engineering proposal, not a measured N3/D1 optimum or a causal SGW finding.",
+  "counterfactual_paper_figure5": "https://arxiv.org/html/2602.17659v2#S6.F5",
+  "paper_informed_design_proposal": {
+    "file": "paper-informed-design.json",
+    "sha256": "5f6e34f122d5e5dd880014f3a474290ab09a6fee2108c2d505c601f3f31db3a2"
+  },
+  "specification": {
+    "path": "experiments/workshops/spatial_grounding_v1/spec/EXPERIMENT_SPEC.md",
+    "sha256": "40f3a6c86af16fd4845df9367792a63b60177ebd1d849212c988bf7eacd84577"
+  },
+  "prompts": {
+    "path": "experiments/workshops/spatial_grounding_v1/spec/prompts.json",
+    "sha256": "f07dbda34feb915472fc329be203ec526a7589007485eeb8f237c19c8708b979"
+  },
+  "images": [
+    {
+      "file": "design-lat.jpg",
+      "bytes": 184546,
+      "sha256": "5589277f52f31414d37ddabc51d0fd6b6fea8a282ff7752fbd33268f1c99b86d",
+      "provenance": {
+        "trial_id": "lat-pick",
+        "frame": 0,
+        "video_sha256": "7c2d30bc7d9d040e83f529a7b98f6f895293d898b9e2baba9bea06ad8160df7f"
+      }
+    },
+    {
+      "file": "design-height.jpg",
+      "bytes": 184437,
+      "sha256": "c28aa76d30dd942c4a8df88fae6c4b0fd7286e886dc2f257ece6912dfd15f8d6",
+      "provenance": {
+        "trial_id": "height-fail",
+        "frame": 0,
+        "video_sha256": "59af9260aed6ed4bfd053b020623b6e7bc88245df1076727157f08d117f316dc"
+      }
+    },
+    {
+      "file": "design-dist.png",
+      "bytes": 1076808,
+      "sha256": "7436ef3c9395774af0ff29c0704e6137487d5ab33d85cf06718545a5fd91a1a4",
+      "provenance": {
+        "review_manifest_sha256": "8a5d5f82edb73cd774c82e093646604dc90e560cd3696b715dac7eba007476ba",
+        "source_png_path": "/Users/SZ5VJY/.copilot/session-state/89af7b05-595a-43d4-977b-ae0b077d6e9f/files/sgw-bi-review-analysis/2-dist-left/over_shoulder_left_camera-final.png",
+        "frame": "final render-only warmup; no actions"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "experiment": "LAT",
+      "neutral_start": "Cube/bowl centers aligned in robot-left-right coordinate within 5 mm; separated front-to-back; cube supported.",
+      "goal_a": "Put the Rubik's cube to the left of the bowl.",
+      "goal_b": "Put the Rubik's cube to the right of the bowl.",
+      "goal_margin": "Cube center at least 30 mm left or right of bowl center in robot frame.",
+      "proposed_design_pictures": "Neutral start; proposed left endpoint; proposed right endpoint; optional annotated top view.",
+      "main_design_priority": "Grasp clearance and clear landing routes on both sides; avoid table edge and bowl.",
+      "reference_picture": "design-lat.jpg"
+    },
+    {
+      "experiment": "HEIGHT",
+      "neutral_start": "Cube/bowl centers at same height within 5 mm; separate grounded supports; bowl at intermediate height.",
+      "goal_a": "Put the Rubik's cube higher than the bowl.",
+      "goal_b": "Put the Rubik's cube lower than the bowl.",
+      "goal_margin": "Released cube center at least 30 mm higher/lower than bowl center.",
+      "proposed_design_pictures": "Neutral start; proposed higher endpoint; proposed lower endpoint; annotated side elevation.",
+      "main_design_priority": "Grounded upper/lower supports; arm clearance; transport path avoids bowl.",
+      "reference_picture": "design-height.jpg"
+    },
+    {
+      "experiment": "DIST",
+      "neutral_start": "Cube equally distant in 3D from bowl and plate centers within 5 mm difference; supported, distinct visible anchors.",
+      "goal_a": "Put the Rubik's cube closer to the bowl than to the plate.",
+      "goal_b": "Put the Rubik's cube farther from the bowl than from the plate.",
+      "goal_margin": "Requested cube-to-anchor distance advantage at least 30 mm.",
+      "proposed_design_pictures": "Neutral start; near-bowl endpoint; near-plate endpoint; annotated top view and side view if heights differ.",
+      "main_design_priority": "Recognizable plate, stationary anchors, separate safe supported landing regions.",
+      "reference_picture": "design-dist.png"
+    }
+  ]
+}

@@ -19,6 +19,43 @@ Current restart state and cluster evidence:
 
 - [`STATUS.md`](../../../artifacts/workshops/spatial_grounding_v1/STATUS.md)
 - [`continuation_state.json`](../../../artifacts/workshops/spatial_grounding_v1/continuation_state.json)
+- [Portable scene-design table and reference pictures](../../../docs/sgw_scene_design/scene-design.html)
+
+## Restart and reuse, rather than rebuild
+
+The continuation state is the restart authority, not a previous chat or a
+successful process exit. Inspect existing work before starting another worker:
+
+```bash
+git status --short
+python3 - <<'PY'
+import json
+from pathlib import Path
+state = json.loads(Path("artifacts/workshops/spatial_grounding_v1/continuation_state.json").read_text())
+for field in ("updated_at_utc", "status", "next_authorized_step", "next_safe_command"):
+    print(f"{field}: {state[field]}")
+PY
+```
+
+The persistent study root is `/data/users/ali/sgw-01`; the existing native
+environment, external repositories and checkpoints are under
+`/data/users/ali/vla_wam/`. Use the exact paths and hashes in the retained
+runtime/job receipts. Do not reinstall, redownload, replace assets, or update a
+live pinned source checkout merely to resume an ablation.
+
+Reuse qualified scene/controller, renderer, calibration and runtime evidence
+only when its exact bindings still match. A wording-only ablation need not
+rebuild an unchanged scene; changed geometry, controllers, interfaces or model
+settings require the corresponding new checks and a prospective registration.
+Never reuse a rejected/partial candidate as qualified or rerun a valid result.
+The current absence of a released SGW family/runtime remains a real blocker:
+this restart procedure is not a release or an exploratory-inference shortcut.
+
+The portable design handoff contains editable HTML, a CSV, three compact
+reference figures, provenance and the paper-informed proposal. Open its HTML
+locally; it does not require the temporary Side chat web server. Raw rollout
+videos, arrays, checkpoints and simulator collections remain on the PVC, not
+in ordinary Git.
 
 ## Local development
 

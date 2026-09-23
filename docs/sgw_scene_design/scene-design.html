@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RoboLab scene-design brief: LAT, HEIGHT and DIST</title>
+<style>
+:root{color-scheme:dark;--bg:#111318;--surface:#1b1e25;--text:#eef0f6;--muted:#aeb5c3;--line:#363b47;--accent:#95b7ff;--warn:#efc48b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}
+main{max-width:1480px;margin:auto;padding:28px}h1{font-size:24px;line-height:1.25;margin:5px 0 12px}h2{font-size:19px;margin:25px 0 10px}h3{font-size:16px;margin:6px 0}
+p{margin:8px 0}.muted,figcaption,small{color:var(--muted)}a{color:var(--accent)}.eyebrow{color:var(--accent);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.actions a,button{font:inherit;background:var(--surface);border:1px solid var(--line);padding:7px 11px;color:var(--text);border-radius:4px;text-decoration:none;cursor:pointer}
+.note{border-left:3px solid var(--accent);background:var(--surface);padding:12px 17px;margin:18px 0}.note.warning{border-color:var(--warn)}.columns{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+table{border-collapse:collapse;width:100%;table-layout:fixed}th{text-align:left;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}th,td{padding:16px 14px;vertical-align:top;border-bottom:1px solid var(--line)}th:first-child,td:first-child{padding-left:0}th:last-child,td:last-child{padding-right:0}
+th:nth-child(1){width:31%}th:nth-child(2){width:42%}th:nth-child(3){width:27%}.family{color:var(--accent);font-size:12px;font-weight:650}
+figure{margin:12px 0}figure img{width:100%;display:block;border:1px solid var(--line)}figcaption{font-size:12px;margin-top:7px}
+.goal{border-left:2px solid var(--line);padding-left:10px;margin:10px 0}.label{font-weight:650}ol,ul{padding-left:21px}li{margin:6px 0}
+.packet{background:var(--surface);padding:18px;margin-top:18px}.packet h2{margin-top:0}.sources{border-top:1px solid var(--line);padding-top:18px;margin-top:24px;font-size:13px}.sources li{overflow-wrap:anywhere}
+code{font-size:12px;overflow-wrap:anywhere}.fine{font-size:13px}.pill{font-size:12px;border:1px solid var(--line);padding:3px 7px;border-radius:3px;color:var(--muted)}
+@media(max-width:850px){main{padding:18px}.columns{grid-template-columns:1fr;gap:10px}table,tbody,tr,td{display:block;width:100%}thead{display:none}tr{margin:20px 0;border-top:1px solid var(--line)}td{padding:12px 0;border:0}td:first-child figure{max-width:620px}td:before{content:attr(data-label);display:block;color:var(--muted);text-transform:uppercase;font-size:11px;margin-bottom:5px}}
+@media print{:root{color-scheme:light;--bg:white;--surface:#f4f4f4;--text:#111;--muted:#444;--line:#ccc;--accent:#153e7c;--warn:#875000}main{padding:0}.actions{display:none}tr{break-inside:avoid}.packet{break-inside:avoid}a{color:inherit;text-decoration:underline}}
+</style>
+</head>
+<body><main>
+<div class="eyebrow">SGW-01 / RoboLab only / design handoff</div>
+<h1>What each scene must make possible</h1>
+<p>Design <strong>one clear starting arrangement per family</strong> first. The same scene must permit both opposing goals. We can later generate the required variants; you do not need to hand-build 29 scenes.</p>
+<p class="muted">Both policies use these scenes. Three wording forms express each goal, but they do not need different geometry. Only the Rubik's cube is manipulated; the bowl and, for DIST, the plate remain task references.</p>
+<div class="actions">
+<a href="scene-design-requirements.csv" download>Download CSV table</a>
+<a href="#paper-informed">Paper-informed targets and Figure 5</a>
+<button onclick="window.print()">Print / save PDF</button>
+</div>
+<div class="note"><strong>The pictures below show our current scenes, not recommended final designs.</strong> Your sketches or edited screenshots can propose improvements. Goal-position pictures that you stage manually are design illustrations, not successful robot trials.</div>
+
+<table aria-label="Experiment requirements and requested design pictures">
+<thead><tr><th>Experiment and current reference picture</th><th>Starting arrangement and both required outcomes</th><th>Pictures useful for your design proposal</th></tr></thead>
+<tbody>
+<tr>
+<td data-label="Experiment">
+<span class="family">LAT / LEFT-RIGHT</span><h3>Two unobstructed lateral landing areas</h3>
+<figure><a href="design-lat.jpg" target="_blank"><img src="design-lat.jpg" alt="Original LAT-057 starting scene with cube, red bowl and banana on a table."></a><figcaption>Actual LAT-057 reset, frame 0, left-shoulder camera. This candidate failed pickup; do not assume this near-edge arrangement is good.</figcaption></figure>
+</td>
+<td data-label="Scene requirements">
+<p><span class="label">Start:</span> cube and bowl centers have the same robot-left/right coordinate within 5 mm. Separate them front-to-back so they do not overlap. Cube starts on a support, ungrasped.</p>
+<div class="goal"><strong>Goal A:</strong> cube center at least 30 mm to the <strong>robot's left</strong> of the bowl.<br><small>"Put the Rubik's cube to the left of the bowl."</small></div>
+<div class="goal"><strong>Goal B:</strong> cube center at least 30 mm to the <strong>robot's right</strong> of the bowl.<br><small>"Put the Rubik's cube to the right of the bowl."</small></div>
+<p><span class="label">Design priority:</span> accessible grasp, clear approach, and roomy landing areas on both sides, away from the table edge. Leave a transport route that avoids the bowl.</p>
+<p class="fine muted">Robot-left/right is not image-left/right. Colors must not stand in for spatial geometry.</p>
+</td>
+<td data-label="Pictures to provide">
+<ol><li><strong>Neutral start:</strong> overview with robot/base and table visible.</li><li><strong>Proposed left outcome:</strong> cube placed in the left landing area.</li><li><strong>Proposed right outcome:</strong> cube placed in the right landing area.</li></ol>
+<p><strong>Useful extra:</strong> top view with robot-forward/left directions and approximate distances marked.</p>
+<p class="fine muted">Keep bowl, robot and cameras unchanged across the three pictures.</p>
+</td>
+</tr>
+<tr>
+<td data-label="Experiment">
+<span class="family">HEIGHT / HIGHER-LOWER</span><h3>Grounded supports at two reachable heights</h3>
+<figure><a href="design-height.jpg" target="_blank"><img src="design-height.jpg" alt="Original HEIGHT-001 starting scene with neutral cube support, reference bowl support, lower and upper supports."></a><figcaption>Actual HEIGHT-001 reset, frame 0, left-shoulder camera. A lower-goal repetition later drops the cube into the bowl; another repetition succeeds.</figcaption></figure>
+</td>
+<td data-label="Scene requirements">
+<p><span class="label">Start:</span> cube center and bowl center are at the same height within 5 mm, on separate grounded supports. Bowl remains at an intermediate height.</p>
+<div class="goal"><strong>Goal A:</strong> released cube center at least 30 mm <strong>higher</strong> than the bowl center.<br><small>"Put the Rubik's cube higher than the bowl."</small></div>
+<div class="goal"><strong>Goal B:</strong> released cube center at least 30 mm <strong>lower</strong> than the bowl center.<br><small>"Put the Rubik's cube lower than the bowl."</small></div>
+<p><span class="label">Design priority:</span> broad stable landing surfaces, no floating geometry, gripper clearance, and a transport corridor that does not pass through the bowl. The lower goal must be above the table, not below it.</p>
+<p class="fine muted">Heights refer to <strong>object centers</strong>, not support tops or pixel height. Later variants must put the upper support on both lateral sides.</p>
+</td>
+<td data-label="Pictures to provide">
+<ol><li><strong>Neutral start:</strong> cube and bowl at equal center height.</li><li><strong>Higher outcome:</strong> cube resting on the upper landing support.</li><li><strong>Lower outcome:</strong> cube resting on the lower landing support.</li></ol>
+<p><strong>Useful extra:</strong> side elevation with the three object-center heights and support tops labeled.</p>
+<p class="fine muted">A single overhead picture cannot demonstrate 3D height. Show the arm's approach/transport clearance too.</p>
+</td>
+</tr>
+<tr>
+<td data-label="Experiment">
+<span class="family">DIST / NEARER ONE OF TWO ANCHORS</span><h3>A recognizable bowl and a distinct plate</h3>
+<figure><a href="design-dist.png" target="_blank"><img src="design-dist.png" alt="Actual DIST-left baseline showing red bowl, white disc-shaped plate, cube and supports."></a><figcaption>Actual repaired DIST-left baseline after render warmup, left-shoulder camera. Visual setup only, not a qualified behavioral trial. The current white disc can be ambiguous as a plate.</figcaption></figure>
+</td>
+<td data-label="Scene requirements">
+<p><span class="label">Start:</span> cube is equally distant from bowl and plate centers in <strong>3D</strong>, within a 5 mm difference. Both anchors are visible, distinct, supported and stationary.</p>
+<div class="goal"><strong>Goal A:</strong> cube is at least 30 mm closer to the <strong>bowl</strong> than to the plate.<br><small>"Put the Rubik's cube closer to the bowl than to the plate."</small></div>
+<div class="goal"><strong>Goal B:</strong> cube is at least 30 mm closer to the <strong>plate</strong> than to the bowl.<br><small>"Put the Rubik's cube farther from the bowl than from the plate."</small></div>
+<p><span class="label">Design priority:</span> a clearly recognizable plate, separate clear landing regions nearer each anchor, and a grasp/transport route that avoids both. No need to put the cube <em>inside</em> the bowl or <em>on</em> the plate.</p>
+<p class="fine muted">This tests distances relative to two anchors, not "closer than the initial position." Later variants must swap bowl/plate lateral arrangement.</p>
+</td>
+<td data-label="Pictures to provide">
+<ol><li><strong>Neutral start:</strong> cube between/equidistant from the two anchors.</li><li><strong>Near-bowl outcome:</strong> cube resting in the bowl-side landing region.</li><li><strong>Near-plate outcome:</strong> cube resting in the plate-side landing region.</li></ol>
+<p><strong>Useful extra:</strong> top view with the two cube-to-anchor distances; include a side view if anchor heights differ.</p>
+<p class="fine muted">Do not move either anchor when staging the two goal pictures.</p>
+</td>
+</tr>
+</tbody></table>
+
+<h2>Your "too close to the robot" concern has a RoboLab basis</h2>
+<div class="columns">
+<section>
+<p>The <a href="https://arxiv.org/html/2604.09860v4#S4.SS3.SSS0.Px3" target="_blank">RoboLab paper, section IV-C / Figure 9</a>, describes successful placements around <strong>0.5 m from the robot origin</strong> in its object-position sensitivity analysis. Figure 9 shows a success-conditioned posterior for pi0, pi0.5 and pi0-FAST on two banana tasks, not our cube/support experiments or N3/D1. This is a design prior, not a universal optimum.</p>
+<p class="fine muted"><strong>Metric caveat:</strong> Appendix B defines pose distance using both translation and orientation. Do not treat the plot as a calibrated pure-distance success curve. In a new proximity comparison, keep object orientation fixed and record translational robot-to-object distance separately.</p>
+<p>The <a href="https://github.com/NVLabs/RoboLab/blob/ad45d4f974725d020f82c2b0d77d78533aeba2b3/skills/robolab-scenegen/references/scene_format.md" target="_blank">official scene-authoring guide</a> uses table center near <strong>(0.55, 0.0) m</strong>, suggested placement bounds <strong>X 0.30-0.80 m / Y -0.40 to 0.40 m</strong>, and <strong>5 cm table-edge clearance</strong>. X points forward, away from the robot. X is not the same as radial distance.</p>
+</section>
+<section>
+<p><strong>Existing-data check:</strong> in the 39-candidate LAT batch, 2 of 7 layouts with authored cube-root X below 0.30 m pass all six trials, compared with 18 of 32 farther-forward layouts. LAT-057 starts at X=0.258 m. This makes proximity worth investigating, but some close layouts succeed and many farther ones fail.</p>
+<p class="fine muted">This split is post-hoc and confounded by other pose differences. It is not a causal distance test or learned-policy result. A proper future comparison would hold robot/cameras and relative task geometry fixed while translating the proposed object/support arrangement.</p>
+</section>
+</div>
+<div class="note"><strong>Suggested first draft:</strong> use the central workspace around the paper's 0.5 m region rather than crowding the robot-side edge. Check full object footprints, arm/gripper clearance and both landing routes. Keep the wrist camera at its nominal pose; the same paper finds strong sensitivity to wrist-camera displacement. Do not assume a single distance guarantees reachability.</div>
+
+<section id="paper-informed">
+<h2>Adopted targets for the next design proposal</h2>
+<p>The following makes the paper guidance actionable without inventing a fully validated scene. <strong>No frozen candidate or running experiment is changed.</strong> Exact root transforms, support heights and path clearances still need to be realized against the pinned assets.</p>
+<table aria-label="Paper-informed prospective placement targets">
+<thead><tr><th>Design parameter</th><th>Target for the proposal</th><th>Evidence boundary</th></tr></thead>
+<tbody>
+<tr><td data-label="Parameter"><strong>Initial pickup region</strong></td><td data-label="Target">Aim for the initial <strong>cube geometric center approximately 0.50 m from the measured robot root</strong>. Convert that to an actor-root pose using the measured center offset, and record both distances. Hold object orientation fixed.</td><td data-label="Boundary">Engineering starting choice motivated by RoboLab, not a measured optimum for our models. The paper's plot uses a pose-distance metric and different policies/tasks.</td></tr>
+<tr><td data-label="Parameter"><strong>Table placement</strong></td><td data-label="Target">Use official authoring guidance: forward X 0.30-0.80 m, lateral Y -0.40 to 0.40 m, table center near X=0.55 m, and 5 cm edge clearance. Check full footprints, not just centers.</td><td data-label="Boundary">Resolve against our actual table bounds and frame. These current-documentation values are not retroactive acceptance thresholds.</td></tr>
+<tr><td data-label="Parameter"><strong>Visual and motion controls</strong></td><td data-label="Target">Keep robot and cameras fixed. Keep original object orientations for the distance comparison. Provide clear approach and transport paths for both goals.</td><td data-label="Boundary">A grasp pose being reachable does not prove the complete loaded trajectory is collision-free.</td></tr>
+<tr><td data-label="Parameter"><strong>Task geometry</strong></td><td data-label="Target">Retain the SGW neutral-start tolerance of 5 mm, opposed-goal margin of 30 mm, and existing pickup, release, stability and reference-motion rules.</td><td data-label="Boundary">These come from SGW, not from either paper. A redesigned pool needs its own prospective record.</td></tr>
+</tbody></table>
+<h2>What Figure 5 of the counterfactual VLA paper adds</h2>
+<p><a href="https://arxiv.org/html/2602.17659v2#S6.F5" target="_blank">When Vision Overrides Language, Figure 5</a>, separates object recognition, spatial selection, goal targeting and out-of-distribution generalization. <strong>Stack / Plate / Basket</strong> is the closest analogue to SGW: the same manipulated object has different requested destinations.</p>
+<p>We can investigate this principle within SGW's existing six conditions per layout. It does not require adding the paper's task families or increasing the planned episode count.</p>
+<div class="columns">
+<section><h3>Use the experimental idea</h3><ul><li>Match the starting reset across opposing goals, then change only the registered instruction.</li><li>Keep the same reset across the three equivalent wording forms.</li><li>Distinguish movement toward the requested relation from full physical completion.</li><li>Preserve counterbalance so a fixed visual side cannot stand in for the language.</li></ul></section>
+<section><h3>Do not import the intervention or claims</h3><ul><li>No LIBERO switch, extra objects, new core model, fine-tuning or CAG guidance change.</li><li>The paper's pi0.5 results do not establish N3/D1 performance.</li><li>Our same-cube task cannot use cube contact alone as proof of spatial language grounding.</li><li>Current scripted-controller failures are not evidence of a learned model's vision shortcuts.</li></ul></section>
+</div>
+<p class="fine muted">The paper's real-world study uses FR3 + Robotiq, fine-tuned pi0.5, 20 versus 1 demonstrations for its in-domain/under-observed tasks (OOD zero-shot), and 10 evaluation trials per instruction. It varies object positions across trials; we should not describe its examples as exact-reset matched SGW blocks. Its task-training frequencies are not known for our checkpoints.</p>
+<p><a href="paper-informed-design.json" target="_blank">Download the explicit source-bound design proposal and transfer limits</a></p>
+</section>
+
+<div class="packet">
+<h2>Smallest useful handoff from you</h2>
+<p><strong>Start with HEIGHT if you want to fix one scene first:</strong> send the neutral-start picture, a proposed higher placement, and a proposed lower placement, plus a side view. An annotated screenshot or sketch is enough for the first design discussion.</p>
+<p>If you edit in Isaac Sim, send a <strong>new .usda file</strong> with its asset references. Move each object's <strong>root prim using the stage tree</strong>, not its child mesh by dragging in the viewport. RoboLab's documentation warns that mesh-only movement separates geometry from the recorded object transform.</p>
+<p>Keep the robot/base and camera calibration fixed. Extra top/side pictures are <strong>engineering views only</strong>, not additional policy observations. The agent can produce the three actual policy-camera captures later: left shoulder, right shoulder, and wrist.</p>
+<p class="fine muted">This picture checklist is a design handoff, not an added experimental gate. Manually staged goal images are proposals; they do not replace the recorded scripted grasp/place checks.</p>
+</div>
+<div class="note warning"><strong>Preserve the current experiment.</strong> The original LAT/HEIGHT pools remain blocked. A new scene/controller used for new evidence needs a separately disclosed prospective design; it cannot replace rejected frozen candidates. No LIBERO or other simulator/benchmark substitution is proposed.</div>
+
+<h2>Requirements that do not change when the scene is redesigned</h2>
+<p>Cube begins supported and ungrasped; only the cube is manipulated. Reference-center movement must stay within 5 mm. The cube must be lifted at least 30 mm for three consecutive recorded steps, then released onto a valid support. The final half-second must satisfy the requested relation, support and detachment, linear speed below 0.02 m/s and angular speed below 0.2 rad/s. Qualification uses both goals with three reset trials each; these rules are from SGW-01, not minimum requirements imposed by RoboLab itself.</p>
+<div class="sources">
+<strong>Sources and picture provenance</strong>
+<ul>
+<li>Frozen study: <code>experiments/workshops/spatial_grounding_v1/spec/EXPERIMENT_SPEC.md</code>, sections 4-5, and exact <code>prompts.json</code>.</li>
+<li><a href="https://research.nvidia.com/labs/srl/projects/robolab/" target="_blank">Official RoboLab project</a>; <a href="https://arxiv.org/html/2604.09860#S4.SS3" target="_blank">paper sensitivity analysis</a>; <a href="https://github.com/NVLabs/RoboLab/blob/ad45d4f974725d020f82c2b0d77d78533aeba2b3/docs/scene.md" target="_blank">manual USD scene workflow</a>.</li>
+<li>Official documentation reference revision: <code>ad45d4f974725d020f82c2b0d77d78533aeba2b3</code>. This does not upgrade the study's pinned RoboLab runtime.</li>
+<li><a href="https://arxiv.org/html/2602.17659v2#S6.F5" target="_blank">Counterfactual VLA paper, Figure 5</a>, section VII methods/results and Appendix C: design inspiration only; no imported results or intervention.</li>
+<li>LAT and HEIGHT pictures are frame 0 from the hash-verified original trial videos. DIST is the original independent-review PNG, bound to the sealed SGW-ENG-007 review. <a href="scene-design-sources.json" target="_blank">Exact source/image hashes</a>; <a href="lat-proximity-diagnostic.json" target="_blank">existing-data proximity diagnostic</a>.</li>
+</ul>
+</div>
+</main>
+<script>
+if (location.protocol === "file:") {
+  document.querySelectorAll(".server-only").forEach(link => { link.hidden = true; });
+}
+</script>
+</body></html>

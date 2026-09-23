@@ -1,0 +1,89 @@
+{
+  "schema_version": "sgw-paper-informed-design-proposal-v1",
+  "status": "prospective_design_proposal_not_a_materialized_scene_or_experimental_release",
+  "platform": "RoboLab",
+  "other_benchmarks_added": [],
+  "scene_materialized": false,
+  "new_model_requests": 0,
+  "new_simulator_runs": 0,
+  "frozen_candidates_modified": false,
+  "frozen_failures_replaced": false,
+  "user_direction": "Use paper-informed measurements for improved scene design; investigate Figure 5 of arXiv:2602.17659; retain RoboLab only and full benchmark qualification first.",
+  "placement_design_targets": {
+    "initial_pickup_translational_distance_from_robot_base_m": {
+      "target": 0.5,
+      "role": "engineering_starting_target_not_a_success_threshold_or_universal_optimum",
+      "target_applies_to": "initial movable cube geometric center; convert to the authored actor-root transform using the measured root-local center offset",
+      "measure": "Euclidean position separation from the measured robot root, with actor-root and geometric-center values reported separately",
+      "orientation": "Keep the object's existing validated orientation fixed during a proximity comparison; record it separately.",
+      "source": "RoboLab Figure 9 and section IV-C",
+      "caveat": "The figure is a success-conditioned posterior for pi0, pi0.5 and pi0-FAST on two banana tasks. Appendix B defines a pose metric containing translation and rotation; its horizontal axis must not be silently equated to pure metric reach."
+    },
+    "official_scene_authoring_guidance_m": {
+      "x_forward": [0.3, 0.8],
+      "y_lateral": [-0.4, 0.4],
+      "table_center_xy": [0.55, 0.0],
+      "table_edge_clearance": 0.05,
+      "role": "current_official_authoring_guidance_not_a_retroactive_gate",
+      "source": "NVLabs/RoboLab skills/robolab-scenegen/references/scene_format.md",
+      "source_commit": "ad45d4f974725d020f82c2b0d77d78533aeba2b3",
+      "caveat": "Resolve these guidelines against the actual pinned table, robot origin, object footprints and assets. Do not upgrade the simulator or assume the current documentation's tabletop height matches the pinned runtime."
+    },
+    "robot_and_camera_pose": "unchanged; retain nominal wrist-camera calibration",
+    "layout_motion_for_proximity_comparison": "Translate the proposed object/support arrangement in the fixed robot frame without changing relative task geometry, reference inventory or object orientations. Do not translate the robot with it.",
+    "physical_checks_still_needed": [
+      "measured grasp and landing centers and frame transforms",
+      "full object/support footprints and table-edge clearance",
+      "arm and gripper collision clearance along approach, lift, transfer and release",
+      "joint limits and reachability for both goals",
+      "stable support and reset behavior",
+      "scripted qualification under the separately authorized prospective plan"
+    ]
+  },
+  "unchanged_SGW_requirements": {
+    "neutral_relation_tolerance_m": 0.005,
+    "requested_goal_margin_m": 0.03,
+    "reference_center_motion_limit_m": 0.005,
+    "pickup_height_m": 0.03,
+    "pickup_consecutive_samples": 3,
+    "terminal_stability_seconds": 0.5,
+    "linear_speed_strictly_below_m_s": 0.02,
+    "angular_speed_strictly_below_rad_s": 0.2,
+    "robot_actions_per_trial": 450,
+    "qualification_trials_per_candidate": 6,
+    "note": "The current frozen study and its blocked LAT/HEIGHT outcomes remain intact. These values are SGW requirements, not requirements inferred from the papers."
+  },
+  "counterfactual_paper_transfer": {
+    "paper": "When Vision Overrides Language: Evaluating and Mitigating Counterfactual Failures in VLAs",
+    "arxiv_version": "2602.17659v2",
+    "figure": 5,
+    "most_relevant_scene_family": "Stack / Plate / Basket: different requested destinations for the same manipulated object",
+    "compatible_with_current_SGW": [
+      "same registered reset for matched opposite-goal instructions",
+      "same registered reset for direct, syntax-matched and reference-inverted wordings",
+      "use the existing six conditions per layout rather than silently adding the paper's task families",
+      "report objective requested-relation movement separately from strict physical completion",
+      "retain pickup, reference disturbance, wrong relation and release/stability failures",
+      "use counterbalanced sides to reduce a fixed visual location predicting the goal"
+    ],
+    "metric_warning": "The paper defines target contact as grounding in its simulation benchmark and reports correct-task attempts versus completed executions in its real-world breakdown. In SGW the target is always the same cube, so cube contact alone cannot establish that left/right, higher/lower or relative-distance language was followed. Use the registered relation/trajectory analyses without equating them to the paper's grounding rate.",
+    "not_added": [
+      "LIBERO or LIBERO-CF",
+      "additional manipulated objects or extra task families",
+      "pi0.5 as an SGW core model",
+      "Counterfactual Action Guidance or changed N3/D1 guidance settings",
+      "fine-tuning or additional demonstrations",
+      "claims that SGW instructions are known in-domain or under-observed in model training",
+      "the paper's outcomes as SGW evidence"
+    ],
+    "evidence_limits": "Figure 5 concerns real-world FR3/Robotiq experiments with a fine-tuned pi0.5 baseline, 20 versus 1 demonstrations for in-domain/under-observed tasks (OOD zero-shot), and 10 evaluation trials per instruction. It is not a result for frozen N3 or D1.",
+    "current_failure_video_limit": "Current LAT/HEIGHT clips were generated by a scripted qualification controller, so they cannot demonstrate a learned policy's vision shortcuts."
+  },
+  "sources": {
+    "robolab_paper": "https://arxiv.org/html/2604.09860v4",
+    "robolab_distance_analysis": "https://arxiv.org/html/2604.09860v4#S4.SS3",
+    "robolab_authoring_guide": "https://github.com/NVLabs/RoboLab/blob/ad45d4f974725d020f82c2b0d77d78533aeba2b3/skills/robolab-scenegen/references/scene_format.md",
+    "counterfactual_figure5": "https://arxiv.org/html/2602.17659v2#S6.F5",
+    "counterfactual_paper_pdf": "https://arxiv.org/pdf/2602.17659"
+  }
+}

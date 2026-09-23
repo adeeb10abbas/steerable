@@ -186,6 +186,38 @@ def test_prediction_array_names_do_not_interpret_observation_keys_as_paths(tmp_p
             assert path.is_file()
 
 
+def test_dreamzero_http_watchdog_fails_when_rank_dies(tmp_path: Path) -> None:
+    backend = _Backend()
+    producer = DreamZeroEvidenceProducer(
+        backend,
+        trace_path=tmp_path / "trace.jsonl",
+        future_dir=tmp_path / "future",
+        attestation_path=tmp_path / "attestation.json",
+    )
+    server = make_dreamzero_http_server(
+        producer,
+        host="127.0.0.1",
+        port=0,
+        healthcheck=lambda: (_ for _ in ()).throw(AdapterError("rank exited")),
+    )
+    with pytest.raises(AdapterError, match="rank exited"):
+        server.service_actions()
+    assert isinstance(server.failure, AdapterError)
+    server.server_close()
+
+
+def test_dreamzero_http_rejects_non_loopback_before_bind(tmp_path: Path) -> None:
+    backend = _Backend()
+    producer = DreamZeroEvidenceProducer(
+        backend,
+        trace_path=tmp_path / "trace.jsonl",
+        future_dir=tmp_path / "future",
+        attestation_path=tmp_path / "attestation.json",
+    )
+    with pytest.raises(AdapterError, match="loopback"):
+        make_dreamzero_http_server(producer, host="0.0.0.0", port=0)
+
+
 def test_dreamzero_native_binding_requires_exported_server_surface(tmp_path: Path) -> None:
     try:
         dreamzero_backend._verify_exported_server_surface(tmp_path)

@@ -220,6 +220,10 @@ class OwnedD1RankLifecycle:
                     and payload.get("source_commit") == self.source_commit
                     and payload.get("checkpoint_revision") == self.checkpoint_revision
                     and isinstance(payload.get("native_config"), Mapping)
+                    and payload["native_config"].get("num_inference_steps") == 16
+                    and payload["native_config"].get("seed") == 1140
+                    and payload["native_config"].get("cfg_scale") == 5.0
+                    and payload["native_config"].get("action_output_dim") == 8
                     and payload.get("native_config_sha256")
                     == _json_sha(payload["native_config"])
                 ):

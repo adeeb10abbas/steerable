@@ -13,6 +13,7 @@ from experiments.workshops.spatial_grounding_v1.adapters import AdapterError
 from experiments.workshops.spatial_grounding_v1.dreamzero_rank_lifecycle import (
     OwnedD1RankLifecycle,
 )
+from experiments.workshops.spatial_grounding_v1 import dreamzero_wrapper_entrypoint as entrypoint
 
 
 SOURCE = "ab790c198fbce33503358efbbd4187ce9a89adf3"
@@ -30,7 +31,7 @@ def test_owned_rank_lifecycle_starts_and_reaps_workers(tmp_path: Path) -> None:
         "p=pathlib.Path(os.environ['SGW01_D1_RANK_READY_DIR']) / "
         "f\"rank-{os.environ['SGW01_D1_RANK']}.json\"\n"
         "st=subprocess.check_output(['ps','-p',str(os.getpid()),'-o','lstart='],text=True).strip()\n"
-        "cfg={'worker':'cpu','rank': int(os.environ['SGW01_D1_RANK'])}\n"
+        "cfg={'num_inference_steps':16,'seed':1140,'cfg_scale':5.0,'action_output_dim':8,'rank': int(os.environ['SGW01_D1_RANK'])}\n"
         "p.write_text(json.dumps({'rank': int(os.environ['SGW01_D1_RANK']), 'pid': os.getpid(), 'start_time': st, "
         "'run_nonce': os.environ['SGW01_D1_RUN_NONCE'], "
         "'source_commit': os.environ['SGW01_D1_SOURCE_COMMIT'], "
@@ -119,7 +120,7 @@ def test_owned_rank_lifecycle_synchronizes_cpu_inference_barrier(tmp_path: Path)
         "s=socket.create_connection((os.environ['MASTER_ADDR'], int(os.environ['MASTER_PORT'])))\n"
         "s.sendall((os.environ['SGW01_D1_RANK']+'\\n').encode())\n"
         "st=subprocess.check_output(['ps','-p',str(os.getpid()),'-o','lstart='],text=True).strip()\n"
-        "cfg={'worker':'cpu','rank': int(os.environ['SGW01_D1_RANK'])}\n"
+        "cfg={'num_inference_steps':16,'seed':1140,'cfg_scale':5.0,'action_output_dim':8,'rank': int(os.environ['SGW01_D1_RANK'])}\n"
         "p=pathlib.Path(os.environ['SGW01_D1_RANK_READY_DIR']) / f\"rank-{os.environ['SGW01_D1_RANK']}.json\"\n"
         "p.write_text(json.dumps({'rank':int(os.environ['SGW01_D1_RANK']),'pid':os.getpid(),'start_time':st,"
         "'run_nonce':os.environ['SGW01_D1_RUN_NONCE'],'source_commit':os.environ['SGW01_D1_SOURCE_COMMIT'],"
@@ -169,3 +170,36 @@ def test_exported_ar_source_keeps_rank0_server_and_worker_loop_split() -> None:
     assert "lazy_joint_forward_causal" in source
     assert "signal == 1" in source
     assert "signal == 2" in source
+
+
+def test_wrapper_rejects_bad_host_before_native_preflight(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SGW01_D1_WORLD_SIZE", "2")
+    monkeypatch.setenv("SGW01_D1_HOST", "0.0.0.0")
+    monkeypatch.setenv("SGW01_D1_PORT", "8123")
+    called = []
+    monkeypatch.setattr(entrypoint, "verify_pinned_dreamzero_prerequisites", lambda: called.append("verify"))
+    monkeypatch.setattr(entrypoint, "build_pinned_dreamzero_backend", lambda: called.append("build"))
+    with pytest.raises(RuntimeError, match="loopback"):
+        entrypoint.main()
+    assert called == []
+
+
+def test_wrapper_rejects_bad_identity_before_worker_spawn(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SGW01_D1_WORLD_SIZE", "2")
+    monkeypatch.setenv("SGW01_D1_HOST", "127.0.0.1")
+    monkeypatch.setenv("SGW01_D1_PORT", "8123")
+    monkeypatch.setattr(
+        entrypoint,
+        "verify_pinned_dreamzero_prerequisites",
+        lambda: (_ for _ in ()).throw(AdapterError("checkpoint hash mismatch")),
+    )
+    spawned = []
+
+    class SpyLifecycle:
+        def __init__(self, **kwargs: object) -> None:
+            spawned.append(kwargs)
+
+    monkeypatch.setattr(entrypoint, "OwnedD1RankLifecycle", SpyLifecycle)
+    with pytest.raises(AdapterError, match="checkpoint hash mismatch"):
+        entrypoint.main()
+    assert spawned == []

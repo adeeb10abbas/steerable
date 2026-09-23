@@ -9,6 +9,7 @@ Tests can use ``DreamZeroBackend`` implementations without importing models.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import datetime
 import importlib
 import hashlib
 import json
@@ -38,6 +39,9 @@ def configure_official_startup() -> None:
         import torch
 
         torch._dynamo.config.recompile_limit = 800
+        torch.distributed.default_pg_timeout = datetime.timedelta(
+            seconds=int(os.environ.get("SGW01_D1_COLLECTIVE_TIMEOUT", "300"))
+        )
     except ImportError:
         return
 
@@ -164,11 +168,27 @@ def _read_native_checkpoint_config(checkpoint_path: str) -> dict[str, Any]:
     }
 
 
+def verify_pinned_dreamzero_prerequisites() -> dict[str, str]:
+    """Verify every identity and path needed before spawning any rank."""
+    identity = _verify_dreamzero_identity()
+    source_root = Path(identity["source_root"])
+    _verify_exported_server_surface(source_root)
+    _verify_14b_entrypoint(source_root)
+    model_path = os.environ.get("SGW01_D1_MODEL_PATH", "").strip()
+    if not model_path:
+        raise AdapterError("SGW01_D1_MODEL_PATH is required before rank launch")
+    if Path(model_path).resolve() != Path(identity["checkpoint_path"]).resolve():
+        raise AdapterError("D1 model path differs from the attested checkpoint path")
+    native_config = _read_native_checkpoint_config(identity["checkpoint_path"])
+    if native_config["returned_action_horizon"] != DREAMZERO_CONFIG["returned_action_horizon"]:
+        raise AdapterError("attested D1 checkpoint action horizon is not 24")
+    return identity
+
+
 def build_pinned_dreamzero_backend() -> DreamZeroBackend:
     """Verify identity, then invoke only an explicitly reviewed native factory."""
     configure_official_startup()
-    identity = _verify_dreamzero_identity()
-    _verify_exported_server_surface(Path(identity["source_root"]))
+    identity = verify_pinned_dreamzero_prerequisites()
     factory_spec = os.environ.get("SGW01_D1_SERVER_FACTORY", "").strip()
     if not factory_spec:
         raise AdapterError(
@@ -259,7 +279,7 @@ def build_official_14b_dreamzero_backend(
 ) -> OfficialDreamZero14BBackend:
     """Construct the exact AR 14B route after identity and config checks."""
     configure_official_startup()
-    identity = _verify_dreamzero_identity()
+    identity = verify_pinned_dreamzero_prerequisites()
     if config is not None and (
         Path(config.checkpoint_path).resolve() != Path(identity["checkpoint_path"]).resolve()
         or Path(config.source_root).resolve() != Path(identity["source_root"]).resolve()
@@ -271,13 +291,7 @@ def build_official_14b_dreamzero_backend(
     ):
         raise AdapterError("D1 factory configuration differs from the verified identity")
     source_root = Path(identity["source_root"])
-    _verify_exported_server_surface(source_root)
-    _verify_14b_entrypoint(source_root)
-    model_path = os.environ.get("SGW01_D1_MODEL_PATH", "").strip()
-    if not model_path:
-        raise AdapterError("SGW01_D1_MODEL_PATH is required for explicit 14B construction")
-    if Path(model_path).resolve() != Path(identity["checkpoint_path"]).resolve():
-        raise AdapterError("D1 model path differs from the attested checkpoint path")
+    model_path = os.environ["SGW01_D1_MODEL_PATH"]
     native_config = _read_native_checkpoint_config(identity["checkpoint_path"])
     if native_config["returned_action_horizon"] != DREAMZERO_CONFIG["returned_action_horizon"]:
         raise AdapterError("attested D1 checkpoint action horizon is not 24")

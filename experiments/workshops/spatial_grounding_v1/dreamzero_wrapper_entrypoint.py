@@ -22,6 +22,7 @@ from .dreamzero_backend import (
     _observe_action_head,
     build_pinned_dreamzero_backend,
     configure_official_startup,
+    verify_pinned_dreamzero_prerequisites,
 )
 from .dreamzero_producer import DreamZeroEvidenceProducer, make_dreamzero_http_server
 from .dreamzero_rank_lifecycle import OwnedD1RankLifecycle
@@ -60,7 +61,8 @@ def run_native_rank_worker() -> None:
     if os.environ.get("RANK") == "0":
         raise RuntimeError("rank worker entrypoint cannot run as rank zero")
     configure_official_startup()
-    source_root = Path(_required("SGW01_D1_SERVER_SOURCE_ROOT")).resolve()
+    identity = verify_pinned_dreamzero_prerequisites()
+    source_root = Path(identity["source_root"]).resolve()
     model_path = _required("SGW01_D1_MODEL_PATH")
     sys.path.insert(0, str(source_root))
     module = importlib.import_module("socket_test_optimized_AR")
@@ -115,9 +117,16 @@ def main() -> None:
     if "--rank-worker" in sys.argv:
         run_native_rank_worker()
         return
-    world_size = int(os.environ.get("SGW01_D1_WORLD_SIZE", "1"))
+    world_size = int(os.environ.get("SGW01_D1_WORLD_SIZE", "0"))
+    if world_size != 2:
+        raise RuntimeError("SGW01 D1 requires explicit SGW01_D1_WORLD_SIZE=2")
+    host = _required("SGW01_D1_HOST")
+    if host not in {"127.0.0.1", "localhost", "::1"}:
+        raise RuntimeError("SGW01 D1 HTTP host must be loopback")
+    port = int(_required("SGW01_D1_PORT"))
+    verify_pinned_dreamzero_prerequisites()
     worker_spec = os.environ.get("SGW01_D1_RANK_WORKER_ARGV", "").strip()
-    if world_size > 1 and not worker_spec:
+    if not worker_spec:
         worker_spec = json.dumps([
             sys.executable,
             "-m",
@@ -141,22 +150,6 @@ def main() -> None:
         )
         lifecycle.configure_rank_zero()
         lifecycle.install_signal_cleanup()
-    host = _required("SGW01_D1_HOST")
-    port = int(_required("SGW01_D1_PORT"))
-    if lifecycle is None:
-        backend = build_pinned_dreamzero_backend()
-        producer = DreamZeroEvidenceProducer(
-            backend,
-            trace_path=Path(_required("SGW01_TRACE_SIDECAR")),
-            future_dir=Path(_required("SGW01_FUTURE_DIR")),
-            attestation_path=Path(_required("SGW01_SERVER_ATTESTATION")),
-        )
-        make_dreamzero_http_server(
-            producer,
-            host=host,
-            port=port,
-        ).serve_forever()
-        return
     with lifecycle:
         backend = build_pinned_dreamzero_backend()
         lifecycle.await_ready()

@@ -231,6 +231,18 @@ def make_dreamzero_http_server(
 ) -> ThreadingHTTPServer:
     if host not in {"127.0.0.1", "localhost", "::1"}:
         raise AdapterError("owned D1 HTTP server must bind loopback")
+    class OwnedD1HTTPServer(ThreadingHTTPServer):
+        failure: BaseException | None = None
+
+        def service_actions(self) -> None:
+            if healthcheck is None:
+                return
+            try:
+                healthcheck()
+            except BaseException as exc:
+                self.failure = exc
+                raise
+
     class Handler(BaseHTTPRequestHandler):
         def _json(self, status: int, value: Mapping[str, Any]) -> None:
             body = json.dumps(value, default=lambda item: np.asarray(item).tolist()).encode()
@@ -259,4 +271,4 @@ def make_dreamzero_http_server(
         def log_message(self, format: str, *args: Any) -> None:
             return None
 
-    return ThreadingHTTPServer((host, port), Handler)
+    return OwnedD1HTTPServer((host, port), Handler)

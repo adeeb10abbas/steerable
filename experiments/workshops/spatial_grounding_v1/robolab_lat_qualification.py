@@ -194,9 +194,42 @@ def register_lat_task(registrar: Any, task_path: Path, cameras: Any) -> None:
 class RoboLabLatScriptedController:
     """Execute candidate-recorded world-frame Abs-IK waypoints without a policy."""
 
+    def __init__(self, calibration_path: Path | None = None) -> None:
+        self.calibration = None
+        self.identity = {"recipe": "legacy_candidate_waypoints_unqualified"}
+        if calibration_path is not None:
+            from .grasp_calibration import SCHEMA
+            from .lat_candidate_generator import workspace_digest
+
+            raw = calibration_path.read_bytes()
+            self.calibration = json.loads(raw)
+            if (self.calibration.get("schema_version") != SCHEMA
+                    or self.calibration.get("receipt_sha256") != workspace_digest(self.calibration)):
+                raise SimulatorBridgeError("invalid grasp calibration identity")
+            self.identity = {
+                "recipe": SCHEMA, "calibration_sha256": hashlib.sha256(raw).hexdigest(),
+                "calibration": self.calibration,
+            }
+
     def actions_for_goal(self, environment: Environment, candidate: FixtureCandidate, goal_sign: int) -> Sequence[Sequence[float]]:
         if not isinstance(environment, RoboLabLatEnvironment):
             raise SimulatorBridgeError("LAT controller requires RoboLabLatEnvironment")
+        if self.calibration is not None:
+            from .grasp_calibration import calibrated_actions
+
+            robot = environment._env.scene["robot"]
+            if hashlib.sha256(Path(robot.cfg.spawn.usd_path).read_bytes()).hexdigest() != self.calibration["robot_asset"]["sha256"]:
+                raise SimulatorBridgeError("actual robot asset differs from measured gripper geometry")
+            data = robot.data
+            if not np.allclose(data.root_quat_w[0].detach().cpu().numpy(), [1, 0, 0, 0], atol=1e-6):
+                raise SimulatorBridgeError("calibrated controller requires identity robot-root orientation")
+            index = list(data.body_names).index("base_link")
+            return calibrated_actions(
+                candidate, goal_sign, self.calibration,
+                flange_quaternion_world_wxyz=data.body_quat_w[0, index].detach().cpu().numpy(),
+                environment_origin_world_xyz_m=environment._env.scene.env_origins[0].detach().cpu().numpy(),
+                robot_root_world_xyz_m=data.root_pos_w[0].detach().cpu().numpy(),
+            )
         key = "positive" if goal_sign == 1 else "negative"
         waypoints = candidate.metadata.get("abs_ik_waypoints", {}).get(key)
         if not isinstance(waypoints, list) or not waypoints:
@@ -238,5 +271,5 @@ def create_bridge(*, robolab_root: Path, assets_manifest: Path, evidence_root: P
     return RoboLabLatBridge(study_root=study_root, robolab_root=robolab_root, evidence_root=evidence_root, device=device, renderer=renderer, rendering_type=rendering_type)
 
 
-def create_controller(**_: Any) -> RoboLabLatScriptedController:
-    return RoboLabLatScriptedController()
+def create_controller(*, controller_calibration: Path | None = None, **_: Any) -> RoboLabLatScriptedController:
+    return RoboLabLatScriptedController(controller_calibration)

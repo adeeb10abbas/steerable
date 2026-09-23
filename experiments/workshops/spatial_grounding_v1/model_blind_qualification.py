@@ -167,6 +167,7 @@ def qualify_candidate(
         "model_request_count": 0, "behavioral_episode_count": 0,
         "candidate_id": candidate.candidate_id, "family": candidate.family, "seed": seed,
         "candidate_sha256": hashlib.sha256(json.dumps(asdict(candidate), sort_keys=True).encode()).hexdigest(),
+        "controller_identity": getattr(controller, "identity", {"recipe": "unattested_controller"}),
         "action_cap": ACTION_CAP, "checks": checks,
     }
 
@@ -202,6 +203,7 @@ def parse_args() -> argparse.Namespace:
     bootstrap.add_argument("--output-root", type=Path, required=True)
     bootstrap.add_argument("--bridge-factory", required=True)
     bootstrap.add_argument("--controller-factory", required=True)
+    bootstrap.add_argument("--controller-calibration", type=Path)
     bootstrap.add_argument("--seed", type=int, default=20260922)
     bootstrap.add_argument("--robolab-root", type=Path, required=True)
     bootstrap.add_argument("--assets-manifest", type=Path, required=True)
@@ -247,7 +249,9 @@ def main() -> None:
         )
         controller = load_factory(args.controller_factory)(
             robolab_root=args.robolab_root, assets_manifest=args.assets_manifest, device=args.device,
+            controller_calibration=args.controller_calibration,
         )
+        atomic_json(args.output_root / "controller.json", getattr(controller, "identity", {"recipe": "unattested_controller"}))
         receipt = qualify_candidate(candidate, bridge, controller, seed=args.seed, evidence_root=args.output_root / "trials")
         atomic_json(args.output_root / "qualification.json", receipt)
         print(json.dumps({"candidate_id": candidate.candidate_id, "status": receipt["status"]}))

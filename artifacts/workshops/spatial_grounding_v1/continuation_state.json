@@ -1,6 +1,6 @@
 {
   "study_id": "SGW-01",
-  "status": "native_recording_verified_candidate_rejected_control_frame_unqualified",
+  "status": "gripper_geometry_measured_corrected_static_controller_pending_physical_qualification",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -34,13 +34,13 @@
     "owned_nano_runtime": "aadb5b9",
     "recorded_fixture_and_render_diagnostics": "42b26ed8d2df546340497965d1fc86d47cc14197",
     "native_reset_readiness": "177e7dd064f41401b58c6c3491bde2b8af13ec34",
-    "local_sgw_tests_passed": 116,
+    "local_sgw_tests_passed": 124,
     "local_sgw_tests_skipped_linux_identity": 1,
     "live_model_runtime_qualified": false,
     "concrete_behavioral_allocation_receipt_exists": false
   },
-  "last_probe_source_commit": "42b26ed8d2df546340497965d1fc86d47cc14197",
-  "last_probe_source_path": "/data/users/ali/sgw-01/source/42b26ed-y",
+  "last_probe_source_commit": "436f67a313e8b8a98a6af362e75eb2d1d9bd57b1",
+  "last_probe_source_path": "/data/users/ali/sgw-01/source/436f67a-ae",
   "verified_simulator_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
   "preflight_image_digest": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
   "infrastructure_attempts": [
@@ -350,6 +350,23 @@
       "behavioral_episodes": 0
     }
   ],
+  "gripper_calibration": {
+    "status": "measured_empty_gripper_motion_not_fixture_qualification",
+    "job": "sgw01-ali-gripper-calibration-20260923af",
+    "source_stage_job": "sgw01-ali-source-stage-20260923ae",
+    "independent_verifier_job": "sgw01-ali-gripper-export-20260923ag",
+    "completed_at_utc": "2026-09-23T00:43:01Z",
+    "receipt": "infrastructure/a40-20260923af-gripper-calibration.json",
+    "raw_root": "/data/users/ali/sgw-01/qualification/gripper-calibration-20260923af",
+    "verified_retained_files": 185,
+    "issued_controller_commands": 60,
+    "observed_controller_actions": 60,
+    "decoded_calibration_video_frames": 61,
+    "decoded_render_warmup_frames": 121,
+    "controller_calibration": "controller_calibrations/lat-closed-pad-20260923.json",
+    "controller_calibration_sha256": "107442ccca01c4ac44ec6e1cb9674d51dbcd8663288a851dc54fa91a124f93d7",
+    "claim_boundary": "Measured visual pad geometry and a prospective virtual TCP, not an established contact center or physical fixture release."
+  },
   "connectivity_event": {
     "status": "recovered",
     "error": "dial tcp 10.120.200.169:6443: connect: can't assign requested address",
@@ -360,7 +377,7 @@
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
     "fixture_scope": "Child paused, no independent launch authorized. Parent implemented measured proposals with geometric rejection accounting and six full recorded scripted trials. Native qualification remains outstanding.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
-    "runtime_scope": "Owned N3 native factory and HTTP wrapper corrections integrated. Child paused; no policy server or learned inference authorized. D1 and both live runtime releases remain outstanding.",
+    "runtime_scope": "Owned N3 corrections integrated. Child is resolving D1 source-backed cache cadence and identity locally; no policy server, cluster operations or learned inference authorized. Both live runtime releases remain outstanding.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
     "worker_scope": "Local guard work integrated; idle, no cluster operations."
   },
@@ -378,7 +395,7 @@
     "reachability_and_historical_deduplication_release": false
   },
   "native_controller_gate": {
-    "status": "blocked_on_measured_flange_to_grasp_geometry",
+    "status": "measured_virtual_tcp_bound_corrected_controller_not_physically_qualified",
     "audit": "infrastructure/cpu-20260923-control-frame-audit.json",
     "completed_candidate": "LAT-CANDIDATE-032",
     "scripted_checks_passed": 0,
@@ -402,10 +419,18 @@
       "change": "Pause further fixture acceptance to measure actual finger geometry and robot body frames. A bounded empty-gripper calibration may hold the initial flange pose for 30 closing and 30 reopening actions, with all 61 states/frames and complete video retained.",
       "reason": "The native absolute-IK target is the mount flange, while the current recipe lacks measured flange-to-grasp geometry.",
       "unchanged": "All 100 candidate poses, all ac rejections and their original controller identity, every scientific threshold and the learned-policy queue. The 60 calibration actions are not model episodes and do not replace any 450-action qualification."
+    },
+    {
+      "id": "SGW-ENG-003",
+      "timing": "After ac's six rejected scripted trials and af's empty-gripper geometry were known, before any corrected-controller trial or learned request.",
+      "evidence": "infrastructure/a40-20260923af-gripper-calibration.json",
+      "change": "Use the measured closed visual-pad midpoint as an explicitly virtual TCP. Convert desired cube-center poses to robot-root-relative mount-flange commands. Keep the 0.12 m lift, use 20 actions each for approach, descend, close, lift, transport, lower and open, then retreat-and-settle for 310 actions. Bind the calibration and actual robot asset hashes in the recorder.",
+      "scope": "Repeat the same LAT-CANDIDATE-032 six model-blind qualification checks in a new evidence root. Original ac checks remain unchanged; this is a controller correction, not a new pose or learned result.",
+      "unchanged": "All 100 candidate poses and geometric rejection accounting, goal positions, prompts, model settings, 450-action cap and every scientific success/reset threshold."
     }
   ],
   "blockers": [
-    "Candidate 032 completed six native trials with verified raw files, reset checks and twelve complete videos, but all six failed pickup and anchor stability. The native IK target is the gripper flange; measured flange-to-grasp geometry and a prospectively bound controller correction are required before further fixture acceptance.",
+    "Candidate 032's original six native trials all failed pickup and anchor stability and remain unchanged. Af measured gripper geometry and SGW-ENG-003 binds a corrected virtual-TCP controller; the corrected six-trial physical qualification is still pending.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Native model runtime/reset/time-map receipts and actual server-side trace/future production remain unqualified; local scaffolding is not live proof.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
@@ -413,7 +438,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Preserve completed ac/ad without rerunning or relabeling their six scripted rejections. Commit and stage the body/finger geometry instrumentation, then run the disclosed bounded 60-action empty-gripper calibration with complete recording. Measure the flange-to-grasp transform before changing the static controller; preserve all 100 candidate poses and scientific thresholds. No family or learned runtime is released.",
+  "next_action": "Stage the committed SGW-ENG-003 controller and repeat candidate 032's six model-blind physical qualification checks in a new bounded Job. Preserve ac's original six rejections and all 100 registered poses. No family or learned runtime is released.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

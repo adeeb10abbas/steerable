@@ -1,6 +1,6 @@
 # SGW-01 status
 
-**Recorded render-only warmup restores the intended textures. No physical fixture or learned-policy episode is qualified yet.**
+**Gripper geometry is measured and a corrected static controller is bound. Its physical qualification is pending; learned-policy episodes remain at zero.**
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
@@ -257,6 +257,26 @@ These 60 calibration actions are not a zero-action render probe, a fixture
 qualification, or learned behavior. They do not alter the 100 candidate poses
 or erase ac's six recorded rejections.
 
+The bounded calibration `sgw01-ali-gripper-calibration-20260923af` completed
+at `2026-09-23T00:43:01Z` on one verified-idle A40. It retained 60 issued and
+observed actions over 4.000000209 physical seconds. Read-only CPU verifier ag
+checked all 61 states, all 60 commands, 185 retained files, the 61-frame motion
+video and the 121-frame reset warmup. Maximum mount-flange displacement was
+0.086 mm; cube and bowl drift stayed below 0.04 mm.
+
+The measured pad midpoint lies 130.100 mm along flange-local X when open and
+143.656 mm when closed. The latter is now an explicitly **virtual TCP based
+on visual pad bounds**, not a claim of measured contact-surface geometry.
+The nominal source comment was not used as the offset.
+
+**Disclosed operational amendment SGW-ENG-003:** repeat the same six checks
+for candidate 032 with the hash-bound measured virtual TCP, corrected
+world-to-robot-root flange commands, and an explicit release then retreat.
+Seven 20-action phases plus 310 retreat-and-settle actions retain the exact
+450-action cap. Original ac outcomes, all 100 poses and every scientific gate
+remain unchanged. This corrected recipe has not yet passed physical checks.
+The complete local suite has 124 passing checks and one Linux-only skip.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure
@@ -284,9 +304,8 @@ and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Stage the robot body/finger geometry instrumentation and run the bounded
-60-action empty-gripper calibration. Bind a measured flange-to-grasp transform
-before prospectively
+Stage the measured SGW-ENG-003 controller and run the same candidate's six
+physical checks in a fresh bounded Job before
 correcting the scripted controller. Preserve ac's six rejections and all 100
 candidate poses; no learned-policy release exists.
 Do not rerun completed captures or overwrite evidence.

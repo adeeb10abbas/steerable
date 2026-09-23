@@ -116,6 +116,20 @@ video, and rejects premature termination. Partial calibration evidence remains
 on failure. Neither mesh bounds nor a source-code nominal fingertip height is
 silently presented as an established grasp transform.
 
+Native probe af completed this calibration. `grasp_calibration` derives the
+prospective virtual TCP from the measured closed visual-pad midpoint, retaining
+open/closed/reopened comparisons and binding the exact robot USD hash. This is
+not a measured collision-contact center. SGW-ENG-003 preserves the original
+rejected recipe and all candidate poses while adding corrected flange commands
+and a release/retreat phase, still totaling exactly 450 actions.
+
+Pass `--controller-calibration
+artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json`
+to `model_blind_qualification` for this new recipe. The recorder saves the
+controller identity before acting and includes it in the qualification receipt.
+Omitting the flag retains the original, unqualified recipe for provenance;
+neither recipe is a learned-policy action mapping.
+
 ## Execution order
 
 1. Obtain a genuinely idle, authorized RTX/Vulkan-capable allocation. A

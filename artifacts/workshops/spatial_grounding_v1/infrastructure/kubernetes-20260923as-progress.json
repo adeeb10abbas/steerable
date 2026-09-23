@@ -1,0 +1,121 @@
+{
+  "jobs": [
+    {
+      "active_deadline_seconds": 18000,
+      "allocated_gpus_per_pod": 1,
+      "completions": 39,
+      "metadata": {
+        "creationTimestamp": "2026-09-23T01:24:09Z",
+        "name": "sgw01-ali-lat-batch-20260923ak",
+        "uid": "f31bfbca-f4e3-4919-af8a-3fd92ec515a2"
+      },
+      "parallelism": 4,
+      "status": {
+        "active": 4,
+        "completedIndexes": "0-22",
+        "failedIndexes": "",
+        "ready": 4,
+        "startTime": "2026-09-23T01:24:09Z",
+        "succeeded": 23,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "suspend": false
+    },
+    {
+      "active_deadline_seconds": 24000,
+      "allocated_gpus_per_pod": 0,
+      "completions": 1,
+      "metadata": {
+        "creationTimestamp": "2026-09-23T02:13:47Z",
+        "name": "sgw01-ali-lat-verify-20260923ao",
+        "uid": "1de130fb-6fd4-4c10-94d5-6fcc6e1e4c1c"
+      },
+      "parallelism": 1,
+      "status": {
+        "active": 1,
+        "ready": 1,
+        "startTime": "2026-09-23T02:13:47Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "suspend": false
+    },
+    {
+      "active_deadline_seconds": 600,
+      "allocated_gpus_per_pod": 0,
+      "completions": 1,
+      "metadata": {
+        "creationTimestamp": "2026-09-23T02:48:02Z",
+        "name": "sgw01-ali-source-stage-20260923aq",
+        "uid": "775d0856-6560-452b-9c79-19d17958b27b"
+      },
+      "parallelism": 1,
+      "status": {
+        "completionTime": "2026-09-23T02:48:41Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-23T02:48:41Z",
+            "lastTransitionTime": "2026-09-23T02:48:41Z",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-23T02:48:02Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "suspend": false
+    },
+    {
+      "active_deadline_seconds": 2400,
+      "allocated_gpus_per_pod": 1,
+      "completions": 4,
+      "metadata": {
+        "creationTimestamp": "2026-09-23T02:55:06Z",
+        "name": "sgw01-ali-prospective-capture-20260923ar",
+        "uid": "8f3327bc-95bb-48ea-ae17-3eaf4b2d4077"
+      },
+      "parallelism": 4,
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-23T02:55:06Z",
+            "lastTransitionTime": "2026-09-23T02:55:06Z",
+            "message": "Job suspended",
+            "reason": "JobSuspended",
+            "status": "True",
+            "type": "Suspended"
+          }
+        ],
+        "failedIndexes": "",
+        "ready": 0,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "suspend": true
+    },
+    {
+      "active_deadline_seconds": 18600,
+      "allocated_gpus_per_pod": 0,
+      "completions": 1,
+      "metadata": {
+        "creationTimestamp": "2026-09-23T02:56:55Z",
+        "name": "sgw01-ali-capture-sequencer-20260923as",
+        "uid": "26610acb-0428-48b9-b3ab-0a75e13f51f2"
+      },
+      "parallelism": 1,
+      "status": {
+        "active": 1,
+        "ready": 1,
+        "startTime": "2026-09-23T02:56:55Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "suspend": false
+    }
+  ],
+  "observed_at_utc": "2026-09-23T02:58:33.337081+00:00"
+}

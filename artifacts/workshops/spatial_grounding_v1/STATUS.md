@@ -1,6 +1,6 @@
 # SGW-01 status
 
-**The four-GPU LAT batch is running durably. At 02:17 UTC, twelve candidates had producer receipts and candidate 082 independently passed all six physical checks. Learned-policy episodes remain at zero.**
+**The four-GPU LAT batch and CPU verifier are running durably. At 02:58 UTC, 23 candidates had producer receipts; independent verification confirmed 14 all-six-pass candidates and seven physical rejections. Four zero-model HEIGHT/DIST captures are queued for automatic handoff after LAT releases its GPUs. Learned-policy episodes remain at zero.**
 
 The supplied study is committed on
 `sz5vjy-gme-spatial-grounding-experiments`. Four Terra/Luna child sessions
@@ -345,6 +345,40 @@ cannot release a family based on an arbitrary subset, empty registry or
 unverified hash strings. Its source inventory identifies the precise missing
 historical root/center bindings; model-family release remains blocked.
 
+### Durable next capture phase and integration checkpoint
+
+The [02:58 progress snapshot](infrastructure/kubernetes-20260923as-progress.json)
+and [verification/staging receipt](infrastructure/cpu-20260923as-sequencing-and-verification.json)
+retain the newer partial results without changing the earlier snapshots.
+Candidate 032 remains an additional preserved rejection outside batch ak.
+All-six-pass physics is not historical-deduplication or family release.
+
+CPU-only source stage aq completed using exact source `ff2c361` and the direct
+`b429ddd` object store. It produced four prospective HEIGHT/DIST overlays and
+checked their baseline scene, workspace, source and live asset bytes. Camera
+enablement, measured actor orientation, neutral supports and separate DIST
+anchor/landing supports are now wired. These designs have not yet undergone
+native capture or qualification.
+
+Capture Job ar is suspended with four fixed indexes and no retries. CPU
+controller as is running, has successfully read the exact ak/ar Jobs, and
+will unsuspend ar only after every ak index completes and active/terminating
+allocations are zero. The maximum stays at four GPUs. Its dedicated rotating
+ServiceAccount credentials can read ak and read/patch ar only; live API
+self-access reviews confirmed it cannot patch ak, list Pods or read secrets.
+The immutable controller script/plan are hash checked, and events are fsynced
+on the PVC. This registered handoff does not require the laptop or app to stay
+open. It does not authorize candidate selection or learned inference.
+
+D1 offline integration now executes the actual hash-verified official client
+constructor, image extraction/padding, packing, cache, gripper postprocessing
+and reset against the owned HTTP producer, trace reader and recorder.
+Physical reset IDs, wrapper IDs, native sessions, nominal/effective seeds and
+raw/postprocessed actions remain distinct. Latents are retained but explicitly
+not decoded predictions. Live distributed startup, official video decode/time
+mapping and the production joint-position simulator/RPC remain unfinished;
+the unintegrated worker prototype's hardcoded support state is not accepted.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure
@@ -377,8 +411,10 @@ and evidence. These are infrastructure identities, not a behavioral release.
 Supervise existing finite Job `sgw01-ali-lat-batch-20260923ak` and CPU verifier
 `sgw01-ali-lat-verify-20260923ao`; inspect the latter's persistent
 `report.candidates/` files for independently verified results.
-Do not recreate either Job or allocate additional GPUs while ak's four slots are
-occupied. Preserve all earlier outcomes and all 100 candidate poses; no
+Controller `sgw01-ali-capture-sequencer-20260923as` now owns the automatic
+handoff to `sgw01-ali-prospective-capture-20260923ar`. Do not recreate these
+Jobs, manually unsuspend ar, or launch any other study GPU phase concurrently.
+Preserve all earlier outcomes and all 100 candidate poses; no
 learned-policy release exists.
 Do not rerun completed captures or overwrite evidence.
 **Do not kill unidentified processes,
@@ -388,7 +424,9 @@ The exact safe cluster-status command is:
 
 ```bash
 kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s \
-  -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01
+  -n 211247-prod get jobs sgw01-ali-lat-batch-20260923ak \
+  sgw01-ali-lat-verify-20260923ao sgw01-ali-prospective-capture-20260923ar \
+  sgw01-ali-capture-sequencer-20260923as
 ```
 
 Preserve each failed attempt and diagnose its specific failure before

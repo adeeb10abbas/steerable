@@ -1,0 +1,258 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "labels": {
+      "app.kubernetes.io/managed-by": "ali-research",
+      "app.kubernetes.io/name": "sgw-01",
+      "owner": "ali"
+    },
+    "name": "sgw01-ali-family-native-smoke-20260923br",
+    "namespace": "211247-prod"
+  },
+  "spec": {
+    "activeDeadlineSeconds": 4800,
+    "backoffLimitPerIndex": 0,
+    "completionMode": "Indexed",
+    "completions": 4,
+    "maxFailedIndexes": 4,
+    "parallelism": 4,
+    "podReplacementPolicy": "Failed",
+    "template": {
+      "metadata": {
+        "labels": {
+          "app.kubernetes.io/name": "sgw-01",
+          "owner": "ali",
+          "purpose": "finite-native-bbox-repair"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 4500,
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A40"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "containers": [
+          {
+            "args": [
+              "set -euo pipefail\nSTUDY=/data/users/ali/sgw-01/source/e43f5b40-bq\nROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241\nPY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python\nPREFLIGHT=/data/users/ali/sgw-01/preflight/a40-20260922e\nFREEZE=/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/receipt.json\ntest \"$(sha256sum \"$FREEZE\" | awk '{print $1}')\" = 55b2dbbce2376b1c297180630238b09a83e8f226697f8da6a1814d748eebefd3\ncase \"$JOB_COMPLETION_INDEX\" in\n  0|1|2|3) ;;\n  *) echo \"Unregistered smoke index\" >&2; exit 1 ;;\nesac\nBASE=/data/users/ali/sgw-01/qualification/family-native-smoke-20260923br\nmkdir -p \"$BASE\"\nOUT=\"$BASE/$JOB_COMPLETION_INDEX\"\nmkdir \"$OUT\"\nexport STUDY ROBOLAB PY PREFLIGHT FREEZE OUT\nexec > >(tee \"$OUT/worker.log\") 2>&1\n\"$PY\" - <<'PY'\nfrom datetime import datetime, timezone\nimport json, os, shutil\nfrom pathlib import Path\nfree = shutil.disk_usage(os.environ[\"OUT\"]).free\nrequired = (100 + 4 * 32) * 1024**3\nreceipt = {\n    \"recorded_at_utc\": datetime.now(timezone.utc).isoformat(),\n    \"pod\": os.environ[\"POD_NAME\"], \"pod_uid\": os.environ[\"POD_UID\"],\n    \"job_uid\": os.environ[\"JOB_UID\"], \"index\": int(os.environ[\"JOB_COMPLETION_INDEX\"]),\n    \"free_bytes\": free, \"required_free_bytes\": required,\n    \"allowance\": \"100 GiB floor plus 32 GiB per four bounded zero-model smoke candidates; not behavioral P95 qualification\",\n    \"model_requests\": 0, \"behavioral_episodes\": 0,\n    \"status\": \"passed_conservative_smoke_space_check\" if free >= required else \"insufficient_space\",\n}\nwith (Path(os.environ[\"OUT\"]) / \"storage_preflight.json\").open(\"x\") as f:\n    json.dump(receipt, f, indent=2, sort_keys=True)\n    f.write(\"\\n\"); f.flush(); os.fsync(f.fileno())\nif free < required:\n    raise RuntimeError(\"insufficient space for four native smoke candidates plus reserve\")\nPY\ntest \"$(git -C \"$STUDY\" rev-parse HEAD)\" = e43f5b4054d1b65d192daa734fa9d99427b2eca3\ntest -z \"$(git -C \"$STUDY\" status --porcelain)\"\ntest \"$(git -C \"$ROBOLAB\" rev-parse HEAD)\" = 0aef241fb088ca21bb4ebd24448940ed56620d17\ntest -z \"$(git -C \"$ROBOLAB\" status --porcelain --untracked-files=no)\"\ntest \"$(sha256sum \"$PREFLIGHT/renderer.json\" | awk '{print $1}')\" = e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5\nexport XDG_CACHE_HOME=\"$OUT/cache/xdg\" WARP_CACHE_PATH=\"$OUT/cache/warp\" MPLCONFIGDIR=\"$OUT/cache/matplotlib\"\nmkdir -p \"$HOME/.cache\" \"$XDG_CACHE_HOME\" \"$WARP_CACHE_PATH\" \"$MPLCONFIGDIR\"\ncd \"$STUDY\"\n\"$PY\" tools/validate_vla_wam_v3_protocol.py --quiet\n\"$PY\" tools/validate_vla_wam_v2_protocol.py > \"$OUT/v2_validation.json\"\nexport PYTHONPATH=\"$STUDY:$ROBOLAB\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 1 --output \"$OUT/gpu_selection.json\")\nmkdir -p /data/users/ali/sgw-01/locks\nexec 9>\"/data/users/ali/sgw-01/locks/gpu-$CUDA_VISIBLE_DEVICES.lock\"\nflock --nonblock 9\nnvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total,memory.used,utilization.gpu --format=csv,noheader | tee \"$OUT/gpu_identity.csv\"\n\"$PY\" - <<'PY'\nfrom datetime import datetime, timezone\nimport hashlib, json, os, traceback\nfrom pathlib import Path\nfrom experiments.workshops.spatial_grounding_v1.family_campaign_executor import run_slot\n\nout, study, robolab, preflight = [Path(os.environ[k]) for k in (\"OUT\", \"STUDY\", \"ROBOLAB\", \"PREFLIGHT\")]\nfreeze = Path(os.environ[\"FREEZE\"])\nassert hashlib.sha256(freeze.read_bytes()).hexdigest() == \"55b2dbbce2376b1c297180630238b09a83e8f226697f8da6a1814d748eebefd3\"\nregistry = json.loads(freeze.read_text())\nselected = registry[\"native_smoke_slots\"][int(os.environ[\"JOB_COMPLETION_INDEX\"])]\nfamily = next(row for row in registry[\"families\"] if row[\"family\"] == selected[\"family\"])\nfor key in (\"plan\", \"campaign\"):\n    binding = family[key]\n    data = Path(binding[\"path\"]).read_bytes()\n    assert len(data) == binding[\"bytes\"] and hashlib.sha256(data).hexdigest() == binding[\"sha256\"]\ncampaign = Path(family[\"campaign\"][\"path\"])\njob = json.loads(campaign.read_text())[\"jobs\"][selected[\"slot_index\"]]\nassert all(job[key] == selected[key] for key in (\"family\", \"design_id\", \"side\"))\nprefix = [\"/usr/bin/env\", \"-C\", str(robolab), os.environ[\"PY\"], \"-m\"]\nnative = [\"--headless\", \"--num-envs\", \"1\", \"--device\", \"cuda:0\",\n          \"--renderer\", \"realtime\", \"--rendering-type\", \"balanced\", \"--rendering_mode\", \"balanced\"]\ncapture = prefix + [\"experiments.workshops.spatial_grounding_v1.prospective_family_capture\",\n    \"--study-root\", \"{study_root}\", \"--robolab-root\", str(robolab),\n    \"--assets-manifest\", str(preflight / \"assets.json\"),\n    \"--renderer-receipt\", str(preflight / \"renderer.json\"),\n    \"--overlay-manifest\", \"{overlay_manifest}\", \"--output\", \"{capture}\",\n    \"--kit_args=--portable-root={root}/kit_capture --/rtx/verifyDriverVersion/enabled=false\"] + native\nqualification = prefix + [\"experiments.workshops.spatial_grounding_v1.model_blind_qualification\",\n    \"--family\", \"{family}\", \"--candidate-file\", \"{candidate}\", \"--candidate-id\", \"{candidate_id}\",\n    \"--candidate-manifest\", \"{overlay_manifest}\", \"--candidate-capture\", \"{capture}\",\n    \"--output-root\", \"{root}\", \"--controller-calibration\", \"{calibration}\",\n    \"--bridge-factory\", \"experiments.workshops.spatial_grounding_v1.robolab_height_dist_qualification:create_bridge\",\n    \"--controller-factory\", \"experiments.workshops.spatial_grounding_v1.robolab_height_dist_qualification:create_controller\",\n    \"--robolab-root\", str(robolab), \"--assets-manifest\", str(preflight / \"assets.json\"),\n    \"--kit_args=--portable-root={root}/kit_qualification --/rtx/verifyDriverVersion/enabled=false\"] + native\nreceipt = {\n    \"selected_slot\": selected, \"source_commit\": \"e43f5b4054d1b65d192daa734fa9d99427b2eca3\", \"plan_source_commit\": registry[\"source_commit\"],\n    \"freeze_sha256\": hashlib.sha256(freeze.read_bytes()).hexdigest(),\n    \"capture_command\": capture, \"qualification_command\": qualification,\n    \"child_timeout_seconds\": 1800, \"model_requests\": 0, \"behavioral_episodes\": 0,\n    \"release_permitted\": False, \"job_uid\": os.environ[\"JOB_UID\"], \"pod_uid\": os.environ[\"POD_UID\"],\n    \"started_at_utc\": datetime.now(timezone.utc).isoformat(),\n}\ndef write(name, value):\n    with (out / name).open(\"x\") as f:\n        json.dump(value, f, indent=2, sort_keys=True, allow_nan=False)\n        f.write(\"\\n\"); f.flush(); os.fsync(f.fileno())\nwrite(\"launch.json\", receipt)\ntry:\n    result = run_slot(\n        campaign_path=campaign, index=selected[\"slot_index\"], root=out / \"evidence\",\n        controller_calibration=study / \"artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json\",\n        capture_command=capture, qualification_command=qualification, child_timeout_seconds=1800,\n    )\n    receipt.update(status=\"externally_verified_native_smoke_not_release\", executor=result)\nexcept BaseException:\n    receipt.update(status=\"infrastructure_invalid_native_smoke\", traceback=traceback.format_exc())\n    raise\nfinally:\n    receipt[\"finished_at_utc\"] = datetime.now(timezone.utc).isoformat()\n    write(\"process_outcome.json\", receipt)\nPY\nsync\n"
+            ],
+            "command": [
+              "/bin/bash",
+              "-ec"
+            ],
+            "env": [
+              {
+                "name": "JOB_COMPLETION_INDEX",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.annotations['batch.kubernetes.io/job-completion-index']"
+                  }
+                }
+              },
+              {
+                "name": "JOB_UID",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.labels['batch.kubernetes.io/controller-uid']"
+                  }
+                }
+              },
+              {
+                "name": "POD_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.name"
+                  }
+                }
+              },
+              {
+                "name": "POD_UID",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.uid"
+                  }
+                }
+              },
+              {
+                "name": "HOME",
+                "value": "/home/ali"
+              },
+              {
+                "name": "USER",
+                "value": "ali"
+              },
+              {
+                "name": "LOGNAME",
+                "value": "ali"
+              },
+              {
+                "name": "TMPDIR",
+                "value": "/tmp"
+              },
+              {
+                "name": "PYTHONDONTWRITEBYTECODE",
+                "value": "1"
+              },
+              {
+                "name": "NVIDIA_DRIVER_CAPABILITIES",
+                "value": "compute,utility,graphics,display"
+              },
+              {
+                "name": "OMNI_KIT_ACCEPT_EULA",
+                "value": "YES"
+              },
+              {
+                "name": "ACCEPT_EULA",
+                "value": "Y"
+              },
+              {
+                "name": "VK_ICD_FILENAMES",
+                "value": "/etc/vulkan/icd.d/nvidia_icd.json"
+              },
+              {
+                "name": "LD_LIBRARY_PATH",
+                "value": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+              }
+            ],
+            "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+            "name": "qualify",
+            "resources": {
+              "limits": {
+                "cpu": "32",
+                "memory": "128Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "16",
+                "memory": "64Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              },
+              "runAsGroup": 2518800,
+              "runAsNonRoot": true,
+              "runAsUser": 816149040
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/data",
+                "name": "workspace"
+              },
+              {
+                "mountPath": "/dev/shm",
+                "name": "dshm"
+              },
+              {
+                "mountPath": "/tmp",
+                "name": "tmp"
+              },
+              {
+                "mountPath": "/var/tmp",
+                "name": "vartmp"
+              },
+              {
+                "mountPath": "/home/ali",
+                "name": "home"
+              },
+              {
+                "mountPath": "/etc/passwd",
+                "name": "userdb",
+                "readOnly": true,
+                "subPath": "passwd"
+              },
+              {
+                "mountPath": "/etc/group",
+                "name": "userdb",
+                "readOnly": true,
+                "subPath": "group"
+              }
+            ]
+          }
+        ],
+        "imagePullSecrets": [
+          {
+            "name": "artifactory-ci-pull-secret"
+          }
+        ],
+        "nodeSelector": {
+          "node-role.kubernetes.io/worker-gpu": ""
+        },
+        "restartPolicy": "Never",
+        "securityContext": {
+          "fsGroup": 2518800,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          },
+          "supplementalGroups": [
+            2518800
+          ]
+        },
+        "terminationGracePeriodSeconds": 180,
+        "tolerations": [
+          {
+            "effect": "NoSchedule",
+            "key": "nvidia.com/gpu",
+            "operator": "Equal",
+            "value": "present"
+          }
+        ],
+        "volumes": [
+          {
+            "name": "workspace",
+            "persistentVolumeClaim": {
+              "claimName": "211247-prod-pvc"
+            }
+          },
+          {
+            "emptyDir": {
+              "medium": "Memory",
+              "sizeLimit": "32Gi"
+            },
+            "name": "dshm"
+          },
+          {
+            "emptyDir": {},
+            "name": "tmp"
+          },
+          {
+            "emptyDir": {},
+            "name": "vartmp"
+          },
+          {
+            "emptyDir": {},
+            "name": "home"
+          },
+          {
+            "configMap": {
+              "name": "211247-ali-b200-1gpu-userdb"
+            },
+            "name": "userdb"
+          }
+        ]
+      }
+    }
+  }
+}

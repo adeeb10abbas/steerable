@@ -10,13 +10,15 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 from typing import Any, Mapping
 
 from .lat_candidate_generator import workspace_digest
+from .lat_workspace_capture import _rotate_wxyz
 
 SCHEMA = "sgw-01-prospective-family-overlay-v1"
-BASE_WORKSPACE_SCHEMA = "sgw-01-lat-measured-workspace-v2"
+BASE_WORKSPACE_SCHEMA = "sgw-01-lat-measured-workspace-v1"
 
 
 def sha256(path: Path) -> str:
@@ -72,6 +74,7 @@ def build_overlay(
         "prospective_design": {
             "units": "meters",
             "dimensions_and_poses": specs,
+            "authored_actor_root_overrides_env_local_xyz_m": overrides,
             "claim_boundary": "Authoring values are prospective design inputs. Native capture must measure root poses, centers, offsets, contacts, and rendered views before any candidate proposal.",
         },
         "counterbalance": counterbalance,
@@ -92,8 +95,17 @@ def _validate_base_receipt(value: Mapping[str, Any], path: Path) -> None:
         raise ValueError("base workspace receipt lacks measured cube/bowl/table")
     for name in ("rubiks_cube", "bowl"):
         row = objects[name]
-        if not isinstance(row, Mapping) or not isinstance(row.get("geometric_center_offset_root_local_xyz_m"), list):
-            raise ValueError(f"base workspace receipt lacks measured {name} center offset")
+        if not isinstance(row, Mapping):
+            raise ValueError(f"base workspace receipt lacks measured {name}")
+        for key, length in (
+            ("root_position_env_local_xyz_m", 3),
+            ("root_quaternion_world_wxyz", 4),
+            ("geometric_center_offset_root_local_xyz_m", 3),
+            ("bbox_env_local_min_xyz_m", 3),
+            ("bbox_env_local_max_xyz_m", 3),
+        ):
+            if not _finite_vector(row.get(key), length):
+                raise ValueError(f"base workspace receipt lacks finite {name} {key}")
     for key in ("receipt_sha256", "asset_manifest_sha256", "robolab_commit", "task_asset"):
         if not isinstance(value.get(key), str) or not value[key]:
             raise ValueError(f"base workspace receipt lacks {key}")
@@ -106,17 +118,27 @@ def _validate_base_receipt(value: Mapping[str, Any], path: Path) -> None:
 
 
 def _height_specs(upper_side: str, workspace: Mapping[str, Any]) -> tuple[list[dict[str, Any]], dict[str, list[float]]]:
-    """Place bowl/cube at a measured-offset neutral intermediate height."""
+    """Author neutral and goal supports from measured root/center/bounds transforms."""
 
     sign = 1 if upper_side == "left" else -1
-    cube_offset = workspace["objects"]["rubiks_cube"]["geometric_center_offset_root_local_xyz_m"]
-    bowl = workspace["objects"]["bowl"]
-    bowl_root = [0.44258353114128113, 0.0, 0.15]
-    cube_root = [0.32 - cube_offset[0], -0.10 - cube_offset[1], bowl_root[2] - cube_offset[2]]
+    cube, bowl = workspace["objects"]["rubiks_cube"], workspace["objects"]["bowl"]
+    intermediate_center_z = 0.16
+    bowl_center = [0.45, 0.13, intermediate_center_z]
+    cube_center = [0.29, -0.10, intermediate_center_z]
+    bowl_root = _root_for_center(bowl, bowl_center)
+    cube_root = _root_for_center(cube, cube_center)
+    bowl_bottom_z = _bottom_z(bowl, bowl_root)
+    cube_bottom_z = _bottom_z(cube, cube_root)
+    support_height = 0.04
+    lower_center_z = intermediate_center_z - 0.04
+    upper_center_z = intermediate_center_z + 0.04
+    lower_cube_root = _root_for_center(cube, [0.65, -0.23 * sign, lower_center_z])
+    upper_cube_root = _root_for_center(cube, [0.65, 0.23 * sign, upper_center_z])
     specs = [
-        _box("height_reference_support", (bowl_root[0], bowl_root[1], 0.10), (0.16, 0.16, 0.10), (0.20, 0.45, 0.95)),
-        _box("height_lower_support", (0.62, -0.23 * sign, 0.075), (0.14, 0.14, 0.05), (0.20, 0.45, 0.95)),
-        _box("height_upper_support", (0.62, 0.23 * sign, 0.22), (0.14, 0.14, 0.34), (0.95, 0.40, 0.20)),
+        _box("height_reference_support", (bowl_center[0], bowl_center[1], bowl_bottom_z - support_height / 2), (0.16, 0.16, support_height), (0.20, 0.45, 0.95)),
+        _box("height_neutral_cube_support", (cube_center[0], cube_center[1], cube_bottom_z - support_height / 2), (0.10, 0.10, support_height), (0.35, 0.85, 0.45)),
+        _box("height_lower_support", (0.65, -0.23 * sign, _bottom_z(cube, lower_cube_root) - support_height / 2), (0.14, 0.14, support_height), (0.20, 0.45, 0.95)),
+        _box("height_upper_support", (0.65, 0.23 * sign, _bottom_z(cube, upper_cube_root) - support_height / 2), (0.14, 0.14, support_height), (0.95, 0.40, 0.20)),
     ]
     return specs, {"bowl": bowl_root, "rubiks_cube": cube_root}
 
@@ -125,15 +147,16 @@ def _dist_specs(bowl_side: str, workspace: Mapping[str, Any]) -> tuple[list[dict
     """Counterbalance anchors and put the cube center on their perpendicular bisector."""
 
     sign = 1 if bowl_side == "left" else -1
-    cube_offset = workspace["objects"]["rubiks_cube"]["geometric_center_offset_root_local_xyz_m"]
-    bowl_root = [0.44, 0.16 * sign, 0.07732785493135452]
-    plate_center = [0.62, -0.16 * sign, 0.072]
-    cube_center = [(bowl_root[0] + plate_center[0]) / 2, 0.0, bowl_root[2]]
-    cube_root = [cube_center[index] - cube_offset[index] for index in range(3)]
+    cube, bowl = workspace["objects"]["rubiks_cube"], workspace["objects"]["bowl"]
+    bowl_center = [0.44, 0.16 * sign, 0.12]
+    plate_center = [0.66, -0.16 * sign, 0.12]
+    cube_center = [(bowl_center[index] + plate_center[index]) / 2 for index in range(3)]
+    bowl_root = _root_for_center(bowl, bowl_center)
+    cube_root = _root_for_center(cube, cube_center)
     return [
-        _box("plate", tuple(plate_center), (0.16, 0.16, 0.015), (0.95, 0.75, 0.15), rigid=True),
-        _box("dist_bowl_landing_support", (0.48, 0.18 * sign, 0.055), (0.12, 0.12, 0.01), (0.25, 0.70, 0.35)),
-        _box("dist_plate_landing_support", (0.62, 0.18 * -sign, 0.055), (0.12, 0.12, 0.01), (0.95, 0.70, 0.30)),
+        _disc("plate", tuple(plate_center), radius_m=0.11, thickness_m=0.012, color=(0.95, 0.75, 0.15), rigid=True),
+        _box("dist_bowl_landing_support", (bowl_center[0], bowl_center[1], _bottom_z(bowl, bowl_root) - 0.02), (0.14, 0.14, 0.04), (0.25, 0.70, 0.35)),
+        _box("dist_plate_landing_support", (plate_center[0], plate_center[1], plate_center[2] - 0.012 - 0.02), (0.24, 0.24, 0.04), (0.95, 0.70, 0.30)),
     ], {"bowl": bowl_root, "rubiks_cube": cube_root}
 
 
@@ -144,24 +167,62 @@ def _box(name: str, center_m: tuple[float, float, float], size_m: tuple[float, f
         "display_color_rgb": list(color), "rigid_body": rigid,
     }
 
+def _disc(name: str, center_m: tuple[float, float, float], *, radius_m: float, thickness_m: float,
+          color: tuple[float, float, float], rigid: bool) -> dict[str, Any]:
+    return {
+        "name": name, "center_m": list(center_m), "radius_m": radius_m, "thickness_m": thickness_m,
+        "display_color_rgb": list(color), "rigid_body": rigid, "shape": "cylinder",
+    }
+
+
+def _finite_vector(value: Any, length: int) -> bool:
+    return isinstance(value, list) and len(value) == length and all(isinstance(item, (int, float)) and math.isfinite(item) for item in value)
+
+
+def _root_for_center(object_row: Mapping[str, Any], center: list[float]) -> list[float]:
+    offset = object_row["geometric_center_offset_root_local_xyz_m"]
+    quaternion = object_row["root_quaternion_world_wxyz"]
+    rotated = _rotate_wxyz(quaternion, offset)
+    return [center[index] - rotated[index] for index in range(3)]
+
+
+def _bottom_z(object_row: Mapping[str, Any], root: list[float]) -> float:
+    """Use captured lowest geometry relative to the retained base orientation."""
+
+    return root[2] + (
+        object_row["bbox_env_local_min_xyz_m"][2] - object_row["root_position_env_local_xyz_m"][2]
+    )
+
 
 def _usda(base_scene: Path, specs: list[dict[str, Any]], overrides: Mapping[str, list[float]]) -> str:
     def prim(spec: Mapping[str, Any]) -> str:
-        center, size, color = spec["center_m"], spec["size_m"], spec["display_color_rgb"]
+        center, color = spec["center_m"], spec["display_color_rgb"]
         rigid = '        prepend apiSchemas = ["PhysicsRigidBodyAPI"]\n' if spec["rigid_body"] else ""
-        return f'''    def Xform "{spec["name"]}" (
-{rigid}    )
-    {{
-        double3 xformOp:translate = ({center[0]}, {center[1]}, {center[2]})
-        uniform token[] xformOpOrder = ["xformOp:translate"]
-        def Cube "geometry" (
+        if spec.get("shape") == "cylinder":
+            geometry = f'''        def Cylinder "geometry" (
+            prepend apiSchemas = ["PhysicsCollisionAPI"]
+        ) {{
+                uniform token axis = "Z"
+                double height = {spec["thickness_m"]}
+            double radius = {spec["radius_m"]}
+            color3f[] primvars:displayColor = [({color[0]}, {color[1]}, {color[2]})]
+        }}'''
+        else:
+            size = spec["size_m"]
+            geometry = f'''        def Cube "geometry" (
             prepend apiSchemas = ["PhysicsCollisionAPI"]
         ) {{
             double size = 1
             double3 xformOp:scale = ({size[0]}, {size[1]}, {size[2]})
             uniform token[] xformOpOrder = ["xformOp:scale"]
             color3f[] primvars:displayColor = [({color[0]}, {color[1]}, {color[2]})]
-        }}
+        }}'''
+        return f'''    def Xform "{spec["name"]}" (
+{rigid}    )
+    {{
+        double3 xformOp:translate = ({center[0]}, {center[1]}, {center[2]})
+        uniform token[] xformOpOrder = ["xformOp:translate"]
+{geometry}
     }}'''
     escaped = str(base_scene).replace("\\", "\\\\")
     authored = "\n".join(

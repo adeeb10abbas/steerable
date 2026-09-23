@@ -75,6 +75,58 @@ def _usd_dependencies(overlay: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def _create_capture_environment(create_env: Any, args: argparse.Namespace) -> Any:
+    """Construct exactly the model-free task environment through RoboLab's native boundary."""
+
+    return create_env(
+        "SGWProspectiveFamilyCaptureTask", device=args.device, seed=args.environment_seed, num_envs=1,
+        instruction_type="default", policy="sgw_01_zero_model_prospective_capture",
+        renderer=args.renderer, rendering_mode=args.rendering_type,
+    )
+
+
+def _capture_object_rows(world: Any, names: list[str], env_id: int = 0) -> dict[str, dict[str, Any]]:
+    """Read roots and geometric centers from the native WorldState interface."""
+
+    import numpy as np
+
+    rows = {}
+    for name in names:
+        root, quat = world.get_pose(name, env_id=env_id)
+        corners, center = world.get_bbox(name, env_id=env_id)
+        root_values, quat_values, center_values = _vector(root), _vector(quat), _vector(center)
+        points = np.asarray([_vector(corner) for corner in corners], dtype=np.float64)
+        rows[name] = {
+            "root_position_env_local_xyz_m": root_values,
+            "root_quaternion_world_wxyz": quat_values,
+            "geometric_center_env_local_xyz_m": center_values,
+            "geometric_center_offset_root_local_xyz_m": _root_local_offset(root_values, quat_values, center_values),
+            "bbox_env_local_min_xyz_m": points.min(axis=0).tolist(),
+            "bbox_env_local_max_xyz_m": points.max(axis=0).tolist(),
+        }
+    return rows
+
+
+def _contact_inventory(get_contact_sensors: Any, scene: Any) -> list[str]:
+    return sorted(name for name in get_contact_sensors(scene) if not name.endswith("__all_objs"))
+
+
+def _validate_capture_bindings(args: argparse.Namespace, manifest: Mapping[str, Any]) -> None:
+    """Reject a capture before AppLauncher unless every native source binding matches."""
+
+    workspace = manifest["base_workspace_receipt"]
+    if _sha256(args.assets_manifest) != workspace["asset_manifest_sha256"]:
+        raise ValueError("assets manifest bytes do not match the measured workspace binding")
+    scenes_utils = args.robolab_root / "robolab/core/scenes/utils.py"
+    if not scenes_utils.is_file() or _sha256(scenes_utils) != manifest["native_import_contract"]["robolab_utils_sha256"]:
+        raise ValueError("RoboLab import_scene source does not match the overlay binding")
+    commit = subprocess.check_output(
+        ["git", "-C", str(args.robolab_root), "rev-parse", "HEAD"], text=True,
+    ).strip()
+    if commit != workspace["robolab_commit"]:
+        raise ValueError("RoboLab checkout commit does not match the measured workspace binding")
+
+
 def parse_args() -> argparse.Namespace:
     bootstrap = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
     bootstrap.add_argument("--study-root", type=Path, required=True)
@@ -89,7 +141,8 @@ def parse_args() -> argparse.Namespace:
         raise FileExistsError(f"refusing to overwrite prospective capture: {known.output}")
     if not is_git_worktree(known.robolab_root) or not known.assets_manifest.is_file() or not known.renderer_receipt.is_file():
         raise ValueError("capture requires pinned RoboLab, assets, and renderer receipt")
-    _manifest(known.overlay_manifest)
+    manifest = _manifest(known.overlay_manifest)
+    _validate_capture_bindings(known, manifest)
     if str(known.study_root.resolve()) not in sys.path:
         sys.path.insert(0, str(known.study_root.resolve()))
     from isaaclab.app import AppLauncher
@@ -109,6 +162,7 @@ def main() -> None:
     if renderer.get("status") != "passed_zero_model_renderer_preflight" or renderer.get("model_request_count") != 0:
         raise ValueError("prospective capture requires passed zero-model renderer receipt")
     manifest = _manifest(args.overlay_manifest)
+    _validate_capture_bindings(args, manifest)
     os.environ["SGW_PROSPECTIVE_OVERLAY_MANIFEST"] = str(args.overlay_manifest.resolve())
     os.environ["SGW_PROSPECTIVE_OVERLAY_MANIFEST_SHA256"] = _sha256(args.overlay_manifest)
     from isaaclab.app import AppLauncher
@@ -132,32 +186,14 @@ def main() -> None:
         robolab.constants.ENABLE_SUBTASK_PROGRESS_CHECKING = False
         robolab.constants.RECORD_IMAGE_DATA = False
         auto_register_droid_abs_ik_envs(task=[str(task_path)], cameras=WRIST_LEFT_RIGHT_HEAD)
-        env, _ = create_env(
-            "SGWProspectiveFamilyCaptureTask", device=args.device, seed=args.environment_seed, num_envs=1,
-            instruction_type="default", policy="sgw_01_zero_model_prospective_capture",
-            renderer=args.renderer, rendering_mode=args.rendering_type,
-        )
+        env, _ = _create_capture_environment(create_env, args)
         try:
             observation, _ = env.reset()
             observation, warmup = render_only_warmup(env, observation, 120, args.output.parent / "render_diagnostic")
             world, origin = get_world(env), env.scene.env_origins[0].detach().cpu().numpy()
-            object_rows = {}
             names = manifest["native_import_contract"]["objects_of_interest"]
-            for name in names:
-                root, quat = world.get_pose(name, env_id=0)
-                corners, center = world.get_bbox(name, env_id=0)
-                root_values, quat_values, center_values = _vector(root), _vector(quat), _vector(center)
-                points = np.asarray([_vector(corner) for corner in corners], dtype=np.float64)
-                object_rows[name] = {
-                    "root_position_env_local_xyz_m": root_values,
-                    "root_quaternion_world_wxyz": quat_values,
-                    "geometric_center_env_local_xyz_m": center_values,
-                    "geometric_center_offset_root_local_xyz_m": _root_local_offset(root_values, quat_values, center_values),
-                    "bbox_env_local_min_xyz_m": points.min(axis=0).tolist(),
-                    "bbox_env_local_max_xyz_m": points.max(axis=0).tolist(),
-                }
-            sensors = get_contact_sensors(env.scene)
-            contacts = sorted(name for name in sensors if not name.endswith("__all_objs"))
+            object_rows = _capture_object_rows(world, names)
+            contacts = _contact_inventory(get_contact_sensors, env.scene)
             views = {}
             root = args.output.parent / "views"
             root.mkdir(parents=True, exist_ok=False)

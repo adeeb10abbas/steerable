@@ -18,10 +18,7 @@ from .lat_candidate_generator import workspace_digest
 from .lat_workspace_capture import _rotate_wxyz
 
 SCHEMA = "sgw-01-prospective-family-overlay-v1"
-BASE_WORKSPACE_SCHEMAS = {
-    "sgw-01-lat-measured-workspace-v1",
-    "sgw-01-lat-measured-workspace-v2",
-}
+BASE_WORKSPACE_SCHEMA = "sgw-01-lat-measured-workspace-v2"
 BANANA_CENTER_XY_M = (0.80, 0.39)
 
 
@@ -103,8 +100,8 @@ def build_overlay(
 
 
 def _validate_base_receipt(value: Mapping[str, Any], path: Path) -> None:
-    if value.get("measurement_schema_version") not in BASE_WORKSPACE_SCHEMAS:
-        raise ValueError("prospective overlay requires a supported measured LAT workspace receipt")
+    if value.get("measurement_schema_version") != BASE_WORKSPACE_SCHEMA:
+        raise ValueError("prospective overlay requires the measured LAT workspace-v2 receipt")
     if value.get("model_request_count") != 0 or value.get("behavioral_episode_count") != 0:
         raise ValueError("base workspace receipt must remain model blind")
     objects = value.get("objects")

@@ -145,8 +145,6 @@ def _contact_inventory(get_contact_sensors: Any, scene: Any) -> list[str]:
 
 
 def _support_contact_measurements(sensors: Mapping[str, Any], supports: list[str]) -> dict[str, Any]:
-    import numpy as np
-
     rows = {}
     for support in supports:
         rows[support] = _pair_contact_measurement(sensors, "rubiks_cube", support)
@@ -181,6 +179,32 @@ def _banana_contact_measurements(sensors: Mapping[str, Any], bodies: list[str]) 
     if not bodies or len(set(bodies)) != len(bodies):
         raise RuntimeError("banana contact body contract is empty or contains duplicates")
     return {body: _pair_contact_measurement(sensors, "banana", body) for body in bodies}
+
+
+def _verify_banana_contacts(receipt: Mapping[str, Any], contract: Mapping[str, Any]) -> None:
+    import numpy as np
+
+    expected = contract.get("banana_contact_bodies")
+    if expected is None:
+        return  # Earlier manifests did not request banana contact measurements.
+    contacts = receipt.get("banana_contact_measurements")
+    if not isinstance(contacts, Mapping) or set(contacts) != set(expected):
+        raise ValueError("prospective capture omits required banana contact measurements")
+    for body, record in contacts.items():
+        if not isinstance(record, Mapping):
+            raise ValueError(f"invalid banana contact record for {body}")
+        sensor = record.get("sensor")
+        if sensor not in (f"banana__{body}", f"{body}__banana") or sensor not in receipt.get("contact_sensor_inventory", ()):
+            raise ValueError(f"invalid banana contact sensor binding for {body}")
+        values = np.asarray(record.get("force_matrix_world_n"))
+        if (
+            values.ndim != 4 or values.shape[0] != 1 or values.shape[-1] != 3
+            or not values.size or not np.issubdtype(values.dtype, np.number)
+            or not np.isfinite(values).all() or list(values.shape) != record.get("shape")
+        ):
+            raise ValueError(f"invalid banana contact force matrix for {body}")
+        if record.get("nonzero_force_observed") is not bool(np.any(np.linalg.norm(values, axis=-1) > 0)):
+            raise ValueError(f"invalid banana contact force summary for {body}")
 
 
 def _validate_capture_bindings(args: argparse.Namespace, manifest: Mapping[str, Any]) -> None:
@@ -297,10 +321,7 @@ def verify_capture_artifacts(path: Path) -> dict[str, Any]:
     objects = receipt.get("objects")
     if not isinstance(objects, Mapping) or not set(contract["objects_of_interest"]).issubset(objects):
         raise ValueError("prospective capture omits required measured objects")
-    banana_contacts = receipt.get("banana_contact_measurements")
-    expected_banana_contacts = contract.get("banana_contact_bodies")
-    if not isinstance(banana_contacts, Mapping) or set(banana_contacts) != set(expected_banana_contacts or ()):
-        raise ValueError("prospective capture omits required banana contact measurements")
+    _verify_banana_contacts(receipt, contract)
     dependencies = receipt["usd_dependency_inventory"]
     required_layers = {manifest[key]["path"] for key in ("overlay_usda", "base_scene")}
     if not required_layers.issubset({row["real_path"] for row in dependencies}):

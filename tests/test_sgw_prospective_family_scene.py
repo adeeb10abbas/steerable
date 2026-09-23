@@ -233,6 +233,19 @@ def test_overlay_refuses_non_model_blind_or_wrong_workspace_receipt(tmp_path):
         )
 
 
+def test_overlay_does_not_reaccept_legacy_measurement_semantics(tmp_path):
+    value = _workspace()
+    value["measurement_schema_version"] = "sgw-01-lat-measured-workspace-v1"
+    value["receipt_sha256"] = workspace_digest(value)
+    receipt = tmp_path / "legacy.json"
+    receipt.write_text(json.dumps(value))
+    with pytest.raises(ValueError, match="workspace-v2"):
+        build_overlay(
+            family="HEIGHT", base_scene=_base_scene(tmp_path), workspace_receipt=receipt,
+            output=tmp_path / "scene.usda", upper_side="left",
+        )
+
+
 def test_overlay_refuses_workspace_with_forged_receipt_digest(tmp_path):
     receipt = tmp_path / "workspace.json"
     value = _workspace()
@@ -551,8 +564,15 @@ def test_capture_output_check_requires_actual_receipt_and_complete_video(tmp_pat
         "model_request_count": 0, "behavioral_episode_count": 0,
         "objects": {name: {} for name in manifest["native_import_contract"]["objects_of_interest"]},
         "banana_contact_measurements": {
-            name: {} for name in manifest["native_import_contract"]["banana_contact_bodies"]
+            name: {
+                "sensor": f"banana__{name}", "shape": [1, 1, 1, 3],
+                "force_matrix_world_n": [[[[0.0, 0.0, 0.0]]]],
+                "nonzero_force_observed": False,
+            } for name in manifest["native_import_contract"]["banana_contact_bodies"]
         },
+        "contact_sensor_inventory": [
+            f"banana__{name}" for name in manifest["native_import_contract"]["banana_contact_bodies"]
+        ],
         "views": views, "render_only_diagnostic": warmup,
         "overlay_manifest": capture._record(manifest_path),
         "overlay_manifest_sha256": manifest["manifest_sha256"],
@@ -569,3 +589,26 @@ def test_capture_output_check_requires_actual_receipt_and_complete_video(tmp_pat
     Path(warmup["viewport_video"]["path"]).unlink()
     with pytest.raises(ValueError, match="missing evidence"):
         capture.verify_capture_artifacts(path)
+
+
+def test_banana_contact_verification_preserves_old_contract_and_checks_new_payload():
+    capture._verify_banana_contacts({}, {"objects_of_interest": ["rubiks_cube"]})
+    contract = {"banana_contact_bodies": ["table"]}
+    receipt = {
+        "contact_sensor_inventory": ["banana__table"],
+        "banana_contact_measurements": {"table": {}},
+    }
+    with pytest.raises(ValueError, match="sensor binding"):
+        capture._verify_banana_contacts(receipt, contract)
+    row = {
+        "sensor": "banana__table", "shape": [1, 1, 1, 3],
+        "force_matrix_world_n": [[[[0.0, 0.0, 1.0]]]], "nonzero_force_observed": True,
+    }
+    receipt["banana_contact_measurements"]["table"] = row
+    capture._verify_banana_contacts(receipt, contract)
+    row["nonzero_force_observed"] = False
+    with pytest.raises(ValueError, match="force summary"):
+        capture._verify_banana_contacts(receipt, contract)
+    row["force_matrix_world_n"] = [[[[0.0, 0.0, float("nan")]]]]
+    with pytest.raises(ValueError, match="force matrix"):
+        capture._verify_banana_contacts(receipt, contract)

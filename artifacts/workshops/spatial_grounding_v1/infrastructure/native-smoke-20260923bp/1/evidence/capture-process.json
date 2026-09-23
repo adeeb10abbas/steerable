@@ -1,0 +1,49 @@
+{
+  "argv": [
+    "/usr/bin/env",
+    "-C",
+    "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241",
+    "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
+    "-m",
+    "experiments.workshops.spatial_grounding_v1.prospective_family_capture",
+    "--study-root",
+    "/data/users/ali/sgw-01/source/c3c976db-bo",
+    "--robolab-root",
+    "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241",
+    "--assets-manifest",
+    "/data/users/ali/sgw-01/preflight/a40-20260922e/assets.json",
+    "--renderer-receipt",
+    "/data/users/ali/sgw-01/preflight/a40-20260922e/renderer.json",
+    "--overlay-manifest",
+    "/data/users/ali/sgw-01/qualification/family-native-smoke-20260923bp/1/evidence/candidate_manifest.json",
+    "--output",
+    "/data/users/ali/sgw-01/qualification/family-native-smoke-20260923bp/1/evidence/candidate_capture.json",
+    "--kit_args=--portable-root=/data/users/ali/sgw-01/qualification/family-native-smoke-20260923bp/1/evidence/kit_capture --/rtx/verifyDriverVersion/enabled=false",
+    "--headless",
+    "--num-envs",
+    "1",
+    "--device",
+    "cuda:0",
+    "--renderer",
+    "realtime",
+    "--rendering-type",
+    "balanced",
+    "--rendering_mode",
+    "balanced"
+  ],
+  "label": "capture",
+  "returncode": 0,
+  "schema_version": "sgw-01-family-campaign-executor-v1",
+  "stderr": {
+    "bytes": 639,
+    "path": "/data/users/ali/sgw-01/qualification/family-native-smoke-20260923bp/1/evidence/capture.stderr.log",
+    "sha256": "333f0a3aaeff9cbde107c25aa3f10c29bf42add9c763e3725f47317aae1f74a2"
+  },
+  "stdout": {
+    "bytes": 13965,
+    "path": "/data/users/ali/sgw-01/qualification/family-native-smoke-20260923bp/1/evidence/capture.stdout.log",
+    "sha256": "5a24130b6f6d7f505b13434a18d25bdad8abaddb6e4b8547aab4ea5680c02566"
+  },
+  "timed_out": false,
+  "timeout_seconds": 1800
+}

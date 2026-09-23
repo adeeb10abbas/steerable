@@ -50,6 +50,59 @@ def test_family_support_sensor_selection_uses_declared_surfaces_not_table():
     assert environment._support_sensor_names() == ("rubiks_cube__upper", "rubiks_cube__lower")
 
 
+@pytest.mark.parametrize("tensor_corners", (False, True))
+def test_family_snapshot_accepts_native_single_env_bbox_vectors(monkeypatch, tmp_path, tensor_corners):
+    import itertools
+    import torch
+    from pxr import Gf
+    from experiments.workshops.spatial_grounding_v1 import robolab_lat_qualification
+
+    corners = [Gf.Vec3d(*point) for point in itertools.product((0, 1), (0, 2), (0, 3))]
+    if tensor_corners:
+        corners = torch.tensor([list(point) for point in corners])
+
+    class World:
+        def get_pose(self, name, env_id):
+            assert env_id == 0
+            return torch.zeros(3), torch.tensor([1., 0, 0, 0])
+
+        def get_bbox(self, name, env_id):
+            assert env_id == 0
+            return corners, np.array([.5, 1., 1.5])
+
+    class Scene:
+        env_origins = [torch.zeros(3)]
+
+        def __getitem__(self, name):
+            return types.SimpleNamespace(data=types.SimpleNamespace(
+                root_com_pos_w=torch.zeros(1, 3), root_com_vel_w=torch.zeros(1, 6),
+            ))
+
+    sensors = {name: types.SimpleNamespace(data=types.SimpleNamespace(
+        force_matrix_w=torch.tensor([[[[0., 0, 2.]]]]),
+    )) for name in ("rubiks_cube__upper", "rubiks_cube__lower")}
+    for name, attrs in {
+        "robolab.core.task.conditionals": {"object_grabbed": lambda *args, **kwargs: False},
+        "robolab.core.sensors.contact_sensor_utils": {"get_contact_sensors": lambda scene: sensors},
+        "robolab.core.world.world_state": {"get_world": lambda env: World()},
+    }.items():
+        module = types.ModuleType(name)
+        for key, value in attrs.items():
+            setattr(module, key, value)
+        monkeypatch.setitem(sys.modules, name, module)
+    monkeypatch.setattr(robolab_lat_qualification, "articulation_body_frames", lambda data: {})
+    env = RoboLabLatEnvironment(
+        types.SimpleNamespace(scene=Scene(), step_dt=.1), _candidate(), tmp_path,
+    )
+    snapshot = env._snapshot()
+    assert snapshot.objects["rubiks_cube"].supported
+    assert set(snapshot.context_measurements) == {"table", "upper_platform", "lower_platform"}
+    for row in snapshot.context_measurements.values():
+        assert row["bbox_env_local_min_xyz_m"] == (0., 0., 0.)
+        assert row["bbox_env_local_max_xyz_m"] == (1., 2., 3.)
+        assert row["geometric_center_env_local_xyz_m"] == (.5, 1., 1.5)
+
+
 def test_family_bridge_requires_explicit_evidence_root_before_native_start(tmp_path):
     manifest = tmp_path / "assets.json"
     manifest.write_text("{}")

@@ -1,0 +1,10 @@
+{
+  "actual_call_env_id": 0,
+  "cause": "qualification context incorrectly called detach on the list; captured geometry already uses per-corner vector conversion",
+  "documented_return": "list[Gf.Vec3d] corners plus numpy.ndarray centroid",
+  "external_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "method": "WorldState.get_bbox",
+  "method_docstring": "Get the Oriented Bounding Box (OBB) for a body in env-local coordinates\n(relative to each env's scene origin, via get_pose's default is_relative=True).\n\nUses cached local geometry + vectorized transform_points for efficiency.\n\nArgs:\n    body: Name of the body/object in the scene\n    env_id: None \u2192 (Tensor(N, 8, 3), Tensor(N, 3))\n            int  \u2192 (list[Gf.Vec3d] len=8, np.ndarray(3,)) for backward compat\n\nReturns:\n    (corners, centroid) \u2014 shapes depend on env_id",
+  "source_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/core/world/world_state.py",
+  "source_sha256": "a4c12dc07673b0733c53990244e86577d16fa98888772a6c93934903f9699bbf"
+}

@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_below_release_gate_height_dist_native_visual_setup_accepted_qualification_unreleased",
-  "updated_at_utc": "2026-09-23T07:15:21Z",
+  "updated_at_utc": "2026-09-23T07:30:06Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -413,6 +413,26 @@
   "active_task_gpu_jobs": [],
   "native_family_smoke_attempts": [
     {
+      "job": "sgw01-ali-family-native-smoke-20260923bp",
+      "job_uid": "f8253c9e-1f98-49e5-9e5a-765ff71277f2",
+      "started_at_utc": "2026-09-23T07:27:40Z",
+      "status": "all_four_infrastructure_invalid_before_first_controller_action",
+      "failed_at_utc": "2026-09-23T07:30:06Z",
+      "cause": "Contact-order correction succeeded. The next reset snapshot assumed Tensor bbox corners, but the pinned WorldState.get_bbox(env_id=0) returns list[Gf.Vec3d]. All four failed before controller planning.",
+      "compact_evidence": "infrastructure/native-smoke-20260923bp/manifest.json",
+      "native_source_audit": "infrastructure/native-smoke-20260923bp/bbox-source-audit.json",
+      "source_commit": "c3c976db56fd694d2c5498a8409b08f9a510a41c",
+      "raw_root": "/data/users/ali/sgw-01/qualification/family-native-smoke-20260923bp",
+      "allocated_gpus": 0,
+      "peak_allocated_gpus": 4,
+      "model_workers": 0,
+      "automatic_retries_per_index": 0,
+      "job_deadline_seconds": 4800,
+      "pod_deadline_seconds": 4500,
+      "child_deadline_seconds": 1800,
+      "pods": ["sgw01-ali-family-native-smoke-20260923bp-0-bhzlt", "sgw01-ali-family-native-smoke-20260923bp-1-2ktjc", "sgw01-ali-family-native-smoke-20260923bp-2-lcfvz", "sgw01-ali-family-native-smoke-20260923bp-3-dv87b"]
+    },
+    {
       "job": "sgw01-ali-family-native-smoke-20260923bn",
       "job_uid": "181cdd45-0bce-4acb-8388-0134e52cf34c",
       "started_at_utc": "2026-09-23T07:12:51Z",
@@ -442,14 +462,16 @@
   ],
   "active_task_cpu_jobs": [
     {
-      "job": "sgw01-ali-family-source-stage-20260923bm",
-      "job_uid": "ab57c90d-1917-42ce-a8a6-e6edcb33ed15",
-      "pod": "sgw01-ali-family-source-stage-20260923bm-2cwjn",
-      "pod_uid": "c6f6c50b-b30d-41b6-9bab-90abbebf95b7",
-      "status": "freeze_complete_finite_export_window_active",
+      "job": "sgw01-ali-family-source-stage-20260923bo",
+      "job_uid": "b76545c7-fec9-44ec-8712-da22564a18c7",
+      "pod": "sgw01-ali-family-source-stage-20260923bo-jbtvh",
+      "pod_uid": "41993e38-612a-4ce4-8c15-1cab06d2cd29",
+      "status": "source_stage_and_four_real_capture_replays_complete_finite_export_window_active",
       "allocated_gpus": 0,
-      "frozen_at_utc": "2026-09-23T07:07:41.464867+00:00",
-      "bounded_export_window_seconds": 1200
+      "staged_at_utc": "2026-09-23T07:26:03.183909+00:00",
+      "bounded_export_window_seconds": 1800,
+      "receipt": "infrastructure/family-source-stage-20260923bo/receipt.json",
+      "receipt_sha256": "3f0f94aae11e67aa5f498216c7d7877aef035708ab8ad24b21ee8a4cb3f273fb"
     }
   ],
   "prospective_family_plan_freeze": {
@@ -464,7 +486,8 @@
     "dist": {"capture_eligible": 64, "geometric_rejections": 36, "left": 45, "right": 19},
     "native_smoke_design_ids": ["SGW-HEIGHT-DESIGN-000", "SGW-HEIGHT-DESIGN-001", "SGW-DIST-DESIGN-000", "SGW-DIST-DESIGN-003"],
     "native_smoke_manifest": "handoff/k8s/sgw01-ali-family-native-smoke-20260923bn.yaml",
-    "native_smoke_status": "bn_infrastructure_failure_preserved_order_correction_locally_validated_native_repair_pending",
+    "native_smoke_status": "bn_and_bp_infrastructure_failures_preserved_bbox_vector_correction_tested_native_repair_pending",
+    "source_stage_job_completed_at_utc": "2026-09-23T07:27:43Z",
     "remaining_capture_eligible_slots": 117,
     "physically_qualified_candidates": 0,
     "historical_coverage_complete": false,
@@ -586,7 +609,7 @@
       "kubernetes_failed_at_utc": "2026-09-23T06:33:03Z"
     }
   },
-  "next_authorized_step": "Stage the tested native contact-order correction in a fresh finite CPU Job, then explicitly repair only the same four infrastructure-invalid bn design slots in fresh evidence roots. Reuse immutable bm plans, seeds, geometric decisions and calibration. No valid physical trial/action was produced by bn; preserve all its captures, warmup videos and failure records. Four A40 maximum, zero models, no automatic retry/refill. Inspect native smoke integrity before remaining117 slots. Historical/model/runtime gates stay separate; no learned release or LAT rerun.",
+  "next_authorized_step": "Stage the tested bbox-vector conversion repair, then run only the same four infrastructure-invalid smoke design slots in fresh roots. bp passed the repaired contact boundary but exposed native list[Gf.Vec3d] bbox corners; reuse the already-proven capture vector helper. Seven native-boundary tests pass. Preserve bn/bp captures and warmup videos; neither produced a controller action or valid physical trial. bm plans, seeds, thresholds and calibration stay fixed. Four A40 maximum, zero models, no automatic retry/refill. Inspect native smoke integrity before remaining117 slots.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -855,7 +878,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Stage and natively verify the object-order correction against the same four bm smoke slots in new attempt roots. Preserve bn as infrastructure failure, never physical/model failure. Seven large historical payloads remain root-only evidence, not comparable geometry or coverage release. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
+  "next_action": "Stage the tested bbox-vector repair and explicitly rerun only the same four infrastructure-invalid native smoke slots in fresh roots. Preserve bn/bp as infrastructure failures, never physical/model failures. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

@@ -1,0 +1,87 @@
+[Warning] [simulation_app.simulation_app] Modules: ['omni.kit_app'] were loaded before SimulationApp was started and might not be loaded correctly.
+[Warning] [simulation_app.simulation_app] Please check to make sure no extra omniverse or pxr modules are imported before the call to SimulationApp(...)
+Loading user config located at: '/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/data/Kit/Isaac-Sim/5.0/user.config.json'
+[Info] [carb] Logging to file: /data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/logs/Kit/Isaac-Sim/5.0/kit_20260923_072907.log
+2026-09-23T07:29:07Z [4ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/data/Kit/Isaac-Sim/5.0/8d0e22af-8b33-44ca-3d28af83-9c9f838f.dmp'
+2026-09-23T07:29:07Z [6ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/data/Kit/Isaac-Sim/5.0/eea7e642-5b9e-42cb-97b11688-5fb66c7f.dmp'
+2026-09-23T07:29:07Z [7ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/data/Kit/Isaac-Sim/5.0/cb37e459-46fa-4131-0b232691-1b0fadbb.dmp'
+2026-09-23T07:29:09Z [1,672ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-09-23T07:29:09Z [1,672ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-09-23T07:29:09Z [1,808ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-09-23T07:29:09Z [1,817ms] [Warning] [carb.cudainterop.plugin] CUDA_VISIBLE_DEVICES environment variable is set.
+2026-09-23T07:29:09Z [1,817ms] [Warning] [carb.cudainterop.plugin] Note CUDA device enumeration and Omniverse device enumeration are different.
+2026-09-23T07:29:09Z [1,817ms] [Warning] [carb.cudainterop.plugin] Setting CUDA_VISIBLE_DEVICES can lead to undesired behavior or crashes.
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 580.95.05     | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA A40                       | Yes: 0 |     | 46068   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2235      | 8ae996bc.. |
+|     |                                  |        |     |            | 81        |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 5.15.0-191-generic
+| Processor: AMD EPYC 7543 32-Core Processor
+| Bare Metal Cores: 64 | Bare Metal Logical Cores: 128
+| Core Usage Quota: 32
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 131072 | Free Memory: 128277
+| Total Page/Swap (MB): 0 | Free Page/Swap: 0
+|---------------------------------------------------------------------------------------------|
+2026-09-23T07:29:10Z [2,985ms] [Warning] [gpu.foundation.plugin] ECC is enabled on physical device 0
+2026-09-23T07:29:10Z [2,987ms] [Warning] [gpu.foundation.plugin] IOMMU is enabled.
+2026-09-23T07:29:11Z [4,256ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-09-23T07:29:11Z [4,256ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-09-23T07:29:11Z [4,291ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-09-23T07:29:11Z [4,291ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-09-23T07:29:11Z [4,302ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-09-23T07:29:11Z [4,302ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-09-23T07:29:12Z [4,374ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-09-23T07:29:12Z [4,374ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-09-23T07:29:12Z [4,376ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-09-23T07:29:12Z [4,376ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-09-23T07:29:12Z [4,378ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-09-23T07:29:12Z [4,378ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-09-23T07:29:12Z [4,697ms] [Warning] [omni.log] Source: omni.hydra was already registered.
+2026-09-23T07:29:13Z [5,760ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+2026-09-23T07:29:16Z [9,160ms] [Warning] [pxr.Semantics] pxr.Semantics is deprecated - please use Semantics instead
+2026-09-23T07:29:17Z [9,452ms] [Warning] [omni.replicator.core.scripts.extension] No material configuration file, adding configuration to material settings directly.
+2026-09-23T07:29:22Z [15,121ms] [Warning] [omni.kvdb.plugin] Disabling key-value database because another kit process is locking it
+2026-09-23T07:29:22Z [15,123ms] [Warning] [usdrt.population.plugin] using high frequency span is disabled
+2026-09-23T07:29:22Z [15,187ms] [Warning] [rtx.neuraylib.plugin] [LINK:PLUGIN]   0.0   LINK   plug warn : Loading /data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/isaacsim/extscache/omni.iray.libs-0.0.0+8131b85d.lx64.r/bin/iray/nvcuvid_video_decoder.so: libnvcuvid.so.1: cannot open shared object file: No such file or directory
+2026-09-23T07:29:22Z [15,187ms] [Warning] [rtx.neuraylib.plugin] [LINK:PLUGIN]   0.0   LINK   plug warn : Loading .\nt-x86-64\lib\nvcuvid_video_decoder.so: .\nt-x86-64\lib\nvcuvid_video_decoder.so: cannot open shared object file: No such file or directory
+2026-09-23T07:29:22Z [15,187ms] [Warning] [rtx.neuraylib.plugin] Failed to load nvcuvid h264 decoder plugin. Iray Bridge h264 support will not be available.
+2026-09-23T07:29:23Z [15,515ms] [Warning] [carb.graphics-vulkan.plugin] Trying to initialize NGX without vkGetInstanceProcAddr and vkGetDeviceProcAddr pointer-to-functions.
+2026-09-23T07:29:23Z [15,516ms] [Warning] [carb.scenerenderer-rtx.plugin] Failed to create NGX context.
+2026-09-23T07:29:26Z [18,412ms] [Warning] [usdrt.hydra.fabric_scene_delegate.plugin] using high frequency span is disabled
+2026-09-23T07:29:26Z [18,412ms] [Warning] [usdrt.hydra.fabric_scene_delegate.plugin] using high frequency span is disabled
+2026-09-23T07:29:26Z [18,412ms] [Warning] [usdrt.hydra.fabric_scene_delegate.plugin] using high frequency span with attrs is disabled
+2026-09-23T07:29:26Z [18,424ms] [Warning] [omni.fabric.plugin] Warning: attribute viewportHandle not found for bucket id 7
+
+2026-09-23T07:29:26Z [18,440ms] [Warning] [usdrt.hydra.fabric_scene_delegate.plugin] using high frequency span is disabled
+2026-09-23T07:29:26Z [18,440ms] [Warning] [usdrt.hydra.fabric_scene_delegate.plugin] using high frequency span is disabled
+2026-09-23T07:29:27Z [19,998ms] [Warning] [isaacsim.core.simulation_manager.impl.simulation_manager] CCD is not supported on GPU, ignoring request to enable it
+2026-09-23T07:29:31Z [23,643ms] [Warning] [isaaclab.actuators.actuator_pd] The <ImplicitActuatorCfg> object has a value for 'effort_limit'. This parameter will be removed in the future. To set the effort limit, please use 'effort_limit_sim' instead.
+2026-09-23T07:29:31Z [23,643ms] [Warning] [isaaclab.actuators.actuator_pd] The <ImplicitActuatorCfg> object has a value for 'velocity_limit'. Previously, although this value was specified, it was not getting used by implicit actuators. Since this parameter affects the simulation behavior, we continue to not use it. This parameter will be removed in the future. To set the velocity limit, please use 'velocity_limit_sim' instead.
+2026-09-23T07:29:31Z [23,695ms] [Warning] [isaaclab.actuators.actuator_pd] The <ImplicitActuatorCfg> object has a value for 'effort_limit'. This parameter will be removed in the future. To set the effort limit, please use 'effort_limit_sim' instead.
+2026-09-23T07:29:31Z [23,695ms] [Warning] [isaaclab.actuators.actuator_pd] The <ImplicitActuatorCfg> object has a value for 'velocity_limit'. Previously, although this value was specified, it was not getting used by implicit actuators. Since this parameter affects the simulation behavior, we continue to not use it. This parameter will be removed in the future. To set the velocity limit, please use 'velocity_limit_sim' instead.
+2026-09-23T07:29:31Z [23,701ms] [Warning] [isaaclab.actuators.actuator_pd] The <ImplicitActuatorCfg> object has a value for 'velocity_limit'. Previously, although this value was specified, it was not getting used by implicit actuators. Since this parameter affects the simulation behavior, we continue to not use it. This parameter will be removed in the future. To set the velocity limit, please use 'velocity_limit_sim' instead.
+2026-09-23T07:29:31Z [23,705ms] [Warning] [isaaclab.assets.articulation.articulation] Not all actuators are configured! Total number of actuated joints not equal to number of joints available: 8 != 13.
+2026-09-23T07:29:31Z [23,899ms] [Warning] [usdrt.hydra.fabric_scene_delegate.plugin] using high frequency span with attrs is disabled
+2026-09-23T07:29:31Z [23,952ms] [Warning] [usdrt.hydra.fabric_scene_delegate.plugin] using high frequency span with attrs is disabled
+2026-09-23T07:29:36Z [28,986ms] [Warning] [omni.hydra] Parameter 'metallic' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_de89ae90/OmniPBR::::OmniPBR::OmniPBR((118))' not available in the MDL representation.
+2026-09-23T07:29:36Z [28,986ms] [Warning] [omni.hydra] Parameter 'roughness' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_de89ae90/OmniPBR::::OmniPBR::OmniPBR((118))' not available in the MDL representation.
+2026-09-23T07:29:36Z [28,998ms] [Warning] [omni.hydra] Parameter 'metallic' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_17041a19/OmniPBR::::OmniPBR::OmniPBR((121))' not available in the MDL representation.
+2026-09-23T07:29:36Z [28,998ms] [Warning] [omni.hydra] Parameter 'roughness' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_17041a19/OmniPBR::::OmniPBR::OmniPBR((121))' not available in the MDL representation.
+2026-09-23T07:29:36Z [29,138ms] [Warning] [omni.hydra] Parameter 'metallic' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_7bae7558/OmniPBR::::OmniPBR::OmniPBR((144))' not available in the MDL representation.
+2026-09-23T07:29:36Z [29,138ms] [Warning] [omni.hydra] Parameter 'roughness' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_7bae7558/OmniPBR::::OmniPBR::OmniPBR((144))' not available in the MDL representation.
+2026-09-23T07:29:39Z [31,478ms] [Warning] [omni.hydra] Parameter 'metallic' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_de89ae90/OmniPBR::::OmniPBR::OmniPBR((118))' not available in the MDL representation.
+2026-09-23T07:29:39Z [31,478ms] [Warning] [omni.hydra] Parameter 'roughness' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_de89ae90/OmniPBR::::OmniPBR::OmniPBR((118))' not available in the MDL representation.
+2026-09-23T07:29:39Z [31,478ms] [Warning] [omni.hydra] Parameter 'metallic' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_17041a19/OmniPBR::::OmniPBR::OmniPBR((121))' not available in the MDL representation.
+2026-09-23T07:29:39Z [31,479ms] [Warning] [omni.hydra] Parameter 'roughness' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_17041a19/OmniPBR::::OmniPBR::OmniPBR((121))' not available in the MDL representation.
+2026-09-23T07:29:39Z [31,481ms] [Warning] [omni.hydra] Parameter 'metallic' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_7bae7558/OmniPBR::::OmniPBR::OmniPBR((144))' not available in the MDL representation.
+2026-09-23T07:29:39Z [31,481ms] [Warning] [omni.hydra] Parameter 'roughness' of shade node 'usd::rtx_scope0::/__Fabric_StageInfo/MaterialPool/mat_7bae7558/OmniPBR::::OmniPBR::OmniPBR((144))' not available in the MDL representation.
+2026-09-23T07:29:42Z [34,342ms] [Warning] [carb] Client gpu.foundation.plugin has acquired [gpu::unstable::IMemoryBudgetManagerFactory v0.1] 100 times. Consider accessing this interface with carb::getCachedInterface() (Performance warning)

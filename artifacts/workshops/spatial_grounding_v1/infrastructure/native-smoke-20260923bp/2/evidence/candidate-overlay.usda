@@ -1,0 +1,38 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    subLayers = [@/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective/dist-left.usda@]
+)
+
+over "World" {
+    over "bowl" {
+        double3 xformOp:translate = (0.4012549976158142, 0.1281569964237213, 0.11999999731779099)
+        quatf xformOp:orient = (0.9999999403953552, -5.8753543271450326e-05, -0.00032362030469812453, -0.00010501052747713402)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+    over "plate" {
+        double3 xformOp:translate = (0.6212550262260437, -0.19184299642372132, 0.11999999731779099)
+        quatf xformOp:orient = (1.0, 0.0, 0.0, 0.0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+    over "rubiks_cube" {
+        double3 xformOp:translate = (0.5214246372032165, -0.06076564723777771, 0.12243536114692688)
+        quatf xformOp:orient = (0.9999990463256836, -0.0009071399690583348, 0.001037940033711493, 8.44117093947716e-05)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+    over "dist_bowl_support" {
+        double3 xformOp:translate = (0.40125500000000003, 0.128157, 0.07122701168060303)
+    }
+    over "dist_plate_support" {
+        double3 xformOp:translate = (0.621255, -0.191843, 0.08200036172568798)
+    }
+    over "dist_neutral_cube_support" {
+        double3 xformOp:translate = (0.511255, -0.031843, 0.07045305654406547)
+    }
+    over "dist_bowl_landing_support" {
+        double3 xformOp:translate = (0.261255, 0.128157, 0.07045305654406547)
+    }
+    over "dist_plate_landing_support" {
+        double3 xformOp:translate = (0.621255, -0.37184300000000003, 0.07045305654406547)
+    }
+}

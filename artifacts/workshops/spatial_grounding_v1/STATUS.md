@@ -57,6 +57,23 @@ freeze: the exact bm designs, seed, thresholds and calibration remain fixed.
 Only the same four infrastructure-invalid slots may receive fresh technical
 attempts; no valid physical trial is rerun and no rejected proposal is replaced.
 
+CPU stage bo independently rematerialized all four real bn captures with the
+corrected source `c3c976db`, preserving their recorded contact IDs. Its generated
+repair manifest was byte/hash checked against the original template, changing
+only source and attempt identities. Job bp started at 07:27:40 UTC at the same
+four frozen slots, in new PVC roots, after four fresh zero-memory-use GPU
+checks. The original bm CPU Job completed at 07:27:43 UTC. All bp captures
+again passed, and contact lookup advanced beyond bn's error. At 07:30:06 UTC,
+all four bp workers had failed before controller planning at the next native
+boundary: `WorldState.get_bbox(env_id=0)` returns a list of `Gf.Vec3d`, not a
+Tensor. Their immutable evidence is in
+[`infrastructure/native-smoke-20260923bp/`](infrastructure/native-smoke-20260923bp/).
+The snapshot now reuses capture's established per-corner vector conversion.
+Seven native-boundary tests pass, including real `Gf.Vec3d` list and Tensor
+corner representations through the actual snapshot method. This additive
+engineering repair changes no geometry, threshold, seed, or valid outcome.
+Fresh same-slot technical attempts remain necessary; all learned gates stay closed.
+
 ## Scientific accounting
 
 - Planned: **1,044** episodes (P 36, D 144, C 864).

@@ -23,7 +23,7 @@ from .simulator_bridge import (
 )
 from .task_definitions import RoboLabTaskDefinition
 from .robolab_measurements import articulation_body_frames, geometric_center_state
-from .lat_workspace_capture import render_only_warmup
+from .lat_workspace_capture import _vector, render_only_warmup
 
 
 class RoboLabLatEnvironment:
@@ -97,7 +97,7 @@ class RoboLabLatEnvironment:
                 continue
             root_position, quaternion = world.get_pose(name, env_id=0)
             corners, geometric_center = world.get_bbox(name, env_id=0)
-            corners_values = np.asarray(corners.detach().cpu().numpy(), dtype=np.float64).reshape(-1, 3)
+            corners_values = np.asarray([_vector(corner) for corner in corners], dtype=np.float64).reshape(-1, 3)
             context_measurements[name] = {
                 "root_position_env_local_xyz_m": tuple(float(item) for item in root_position.detach().cpu().tolist()),
                 "root_quaternion_world_wxyz": tuple(float(item) for item in quaternion.detach().cpu().tolist()),

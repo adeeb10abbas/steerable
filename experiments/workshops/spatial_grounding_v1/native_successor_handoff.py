@@ -16,7 +16,7 @@ import re
 import ssl
 import time
 from typing import Any
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 NAMESPACE = "211247-prod"
@@ -159,8 +159,12 @@ class Kubernetes:
             },
             method=method,
         )
-        with urlopen(request, context=self.context, timeout=30) as response:
-            return json.load(response)
+        try:
+            with urlopen(request, context=self.context, timeout=30) as response:
+                return json.load(response)
+        except HTTPError as error:
+            detail = error.read(32768).decode("utf-8", errors="replace")
+            raise URLError(f"Kubernetes {method} {path} returned HTTP {error.code}: {detail}") from error
 
 
 def api_path(resource: str, name: str) -> str:

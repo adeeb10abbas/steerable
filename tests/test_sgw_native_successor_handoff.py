@@ -1,6 +1,7 @@
 import copy
+import io
 import json
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 
 import pytest
 
@@ -170,3 +171,18 @@ def test_resume_denial_is_not_success(tmp_path):
     with pytest.raises(URLError):
         handoff.run(config, tmp_path, api)
     assert not (tmp_path / "result.json").exists()
+
+
+def test_http_failure_preserves_server_reason(tmp_path, monkeypatch):
+    (tmp_path / "token").write_text("unit-test-token")
+    monkeypatch.setattr(handoff, "SERVICE_ACCOUNT", tmp_path)
+    client = handoff.Kubernetes.__new__(handoff.Kubernetes)
+    client.root, client.context = "https://example.invalid", None
+
+    def reject(request, **kwargs):
+        assert request.get_header("Content-type") == "application/json-patch+json"
+        raise HTTPError(request.full_url, 422, "Unprocessable Entity", {}, io.BytesIO(b'{"message":"spec test failed"}'))
+
+    monkeypatch.setattr(handoff, "urlopen", reject)
+    with pytest.raises(URLError, match="HTTP 422.*spec test failed"):
+        client.request("PATCH", "/target", [])

@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_height_dist_remaining_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T11:15:22Z",
+  "updated_at_utc": "2026-09-23T11:32:46Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -66,6 +66,8 @@
     "historical_root_separation_primitive": "experiments/workshops/spatial_grounding_v1/historical_root_separation.py",
     "groot_reset_population_audit": "tools/audit_sgw_groot_reset_population.py",
     "groot_reset_population_and_root_primitives_targeted_tests_passed": 65,
+    "frozen_family_capacity_audit": "tools/audit_sgw_family_capacity.py",
+    "capacity_and_partition_summary_targeted_tests_passed": 27,
     "family_capture_materializer_and_six_trial_verifier": "5b21c8af",
     "finite_family_slot_executor": "e1f8a212",
     "preaction_guard_persisted_before_controller_planning": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
@@ -737,15 +739,51 @@
       "including_native_smoke_and_all_prefixes": {"completed_candidates": 32, "all_six_pass": 12, "physical_rejected": 20, "completed_trials": 192, "controller_actions": 86400},
       "claim_boundary": "Worker verification and hash-bound raw trial/video projections, not final independent raw compilation."
     },
+    "verified_eighth_prefix": {
+      "observed_at_utc": "2026-09-23T11:26:37.356950+00:00",
+      "manifest": "infrastructure/family-partition-20260923bt-prefix-cd/manifest.json",
+      "manifest_sha256": "ea0c6418a791b94d2265eedd4520062bf6aa3aa6a77d196c0f0238d59d57bb1d",
+      "pvc_copy": "/data/users/ali/sgw-01/infrastructure/family-capacity-20260923cd/replay/artifacts/workshops/spatial_grounding_v1/infrastructure/family-partition-20260923bt-prefix-cd",
+      "completed_remaining_slots_including_prior_prefixes": 32,
+      "remaining_slots_not_yet_terminal": 85,
+      "completed_trials_this_prefix": 24,
+      "all_six_pass_slots": ["HEIGHT-046"],
+      "valid_physical_rejections": [
+        {"slot": "HEIGHT-049", "passed_trials": 5},
+        {"slot": "HEIGHT-052", "passed_trials": 4},
+        {"slot": "HEIGHT-053", "passed_trials": 3}
+      ],
+      "including_native_smoke_and_all_prefixes": {"completed_candidates": 36, "all_six_pass": 13, "physical_rejected": 23, "completed_trials": 216, "controller_actions": 97200},
+      "claim_boundary": "Worker verification and rehashed original raw state/score/video projections, not final independent raw compilation."
+    },
+    "frozen_family_capacity": {
+      "audit": "infrastructure/family-capacity-20260923cd/audit.json",
+      "audit_sha256": "63ca814ab4dffcc8ba91945ac015e83ddc56ae4a992284d6344bea63123eaa49",
+      "manifest": "infrastructure/family-capacity-20260923cd/manifest.json",
+      "pvc_replay_root": "/data/users/ali/sgw-01/infrastructure/family-capacity-20260923cd",
+      "replayed_byte_identically": true,
+      "HEIGHT": {
+        "left": {"physical_accepted": 11, "physical_rejected": 7, "unresolved": 10, "upper_bound": 21, "required": 15},
+        "right": {"physical_accepted": 1, "physical_rejected": 15, "unresolved": 13, "upper_bound": 14, "required": 14},
+        "mathematically_blocked_at_this_prefix": false,
+        "one_additional_valid_right_rejection_would_block": true
+      },
+      "DIST": {
+        "left": {"physical_accepted": 1, "physical_rejected": 0, "unresolved": 44, "upper_bound": 45, "required": 15},
+        "right": {"physical_accepted": 0, "physical_rejected": 1, "unresolved": 18, "upper_bound": 18, "required": 14}
+      },
+      "live_workers_modified": false,
+      "release_permitted": false
+    },
     "latest_worker_monitor": {
-      "observed_at_utc": "2026-09-23T11:15:22.266075+00:00",
-      "active_slots": ["HEIGHT-046", "HEIGHT-059", "HEIGHT-052", "HEIGHT-063"],
-      "completed_slots_not_yet_in_retained_prefix": ["HEIGHT-049", "HEIGHT-053"],
+      "observed_at_utc": "2026-09-23T11:32:46.738413+00:00",
+      "active_slots": ["HEIGHT-055", "HEIGHT-059", "HEIGHT-061", "HEIGHT-063"],
+      "completed_slots_not_yet_in_retained_prefix": [],
       "shared_infrastructure_stop_present": false,
       "terminal_launcher_receipts": 0
     },
     "last_read_only_monitor": {
-      "observed_at_utc": "2026-09-23T11:15:22.266075+00:00",
+      "observed_at_utc": "2026-09-23T11:32:46.738413+00:00",
       "shared_infrastructure_stop_present": false,
       "collector_terminal_or_error_record_present": false
     },
@@ -1055,7 +1093,7 @@
     "historical_population_coverage_complete": false,
     "release_permitted": false
   },
-  "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. At the retained seventh prefix,32 HEIGHT/DIST candidates have192 full recorded trials,12 all-six passes and20 valid rejections;89 slots remain not terminal. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. Keep bx's149 snapshots, ca's20 source-bounded resets, cb's20 complete native configs and cc's108 GR00T final-cell/warmup snapshots separately scoped. cc adds no qualified nonmatch or global coverage claim.",
+  "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. At the retained eighth prefix,36 HEIGHT/DIST candidates have216 full recorded trials,13 all-six passes and23 valid rejections;85 slots remain not terminal. HEIGHT is not yet mathematically blocked, but its right-stratum best-case bound is exactly14 against14 required; one more valid right rejection would block its frozen pool. Recompute the read-only capacity audit from newly retained terminal evidence without inferring pending outcomes or altering the live queue. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. Keep bx's149 snapshots, ca's20 source-bounded resets, cb's20 complete native configs and cc's108 GR00T final-cell/warmup snapshots separately scoped. cc adds no qualified nonmatch or global coverage claim.",
   "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu -o wide",
   "next_historical_trace": "cc recovers all54 GR00T Phase-A final-cell initial resets and54 named warmups, reconciling complete raw streams. Its retained actual runtime patch preserves the frozen getter/rotation ASTs but is not independently hash-anchored by the final manifest. Seek a genuine historical source attestation or move to another cohort with stronger source-bound reset evidence; do not repeat unchanged provenance probes. The new root-separation primitive needs qualified orthonormal metre frames and per-root error bounds before use. Other attempts/preflights/constructor states remain outside cc. cb's physical no-plate exclusion and R005 missing materialization poses remain unresolved; completion cannot extend ca reset bounds to constructed states.",
   "verification_recovery": {
@@ -1320,7 +1358,7 @@
     "Historical-layout coverage remains incomplete. The recovered 24-layout cohort now has independently hash-bound roots, AABB-derived centers and separate reset displacement in infrastructure/historical-droid-layout-evidence-registry-v1.json. This does not establish exhaustive coverage or release.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Both native client paths now run complete 450-action engineering integrations through joint-position measurements, HTTP producers, trace readers, recorder and scorer with simulated physics/model computation. Native AppLauncher/RPC, D1 distributed startup, official decode/time mapping and all live model runtimes remain unqualified.",
-    "Native smoke integrity passed and bt is processing the remaining frozen HEIGHT/DIST candidates. The retained32-candidate prefix contains12 all-six passes and20 valid physical rejections across192 full recorded trials;89 remaining slots are not yet terminal. No29-layout family pool or historical/runtime release is established.",
+    "Native smoke integrity passed and bt is processing the remaining frozen HEIGHT/DIST candidates. The retained36-candidate prefix contains13 all-six passes and23 valid physical rejections across216 full recorded trials;85 remaining slots are not yet terminal. HEIGHT's right-stratum best-case capacity is exactly14; one further valid right rejection would make its frozen pool impossible. No29-layout family pool or historical/runtime release is established.",
     "Worker storage/allocation guards are implemented, but genuine runtime-bound allocation, fresh idle-device, and stage-specific resource receipts have not been issued for a behavioral launch.",
     "Pilot-derived request/episode deadlines, storage P95, and measured D/C runtime estimates remain unavailable. The user imposed no aggregate GPU-hour cap on idle existing capacity, but this does not waive these gates.",
     "No authenticated Overleaf connection is available."

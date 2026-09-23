@@ -71,6 +71,18 @@ Candidate qualification order and eventual layout selection use the frozen hash
 order. Robot reachability and every reset must still be verified in the native
 runtime before a family is released.
 
+`tools.audit_sgw_family_capacity` computes a read-only necessary capacity bound
+from the frozen 100-proposal HEIGHT/DIST plans, independently rechecked smoke,
+and explicitly selected retained worker prefixes. Pass each prefix manifest with
+`--prefix` and a fresh destination with `--output`. It checks retained byte
+bindings, canonical verification digests, score projections and unique design
+membership. The seeded pilot side needs 15 layouts, not 14; the other side needs
+14. Geometric and valid physical rejections consume slots without refill.
+Every unknown slot and every physical pass remains optimistically potentially
+qualified. A sufficient upper bound is **not** historical freshness, physical
+release, or model release. This audit neither changes the live queue nor
+replaces its pending independent final raw compilation.
+
 One selected proposal runs both goals three times in a fresh Isaac process:
 `model_blind_qualification --proposal-file <file> --candidate-id <id>`, with the
 required pinned runtime arguments. Every trial retains 450 issued commands,

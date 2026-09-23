@@ -6,9 +6,11 @@ behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
 have verified receipts, views and complete videos. Native smoke br has completed
 24 full physical trials: two candidates pass all six trials and two are valid
 physical rejections. All four raw evidence chains passed independent rechecks.
-Including the first twenty-eight subsequent candidates, 32 HEIGHT/DIST candidates
-have completed 192 full trials: twelve all-six passes and twenty physical
-rejections. Four durable GPU workers continue the remaining 89 frozen slots.
+Including the first thirty-two subsequent candidates, 36 HEIGHT/DIST candidates
+have completed 216 full trials: thirteen all-six passes and twenty-three physical
+rejections. Four durable GPU workers continue the remaining 85 frozen slots.
+HEIGHT's right-side best-case capacity is exactly 14 against 14 required; one
+more valid right-side rejection would block its frozen pool.
 Historical coverage and all learned-runtime release gates remain open.
 Learned-policy requests and episodes remain at zero.**
 
@@ -367,6 +369,33 @@ coordinate frame when both metre-frame metrics and numerical error bounds
 are independently qualified. It is not applied as a qualified proof here or
 wired into fixture release. The focused recovery/point/bound/separation suite
 passes 65 checks; global coverage and all learned-policy gates remain open.
+
+At 11:26 UTC, the eighth wave was retained: HEIGHT 046 passed all six trials;
+HEIGHT 049/052/053 passed five/four/three and remain valid physical rejections.
+Including smoke, 36 candidates have **216 full recorded trials** and 97,200
+scripted actions: thirteen all-six passes and twenty-three rejections.
+All 24 new original state/score projections and complete viewport video hashes
+agree with the retained worker verification. Compact evidence is in
+[`infrastructure/family-partition-20260923bt-prefix-cd/`](infrastructure/family-partition-20260923bt-prefix-cd/).
+
+The read-only [capacity audit](infrastructure/family-capacity-20260923cd/audit.json)
+checks the exact frozen proposals and retained terminal evidence, including
+smoke. The even-seed pilot requires **15 left and 14 right** layouts. HEIGHT
+currently has left 11 passes/7 rejections/10 unresolved and right 1 pass/15
+rejections/13 unresolved. Its optimistic final bounds are therefore left 21
+and right 14: **not yet mathematically blocked**, but one additional valid
+right rejection would make its fixed pool insufficient. DIST's corresponding
+bounds remain left 45/right 18. Unknown outcomes are not failures, and even
+all physical passes still require historical freshness and the other gates.
+
+The audit and all its compact inputs are preserved under the PVC's
+`infrastructure/family-capacity-20260923cd/`; its CPU replay is byte-identical.
+The capacity and existing collector tests pass 27 checks. This accounting
+neither changes qualification criteria nor authorizes interrupting/reordering
+the running queue. At 11:32 UTC, HEIGHT 055/059/061/063 were active and all
+four ranks had eight completed slots. No shared stop, launcher terminal,
+collector error or final receipt was present. Learned requests and episodes
+remain zero.
 
 ## Scientific accounting
 

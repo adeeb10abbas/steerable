@@ -81,3 +81,56 @@ def test_all_required_actors_must_be_checked():
     )
     assert result.status == "nonmatch"
     assert result.differing_actors == ("cube",)
+
+
+def test_malformed_containers_are_unresolved():
+    assert prove_root_position_nonmatch(
+        [], {}, required_actors=("cube",), frame=FRAME
+    ).status == "unresolved"
+    assert prove_root_position_nonmatch(
+        {}, {}, required_actors="cube", frame=FRAME
+    ).status == "unresolved"
+    assert prove_root_position_nonmatch(
+        {}, {}, required_actors=(["cube"],), frame=FRAME
+    ).status == "unresolved"
+    assert prove_root_position_nonmatch(
+        {}, {}, required_actors=(), frame=FRAME
+    ).status == "unresolved"
+    assert prove_root_position_nonmatch(
+        {}, {}, required_actors=("cube", "cube"), frame=FRAME
+    ).status == "unresolved"
+    assert prove_root_position_nonmatch(
+        {}, {}, required_actors=("cube",), frame="not-a-contract"
+    ).status == "unresolved"
+
+
+def test_invalid_coordinate_values_are_unresolved():
+    for value in ((True, 0.0, 0.0), ("0.0", 0.0, 0.0), (0.0, 0.0), (float("inf"), 0.0, 0.0)):
+        result = prove_root_position_nonmatch(
+            {"cube": RootPosition(value, FRAME.frame_id)},
+            {"cube": pose(1.0)},
+            required_actors=("cube",),
+            frame=FRAME,
+        )
+        assert result.status == "unresolved"
+
+
+def test_invalid_later_actor_blocks_earlier_separation():
+    result = prove_root_position_nonmatch(
+        {"cube": pose(0.0), "bowl": RootPosition((True, 0.0, 0.0), FRAME.frame_id)},
+        {"cube": pose(0.004), "bowl": pose(0.0)},
+        required_actors=("cube", "bowl"),
+        frame=FRAME,
+    )
+    assert result.status == "unresolved"
+    assert result.differing_actors == ()
+
+
+def test_tolerance_is_not_caller_configurable():
+    result = prove_root_position_nonmatch(
+        {"cube": pose(0.0)},
+        {"cube": pose(0.002)},
+        required_actors=("cube",),
+        frame=FRAME,
+    )
+    assert result.status == "unresolved"

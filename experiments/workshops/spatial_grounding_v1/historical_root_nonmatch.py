@@ -11,8 +11,9 @@ from dataclasses import dataclass
 import math
 from typing import Mapping, Sequence
 
-
-DEFAULT_RESET_POSITION_TOLERANCE_M = 0.003
+from experiments.workshops.spatial_grounding_v1.fixtures import (
+    RESET_POSITION_TOLERANCE_M,
+)
 
 
 @dataclass(frozen=True)
@@ -46,25 +47,33 @@ def prove_root_position_nonmatch(
     *,
     required_actors: Sequence[str],
     frame: CommonFrameContract,
-    tolerance_m: float = DEFAULT_RESET_POSITION_TOLERANCE_M,
 ) -> RootNonmatchResult:
     """Prove only the necessary root-position condition for a nonmatch.
 
     Every required actor must be present, finite, three-dimensional, and
     expressed in exactly ``frame.frame_id`` on both sides. A result is
     ``nonmatch`` iff at least one actor's maximum absolute coordinate
-    difference is strictly greater than ``tolerance_m``. All other cases are
+    difference is strictly greater than the frozen
+    ``fixtures.RESET_POSITION_TOLERANCE_M``. All other cases are
     ``unresolved``. Root agreement never proves duplication because centroid,
     orientation, asset, and population evidence are outside this primitive.
     """
 
+    if not isinstance(frame, CommonFrameContract):
+        return RootNonmatchResult("unresolved", "malformed common-frame contract")
     if not isinstance(frame.frame_id, str) or not frame.frame_id:
         return RootNonmatchResult("unresolved", "invalid common-frame contract")
-    if not math.isfinite(tolerance_m) or tolerance_m < 0:
-        return RootNonmatchResult("unresolved", "invalid position tolerance")
+    if not isinstance(historical, Mapping) or not isinstance(prospective, Mapping):
+        return RootNonmatchResult("unresolved", "malformed root-position mapping")
 
-    actors = tuple(dict.fromkeys(required_actors))
-    if not actors or any(not isinstance(actor, str) or not actor for actor in actors):
+    if isinstance(required_actors, (str, bytes)) or not isinstance(
+        required_actors, Sequence
+    ):
+        return RootNonmatchResult("unresolved", "malformed required actor container")
+    actors = tuple(required_actors)
+    if any(not isinstance(actor, str) or not actor for actor in actors):
+        return RootNonmatchResult("unresolved", "required actor set is empty or invalid")
+    if not actors or len(set(actors)) != len(actors):
         return RootNonmatchResult("unresolved", "required actor set is empty or invalid")
 
     differences: list[tuple[str, float]] = []
@@ -74,6 +83,10 @@ def prove_root_position_nonmatch(
         if old is None or new is None:
             return RootNonmatchResult(
                 "unresolved", f"missing required actor root: {actor}"
+            )
+        if not isinstance(old, RootPosition) or not isinstance(new, RootPosition):
+            return RootNonmatchResult(
+                "unresolved", f"malformed root observation for actor: {actor}"
             )
         if old.frame_id != frame.frame_id or new.frame_id != frame.frame_id:
             return RootNonmatchResult(
@@ -89,7 +102,11 @@ def prove_root_position_nonmatch(
             (actor, max(abs(a - b) for a, b in zip(old_position, new_position)))
         )
 
-    differing = tuple(actor for actor, difference in differences if difference > tolerance_m)
+    differing = tuple(
+        actor
+        for actor, difference in differences
+        if difference > RESET_POSITION_TOLERANCE_M
+    )
     if not differing:
         return RootNonmatchResult(
             "unresolved",
@@ -111,6 +128,8 @@ def _validated_position(
         return None
     try:
         if len(position) != 3:
+            return None
+        if any(isinstance(value, (bool, str, bytes)) for value in position):
             return None
         values = tuple(float(value) for value in position)
     except (TypeError, ValueError):

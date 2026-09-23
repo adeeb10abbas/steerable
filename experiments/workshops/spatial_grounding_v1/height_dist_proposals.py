@@ -105,7 +105,8 @@ def _validate_height_measurements(row: Mapping[str, Any]) -> None:
     if not isinstance(supports, Mapping) or set(supports) != {"higher", "lower"}:
         raise ValueError("HEIGHT requires measured higher and lower landing supports")
     for sign, support in supports.items():
-        if not isinstance(support, Mapping) or not support.get("support_surface_id"):
+        if (not isinstance(support, Mapping) or not support.get("support_surface_id")
+                or not support.get("contact_sensor_id")):
             raise ValueError(f"HEIGHT {sign} support lacks an immutable surface identity")
         _finite_vector(support.get("cube_center_env_local_xyz_m"), f"HEIGHT {sign} support center")
     cube, bowl = _centers(row)
@@ -124,7 +125,8 @@ def _validate_dist_measurements(row: Mapping[str, Any]) -> None:
     if not isinstance(supports, Mapping) or set(supports) != {"near_bowl", "near_plate"}:
         raise ValueError("DIST requires measured near-bowl and near-plate landing supports")
     for name, support in supports.items():
-        if not isinstance(support, Mapping) or not support.get("support_surface_id"):
+        if (not isinstance(support, Mapping) or not support.get("support_surface_id")
+                or not support.get("contact_sensor_id")):
             raise ValueError(f"DIST {name} support lacks an immutable surface identity")
         _finite_vector(support.get("cube_center_env_local_xyz_m"), f"DIST {name} support center")
     cube, bowl, plate = _centers(row, include_plate=True)

@@ -13,10 +13,10 @@ receipt containing:
 - cube/bowl roots, WXYZ orientations, scoring centers, and root-local center
   offsets for every layout; DIST additionally requires the plate;
 - HEIGHT: named, immutable higher and lower released support surfaces,
-  measured cube-center landing coordinates, an intermediate-height bowl, and
+  their actual cube-contact sensor IDs, measured cube-center landing coordinates, an intermediate-height bowl, and
   the `upper_support_side` label;
 - DIST: named, immutable near-bowl and near-plate released support surfaces,
-  measured cube-center landing coordinates, bowl/plate scoring centers, and
+  their actual cube-contact sensor IDs, measured cube-center landing coordinates, bowl/plate scoring centers, and
   the `bowl_side` label;
 - for both families: contact instrumentation proving each proposed final
   support, collision geometry/asset provenance, camera/reset identity, and a

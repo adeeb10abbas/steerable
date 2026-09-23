@@ -145,6 +145,9 @@ class FixtureCandidate:
         native_scene = self.metadata.get("native_scene")
         if native_scene is not None:
             payload["native_scene"] = native_scene
+        supports = self.metadata.get("goal_supports")
+        if supports is not None:
+            payload["goal_supports"] = supports
         return payload
 
 

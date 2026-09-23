@@ -27,6 +27,11 @@ def _candidate() -> dict:
         raise RuntimeError("family task lacks measured native scene inventory")
     if set(value.get("object_poses", ())) != required:
         raise RuntimeError("family task object poses do not match the scored inventory")
+    supports = value.get("goal_supports")
+    if not isinstance(supports, dict) or not all(
+        isinstance(support, dict) and support.get("contact_sensor_id") for support in supports.values()
+    ):
+        raise RuntimeError("family task lacks measured support contact sensors")
     return value
 
 

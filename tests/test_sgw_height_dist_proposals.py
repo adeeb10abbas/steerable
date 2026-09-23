@@ -30,8 +30,10 @@ def _height_row():
         "native_scene": _scene(["rubiks_cube", "bowl"]),
         "upper_support_side": "left",
         "goal_supports": {
-            "higher": {"support_surface_id": "upper_platform_top", "cube_center_env_local_xyz_m": [.3, -.1, .14]},
-            "lower": {"support_surface_id": "lower_platform_top", "cube_center_env_local_xyz_m": [.3, .1, .06]},
+            "higher": {"support_surface_id": "upper_platform_top", "contact_sensor_id": "rubiks_cube__upper_platform",
+                       "cube_center_env_local_xyz_m": [.3, -.1, .14]},
+            "lower": {"support_surface_id": "lower_platform_top", "contact_sensor_id": "rubiks_cube__lower_platform",
+                      "cube_center_env_local_xyz_m": [.3, .1, .06]},
         },
     }
 
@@ -51,8 +53,10 @@ def _dist_row():
         "native_scene": _scene(["rubiks_cube", "bowl", "plate"]),
         "bowl_side": "right",
         "goal_supports": {
-            "near_bowl": {"support_surface_id": "table-left", "cube_center_env_local_xyz_m": [.43, 0, .1]},
-            "near_plate": {"support_surface_id": "table-right", "cube_center_env_local_xyz_m": [.57, 0, .1]},
+            "near_bowl": {"support_surface_id": "table-left", "contact_sensor_id": "rubiks_cube__table_left",
+                          "cube_center_env_local_xyz_m": [.43, 0, .1]},
+            "near_plate": {"support_surface_id": "table-right", "contact_sensor_id": "rubiks_cube__table_right",
+                           "cube_center_env_local_xyz_m": [.57, 0, .1]},
         },
     }
 

@@ -26,9 +26,10 @@ from .robolab_measurements import geometric_center_state
 
 
 class RoboLabLatEnvironment:
-    def __init__(self, env: Any, candidate: FixtureCandidate) -> None:
+    def __init__(self, env: Any, candidate: FixtureCandidate, evidence_root: Path) -> None:
         self._env = env
         self._candidate = candidate
+        self._evidence_root = Path(evidence_root).resolve()
         self._reset_index = 0
         self._initial: dict[str, tuple[float, float, float]] | None = None
         step_dt = getattr(env, "step_dt", None)
@@ -44,15 +45,20 @@ class RoboLabLatEnvironment:
 
         world = get_world(self._env)
         sensors = get_contact_sensors(self._env.scene)
-        support_sensor = sensors.get("rubiks_cube__table")
-        if support_sensor is None:
-            raise SimulatorBridgeError("RoboLab scene lacks required rubiks_cube__table contact sensor")
-        force_matrix = getattr(support_sensor.data, "force_matrix_w", None)
-        raw_force = force_matrix if force_matrix is not None else getattr(support_sensor.data, "net_forces_w", None)
-        if raw_force is None:
-            raise SimulatorBridgeError("rubiks_cube__table contact sensor lacks a force stream")
-        support_vectors = np.asarray(raw_force.detach().cpu().numpy(), dtype=np.float64).reshape(-1, 3)
-        cube_supported = bool(support_vectors.size and np.max(np.linalg.norm(support_vectors, axis=1)) >= 1.0)
+        support_sensor_names = self._support_sensor_names()
+        support_vectors = []
+        for sensor_name in support_sensor_names:
+            support_sensor = sensors.get(sensor_name)
+            if support_sensor is None:
+                raise SimulatorBridgeError(f"RoboLab scene lacks required {sensor_name} contact sensor")
+            force_matrix = getattr(support_sensor.data, "force_matrix_w", None)
+            raw_force = force_matrix if force_matrix is not None else getattr(support_sensor.data, "net_forces_w", None)
+            if raw_force is None:
+                raise SimulatorBridgeError(f"{sensor_name} contact sensor lacks a force stream")
+            support_vectors.append(np.asarray(raw_force.detach().cpu().numpy(), dtype=np.float64).reshape(-1, 3))
+        cube_supported = any(
+            vectors.size and np.max(np.linalg.norm(vectors, axis=1)) >= 1.0 for vectors in support_vectors
+        )
         rows: dict[str, ObjectState] = {}
         reset_roots: dict[str, Pose] = {}
         origin = self._env.scene.env_origins[0].detach().cpu().numpy()
@@ -115,6 +121,20 @@ class RoboLabLatEnvironment:
             },
         )
 
+    def _support_sensor_names(self) -> tuple[str, ...]:
+        supports = self._candidate.metadata.get("goal_supports")
+        if supports is None:
+            return ("rubiks_cube__table",)
+        if not isinstance(supports, dict):
+            raise SimulatorBridgeError("candidate goal supports must be a mapping")
+        names = tuple(
+            support.get("contact_sensor_id") for support in supports.values()
+            if isinstance(support, dict)
+        )
+        if not names or any(not isinstance(name, str) or not name for name in names):
+            raise SimulatorBridgeError("candidate lacks measured support contact sensor IDs")
+        return tuple(dict.fromkeys(names))
+
     def step(self, action: Sequence[float]) -> SimulatorSnapshot:
         import torch
 
@@ -136,9 +156,10 @@ class RoboLabLatEnvironment:
 
 
 class RoboLabLatBridge:
-    def __init__(self, *, study_root: Path, robolab_root: Path, device: str, renderer: str, rendering_type: str) -> None:
+    def __init__(self, *, study_root: Path, robolab_root: Path, evidence_root: Path, device: str, renderer: str, rendering_type: str) -> None:
         self._study_root = Path(study_root).resolve()
         self._robolab_root = Path(robolab_root).resolve()
+        self._evidence_root = Path(evidence_root).resolve()
         self._device = device
         if renderer != "realtime" or rendering_type != "balanced":
             raise SimulatorBridgeError("LAT qualification requires realtime/balanced RTX")
@@ -158,7 +179,7 @@ class RoboLabLatBridge:
             instruction_type="default", policy="sgw_01_model_blind_lat_controller",
             renderer="realtime", rendering_mode="balanced",
         )
-        return RoboLabLatEnvironment(env, task.candidate)
+        return RoboLabLatEnvironment(env, task.candidate, self._evidence_root)
 
 
 def register_lat_task(registrar: Any, task_path: Path, cameras: Any) -> None:
@@ -209,11 +230,14 @@ def _quat_mul(first: np.ndarray, second: np.ndarray) -> np.ndarray:
     ))
 
 
-def create_bridge(*, robolab_root: Path, assets_manifest: Path, device: str, renderer: str, rendering_type: str, **_: Any) -> RoboLabLatBridge:
+def create_bridge(*, robolab_root: Path, assets_manifest: Path, evidence_root: Path, device: str, renderer: str, rendering_type: str, **_: Any) -> RoboLabLatBridge:
     study_root = Path(__file__).resolve().parents[3]
     if not Path(assets_manifest).is_file():
         raise SimulatorBridgeError("measured asset manifest is required")
-    return RoboLabLatBridge(study_root=study_root, robolab_root=robolab_root, device=device, renderer=renderer, rendering_type=rendering_type)
+    return RoboLabLatBridge(
+        study_root=study_root, robolab_root=robolab_root, evidence_root=evidence_root,
+        device=device, renderer=renderer, rendering_type=rendering_type,
+    )
 
 
 def create_controller(**_: Any) -> RoboLabLatScriptedController:

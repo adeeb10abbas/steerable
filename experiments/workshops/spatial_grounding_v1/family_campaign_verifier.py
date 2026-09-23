@@ -8,6 +8,7 @@ import math
 from pathlib import Path
 from typing import Any, Mapping
 
+import imageio.v2 as iio
 from .fixtures import ACTION_CAP, FixtureCandidate, FixtureError, Pose, validate_reset
 from .family_campaign import SCHEMA
 from .prospective_family_capture import verify_capture_artifacts
@@ -54,6 +55,13 @@ def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Pa
     controller = _verified_calibration(root, candidate, result)
     if result.get("action_cap") != ACTION_CAP or result.get("controller_identity") != controller:
         raise ValueError("qualification lacks calibrated 450-action controller identity")
+    early = result.get("physical_geometry_rejection_before_actions")
+    if isinstance(early, Mapping):
+        return _verify_early_rejection(
+            campaign=campaign, design_id=design_id, root=root, output=output, candidate=candidate,
+            candidate_capture=candidate_capture, candidate_manifest=candidate_manifest,
+            materialized_candidate=materialized_candidate, qualification=qualification, result=result, early=early,
+        )
     expected = [(sign, reset) for sign in (1, -1) for reset in range(3)]
     checks = result.get("checks")
     if not isinstance(checks, list) or [(row.get("goal_sign"), row.get("reset_index")) for row in checks] != expected:
@@ -119,6 +127,116 @@ def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Pa
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return value
+
+
+def _verify_early_rejection(
+    *, campaign: Mapping[str, Any], design_id: str, root: Path, output: Path, candidate: FixtureCandidate,
+    candidate_capture: Path, candidate_manifest: Path, materialized_candidate: Path, qualification: Path,
+    result: Mapping[str, Any], early: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Verify a real zero-action geometry rejection and its completed prefix."""
+    goal, reset = early.get("goal_sign"), early.get("reset_index")
+    if (goal not in {1, -1} or reset not in range(3) or early.get("rejection_scope") not in {"candidate", "reset"}
+            or not isinstance(early.get("reason"), str) or not early["reason"]
+            or early.get("controller_actions_executed") != 0
+            or result.get("status") != "rejected_model_blind_fixture_candidate"):
+        raise ValueError("early physical geometry rejection aggregate is malformed")
+    identities = [(sign, index) for sign in (1, -1) for index in range(3)]
+    terminal = identities.index((goal, reset))
+    checks = result.get("checks")
+    if not isinstance(checks, list) or [(row.get("goal_sign"), row.get("reset_index")) for row in checks] != identities[:terminal + 1]:
+        raise ValueError("early physical geometry rejection has a non-prefix trial aggregate")
+    reports = []
+    for check in checks[:terminal]:
+        trial = root / "trials" / f"goal-{check['goal_sign']:+d}" / f"reset-{check['reset_index']}"
+        _verify_preaction_guard(trial, candidate, check)
+        try:
+            report, _reset = verify_trial_evidence(evidence_root=root, trial=trial, check=check, candidate=candidate)
+        except VerificationError as error:
+            raise ValueError(f"completed prefix trial differs from raw evidence: {error}") from error
+        _verify_reset_banana_geometry(trial, candidate)
+        _verify_aggregate_trial(check, report)
+        reports.append(_trial_record(trial, check))
+    rejected_check = checks[-1]
+    trial = root / "trials" / f"goal-{goal:+d}" / f"reset-{reset}"
+    _verify_rejected_trial(trial, candidate, rejected_check, early)
+    reports.append(_trial_record(trial, rejected_check))
+    for sign, index in identities[terminal + 1:]:
+        future = root / "trials" / f"goal-{sign:+d}" / f"reset-{index}"
+        if future.exists():
+            raise ValueError("geometry rejection was followed by another trial")
+    value = {
+        "schema_version": "sgw-01-family-campaign-verification-v1",
+        "campaign_sha256": campaign["campaign_sha256"], "design_id": design_id, "family": campaign["family"],
+        "evidence_root": str(root.resolve()), "candidate_capture_sha256": _sha256(candidate_capture),
+        "candidate_manifest_sha256": _sha256(candidate_manifest),
+        "materialized_candidate_sha256": _sha256(materialized_candidate),
+        "qualification_sha256": _sha256(qualification), "candidate_capture": _record(candidate_capture),
+        "candidate_manifest": _record(candidate_manifest), "materialized_candidate": _record(materialized_candidate),
+        "qualification": _record(qualification), "trials": reports,
+        "physical_geometry_rejection": dict(early), "status": "verified_evidence_not_fixture_release",
+        "model_request_count": 0, "behavioral_episode_count": 0, "release_permitted": False,
+    }
+    value["verification_sha256"] = _digest(value, "verification_sha256")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return value
+
+
+def _trial_record(trial: Path, check: Mapping[str, Any]) -> dict[str, Any]:
+    receipt = trial / "trial.json"
+    return {
+        "goal_sign": check["goal_sign"], "reset_index": check["reset_index"],
+        "trial_sha256": _sha256(receipt), "sha256": _sha256(receipt), "bytes": receipt.stat().st_size,
+        "path": str(receipt.resolve()),
+    }
+
+
+def _verify_rejected_trial(
+    trial: Path, candidate: FixtureCandidate, check: Mapping[str, Any], early: Mapping[str, Any],
+) -> None:
+    receipt_path = trial / "trial.json"
+    guard_path = trial / "preaction-geometry-guard.json"
+    if not receipt_path.is_file() or not guard_path.is_file():
+        raise ValueError("early rejection lacks trial receipt or guard")
+    receipt, guard = json.loads(receipt_path.read_text()), json.loads(guard_path.read_text())
+    expected_files = {"reset.json", "state-0000.json", "frame-0000.npy", "viewport.mp4", "preaction-geometry-guard.json"}
+    if (receipt.get("status") != "physical_geometry_rejection_before_actions"
+            or receipt.get("actions_executed") != 0 or receipt.get("observed_actions") != 0
+            or receipt.get("goal_sign") != check["goal_sign"] or receipt.get("reset_index") != check["reset_index"]
+            or receipt.get("physical_geometry_rejection") != {
+                "rejection_scope": early["rejection_scope"], "reason": early["reason"],
+            } or set(receipt.get("files", {})) != expected_files
+            or {path.name for path in trial.iterdir()} != expected_files | {"trial.json"}):
+        raise ValueError("early rejection trial contains controller or incomplete evidence")
+    for name, record in receipt["files"].items():
+        path = trial / name
+        if not path.is_file() or record.get("bytes") != path.stat().st_size or record.get("sha256") != _sha256(path):
+            raise ValueError("early rejection trial file hash differs")
+    with iio.get_reader(trial / "viewport.mp4") as reader:
+        if sum(1 for _ in reader) != 1:
+            raise ValueError("early rejection viewport does not contain only reset frame")
+    state = trial / "state-0000.json"
+    raw = json.loads(state.read_text()).get("raw_snapshot")
+    if not isinstance(raw, Mapping):
+        raise ValueError("early rejection lacks raw reset snapshot")
+    try:
+        recomputed = validate_preaction_reset_geometry(
+            SimulatorSnapshot(objects={}, context_measurements=raw.get("context_measurements")), candidate,
+        )
+    except QualificationError as error:
+        raise ValueError(f"early rejection reset geometry is malformed: {error}") from error
+    if recomputed is None or recomputed.scope != early["rejection_scope"] or recomputed.reason != early["reason"]:
+        raise ValueError("early rejection reason differs from recomputed measured geometry")
+    raw_record = guard.get("raw_reset")
+    if (
+        guard.get("status") != "physical_geometry_rejection_before_actions"
+        or guard.get("rejection_scope") != early["rejection_scope"] or guard.get("reason") != early["reason"]
+        or guard.get("controller_actions_executed") != 0 or not isinstance(raw_record, Mapping)
+        or raw_record.get("path") != str(state.resolve()) or raw_record.get("sha256") != _sha256(state)
+        or raw_record.get("bytes") != state.stat().st_size
+    ):
+        raise ValueError("early rejection guard differs from recomputed reset evidence")
 
 
 def _verify_design_chain(

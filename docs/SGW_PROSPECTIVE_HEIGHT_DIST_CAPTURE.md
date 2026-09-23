@@ -278,6 +278,33 @@ not physical rejections. The child itself must evaluate fresh per-reset banana,
 table, and support geometry before starting each 450-action sequence; an
 external verifier is intentionally too late to make that safe.
 
+The qualification child uses the canonical executor root in place; it must not
+create a nested output directory or move evidence after recording it. Its
+explicit command-array form is:
+
+```json
+[
+  "python", "-m", "experiments.workshops.spatial_grounding_v1.model_blind_qualification",
+  "--family", "{family}",
+  "--candidate-file", "{root}/candidate.json",
+  "--candidate-manifest", "{root}/candidate_manifest.json",
+  "--candidate-capture", "{root}/candidate_capture.json",
+  "--candidate-id", "{candidate_id}",
+  "--output-root", "{root}",
+  "--controller-calibration", "/ABSOLUTE/controller-calibration.json",
+  "--bridge-factory", "MODULE:FACTORY",
+  "--controller-factory", "MODULE:FACTORY",
+  "--robolab-root", "/ABSOLUTE/PINNED/RoboLab",
+  "--assets-manifest", "/ABSOLUTE/assets-manifest.json"
+]
+```
+
+Before AppLauncher, this form requires all three immutable canonical inputs,
+binds the materialized candidate to the fresh capture and design manifest, and
+rejects any existing `qualification.json`, controller receipt, trial directory,
+warmup directory, or native output. Existing LAT `--candidate-root` and
+`--proposal-file` invocation forms retain their fresh-output-root behavior.
+
 Geometric or measured physical/reset rejection consumes its pre-registered
 slot with no refill. Missing, partial, malformed, or technically invalid
 evidence writes a durable failure receipt and stops the slot without an

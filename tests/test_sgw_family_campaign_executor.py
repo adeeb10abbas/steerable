@@ -79,10 +79,10 @@ def test_slot_executes_separate_children_and_records_verified_physical_rejection
     def materialize(**kwargs):
         calls.append(kwargs["design_id"])
         kwargs["output"].write_text(json.dumps({
-            "candidate": "measured",
+            "candidate_id": "mock-candidate",
             "metadata": {"candidate_capture_sha256": hashlib.sha256(kwargs["capture"].read_bytes()).hexdigest()},
         }))
-        return {"candidate": "measured"}
+        return {"candidate_id": "mock-candidate"}
     def verify(**kwargs):
         assert Path(kwargs["root"] / "candidate.json").is_file()
         return {"verification_sha256": "f" * 64, "physical_outcome": "valid_physical_rejection"}
@@ -114,41 +114,35 @@ def test_missing_or_late_preaction_guard_stops_slot(tmp_path: Path, monkeypatch:
     campaign, calibration = _campaign(tmp_path), _calibration(tmp_path)
     _patch_fixture(monkeypatch, calibration)
     capture, _qualification = _success_commands()
-    with pytest.raises(RuntimeError, match="pre-action geometry guard"):
+    with pytest.raises(ValueError, match="candidate manifest"):
         executor.run_slot(
             campaign_path=campaign, index=0, root=tmp_path / "slot", controller_calibration=calibration,
             capture_command=capture, qualification_command=[sys.executable, "-c", "pass"],
-            materialize=lambda **kwargs: kwargs["output"].write_text(json.dumps({
-                "metadata": {"candidate_capture_sha256": hashlib.sha256(kwargs["capture"].read_bytes()).hexdigest()},
-            })),
+            materialize=lambda **kwargs: (
+                kwargs["output"].write_text(json.dumps({"candidate_id": "mock-candidate"})),
+                {"candidate_id": "mock-candidate"},
+            )[1],
         )
 
 
-def test_typed_physical_rejection_accounts_slot_without_controller_actions(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_typed_physical_rejection_accounts_only_verifier_output(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     campaign, calibration = _campaign(tmp_path), _calibration(tmp_path)
     _patch_fixture(monkeypatch, calibration)
     capture, _qualification = _success_commands()
-    rejection = [
-        sys.executable, "-c",
-        (
-            "import hashlib,json,pathlib,sys;"
-            "q,c,r=map(pathlib.Path,sys.argv[1:]);q.write_text('{}');r=r/'trials'/'goal-+1'/'reset-0';r.mkdir(parents=True);s=r/'state-0000.json';s.write_text('{}');"
-            "v=json.loads(c.read_text());json.dump({'schema_version':'sgw-01-family-preaction-geometry-guard-v1',"
-            "'design_id':'HEIGHT-001','candidate_sha256':hashlib.sha256(c.read_bytes()).hexdigest(),"
-            "'candidate_capture_sha256':v['metadata']['candidate_capture_sha256'],'goal_sign':1,'reset_index':0,"
-            "'raw_reset':{'path':'state-0000.json','sha256':hashlib.sha256(s.read_bytes()).hexdigest(),'bytes':s.stat().st_size},"
-            "'status':'physical_geometry_rejection_before_actions','controller_actions_executed':0,"
-            "'rejection_scope':'candidate','reason':'measured banana intersects support'},open(r/'preaction-geometry-guard.json','w'))"
-        ),
-        "{qualification}", "{candidate}", "{root}",
-    ]
     result = executor.run_slot(
         campaign_path=campaign, index=0, root=tmp_path / "slot", controller_calibration=calibration,
-        capture_command=capture, qualification_command=rejection,
-        materialize=lambda **kwargs: kwargs["output"].write_text(json.dumps({
-            "metadata": {"candidate_capture_sha256": hashlib.sha256(kwargs["capture"].read_bytes()).hexdigest()},
-        })),
-        verify=lambda **_: pytest.fail("physical rejection must not invoke six-trial verifier"),
+        capture_command=capture, qualification_command=[sys.executable, "-c", "pass"],
+        materialize=lambda **kwargs: (
+            kwargs["output"].write_text(json.dumps({"candidate_id": "mock-candidate"})),
+            {"candidate_id": "mock-candidate"},
+        )[1],
+        verify=lambda **_: {
+            "verification_sha256": "f" * 64,
+            "physical_geometry_rejection": {
+                "goal_sign": 1, "reset_index": 0, "rejection_scope": "reset",
+                "reason": "fresh measured collision", "controller_actions_executed": 0,
+            },
+        },
     )
     assert result["status"] == "physical_geometry_rejection_accounted_slot_no_refill"
     assert result["physical_rejection"]["controller_actions_executed"] == 0

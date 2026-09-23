@@ -16,6 +16,7 @@ from typing import Any, Mapping
 import numpy as np
 
 from .fixtures import ACTION_CAP, FixtureCandidate, FixtureError, Pose, pose_error, validate_reset
+from .prospective_family_designs import require_design_capture
 from .recorder import atomic_json, encode_viewport_video
 from .scoring import GoalSpec, OutcomeStatus, score_episode
 from .simulator_bridge import (
@@ -294,6 +295,11 @@ def qualify_candidate(
 
 
 def _load_selected_candidate(args: argparse.Namespace) -> FixtureCandidate:
+    if getattr(args, "candidate_file", None):
+        candidate = load_candidate_file(args.candidate_file)
+        if args.candidate_id is not None and candidate.candidate_id != args.candidate_id:
+            raise QualificationError("explicit candidate file differs from requested candidate id")
+        return candidate
     if args.proposal_file:
         value = json.loads(args.proposal_file.read_text())
         if (value.get("status") != "proposed_unqualified" or value.get("model_request_count") != 0
@@ -314,13 +320,53 @@ def _load_selected_candidate(args: argparse.Namespace) -> FixtureCandidate:
     return load_candidate_file(paths[0])
 
 
+def _preflight_output_root(args: argparse.Namespace) -> None:
+    """Allow the executor's prepared family root without overwriting any evidence."""
+    if not args.candidate_file:
+        if args.output_root.exists():
+            raise FileExistsError(f"refusing to overwrite qualification output: {args.output_root}")
+        return
+    root = args.output_root.resolve()
+    if args.candidate_file.resolve() != root / "candidate.json":
+        raise QualificationError("explicit family candidate must be output-root/candidate.json")
+    if args.candidate_manifest is None or args.candidate_capture is None:
+        raise QualificationError("explicit family candidate requires manifest and fresh capture bindings")
+    if (args.candidate_manifest.resolve() != root / "candidate_manifest.json"
+            or args.candidate_capture.resolve() != root / "candidate_capture.json"):
+        raise QualificationError("explicit family bindings must use canonical output-root paths")
+    if not root.is_dir() or not all(path.is_file() for path in (
+        args.candidate_file, args.candidate_manifest, args.candidate_capture,
+    )):
+        raise QualificationError("explicit family candidate root lacks canonical immutable inputs")
+    candidate = _load_selected_candidate(args)
+    try:
+        capture = require_design_capture(
+            candidate_manifest_path=args.candidate_manifest, capture_path=args.candidate_capture,
+        )
+    except Exception as error:
+        raise QualificationError(f"explicit family capture binding is invalid: {error}") from error
+    if (
+        candidate.family not in {"HEIGHT", "DIST"} or capture.get("family") != candidate.family
+        or candidate.metadata.get("candidate_capture_sha256") != hashlib.sha256(args.candidate_capture.read_bytes()).hexdigest()
+        or candidate.metadata.get("prospective_design_id")
+        != json.loads(args.candidate_manifest.read_text(encoding="utf-8")).get("design_id")
+    ):
+        raise QualificationError("explicit family candidate differs from its manifest/capture binding")
+    for name in ("qualification.json", "controller.json", "trials", "reset_warmup", "native"):
+        if (root / name).exists():
+            raise FileExistsError(f"refusing to overwrite existing qualification evidence: {root / name}")
+
+
 def parse_args() -> argparse.Namespace:
     bootstrap = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
     bootstrap.add_argument("--family", required=True, choices=("LAT", "HEIGHT", "DIST"))
     source = bootstrap.add_mutually_exclusive_group(required=True)
     source.add_argument("--candidate-root", type=Path)
     source.add_argument("--proposal-file", type=Path)
+    source.add_argument("--candidate-file", type=Path)
     bootstrap.add_argument("--candidate-id")
+    bootstrap.add_argument("--candidate-manifest", type=Path)
+    bootstrap.add_argument("--candidate-capture", type=Path)
     bootstrap.add_argument("--output-root", type=Path, required=True)
     bootstrap.add_argument("--bridge-factory", required=True)
     bootstrap.add_argument("--controller-factory", required=True)
@@ -329,8 +375,7 @@ def parse_args() -> argparse.Namespace:
     bootstrap.add_argument("--robolab-root", type=Path, required=True)
     bootstrap.add_argument("--assets-manifest", type=Path, required=True)
     known, _ = bootstrap.parse_known_args()
-    if known.output_root.exists():
-        raise FileExistsError(f"refusing to overwrite qualification output: {known.output_root}")
+    _preflight_output_root(known)
     from isaaclab.app import AppLauncher
     from robolab.eval.runner import add_common_eval_args
     parser = argparse.ArgumentParser(parents=[bootstrap], allow_abbrev=False)
@@ -367,7 +412,7 @@ def main() -> None:
     )
     from isaaclab.app import AppLauncher
     args.enable_cameras = True
-    args.output_root.mkdir(parents=True, exist_ok=False)
+    args.output_root.mkdir(parents=True, exist_ok=args.candidate_file is not None)
     app = AppLauncher(args).app
     try:
         import robolab

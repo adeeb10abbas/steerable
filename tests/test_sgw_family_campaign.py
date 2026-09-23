@@ -1,4 +1,5 @@
 import json
+from argparse import Namespace
 import hashlib
 import shutil
 from dataclasses import replace
@@ -16,7 +17,7 @@ from experiments.workshops.spatial_grounding_v1.family_campaign_verifier import 
 from experiments.workshops.spatial_grounding_v1.prospective_family_designs import _digest
 from experiments.workshops.spatial_grounding_v1.prospective_family_designs import author_candidate_overlay, build_design_plan
 from experiments.workshops.spatial_grounding_v1.height_dist_proposals import materialize_campaign_candidate
-from experiments.workshops.spatial_grounding_v1.model_blind_qualification import qualify_candidate
+from experiments.workshops.spatial_grounding_v1.model_blind_qualification import _preflight_output_root, qualify_candidate
 from experiments.workshops.spatial_grounding_v1.recorder import atomic_json
 from experiments.workshops.spatial_grounding_v1.simulator_bridge import SimulatorSnapshot
 from experiments.workshops.spatial_grounding_v1.lat_candidate_generator import workspace_digest
@@ -316,6 +317,15 @@ def test_complete_synthetic_family_campaign_chain_and_adversarial_bindings(tmp_p
         plan_path=plan_path, design_id=design["design_id"], candidate_manifest_path=candidate_manifest,
         candidate_capture_path=capture, controller_calibration_path=calibration, output=root / "candidate.json",
     )
+    cli_args = Namespace(
+        candidate_file=root / "candidate.json", candidate_manifest=candidate_manifest,
+        candidate_capture=capture, candidate_id=candidate["candidate_id"], output_root=root,
+    )
+    _preflight_output_root(cli_args)
+    (root / "qualification.json").write_text("{}")
+    with pytest.raises(FileExistsError, match="overwrite"):
+        _preflight_output_root(cli_args)
+    (root / "qualification.json").unlink()
     monkeypatch.setattr(
         family_campaign, "verify_capture_artifacts",
         lambda path: {"receipt": {"path": str(path), "sha256": family_campaign._sha256(path)}},
@@ -375,6 +385,35 @@ def test_complete_synthetic_family_campaign_chain_and_adversarial_bindings(tmp_p
     guard = json.loads((root / "trials/goal-+1/reset-0/preaction-geometry-guard.json").read_text())
     assert guard["status"] == "physical_geometry_rejection_before_actions"
     assert guard["controller_actions_executed"] == 0
+    verified_geometry_rejection = verify_design(
+        campaign_path=campaign_path, design_id=design["design_id"], root=root,
+        output=root / "geometry-rejection.json",
+    )
+    assert verified_geometry_rejection["physical_geometry_rejection"]["reason"] == (
+        geometry_rejection["physical_geometry_rejection_before_actions"]["reason"]
+    )
+    guard["reason"] = "forged physical rejection"
+    guard_path = root / "trials/goal-+1/reset-0/preaction-geometry-guard.json"
+    guard_path.write_text(json.dumps(guard))
+    trial_receipt_path = guard_path.parent / "trial.json"
+    trial_receipt = json.loads(trial_receipt_path.read_text())
+    trial_receipt["files"][guard_path.name]["bytes"] = guard_path.stat().st_size
+    trial_receipt["files"][guard_path.name]["sha256"] = hashlib.sha256(guard_path.read_bytes()).hexdigest()
+    trial_receipt_path.write_text(json.dumps(trial_receipt))
+    with pytest.raises(ValueError, match="recomputed"):
+        verify_design(
+            campaign_path=campaign_path, design_id=design["design_id"], root=root,
+            output=root / "forged-geometry-rejection.json",
+        )
+    geometry_rejection, _ = _produce_family_qualification(
+        root, candidate, calibration, reject_reset=False, reject_geometry=True,
+    )
+    (root / "trials/goal-+1/reset-0/action-0001.npy").write_bytes(b"forbidden")
+    with pytest.raises(ValueError, match="contains controller"):
+        verify_design(
+            campaign_path=campaign_path, design_id=design["design_id"], root=root,
+            output=root / "late-action-geometry-rejection.json",
+        )
     _produce_family_qualification(root, candidate, calibration, reject_reset=False)
     raw = root / "trials/goal-+1/reset-0/frame-0001.npy"
     saved_raw = raw.read_bytes()

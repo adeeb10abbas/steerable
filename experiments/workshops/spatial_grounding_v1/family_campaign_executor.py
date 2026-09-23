@@ -269,27 +269,30 @@ def run_slot(
             raise RuntimeError("capture native child exited zero without candidate capture output")
         from .prospective_family_capture import verify_capture_artifacts
         verify_capture_artifacts(capture)
-        materialize(plan=plan, design_id=str(job["design_id"]), manifest=manifest, capture=capture,
-                    calibration=controller_calibration, output=Path(values["candidate"]))
+        materialized = materialize(plan=plan, design_id=str(job["design_id"]), manifest=manifest, capture=capture,
+                                   calibration=controller_calibration, output=Path(values["candidate"]))
+        candidate_id = materialized.get("candidate_id") if isinstance(materialized, Mapping) else None
+        if not isinstance(candidate_id, str) or not candidate_id:
+            candidate_id = json.loads(Path(values["candidate"]).read_text(encoding="utf-8")).get("candidate_id")
+        if not isinstance(candidate_id, str) or not candidate_id:
+            raise ValueError("materialized candidate lacks immutable candidate id")
+        values["candidate_id"] = candidate_id
         _run_child(qualification_command, label="qualification", root=root, values=values,
                    timeout_seconds=child_timeout_seconds)
-        candidate_sha256, candidate_capture_sha256 = _candidate_identity(Path(values["candidate"]))
-        rejected = _trial_guards(
-            root / "trials", design_id=str(job["design_id"]), candidate_sha256=candidate_sha256,
-            candidate_capture_sha256=candidate_capture_sha256,
-        )
-        if rejected is not None:
+        verification = verify(campaign_path=campaign_path, design_id=str(job["design_id"]), root=root,
+                              output=root / "family_verification.json")
+        rejected = verification.get("physical_geometry_rejection")
+        if isinstance(rejected, Mapping):
             value = {
                 "schema_version": EXECUTOR_SCHEMA, "campaign_sha256": campaign["campaign_sha256"],
                 "index": index, "design_id": job["design_id"], "family": campaign["family"],
                 "status": "physical_geometry_rejection_accounted_slot_no_refill",
-                "physical_rejection": asdict(rejected),
+                "physical_rejection": dict(rejected),
+                "verification_sha256": verification["verification_sha256"],
                 "model_request_count": 0, "behavioral_episode_count": 0, "release_permitted": False,
             }
             _fsync_json(receipt, value)
             return value
-        verification = verify(campaign_path=campaign_path, design_id=str(job["design_id"]), root=root,
-                              output=root / "family_verification.json")
         value = {
             "schema_version": EXECUTOR_SCHEMA, "campaign_sha256": campaign["campaign_sha256"],
             "index": index, "design_id": job["design_id"], "family": campaign["family"],

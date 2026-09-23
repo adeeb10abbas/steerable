@@ -1,0 +1,1562 @@
+{
+  "claim_boundary": "Measured initial geometry and filtered contacts, not a visual verdict, sustained stability, physical qualification, or policy recognition.",
+  "engineering_clearance_rule": "SGW-ENG-007's 0.02 m minimum Euclidean XY AABB separation from added supports; this is not a new scientific success threshold.",
+  "scenes": {
+    "0-height-left": {
+      "authored_spec_changes_from_bf": {
+        "height_lower_support": {
+          "center_m": {
+            "bf": [
+              0.65,
+              -0.23,
+              0.07090538963675498
+            ],
+            "bi": [
+              0.65,
+              -0.23,
+              0.07045305654406547
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.14,
+              0.14,
+              0.04
+            ],
+            "bi": [
+              0.14,
+              0.14,
+              0.040904666185379024
+            ]
+          }
+        },
+        "height_neutral_cube_support": {
+          "center_m": {
+            "bf": [
+              0.29,
+              -0.1,
+              0.11090538963675499
+            ],
+            "bi": [
+              0.29,
+              -0.1,
+              0.09045305654406548
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.1,
+              0.1,
+              0.04
+            ],
+            "bi": [
+              0.1,
+              0.1,
+              0.08090466618537903
+            ]
+          }
+        },
+        "height_reference_support": {
+          "center_m": {
+            "bf": [
+              0.45,
+              0.13,
+              0.11245329990983009
+            ],
+            "bi": [
+              0.45,
+              0.13,
+              0.09122701168060303
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.16,
+              0.16,
+              0.04
+            ],
+            "bi": [
+              0.16,
+              0.16,
+              0.08245257645845414
+            ]
+          }
+        },
+        "height_upper_support": {
+          "center_m": {
+            "bf": [
+              0.65,
+              0.23,
+              0.150905389636755
+            ],
+            "bi": [
+              0.65,
+              0.23,
+              0.11045305654406548
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.14,
+              0.14,
+              0.04
+            ],
+            "bi": [
+              0.14,
+              0.14,
+              0.12090466618537904
+            ]
+          }
+        }
+      },
+      "banana_bottom_minus_table_top_m": 0.0,
+      "banana_contact_measurements": {
+        "height_lower_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__height_lower_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "height_neutral_cube_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__height_neutral_cube_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "height_reference_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__height_reference_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "height_upper_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__height_upper_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "table": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  -5.625391708008465e-08,
+                  -2.24977475227206e-06,
+                  2.3150529861450195
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": true,
+          "sensor": "banana__table",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 2.3150529861461133
+        }
+      },
+      "banana_measured_geometry": {
+        "bbox_env_local_max_xyz_m": [
+          0.8546850085258484,
+          0.4793199896812439,
+          0.08893656730651855
+        ],
+        "bbox_env_local_min_xyz_m": [
+          0.7453150153160095,
+          0.3006799817085266,
+          0.05000072345137596
+        ],
+        "geometric_center_env_local_xyz_m": [
+          0.800000011920929,
+          0.38999998569488525,
+          0.06946864724159241
+        ],
+        "geometric_center_offset_root_local_xyz_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "root_position_env_local_xyz_m": [
+          0.800000011920929,
+          0.38999998569488525,
+          0.06946864724159241
+        ],
+        "root_quaternion_world_wxyz": [
+          0.9999781250953674,
+          -0.0026648887433111668,
+          -0.006051987875252962,
+          0.0001454032608307898
+        ]
+      },
+      "banana_table_xy_edge_margins_m": {
+        "max_x": 0.043899357318878174,
+        "max_y": 0.04274827241897583,
+        "min_x": 0.5467306673526764,
+        "min_y": 0.7786117196083069
+      },
+      "banana_within_measured_table_xy_bounds": true,
+      "bf_capture_sha256": "20c16465cb215e5458b14e8ec68957eae17b6c609bb0d442af38205e940e9f30",
+      "capture_sha256": "d8c961be41b65d4d6860f550466a2a0b000d44bd147f631901f6de31d98b9148",
+      "counterbalance_unchanged_from_bf": true,
+      "plate_category_caveat": null,
+      "scored_and_table_row_max_coordinate_deltas_from_bf": {
+        "bowl": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        },
+        "rubiks_cube": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        },
+        "table": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        }
+      },
+      "supports": {
+        "height_lower_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.4613750034642399,
+          "banana_xy_axis_separation_m": [
+            0.025315046310424805,
+            0.4606799781322479
+          ],
+          "bottom_minus_table_top_m": -3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 7.450580596923828e-09
+        },
+        "height_neutral_cube_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.5359633465408101,
+          "banana_xy_axis_separation_m": [
+            0.40531501173973083,
+            0.35067998245358467
+          ],
+          "bottom_minus_table_top_m": 3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 0.0
+        },
+        "height_reference_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.23363096629664823,
+          "banana_xy_axis_separation_m": [
+            0.215315043926239,
+            0.09067998826503754
+          ],
+          "bottom_minus_table_top_m": 0.0,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 0.0
+        },
+        "height_upper_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.025324176760775426,
+          "banana_xy_axis_separation_m": [
+            0.025315046310424805,
+            0.0006799697875976562
+          ],
+          "bottom_minus_table_top_m": -3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 0.0
+        }
+      }
+    },
+    "1-height-right": {
+      "authored_spec_changes_from_bf": {
+        "height_lower_support": {
+          "center_m": {
+            "bf": [
+              0.65,
+              0.23,
+              0.07090538963675498
+            ],
+            "bi": [
+              0.65,
+              0.23,
+              0.07045305654406547
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.14,
+              0.14,
+              0.04
+            ],
+            "bi": [
+              0.14,
+              0.14,
+              0.040904666185379024
+            ]
+          }
+        },
+        "height_neutral_cube_support": {
+          "center_m": {
+            "bf": [
+              0.29,
+              -0.1,
+              0.11090538963675499
+            ],
+            "bi": [
+              0.29,
+              -0.1,
+              0.09045305654406548
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.1,
+              0.1,
+              0.04
+            ],
+            "bi": [
+              0.1,
+              0.1,
+              0.08090466618537903
+            ]
+          }
+        },
+        "height_reference_support": {
+          "center_m": {
+            "bf": [
+              0.45,
+              0.13,
+              0.11245329990983009
+            ],
+            "bi": [
+              0.45,
+              0.13,
+              0.09122701168060303
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.16,
+              0.16,
+              0.04
+            ],
+            "bi": [
+              0.16,
+              0.16,
+              0.08245257645845414
+            ]
+          }
+        },
+        "height_upper_support": {
+          "center_m": {
+            "bf": [
+              0.65,
+              -0.23,
+              0.150905389636755
+            ],
+            "bi": [
+              0.65,
+              -0.23,
+              0.11045305654406548
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.14,
+              0.14,
+              0.04
+            ],
+            "bi": [
+              0.14,
+              0.14,
+              0.12090466618537904
+            ]
+          }
+        }
+      },
+      "banana_bottom_minus_table_top_m": 0.0,
+      "banana_contact_measurements": {
+        "height_lower_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__height_lower_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "height_neutral_cube_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__height_neutral_cube_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "height_reference_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__height_reference_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "height_upper_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__height_upper_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "table": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  3.1613240025762934e-07,
+                  1.0290915497535025e-06,
+                  2.3146770000457764
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": true,
+          "sensor": "banana__table",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 2.314677000046027
+        }
+      },
+      "banana_measured_geometry": {
+        "bbox_env_local_max_xyz_m": [
+          0.8546850085258484,
+          0.4793199896812439,
+          0.08893656730651855
+        ],
+        "bbox_env_local_min_xyz_m": [
+          0.7453150153160095,
+          0.3006799817085266,
+          0.05000072345137596
+        ],
+        "geometric_center_env_local_xyz_m": [
+          0.800000011920929,
+          0.38999998569488525,
+          0.06946864724159241
+        ],
+        "geometric_center_offset_root_local_xyz_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "root_position_env_local_xyz_m": [
+          0.800000011920929,
+          0.38999998569488525,
+          0.06946864724159241
+        ],
+        "root_quaternion_world_wxyz": [
+          0.9999781250953674,
+          -0.0026648887433111668,
+          -0.006051987875252962,
+          0.0001454032608307898
+        ]
+      },
+      "banana_table_xy_edge_margins_m": {
+        "max_x": 0.043899357318878174,
+        "max_y": 0.04274827241897583,
+        "min_x": 0.5467306673526764,
+        "min_y": 0.7786117196083069
+      },
+      "banana_within_measured_table_xy_bounds": true,
+      "bf_capture_sha256": "56c92caa5d7b79de915c237e0dddb15ee5d5e84b4cde13dbc9946a2c2a026b71",
+      "capture_sha256": "35327020323b406969eef7613d94946bd776001567d0dcc4e223dfc3330ad3b7",
+      "counterbalance_unchanged_from_bf": true,
+      "plate_category_caveat": null,
+      "scored_and_table_row_max_coordinate_deltas_from_bf": {
+        "bowl": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        },
+        "rubiks_cube": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        },
+        "table": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        }
+      },
+      "supports": {
+        "height_lower_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.025324176760775426,
+          "banana_xy_axis_separation_m": [
+            0.025315046310424805,
+            0.0006799697875976562
+          ],
+          "bottom_minus_table_top_m": -3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 7.450580596923828e-09
+        },
+        "height_neutral_cube_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.5359633465408101,
+          "banana_xy_axis_separation_m": [
+            0.40531501173973083,
+            0.35067998245358467
+          ],
+          "bottom_minus_table_top_m": 3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 0.0
+        },
+        "height_reference_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.23363096629664823,
+          "banana_xy_axis_separation_m": [
+            0.215315043926239,
+            0.09067998826503754
+          ],
+          "bottom_minus_table_top_m": 0.0,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 0.0
+        },
+        "height_upper_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.4613750034642399,
+          "banana_xy_axis_separation_m": [
+            0.025315046310424805,
+            0.4606799781322479
+          ],
+          "bottom_minus_table_top_m": -3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 0.0
+        }
+      }
+    },
+    "2-dist-left": {
+      "authored_spec_changes_from_bf": {
+        "dist_bowl_landing_support": {
+          "center_m": {
+            "bf": [
+              0.3,
+              0.16,
+              0.07090538963675498
+            ],
+            "bi": [
+              0.3,
+              0.16,
+              0.07045305654406547
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.08,
+              0.08,
+              0.04
+            ],
+            "bi": [
+              0.08,
+              0.08,
+              0.040904666185379024
+            ]
+          }
+        },
+        "dist_bowl_support": {
+          "center_m": {
+            "bf": [
+              0.44,
+              0.16,
+              0.07245329990983009
+            ],
+            "bi": [
+              0.44,
+              0.16,
+              0.07122701168060303
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.18,
+              0.18,
+              0.04
+            ],
+            "bi": [
+              0.18,
+              0.18,
+              0.04245257645845413
+            ]
+          }
+        },
+        "dist_neutral_cube_support": {
+          "center_m": {
+            "bf": [
+              0.55,
+              0.0,
+              0.07090538963675498
+            ],
+            "bi": [
+              0.55,
+              0.0,
+              0.07045305654406547
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.08,
+              0.08,
+              0.04
+            ],
+            "bi": [
+              0.08,
+              0.08,
+              0.040904666185379024
+            ]
+          }
+        },
+        "dist_plate_landing_support": {
+          "center_m": {
+            "bf": [
+              0.66,
+              -0.34,
+              0.07090538963675498
+            ],
+            "bi": [
+              0.66,
+              -0.34,
+              0.07045305654406547
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.08,
+              0.08,
+              0.04
+            ],
+            "bi": [
+              0.08,
+              0.08,
+              0.040904666185379024
+            ]
+          }
+        },
+        "dist_plate_support": {
+          "center_m": {
+            "bf": [
+              0.66,
+              -0.16,
+              0.09399999999999999
+            ],
+            "bi": [
+              0.66,
+              -0.16,
+              0.08200036172568798
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.24,
+              0.24,
+              0.04
+            ],
+            "bi": [
+              0.24,
+              0.24,
+              0.06399927654862403
+            ]
+          }
+        },
+        "plate": {
+          "display_color_rgb": {
+            "bf": [
+              0.95,
+              0.75,
+              0.15
+            ],
+            "bi": [
+              0.94,
+              0.94,
+              0.9
+            ]
+          }
+        }
+      },
+      "banana_bottom_minus_table_top_m": 0.0,
+      "banana_contact_measurements": {
+        "dist_bowl_landing_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__dist_bowl_landing_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "dist_bowl_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__dist_bowl_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "dist_neutral_cube_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__dist_neutral_cube_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "dist_plate_landing_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__dist_plate_landing_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "dist_plate_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__dist_plate_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "plate": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__plate",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "table": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  -3.41692975780461e-06,
+                  1.344893462373875e-06,
+                  2.314826250076294
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": true,
+          "sensor": "banana__table",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 2.3148262500792067
+        }
+      },
+      "banana_measured_geometry": {
+        "bbox_env_local_max_xyz_m": [
+          0.8546850085258484,
+          0.4793199896812439,
+          0.08893656730651855
+        ],
+        "bbox_env_local_min_xyz_m": [
+          0.7453150153160095,
+          0.3006799817085266,
+          0.05000072345137596
+        ],
+        "geometric_center_env_local_xyz_m": [
+          0.800000011920929,
+          0.38999998569488525,
+          0.06946864724159241
+        ],
+        "geometric_center_offset_root_local_xyz_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "root_position_env_local_xyz_m": [
+          0.800000011920929,
+          0.38999998569488525,
+          0.06946864724159241
+        ],
+        "root_quaternion_world_wxyz": [
+          0.9999781250953674,
+          -0.0026648887433111668,
+          -0.006051987875252962,
+          0.0001454032608307898
+        ]
+      },
+      "banana_table_xy_edge_margins_m": {
+        "max_x": 0.043899357318878174,
+        "max_y": 0.04274827241897583,
+        "min_x": 0.5467306673526764,
+        "min_y": 0.7786117196083069
+      },
+      "banana_within_measured_table_xy_bounds": true,
+      "bf_capture_sha256": "e5e149208b93e33400e7db47f52c8711f688c7cf32cbeb201b1fdeffae7745fd",
+      "capture_sha256": "beb0991e7f11bbd57f4e762627ceffd478aeeab1e91a6f4f65723e2c41d31b32",
+      "counterbalance_unchanged_from_bf": true,
+      "plate_category_caveat": "The DIST plate is a simplified off-white disc. Its category remains a caveat until a future actual policy-sized view check; this overlay does not assert recognition.",
+      "scored_and_table_row_max_coordinate_deltas_from_bf": {
+        "bowl": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        },
+        "plate": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        },
+        "rubiks_cube": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        },
+        "table": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        }
+      },
+      "supports": {
+        "dist_bowl_landing_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.4176322782769614,
+          "banana_xy_axis_separation_m": [
+            0.40531501173973083,
+            0.10067999362945557
+          ],
+          "bottom_minus_table_top_m": -3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 7.450580596923828e-09
+        },
+        "dist_bowl_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.22119907026688612,
+          "banana_xy_axis_separation_m": [
+            0.215315043926239,
+            0.05067998170852661
+          ],
+          "bottom_minus_table_top_m": 3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 0.0
+        },
+        "dist_neutral_cube_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.30344158736716925,
+          "banana_xy_axis_separation_m": [
+            0.15531498193740845,
+            0.2606799826025963
+          ],
+          "bottom_minus_table_top_m": -3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 7.450580596923828e-09
+        },
+        "dist_plate_landing_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.6023868367072762,
+          "banana_xy_axis_separation_m": [
+            0.0453149676322937,
+            0.6006799936294556
+          ],
+          "bottom_minus_table_top_m": -3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 7.450580596923828e-09
+        },
+        "dist_plate_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.34067998081445694,
+          "banana_xy_axis_separation_m": [
+            0.0,
+            0.34067998081445694
+          ],
+          "bottom_minus_table_top_m": 0.0,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 0.0
+        }
+      }
+    },
+    "3-dist-right": {
+      "authored_spec_changes_from_bf": {
+        "dist_bowl_landing_support": {
+          "center_m": {
+            "bf": [
+              0.3,
+              -0.16,
+              0.07090538963675498
+            ],
+            "bi": [
+              0.3,
+              -0.16,
+              0.07045305654406547
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.08,
+              0.08,
+              0.04
+            ],
+            "bi": [
+              0.08,
+              0.08,
+              0.040904666185379024
+            ]
+          }
+        },
+        "dist_bowl_support": {
+          "center_m": {
+            "bf": [
+              0.44,
+              -0.16,
+              0.07245329990983009
+            ],
+            "bi": [
+              0.44,
+              -0.16,
+              0.07122701168060303
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.18,
+              0.18,
+              0.04
+            ],
+            "bi": [
+              0.18,
+              0.18,
+              0.04245257645845413
+            ]
+          }
+        },
+        "dist_neutral_cube_support": {
+          "center_m": {
+            "bf": [
+              0.55,
+              0.0,
+              0.07090538963675498
+            ],
+            "bi": [
+              0.55,
+              0.0,
+              0.07045305654406547
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.08,
+              0.08,
+              0.04
+            ],
+            "bi": [
+              0.08,
+              0.08,
+              0.040904666185379024
+            ]
+          }
+        },
+        "dist_plate_landing_support": {
+          "center_m": {
+            "bf": [
+              0.66,
+              0.34,
+              0.07090538963675498
+            ],
+            "bi": [
+              0.66,
+              0.34,
+              0.07045305654406547
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.08,
+              0.08,
+              0.04
+            ],
+            "bi": [
+              0.08,
+              0.08,
+              0.040904666185379024
+            ]
+          }
+        },
+        "dist_plate_support": {
+          "center_m": {
+            "bf": [
+              0.66,
+              0.16,
+              0.09399999999999999
+            ],
+            "bi": [
+              0.66,
+              0.16,
+              0.08200036172568798
+            ]
+          },
+          "size_m": {
+            "bf": [
+              0.24,
+              0.24,
+              0.04
+            ],
+            "bi": [
+              0.24,
+              0.24,
+              0.06399927654862403
+            ]
+          }
+        },
+        "plate": {
+          "display_color_rgb": {
+            "bf": [
+              0.95,
+              0.75,
+              0.15
+            ],
+            "bi": [
+              0.94,
+              0.94,
+              0.9
+            ]
+          }
+        }
+      },
+      "banana_bottom_minus_table_top_m": 0.0,
+      "banana_contact_measurements": {
+        "dist_bowl_landing_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__dist_bowl_landing_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "dist_bowl_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__dist_bowl_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "dist_neutral_cube_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__dist_neutral_cube_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "dist_plate_landing_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__dist_plate_landing_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "dist_plate_support": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__dist_plate_support",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "plate": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": false,
+          "sensor": "banana__plate",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 0.0
+        },
+        "table": {
+          "force_matrix_world_n": [
+            [
+              [
+                [
+                  -9.794830475584604e-07,
+                  -4.6917904228394036e-07,
+                  2.3148484230041504
+                ]
+              ]
+            ]
+          ],
+          "nonzero_force_observed": true,
+          "sensor": "banana__table",
+          "shape": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "sum_contact_force_norm_n": 2.3148484230044053
+        }
+      },
+      "banana_measured_geometry": {
+        "bbox_env_local_max_xyz_m": [
+          0.8546850085258484,
+          0.4793199896812439,
+          0.08893656730651855
+        ],
+        "bbox_env_local_min_xyz_m": [
+          0.7453150153160095,
+          0.3006799817085266,
+          0.05000072345137596
+        ],
+        "geometric_center_env_local_xyz_m": [
+          0.800000011920929,
+          0.38999998569488525,
+          0.06946864724159241
+        ],
+        "geometric_center_offset_root_local_xyz_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "root_position_env_local_xyz_m": [
+          0.800000011920929,
+          0.38999998569488525,
+          0.06946864724159241
+        ],
+        "root_quaternion_world_wxyz": [
+          0.9999781250953674,
+          -0.0026648887433111668,
+          -0.006051987875252962,
+          0.0001454032608307898
+        ]
+      },
+      "banana_table_xy_edge_margins_m": {
+        "max_x": 0.043899357318878174,
+        "max_y": 0.04274827241897583,
+        "min_x": 0.5467306673526764,
+        "min_y": 0.7786117196083069
+      },
+      "banana_within_measured_table_xy_bounds": true,
+      "bf_capture_sha256": "d7566dd505996d0c658a7f0e0514bf1f55a8d71be1e7f5db1ec0bb1eac0821c9",
+      "capture_sha256": "7a8ace8867e0e1807518b9ca073c2004fc80fe9b9c11a1a489d57a49857ee19a",
+      "counterbalance_unchanged_from_bf": true,
+      "plate_category_caveat": "The DIST plate is a simplified off-white disc. Its category remains a caveat until a future actual policy-sized view check; this overlay does not assert recognition.",
+      "scored_and_table_row_max_coordinate_deltas_from_bf": {
+        "bowl": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        },
+        "plate": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        },
+        "rubiks_cube": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        },
+        "table": {
+          "bbox_env_local_max_xyz_m": 0.0,
+          "bbox_env_local_min_xyz_m": 0.0,
+          "geometric_center_env_local_xyz_m": 0.0,
+          "geometric_center_offset_root_local_xyz_m": 0.0,
+          "root_position_env_local_xyz_m": 0.0,
+          "root_quaternion_world_wxyz": 0.0
+        }
+      },
+      "supports": {
+        "dist_bowl_landing_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.5841677015165775,
+          "banana_xy_axis_separation_m": [
+            0.40531501173973083,
+            0.4206799790263176
+          ],
+          "bottom_minus_table_top_m": -3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 7.450580596923828e-09
+        },
+        "dist_bowl_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.4286772815041313,
+          "banana_xy_axis_separation_m": [
+            0.215315043926239,
+            0.37067997455596924
+          ],
+          "bottom_minus_table_top_m": 3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 0.0
+        },
+        "dist_neutral_cube_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.30344158736716925,
+          "banana_xy_axis_separation_m": [
+            0.15531498193740845,
+            0.2606799826025963
+          ],
+          "bottom_minus_table_top_m": -3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 7.450580596923828e-09
+        },
+        "dist_plate_landing_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.0453149676322937,
+          "banana_xy_axis_separation_m": [
+            0.0453149676322937,
+            0.0
+          ],
+          "bottom_minus_table_top_m": -3.725290298461914e-09,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 7.450580596923828e-09
+        },
+        "dist_plate_support": {
+          "banana_meets_20mm_engineering_clearance": true,
+          "banana_xy_aabb_clearance_m": 0.020679980516433716,
+          "banana_xy_axis_separation_m": [
+            0.0,
+            0.020679980516433716
+          ],
+          "bottom_minus_table_top_m": 0.0,
+          "footprint_max_coordinate_change_from_bf_m": 0.0,
+          "top_change_from_bf_m": 0.0
+        }
+      }
+    }
+  },
+  "shared_verifier_sha256": "d590f61c454769ea92dcc4cec9e95e345352691006f3c204adf5cc8d5920623f",
+  "study_source_commit": "5f7a0911b7384b98cc2094b4054ad75f9c3b226b"
+}

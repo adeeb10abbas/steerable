@@ -1,0 +1,678 @@
+{
+  "behavioral_episodes": 0,
+  "checkpoint_config": {
+    "download_metadata": "6706d7680581c255ff61e0f3bb49d90eac55c79e\n12662a48351897b27c63367942d6833a46a42c86\n1785807995.205379\n",
+    "path": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid/config.json",
+    "sha256": "11577909f49e95d62456b6a497cf7b883f8987a3186d720d838ea5de0e493366"
+  },
+  "claim_boundary": "Exact source CPU image preprocessing replay of real bi views; no model/server was loaded. D1 images are client API camera inputs, not a qualified final internal model tensor. N3 spatial stage uses the source default selected when the pinned checkpoint config has no training dataloader. Native runtime qualification remains required.",
+  "d1_config": {
+    "cam2_source": "right",
+    "height": 180,
+    "resize": "pad",
+    "width": 320
+  },
+  "images": [
+    {
+      "array_sha256": "f274f3042cc42a646645bfba7b367ba3e9dd342947bb06a3798a605ae397d3e2",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/0-height-left--D1-over_shoulder_left_camera.png",
+      "png_sha256": "4d4f2aadda0ff3ecd687aa8f9a170a17a84cd7287ad75de520d652d7d4b8273a",
+      "range": [
+        1,
+        255
+      ],
+      "scene": "0-height-left",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-over_shoulder_left_camera",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "0-height-left/views/over_shoulder_left_camera.npy",
+          "sha256": "ce39f9c77a5ab4ce951d3be37e5f360e57cfbf9488950b361fe71171530e6c54",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/0-height-left/views/over_shoulder_left_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "704bf2a36ea514116d8b77ff8186b7b8f8bc5397df7b3f6c207a118efa0e2031",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/0-height-left--D1-over_shoulder_right_camera.png",
+      "png_sha256": "877f91a617f1c3d4d22998b951db2a377f23e69af48a1ef603df6f191083e8c9",
+      "range": [
+        3,
+        255
+      ],
+      "scene": "0-height-left",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-over_shoulder_right_camera",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "0-height-left/views/over_shoulder_right_camera.npy",
+          "sha256": "4a5af858fa4daea89fb095c265c880b713de95780abfd06a4a867580d562e99b",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/0-height-left/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "7d1f273c9a06ec2354c153fa4cbfc7654df2ca316509863171a86840c4efc2a7",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/0-height-left--D1-wrist_cam.png",
+      "png_sha256": "fbc8e34f8a5bb14ddeacc1c1bd6e90c7ae9f659067c1851948da70c71b7ddbab",
+      "range": [
+        1,
+        243
+      ],
+      "scene": "0-height-left",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-wrist_cam",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "0-height-left/views/wrist_cam.npy",
+          "sha256": "a3c4bad13e4e31b75c392cc7775fcd35711ec806a724f30607eb554e52677552",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/0-height-left/views/wrist_cam.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "2def9e0764098176af46442fd1b7664aa4d61be58ef483d50cf8801ba84449ef",
+      "dtype": "uint8",
+      "layout": "wrist above left/right exterior views",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/0-height-left--N3-server-540x640.png",
+      "png_sha256": "a0455c6025bbfc40ef6951427a8de44d588c47ff2f170a7f925189c73d5be9f4",
+      "range": [
+        0,
+        255
+      ],
+      "scene": "0-height-left",
+      "shape": [
+        540,
+        640,
+        3
+      ],
+      "slot": "N3-server-540x640",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "0-height-left/views/wrist_cam.npy",
+          "sha256": "a3c4bad13e4e31b75c392cc7775fcd35711ec806a724f30607eb554e52677552",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/0-height-left/views/wrist_cam.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "0-height-left/views/over_shoulder_left_camera.npy",
+          "sha256": "ce39f9c77a5ab4ce951d3be37e5f360e57cfbf9488950b361fe71171530e6c54",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/0-height-left/views/over_shoulder_left_camera.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "0-height-left/views/over_shoulder_right_camera.npy",
+          "sha256": "4a5af858fa4daea89fb095c265c880b713de95780abfd06a4a867580d562e99b",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/0-height-left/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "b96f351f48e6e40174576405574b3c0a492c0d730b17a062f2364555018950f7",
+      "dtype": "uint8",
+      "image_size": [
+        544.0,
+        736.0,
+        540.0,
+        640.0
+      ],
+      "layout": "wrist above left/right exterior views; source-defined resize and reflection padding",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/0-height-left--N3-spatial-480.png",
+      "png_sha256": "8c476d7f1465441f7cb39eb5cac2d0affd748c1539b7ddfb120a4411df3d51fb",
+      "range": [
+        0,
+        255
+      ],
+      "scene": "0-height-left",
+      "shape": [
+        544,
+        736,
+        3
+      ],
+      "slot": "N3-spatial-480",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "0-height-left/views/wrist_cam.npy",
+          "sha256": "a3c4bad13e4e31b75c392cc7775fcd35711ec806a724f30607eb554e52677552",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/0-height-left/views/wrist_cam.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "0-height-left/views/over_shoulder_left_camera.npy",
+          "sha256": "ce39f9c77a5ab4ce951d3be37e5f360e57cfbf9488950b361fe71171530e6c54",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/0-height-left/views/over_shoulder_left_camera.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "0-height-left/views/over_shoulder_right_camera.npy",
+          "sha256": "4a5af858fa4daea89fb095c265c880b713de95780abfd06a4a867580d562e99b",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/0-height-left/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "274f17bb7477591838831139e4104a8b396eb7172dd2e83c5b58c125f19f3807",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/1-height-right--D1-over_shoulder_left_camera.png",
+      "png_sha256": "4a7a7ea8394b10c1967521dacedb416d2ada014e5111500c8f9668c9283e090f",
+      "range": [
+        1,
+        255
+      ],
+      "scene": "1-height-right",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-over_shoulder_left_camera",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "1-height-right/views/over_shoulder_left_camera.npy",
+          "sha256": "afb8f9b96c2d583a9924f5a215e956c455faed0870c82e2d27d58b5eeae54cfb",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/1-height-right/views/over_shoulder_left_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "8519c0d2f115e9c0bd9b57d0de09596436361c7a3a8e439eb0d5dec1306e23bc",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/1-height-right--D1-over_shoulder_right_camera.png",
+      "png_sha256": "b6f90370e9725aa2c5c0ca93061bddd79fb902251ba66cb9160709871de17e65",
+      "range": [
+        3,
+        255
+      ],
+      "scene": "1-height-right",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-over_shoulder_right_camera",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "1-height-right/views/over_shoulder_right_camera.npy",
+          "sha256": "1a850c5032680e1886da772e6ff0fba3970098fdfbea752b74e04e6a931c145c",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/1-height-right/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "b2ed6daee72d016efa5c85c8b0c0a4d0c2efaef3449f610697debf3744c2344a",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/1-height-right--D1-wrist_cam.png",
+      "png_sha256": "e80471d3d73a73d749689975ccdd865ed679f1f2b1d6103a3d9aaa00c3970af4",
+      "range": [
+        1,
+        243
+      ],
+      "scene": "1-height-right",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-wrist_cam",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "1-height-right/views/wrist_cam.npy",
+          "sha256": "7cc0f727e1f4d157ca7063746827b25769414130927949244771119f63a534ba",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/1-height-right/views/wrist_cam.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "d396289e8aa76575146cd03ec29fcbceaf49a0a41c2311e99431c4417e08d99b",
+      "dtype": "uint8",
+      "layout": "wrist above left/right exterior views",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/1-height-right--N3-server-540x640.png",
+      "png_sha256": "6807e81cd60323d8fe188e22d26dad5c64f4f74a8591fbc96fd959f53815ed38",
+      "range": [
+        0,
+        255
+      ],
+      "scene": "1-height-right",
+      "shape": [
+        540,
+        640,
+        3
+      ],
+      "slot": "N3-server-540x640",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "1-height-right/views/wrist_cam.npy",
+          "sha256": "7cc0f727e1f4d157ca7063746827b25769414130927949244771119f63a534ba",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/1-height-right/views/wrist_cam.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "1-height-right/views/over_shoulder_left_camera.npy",
+          "sha256": "afb8f9b96c2d583a9924f5a215e956c455faed0870c82e2d27d58b5eeae54cfb",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/1-height-right/views/over_shoulder_left_camera.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "1-height-right/views/over_shoulder_right_camera.npy",
+          "sha256": "1a850c5032680e1886da772e6ff0fba3970098fdfbea752b74e04e6a931c145c",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/1-height-right/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "e4134c1ee5b825fc3c443a3ce140046dfa0d80d035750d4ffc829cdb1467c8a7",
+      "dtype": "uint8",
+      "image_size": [
+        544.0,
+        736.0,
+        540.0,
+        640.0
+      ],
+      "layout": "wrist above left/right exterior views; source-defined resize and reflection padding",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/1-height-right--N3-spatial-480.png",
+      "png_sha256": "1a54b7ddad4db1e63fbbdeffa05f5c7795474bf42530a1ecfc2f3d228333b5db",
+      "range": [
+        0,
+        255
+      ],
+      "scene": "1-height-right",
+      "shape": [
+        544,
+        736,
+        3
+      ],
+      "slot": "N3-spatial-480",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "1-height-right/views/wrist_cam.npy",
+          "sha256": "7cc0f727e1f4d157ca7063746827b25769414130927949244771119f63a534ba",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/1-height-right/views/wrist_cam.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "1-height-right/views/over_shoulder_left_camera.npy",
+          "sha256": "afb8f9b96c2d583a9924f5a215e956c455faed0870c82e2d27d58b5eeae54cfb",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/1-height-right/views/over_shoulder_left_camera.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "1-height-right/views/over_shoulder_right_camera.npy",
+          "sha256": "1a850c5032680e1886da772e6ff0fba3970098fdfbea752b74e04e6a931c145c",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/1-height-right/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "6dccb13338dd06beffad216a38a26c77d8f2142df86aab9de8f6e5f43f502f81",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/2-dist-left--D1-over_shoulder_left_camera.png",
+      "png_sha256": "b822fea5f851611a690c38e51b1478d9f6e106133eeb8db2db7f64f8982c44b8",
+      "range": [
+        1,
+        255
+      ],
+      "scene": "2-dist-left",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-over_shoulder_left_camera",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "2-dist-left/views/over_shoulder_left_camera.npy",
+          "sha256": "79918610ca3110d8e78ce9f6726c1233f31cac1236d39fb246a21de4b25fd604",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/over_shoulder_left_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "a8682759a696bf97d169ec1aa835cb8d86e65baeeb420e2ad7468483c6dd079a",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/2-dist-left--D1-over_shoulder_right_camera.png",
+      "png_sha256": "267db061f78353a2480786100dc803278599488828db39fb0c8685c350c816d4",
+      "range": [
+        3,
+        255
+      ],
+      "scene": "2-dist-left",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-over_shoulder_right_camera",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "2-dist-left/views/over_shoulder_right_camera.npy",
+          "sha256": "02c1ada4c25e14b83519cb30e8132c50844b6efd586671e64d55f6970655a1c2",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "23e3a83d99fd26d7b3a0d08fcdedce6835c2902db6d82182484c5c9b5d8db15e",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/2-dist-left--D1-wrist_cam.png",
+      "png_sha256": "cbb049d8fdd9b2e8d51e339bc6e47895cd119b9d39c272123ce83026d1f5b72a",
+      "range": [
+        1,
+        241
+      ],
+      "scene": "2-dist-left",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-wrist_cam",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "2-dist-left/views/wrist_cam.npy",
+          "sha256": "2443391a59f72dd520c325d3ce92038e34602580cea7fb75d5aa9ab4582a8eda",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/wrist_cam.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "a99cc27109ba11fd6167a617738eec8eaea16b850a09cbee180a48b36ab917a0",
+      "dtype": "uint8",
+      "layout": "wrist above left/right exterior views",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/2-dist-left--N3-server-540x640.png",
+      "png_sha256": "05ded87e753b90265923e26c451bf1584fdb6765480e58355c4b46c3197344b0",
+      "range": [
+        0,
+        255
+      ],
+      "scene": "2-dist-left",
+      "shape": [
+        540,
+        640,
+        3
+      ],
+      "slot": "N3-server-540x640",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "2-dist-left/views/wrist_cam.npy",
+          "sha256": "2443391a59f72dd520c325d3ce92038e34602580cea7fb75d5aa9ab4582a8eda",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/wrist_cam.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "2-dist-left/views/over_shoulder_left_camera.npy",
+          "sha256": "79918610ca3110d8e78ce9f6726c1233f31cac1236d39fb246a21de4b25fd604",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/over_shoulder_left_camera.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "2-dist-left/views/over_shoulder_right_camera.npy",
+          "sha256": "02c1ada4c25e14b83519cb30e8132c50844b6efd586671e64d55f6970655a1c2",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "908299b6faa4aead767f382b87eec10d01e046cddc9146ecabacd9d6391ecbf0",
+      "dtype": "uint8",
+      "image_size": [
+        544.0,
+        736.0,
+        540.0,
+        640.0
+      ],
+      "layout": "wrist above left/right exterior views; source-defined resize and reflection padding",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/2-dist-left--N3-spatial-480.png",
+      "png_sha256": "41ed5c4ffdf8b7d829bfbd1cb594ccdaf63ea53f7ab0b5b26980d8e7728615a9",
+      "range": [
+        0,
+        255
+      ],
+      "scene": "2-dist-left",
+      "shape": [
+        544,
+        736,
+        3
+      ],
+      "slot": "N3-spatial-480",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "2-dist-left/views/wrist_cam.npy",
+          "sha256": "2443391a59f72dd520c325d3ce92038e34602580cea7fb75d5aa9ab4582a8eda",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/wrist_cam.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "2-dist-left/views/over_shoulder_left_camera.npy",
+          "sha256": "79918610ca3110d8e78ce9f6726c1233f31cac1236d39fb246a21de4b25fd604",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/over_shoulder_left_camera.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "2-dist-left/views/over_shoulder_right_camera.npy",
+          "sha256": "02c1ada4c25e14b83519cb30e8132c50844b6efd586671e64d55f6970655a1c2",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "fb88a62b8059f35a08de969afce9473c45b10b699c1f374c3d609cc84e435bae",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/3-dist-right--D1-over_shoulder_left_camera.png",
+      "png_sha256": "d4ba37d9e7530c926c83d0ac2618cc7ea69652981b1772d9537e7252860584d1",
+      "range": [
+        0,
+        255
+      ],
+      "scene": "3-dist-right",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-over_shoulder_left_camera",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "3-dist-right/views/over_shoulder_left_camera.npy",
+          "sha256": "3516ef93277e17978b942526722b4d791a58be828370c81778ac5a1c1aa6de50",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/3-dist-right/views/over_shoulder_left_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "699be4424328928ccac50b13e808994dafa1cd13844af0f771b985872620fed1",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/3-dist-right--D1-over_shoulder_right_camera.png",
+      "png_sha256": "053a524abeee4903eb366818a1ff28952bcbfa62363828342145a9a2a4b30966",
+      "range": [
+        3,
+        255
+      ],
+      "scene": "3-dist-right",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-over_shoulder_right_camera",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "3-dist-right/views/over_shoulder_right_camera.npy",
+          "sha256": "6e5738306c0b3cdfd3405c80279f04ae2ecfecd2e5d21c1ec4ab5fdd0014e89b",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/3-dist-right/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "11eddf787a9b9173a58b48ead7a1273ccaec12c9b79118ad105d9f62ae2f6aa6",
+      "dtype": "uint8",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/3-dist-right--D1-wrist_cam.png",
+      "png_sha256": "3f9ecbe77b82ab5c812fc00ac224140999dfed711f5b6a0cad0008c65eaa5b23",
+      "range": [
+        2,
+        241
+      ],
+      "scene": "3-dist-right",
+      "shape": [
+        180,
+        320,
+        3
+      ],
+      "slot": "D1-wrist_cam",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "3-dist-right/views/wrist_cam.npy",
+          "sha256": "f8b32fd20faf949d69c54e1a8c8b98fc5ab0083e4c1c90fdbc2c5179c44fb7ee",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/3-dist-right/views/wrist_cam.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "b9d3faf28d558dcbc0d28a2b991ebc911ab8389ebdb2166be43ad3cc6454429c",
+      "dtype": "uint8",
+      "layout": "wrist above left/right exterior views",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/3-dist-right--N3-server-540x640.png",
+      "png_sha256": "4016b2671cfa290e8c28d6325fa04f6820ee8792dac5665ed774630ecc146cb6",
+      "range": [
+        0,
+        255
+      ],
+      "scene": "3-dist-right",
+      "shape": [
+        540,
+        640,
+        3
+      ],
+      "slot": "N3-server-540x640",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "3-dist-right/views/wrist_cam.npy",
+          "sha256": "f8b32fd20faf949d69c54e1a8c8b98fc5ab0083e4c1c90fdbc2c5179c44fb7ee",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/3-dist-right/views/wrist_cam.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "3-dist-right/views/over_shoulder_left_camera.npy",
+          "sha256": "3516ef93277e17978b942526722b4d791a58be828370c81778ac5a1c1aa6de50",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/3-dist-right/views/over_shoulder_left_camera.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "3-dist-right/views/over_shoulder_right_camera.npy",
+          "sha256": "6e5738306c0b3cdfd3405c80279f04ae2ecfecd2e5d21c1ec4ab5fdd0014e89b",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/3-dist-right/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    },
+    {
+      "array_sha256": "6a5a7a2757999768cebaf2870e571245d54fb59482f4fb2cab3501589bfa6594",
+      "dtype": "uint8",
+      "image_size": [
+        544.0,
+        736.0,
+        540.0,
+        640.0
+      ],
+      "layout": "wrist above left/right exterior views; source-defined resize and reflection padding",
+      "path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-bi-policy-inputs/3-dist-right--N3-spatial-480.png",
+      "png_sha256": "8e7c47abd3a7f58b164b4281c4be7f4b8b4ae34928272325c72adddac11d384d",
+      "range": [
+        0,
+        255
+      ],
+      "scene": "3-dist-right",
+      "shape": [
+        544,
+        736,
+        3
+      ],
+      "slot": "N3-spatial-480",
+      "source_views": [
+        {
+          "bytes": 2764928,
+          "export_path": "3-dist-right/views/wrist_cam.npy",
+          "sha256": "f8b32fd20faf949d69c54e1a8c8b98fc5ab0083e4c1c90fdbc2c5179c44fb7ee",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/3-dist-right/views/wrist_cam.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "3-dist-right/views/over_shoulder_left_camera.npy",
+          "sha256": "3516ef93277e17978b942526722b4d791a58be828370c81778ac5a1c1aa6de50",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/3-dist-right/views/over_shoulder_left_camera.npy"
+        },
+        {
+          "bytes": 2764928,
+          "export_path": "3-dist-right/views/over_shoulder_right_camera.npy",
+          "sha256": "6e5738306c0b3cdfd3405c80279f04ae2ecfecd2e5d21c1ec4ab5fdd0014e89b",
+          "source_path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/3-dist-right/views/over_shoulder_right_camera.npy"
+        }
+      ]
+    }
+  ],
+  "model_requests": 0,
+  "n3_config": {
+    "frames": 33,
+    "keep_aspect_ratio": true,
+    "resolution": "480",
+    "server_height": 540,
+    "server_width": 640
+  },
+  "reproducer_sha256": "00e5860563bbe2fb324f8f1a6a7b8c44ebe9de2a28e31ab923e20de6ccc9c7db",
+  "schema_version": "sgw-01-model-free-policy-image-replay-v1",
+  "sources": [
+    {
+      "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/robolab/core/utils/image_utils.py",
+      "sha256": "aead0c246b696ce5feabbbc63df93f42762365cc6315269fa08ad5c98e1a3d94"
+    },
+    {
+      "path": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b/cosmos_framework/scripts/action_policy_server_robolab.py",
+      "sha256": "024a6d19048a6ac732ca0b23e741b5da6d38424223783b944bf539b2b6bd9a24"
+    },
+    {
+      "path": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b/cosmos_framework/data/vfm/action/transforms.py",
+      "sha256": "1a0577cf481c8cadd2dda9cc344f1f5dd60b16b020f4636221c8bb71403cfea4"
+    },
+    {
+      "path": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b/cosmos_framework/data/vfm/utils.py",
+      "sha256": "62eeda71daa4dfde8feda69a87d54161f080f2d6f86267d2778f2752494cb077"
+    }
+  ],
+  "versions": {
+    "numpy": "2.5.1",
+    "torch": "2.7.1",
+    "torchvision": "0.22.1"
+  }
+}

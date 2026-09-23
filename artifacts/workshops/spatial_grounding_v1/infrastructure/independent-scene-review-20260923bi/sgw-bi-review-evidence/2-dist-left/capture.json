@@ -1,0 +1,2220 @@
+{
+  "asset_manifest_sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806",
+  "banana_contact_measurements": {
+    "dist_bowl_landing_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "banana__dist_bowl_landing_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "dist_bowl_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "banana__dist_bowl_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "dist_neutral_cube_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "banana__dist_neutral_cube_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "dist_plate_landing_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "banana__dist_plate_landing_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "dist_plate_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "banana__dist_plate_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "plate": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "banana__plate",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "table": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              -3.41692975780461e-06,
+              1.344893462373875e-06,
+              2.314826250076294
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": true,
+      "sensor": "banana__table",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    }
+  },
+  "behavioral_episode_count": 0,
+  "contact_sensor_inventory": [
+    "banana__dist_bowl_landing_support",
+    "banana__dist_bowl_support",
+    "banana__dist_neutral_cube_support",
+    "banana__dist_plate_landing_support",
+    "banana__dist_plate_support",
+    "banana__plate",
+    "banana__table",
+    "bowl__banana",
+    "bowl__dist_bowl_landing_support",
+    "bowl__dist_bowl_support",
+    "bowl__dist_neutral_cube_support",
+    "bowl__dist_plate_landing_support",
+    "bowl__dist_plate_support",
+    "bowl__plate",
+    "bowl__table",
+    "dist_bowl_landing_support__dist_plate_landing_support",
+    "dist_bowl_support__dist_bowl_landing_support",
+    "dist_bowl_support__dist_neutral_cube_support",
+    "dist_bowl_support__dist_plate_landing_support",
+    "dist_bowl_support__dist_plate_support",
+    "dist_neutral_cube_support__dist_bowl_landing_support",
+    "dist_neutral_cube_support__dist_plate_landing_support",
+    "dist_plate_support__dist_bowl_landing_support",
+    "dist_plate_support__dist_neutral_cube_support",
+    "dist_plate_support__dist_plate_landing_support",
+    "gripper__banana",
+    "gripper__bowl",
+    "gripper__dist_bowl_landing_support",
+    "gripper__dist_bowl_support",
+    "gripper__dist_neutral_cube_support",
+    "gripper__dist_plate_landing_support",
+    "gripper__dist_plate_support",
+    "gripper__plate",
+    "gripper__rubiks_cube",
+    "gripper__table",
+    "plate__dist_bowl_landing_support",
+    "plate__dist_bowl_support",
+    "plate__dist_neutral_cube_support",
+    "plate__dist_plate_landing_support",
+    "plate__dist_plate_support",
+    "rubiks_cube__banana",
+    "rubiks_cube__bowl",
+    "rubiks_cube__dist_bowl_landing_support",
+    "rubiks_cube__dist_bowl_support",
+    "rubiks_cube__dist_neutral_cube_support",
+    "rubiks_cube__dist_plate_landing_support",
+    "rubiks_cube__dist_plate_support",
+    "rubiks_cube__plate",
+    "rubiks_cube__table",
+    "table__dist_bowl_landing_support",
+    "table__dist_bowl_support",
+    "table__dist_neutral_cube_support",
+    "table__dist_plate_landing_support",
+    "table__dist_plate_support",
+    "table__plate"
+  ],
+  "environment_origin_world_xyz_m": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment_seed": 20260922,
+  "family": "DIST",
+  "model_request_count": 0,
+  "objects": {
+    "banana": {
+      "bbox_env_local_max_xyz_m": [
+        0.8546850085258484,
+        0.4793199896812439,
+        0.08893656730651855
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.7453150153160095,
+        0.3006799817085266,
+        0.05000072345137596
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.800000011920929,
+        0.38999998569488525,
+        0.06946864724159241
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.800000011920929,
+        0.38999998569488525,
+        0.06946864724159241
+      ],
+      "root_quaternion_world_wxyz": [
+        0.9999781250953674,
+        -0.0026648887433111668,
+        -0.006051987875252962,
+        0.0001454032608307898
+      ]
+    },
+    "bowl": {
+      "bbox_env_local_max_xyz_m": [
+        0.5207566618919373,
+        0.24057668447494507,
+        0.1475466936826706
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.3592433035373688,
+        0.07942330837249756,
+        0.09245330095291138
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.4399999976158142,
+        0.1599999964237213,
+        0.11999999731779099
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.4399999976158142,
+        0.1599999964237213,
+        0.11999999731779099
+      ],
+      "root_quaternion_world_wxyz": [
+        0.9999999403953552,
+        -5.8753543271450326e-05,
+        -0.00032362030469812453,
+        -0.00010501052747713402
+      ]
+    },
+    "dist_bowl_landing_support": {
+      "bbox_env_local_max_xyz_m": [
+        0.3400000035762787,
+        0.19999998807907104,
+        0.09090539067983627
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.2600000202655792,
+        0.11999999731779099,
+        0.05000071972608566
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.30000001192092896,
+        0.1599999964237213,
+        0.07045305520296097
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.30000001192092896,
+        0.1599999964237213,
+        0.07045305520296097
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dist_bowl_support": {
+      "bbox_env_local_max_xyz_m": [
+        0.5299999713897705,
+        0.25,
+        0.09245330095291138
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.3499999940395355,
+        0.06999999284744263,
+        0.05000072717666626
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.4399999976158142,
+        0.1599999964237213,
+        0.07122701406478882
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.4399999976158142,
+        0.1599999964237213,
+        0.07122701406478882
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dist_neutral_cube_support": {
+      "bbox_env_local_max_xyz_m": [
+        0.5900000333786011,
+        0.03999999910593033,
+        0.09090539067983627
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.5099999904632568,
+        -0.03999999910593033,
+        0.05000071972608566
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.550000011920929,
+        0.0,
+        0.07045305520296097
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.550000011920929,
+        0.0,
+        0.07045305520296097
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dist_plate_landing_support": {
+      "bbox_env_local_max_xyz_m": [
+        0.7000000476837158,
+        -0.30000001192092896,
+        0.09090539067983627
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.6200000047683716,
+        -0.3799999952316284,
+        0.05000071972608566
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.6600000262260437,
+        -0.3400000035762787,
+        0.07045305520296097
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.6600000262260437,
+        -0.3400000035762787,
+        0.07045305520296097
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dist_plate_support": {
+      "bbox_env_local_max_xyz_m": [
+        0.7800000309944153,
+        -0.03999999910593033,
+        0.11399999260902405
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.5400000214576721,
+        -0.2800000011920929,
+        0.05000072345137596
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.6600000262260437,
+        -0.1599999964237213,
+        0.08200035989284515
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.6600000262260437,
+        -0.1599999964237213,
+        0.08200035989284515
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "plate": {
+      "bbox_env_local_max_xyz_m": [
+        0.7700000405311584,
+        -0.04999999701976776,
+        0.12600000202655792
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.550000011920929,
+        -0.26999998092651367,
+        0.11400000005960464
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.6600000262260437,
+        -0.1599999964237213,
+        0.11999999731779099
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "root_position_env_local_xyz_m": [
+        0.6600000262260437,
+        -0.1599999964237213,
+        0.11999999731779099
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "rubiks_cube": {
+      "bbox_env_local_max_xyz_m": [
+        0.5792079567909241,
+        0.028942830860614777,
+        0.1490946114063263
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.5207920670509338,
+        -0.028942830860614777,
+        0.09090538322925568
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.550000011920929,
+        0.0,
+        0.11999999731779099
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        -0.01015971898322125,
+        0.028928753245158832,
+        -0.002403985121839028
+      ],
+      "root_position_env_local_xyz_m": [
+        0.5601696372032166,
+        -0.02892264723777771,
+        0.12243536114692688
+      ],
+      "root_quaternion_world_wxyz": [
+        0.9999990463256836,
+        -0.0009071399690583348,
+        0.001037940033711493,
+        8.44117093947716e-05
+      ]
+    },
+    "table": {
+      "bbox_env_local_max_xyz_m": [
+        0.8985843658447266,
+        0.5220682621002197,
+        0.05000072345137596
+      ],
+      "bbox_env_local_min_xyz_m": [
+        0.19858434796333313,
+        -0.4779317378997803,
+        -0.6499992609024048
+      ],
+      "geometric_center_env_local_xyz_m": [
+        0.5485843420028687,
+        0.02206825464963913,
+        -0.29999926686286926
+      ],
+      "geometric_center_offset_root_local_xyz_m": [
+        0.3499999940395355,
+        0.0,
+        -0.3499999903142452
+      ],
+      "root_position_env_local_xyz_m": [
+        0.19858434796333313,
+        0.02206825464963913,
+        0.05000072345137596
+      ],
+      "root_quaternion_world_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "overlay_manifest": {
+    "bytes": 5997,
+    "path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective/dist-left.manifest.json",
+    "sha256": "5c6462cdca9627f905e689ec938223752f05e045f95afbce28e1d74b1a802098"
+  },
+  "overlay_manifest_sha256": "f5e724489f8e712c5789aafb303ddc52925034deeec2ec5dfdee709d9a754982",
+  "receipt_sha256": "88767c618ae4d692130ab10d53122ba24ba3913c440840bb63d670a9c506ab8f",
+  "render_only_diagnostic": {
+    "material_assets": [
+      {
+        "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+        "authored_asset": "OmniPBR.mdl",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+      },
+      {
+        "attribute": "/World/envs/env_0/scene/bowl/Looks/Material/OmniPBR.inputs:diffuse_texture",
+        "authored_asset": "./textures/obj_000013.png",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000013.png"
+      },
+      {
+        "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+        "authored_asset": "OmniPBR.mdl",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+      },
+      {
+        "attribute": "/World/envs/env_0/scene/rubiks_cube/Looks/Material/OmniPBR.inputs:diffuse_texture",
+        "authored_asset": "./textures/obj_000030.png",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/textures/obj_000030.png"
+      },
+      {
+        "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+        "authored_asset": "OmniPBR.mdl",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/omni/mdl/core/Base/OmniPBR.mdl"
+      },
+      {
+        "attribute": "/World/envs/env_0/scene/banana/Looks/Material/OmniPBR.inputs:diffuse_texture",
+        "authored_asset": "./textures/obj_000010.png",
+        "resolved_file_exists": true,
+        "resolved_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000010.png"
+      }
+    ],
+    "physics_actions": 0,
+    "render_frames": 120,
+    "simulation_time_unchanged": true,
+    "snapshots": [
+      {
+        "render_frame": 0,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0000.npy",
+            "sha256": "9e04cb07f8cd3f421db0b6a7c5a5a712a2f8a0912416b60c0996b9dc23994793"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_right_camera-0000.npy",
+            "sha256": "32857e7ba8cb1561c19d8c6698436b24b7062be4f613fda3a7c6f672bdb39b4b"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/wrist_cam-0000.npy",
+            "sha256": "8389a39faeb77cdd0a320b7fc683187bed814412bb6cf1f66ac468e32b7ea2e4"
+          }
+        }
+      },
+      {
+        "render_frame": 1,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0001.npy",
+            "sha256": "fea0656090e6444d8cfc5a435862ddbc5a30718e135fbd9652151a2c9fe01859"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_right_camera-0001.npy",
+            "sha256": "9e0b67cf87f0f06d6f7e63d2c587da20375dadd9cbd65f9f798b9f973505e822"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/wrist_cam-0001.npy",
+            "sha256": "4d7bc8b0c284c551b0026e2313d975a07794207019af837046f2ebb313d29af0"
+          }
+        }
+      },
+      {
+        "render_frame": 2,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0002.npy",
+            "sha256": "1c0fa10fc4ba62884c6646698f640627a47f15f57031d6d8fa2de5221a1c7bc4"
+          }
+        }
+      },
+      {
+        "render_frame": 3,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0003.npy",
+            "sha256": "1b42f5dd3feda20b0249df185f2a1700a06ef96dec325b4ccb2797e9202766d4"
+          }
+        }
+      },
+      {
+        "render_frame": 4,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0004.npy",
+            "sha256": "4956b5dae0c4a7c6e3bf85e1f28168742e164841f4bedd850d549c70e9787190"
+          }
+        }
+      },
+      {
+        "render_frame": 5,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0005.npy",
+            "sha256": "e82b900176b6cf68a3026518a688adce396c190ac55f697d051cd3833a715bf2"
+          }
+        }
+      },
+      {
+        "render_frame": 6,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0006.npy",
+            "sha256": "e6c947f09bc6dd5d8ee343ab35a45195bd0ae70d03cd6066e0dba260b30083a6"
+          }
+        }
+      },
+      {
+        "render_frame": 7,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0007.npy",
+            "sha256": "96d4dd992bebcfbad0b0986907a7f0cd358a6b1784d9c9b84fdd39ad174960ab"
+          }
+        }
+      },
+      {
+        "render_frame": 8,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0008.npy",
+            "sha256": "d5261f5f994603dc2d5ef5a13d114ba4c108a774f5bd056e9f091f0415980fca"
+          }
+        }
+      },
+      {
+        "render_frame": 9,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0009.npy",
+            "sha256": "0d500e22c685a788a680963180467fd889eb30a4ea0679ca62a53fc1de698798"
+          }
+        }
+      },
+      {
+        "render_frame": 10,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0010.npy",
+            "sha256": "92f0ca3c302f2ebba19a6b8a8ec1ce9df4f01bab5a5f89905527f5abd1e1b534"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_right_camera-0010.npy",
+            "sha256": "29ed77f627224747ec1bfb5e7a0cbda7821cd02e0992919896634657c06977ff"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/wrist_cam-0010.npy",
+            "sha256": "62a71d23740241e5d2c7a4131499045b816e21860c571736bd376d59cd8310ca"
+          }
+        }
+      },
+      {
+        "render_frame": 11,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0011.npy",
+            "sha256": "a869a0af1b6219968c351ed4188c8274705d00ccbe3d23d43a2cf4e8fe91cd61"
+          }
+        }
+      },
+      {
+        "render_frame": 12,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0012.npy",
+            "sha256": "16cd21ef3eb536702d429a30ba4c77e380df48a340293e2f3b9119899d2be6f3"
+          }
+        }
+      },
+      {
+        "render_frame": 13,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0013.npy",
+            "sha256": "4e85c9b3eea80faeb5650f242e396ff5a837ef663a049e854a23c5be21d5b93c"
+          }
+        }
+      },
+      {
+        "render_frame": 14,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0014.npy",
+            "sha256": "f9e2dca1023c7f27b5a62c3ec4cd1277c62fef579a77c6a0bdba5b7a8da78a36"
+          }
+        }
+      },
+      {
+        "render_frame": 15,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0015.npy",
+            "sha256": "f300ecc5b65efd38e7a7ef838eea2c70d390a3fab2b6cdcab4f633ee6176b587"
+          }
+        }
+      },
+      {
+        "render_frame": 16,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0016.npy",
+            "sha256": "59f5385d61f4b91e8e746de4f2b7b18c9abca0dbdde3dda63e5570b6b90f6bca"
+          }
+        }
+      },
+      {
+        "render_frame": 17,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0017.npy",
+            "sha256": "d0ad15bf6bf2a029f9c1c5a6db7951489b90043756618a852589590261634156"
+          }
+        }
+      },
+      {
+        "render_frame": 18,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0018.npy",
+            "sha256": "6574edbee98cb2628de3380ca5c6c46a6336c91a6407d6d547b372b23009b006"
+          }
+        }
+      },
+      {
+        "render_frame": 19,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0019.npy",
+            "sha256": "8afde9ed72bd566fe3d25ea5a8de73091e17e509e4ee68e05f8ecc47c4015579"
+          }
+        }
+      },
+      {
+        "render_frame": 20,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0020.npy",
+            "sha256": "ad4b76523869002006c13fd15879a6aa81a231d43453911b09a581b1d9f12b6a"
+          }
+        }
+      },
+      {
+        "render_frame": 21,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0021.npy",
+            "sha256": "78894edf57d3638ea1904f805c077d225efd1553413ca19220c94a91506d0b63"
+          }
+        }
+      },
+      {
+        "render_frame": 22,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0022.npy",
+            "sha256": "2f3125b057a574aa906f843241ba122ea3dbff73702c10de4bb7032fc841202f"
+          }
+        }
+      },
+      {
+        "render_frame": 23,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0023.npy",
+            "sha256": "d9e63e6548a52005bc6967aafa7d704661054cdcd73042e05444716aa4979199"
+          }
+        }
+      },
+      {
+        "render_frame": 24,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0024.npy",
+            "sha256": "f217d3fa24b852a8fe74ee95db3db4bc0ec16219968f8199d6b25d3e46b63186"
+          }
+        }
+      },
+      {
+        "render_frame": 25,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0025.npy",
+            "sha256": "ac4a17c04be5ddd77647924cd5ee7a82038153a55bb87f1999b12f41683378f7"
+          }
+        }
+      },
+      {
+        "render_frame": 26,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0026.npy",
+            "sha256": "dc9bbf32c7bc06a5cc720072986ceffc295ca53b94da7e1b54f8629cf66db12f"
+          }
+        }
+      },
+      {
+        "render_frame": 27,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0027.npy",
+            "sha256": "b695bbed8465594e758cddf5f9cdabcf860a9ff2c712a91d113082f49b55c604"
+          }
+        }
+      },
+      {
+        "render_frame": 28,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0028.npy",
+            "sha256": "2941ad898bd2c8c201a5e297cdd6da9cb35371788fb167525b7ebec430e7b859"
+          }
+        }
+      },
+      {
+        "render_frame": 29,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0029.npy",
+            "sha256": "68549ff8417863967022c205295975c4b757cc7901dce628ae0aafa860e14706"
+          }
+        }
+      },
+      {
+        "render_frame": 30,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0030.npy",
+            "sha256": "a58379711d128f514c5dfae48e6063f4774a35c607cc688e33c352b3390852a9"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_right_camera-0030.npy",
+            "sha256": "9d2e5e47d6baaeead1a573f9a45ea9a2069cf2fa32a190018f532caaadcfed62"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/wrist_cam-0030.npy",
+            "sha256": "478a7249a39500bd36941d1df91ecaed3331af2a3b2b6ef9883cfb11b68a9f6d"
+          }
+        }
+      },
+      {
+        "render_frame": 31,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0031.npy",
+            "sha256": "c559166615bec127b9b5b5f33c3e0df46bf6ce1b5f46328fd37d5ec24c3ce21f"
+          }
+        }
+      },
+      {
+        "render_frame": 32,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0032.npy",
+            "sha256": "d3e4a755d1c3fc8200782ef6b04fe9b9c1924798f50afe0e426492674191b3bd"
+          }
+        }
+      },
+      {
+        "render_frame": 33,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0033.npy",
+            "sha256": "77052ada1b6b2f37cf5f12b96aa5bec3be74523fb3b26e5acd5a48fd5a3e5bfa"
+          }
+        }
+      },
+      {
+        "render_frame": 34,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0034.npy",
+            "sha256": "6a0526ee6c93bd9bcadc82c6790616a505ce4a64e4db616071ae1d1848f6fa41"
+          }
+        }
+      },
+      {
+        "render_frame": 35,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0035.npy",
+            "sha256": "5b200cc08ec85806e01de8543a298e7ecd0d04b738616ae8213402621a112cbd"
+          }
+        }
+      },
+      {
+        "render_frame": 36,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0036.npy",
+            "sha256": "bdf160efed127422a70e0158a89f66231e70a51c1dece4abc366f5172de1ef1e"
+          }
+        }
+      },
+      {
+        "render_frame": 37,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0037.npy",
+            "sha256": "35e903e2a35938c2d5d83c84dadacaa6b34d8d5c83f27c1107654ba73e882507"
+          }
+        }
+      },
+      {
+        "render_frame": 38,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0038.npy",
+            "sha256": "cc20c23f39640227efc096768c5e642916ab4bcd516c9e72ef7ff392b71addef"
+          }
+        }
+      },
+      {
+        "render_frame": 39,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0039.npy",
+            "sha256": "5a996ede5d5c611638d93ab6a94aa8a0bc4b71f1211b25de02312bc25fdef42e"
+          }
+        }
+      },
+      {
+        "render_frame": 40,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0040.npy",
+            "sha256": "77f34ad648a564370a9ff772d4bff3d0162230daac0f8e0ee7f862dd1909bf85"
+          }
+        }
+      },
+      {
+        "render_frame": 41,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0041.npy",
+            "sha256": "e45e28cecc5bd30b46a7a10a803d5d8ff3eeb1ee7f99cdc9c7502070b56bf0e2"
+          }
+        }
+      },
+      {
+        "render_frame": 42,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0042.npy",
+            "sha256": "97c2a25ba0a24995906fca92b136288d1662d07325cee7010f8bc4fe9e1efbb1"
+          }
+        }
+      },
+      {
+        "render_frame": 43,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0043.npy",
+            "sha256": "67da9404f370ea407ac4da4a4399f02256bf20c57550ac0a3817955bed6fc2af"
+          }
+        }
+      },
+      {
+        "render_frame": 44,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0044.npy",
+            "sha256": "0488a5bde527fc0d8a6f63117811ada03552f9455a80bf947f3c8a18842e01a6"
+          }
+        }
+      },
+      {
+        "render_frame": 45,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0045.npy",
+            "sha256": "7a1a3fc1a86efd1e1ff0d42a66c435dc178cd5128d862af5bccf7e9f344e56fc"
+          }
+        }
+      },
+      {
+        "render_frame": 46,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0046.npy",
+            "sha256": "fe0c7cc7d69e3757a285403980357fe2beb14bdee02314f7429795fa09339cd4"
+          }
+        }
+      },
+      {
+        "render_frame": 47,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0047.npy",
+            "sha256": "ab62dc1cb46db6fb7ba9e2507bd6001fef1bbea19995d7e89fc040858a3c0e6a"
+          }
+        }
+      },
+      {
+        "render_frame": 48,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0048.npy",
+            "sha256": "f6cb358e4816551a56c4f0f6ebebb0575c65b887839a4fe95ab5676876ffebca"
+          }
+        }
+      },
+      {
+        "render_frame": 49,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0049.npy",
+            "sha256": "57a115877ce46aef10d4bf6a1aeb704eb63eaba48ec7f62932b8349acc85e289"
+          }
+        }
+      },
+      {
+        "render_frame": 50,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0050.npy",
+            "sha256": "339cf635749012f454eef574331faa003e6171c63f9f5203723ebc5a21d3a2dc"
+          }
+        }
+      },
+      {
+        "render_frame": 51,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0051.npy",
+            "sha256": "b9df08d803e34f5bbc47f3d6b05bfd08b148bc48a9066fa41ee9da7b1d5b7854"
+          }
+        }
+      },
+      {
+        "render_frame": 52,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0052.npy",
+            "sha256": "55d124e0b492417432e6e87cd15d6524be84d167d1e9c121122bdb5b36de6dbc"
+          }
+        }
+      },
+      {
+        "render_frame": 53,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0053.npy",
+            "sha256": "def1560ce7f1e5401e89722104971efd58cbb28f461f10c4c4c4e09fc4cdca5e"
+          }
+        }
+      },
+      {
+        "render_frame": 54,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0054.npy",
+            "sha256": "54491242171d214e5e0472de8f5669e852a5852f98a8ff02cb9f79761f4c31ac"
+          }
+        }
+      },
+      {
+        "render_frame": 55,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0055.npy",
+            "sha256": "09cbe8a97e26a8dadd42a407c411e06ca6afdc095af36dde8005e33f34bf9255"
+          }
+        }
+      },
+      {
+        "render_frame": 56,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0056.npy",
+            "sha256": "5c9b4cea8bdd5808e16454915456820a820e6802283b5d734f712c6ac92f3d86"
+          }
+        }
+      },
+      {
+        "render_frame": 57,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0057.npy",
+            "sha256": "722234dc705caee7accb7e71ab1833667547579701d88c7f52fe7c88936e8e99"
+          }
+        }
+      },
+      {
+        "render_frame": 58,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0058.npy",
+            "sha256": "579a3ac8f7959b35eac6da6e8838249c474c836f2e808630e39d58fc93a1e611"
+          }
+        }
+      },
+      {
+        "render_frame": 59,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0059.npy",
+            "sha256": "85ca651c01f66c2b63052fd5c95fccb2ed044029f2f1aadf6abe843e574c83ec"
+          }
+        }
+      },
+      {
+        "render_frame": 60,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0060.npy",
+            "sha256": "27705d496ef19866a8ab11ba4518f477284f7bdab76914587e58cb295c38880b"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_right_camera-0060.npy",
+            "sha256": "fd37a9c3cef6f248247ae555401c322db0a1191618c36fceabfd3adf65cedc0a"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/wrist_cam-0060.npy",
+            "sha256": "eab7ba87ac7fbc7b267690b7849600e06fe4534441709d7718986ce7b97d475b"
+          }
+        }
+      },
+      {
+        "render_frame": 61,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0061.npy",
+            "sha256": "abcda8593fd11c80bde7c62f7d4b470d9580ef03ed5c514fb16b698a26fecc91"
+          }
+        }
+      },
+      {
+        "render_frame": 62,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0062.npy",
+            "sha256": "557dfd18d79af9969fd3264b5e425690eb131272c5c878dc7a1598f969653380"
+          }
+        }
+      },
+      {
+        "render_frame": 63,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0063.npy",
+            "sha256": "6bb3cc0cd444bec13ad09ab9d6f6849a88091f2fac6ace379ef3e59d99bff480"
+          }
+        }
+      },
+      {
+        "render_frame": 64,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0064.npy",
+            "sha256": "7af60fa5b02077baaeeeee3fede52e6c76d1dc6937d45b4445d486bf3928dcf9"
+          }
+        }
+      },
+      {
+        "render_frame": 65,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0065.npy",
+            "sha256": "1d182446b106c0d4ae97979e68569800ae9b7c10852445cd6502464aff596e00"
+          }
+        }
+      },
+      {
+        "render_frame": 66,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0066.npy",
+            "sha256": "35762e85887496801020e325bb8b20758dc6a160a1a0c092e2aef7df0b8f841f"
+          }
+        }
+      },
+      {
+        "render_frame": 67,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0067.npy",
+            "sha256": "9da5bd30b88d2800a169d13de9077aac504afa27d13a399be30ff1993f30d3cd"
+          }
+        }
+      },
+      {
+        "render_frame": 68,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0068.npy",
+            "sha256": "033e1d822c66a94c83b41bfa801d2c168941385af163b478f90840e4bcadfe1c"
+          }
+        }
+      },
+      {
+        "render_frame": 69,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0069.npy",
+            "sha256": "a1c40c8536c6893570a960707a8022371532ea4c5e72bf12404a36f199647272"
+          }
+        }
+      },
+      {
+        "render_frame": 70,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0070.npy",
+            "sha256": "02b24cf9a429327dfd6e69210dfb3ca85a3e1a477df0504291df382c88e2f858"
+          }
+        }
+      },
+      {
+        "render_frame": 71,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0071.npy",
+            "sha256": "a8b255dc43ebf0a324228a04e5829935aacd6bfba5ff3f721f8c46b43d955ef6"
+          }
+        }
+      },
+      {
+        "render_frame": 72,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0072.npy",
+            "sha256": "33e75b4e97fd1341f60bd454a4123ff48bc68511a0806f5404b2af123f0d67e6"
+          }
+        }
+      },
+      {
+        "render_frame": 73,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0073.npy",
+            "sha256": "836330848f8a9da677bca1f4e39bb28cd0b0dcbdc8f49e33a488a255d36039f5"
+          }
+        }
+      },
+      {
+        "render_frame": 74,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0074.npy",
+            "sha256": "217ac3017ef829aa4fbda0d4abaa4ade2e0914dc5cc86ad017688c419b22f1a7"
+          }
+        }
+      },
+      {
+        "render_frame": 75,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0075.npy",
+            "sha256": "85f5282f6ccf63a28fe6d1c09360b13a2f89be140b6ea3f0d3756e01686133f3"
+          }
+        }
+      },
+      {
+        "render_frame": 76,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0076.npy",
+            "sha256": "a7888dd41f835efeb6e015669c4cf4cf20e8c30436e299232b7bcb67b677acdc"
+          }
+        }
+      },
+      {
+        "render_frame": 77,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0077.npy",
+            "sha256": "34ee3501b84fa92c8c220ab1df4fb0c447791cc3802a3a1c8d8b5324f851c46f"
+          }
+        }
+      },
+      {
+        "render_frame": 78,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0078.npy",
+            "sha256": "8812386c6a7f6a146fde1867e2c7df4653476458b4aef7a8752d2efb26e4b6fb"
+          }
+        }
+      },
+      {
+        "render_frame": 79,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0079.npy",
+            "sha256": "54f172f9a33f19ddf9aab48843ff9a0c9f3c8bb5a8283acbe41fe8ea349d273b"
+          }
+        }
+      },
+      {
+        "render_frame": 80,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0080.npy",
+            "sha256": "d55f2583529e2dd504a7460a0a53348691d76ef8e6a185d8cc5ff51ddf6e8564"
+          }
+        }
+      },
+      {
+        "render_frame": 81,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0081.npy",
+            "sha256": "7003b68d93643359e14797a63f60f788e178d8c0e328d6430e4184e61c6e26ef"
+          }
+        }
+      },
+      {
+        "render_frame": 82,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0082.npy",
+            "sha256": "b7b0c83698c5ac0778d1965ba8d9f1befafa7bbf02bb4465874aabccaff105cf"
+          }
+        }
+      },
+      {
+        "render_frame": 83,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0083.npy",
+            "sha256": "6f95972c9be3e8fa6c949bd79af0046dc8dad69b117051e6400ccee95acd12c2"
+          }
+        }
+      },
+      {
+        "render_frame": 84,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0084.npy",
+            "sha256": "f73de9e5a13bcd60810d98d5aec0b092b2e8f47830fc9af59c3ce89ed25c5bc4"
+          }
+        }
+      },
+      {
+        "render_frame": 85,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0085.npy",
+            "sha256": "5974bd34a5c2f601bb9fc7da3be50c0088f47d41a1e0d64da4c7e2098935d122"
+          }
+        }
+      },
+      {
+        "render_frame": 86,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0086.npy",
+            "sha256": "6d87f6ce8e5c0c5d9d32d9393ea86ae07563eef3dcf496e6cb05d365c50474c7"
+          }
+        }
+      },
+      {
+        "render_frame": 87,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0087.npy",
+            "sha256": "2b09bf23bc1b114f02aa433c55e63b11d2eb0c44dc0eb5d3ba85b5ecc562b494"
+          }
+        }
+      },
+      {
+        "render_frame": 88,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0088.npy",
+            "sha256": "a8ae46c2ef4a43625f7e3bf81610394eb5138a34c7863ce62a3f922ee2cd10ba"
+          }
+        }
+      },
+      {
+        "render_frame": 89,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0089.npy",
+            "sha256": "50cbb9c75e73f1dad572a2553567db179ce0db6985b6883dca0125b1e06b8f9f"
+          }
+        }
+      },
+      {
+        "render_frame": 90,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0090.npy",
+            "sha256": "b5f37068a428048d7f9b589633a677d044c1190be70afa8035603f1c8a11a9fe"
+          }
+        }
+      },
+      {
+        "render_frame": 91,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0091.npy",
+            "sha256": "e42afd8c4529feea383abd39c50f1c1dff49701ca7194a3bed757c1a79efc449"
+          }
+        }
+      },
+      {
+        "render_frame": 92,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0092.npy",
+            "sha256": "dce36a1e7f3c0950c6e1193989d3ebd6350a2ca08bbdff9ee36117566d545213"
+          }
+        }
+      },
+      {
+        "render_frame": 93,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0093.npy",
+            "sha256": "db0ff0e3d8aef4f84ae12c187869963bf413d1689eb4024250eca3c107dc1766"
+          }
+        }
+      },
+      {
+        "render_frame": 94,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0094.npy",
+            "sha256": "1a0b0343ba6ef1957bca853ba9e504177793e8f6927e5313923d76443147ceaf"
+          }
+        }
+      },
+      {
+        "render_frame": 95,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0095.npy",
+            "sha256": "2edf82944cd73f794a1decd3a22cf0a0e233d3238922fff5e450d59d73494cd1"
+          }
+        }
+      },
+      {
+        "render_frame": 96,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0096.npy",
+            "sha256": "39985effada20e93410bc53f20d46bf88323a60ef739eba7ca067291f61278a5"
+          }
+        }
+      },
+      {
+        "render_frame": 97,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0097.npy",
+            "sha256": "97997e80f8dd7cdd218ae7ae2d646f24ce531707285fe616e79619a786e793a9"
+          }
+        }
+      },
+      {
+        "render_frame": 98,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0098.npy",
+            "sha256": "839a12e8220a6eaf6d6041fd1b7c5cf11d7f2bb44234acccc33a8cf9bc5abad1"
+          }
+        }
+      },
+      {
+        "render_frame": 99,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0099.npy",
+            "sha256": "1b44e0d736694c3f7ee7c257052c15d46968744b8da68e38c1134e65b25dabc7"
+          }
+        }
+      },
+      {
+        "render_frame": 100,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0100.npy",
+            "sha256": "f18deeba40d85941040065936eec2ba19812c430d71cc17fb3ee5a758bd1f47f"
+          }
+        }
+      },
+      {
+        "render_frame": 101,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0101.npy",
+            "sha256": "074580be3c2b146f47f618b5f5e5161bd613a19cdf609ced40d070b7d57d7f5b"
+          }
+        }
+      },
+      {
+        "render_frame": 102,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0102.npy",
+            "sha256": "e758296b42efe2fb9773137392904128a3df0acb5b345db82e0137163a73d247"
+          }
+        }
+      },
+      {
+        "render_frame": 103,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0103.npy",
+            "sha256": "c3a483ef3174502f96593e0b24e2d73edbfccdf18ff08e06d37b4889b992140c"
+          }
+        }
+      },
+      {
+        "render_frame": 104,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0104.npy",
+            "sha256": "3da51572ee2655ae8a7c4924acffa1e0a7d14d884525b76499f4dcff7fa2957b"
+          }
+        }
+      },
+      {
+        "render_frame": 105,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0105.npy",
+            "sha256": "5ad294fe2a7eb87039cf1ba6a703b1c2b72e3c0c5df3d3e2e57f225e92bce482"
+          }
+        }
+      },
+      {
+        "render_frame": 106,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0106.npy",
+            "sha256": "5ae98890922883e14a662e30105e4184d1c0ee3437e070b8b440dc31802946ea"
+          }
+        }
+      },
+      {
+        "render_frame": 107,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0107.npy",
+            "sha256": "885fcc7dfb178b738f18e669c5eca177af1d00f06aab3b9285d7c86d851bcba1"
+          }
+        }
+      },
+      {
+        "render_frame": 108,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0108.npy",
+            "sha256": "9bc48dd07e2f996acdf9c669bc44f72eaf5147932575a12d029038f5fde05068"
+          }
+        }
+      },
+      {
+        "render_frame": 109,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0109.npy",
+            "sha256": "ad0d2e1e574c589dfa1a5447fdce95a6005a1b1307a0aebb349069a62d07ae5d"
+          }
+        }
+      },
+      {
+        "render_frame": 110,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0110.npy",
+            "sha256": "4e833fe76639609a0f6d5780844dc74004fb9ace2f7991dc76ce5fc445839c2c"
+          }
+        }
+      },
+      {
+        "render_frame": 111,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0111.npy",
+            "sha256": "709ad9f410be40a18b90db0c207e3ba0255fb10a8fa3b75aa89313cae96f9e47"
+          }
+        }
+      },
+      {
+        "render_frame": 112,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0112.npy",
+            "sha256": "1a5ebc5b31942f5af1397c21398bde61b0fc785b3819652afb49f5546a8aae64"
+          }
+        }
+      },
+      {
+        "render_frame": 113,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0113.npy",
+            "sha256": "c19ab5cbdbdfbdec526d3f64d39baf69aa11d37ee2904eaf6db8d81e68e10d27"
+          }
+        }
+      },
+      {
+        "render_frame": 114,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0114.npy",
+            "sha256": "8799a25c14154d43ee181a6460e920beb921b57c5d3aef5aba744fa4e0a0c1ff"
+          }
+        }
+      },
+      {
+        "render_frame": 115,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0115.npy",
+            "sha256": "c9a9b3805ddb34b531d8dc1c6a2818d0f0ee9250509926960155e8c3a03249be"
+          }
+        }
+      },
+      {
+        "render_frame": 116,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0116.npy",
+            "sha256": "a73e681a776145c22ef938dcc5c8bdb178745cf56038b2ef79973ab5121baefb"
+          }
+        }
+      },
+      {
+        "render_frame": 117,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0117.npy",
+            "sha256": "1a03f0096ac755707df91568bebe74a39180ea6d88945a155e4c83c5a076e548"
+          }
+        }
+      },
+      {
+        "render_frame": 118,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0118.npy",
+            "sha256": "0c8cf0ee06f8be72b8095044c93938bbea7340fbdc9e67fbb1543d047d63f9a0"
+          }
+        }
+      },
+      {
+        "render_frame": 119,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0119.npy",
+            "sha256": "8630808bce97b42e3939213f1a9080415ab017272b368d94334192b4b4c4590f"
+          }
+        }
+      },
+      {
+        "render_frame": 120,
+        "sim_time_s": 0.01666666753590107,
+        "views": {
+          "over_shoulder_left_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_left_camera-0120.npy",
+            "sha256": "79918610ca3110d8e78ce9f6726c1233f31cac1236d39fb246a21de4b25fd604"
+          },
+          "over_shoulder_right_camera": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/over_shoulder_right_camera-0120.npy",
+            "sha256": "02c1ada4c25e14b83519cb30e8132c50844b6efd586671e64d55f6970655a1c2"
+          },
+          "wrist_cam": {
+            "bytes": 2764928,
+            "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/wrist_cam-0120.npy",
+            "sha256": "2443391a59f72dd520c325d3ce92038e34602580cea7fb75d5aa9ab4582a8eda"
+          }
+        }
+      }
+    ],
+    "status": "render_only_diagnostic_not_visual_qualification",
+    "video_timing": "30_fps_display_only_no_physical_time_advance",
+    "viewport_video": {
+      "bytes": 218907,
+      "fps": 30,
+      "frame_count": 121,
+      "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/render_diagnostic/render_only.mp4",
+      "sha256": "8aa7e963581bb2e2bf73b36771069404a9a56b27bb9f73e802ca1587f426f7a0"
+    }
+  },
+  "renderer_receipt": {
+    "bytes": 1764,
+    "path": "/data/users/ali/sgw-01/preflight/a40-20260922e/renderer.json",
+    "sha256": "e482ca8893ff7b8dd8d20d2183602dfd9647fd7fee9cdf2451ab4dc654d0a9c5"
+  },
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "schema_version": "sgw-01-prospective-family-native-capture-v1",
+  "status": "prospective_native_capture_not_candidate_qualified",
+  "study_source_commit": "5f7a0911b7384b98cc2094b4054ad75f9c3b226b",
+  "support_contact_measurements": {
+    "dist_bowl_landing_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "rubiks_cube__dist_bowl_landing_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "dist_bowl_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "rubiks_cube__dist_bowl_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "dist_neutral_cube_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              -0.0004119468794669956,
+              -0.0013325330801308155,
+              1.9833451509475708
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": true,
+      "sensor": "rubiks_cube__dist_neutral_cube_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "dist_plate_landing_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "rubiks_cube__dist_plate_landing_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    "dist_plate_support": {
+      "force_matrix_world_n": [
+        [
+          [
+            [
+              0.0,
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "nonzero_force_observed": false,
+      "sensor": "rubiks_cube__dist_plate_support",
+      "shape": [
+        1,
+        1,
+        1,
+        3
+      ]
+    }
+  },
+  "usd_dependency_inventory": [
+    {
+      "bytes": 4747,
+      "exists": true,
+      "identifier": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective/dist-left.usda",
+      "real_path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective/dist-left.usda",
+      "sha256": "66f5686cba40b60dcaf6ddac4c9d6c13f7232cfd89a9ce21192f9357f1d4c744"
+    },
+    {
+      "bytes": 17794512,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/Props/instaceable_meshes.usd",
+      "sha256": "b7827de44e5051d8d7803507b9362dbf8521181996449a88934b59ceb0d54db6"
+    },
+    {
+      "bytes": 3569,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+      "sha256": "f5a00da4c05db6dd0441f8c76a886a898435e61890dd1f445ff7e8f79e1e2495"
+    },
+    {
+      "bytes": 7318,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+      "sha256": "46fd4ea678f0ced8f620f2a8ceb045d779e412bca881d5ec584ce4cadf18133a"
+    },
+    {
+      "bytes": 682045,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+      "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+    },
+    {
+      "bytes": 419223,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+      "sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9"
+    },
+    {
+      "bytes": 342393,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+      "sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e"
+    },
+    {
+      "bytes": 5373,
+      "exists": true,
+      "identifier": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+      "real_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+      "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+    }
+  ],
+  "validated_slots": [],
+  "versions": {
+    "isaaclab": "2.2.0",
+    "isaacsim": "5.0.0.0",
+    "robolab": "0.2.1"
+  },
+  "views": {
+    "over_shoulder_left_camera": {
+      "lossless_array": {
+        "bytes": 2764928,
+        "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/over_shoulder_left_camera.npy",
+        "sha256": "79918610ca3110d8e78ce9f6726c1233f31cac1236d39fb246a21de4b25fd604"
+      },
+      "shape": [
+        720,
+        1280,
+        3
+      ]
+    },
+    "over_shoulder_right_camera": {
+      "lossless_array": {
+        "bytes": 2764928,
+        "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/over_shoulder_right_camera.npy",
+        "sha256": "02c1ada4c25e14b83519cb30e8132c50844b6efd586671e64d55f6970655a1c2"
+      },
+      "shape": [
+        720,
+        1280,
+        3
+      ]
+    },
+    "wrist_cam": {
+      "lossless_array": {
+        "bytes": 2764928,
+        "path": "/data/users/ali/sgw-01/qualification/prospective-families-20260923bi/2-dist-left/views/wrist_cam.npy",
+        "sha256": "2443391a59f72dd520c325d3ce92038e34602580cea7fb75d5aa9ab4582a8eda"
+      },
+      "shape": [
+        720,
+        1280,
+        3
+      ]
+    }
+  }
+}

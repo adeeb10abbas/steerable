@@ -1,0 +1,184 @@
+{
+  "base_scene": {
+    "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+    "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+  },
+  "base_workspace_receipt": {
+    "asset_manifest_sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806",
+    "path": "/data/users/ali/sgw-01/source/ff2c361-aq/artifacts/workshops/spatial_grounding_v1/infrastructure/a40-20260922r-workspace.json",
+    "receipt_sha256": "3766dd5b9ed08f7fc60525077ba96df0d98b67e980ff453ee7d19559932b8239",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "sha256": "1ef79d38f5004c40b2c5161a8c42aca2298dcbbf60d67ff3e48a19642c567e0e"
+  },
+  "behavioral_episode_count": 0,
+  "counterbalance": {
+    "upper_support_side": "left"
+  },
+  "family": "HEIGHT",
+  "manifest_sha256": "948314a38b08ade0c4a7187d437a72dbc74fe3912bd4da5246d183860673b6ab",
+  "model_request_count": 0,
+  "native_import_contract": {
+    "banana_contact_bodies": [
+      "table",
+      "height_reference_support",
+      "height_neutral_cube_support",
+      "height_lower_support",
+      "height_upper_support"
+    ],
+    "dynamic_bodies": [],
+    "kinematic_bodies": [
+      "height_reference_support",
+      "height_neutral_cube_support",
+      "height_lower_support",
+      "height_upper_support"
+    ],
+    "kinematic_or_static_bodies": [
+      "height_reference_support",
+      "height_neutral_cube_support",
+      "height_lower_support",
+      "height_upper_support"
+    ],
+    "objects_of_interest": [
+      "rubiks_cube",
+      "bowl",
+      "banana",
+      "table",
+      "height_reference_support",
+      "height_neutral_cube_support",
+      "height_lower_support",
+      "height_upper_support"
+    ],
+    "robolab_utils_sha256": "6562517740be7c60e24e964afced5eac63bd00b4c5de0b6fee92295b87c81110"
+  },
+  "overlay_usda": {
+    "bytes": 3631,
+    "path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective/height-left.usda",
+    "sha256": "629859e5aa09fce65f63963d72f36ec54d53a65c256bde080af19e41fced829a"
+  },
+  "prospective_design": {
+    "authored_actor_quaternion_overrides_wxyz": {
+      "banana": [
+        0.9999781250953674,
+        -0.0026648887433111668,
+        -0.006051987875252962,
+        0.0001454032608307898
+      ],
+      "bowl": [
+        0.9999999403953552,
+        -5.8753543271450326e-05,
+        -0.00032362030469812453,
+        -0.00010501052747713402
+      ],
+      "rubiks_cube": [
+        0.9999990463256836,
+        -0.0009071399690583348,
+        0.001037940033711493,
+        8.44117093947716e-05
+      ]
+    },
+    "authored_actor_root_overrides_env_local_xyz_m": {
+      "banana": [
+        0.8,
+        0.39,
+        0.06946864724159241
+      ],
+      "bowl": [
+        0.45,
+        0.13,
+        0.16
+      ],
+      "rubiks_cube": [
+        0.30016965508460997,
+        -0.12892264723777772,
+        0.1624353638291359
+      ]
+    },
+    "claim_boundary": "Authoring values are prospective design inputs. Native capture must measure root poses, centers, offsets, banana contacts, and rendered views before any candidate proposal.",
+    "dimensions_and_poses": [
+      {
+        "center_m": [
+          0.45,
+          0.13,
+          0.09122701168060303
+        ],
+        "display_color_rgb": [
+          0.2,
+          0.45,
+          0.95
+        ],
+        "kinematic_body": true,
+        "name": "height_reference_support",
+        "rigid_body": true,
+        "size_m": [
+          0.16,
+          0.16,
+          0.08245257645845414
+        ]
+      },
+      {
+        "center_m": [
+          0.29,
+          -0.1,
+          0.09045305654406548
+        ],
+        "display_color_rgb": [
+          0.35,
+          0.85,
+          0.45
+        ],
+        "kinematic_body": true,
+        "name": "height_neutral_cube_support",
+        "rigid_body": true,
+        "size_m": [
+          0.1,
+          0.1,
+          0.08090466618537903
+        ]
+      },
+      {
+        "center_m": [
+          0.65,
+          -0.23,
+          0.07045305654406547
+        ],
+        "display_color_rgb": [
+          0.2,
+          0.45,
+          0.95
+        ],
+        "kinematic_body": true,
+        "name": "height_lower_support",
+        "rigid_body": true,
+        "size_m": [
+          0.14,
+          0.14,
+          0.040904666185379024
+        ]
+      },
+      {
+        "center_m": [
+          0.65,
+          0.23,
+          0.11045305654406548
+        ],
+        "display_color_rgb": [
+          0.95,
+          0.4,
+          0.2
+        ],
+        "kinematic_body": true,
+        "name": "height_upper_support",
+        "rigid_body": true,
+        "size_m": [
+          0.14,
+          0.14,
+          0.12090466618537904
+        ]
+      }
+    ],
+    "plate_category_caveat": null,
+    "units": "meters"
+  },
+  "schema_version": "sgw-01-prospective-family-overlay-v1",
+  "status": "prospective_scene_design_not_measured_or_qualified"
+}

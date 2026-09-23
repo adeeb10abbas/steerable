@@ -1,0 +1,109 @@
+{
+  "allocated_gpus": 0,
+  "behavioral_episodes": 0,
+  "bounded_accessor_expired": true,
+  "child_state_export": {
+    "bytes": 2104532,
+    "manifest": "cpu-20260923bj-state-payload-manifest.json",
+    "oversized_sources_not_exported": 7,
+    "path": "/data/users/ali/sgw-01/infrastructure/historical-export-20260923bj/state-payloads/payloads.tar.gz",
+    "records": [
+      {
+        "bytes": 895621,
+        "cohort_id": "V3-E006-repair-r001",
+        "export_status": "exported_hash_verified_payload"
+      },
+      {
+        "bytes": 7103108,
+        "cohort_id": "V3-E006-repair-r002",
+        "export_status": "exported_hash_verified_payload"
+      },
+      {
+        "bytes": 349923,
+        "cohort_id": "V3-E006-repair-r003",
+        "export_status": "exported_hash_verified_payload"
+      },
+      {
+        "cohort_id": "V3-E006-repair-r004",
+        "export_status": "source_exceeds_bounded_export_size"
+      },
+      {
+        "cohort_id": "V3-E006-repair-r005",
+        "export_status": "source_exceeds_bounded_export_size"
+      },
+      {
+        "cohort_id": "V3-E006-repair-r006",
+        "export_status": "source_exceeds_bounded_export_size"
+      },
+      {
+        "cohort_id": "V3-E006-repair-r007",
+        "export_status": "source_exceeds_bounded_export_size"
+      },
+      {
+        "cohort_id": "V3-E006-repair-r008",
+        "export_status": "source_exceeds_bounded_export_size"
+      },
+      {
+        "cohort_id": "V3-E006-repair-r009",
+        "export_status": "source_exceeds_bounded_export_size"
+      },
+      {
+        "bytes": 170593,
+        "cohort_id": "V3-E006-repair-r010",
+        "export_status": "exported_hash_verified_payload"
+      },
+      {
+        "bytes": 177116,
+        "cohort_id": "V3-E006-repair-r011",
+        "export_status": "exported_hash_verified_payload"
+      },
+      {
+        "cohort_id": "V3-E006-repair-r012",
+        "export_status": "source_exceeds_bounded_export_size"
+      }
+    ],
+    "requests": "sgw-bj-state-requests.json",
+    "requests_sha256": "486ad44a5fd831757c08518a11b8675212b723802c3040cb425a2d4fbb1ae501",
+    "sha256": "d13c12cf9d514216ea997fe938c4b690734413fc7165e1765d1e2f5831bf842a",
+    "verified_sources": 5
+  },
+  "coverage_status": "named_payload_recovery_only_not_exhaustive_historical_coverage",
+  "full_review_archive_on_pvc": {
+    "bytes": 36810103,
+    "job_uid": "586c16c7-98cb-4314-a464-592cfc4c6812",
+    "path": "/data/users/ali/sgw-01/infrastructure/historical-export-20260923bj/bi-sealed-review.tar.gz",
+    "pod_uid": "e675bea5-df86-4c67-9917-d035f21a5754",
+    "sha256": "6d9ea20b31a7a2c1ad92b720f9c625c7ac360ddd66846387d8eb505bddebf42b"
+  },
+  "initial_export": {
+    "bytes": 5880,
+    "manifest": "cpu-20260923bj-payload-manifest.json",
+    "path": "/data/users/ali/sgw-01/infrastructure/historical-export-20260923bj/payloads.tar.gz",
+    "sha256": "e57af28b6533cce7da1bd742251e56faffa02d73ceed00592bf2b6b59b023c20",
+    "verified_sources": 15
+  },
+  "job": "sgw01-ali-historical-export-20260923bj",
+  "job_status": {
+    "completionTime": "2026-09-23T05:48:17Z",
+    "conditions": [
+      {
+        "lastProbeTime": "2026-09-23T05:48:17Z",
+        "lastTransitionTime": "2026-09-23T05:48:17Z",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "ready": 0,
+    "startTime": "2026-09-23T05:38:13Z",
+    "succeeded": 1,
+    "terminating": 0,
+    "uncountedTerminatedPods": {}
+  },
+  "job_uid": "586c16c7-98cb-4314-a464-592cfc4c6812",
+  "model_requests": 0,
+  "original_request_manifest_sha256": "d818ec5aaa760964d73bd1ffb79eef30af08eb3be5c070e15e4075c4a65de736",
+  "pod": "sgw01-ali-historical-export-20260923bj-wzsnl",
+  "pod_uid": "e675bea5-df86-4c67-9917-d035f21a5754",
+  "release_permitted": false,
+  "schema_version": "sgw-01-bounded-historical-export-outcome-v1"
+}

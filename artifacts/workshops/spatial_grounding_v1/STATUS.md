@@ -3,8 +3,9 @@
 **LAT qualification is complete: 20 all-six passes and 20 physical rejections,
 including candidate 032, plus 60 geometric rejections. The frozen 29-layout
 behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
-have verified receipts, views and complete videos, but independent visual review
-requires support/distractor engineering repair before scene acceptance.
+have verified receipts, views and complete videos. The new bi captures passed
+independent native-visual-setup review after support/distractor repair; physical
+candidate qualification and all learned-runtime release gates remain open.
 Learned-policy requests and episodes remain at zero.**
 
 The supplied study is committed on
@@ -496,6 +497,67 @@ subsequent focused suite passed 44 with one skip. These remain local engineering
 checks, not native runtime qualification. Decoded-future, campaign descriptor
 and RPC follow-ups remain under review.
 
+### Grounded bi captures: native visual setup accepted, behavior unreleased
+
+Stage bh bound the SGW-ENG-007 source `5f7a0911` and all four repaired scene
+manifests. Capture bi completed four A40 indexes at `05:07:42Z`, with no model
+requests or controller trials. The [exact outcome](infrastructure/a40-20260923bi-native-capture-outcome.json)
+records independent verification of 137 files and all 121 decoded video frames
+per capture. All raw arrays and videos remain on the PVC; bf is unchanged.
+
+The same independent reviewer sealed
+[native scene](infrastructure/independent-scene-review-20260923bi/sgw-bi-review-analysis/independent_scene_review.md)
+and [policy-input](infrastructure/independent-scene-review-20260923bi/sgw-bi-review-analysis/policy_input_review.md)
+reports. All four dispositions are **`ACCEPT_NATIVE_VISUAL_SETUP_ONLY`**.
+Measured support bottoms now meet the table, and captured banana geometry and
+contacts resolve the previous initial-scene interference concern. This is not
+an additional independent rater, physical settling, controller qualification,
+model recognition, or learned-policy release. DIST-right banana clearance is
+only 20.67998 mm (0.67998 mm above the engineering screen); every candidate and
+reset still needs its own measured clearance and table-containment checks.
+Plate/puck/pad ambiguity and wrist-camera occlusion remain explicit caveats.
+
+All 20 offline policy-image PNGs and RGB arrays were independently reproduced
+byte-for-byte from the exact captured camera arrays and pinned native sources.
+D1 client API images are 180 by 320; they are not proven internal model tensors.
+Nano server images are 540 by 640. Its actual checkpoint/default transform
+selects 544 by 736 and reflects 96 pixels on the right plus four below, rather
+than performing a naive 480-pixel resize. Reflected image fragments are not
+additional actors or predictions. None of this is live request-time parity.
+
+The [sealed manifest](infrastructure/independent-scene-review-20260923bi/sgw-bi-review-analysis/independent_scene_review_manifest.json)
+binds the full evidence. A compact exact subset is committed; the complete
+36,810,103-byte review/replay archive is separately persisted and rehashed at
+`/data/users/ali/sgw-01/infrastructure/historical-export-20260923bj/bi-sealed-review.tar.gz`
+(SHA-256 `6d9ea20b31a7a2c1ad92b720f9c625c7ac360ddd66846387d8eb505bddebf42b`).
+Full capture footage remains under
+`/data/users/ali/sgw-01/qualification/prospective-families-20260923bi`.
+
+D1 accumulated-stream decoding and separate latent provenance are integrated.
+Context-inclusive decoded video remains explicitly unmapped until native
+VAE/clock qualification; decode errors and latent-only traces are not missing
+successes or zeros. A real D1 launch must supply an explicit realistic finite
+`SGW01_READINESS_TIMEOUT`; the default 15 seconds is not a model-loading budget.
+Mailbox integration now checks actual candidate/binding bytes and Downward-API
+identity, preserves native and cleanup faults, and performs at-most-once
+environment cleanup. No receiver or model server has been deployed.
+
+The full source-backed SGW suite at `f3664eb7` passed 295 checks with one
+Linux-only skip; later focused results are not added to that total. V3 and V2
+validators still pass. Campaign descriptors are integrated, but the complete
+measured capture/materializer/six-trial/external-verifier path remains under
+integration review. No HEIGHT/DIST candidate plan or physical candidate is
+released.
+
+CPU exporter bj [completed at 05:48:17Z](infrastructure/cpu-20260923bj-historical-export-outcome.json).
+It recovered 15 hash-anchored historical probes and five precisely named E006
+state payloads. Seven other state files exceeded the explicit export caps and
+remain unresolved, not failures or evidence of absent geometry. Actor-root XYZ
+and reset checks are not automatically centroid/AABB evidence; the 24-layout WMF
+forecast registry does not establish V3-E004 coverage. All 45 inventory sources
+still need complete coverage accounting. bh and bj accessors expired; the scoped
+cluster snapshot showed no running study Pod, GPU allocation or model server.
+
 ## Artifacts and source identities
 
 Compact evidence is in [`infrastructure/`](infrastructure/). Raw infrastructure
@@ -525,16 +587,18 @@ and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-ak, ao, ar, as and bc are terminal and must not be recreated. Stage the
-SGW-ENG-006 support-body correction through a new bounded CPU Job using the
-original `b429ddd` object store. Compare newly authored baselines against all
-original dimensions, colors, poses, quaternions and counterbalances, allowing
-only fixed-kinematic support body flags to differ. Then use fresh bounded
-capture roots and require complete receipt/video verification outside native
-Python. Do not count a zero exit as valid capture.
-Only genuine complete media can go to the existing independent scene reviewer.
-Preserve all earlier outcomes and all 100 candidate poses; no learned-policy
-release exists.
+All previously launched qualification/capture chains, including bh/bi/bj, are
+terminal and must not be recreated. Finish the actual measured
+capture-to-candidate-to-six-recorded-trials-to-external-verifier integration,
+including valid reset-gated rejection and corrupted-evidence cases. Only then
+freeze bounded HEIGHT/DIST plans against the exact sealed native-visual-only
+review and scene bytes. Preserve the 100-slot cap including geometric
+rejections, measured candidate/reset distractor checks, fixed scientific
+thresholds, and independent historical/runtime/model gates. A tested finite
+cluster sequencer must precede any claim of unattended candidate execution.
+Use bounded, full-hash-verified streaming extraction for the specifically
+identified large historical files; do not read whole gigabyte JSON files into
+the old 1-GiB accessor. No learned-policy release exists.
 LAT's frozen minimum-layout gate cannot pass; do not start LAT behavior or
 generate replacement LAT candidates.
 Do not rerun completed captures or overwrite evidence.

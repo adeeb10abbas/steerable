@@ -211,6 +211,23 @@ evidence. The user asked why the auxiliary content filter is needed; no runtime
 configuration change was authorized or made. The current native startup
 access blocker remains, and no new GPU or simulator was launched here.
 
+### Authentication diagnosis after the user's 21:26 UTC status request
+
+Direct `hf auth whoami` checks on both the laptop and the cluster's exact
+`HF_HOME` returned **Not logged in**. The Hub reports
+`nvidia/Cosmos-Guardrail1` as **automatically gated**, not manually approved.
+The earlier unauthenticated download denial therefore did not establish that
+the user's account lacked permission. Normal browser sign-in has now succeeded,
+but the exact authenticated file dry-run still reports access required. The
+official model page is open for the user to accept its repository access terms.
+The [authentication record](infrastructure/n3-fixed-input-20260923cw/authentication-check-20260923.json)
+preserves these observations without credentials.
+
+The main Nano checkpoint is already downloaded and hash-verified. Only its
+native auxiliary startup dependencies remain to be staged after legitimate
+authentication. No runtime configuration change, new policy request or GPU
+allocation occurred during this diagnosis.
+
 ## Latest retained evidence (23 September, 13:34 UTC)
 
 The thirteenth prefix preserves HEIGHT084/086/088/089 with 6/6, 6/6, 5/6 and

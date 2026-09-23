@@ -298,3 +298,18 @@ new completed candidates once and fsyncs a compact per-candidate report beside
 the final output. The bounded wait neither retries a simulator nor treats
 unpublished candidates as physical failures. An incomplete final batch exits
 nonzero while preserving every report.
+
+## Owned D1 server binding
+
+The owned D1 HTTP boundary is implemented by `dreamzero_producer.py` and
+`dreamzero_wrapper_entrypoint.py`. Its native binding is deliberately not
+guessed: `dreamzero_backend.py` requires a reviewed
+`SGW01_D1_SERVER_FACTORY` after verifying the separate pinned DreamZero server
+and RoboLab client checkouts plus the complete checkpoint manifest. The
+synthetic backend tests exercise request binding, native session eviction,
+action hashing, durable future retention, and the HTTP error boundary. The
+exact server factory source still required for native qualification is the
+DreamZero websocket/model constructor and its reset/session-eviction method
+from the clean server checkout at
+`ab790c198fbce33503358efbbd4187ce9a89adf3`; no server method names are
+invented here.

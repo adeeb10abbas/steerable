@@ -185,9 +185,22 @@ LAT scene path is hash-bound to the fresh capture; the original stock task
 path is unchanged. Raw frames/videos, native geometry and all outcomes remain
 on PVC. This is one engineering layout, not a refill or release of a frozen
 pool. Unavailable arm/camera measurements are explicit, never safe defaults.
-`native_successor_job` binds a single non-preempting GPU Job to the four
-current worker nodes with hard anti-affinity to the original `bt` workload:
-it cannot take a fifth lane or interrupt a current episode.
+`native_successor_job` creates a **suspended**, one-GPU Job pre-bound to one
+registered predecessor node at noncritical priority zero. The default scheduler
+does not handle it. `native_successor_handoff` checks all four exact worker
+identities and the frozen target spec, waits for the selected worker's natural
+successful completion and its indexed Job acknowledgement, then atomically
+resumes only that target using UID/resource-version guards. Its service account
+can read only the named resources and patch that one new Job; it cannot create,
+bind, delete or evict Pods. Missing, failed, replaced or interrupted workers
+are not treated as available capacity.
+
+This admitted namespace-scoped route replaces the rejected PriorityClass and
+Pod-binding proposals without weakening non-preemption or the four-GPU ceiling.
+The exact operational disclosure is
+[`scheduling-amendment.json`](../../../artifacts/workshops/spatial_grounding_v1/infrastructure/paper-engineering-20260923cn/scheduling-amendment.json).
+The original workers/collector and immutable native execution source remain
+unchanged. Scheduling and controller readiness are not native scene evidence.
 
 One selected proposal runs both goals three times in a fresh Isaac process:
 `model_blind_qualification --proposal-file <file> --candidate-id <id>`, with the

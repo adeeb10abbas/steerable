@@ -1,0 +1,91 @@
+{
+  "schema_version": "sgw-01-native-engineering-deployment-v1",
+  "recorded_at_utc": "2026-09-23T16:05:06Z",
+  "attempt_id": "SGW-ENG-008-LAT-057",
+  "status": "autonomous_handoff_healthy_native_job_suspended_waiting_for_selected_lane",
+  "registration_sha256": "ec79b162dc7dbac10155ee62ee1962da617ffb0517b6b683387bf9f37dcecb92",
+  "native_execution": {
+    "source_commit": "4f04e31ee0219dae052bba2ef95b9e2010dbceeb",
+    "source_path": "/data/users/ali/sgw-01/source/4f04e31e-cj",
+    "source_receipt_sha256": "6fc36040ef0820054907c47e5f5febb1a0ca3cfc49d01a06954d0bc2583c5f3e",
+    "job": "sgw01-ali-paper-engineering-20260923cn",
+    "job_uid": "acdf52db-7ded-4b33-8b7a-1ec818e82a2c",
+    "created_at_utc": "2026-09-23T15:44:45Z",
+    "frozen_job_spec_sha256": "cb43d06de82ac3dd51c8882452b98dbdb984e063036412d3d3c68a2d295d1285",
+    "manifest": "handoff/k8s/sgw01-ali-paper-engineering-20260923cn.json",
+    "manifest_sha256": "2537cb018851aab273848d84a949b8fda11d0285124662092f340c2a3902d4ba",
+    "output_root": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cn",
+    "suspended": true,
+    "gpu_pods_created": 0,
+    "native_captures_completed": 0,
+    "scripted_trials_completed": 0
+  },
+  "handoff": {
+    "source_commit": "3d15fc114387ed5a067a45624b06629b80ca1793",
+    "script_sha256": "cb6c2f198f513b8886c24f2417f28fce0d4cf8248562827310aea6851e58ad61",
+    "staged_script": "/data/users/ali/sgw-01/infrastructure/paper-engineering-20260923cn/native_successor_handoff-rv.py",
+    "config": "handoff-config.json",
+    "config_sha256": "6cefa1f0c661ffea8b85a25f37f1b4c4148017ba93377a2fefcb97d7d65dec4f",
+    "job": "sgw01-ali-paper-handoff-20260923cp",
+    "job_uid": "190fcdaf-582a-46cc-be12-37a715724407",
+    "created_at_utc": "2026-09-23T15:56:42Z",
+    "pod": "sgw01-ali-paper-handoff-20260923cp-2k6vq",
+    "pod_uid": "d68ee49e-1c3f-4550-8cac-f756be9f8bca",
+    "manifest": "handoff/k8s/sgw01-ali-paper-handoff-20260923cp.yaml",
+    "manifest_sha256": "da213286e2b375c35a9d6980eb6e936bcb7b3283fa2ff4d737e34054db9f4523",
+    "status": "Running; repeated healthy waiting ticks",
+    "last_retained_tick_unix": 1790179199.53631,
+    "source_phases_at_tick": ["Running", "Running", "Running", "Running"],
+    "selected_source_index": 1,
+    "selected_source_uid": "e7904b8b-c201-4880-88ea-9e30d8c5d12c",
+    "node": "dcwipphhgc191.edc.nam.gm.com",
+    "source_job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
+    "actual_service_account_preflight": "resume-api-preflight.json",
+    "actual_service_account_preflight_sha256": "a555d57140be90c7a64b1a8853f89c3fbabc1a9e86e582f63c6c1ef74965a6df",
+    "gpu_requests": 0,
+    "client_connection_required": false,
+    "only_mutation_permission": "PATCH the named native cn Job; GET only the four source Pods and the source/target Jobs. No create/bind/delete/evict or cluster-scoped permissions.",
+    "persistent_log": "/data/users/ali/sgw-01/infrastructure/paper-engineering-20260923cn/handoff-cp-job.log",
+    "persistent_outcome_root": "/data/users/ali/sgw-01/infrastructure/paper-engineering-20260923cn/handoff"
+  },
+  "concurrency_encoding_followup": {
+    "timing": "After CPU-only cm/co dry-run failures and before any native execution or real resume.",
+    "preserved_observation": "The nested full-spec JSON Patch test returned generic HTTP422 in the in-cluster client; a user-CLI dry-run succeeded. No native Job was resumed by either failed controller.",
+    "superseded_clause": "scheduling-amendment.json replacement.only_mutation, only its literal full-spec JSON Patch test encoding",
+    "current_guard": "Verify the complete frozen spec SHA256 on GET, then atomically test Job UID and that same GET's resourceVersion before changing only suspend to false. Reconcile a lost acknowledgement without repeating the mutation.",
+    "in_cluster_verification": "The actual scoped ServiceAccount's dry-run passed; a subsequent GET proved the real Job remained suspended with the same spec hash. Repeated live controller ticks passed all source/target identity guards.",
+    "scientific_or_resource_gate_relaxed": false
+  },
+  "preserved_cpu_attempts": [
+    {
+      "job": "sgw01-ali-paper-handoff-20260923cm",
+      "uid": "a4940db8-7081-4b1f-ad77-fa8d9f7ee217",
+      "status": "Failed during resume dry-run; zero GPU requests and no native execution",
+      "log": "/data/users/ali/sgw-01/infrastructure/paper-engineering-20260923cn/handoff-job.log"
+    },
+    {
+      "job": "sgw01-ali-paper-handoff-20260923co",
+      "uid": "d01cc07e-5d3d-41dc-8c02-e264bb900324",
+      "status": "Failed during diagnostic resume dry-run; retained explicit HTTP422 body",
+      "log": "/data/users/ali/sgw-01/infrastructure/paper-engineering-20260923cn/handoff-co-job.log"
+    }
+  ],
+  "active_resource_accounting": {
+    "allocated_sgw_gpus": 4,
+    "gpu_owners": "The four unchanged bt workers only",
+    "active_model_workers": 0,
+    "active_cpu_jobs": ["sgw01-ali-family-collector-20260923bu", "sgw01-ali-paper-handoff-20260923cp"],
+    "prior_native_attempts": "ck and cl suspended; cl's unscheduled Pod was removed without running a container",
+    "existing_work_interrupted": false
+  },
+  "api_archive": {
+    "path": "api-receipts.tar.gz",
+    "sha256": "b6d434a9b82f9bc7f25cafd2b28c42d6400a85467c44895e7f009c32c0a776b6",
+    "scope": "Exact compact Kubernetes receipts, scoped RBAC, failed CPU attempt, active-Pod accounting and healthy controller log; no simulator raw data or credentials."
+  },
+  "next_milestone": "After rank1 naturally succeeds, inspect the native reference/translated captures, achieved geometry, fixed robot/cameras, all six scripted traces/videos and independent verification. No new campaign or policy release follows automatically.",
+  "historical_novelty_required": false,
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false
+}

@@ -1,0 +1,93 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-paper-handoff-20260923co
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  parallelism: 1
+  completions: 1
+  backoffLimit: 0
+  activeDeadlineSeconds: 171000
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: native-natural-release-handoff}
+    spec:
+      nodeName: dcwipphhgc191.edc.nam.gm.com
+      priority: 0
+      restartPolicy: Never
+      serviceAccountName: sgw01-ali-paper-handoff-20260923cm
+      automountServiceAccountToken: true
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets: [{name: artifactory-ci-pull-secret}]
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: natural-release-handoff
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: [/bin/bash, -ec]
+          args:
+            - |
+              set -euo pipefail
+              STAGE=/data/users/ali/sgw-01/infrastructure/paper-engineering-20260923cn
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              SCRIPT="$STAGE/native_successor_handoff-diagnostic.py"
+              CONFIG="$STAGE/handoff-config.json"
+              exec > >(tee -a "$STAGE/handoff-co-job.log") 2>&1
+              test "$(sha256sum "$SCRIPT" | awk '{print $1}')" = f4a2801b47f95a705b102cc725afde09314c83e1b26197d3ac55da43fb36afa7
+              test "$(sha256sum "$CONFIG" | awk '{print $1}')" = 6cefa1f0c661ffea8b85a25f37f1b4c4148017ba93377a2fefcb97d7d65dec4f
+              "$PY" - "$SCRIPT" "$CONFIG" "$STAGE" <<'PY'
+              import json, runpy, sys
+              from pathlib import Path
+              module = runpy.run_path(sys.argv[1])
+              config = json.loads(Path(sys.argv[2]).read_text())
+              module["validate_config"](config)
+              api = module["Kubernetes"]()
+              path = module["api_path"]("jobs", config["target"]["name"])
+              before = api.request("GET", path)
+              assert before["metadata"]["uid"] == config["target"]["uid"]
+              assert before["spec"]["suspend"] is True
+              assert module["digest"](before["spec"]) == config["target"]["spec_sha256"]
+              result = api.request("PATCH", path + "?dryRun=All", [
+                  {"op": "test", "path": "/metadata/uid", "value": config["target"]["uid"]},
+                  {"op": "test", "path": "/spec", "value": before["spec"]},
+                  {"op": "replace", "path": "/spec/suspend", "value": False},
+              ])
+              assert result["spec"]["suspend"] is False
+              after = api.request("GET", path)
+              assert after["metadata"]["uid"] == config["target"]["uid"]
+              assert after["spec"]["suspend"] is True
+              assert module["digest"](after["spec"]) == config["target"]["spec_sha256"]
+              module["write_receipt"](Path(sys.argv[3]) / "resume-api-preflight.json", {
+                  "status": "resume_permission_and_shape_dry_run_passed_job_still_suspended",
+                  "api_response_sha256": module["digest"](result), "target_uid": after["metadata"]["uid"],
+                  "model_requests": 0, "gpu_allocations": 0, "release_permitted": False,
+              })
+              print("Scoped resume dry-run passed; target remains suspended.", flush=True)
+              PY
+              exec "$PY" "$SCRIPT" --config "$CONFIG" \
+                --config-sha256 6cefa1f0c661ffea8b85a25f37f1b4c4148017ba93377a2fefcb97d7d65dec4f \
+                --output "$STAGE/handoff"
+          env:
+            - {name: CUDA_VISIBLE_DEVICES, value: ""}
+            - {name: NVIDIA_VISIBLE_DEVICES, value: void}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: PYTHONUNBUFFERED, value: "1"}
+          resources:
+            requests: {cpu: 20m, memory: 64Mi}
+            limits: {cpu: 100m, memory: 256Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsNonRoot: true
+            runAsUser: 816149040
+            runAsGroup: 2518800
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}

@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
-  "status": "lat_and_height_fixture_gates_closed_finite_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T14:31:39.409Z",
+  "status": "lat_and_height_gates_closed_qualification_and_native_handoff_running_behavior_unreleased",
+  "updated_at_utc": "2026-09-23T16:05:06Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -1328,22 +1328,39 @@
     "frozen_candidates_or_controller_modified": false,
     "scope": "Inspect scene/path clearance using copies of exact existing source and video. Offer does not authorize replacing frozen failures or waive history/runtime gates; future repairs require prospective disclosure."
   },
-  "next_authorized_step": "RoboLab only and full benchmark qualification first; no exploratory policy pilot. Keep bt/bu running unchanged. The user's subsequent explicit execution direction supersedes the prior arithmetic-only scope: implement and stage the separately disclosed SGW-ENG-008-LAT-057 native engineering attempt, then queue one non-preempting successor on the exact four bt nodes with hard anti-affinity against active bt pods. It may use only naturally released capacity, never a fifth GPU or interrupted episode. The attempt measures the reference articulation root/cameras, realizes one new approximately0.50m geometric-center arrangement and records both goals across six standard scripted trials. Preserve all frozen failures/pools; no new campaign or learned release. Current retained evidence remains the thirteenth prefix:56 candidates,336 complete trials,17 all-six passes,39 physical rejections. Later live completions are not yet classified here. Prioritize actual native realization and the named mandatory blockers, not additional broad historical audits.",
+  "next_authorized_step": "RoboLab only and full benchmark qualification first; no exploratory policy pilot. Keep bt/bu unchanged. SGW-ENG-008 source4f04e31e is staged, native Job cn is created suspended, and CPU handoff cp is healthy after its actual scoped-credential dry-run. Let it resume only the exact pre-bound cn Job after registered rank1 naturally succeeds; never manually resume early, add a fifth GPU or interrupt an episode. Retrieve its fresh measured reference/translated scene and six recorded scripted trials, then examine the actual geometry/goal evidence before considering a new campaign. Preserve all frozen failures/pools. The retained scientific prefix remains56 candidates/336 complete trials/17 all-six passes/39 physical rejections; later live completions are unclassified here. Historical novelty is not a release requirement under SGW-REQ-001. No new campaign or learned release is authorized by scheduling.",
   "paper_engineering_attempt": {
     "id": "SGW-ENG-008-LAT-057",
     "registration": "infrastructure/paper-engineering-20260923cj/registration.json",
     "registration_sha256": "ec79b162dc7dbac10155ee62ee1962da617ffb0517b6b683387bf9f37dcecb92",
-    "status": "implemented_registered_not_yet_staged_or_launched",
+    "status": "source_staged_native_job_suspended_autonomous_handoff_running",
     "maximum_new_engineering_layouts": 1,
     "scripted_trials": 6,
     "model_requests": 0,
     "native_realization_completed": false,
     "both_goals_demonstrated": false,
     "release_permitted": false,
-    "capacity_blocker": "All four authorized GPU lanes are occupied by bt; successor must wait for natural release. Do not pause or alter the original workers.",
-    "next_milestone": "Stage exact committed native implementation and queue the guarded successor; then retrieve actual translated-scene capture and both-goal evidence."
+    "native_source_commit": "4f04e31ee0219dae052bba2ef95b9e2010dbceeb",
+    "native_source_root": "/data/users/ali/sgw-01/source/4f04e31e-cj",
+    "deployment_receipt": "infrastructure/paper-engineering-20260923cn/deployment-receipt.json",
+    "scheduling_amendment": "infrastructure/paper-engineering-20260923cn/scheduling-amendment.json",
+    "native_job": "sgw01-ali-paper-engineering-20260923cn",
+    "native_job_uid": "acdf52db-7ded-4b33-8b7a-1ec818e82a2c",
+    "native_output_root": "/data/users/ali/sgw-01/qualification/paper-engineering-20260923cn",
+    "handoff_job": "sgw01-ali-paper-handoff-20260923cp",
+    "handoff_job_uid": "190fcdaf-582a-46cc-be12-37a715724407",
+    "handoff_source_commit": "3d15fc114387ed5a067a45624b06629b80ca1793",
+    "handoff_pod": "sgw01-ali-paper-handoff-20260923cp-2k6vq",
+    "handoff_pod_uid": "d68ee49e-1c3f-4550-8cac-f756be9f8bca",
+    "handoff_persistent_root": "/data/users/ali/sgw-01/infrastructure/paper-engineering-20260923cn",
+    "handoff_permission_preflight_passed": true,
+    "handoff_client_connection_required": false,
+    "completed_scripted_trials": 0,
+    "prior_administrative_attempts": "ck/cl suspended without native execution; cm/co CPU dry-run failures retained. No failure is a model/scientific trial.",
+    "capacity_blocker": "The four bt GPU workers remain Running at the retained check. The live CPU handoff waits specifically for recorded rank1 to succeed and its indexed Job to acknowledge completion, then resumes only the exact pre-bound cn Job. No fifth GPU, default-scheduler preemption or interruption of bt/bu.",
+    "next_milestone": "Retrieve actual reference/translated capture, achieved cube-center distance and both-goal raw/video evidence after autonomous natural succession. Examine the measurements before any new campaign; no fixture or policy release is implied."
   },
-  "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu -o wide",
+  "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu sgw01-ali-paper-engineering-20260923cn sgw01-ali-paper-handoff-20260923cp -o wide",
   "next_historical_trace": "No historical-novelty audit is required for SGW release under the explicit user clarification SGW-REQ-001. Preserve all prior recoveries, incomplete coverage and provenance records unchanged; do not turn them into active release blockers. Current scene/model/runtime identity checks remain required.",
   "verification_recovery": {
     "am": {
@@ -1610,14 +1627,14 @@
     }
   ],
   "blockers": [
-    "Immediate native milestone: SGW-ENG-008 has no fresh reference/translated capture or both-goal demonstration yet. All four GPU lanes remain occupied; use a guarded natural-successor allocation, not interruption or extra capacity.",
+    "Immediate native milestone: SGW-ENG-008 has no fresh reference/translated capture or both-goal demonstration yet. Its native cn Job is created suspended and the cp handoff is healthy in-cluster, awaiting natural rank1 completion. Four GPUs remain allocated only to bt. Do not manually resume cn early, interrupt a worker or add capacity.",
     "Full benchmark fixture release: frozen LAT has20 passes/20 physical rejections/60 geometric rejections, below29. Retained HEIGHT's right-side upper bound3 is below14. DIST awaits full independent terminal accounting. The one-layout engineering attempt neither repairs those denominators nor authorizes a new campaign.",
     "Live runtime release: native policy observation/mailbox loop and N3/D1 server identities, D1 distributed decode/physical-time mapping, fixed-input repeat and prompt sensitivity remain unqualified. Synthetic HTTP/450-action tests are not live qualification.",
     "Behavioral operation/release: fresh resource receipts, direct/pilot gates, measured deadlines/storage P95 and D/C estimates, and required prediction annotations remain after fixture/runtime release. Missing futures remain unavailable, never zero.",
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Stage and queue the separately disclosed native SGW-ENG-008 attempt, verify scheduler-enforced natural succession within four GPUs, and retrieve its first actual capture/goal milestone. Continue the original bt/bu collection without interruption; preserve every later terminal prefix/partial. Keep all model requests at zero until full benchmark and runtime release. Do not restart broad historical audits or expand a candidate campaign before the new native evidence is examined.",
+  "next_action": "Monitor the autonomous cp handoff and native cn Job; no client is needed for their guarded natural succession. After rank1 naturally completes, retrieve the first actual native reference/translated capture and six-trial goal milestone. Continue original bt/bu collection without interruption and preserve every terminal prefix/partial. Keep model requests at zero until full benchmark and runtime release. Historical novelty is not a gate; do not resume those audits or expand a campaign before examining the new native evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

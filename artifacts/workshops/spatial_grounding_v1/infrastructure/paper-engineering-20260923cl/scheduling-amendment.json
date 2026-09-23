@@ -1,0 +1,45 @@
+{
+  "schema_version": "sgw-01-native-scheduling-amendment-v1",
+  "attempt_id": "SGW-ENG-008-LAT-057",
+  "timing": "Before creation of the cl GPU Pod, with zero new native captures, scripted trials, model requests or behavioral episodes.",
+  "registration_sha256": "ec79b162dc7dbac10155ee62ee1962da617ffb0517b6b683387bf9f37dcecb92",
+  "native_execution_source": "4f04e31ee0219dae052bba2ef95b9e2010dbceeb",
+  "scheduler_implementation_source": "01f2dd2c4b0da02571e2efc5e83e1529655c6616",
+  "administrative_attempts": [
+    {
+      "kind": "server_dry_run_rejection",
+      "manifest_sha256": "15073ce89ff478db8d3ea25f6634d09381f550d53ecab28dcb60a1cabfede9b0",
+      "reason": "metadata.name node field selectors require exactly one value per In term.",
+      "resources_created": false
+    },
+    {
+      "kind": "job_accepted_pod_admission_rejected",
+      "job": "sgw01-ali-paper-engineering-20260923ck",
+      "job_uid": "890afb53-face-4d92-9297-2890904b34a3",
+      "manifest_sha256": "47acd39833fbb0b170f3c6cbbb6a75e480dab7ac69c15f899c7bc9861fef0105",
+      "reason": "Priority admission rejects explicit Never without a compatible PriorityClass. This account cannot read or create cluster-scoped PriorityClasses.",
+      "gpu_pods_created": 0,
+      "status": "suspended_without_native_execution"
+    }
+  ],
+  "superseded_operational_encoding": "The literal preemptionPolicy: Never Pod field in the original resource boundary. The no-preemption requirement itself is unchanged.",
+  "replacement": {
+    "gpu_job": "sgw01-ali-paper-engineering-20260923cl",
+    "scheduler_name": "sgw01-ali-paper-engineering-20260923cl",
+    "priority": 0,
+    "mechanism": "A unique schedulerName excludes the default scheduler. A one-shot binding-only controller waits for a recorded predecessor Pod to succeed with exit code zero and for its indexed Job to acknowledge that completion. It then binds the exact registered target Pod to that predecessor's exact node.",
+    "permissions": "Namespaced GET for the four exact predecessor Pods, exact target Pod and exact predecessor Job; CREATE only for the target Pod's binding subresource. No delete, eviction, patch, node, PriorityClass, or resource-provisioning permissions.",
+    "gpu_guard": "One GPU request, four-node allowlist, retained hard anti-affinity, exact target spec hash/UID, predecessor identities and zero-retry contract. Source disappearance, failure, mutation or missing completion is not a free lane.",
+    "cpu_controller": "At most one small CPU-only Pod, directly assigned to the existing collector's node at noncritical priority zero. It never invokes the default scheduler or requests a GPU.",
+    "pod_preemption_field": "The API's computed PreemptLowerPriority value is not used: neither Pod is handled by the default scheduler, and the binding-only implementation has no preemption operation or permission."
+  },
+  "unchanged": [
+    "Four allocated GPU ceiling and zero model workers.",
+    "No interruption, patching, pausing, deletion or repartitioning of bt/bu or other workloads.",
+    "No new hardware, nodes, paid capacity or GPU provisioning.",
+    "One new engineering layout, six standard scripted trials, unchanged source inputs and native implementation.",
+    "All raw states/actions/frames/videos and partials retained on persistent storage.",
+    "No fixture, campaign or policy release from scheduling or this amendment."
+  ],
+  "release_permitted": false
+}

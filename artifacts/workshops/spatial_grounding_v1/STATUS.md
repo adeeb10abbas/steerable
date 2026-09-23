@@ -48,14 +48,22 @@ six scripted trials. Root-offset conversion, raw/video retention and independent
 evidence verification are implemented; this is not another candidate campaign.
 No new native capture or successful goal is claimed yet.
 
-All four authorized GPU lanes are occupied by the unchanged `bt` work.
-The separate one-GPU successor must be restricted to those four nodes with
-hard anti-affinity against active `bt` pods and no preemption. It can start
-only after natural lane release, independently of this client. Neither the
-original queue nor its consumed failures is paused, replaced or refilled.
-The immediate milestone is the actual new-scene capture and both-goal evidence;
-the finite remaining fixture/history/runtime gates are listed in the current
-continuation state. Broad historical audits are not the execution priority.
+The exact native source `4f04e31e` is staged, and the
+[deployment receipt](infrastructure/paper-engineering-20260923cn/deployment-receipt.json)
+now records **a live, client-independent handoff**. Native Job `cn` is created
+suspended and pre-bound to rank1's existing node. CPU Job `cp` passed its
+actual ServiceAccount resume dry-run and repeatedly observes all four `bt`
+workers still running. It can resume only that exact Job after rank1 naturally
+succeeds and its indexed Job acknowledges completion. The complete target spec
+is hash-checked, with atomic UID/resource-version guards. No create, bind,
+delete or eviction permission is granted, and no default-scheduler preemption
+is used. The original four GPUs and independent `bu` collector are unchanged.
+
+The rejected `ck`/`cl` scheduling routes and `cm`/`co` CPU dry-run attempts
+remain infrastructure provenance; none executed the new scene or a model.
+The next milestone is actual new-scene capture and both-goal evidence, not
+another historical audit. No frozen pool is paused, refilled or relabeled,
+and no campaign or learned run is released by this engineering demonstration.
 
 ## Latest retained evidence (23 September, 13:34 UTC)
 

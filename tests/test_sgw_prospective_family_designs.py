@@ -6,6 +6,7 @@ import pytest
 from experiments.workshops.spatial_grounding_v1.lat_candidate_generator import workspace_digest
 from experiments.workshops.spatial_grounding_v1.prospective_family_capture import _manifest as capture_manifest
 from experiments.workshops.spatial_grounding_v1.prospective_family_designs import (
+    _geometric_rejection,
     author_candidate_overlay,
     build_design_plan,
     require_design_capture,
@@ -59,6 +60,10 @@ def _baseline_files(tmp_path, family):
             "asset_manifest_sha256": manifest["base_workspace_receipt"]["asset_manifest_sha256"],
             "robolab_commit": manifest["base_workspace_receipt"]["robolab_commit"],
             "objects": objects,
+            "usd_dependency_inventory": [
+                {"real_path": str(overlay.resolve()), "sha256": manifest["overlay_usda"]["sha256"]},
+                {"real_path": str(base.resolve()), "sha256": manifest["base_scene"]["sha256"]},
+            ],
         }
         receipt["receipt_sha256"] = workspace_digest(receipt)
         capture = tmp_path / f"{family.lower()}-{side}.capture.json"
@@ -96,6 +101,22 @@ def test_plan_rejects_mutated_bound_baseline_bytes(tmp_path):
         )
 
 
+def test_candidate_authoring_rejects_mutated_inherited_baseline_usd(tmp_path):
+    captures, manifests = _baseline_files(tmp_path, "HEIGHT")
+    plan = build_design_plan(
+        family="HEIGHT", seed=91, count=4, baseline_capture_paths=captures, baseline_manifest_paths=manifests,
+    )
+    baseline_manifest = json.loads(manifests["left"].read_text())
+    baseline_overlay = Path(baseline_manifest["overlay_usda"]["path"])
+    baseline_overlay.write_text(baseline_overlay.read_text() + "\n# mutation")
+    design = next(row for row in plan["designs"] if row["side"] == "left" and row["status"].endswith("capture"))
+    with pytest.raises(ValueError, match="overlay USD bytes differ"):
+        author_candidate_overlay(
+            plan=plan, design_id=design["design_id"], output=tmp_path / "candidate.usda",
+            manifest_output=tmp_path / "candidate.manifest.json",
+        )
+
+
 def test_candidate_overlay_requires_its_own_capture_before_materialization(tmp_path):
     captures, manifests = _baseline_files(tmp_path, "DIST")
     plan = build_design_plan(
@@ -116,7 +137,49 @@ def test_candidate_overlay_requires_its_own_capture_before_materialization(tmp_p
 
     captured = json.loads(captures["left"].read_text())
     captured["overlay_manifest_sha256"] = candidate["manifest_sha256"]
+    captured["usd_dependency_inventory"].append({
+        "real_path": candidate["overlay_usda"]["path"], "sha256": candidate["overlay_usda"]["sha256"],
+    })
     captured["receipt_sha256"] = workspace_digest(captured)
     candidate_capture = tmp_path / "candidate.capture.json"
     candidate_capture.write_text(json.dumps(captured))
     assert require_design_capture(candidate_manifest_path=candidate_manifest_path, capture_path=candidate_capture)["family"] == "DIST"
+
+
+def test_candidate_overlay_preserves_measured_plate_root_over_authored_plate(tmp_path):
+    pytest.importorskip("pxr.Usd")
+    captures, manifests = _baseline_files(tmp_path, "DIST")
+    capture = json.loads(captures["left"].read_text())
+    capture["objects"]["plate"]["root_position_env_local_xyz_m"] = [.71, -.22, .15]
+    capture["receipt_sha256"] = workspace_digest(capture)
+    captures["left"].write_text(json.dumps(capture))
+    plan = build_design_plan(
+        family="DIST", seed=91, count=2, baseline_capture_paths=captures, baseline_manifest_paths=manifests,
+    )
+    design = next(row for row in plan["designs"] if row["side"] == "left" and row["status"].endswith("capture"))
+    candidate = author_candidate_overlay(
+        plan=plan, design_id=design["design_id"], output=tmp_path / "candidate.usda",
+        manifest_output=tmp_path / "candidate.manifest.json",
+    )
+    from pxr import Usd
+    stage = Usd.Stage.Open(candidate["overlay_usda"]["path"])
+    plate = stage.GetPrimAtPath("/World/plate")
+    expected = design["authored_scored_object_roots"]["plate"]["position_m"]
+    assert list(plate.GetAttribute("xformOp:translate").Get()) == pytest.approx(expected)
+
+
+def test_duplicate_gate_uses_fixture_component_tolerance_across_sides():
+    roots = {
+        "rubiks_cube": {"position_m": [.4, .2, .1], "quaternion_wxyz": [1, 0, 0, 0]},
+        "bowl": {"position_m": [.5, .2, .1], "quaternion_wxyz": [1, 0, 0, 0]},
+    }
+    shifted = {
+        name: {**pose, "position_m": [pose["position_m"][0] + .0025, pose["position_m"][1] + .0025, pose["position_m"][2]]}
+        for name, pose in roots.items()
+    }
+    capture = {"objects": {"table": {
+        "bbox_env_local_min_xyz_m": [0, 0, 0], "bbox_env_local_max_xyz_m": [1, 1, 1],
+    }}}
+    assert _geometric_rejection(capture, "HEIGHT", "right", shifted, [0, 0], [{"roots": roots}]) == (
+        "duplicate_layout_within_3mm_2deg"
+    )

@@ -75,3 +75,28 @@ receipts. Both GPU Jobs retain `automountServiceAccountToken: false`.
 Completing this chain authorizes **evidence review only**. Candidate freezing,
 scripted qualification, historical deduplication and model-runtime gates
 remain separate.
+
+## Prospective design-plan boundary
+
+After—and only after—the two native baseline captures for each family have
+been reviewed, `prospective_family_designs.py` may produce a fixed 1–100-slot
+design plan. This is a **synthetic capture schema used by local tests until
+the native baseline receipts exist**; it is not an observed capture, a
+measured layout, a reachable fixture, or a released candidate.
+
+Each plan binds both side-specific capture receipts, their baseline overlay
+manifests, every captured USD dependency hash, the base scene/workspace/source
+and asset identities, and a fixed seed. It applies only bounded XY rigid
+translations to scored actor roots and the already-authored added supports;
+the robot, table, cameras, retained root quaternions, and root-local scoring
+offsets remain fixed. A geometric rejection still consumes its assigned slot:
+there is no refill. Layout duplicates use the fixture reset rule, namely
+maximum coordinate error at most 3 mm and orientation error at most 2 degrees,
+regardless of side label.
+
+An accepted design remains `prospective_design_requires_zero_model_capture`.
+It must first author a no-overwrite candidate overlay and then collect a
+**fresh zero-model capture of that exact overlay**. Candidate capture verifies
+the candidate overlay and all mutable inherited baseline layers immediately
+before AppLauncher. Only that new hash-bound capture can become input to later
+measured-layout materialization and the separate six-trial qualification gate.

@@ -47,11 +47,36 @@ def _manifest(path: Path) -> dict[str, Any]:
         raise ValueError("prospective base workspace receipt hash differs from manifest")
     if receipt.get("receipt_sha256") != workspace_digest(receipt):
         raise ValueError("prospective base workspace receipt content digest differs")
+    if value.get("status") == "prospective_candidate_design_requires_zero_model_capture":
+        _validate_inherited_baseline(value)
     return value
 
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _validate_inherited_baseline(value: Mapping[str, Any]) -> None:
+    """Recheck every baseline layer inherited by a candidate overlay before launch."""
+
+    source = value.get("source_baseline")
+    dependencies = value.get("inherited_overlay_dependencies")
+    if not isinstance(source, Mapping) or not isinstance(dependencies, list) or not dependencies:
+        raise ValueError("candidate overlay lacks hash-bound inherited baseline dependencies")
+    overlay = source.get("overlay_manifest")
+    if not isinstance(overlay, Mapping) or not Path(overlay.get("path", "")).is_file():
+        raise ValueError("candidate overlay baseline manifest is missing")
+    if _sha256(Path(overlay["path"])) != overlay.get("sha256"):
+        raise ValueError("candidate overlay baseline manifest bytes differ from binding")
+    baseline = json.loads(Path(overlay["path"]).read_text(encoding="utf-8"))
+    if baseline.get("manifest_sha256") != overlay.get("manifest_sha256"):
+        raise ValueError("candidate overlay baseline manifest digest differs from binding")
+    for dependency in dependencies:
+        if not isinstance(dependency, Mapping) or not Path(dependency.get("real_path", "")).is_file():
+            raise ValueError("candidate overlay inherited dependency is missing")
+        path = Path(dependency["real_path"])
+        if _sha256(path) != dependency.get("sha256") or path.stat().st_size != dependency.get("bytes"):
+            raise ValueError("candidate overlay inherited dependency bytes differ from binding")
 
 
 def _usd_dependencies(overlay: Path) -> list[dict[str, Any]]:

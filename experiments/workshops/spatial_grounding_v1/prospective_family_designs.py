@@ -16,6 +16,7 @@ import math
 from pathlib import Path
 from typing import Any, Mapping
 
+from .fixtures import Pose, pose_error
 from .lat_candidate_generator import workspace_digest
 from .prospective_family_capture import _sha256
 
@@ -81,7 +82,7 @@ def build_design_plan(
             row["status"] = "prospective_design_requires_zero_model_capture"
             row["candidate_overlay_status"] = CANDIDATE_STATUS
             accepted.append(row["design_id"])
-            fingerprints.append({"roots": roots, "side": side})
+            fingerprints.append({"roots": roots})
         else:
             row["geometric_rejection"] = rejection
         rows.append(row)
@@ -133,6 +134,7 @@ def author_candidate_overlay(*, plan: Mapping[str, Any], design_id: str, output:
         "base_scene": binding["base_scene"],
         "base_workspace_receipt": binding["base_workspace_receipt"],
         "native_import_contract": binding["native_import_contract"],
+        "inherited_overlay_dependencies": binding["used_layer_dependencies"],
         "design_sha256": _digest(row),
         "overlay_usda": {"path": str(output.resolve()), "sha256": _sha256(output), "bytes": output.stat().st_size},
         "model_request_count": 0,
@@ -154,6 +156,7 @@ def require_design_capture(*, candidate_manifest_path: Path, capture_path: Path)
         raise ValueError("candidate capture family differs from candidate overlay")
     if capture.get("overlay_manifest_sha256") != manifest["manifest_sha256"]:
         raise ValueError("candidate capture does not bind the candidate overlay manifest")
+    _capture_dependencies_include(capture, manifest["overlay_usda"], manifest["inherited_overlay_dependencies"])
     return capture
 
 
@@ -165,6 +168,11 @@ def _baseline_binding(*, family: str, side: str, capture_path: Path, manifest_pa
         raise ValueError(f"{family} {side} baseline does not match its required side")
     if capture.get("overlay_manifest_sha256") != manifest["manifest_sha256"]:
         raise ValueError(f"{family} {side} capture does not bind the supplied overlay manifest")
+    if capture.get("asset_manifest_sha256") != manifest["base_workspace_receipt"]["asset_manifest_sha256"]:
+        raise ValueError(f"{family} {side} capture asset identity differs from its overlay manifest")
+    if capture.get("robolab_commit") != manifest["base_workspace_receipt"]["robolab_commit"]:
+        raise ValueError(f"{family} {side} capture RoboLab identity differs from its overlay manifest")
+    dependencies = _validated_capture_dependencies(capture, manifest)
     binding = {
         "capture": {"path": str(capture_path.resolve()), "sha256": _sha256(capture_path), "receipt_sha256": capture["receipt_sha256"]},
         "overlay_manifest": {"path": str(manifest_path.resolve()), "sha256": _sha256(manifest_path), "manifest_sha256": manifest["manifest_sha256"]},
@@ -173,6 +181,7 @@ def _baseline_binding(*, family: str, side: str, capture_path: Path, manifest_pa
         "native_import_contract": manifest["native_import_contract"],
         "asset_manifest_sha256": capture["asset_manifest_sha256"],
         "robolab_commit": capture["robolab_commit"],
+        "used_layer_dependencies": dependencies,
     }
     return {"capture": capture, "manifest": manifest, "binding": binding}
 
@@ -191,11 +200,49 @@ def _baseline_capture(path: Path, expected_sha256: str | None = None) -> dict[st
         raise ValueError("baseline capture receipt digest differs")
     required = {"rubiks_cube", "bowl"} | ({"plate"} if value.get("family") == "DIST" else set())
     objects = value.get("objects")
-    if not isinstance(objects, Mapping) or set(objects) < required:
+    if not isinstance(objects, Mapping) or not required.issubset(objects):
         raise ValueError("baseline capture lacks required scored objects")
     for name in required:
         _object_row(objects[name], name)
     return value
+
+
+def _validated_capture_dependencies(capture: Mapping[str, Any], manifest: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Recheck the layer hashes recorded during baseline native capture."""
+
+    rows = capture.get("usd_dependency_inventory")
+    if not isinstance(rows, list) or not rows:
+        raise ValueError("baseline capture lacks a hash-bound USD dependency inventory")
+    expected = {
+        str(Path(manifest["overlay_usda"]["path"]).resolve()): manifest["overlay_usda"]["sha256"],
+        str(Path(manifest["base_scene"]["path"]).resolve()): manifest["base_scene"]["sha256"],
+    }
+    actual = {}
+    validated = []
+    for row in rows:
+        if not isinstance(row, Mapping):
+            raise ValueError("baseline capture has malformed USD dependency inventory")
+        path = Path(str(row.get("real_path", "")))
+        if not path.is_file() or row.get("sha256") != _sha256(path):
+            raise ValueError("captured USD dependency bytes differ from the baseline receipt")
+        actual[str(path.resolve())] = row["sha256"]
+        validated.append({"real_path": str(path.resolve()), "sha256": row["sha256"], "bytes": path.stat().st_size})
+    if any(actual.get(path) != digest for path, digest in expected.items()):
+        raise ValueError("baseline capture dependency inventory does not bind its overlay and base scene")
+    return validated
+
+
+def _capture_dependencies_include(
+    capture: Mapping[str, Any], overlay: Mapping[str, Any], inherited: list[Mapping[str, Any]],
+) -> None:
+    rows = capture.get("usd_dependency_inventory")
+    if not isinstance(rows, list):
+        raise ValueError("candidate capture lacks a USD dependency inventory")
+    observed = {str(Path(row.get("real_path", "")).resolve()): row.get("sha256") for row in rows if isinstance(row, Mapping)}
+    expected = {str(Path(overlay["path"]).resolve()): overlay["sha256"]}
+    expected.update({str(Path(row["real_path"]).resolve()): row["sha256"] for row in inherited})
+    if any(observed.get(path) != digest for path, digest in expected.items()):
+        raise ValueError("candidate capture does not bind its overlay and inherited USD dependencies")
 
 
 def _prospective_manifest(path: Path, expected_sha256: str | None = None) -> dict[str, Any]:
@@ -206,6 +253,11 @@ def _prospective_manifest(path: Path, expected_sha256: str | None = None) -> dic
     value = json.loads(path.read_text(encoding="utf-8"))
     if value.get("status") != BASELINE_STATUS or value.get("manifest_sha256") != _digest(value, "manifest_sha256"):
         raise ValueError("baseline overlay manifest is malformed")
+    overlay = value.get("overlay_usda", {})
+    if not isinstance(overlay, Mapping) or not Path(overlay.get("path", "")).is_file():
+        raise ValueError("baseline overlay USD is missing")
+    if _sha256(Path(overlay["path"])) != overlay.get("sha256"):
+        raise ValueError("baseline overlay USD bytes differ from manifest")
     return value
 
 
@@ -257,11 +309,15 @@ def _geometric_rejection(
         if not minimum[0] <= point[0] <= maximum[0] or not minimum[1] <= point[1] <= maximum[1]:
             return f"{name}_root_outside_measured_table_xy_bounds"
     for prior in fingerprints:
-        if prior["side"] != side:
-            continue
         if all(
-            math.dist(roots[name]["position_m"], prior["roots"][name]["position_m"]) <= 0.003
-            and _quaternion_distance_deg(roots[name]["quaternion_wxyz"], prior["roots"][name]["quaternion_wxyz"]) <= 2
+            pose_error(
+                Pose.from_json(roots[name]),
+                Pose.from_json(prior["roots"][name]),
+            )[0] <= 0.003
+            and pose_error(
+                Pose.from_json(roots[name]),
+                Pose.from_json(prior["roots"][name]),
+            )[1] <= 2
             for name in roots
         ):
             return "duplicate_layout_within_3mm_2deg"
@@ -278,20 +334,15 @@ def _object_row(row: Any, name: str) -> Mapping[str, Any]:
     ):
         if not _finite_vector(row.get(key), length):
             raise ValueError(f"baseline capture {name} lacks finite {key}")
+    Pose.from_json({
+        "position_m": row["root_position_env_local_xyz_m"],
+        "quaternion_wxyz": row["root_quaternion_world_wxyz"],
+    })
     return row
 
 
 def _finite_vector(value: Any, length: int) -> bool:
     return isinstance(value, list) and len(value) == length and all(isinstance(item, (int, float)) and math.isfinite(item) for item in value)
-
-
-def _quaternion_distance_deg(left: list[float], right: list[float]) -> float:
-    left_norm = math.sqrt(sum(value * value for value in left))
-    right_norm = math.sqrt(sum(value * value for value in right))
-    if left_norm == 0 or right_norm == 0:
-        return math.inf
-    dot = abs(sum(a * b for a, b in zip(left, right, strict=True)) / (left_norm * right_norm))
-    return math.degrees(2 * math.acos(min(1.0, max(-1.0, dot))))
 
 
 def _candidate_usda(manifest: Mapping[str, Any], capture: Mapping[str, Any], row: Mapping[str, Any]) -> str:
@@ -309,6 +360,8 @@ def _candidate_usda(manifest: Mapping[str, Any], capture: Mapping[str, Any], row
             "    }",
         ))
     for spec in specs:
+        if spec["name"] in roots:
+            continue
         center = spec["center_m"]
         lines.extend((
             f'    over "{spec["name"]}" {{',

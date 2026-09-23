@@ -30,12 +30,12 @@ spec:
           args:
             - |
               set -euo pipefail
-              SOURCE=/data/users/ali/sgw-01/source/042d235-an
+              SOURCE=/data/users/ali/sgw-01/source/042d235-ap
               OUT=/data/users/ali/sgw-01/verification/lat-batch-20260923ao
               PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
               test "$(git -C "$SOURCE" rev-parse HEAD)" = 042d235cbd95104c940ac8982566d039643459f6
               test -z "$(git -C "$SOURCE" status --porcelain)"
-              test -f /data/users/ali/sgw-01/infrastructure/source-stage-20260923an/receipt.json
+              test -f /data/users/ali/sgw-01/infrastructure/source-stage-20260923ap/receipt.json
               mkdir "$OUT"
               exec > >(tee "$OUT/verification.log") 2>&1
               export PYTHONPATH="$SOURCE"

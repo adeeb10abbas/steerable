@@ -1,6 +1,6 @@
 {
   "study_id": "SGW-01",
-  "status": "corrected_candidate_rejected_stability_remaining_lat_batch_registered",
+  "status": "remaining_lat_batch_running_four_verified_model_blind_simulators",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -375,13 +375,27 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "Child paused, no independent launch authorized. Parent implemented measured proposals with geometric rejection accounting and six full recorded scripted trials. Native qualification remains outstanding.",
+    "fixture_scope": "Child is correcting HEIGHT/DIST native integration against the current parent implementation; actual measured family scenes remain absent. No independent cluster launch authorized.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
     "runtime_scope": "Owned N3 corrections integrated. Child is resolving D1 source-backed cache cadence and identity locally; no policy server, cluster operations or learned inference authorized. Both live runtime releases remain outstanding.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
-    "worker_scope": "Local guard work integrated; idle, no cluster operations."
+    "worker_scope": "Implementing independent CPU qualification-batch verification locally; no cluster operations or learned requests authorized."
   },
-  "active_task_gpu_jobs": [],
+  "active_task_gpu_jobs": [
+    {
+      "job": "sgw01-ali-lat-batch-20260923ak",
+      "job_uid": "f31bfbca-f4e3-4919-af8a-3fd92ec515a2",
+      "started_at_utc": "2026-09-23T01:24:09Z",
+      "observed_at_utc": "2026-09-23T01:28:14.267716+00:00",
+      "active_gpu_pods": 4,
+      "distinct_idle_checked_gpu_uuids": 4,
+      "gpu_locks_retained_by_simulator": true,
+      "durable_physical_progress_observed_in_all_four_pods": true,
+      "receipt": "infrastructure/a40-20260923ak-launch-progress.json",
+      "model_requests": 0,
+      "behavioral_episodes": 0
+    }
+  ],
   "last_completed_qualification": {
     "job": "sgw01-ali-lat-qualification-20260923ai",
     "job_uid": "fe60a7a3-0f16-46b0-ab1a-b38c78ee52a5",
@@ -413,7 +427,10 @@
     "plan_sha256": "f5007f84d26f27946b38f2053ca7d640b56e50e92ae3d09a0261feb45f88275e",
     "job": "sgw01-ali-lat-batch-20260923ak",
     "manifest": "handoff/k8s/sgw01-ali-lat-batch-20260923ak.yaml",
-    "status": "registered_not_started",
+    "status": "running_first_four_indices_verified_physical_progress",
+    "job_uid": "f31bfbca-f4e3-4919-af8a-3fd92ec515a2",
+    "started_at_utc": "2026-09-23T01:24:09Z",
+    "progress_receipt": "infrastructure/a40-20260923ak-launch-progress.json",
     "remaining_candidates": 39,
     "max_parallel_gpu_pods": 4,
     "concurrent_model_workers": 0,
@@ -425,7 +442,7 @@
   "prospective_lat_proposals": {
     "path": "proposals/lat-20260922.json",
     "sha256": "5b47860f6eac16e318515534a918d9460677b58d6174b4b76a29f7cc6be34eb9",
-    "status": "one_corrected_candidate_rejected_remaining_39_registered",
+    "status": "one_corrected_candidate_rejected_remaining_39_in_active_finite_batch",
     "total_candidates_including_geometric_rejections": 100,
     "geometric_passes": 40,
     "geometric_rejections": 60,
@@ -480,7 +497,7 @@
     }
   ],
   "blockers": [
-    "Candidate 032's original six trials and corrected ai trials remain unchanged. The corrected recipe passed five of six but failed the strict terminal angular-speed gate once; candidate 032 remains rejected. The 39 remaining eligible poses are registered for bounded model-blind checks.",
+    "Candidate 032's original six trials and corrected ai trials remain unchanged. The corrected recipe passed five of six but failed the strict terminal angular-speed gate once; candidate 032 remains rejected. The 39 remaining eligible poses are running in bounded model-blind batch ak; do not launch a duplicate or allocate above the four-GPU ceiling.",
     "Historical-layout coverage remains incomplete. The diagnostic comparison never grants release from a supplied subset; see infrastructure/lat-historical-layout-evidence-inventory.json.",
     "Diagnostic z restored intended textured appearance at unchanged physical time. Native fixture resets now include the same recorded warmup; production observations still require independent runtime qualification.",
     "Native model runtime/reset/time-map receipts and actual server-side trace/future production remain unqualified; local scaffolding is not live proof.",
@@ -489,7 +506,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get jobs -l app.kubernetes.io/name=sgw-01",
-  "next_action": "Launch registered finite batch ak once after verifying no other study GPU Job is active. Check every allocated GPU receipt and actual durable progress. Do not relaunch ac, af or ai, overwrite partial outputs, relax stability thresholds or issue a learned-policy release.",
+  "next_action": "Inspect existing batch ak by its exact name and UID; it is already launched and four distinct locked A40 simulators have verified physical progress. Supervise and independently verify completed indices, preserving partial attempts and every rejection. Do not recreate ak, launch additional GPUs while all four are allocated, relaunch ac/af/ai, overwrite outputs, relax thresholds or issue a learned-policy release.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

@@ -295,6 +295,16 @@ one-hour deadline; the whole batch has a five-hour deadline and zero retries.
 The first technical failure stops intake and preserves partial evidence.
 The 60 geometric rejections remain counted and are never refilled.
 
+Batch ak **was launched** at `2026-09-23T01:24:09Z`, Job UID
+`f31bfbca-f4e3-4919-af8a-3fd92ec515a2`. Its first four indices use four distinct
+idle-checked A40s on four nodes. Each simulator retains its UUID-specific
+exclusive file lock. At `01:28:14Z`, all four were recording physical states
+on the PVC; index 1 had completed its first trial and begun the second.
+The [launch/progress receipt](infrastructure/a40-20260923ak-launch-progress.json)
+records exact Pods, UUIDs and observed state counts. This is progress evidence,
+not fixture acceptance or batch completion. Kubernetes owns the finite queue;
+closing the laptop does not stop the Job. **Do not launch ak again.**
+
 Historical layout coverage is still incomplete. The new diagnostic comparator
 cannot release a family based on an arbitrary subset, empty registry or
 unverified hash strings. Its source inventory identifies the precise missing
@@ -329,10 +339,11 @@ and evidence. These are infrastructure identities, not a behavioral release.
 
 ## Next action
 
-Launch registered finite Job `sgw01-ali-lat-batch-20260923ak` once after
-checking that all earlier study GPU Jobs are terminal. Verify its actual
-GPU identities and durable per-index progress. Preserve all earlier outcomes
-and all 100 candidate poses; no learned-policy release exists.
+Supervise the existing finite Job `sgw01-ali-lat-batch-20260923ak` and
+independently verify each completed candidate's raw records and videos.
+Do not recreate the Job or allocate additional GPUs while its four slots are
+occupied. Preserve all earlier outcomes and all 100 candidate poses; no
+learned-policy release exists.
 Do not rerun completed captures or overwrite evidence.
 **Do not kill unidentified processes,
 raise the GPU ceiling, rerun a failed Job in place, or release behavioral cells.**

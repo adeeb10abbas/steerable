@@ -227,12 +227,12 @@ class MailboxReceiver:
     def __init__(self, *, root: Path, identity: Mapping[str, str], environment: Any) -> None:
         self.root, self.identity, self.environment = Path(root), dict(identity), environment
         self.last = 0; self.closed = False
-        self.environment_closed = False
+        self.environment_close_attempted = False
 
     def close_environment(self) -> None:
-        if not self.environment_closed:
+        if not self.environment_close_attempted:
+            self.environment_close_attempted = True
             self.environment.close()
-            self.environment_closed = True
 
     def serve_one(self, request_path: Path) -> None:
         try:

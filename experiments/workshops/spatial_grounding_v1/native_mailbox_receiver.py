@@ -6,6 +6,7 @@ import hashlib
 import json
 from pathlib import Path
 import time
+import traceback
 from typing import Any
 
 from .adapters import AdapterError
@@ -15,7 +16,8 @@ from .simulator_mailbox import MailboxReceiver
 def _failure(path: Path, error: BaseException, identity: dict[str, str] | None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if not path.exists():
-        payload = {"error_type": type(error).__name__, "error": str(error), "identity": identity}
+        payload = {"error_type": type(error).__name__, "error": str(error), "identity": identity,
+                   "traceback": "".join(traceback.format_exception(error))}
         with path.open("x") as stream:
             stream.write(json.dumps(payload, sort_keys=True) + "\n")
             stream.flush()
@@ -37,9 +39,9 @@ def _load_identity(path: Path, expected_sha256: str) -> dict[str, str]:
 def verify_receiver_completion(root: Path, identity: dict[str, str]) -> dict[str, Any]:
     """Validate a completed learned-policy receiver from a separate process."""
     root = Path(root)
-    failure = root / "receiver_failure.json"
     complete = root / "receiver_complete.json"
-    if failure.exists() or not complete.is_file():
+    failures = ("receiver_failure.json", "receiver_cleanup_failure.json", "receiver_app_cleanup_failure.json")
+    if any((root / name).exists() for name in failures) or any((root / "faults").glob("*.json")) or not complete.is_file():
         raise AdapterError("receiver has no clean completion receipt")
     try:
         receipt = json.loads(complete.read_text())
@@ -47,13 +49,16 @@ def verify_receiver_completion(root: Path, identity: dict[str, str]) -> dict[str
                 or receipt.get("attempt_scope") != "learned_policy_remote_simulator"
                 or receipt.get("identity") != identity
                 or type(receipt.get("close_command_id")) is not int
+                or receipt["close_command_id"] < 1
                 or receipt.get("close_command_id") != receipt.get("command_count")):
             raise ValueError("completion fields do not bind the learned attempt")
         response = root / "responses" / f"{receipt['close_command_id']:04d}-close.json"
         if not response.is_file() or hashlib.sha256(response.read_bytes()).hexdigest() != receipt.get("close_response_sha256"):
             raise ValueError("close response is absent or hash-mismatched")
         payload = json.loads(response.read_text())
-        if payload.get("status") != "ok" or payload.get("identity") != identity:
+        if (payload.get("status") != "ok" or payload.get("identity") != identity
+                or payload.get("command_id") != receipt["close_command_id"]
+                or payload.get("data") != {"reset": None, "step_result": None}):
             raise ValueError("close response is invalid")
     except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
         raise AdapterError("receiver completion receipt is malformed") from exc
@@ -118,9 +123,16 @@ def main() -> None:
                 receiver.close_environment()
             elif environment is not None:
                 environment.close()
+        except BaseException as exc:
+            _failure(args.mailbox_root / "receiver_cleanup_failure.json", exc, identity)
+            raise
         finally:
-            if app is not None:
-                app.close()
+            try:
+                if app is not None:
+                    app.close()
+            except BaseException as exc:
+                _failure(args.mailbox_root / "receiver_app_cleanup_failure.json", exc, identity)
+                raise
 
 
 if __name__ == "__main__":

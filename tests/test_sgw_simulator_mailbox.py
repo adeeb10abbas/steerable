@@ -4,11 +4,13 @@ import time
 from types import SimpleNamespace
 import json
 import threading
+import sys
+import types
 
 import numpy as np
 import pytest
 
-from experiments.workshops.spatial_grounding_v1 import simulator_mailbox
+from experiments.workshops.spatial_grounding_v1 import simulator_mailbox, native_mailbox_receiver
 from experiments.workshops.spatial_grounding_v1.native_mailbox_receiver import _load_bound_cell, verify_receiver_completion
 from experiments.workshops.spatial_grounding_v1.simulator_mailbox import MailboxClient, MailboxError, MailboxReceiver, create_mailbox_environment
 from experiments.workshops.spatial_grounding_v1.adapters import NanoPolicyAdapter, ProductionAdapter
@@ -159,7 +161,8 @@ def test_client_rejects_nonfinite_or_nonpositive_timeout(tmp_path: Path, timeout
 def test_completion_validator_rejects_failure_and_corrupt_receipt(tmp_path: Path) -> None:
     root = tmp_path / "mail"; (root / "responses").mkdir(parents=True)
     response = root / "responses" / "0001-close.json"
-    response.write_text(json.dumps({"status": "ok", "identity": IDENTITY}))
+    response.write_text(json.dumps({"status": "ok", "identity": IDENTITY,
+                                    "command_id": 1, "data": {"reset": None, "step_result": None}}))
     receipt = {"schema": "sgw-01-mailbox-receiver-completion-v1",
                "attempt_scope": "learned_policy_remote_simulator", "identity": IDENTITY,
                "close_command_id": 1, "command_count": 1,
@@ -179,3 +182,48 @@ def test_receiver_binds_identity_to_hashed_release_cell_bytes(tmp_path: Path) ->
     cell.write_text(json.dumps({"cell_id": "wrong", "candidate_sha256": "a" * 64, "binding_sha256": "b" * 64}))
     with pytest.raises(Exception):
         _load_bound_cell(cell, hashlib.sha256(cell.read_bytes()).hexdigest(), IDENTITY)
+
+
+@pytest.mark.parametrize("failed_cleanup", ["environment", "app"])
+def test_native_cleanup_failure_is_preserved_and_never_retried(tmp_path: Path, monkeypatch, failed_cleanup):
+    from experiments.workshops.spatial_grounding_v1 import robolab_jointpos_environment
+    root = tmp_path / "mail"
+
+    class Environment(FakeEnvironment):
+        def close(self):
+            super().close()
+            if failed_cleanup == "environment":
+                raise RuntimeError("environment cleanup failed")
+
+    environment = Environment()
+    app_closes = []
+
+    def close_app():
+        app_closes.append(True)
+        if failed_cleanup == "app":
+            raise RuntimeError("app cleanup failed")
+
+    def create_environment(**_):
+        for number, operation in ((1, "reset"), (2, "close")):
+            simulator_mailbox._write(root / "requests" / f"{number:04d}-{operation}.json",
+                                     {"command_id": number, "identity": IDENTITY, "operation": operation})
+        return environment
+
+    module = types.ModuleType("isaaclab.app")
+    module.AppLauncher = lambda _: SimpleNamespace(app=SimpleNamespace(close=close_app))
+    monkeypatch.setitem(sys.modules, "isaaclab.app", module)
+    monkeypatch.setattr(robolab_jointpos_environment, "create_environment", create_environment)
+    monkeypatch.setattr(native_mailbox_receiver, "_load_identity", lambda *_: IDENTITY)
+    monkeypatch.setattr(native_mailbox_receiver, "_load_bound_cell", lambda *_: {})
+    monkeypatch.setattr(sys, "argv", ["receiver", "--mailbox-root", str(root),
+                                    "--identity", "identity.json", "--identity-sha256", "a" * 64,
+                                    "--release-cell-json", "cell.json", "--release-cell-sha256", "b" * 64,
+                                    "--deadline-seconds", "2"])
+    with pytest.raises(RuntimeError, match=f"{failed_cleanup} cleanup failed"):
+        native_mailbox_receiver.main()
+    assert environment.close_count == 1 and app_closes == [True]
+    name = "receiver_failure.json" if failed_cleanup == "environment" else "receiver_app_cleanup_failure.json"
+    receipt = json.loads((root / name).read_text())
+    assert receipt["identity"] == IDENTITY and f"{failed_cleanup} cleanup failed" in receipt["traceback"]
+    with pytest.raises(Exception, match="no clean completion"):
+        verify_receiver_completion(root, IDENTITY)

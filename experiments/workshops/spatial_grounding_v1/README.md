@@ -246,6 +246,8 @@ durably published. It binds the identity, exact close command, command count,
 and response hash. Native receiver exceptions are fsynced to
 `receiver_failure.json` before environment/AppLauncher cleanup, so exit zero
 without the completion record is never evidence of a complete attempt.
+Environment and application cleanup failures retain separate traceback receipts
+and invalidate completion. A partially failed environment close is never retried.
 An external coordinator-side `verify_receiver_completion` must validate the
 completion receipt, close-response hash, exact learned-policy attempt scope,
 and absence of a failure receipt before it treats a receiver process as

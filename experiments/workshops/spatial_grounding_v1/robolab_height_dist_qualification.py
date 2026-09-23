@@ -9,14 +9,13 @@ from __future__ import annotations
 
 import hashlib
 import json
-import math
 import os
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 
-from .fixtures import ACTION_CAP, FixtureCandidate
+from .fixtures import FixtureCandidate
 from .robolab_lat_qualification import RoboLabLatEnvironment
 from .simulator_bridge import Environment, SimulatorBridgeError
 from .task_definitions import RoboLabTaskDefinition
@@ -36,8 +35,7 @@ class RoboLabFamilyBridge:
     def create_environment(self, task: RoboLabTaskDefinition, seed: int) -> Environment:
         if task.candidate.family not in {"HEIGHT", "DIST"}:
             raise SimulatorBridgeError("family bridge only accepts HEIGHT or DIST candidates")
-        if not task.candidate.metadata.get("goal_supports"):
-            raise SimulatorBridgeError("family candidate lacks measured released goal supports")
+        _validate_candidate_inputs(task.candidate)
         from robolab.core.environments.runtime import create_env
         from robolab.registrations.droid.auto_env_registrations_abs_ik import auto_register_droid_abs_ik_envs
         from robolab.registrations.droid.camera_presets import WRIST_LEFT_RIGHT_HEAD
@@ -77,12 +75,19 @@ class RoboLabFamilyScriptedController:
     """Create a 450-action Abs-IK trajectory from a measured 3D support center."""
 
     def __init__(self, calibration_path: Path) -> None:
+        from .grasp_calibration import SCHEMA
+        from .lat_candidate_generator import workspace_digest
+
         raw = Path(calibration_path).read_bytes()
         self.calibration = json.loads(raw)
-        digest = _calibration_digest(self.calibration)
-        if (self.calibration.get("schema_version") != CALIBRATION_SCHEMA
-                or self.calibration.get("receipt_sha256") != digest):
+        if (self.calibration.get("schema_version") != SCHEMA
+                or self.calibration.get("receipt_sha256") != workspace_digest(self.calibration)):
             raise SimulatorBridgeError("invalid measured Abs-IK calibration identity")
+        self.identity = {
+            "recipe": SCHEMA,
+            "calibration_sha256": hashlib.sha256(raw).hexdigest(),
+            "calibration": self.calibration,
+        }
 
     def actions_for_goal(self, environment: Environment, candidate: FixtureCandidate, goal_sign: int) -> list[np.ndarray]:
         if not isinstance(environment, RoboLabLatEnvironment) or candidate.family not in {"HEIGHT", "DIST"}:
@@ -90,7 +95,9 @@ class RoboLabFamilyScriptedController:
         if goal_sign not in (-1, 1):
             raise SimulatorBridgeError("family controller goal sign is invalid")
         support = _goal_support(candidate, goal_sign)
-        target_local = _vector3(support["cube_center_env_local_xyz_m"], "measured goal support center")
+        target_local = np.asarray(support["cube_center_env_local_xyz_m"], dtype=np.float64)
+        if target_local.shape != (3,) or not np.isfinite(target_local).all():
+            raise SimulatorBridgeError("measured goal support center must be finite 3-vector")
         robot = environment._env.scene["robot"]
         if hashlib.sha256(Path(robot.cfg.spawn.usd_path).read_bytes()).hexdigest() != self.calibration["robot_asset"]["sha256"]:
             raise SimulatorBridgeError("actual robot asset differs from measured gripper geometry")
@@ -100,7 +107,9 @@ class RoboLabFamilyScriptedController:
         index = list(data.body_names).index("base_link")
         origin = environment._env.scene.env_origins[0].detach().cpu().numpy()
         cube_center = np.asarray(candidate.scoring_poses()["rubiks_cube"].position_m) + origin
-        return _calibrated_actions_to_target(
+        from .grasp_calibration import calibrated_actions_to_target
+
+        return calibrated_actions_to_target(
             self.calibration,
             cube_center_world_xyz_m=cube_center,
             target_center_world_xyz_m=target_local + origin,
@@ -131,49 +140,26 @@ def _goal_support(candidate: FixtureCandidate, goal_sign: int) -> dict[str, Any]
     return support
 
 
-def _calibration_digest(value: dict[str, Any]) -> str:
-    material = dict(value)
-    material.pop("receipt_sha256", None)
-    return hashlib.sha256((json.dumps(material, allow_nan=False, sort_keys=True, separators=(",", ":")) + "\n").encode()).hexdigest()
+def _validate_candidate_inputs(candidate: FixtureCandidate) -> None:
+    """Reject an incomplete capture before importing or starting RoboLab."""
 
-
-def _vector3(value: Any, label: str) -> np.ndarray:
-    vector = np.asarray(value, dtype=np.float64)
-    if vector.shape != (3,) or not np.isfinite(vector).all():
-        raise SimulatorBridgeError(f"{label} must be a finite 3-vector")
-    return vector
-
-
-def _calibrated_actions_to_target(
-    calibration: dict[str, Any], *, cube_center_world_xyz_m: np.ndarray, target_center_world_xyz_m: np.ndarray,
-    flange_quaternion_world_wxyz: np.ndarray, robot_root_world_xyz_m: np.ndarray,
-) -> list[np.ndarray]:
-    """Keep the measured-TCP recipe while preserving the measured target Z."""
-
-    cube, target = _vector3(cube_center_world_xyz_m, "cube center"), _vector3(target_center_world_xyz_m, "target center")
-    quaternion, root = _vector3(flange_quaternion_world_wxyz[1:], "flange quaternion vector"), _vector3(robot_root_world_xyz_m, "robot root")
-    if not math.isfinite(float(flange_quaternion_world_wxyz[0])):
-        raise SimulatorBridgeError("flange quaternion must be finite")
-    tcp = _vector3(calibration.get("virtual_tcp_flange_xyz_m"), "measured virtual TCP")
-    lift_height = calibration.get("lift_height_m")
-    holds = calibration.get("phase_hold_steps")
-    if not isinstance(lift_height, (int, float)) or not math.isfinite(lift_height) or not isinstance(holds, list) or len(holds) != 8:
-        raise SimulatorBridgeError("measured calibration lacks trajectory fields")
-    if any(type(count) is not int or count < 1 for count in holds) or sum(holds) != ACTION_CAP:
-        raise SimulatorBridgeError("measured calibration does not define exactly 450 actions")
-    w, x, y, z = flange_quaternion_world_wxyz
-    offset = np.asarray((
-        (1 - 2 * (y*y + z*z))*tcp[0] + 2*(x*y - z*w)*tcp[1] + 2*(x*z + y*w)*tcp[2],
-        2*(x*y + z*w)*tcp[0] + (1 - 2*(x*x + z*z))*tcp[1] + 2*(y*z - x*w)*tcp[2],
-        2*(x*z - y*w)*tcp[0] + 2*(y*z + x*w)*tcp[1] + (1 - 2*(x*x + y*y))*tcp[2],
-    ))
-    lift = np.asarray([0, 0, float(lift_height)])
-    points = (cube + lift, cube, cube, cube + lift, target + lift, target, target, target + lift)
-    grips = (0, 0, 0.785398, 0.785398, 0.785398, 0.785398, 0, 0)
-    actions = []
-    for point, grip, count in zip(points, grips, holds, strict=True):
-        command = np.concatenate((point - offset - root, flange_quaternion_world_wxyz, [grip])).astype(np.float32).reshape(1, 8)
-        if not np.isfinite(command).all():
-            raise SimulatorBridgeError("calibrated family command is nonfinite")
-        actions.extend(command.copy() for _ in range(count))
-    return actions
+    scene = candidate.metadata.get("native_scene")
+    supports = candidate.metadata.get("goal_supports")
+    if not isinstance(scene, dict) or not isinstance(scene.get("asset"), str) or not scene["asset"]:
+        raise SimulatorBridgeError("family candidate lacks measured native scene asset")
+    if not isinstance(scene.get("object_names"), list) or not all(isinstance(name, str) and name for name in scene["object_names"]):
+        raise SimulatorBridgeError("family candidate lacks measured native scene object inventory")
+    required = {"rubiks_cube", "bowl"} | ({"plate"} if candidate.family == "DIST" else set())
+    if not required.issubset(scene["object_names"]) or "table" not in scene["object_names"]:
+        raise SimulatorBridgeError("family native scene lacks a scored object or table")
+    if not isinstance(supports, dict) or not supports:
+        raise SimulatorBridgeError("family candidate lacks measured released goal supports")
+    expected = {"higher", "lower"} if candidate.family == "HEIGHT" else {"near_bowl", "near_plate"}
+    if set(supports) != expected:
+        raise SimulatorBridgeError("family candidate has incomplete measured goal supports")
+    for support in supports.values():
+        if not isinstance(support, dict) or not isinstance(support.get("contact_sensor_id"), str) or not support["contact_sensor_id"].strip():
+            raise SimulatorBridgeError("family candidate lacks measured nonempty support contact sensor IDs")
+        target = np.asarray(support.get("cube_center_env_local_xyz_m"), dtype=np.float64)
+        if target.shape != (3,) or not np.isfinite(target).all():
+            raise SimulatorBridgeError("family candidate has invalid measured goal support center")

@@ -1,0 +1,76 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-texture-audit-20260922x
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: read-only-texture-audit}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 20
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: audit
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              exec /data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python - <<'PY'
+              import base64
+              import hashlib
+              import importlib.metadata
+              import json
+              from pathlib import Path
+              import numpy as np
+              from PIL import Image
+              root = Path("/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets")
+              rows = []
+              for relative in ("objects/ycb/textures/obj_000013.png", "objects/hot3d/textures/obj_000030.png", "objects/ycb/textures/obj_000010.png"):
+                  path = root / relative
+                  if not path.is_file():
+                      rows.append({"path": str(path), "available": False, "reason": "referenced texture file absent"})
+                      continue
+                  if path.stat().st_size > 16 * 1024 * 1024:
+                      raise ValueError(f"texture exceeds inspection bound: {path}")
+                  raw = path.read_bytes()
+                  with Image.open(path) as image:
+                      pixels = np.asarray(image.convert("RGB"))
+                  rows.append({"path": str(path), "available": True, "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest(), "shape": list(pixels.shape), "rgb_min": pixels.min(axis=(0, 1)).tolist(), "rgb_max": pixels.max(axis=(0, 1)).tolist(), "non_gray_pixel_fraction": float(np.mean(np.ptp(pixels, axis=-1) > 20)), "encoding": "base64", "data": base64.b64encode(raw).decode("ascii")})
+              packages = {}
+              for name in ("imageio", "imageio-ffmpeg", "pillow", "numpy"):
+                  try:
+                      packages[name] = {"available": True, "version": importlib.metadata.version(name)}
+                  except importlib.metadata.PackageNotFoundError:
+                      packages[name] = {"available": False, "reason": "package metadata unavailable"}
+              print(json.dumps({"schema_version": "sgw-01-texture-source-audit-v1", "status": "source_inspection_not_renderer_qualification", "model_requests": 0, "allocated_gpus": 0, "textures": rows, "recording_packages": packages}))
+              PY
+          env:
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+          resources:
+            requests: {cpu: "1", memory: 1Gi}
+            limits: {cpu: "1", memory: 2Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data, readOnly: true}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc, readOnly: true}

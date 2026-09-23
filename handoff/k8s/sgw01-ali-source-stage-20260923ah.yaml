@@ -1,0 +1,141 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-source-stage-20260923ah
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: offline-source-and-cli-preflight}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: stage
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              set -euo pipefail
+              OUT=/data/users/ali/sgw-01/infrastructure/source-stage-20260923ah
+              BASE=/data/users/ali/sgw-01/source/436f67a-ae
+              TARGET=/data/users/ali/sgw-01/source/f177db3-ah
+              SOURCE=f177db308d34687a30b18f388519f999fc88e483
+              ROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241
+              PY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python
+              PREFLIGHT=/data/users/ali/sgw-01/preflight/a40-20260922e
+              test ! -e "$OUT"
+              test ! -e "$TARGET"
+              test "$(git -C "$BASE" rev-parse HEAD)" = 436f67a313e8b8a98a6af362e75eb2d1d9bd57b1
+              test "$(git -C "$ROBOLAB" rev-parse HEAD)" = 0aef241fb088ca21bb4ebd24448940ed56620d17
+              mkdir "$OUT"
+              exec > >(tee "$OUT/stage.log") 2>&1
+              echo "Waiting for exact corrected-controller source bundle."
+              for attempt in {1..180}; do
+                if test -f "$OUT/transfer.complete"; then break; fi
+                sleep 2
+              done
+              test -f "$OUT/transfer.complete"
+              test "$(sha256sum "$OUT/update.bundle" | awk '{print $1}')" = bb8445140a933da16020a34a85166161f6412b2b60ace05fcb6a08f1a46aa90a
+              git clone --shared --no-checkout "$BASE" "$TARGET"
+              git -C "$TARGET" bundle verify "$OUT/update.bundle"
+              git -C "$TARGET" fetch --no-tags "$OUT/update.bundle" HEAD
+              git -C "$TARGET" checkout --detach "$SOURCE"
+              test "$(git -C "$TARGET" rev-parse HEAD)" = "$SOURCE"
+              test -z "$(git -C "$TARGET" status --porcelain)"
+              export PYTHONPATH="$TARGET:$ROBOLAB"
+              cd "$ROBOLAB"
+              "$PY" -m experiments.workshops.spatial_grounding_v1.grasp_calibration --workspace-receipt /data/users/ali/sgw-01/qualification/gripper-calibration-20260923af/workspace.json --output "$OUT/rederived-calibration.json"
+              cmp "$OUT/rederived-calibration.json" "$TARGET/artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json"
+              "$PY" -m experiments.workshops.spatial_grounding_v1.model_blind_qualification --family LAT --proposal-file "$TARGET/artifacts/workshops/spatial_grounding_v1/proposals/lat-20260922.json" --candidate-id LAT-CANDIDATE-032 --output-root "$OUT/cli-only-no-runtime" --bridge-factory experiments.workshops.spatial_grounding_v1.robolab_lat_qualification:create_bridge --controller-factory experiments.workshops.spatial_grounding_v1.robolab_lat_qualification:create_controller --controller-calibration "$OUT/rederived-calibration.json" --robolab-root "$ROBOLAB" --assets-manifest "$PREFLIGHT/assets.json" --headless --num-envs 1 --device cuda:0 --renderer realtime --rendering-type balanced --rendering_mode balanced --help > "$OUT/native-cli-help.txt"
+              test ! -e "$OUT/cli-only-no-runtime"
+              "$PY" - "$OUT" "$TARGET" "$ROBOLAB" <<'PY'
+              from datetime import datetime, timezone
+              import ast
+              import hashlib
+              import json
+              from pathlib import Path
+              import subprocess
+              import sys
+              output, target, robolab = map(Path, sys.argv[1:])
+              pending = [robolab / "policies/dreamzero/client.py"]
+              sources = {}
+              while pending:
+                  path = pending.pop(0)
+                  if str(path) in sources:
+                      continue
+                  if not path.resolve().is_relative_to(robolab.resolve()) or not path.is_file():
+                      raise ValueError(f"exact native client source missing: {path}")
+                  if len(sources) >= 8 or path.stat().st_size > 262144:
+                      raise ValueError("native client source audit exceeded its bound")
+                  text = path.read_text()
+                  tree = ast.parse(text)
+                  sources[str(path)] = {"sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "text": text}
+                  bases = {base.id for node in tree.body if isinstance(node, ast.ClassDef) for base in node.bases if isinstance(base, ast.Name)}
+                  for node in tree.body:
+                      if not isinstance(node, ast.ImportFrom) or not any((name.asname or name.name) in bases for name in node.names):
+                          continue
+                      parts = list(path.relative_to(robolab).parts[:-1]) if node.level else []
+                      if node.level > 1:
+                          parts = parts[:1-node.level]
+                      parts.extend((node.module or "").split(".") if node.module else [])
+                      dependency = robolab.joinpath(*parts).with_suffix(".py")
+                      if dependency.is_file():
+                          pending.append(dependency)
+              audit = {"native_d1_client_sources": sources, "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17", "imports_or_models_constructed": False}
+              (output / "native-client-source-audit.json").write_text(json.dumps(audit, indent=2, sort_keys=True) + "\n")
+              print(json.dumps(audit))
+              receipt = {
+                  "status": "passed_exact_source_native_cli_and_calibration_reproduction",
+                  "source_commit": subprocess.check_output(["git", "-C", str(target), "rev-parse", "HEAD"], text=True).strip(),
+                  "source_root": str(target),
+                  "bundle_sha256": hashlib.sha256((output / "update.bundle").read_bytes()).hexdigest(),
+                  "native_cli_help_sha256": hashlib.sha256((output / "native-cli-help.txt").read_bytes()).hexdigest(),
+                  "rederived_calibration_sha256": hashlib.sha256((output / "rederived-calibration.json").read_bytes()).hexdigest(),
+                  "native_client_source_audit_sha256": hashlib.sha256((output / "native-client-source-audit.json").read_bytes()).hexdigest(),
+                  "completed_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "model_requests": 0, "allocated_gpus": 0, "simulator_created": False,
+              }
+              with (output / "receipt.json").open("x") as stream:
+                  json.dump(receipt, stream, indent=2, sort_keys=True)
+                  stream.write("\n")
+              print(json.dumps(receipt, sort_keys=True))
+              PY
+              sync
+          env:
+            - {name: HOME, value: /tmp}
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - {name: OMNI_KIT_ACCEPT_EULA, value: "YES"}
+            - {name: ACCEPT_EULA, value: "Y"}
+            - name: LD_LIBRARY_PATH
+              value: /data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu
+          resources:
+            requests: {cpu: "2", memory: 8Gi}
+            limits: {cpu: "2", memory: 8Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc}
+        - name: tmp
+          emptyDir: {}

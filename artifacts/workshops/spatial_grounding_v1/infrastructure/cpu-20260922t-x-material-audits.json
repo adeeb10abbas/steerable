@@ -1,0 +1,1272 @@
+{
+  "allocated_gpus": 0,
+  "raw_persistent_root": "/data/users/ali/sgw-01/infrastructure/source-stage-20260922y/retained-audits",
+  "raw_persistent_archive": {
+    "path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260922y/audits.tar.gz",
+    "bytes": 12175785,
+    "sha256": "4789fca533ac2e934e2609e17fcfb3ca3716b0a59102216a750d252b686d311c"
+  },
+  "attempts": [
+    {
+      "allocated_gpus": 0,
+      "automatic_retries": 0,
+      "behavioral_episodes": 0,
+      "deadline_seconds": 300,
+      "job": "sgw01-ali-material-audit-20260922t",
+      "job_uid": "55709ef4-6760-45d3-bd23-5abd0523a397",
+      "model_requests": 0,
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T23:08:28Z",
+            "lastTransitionTime": "2026-09-22T23:08:28Z",
+            "message": "Job was active longer than specified deadline",
+            "reason": "DeadlineExceeded",
+            "status": "True",
+            "type": "Failed"
+          }
+        ],
+        "failed": 1,
+        "ready": 0,
+        "startTime": "2026-09-22T23:03:28Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "allocated_gpus": 0,
+      "automatic_retries": 0,
+      "behavioral_episodes": 0,
+      "deadline_seconds": 300,
+      "job": "sgw01-ali-material-audit-20260922u",
+      "job_uid": "55e40e88-051f-46f8-9081-cb7f13eec5bf",
+      "model_requests": 0,
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T23:25:00Z",
+            "lastTransitionTime": "2026-09-22T23:25:00Z",
+            "message": "Job was active longer than specified deadline",
+            "reason": "DeadlineExceeded",
+            "status": "True",
+            "type": "Failed"
+          }
+        ],
+        "failed": 1,
+        "ready": 0,
+        "startTime": "2026-09-22T23:20:00Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "allocated_gpus": 0,
+      "automatic_retries": 0,
+      "behavioral_episodes": 0,
+      "container_state": {
+        "terminated": {
+          "containerID": "containerd://52c7f4469df31844a7a3ae82c22e82834da696e1d34b05f9a865caf42af2a19f",
+          "exitCode": 0,
+          "finishedAt": "2026-09-22T23:25:17Z",
+          "reason": "Completed",
+          "startedAt": "2026-09-22T23:25:17Z"
+        }
+      },
+      "deadline_seconds": 300,
+      "job": "sgw01-ali-material-audit-20260922v",
+      "job_uid": "4c8e98ad-0d56-4f64-8ffb-fcdb2fe10994",
+      "model_requests": 0,
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "pod": "sgw01-ali-material-audit-20260922v-7lthq",
+      "pod_uid": "f91dcfca-8d4d-4a15-b27b-4bb233c4470a",
+      "status": {
+        "completionTime": "2026-09-22T23:25:20Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T23:25:20Z",
+            "lastTransitionTime": "2026-09-22T23:25:20Z",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-22T23:25:15Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "allocated_gpus": 0,
+      "automatic_retries": 0,
+      "behavioral_episodes": 0,
+      "container_state": {
+        "terminated": {
+          "containerID": "containerd://aa71b22beba87cf0c970213255fa55ffcef16ff120abca9ac840c89876d212a4",
+          "exitCode": 0,
+          "finishedAt": "2026-09-22T23:28:59Z",
+          "reason": "Completed",
+          "startedAt": "2026-09-22T23:28:59Z"
+        }
+      },
+      "deadline_seconds": 300,
+      "job": "sgw01-ali-material-export-20260922w",
+      "job_uid": "3afeb9cf-f8d7-4f60-9577-40f08d4a2c97",
+      "model_requests": 0,
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "pod": "sgw01-ali-material-export-20260922w-wkfhr",
+      "pod_uid": "f4fc3a4c-8be2-4668-8c7b-672ef9c9a100",
+      "status": {
+        "completionTime": "2026-09-22T23:29:02Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T23:29:02Z",
+            "lastTransitionTime": "2026-09-22T23:29:02Z",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-22T23:28:58Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "allocated_gpus": 0,
+      "automatic_retries": 0,
+      "behavioral_episodes": 0,
+      "container_state": {
+        "terminated": {
+          "containerID": "containerd://fd8ed6dd89b40f30814a5e801292b0476a0f1f06ab54aff897d0d77420da9288",
+          "exitCode": 0,
+          "finishedAt": "2026-09-22T23:31:55Z",
+          "reason": "Completed",
+          "startedAt": "2026-09-22T23:31:49Z"
+        }
+      },
+      "deadline_seconds": 300,
+      "job": "sgw01-ali-texture-audit-20260922x",
+      "job_uid": "857ad766-9d23-4551-9cd9-84b3203c6b8e",
+      "model_requests": 0,
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "pod": "sgw01-ali-texture-audit-20260922x-l7v8t",
+      "pod_uid": "f556c320-4846-42aa-94be-1f57f5c65477",
+      "status": {
+        "completionTime": "2026-09-22T23:31:58Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T23:31:58Z",
+            "lastTransitionTime": "2026-09-22T23:31:58Z",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-22T23:31:48Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    }
+  ],
+  "behavioral_episodes": 0,
+  "conclusion": "All three exact diffuse textures exist and decode with non-gray pixels. Missing source PNGs are not supported as the cause of the dark capture. Runtime material resolution/MDL/render readiness remain unqualified. No renderer cache or external source was modified. The local USD reader is diagnostic-only.",
+  "local_usd_reader_version": [
+    0,
+    25,
+    5
+  ],
+  "model_requests": 0,
+  "raw_exports": {
+    "sgw-local-material-audit-w.json": {
+      "bytes": 41881,
+      "retained_local_path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-local-material-audit-w.json",
+      "sha256": "182df08b74020a9db627edbc750fb6bee9b4add9fd11ad431141ffe8d6b66775"
+    },
+    "sgw-material-audit-v.log": {
+      "bytes": 4047,
+      "retained_local_path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-material-audit-v.log",
+      "sha256": "961362f42bdb4cc75c2244f6293d28efe92ca51b333ad08a55fd1ef5cb69ea22"
+    },
+    "sgw-material-export-w.json": {
+      "bytes": 1675037,
+      "retained_local_path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-material-export-w.json",
+      "sha256": "65a1c645b0810b406fe2c68b9b5f7a188bf254bead709a88b7eee663b883d012"
+    },
+    "sgw-texture-audit-x.json": {
+      "bytes": 14543634,
+      "retained_local_path": "/Users/SZ5VJY/.copilot/session-state/c230f3cd-3fe9-4f1f-9ee4-e8b857151a60/files/sgw-texture-audit-x.json",
+      "sha256": "1548dc7be0628828553c194a3e570d79cd8c62cbde3e6fdf6b5584482254c4b0"
+    }
+  },
+  "recording_packages": {
+    "imageio": {
+      "available": true,
+      "version": "2.37.0"
+    },
+    "imageio-ffmpeg": {
+      "available": true,
+      "version": "0.6.0"
+    },
+    "numpy": {
+      "available": true,
+      "version": "1.26.0"
+    },
+    "pillow": {
+      "available": true,
+      "version": "11.2.1"
+    }
+  },
+  "schema_version": "sgw-01-material-investigation-v1",
+  "startup_failures": {
+    "t": "Container never started before deadline; precise cause not established.",
+    "u": "CreateContainerConfigError: failed to prepare subPath for volumeMount \"workspace\" of container \"audit\"; deadline elapsed before the later suspension patch."
+  },
+  "status": "textures_present_and_decodable_rendered_appearance_unqualified",
+  "texture_records": [
+    {
+      "available": true,
+      "bytes": 5919165,
+      "non_gray_pixel_fraction": 0.348108172416687,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000013.png",
+      "rgb_max": [
+        219,
+        230,
+        230
+      ],
+      "rgb_min": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "20029d22859dd94150b3d969c0b351663b6d7be31d28b90ba15987ee3ba57fdc",
+      "shape": [
+        4096,
+        4096,
+        3
+      ]
+    },
+    {
+      "available": true,
+      "bytes": 2093975,
+      "non_gray_pixel_fraction": 0.29666638374328613,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/textures/obj_000030.png",
+      "rgb_max": [
+        227,
+        232,
+        232
+      ],
+      "rgb_min": [
+        29,
+        35,
+        34
+      ],
+      "sha256": "d77642c56ff641e359b77acb24d93f1b6dd14e5f6a90d3c3f85b8a45c337f197",
+      "shape": [
+        2048,
+        2048,
+        3
+      ]
+    },
+    {
+      "available": true,
+      "bytes": 2893410,
+      "non_gray_pixel_fraction": 0.2508203387260437,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/textures/obj_000010.png",
+      "rgb_max": [
+        227,
+        216,
+        125
+      ],
+      "rgb_min": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "b68de45c4d92a2f8d3e8da357912b16b972ef37f25b56bcb593d4cf9fdc4ba2d",
+      "shape": [
+        4096,
+        4096,
+        3
+      ]
+    }
+  ],
+  "u_events": [
+    {
+      "lastTimestamp": null,
+      "message": "Successfully assigned 211247-prod/sgw01-ali-material-audit-20260922u-2hvdh to dcwipphhgc191.edc.nam.gm.com",
+      "reason": "Scheduled"
+    },
+    {
+      "lastTimestamp": "2026-09-22T23:22:10Z",
+      "message": "Container image \"artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c\" already present on machine",
+      "reason": "Pulled"
+    },
+    {
+      "lastTimestamp": "2026-09-22T23:21:55Z",
+      "message": "Error: failed to prepare subPath for volumeMount \"workspace\" of container \"audit\"",
+      "reason": "Failed"
+    }
+  ],
+  "usd_materials": [
+    {
+      "asset": "scenes/rubiks_cube_banana_bowl.usda",
+      "material_properties": [
+        {
+          "connections": [],
+          "path": "/World/GroundPlane/CollisionMesh.primvars:displayColor",
+          "value": "[(0.5, 0.5, 0.5)]"
+        }
+      ],
+      "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0",
+      "source_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda"
+    },
+    {
+      "asset": "objects/ycb/bowl.usd",
+      "material_properties": [
+        {
+          "path": "/bowl/obj_000013_Mesh.material:binding",
+          "targets": [
+            "/bowl/Looks/Material"
+          ]
+        },
+        {
+          "path": "/bowl/obj_000013_Mesh.material:binding:physics",
+          "targets": [
+            "/bowl/physics_material"
+          ]
+        },
+        {
+          "connections": [],
+          "path": "/bowl/Looks/Material/OmniPBR.info:id",
+          "value": "OmniPBR"
+        },
+        {
+          "connections": [],
+          "path": "/bowl/Looks/Material/OmniPBR.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/bowl/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "value": "@OmniPBR.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/bowl/Looks/Material/OmniPBR.info:mdl:sourceAsset:subIdentifier",
+          "value": "OmniPBR"
+        },
+        {
+          "connections": [],
+          "path": "/bowl/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "value": "@./textures/obj_000013.png@"
+        },
+        {
+          "connections": [],
+          "path": "/bowl/Looks/Material/OmniPBR.inputs:metallic",
+          "value": "0.0"
+        },
+        {
+          "connections": [],
+          "path": "/bowl/Looks/Material/OmniPBR.inputs:roughness",
+          "value": "0.5"
+        },
+        {
+          "connections": [
+            "/bowl/Looks/Material/OmniPBR.outputs:out"
+          ],
+          "path": "/bowl/Looks/Material.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/bowl.color",
+          "value": "red"
+        },
+        {
+          "path": "/bowl.material:binding",
+          "targets": [
+            "/bowl/Looks/Material"
+          ]
+        }
+      ],
+      "sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e",
+      "source_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd"
+    },
+    {
+      "asset": "objects/hot3d/rubiks_cube.usd",
+      "material_properties": [
+        {
+          "path": "/rubiks_cube/obj_000030_Mesh.material:binding",
+          "targets": [
+            "/rubiks_cube/Looks/Material"
+          ]
+        },
+        {
+          "path": "/rubiks_cube/obj_000030_Mesh.material:binding:physics",
+          "targets": [
+            "/rubiks_cube/physics_material"
+          ]
+        },
+        {
+          "connections": [],
+          "path": "/rubiks_cube/Looks/Material/OmniPBR.info:id",
+          "value": "OmniPBR"
+        },
+        {
+          "connections": [],
+          "path": "/rubiks_cube/Looks/Material/OmniPBR.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/rubiks_cube/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "value": "@OmniPBR.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/rubiks_cube/Looks/Material/OmniPBR.info:mdl:sourceAsset:subIdentifier",
+          "value": "OmniPBR"
+        },
+        {
+          "connections": [],
+          "path": "/rubiks_cube/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "value": "@./textures/obj_000030.png@"
+        },
+        {
+          "connections": [],
+          "path": "/rubiks_cube/Looks/Material/OmniPBR.inputs:metallic",
+          "value": "0.0"
+        },
+        {
+          "connections": [],
+          "path": "/rubiks_cube/Looks/Material/OmniPBR.inputs:roughness",
+          "value": "0.5"
+        },
+        {
+          "connections": [
+            "/rubiks_cube/Looks/Material/OmniPBR.outputs:out"
+          ],
+          "path": "/rubiks_cube/Looks/Material.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/rubiks_cube.color",
+          "value": "multi-color"
+        },
+        {
+          "path": "/rubiks_cube.material:binding",
+          "targets": [
+            "/rubiks_cube/Looks/Material"
+          ]
+        }
+      ],
+      "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024",
+      "source_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd"
+    },
+    {
+      "asset": "objects/ycb/banana.usd",
+      "material_properties": [
+        {
+          "path": "/banana/obj_000010_Mesh.material:binding",
+          "targets": [
+            "/banana/Looks/Material"
+          ]
+        },
+        {
+          "path": "/banana/obj_000010_Mesh.material:binding:physics",
+          "targets": [
+            "/banana/physics_material"
+          ]
+        },
+        {
+          "connections": [],
+          "path": "/banana/Looks/Material/OmniPBR.info:id",
+          "value": "OmniPBR"
+        },
+        {
+          "connections": [],
+          "path": "/banana/Looks/Material/OmniPBR.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/banana/Looks/Material/OmniPBR.info:mdl:sourceAsset",
+          "value": "@OmniPBR.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/banana/Looks/Material/OmniPBR.info:mdl:sourceAsset:subIdentifier",
+          "value": "OmniPBR"
+        },
+        {
+          "connections": [],
+          "path": "/banana/Looks/Material/OmniPBR.inputs:diffuse_texture",
+          "value": "@./textures/obj_000010.png@"
+        },
+        {
+          "connections": [],
+          "path": "/banana/Looks/Material/OmniPBR.inputs:metallic",
+          "value": "0.0"
+        },
+        {
+          "connections": [],
+          "path": "/banana/Looks/Material/OmniPBR.inputs:roughness",
+          "value": "0.5"
+        },
+        {
+          "connections": [
+            "/banana/Looks/Material/OmniPBR.outputs:out"
+          ],
+          "path": "/banana/Looks/Material.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/banana.color",
+          "value": "multi-color"
+        },
+        {
+          "path": "/banana.material:binding",
+          "targets": [
+            "/banana/Looks/Material"
+          ]
+        }
+      ],
+      "sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9",
+      "source_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd"
+    },
+    {
+      "asset": "fixtures/franka_table.usd",
+      "material_properties": [],
+      "sha256": "f5a00da4c05db6dd0441f8c76a886a898435e61890dd1f445ff7e8f79e1e2495",
+      "source_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd"
+    },
+    {
+      "asset": "fixtures/table_maple.usd",
+      "material_properties": [
+        {
+          "connections": [],
+          "path": "/Root/Looks/Oak/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Oak/Shader.info:mdl:sourceAsset",
+          "value": "@http://omniverse-content-production.s3-us-west-2.amazonaws.com/Materials/Base/Wood/Oak.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Oak/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "Oak"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Oak/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Oak.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Oak/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Oak.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Oak/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Oak.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/RustedMetal/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/RustedMetal/Shader.info:mdl:sourceAsset",
+          "value": "@http://omniverse-content-production.s3-us-west-2.amazonaws.com/Materials/Base/Metals/RustedMetal.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/RustedMetal/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "RustedMetal"
+        },
+        {
+          "connections": [
+            "/Root/Looks/RustedMetal/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/RustedMetal.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/RustedMetal/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/RustedMetal.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/RustedMetal/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/RustedMetal.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Plastic_ABS/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Plastic_ABS/Shader.info:mdl:sourceAsset",
+          "value": "@http://omniverse-content-production.s3-us-west-2.amazonaws.com/Materials/Base/Plastics/Plastic_ABS.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Plastic_ABS/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "Plastic_ABS"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Plastic_ABS/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Plastic_ABS.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Plastic_ABS/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Plastic_ABS.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Plastic_ABS/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Plastic_ABS.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_blue/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_blue/Shader.info:mdl:sourceAsset",
+          "value": "@https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_1/vMaterials_2/Plastic/Plastic_Thick_Translucent.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_blue/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "plastic_blue"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_blue/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_blue.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_blue/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_blue.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_blue/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_blue.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_sky_blue/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_sky_blue/Shader.info:mdl:sourceAsset",
+          "value": "@https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_1/vMaterials_2/Plastic/Plastic_Thick_Translucent.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_sky_blue/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "plastic_sky_blue"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_sky_blue/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_sky_blue.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_sky_blue/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_sky_blue.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_sky_blue/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_sky_blue.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_light_blue/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_light_blue/Shader.info:mdl:sourceAsset",
+          "value": "@https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_1/vMaterials_2/Plastic/Plastic_Thick_Translucent.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_light_blue/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "plastic_light_blue"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_light_blue/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_light_blue.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_light_blue/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_light_blue.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_light_blue/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_light_blue.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_sky_blue_01/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_sky_blue_01/Shader.info:mdl:sourceAsset",
+          "value": "@https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_1/vMaterials_2/Plastic/Plastic_Thick_Translucent_Flakes.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_sky_blue_01/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "plastic_sky_blue"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_sky_blue_01/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_sky_blue_01.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_sky_blue_01/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_sky_blue_01.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_sky_blue_01/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_sky_blue_01.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Plastic_Clear/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Plastic_Clear/Shader.info:mdl:sourceAsset",
+          "value": "@https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_1/Base/Plastics/Plastic_Clear.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Plastic_Clear/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "Plastic_Clear"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Plastic_Clear/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Plastic_Clear.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Plastic_Clear/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Plastic_Clear.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Plastic_Clear/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Plastic_Clear.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_white/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_white/Shader.info:mdl:sourceAsset",
+          "value": "@https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_1/vMaterials_2/Plastic/Plastic_Thick_Translucent.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_white/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "plastic_white"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_white/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_white.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_white/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_white.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_white/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_white.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_white_01/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_white_01/Shader.info:mdl:sourceAsset",
+          "value": "@https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_1/vMaterials_2/Plastic/Plastic_Thick_Translucent_Flakes.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_white_01/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "plastic_white"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_white_01/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_white_01.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_white_01/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_white_01.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_white_01/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_white_01.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Plastic/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Plastic/Shader.info:mdl:sourceAsset",
+          "value": "@https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_1/Base/Plastics/Plastic.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Plastic/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "Plastic"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Plastic/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Plastic.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Plastic/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Plastic.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Plastic/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Plastic.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_light_gray/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_light_gray/Shader.info:mdl:sourceAsset",
+          "value": "@https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_1/vMaterials_2/Plastic/Plastic_Thick_Translucent_Flakes.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_light_gray/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "plastic_light_gray"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_light_gray/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_light_gray.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_light_gray/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_light_gray.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_light_gray/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_light_gray.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_white_02/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_white_02/Shader.info:mdl:sourceAsset",
+          "value": "@https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_1/vMaterials_2/Plastic/Plastic_Thick_Translucent.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/plastic_white_02/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "plastic_white"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_white_02/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_white_02.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_white_02/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_white_02.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/plastic_white_02/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/plastic_white_02.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Black_Matte/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Black_Matte/Shader.info:mdl:sourceAsset",
+          "value": "@https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_1/vMaterials_2/Paint/Carpaint/Carpaint_Solid.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Black_Matte/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "Black_Matte"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Black_Matte/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Black_Matte.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Black_Matte/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Black_Matte.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Black_Matte/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Black_Matte.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Bamboo/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Bamboo/Shader.info:mdl:sourceAsset",
+          "value": "@http://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/Base/Wood/Bamboo.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Bamboo/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "Bamboo"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Bamboo/Shader.inputs:texture_scale",
+          "value": "(0.25, 0.25)"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Bamboo/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Bamboo.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Bamboo/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Bamboo.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Bamboo/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Bamboo.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Walnut_Planks/Shader.info:implementationSource",
+          "value": "sourceAsset"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Walnut_Planks/Shader.info:mdl:sourceAsset",
+          "value": "@http://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/Base/Wood/Walnut_Planks.mdl@"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Walnut_Planks/Shader.info:mdl:sourceAsset:subIdentifier",
+          "value": "Walnut_Planks"
+        },
+        {
+          "connections": [],
+          "path": "/Root/Looks/Walnut_Planks/Shader.inputs:texture_scale",
+          "value": "(0.25, 0.25)"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Walnut_Planks/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Walnut_Planks.outputs:mdl:displacement",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Walnut_Planks/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Walnut_Planks.outputs:mdl:surface",
+          "value": "None"
+        },
+        {
+          "connections": [
+            "/Root/Looks/Walnut_Planks/Shader.outputs:out"
+          ],
+          "path": "/Root/Looks/Walnut_Planks.outputs:mdl:volume",
+          "value": "None"
+        },
+        {
+          "path": "/Root/table_01/leg_0.material:binding",
+          "targets": [
+            "/Root/Looks/RustedMetal"
+          ]
+        },
+        {
+          "path": "/Root/table_01/leg_1.material:binding",
+          "targets": [
+            "/Root/Looks/RustedMetal"
+          ]
+        },
+        {
+          "path": "/Root/table_01/leg_2.material:binding",
+          "targets": [
+            "/Root/Looks/RustedMetal"
+          ]
+        },
+        {
+          "path": "/Root/table_01/leg_3.material:binding",
+          "targets": [
+            "/Root/Looks/RustedMetal"
+          ]
+        },
+        {
+          "path": "/Root/table_01/top.material:binding",
+          "targets": [
+            "/Root/Looks/Walnut_Planks"
+          ]
+        },
+        {
+          "connections": [],
+          "path": "/GroundPlane/CollisionMesh.primvars:displayColor",
+          "value": "[(0.5, 0.5, 0.5)]"
+        }
+      ],
+      "sha256": "46fd4ea678f0ced8f620f2a8ceb045d779e412bca881d5ec584ce4cadf18133a",
+      "source_path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd"
+    }
+  ],
+  "v_result": {
+    "allocated_gpus": 0,
+    "asset_manifest": {
+      "assets": [
+        {
+          "bytes": 342393,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+          "sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e"
+        },
+        {
+          "bytes": 682045,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+          "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+        },
+        {
+          "bytes": 419223,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+          "sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9"
+        },
+        {
+          "bytes": 3569,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+          "sha256": "f5a00da4c05db6dd0441f8c76a886a898435e61890dd1f445ff7e8f79e1e2495"
+        },
+        {
+          "bytes": 7318,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+          "sha256": "46fd4ea678f0ced8f620f2a8ceb045d779e412bca881d5ec584ce4cadf18133a"
+        }
+      ],
+      "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "robolab_root": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241",
+      "scene": {
+        "bytes": 5373,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+        "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+      },
+      "schema_version": "sgw-01-robolab-asset-manifest-v1",
+      "status": "measured_asset_files_not_fixture_qualified"
+    },
+    "assets": [
+      {
+        "bytes": 5373,
+        "material_lines": [
+          {
+            "line": 135,
+            "text": "            color3f[] primvars:displayColor = [(0.5, 0.5, 0.5)]"
+          }
+        ],
+        "material_properties": [],
+        "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda",
+        "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+      },
+      {
+        "bytes": 342393,
+        "inspection_unavailable": "binary USD; pxr import unavailable",
+        "material_properties": [],
+        "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/bowl.usd",
+        "sha256": "4674da9935073ec0355cf3e27ead3b87ab98588e1d9bbb116eedaa6fad3ce98e"
+      },
+      {
+        "bytes": 682045,
+        "inspection_unavailable": "binary USD; pxr import unavailable",
+        "material_properties": [],
+        "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/hot3d/rubiks_cube.usd",
+        "sha256": "d9497c0a01c51df76d8c69e595ab91637fa028140f2656628549283267e65024"
+      },
+      {
+        "bytes": 419223,
+        "inspection_unavailable": "binary USD; pxr import unavailable",
+        "material_properties": [],
+        "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/objects/ycb/banana.usd",
+        "sha256": "b376d3dcbd4c66e6fbbb0ff83d09fdf0d27847cda09ca46a07590045b14b68d9"
+      },
+      {
+        "bytes": 3569,
+        "inspection_unavailable": "binary USD; pxr import unavailable",
+        "material_properties": [],
+        "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/franka_table.usd",
+        "sha256": "f5a00da4c05db6dd0441f8c76a886a898435e61890dd1f445ff7e8f79e1e2495"
+      },
+      {
+        "bytes": 7318,
+        "inspection_unavailable": "binary USD; pxr import unavailable",
+        "material_properties": [],
+        "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/fixtures/table_maple.usd",
+        "sha256": "46fd4ea678f0ced8f620f2a8ceb045d779e412bca881d5ec584ce4cadf18133a"
+      }
+    ],
+    "model_requests": 0,
+    "pxr_available": false,
+    "pxr_import_error": "No module named 'pxr'",
+    "schema_version": "sgw-01-material-source-audit-v1",
+    "status": "source_inspection_not_renderer_qualification"
+  }
+}

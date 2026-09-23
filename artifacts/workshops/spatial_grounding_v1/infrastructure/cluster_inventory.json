@@ -1,0 +1,83 @@
+{
+  "study_id": "SGW-01",
+  "observed_at_utc": "2026-09-22T19:13:36Z",
+  "status": "infrastructure_only_not_behaviorally_released",
+  "context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "resource_owner": "ali",
+  "cluster_version": "v1.30.3",
+  "image_digest": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+  "pvc": {
+    "name": "211247-prod-pvc",
+    "phase": "Bound",
+    "declared_capacity": "2Ti",
+    "access_mode": "ReadWriteMany",
+    "mount_path": "/data",
+    "filesystem": "nfs",
+    "nfs_version": 3,
+    "local_lock": "none",
+    "observed_filesystem_free": "147T",
+    "free_space_is_not_an_allocation_guarantee": true,
+    "study_root": "/data/users/ali/sgw-01"
+  },
+  "existing_workload_excluded": {
+    "pod": "211247-ali-b200-1gpu",
+    "ownership_label": {
+      "user": "ali"
+    },
+    "gpu": "NVIDIA B200",
+    "gpu_uuid": "GPU-60b3065c-79cb-61e6-b92a-32d0ae3750f3",
+    "observed_utilization_percent": 100,
+    "modified_or_stopped": false,
+    "use": "metadata, read-only asset inspection, and transfer to new SGW-owned PVC paths only"
+  },
+  "pvc_lock_probe": {
+    "job": "sgw01-ali-pvc-lock-20260922",
+    "job_uid": "ffa4cfee-14f1-4b20-971a-c7766a09111f",
+    "completion_time_utc": "2026-09-22T19:10:00Z",
+    "completed_indexes": [
+      0,
+      1
+    ],
+    "pods": [
+      "sgw01-ali-pvc-lock-20260922-0-g8zsx",
+      "sgw01-ali-pvc-lock-20260922-1-zx9sh"
+    ],
+    "cross_node": true,
+    "gpus_allocated": 0,
+    "status": "passed",
+    "checks": [
+      "persistent_atomic_write_and_fsync",
+      "live_lock_excludes_another_pod",
+      "lock_reacquired_after_probe_child_sigkill"
+    ],
+    "raw_root": "/data/users/ali/sgw-01/infrastructure/lock-20260922",
+    "receipt": "pvc_lock_receipt.json",
+    "source_commit": "34c400b",
+    "probe_source_sha256": "43be07b794f224568174acd6dd4ec76ab506493e86634e9aec32a7dcf7803156"
+  },
+  "pinned_study_checkout": {
+    "path": "/data/users/ali/sgw-01/source/20ab905",
+    "commit": "20ab9054ee92159710497b5c43e7fbdc83409b02",
+    "clean": true,
+    "full_checkout": true,
+    "shared_object_store": false
+  },
+  "resource_boundaries": {
+    "max_concurrent_model_workers": 2,
+    "max_study_allocated_gpus": 4,
+    "initial_model_workers": 1,
+    "new_paid_allocation": false,
+    "confirmation_budget": "unbound_until_pilot_measurement",
+    "namespace_resourcequota_objects": 0
+  },
+  "behavioral_episodes": 0,
+  "model_requests": 0,
+  "qualified_model_family_branches": [],
+  "overleaf": {
+    "project_id": "6ab2bdb39b30df4bbc98a15e",
+    "web_access": "403_without_authenticated_session",
+    "git_access": "no_existing_password_available_noninteractively",
+    "modified": false
+  }
+}

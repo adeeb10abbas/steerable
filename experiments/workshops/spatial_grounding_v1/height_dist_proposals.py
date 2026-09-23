@@ -29,6 +29,11 @@ def propose_family_layouts(workspace: Mapping[str, Any], *, family: str, seed: i
     source_rows = workspace.get(f"{family.lower()}_layout_measurements")
     if not isinstance(source_rows, list):
         raise ValueError(_missing_capture_requirement(family))
+    layout_ids = [row.get("layout_id") for row in source_rows if isinstance(row, Mapping)]
+    if len(layout_ids) != len(source_rows) or any(not isinstance(layout_id, str) or not layout_id for layout_id in layout_ids):
+        raise ValueError(f"{family} capture has a missing layout_id")
+    if len(set(layout_ids)) != len(layout_ids):
+        raise ValueError(f"{family} capture has duplicate layout IDs")
     candidates = [_candidate_from_measurement(row, workspace, family=family, seed=seed) for row in source_rows]
     if len(candidates) < count:
         raise ValueError(f"{family} capture contains {len(candidates)} usable measured layouts; {count} requested")
@@ -77,7 +82,15 @@ def _candidate_from_measurement(row: Any, workspace: Mapping[str, Any], *, famil
         },
     }
     # This enforces the frozen neutral relation using measured center offsets.
-    FixtureCandidate.from_json(candidate)
+    parsed = FixtureCandidate.from_json(candidate)
+    declared_centers = row.get("scoring_centers_env_local_xyz_m")
+    if not isinstance(declared_centers, Mapping):
+        raise ValueError(f"{family} measured layout lacks scoring centers")
+    for name, pose in parsed.scoring_poses().items():
+        center = declared_centers.get(name)
+        _finite_vector(center, f"{name} measured scoring center")
+        if max(abs(observed - expected) for observed, expected in zip(center, pose.position_m, strict=True)) > 1e-6:
+            raise ValueError(f"{family} {name} scoring center does not close from root pose and offset")
     return candidate
 
 

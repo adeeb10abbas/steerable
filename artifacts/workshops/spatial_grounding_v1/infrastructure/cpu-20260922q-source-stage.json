@@ -1,0 +1,39 @@
+{
+  "schema_version": "sgw-01-infrastructure-attempt-v1",
+  "status": "passed_exact_offline_source_stage",
+  "job": "sgw01-ali-source-stage-20260922q",
+  "job_uid": "d8bf05b4-ed00-46ee-bb46-4fffdcaa6fef",
+  "pod": "sgw01-ali-source-stage-20260922q-8rgxw",
+  "pod_uid": "c94c6db7-3a86-42e4-80bc-31c1e243c41e",
+  "started_at_utc": "2026-09-22T22:36:13Z",
+  "completed_at_utc": "2026-09-22T22:36:59Z",
+  "exit_code": 0,
+  "context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "allocated_gpus": 0,
+  "model_requests": 0,
+  "behavioral_episodes": 0,
+  "candidate_qualifications": 0,
+  "source_commit": "35e627eda09f24f00995fc2dce4dbee362c0bc02",
+  "source_root": "/data/users/ali/sgw-01/source/35e627e-q",
+  "source_git_status": "clean",
+  "object_store_dependency": "/data/users/ali/sgw-01/source/b429ddd",
+  "bundle": {
+    "path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260922q/update.bundle",
+    "sha256": "f24aa8aa4ccd15e7a55413f5acb8eb56996a1794c48670e46c88ac6cbcf3718a",
+    "bytes": 57827,
+    "prerequisite_commit": "b429ddd8c3e7be59f63759c1820e352029e48b8c",
+    "bundled_head": "0031954fac619740e2c1220501823cf98e323ee9",
+    "transport": "stdin through authorized kubectl exec; no credentials or network Git fetch"
+  },
+  "log": {
+    "path": "/data/users/ali/sgw-01/infrastructure/source-stage-20260922q/stage.log",
+    "kubernetes_output_sha256": "b4e7f043b47ff5dbaf479514262ea3eca175e4468188a995be5c0de9ac412e7d",
+    "kubernetes_output_bytes": 1138
+  },
+  "preserved_failed_attempt": {
+    "job": "sgw01-ali-source-stage-20260922l",
+    "partial_checkout": "/data/users/ali/sgw-01/source/35e627e",
+    "modified_or_deleted": false
+  }
+}

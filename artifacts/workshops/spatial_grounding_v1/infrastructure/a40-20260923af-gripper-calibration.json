@@ -1,0 +1,926 @@
+{
+  "behavioral_episodes": 0,
+  "claim_boundary": "Measured visual pad bounds relative to actual articulated bodies. A virtual closed-pad midpoint is a prospective controller convention, not an observed contact point or fixture acceptance.",
+  "decoded_video_frames": {
+    "gripper_calibration/viewport.mp4": 61,
+    "render_diagnostic/render_only.mp4": 121
+  },
+  "gpu_pod": {
+    "container_state": {
+      "terminated": {
+        "containerID": "containerd://35f38b143bce3cb0dbf1ecce8ebc44835cf01dc427f1690c2683c18636de91ba",
+        "exitCode": 0,
+        "finishedAt": "2026-09-23T00:42:59Z",
+        "reason": "Completed",
+        "startedAt": "2026-09-23T00:41:20Z"
+      }
+    },
+    "name": "sgw01-ali-gripper-calibration-20260923af-bntbx",
+    "node": "dcwipphhgc191.edc.nam.gm.com",
+    "uid": "67e449a0-e8f1-4056-a6fc-91605ecbaeb4"
+  },
+  "issued_controller_commands": 60,
+  "jobs": [
+    {
+      "name": "sgw01-ali-source-stage-20260923ae",
+      "status": {
+        "completionTime": "2026-09-23T00:41:04Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-23T00:41:04Z",
+            "lastTransitionTime": "2026-09-23T00:41:04Z",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-23T00:40:40Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "uid": "896c6a05-c000-40cc-a7f5-ab28d79404fb"
+    },
+    {
+      "name": "sgw01-ali-gripper-calibration-20260923af",
+      "status": {
+        "completionTime": "2026-09-23T00:43:01Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-23T00:43:01Z",
+            "lastTransitionTime": "2026-09-23T00:43:01Z",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-23T00:41:18Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "uid": "8892c27d-180c-4f9d-b866-4056e4166387"
+    },
+    {
+      "name": "sgw01-ali-gripper-export-20260923ag",
+      "status": {
+        "completionTime": "2026-09-23T00:44:09Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-23T00:44:09Z",
+            "lastTransitionTime": "2026-09-23T00:44:09Z",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-23T00:44:02Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      },
+      "uid": "bb8fdde2-7a57-4ad4-b62d-29294107a453"
+    }
+  ],
+  "max_flange_displacement_m": 8.539051520593151e-05,
+  "max_object_root_displacement_m": {
+    "banana": 0.0003103693986047248,
+    "bowl": 2.9497778244452733e-05,
+    "rubiks_cube": 3.7028058080317227e-05
+  },
+  "measured_pad_samples": {
+    "closed": {
+      "action_step": 30,
+      "midpoint_flange_xyz_m": [
+        0.14365579295337055,
+        2.1544635288479885e-08,
+        -1.233857550553778e-08
+      ],
+      "pad_center_separation_m": 0.02097894458847642,
+      "pad_centers_flange_xyz_m": [
+        [
+          0.14365577673940977,
+          0.010489493838794162,
+          2.5097889333920133e-08
+        ],
+        [
+          0.14365580916733134,
+          -0.010489450749523585,
+          -4.977504034499569e-08
+        ]
+      ]
+    },
+    "open": {
+      "action_step": 0,
+      "midpoint_flange_xyz_m": [
+        0.13009982321367516,
+        3.1178867550274436e-08,
+        -1.1862537164009712e-09
+      ],
+      "pad_center_separation_m": 0.10415440999798095,
+      "pad_centers_flange_xyz_m": [
+        [
+          0.13009983698870262,
+          0.052077236177852614,
+          1.815384880138684e-08
+        ],
+        [
+          0.1300998094386477,
+          -0.05207717382011751,
+          -2.0526356234188783e-08
+        ]
+      ]
+    },
+    "reopened": {
+      "action_step": 60,
+      "midpoint_flange_xyz_m": [
+        0.13009983658370372,
+        1.6374842825434e-08,
+        3.2912467077391015e-08
+      ],
+      "pad_center_separation_m": 0.1041544250135582,
+      "pad_centers_flange_xyz_m": [
+        [
+          0.13009984200328314,
+          0.05207722888162063,
+          4.32506285549092e-08
+        ],
+        [
+          0.1300998311641243,
+          -0.052077196131934976,
+          2.257430559987283e-08
+        ]
+      ]
+    }
+  },
+  "model_requests": 0,
+  "observed_controller_actions": 60,
+  "observed_duration_s": 4.000000208616257,
+  "prospective_controller_calibration": {
+    "path": "controller_calibrations/lat-closed-pad-20260923.json",
+    "sha256": "107442ccca01c4ac44ec6e1cb9674d51dbcd8663288a851dc54fa91a124f93d7"
+  },
+  "raw_file_manifest": {
+    "gripper_calibration/command-0001.json": {
+      "bytes": 192,
+      "sha256": "33cc0e09fac89d79148d4d8677908d7679889515d8dccffe26a0ed14a7e9f3c4"
+    },
+    "gripper_calibration/command-0002.json": {
+      "bytes": 192,
+      "sha256": "3fdf913bdffcb82eb40ac9fc8a5587e9ebb5e6dcb0b300eb0209812558362134"
+    },
+    "gripper_calibration/command-0003.json": {
+      "bytes": 192,
+      "sha256": "a937ee2019ed6160556a0cbb194f636d465d0953d60a879a5f8df55c947e05e7"
+    },
+    "gripper_calibration/command-0004.json": {
+      "bytes": 192,
+      "sha256": "a82f918b9b19220c83fb16c0849d308df2cfe6c4574a0d9e40aa04bc0cc74902"
+    },
+    "gripper_calibration/command-0005.json": {
+      "bytes": 192,
+      "sha256": "5edbb0c8634077fde677732b5851c30efc0ed3829b05349c74e21446e7cbbe6c"
+    },
+    "gripper_calibration/command-0006.json": {
+      "bytes": 192,
+      "sha256": "502a088ce0243fd1b90d462ed83f0b62e0a3da53f0d0efe47b81b79f73dcf3cb"
+    },
+    "gripper_calibration/command-0007.json": {
+      "bytes": 192,
+      "sha256": "3cd72d020d8e434f79eb11ffc5388cfdcac29c39fda15263101b8e72db9a83b5"
+    },
+    "gripper_calibration/command-0008.json": {
+      "bytes": 192,
+      "sha256": "77553a02a98c8a134818dde32abbba51ebc30d0b2001bae934ed3e31a9daae58"
+    },
+    "gripper_calibration/command-0009.json": {
+      "bytes": 192,
+      "sha256": "093a2f0156b1c72ef6adc6a7ece47697b5e2c70a72170e2d010484238348ebb3"
+    },
+    "gripper_calibration/command-0010.json": {
+      "bytes": 193,
+      "sha256": "af4a9efb4f632962f051357d37c8d7d9bc0a980d4b106f2e1cba7bea524c8feb"
+    },
+    "gripper_calibration/command-0011.json": {
+      "bytes": 193,
+      "sha256": "a8feeb124d27e067b24c09b63a7823476831c104074e6080f3c81560db46a121"
+    },
+    "gripper_calibration/command-0012.json": {
+      "bytes": 193,
+      "sha256": "7aa393d4157257d7db759f241368b6a47a9cd5eeceafbc0d7245a63c1616fedc"
+    },
+    "gripper_calibration/command-0013.json": {
+      "bytes": 193,
+      "sha256": "74caeb84f41ad3937cc68562055fb74a43cad77cffffdacc638c22a1422c90cd"
+    },
+    "gripper_calibration/command-0014.json": {
+      "bytes": 193,
+      "sha256": "c35a9e151b8b5d1b4645c5a5f24ac7c853131a01e928ec27899a02aa7f2d0cb8"
+    },
+    "gripper_calibration/command-0015.json": {
+      "bytes": 193,
+      "sha256": "404de076c1d926479688265c37bc93d3c19e59662691016872c17e6397967051"
+    },
+    "gripper_calibration/command-0016.json": {
+      "bytes": 193,
+      "sha256": "5c305f42ddbeb12ac8b9d7486f0db278c06bb8cf9d6fe362b49d639f1b4d979e"
+    },
+    "gripper_calibration/command-0017.json": {
+      "bytes": 193,
+      "sha256": "d577e037a5d3c8dedf74ef55b2361db936446b640b50457fe1b23bc089290373"
+    },
+    "gripper_calibration/command-0018.json": {
+      "bytes": 193,
+      "sha256": "ccdc6513f5ca1f401edb79c53d4e5cee5e9c39bb42dd9419a48485642b127610"
+    },
+    "gripper_calibration/command-0019.json": {
+      "bytes": 193,
+      "sha256": "28fa382ebb13263a7b52766a0d8560ddb9c1d57829066a2120f32aa06ce59d40"
+    },
+    "gripper_calibration/command-0020.json": {
+      "bytes": 193,
+      "sha256": "54a9725d3343816d38d69e03679591e8c6760033f6474352fea6c4fa4398cdf0"
+    },
+    "gripper_calibration/command-0021.json": {
+      "bytes": 193,
+      "sha256": "8bf1d28193ea9c7d9ec78e422314e3c6a417e9884b9cd8ebc57afc7a4c44fd71"
+    },
+    "gripper_calibration/command-0022.json": {
+      "bytes": 193,
+      "sha256": "63b525d0fe79a7bdf75575f906360bebcab2e5cf336145eb3250a9480d77f64b"
+    },
+    "gripper_calibration/command-0023.json": {
+      "bytes": 193,
+      "sha256": "f0fe84ef84351da823f353f156c0ef02001d5c5602f7da2dbdfc63b7363ce65b"
+    },
+    "gripper_calibration/command-0024.json": {
+      "bytes": 193,
+      "sha256": "9cf13b08e3f13dd74bf2c5cd176aed5268db09cc7289b96ed829b83e8f3744c1"
+    },
+    "gripper_calibration/command-0025.json": {
+      "bytes": 193,
+      "sha256": "d4a12b5d9d509601ef9fb75f20162f3f6abc96b0235bd068bab05a08626c8557"
+    },
+    "gripper_calibration/command-0026.json": {
+      "bytes": 193,
+      "sha256": "005872ec9b361b503c23ed13440aef8d971b40f0d10858aa2de6ad2b0b18c02d"
+    },
+    "gripper_calibration/command-0027.json": {
+      "bytes": 193,
+      "sha256": "f8d1948f00558136fd8442437cb4cdc6c550e546607be19d410cba1ac624dfa5"
+    },
+    "gripper_calibration/command-0028.json": {
+      "bytes": 193,
+      "sha256": "b8400e7a56c88305de46f84d6f25f921f643be61d0b9a5cf5139797989ff5fbb"
+    },
+    "gripper_calibration/command-0029.json": {
+      "bytes": 193,
+      "sha256": "8e723a7eb70dbab2ccd38bc31d015e049a2a5a2e356614b46cf21b8441b401af"
+    },
+    "gripper_calibration/command-0030.json": {
+      "bytes": 193,
+      "sha256": "2300685b2d7557636dbca35843385485b6a7fd2f3f546e1e6112b3951e0b6798"
+    },
+    "gripper_calibration/command-0031.json": {
+      "bytes": 179,
+      "sha256": "1364bc1e69d86f6223151c0ee5bfe3225f15de23d28c43d8bed1bb9be328ee86"
+    },
+    "gripper_calibration/command-0032.json": {
+      "bytes": 179,
+      "sha256": "2383b957c99c89579ef00a42a95c0285f8914c9a3c6c14b6adc82785871daad6"
+    },
+    "gripper_calibration/command-0033.json": {
+      "bytes": 179,
+      "sha256": "c8b2451bf364e9d91f23c09981b4d66322cb185f869709bcd2e5335b18049ef5"
+    },
+    "gripper_calibration/command-0034.json": {
+      "bytes": 179,
+      "sha256": "d8f7825adb2dece82c7985ef57b58820393378b0c70d0b664c77a85a9d8a7ce4"
+    },
+    "gripper_calibration/command-0035.json": {
+      "bytes": 179,
+      "sha256": "cad8790d9b077337ab25b7aa52f89b80fb8007348d059b327ae975c4a6854689"
+    },
+    "gripper_calibration/command-0036.json": {
+      "bytes": 179,
+      "sha256": "b853d1dff34d32363074fd08acb0a6dbe29437379e70f97a99721bbca6d5c9cf"
+    },
+    "gripper_calibration/command-0037.json": {
+      "bytes": 179,
+      "sha256": "3fa6fe02c60c26920d09837e11513ecd4b2c2765311e72c9639ddf6d4d6e8dc0"
+    },
+    "gripper_calibration/command-0038.json": {
+      "bytes": 179,
+      "sha256": "c2151c19a3819ca277bb1febf05e933f4e79cc33f20a3e6c747041dd13de73ed"
+    },
+    "gripper_calibration/command-0039.json": {
+      "bytes": 179,
+      "sha256": "efb25eebd3dd8e8eac0f0bc1ecf78f3dce77225ee1df4bd110165820a7f0de72"
+    },
+    "gripper_calibration/command-0040.json": {
+      "bytes": 179,
+      "sha256": "05743738af36042d1c24ba1b64811c2b45ed8183f80ee718a2e87dde970fc251"
+    },
+    "gripper_calibration/command-0041.json": {
+      "bytes": 179,
+      "sha256": "7bbadc575bf5af59578bc1547f9befa34abd11923b7f3477e7d8b59f8872ea1c"
+    },
+    "gripper_calibration/command-0042.json": {
+      "bytes": 179,
+      "sha256": "2cd0cb5d3d549fa5052cf9b481d01e9f3b9cfc98c307bb68ed5818a7f6aba836"
+    },
+    "gripper_calibration/command-0043.json": {
+      "bytes": 179,
+      "sha256": "a8041e890ff1761b4a8670e628a679902d9f8959ad9321746a9f382eabc75692"
+    },
+    "gripper_calibration/command-0044.json": {
+      "bytes": 179,
+      "sha256": "0300da894e5951691e8b0f9b7c8bd9c610dc3b442fa3124718a869e8b2351d9e"
+    },
+    "gripper_calibration/command-0045.json": {
+      "bytes": 179,
+      "sha256": "a08efd6d0de1cc20fa748bc4d12d09b445e37f9d89be6b6355497166291742af"
+    },
+    "gripper_calibration/command-0046.json": {
+      "bytes": 179,
+      "sha256": "dbde3ff858041bc14ff200db9c8d24fbb8dd727999df716572bb161790785f5c"
+    },
+    "gripper_calibration/command-0047.json": {
+      "bytes": 179,
+      "sha256": "2c5ab2c11b46d1fd2d877405be7c2506ed7cf6e9a6c70fc26fcd0c936c2b88f0"
+    },
+    "gripper_calibration/command-0048.json": {
+      "bytes": 179,
+      "sha256": "30c1e79bb89f01554510ec1d857128b6bca8101825de47102a6bb40e863f9608"
+    },
+    "gripper_calibration/command-0049.json": {
+      "bytes": 179,
+      "sha256": "d1d5d9916c1802f2715f4b252117810521016d0f748240add508653d6520299a"
+    },
+    "gripper_calibration/command-0050.json": {
+      "bytes": 179,
+      "sha256": "d88abc892e55bcf3e0f2beb00784783c618e4f670209f642af31e0378c42fda1"
+    },
+    "gripper_calibration/command-0051.json": {
+      "bytes": 179,
+      "sha256": "731c1e4e6c6f56c537b9c538d941ffab7c457f2ca11e96bae05c2ec67dc982bc"
+    },
+    "gripper_calibration/command-0052.json": {
+      "bytes": 179,
+      "sha256": "2cf35c0befdea70d70eb9ee1696190563b120acba4fdae8198d9ebea59a341b4"
+    },
+    "gripper_calibration/command-0053.json": {
+      "bytes": 179,
+      "sha256": "8dd1f41edd4d3f79ad51d7928ed8d1a6d8822ca9a5eac8137c5963bb3cf9e114"
+    },
+    "gripper_calibration/command-0054.json": {
+      "bytes": 179,
+      "sha256": "9c7f3b85d1b841eeafbaeda532cd32638d9ab1c48474673dd5a987142b5efc0d"
+    },
+    "gripper_calibration/command-0055.json": {
+      "bytes": 179,
+      "sha256": "c9d2c6ea283a38cd9ce9aa07e98c91a8c5e2ca9683a3fae709b131979cb66acc"
+    },
+    "gripper_calibration/command-0056.json": {
+      "bytes": 179,
+      "sha256": "18f7634574d90af4d68656e9c3e5a29922355cbc912af8ad5b14044e7b19c4b6"
+    },
+    "gripper_calibration/command-0057.json": {
+      "bytes": 179,
+      "sha256": "6d1c28332ef2f2b67409868d4d39bea4740a3dda57ba1dc7e126f3d830e7ae05"
+    },
+    "gripper_calibration/command-0058.json": {
+      "bytes": 179,
+      "sha256": "b6a5247815646dee3a80a250d146d6ed7dfbc40680513cf26b4590cd1ae6a590"
+    },
+    "gripper_calibration/command-0059.json": {
+      "bytes": 179,
+      "sha256": "0b5bfb60c4c05928ba65b2545ac4e76aa522f58fce125ec909f3f893b97ba8d6"
+    },
+    "gripper_calibration/command-0060.json": {
+      "bytes": 179,
+      "sha256": "d22b5d858dcd90db5057d0a954391a297eafb028822278850a5ee1ac68d9144e"
+    },
+    "gripper_calibration/frame-0000.npy": {
+      "bytes": 2764928,
+      "sha256": "23e52e257be0392a1454ee357b2109942a844b262ec0bbd16721dcc0c11bb770"
+    },
+    "gripper_calibration/frame-0001.npy": {
+      "bytes": 2764928,
+      "sha256": "18057415818a1e69a2f2132426d14409f782b609d1e6da75012bfc9e21074524"
+    },
+    "gripper_calibration/frame-0002.npy": {
+      "bytes": 2764928,
+      "sha256": "9e7577a07dfbadf70a9612c521cbff2a2b4bd964144b55aa191500cb0c2b802c"
+    },
+    "gripper_calibration/frame-0003.npy": {
+      "bytes": 2764928,
+      "sha256": "55ab0483bb7d0f4f3ce398e414a54b45c9aec0c1b8282b8d6b0e47616c5d6cde"
+    },
+    "gripper_calibration/frame-0004.npy": {
+      "bytes": 2764928,
+      "sha256": "65c6e9bc1efdf951a8f585930dce7e813af4408cf4fee5bdd95598323b83d10d"
+    },
+    "gripper_calibration/frame-0005.npy": {
+      "bytes": 2764928,
+      "sha256": "ac7cf377827939c4737dc92fbaf8451f6fc3f3dbb62c94a9d329937fbcec4022"
+    },
+    "gripper_calibration/frame-0006.npy": {
+      "bytes": 2764928,
+      "sha256": "78ac2d446fc427f3cecca480a28065626b4c2c8be52705a86d6c034acd134ead"
+    },
+    "gripper_calibration/frame-0007.npy": {
+      "bytes": 2764928,
+      "sha256": "270369889eb67a6b11de90166193662b774abe2c665a103727acd873525166fa"
+    },
+    "gripper_calibration/frame-0008.npy": {
+      "bytes": 2764928,
+      "sha256": "28e73a8885fe8612aecdf25dc4ef483e6e0e2a963f314bbf13b2c57d5f1b4eb7"
+    },
+    "gripper_calibration/frame-0009.npy": {
+      "bytes": 2764928,
+      "sha256": "6c3912d9842b7e468f646d415f3beea4b4d8146d4c1cc17e686820e25233eba1"
+    },
+    "gripper_calibration/frame-0010.npy": {
+      "bytes": 2764928,
+      "sha256": "458cc29584515a87a61788152291150f67acad08aa0eab3c6ea89a955244f484"
+    },
+    "gripper_calibration/frame-0011.npy": {
+      "bytes": 2764928,
+      "sha256": "721cce96f90f9a6204126063ba6a7e6ad5851f95493228a07f585ffdb3de9ede"
+    },
+    "gripper_calibration/frame-0012.npy": {
+      "bytes": 2764928,
+      "sha256": "ab5917c933040521c856a1d811711eb1b24d9ecb855f0e32b13c227c55a95799"
+    },
+    "gripper_calibration/frame-0013.npy": {
+      "bytes": 2764928,
+      "sha256": "bd7b35984c335fde19de02ec45c59d0ae3d2ac3098f91a885081949459cc615a"
+    },
+    "gripper_calibration/frame-0014.npy": {
+      "bytes": 2764928,
+      "sha256": "86fb68568d1ced40f915fe06d06c164202c0f11a4dda3c0c665e0afbe439e176"
+    },
+    "gripper_calibration/frame-0015.npy": {
+      "bytes": 2764928,
+      "sha256": "6a2d27a8f3222561aeb58981a5f0e95c73ff19f53547e676af3689509bdbddcf"
+    },
+    "gripper_calibration/frame-0016.npy": {
+      "bytes": 2764928,
+      "sha256": "724b33e6bc2a98288f8aa8f28c098f9fe4d29ffc76bd31b85c781364a9b03821"
+    },
+    "gripper_calibration/frame-0017.npy": {
+      "bytes": 2764928,
+      "sha256": "53d9a108d2e62e12ebac33f3008d265d6729a1f1f8d3f89be8916b335c95f0f4"
+    },
+    "gripper_calibration/frame-0018.npy": {
+      "bytes": 2764928,
+      "sha256": "52324cc1bf13925b98dddf7da09b0dc31d4143b1a9383732838f4222dd9dae6a"
+    },
+    "gripper_calibration/frame-0019.npy": {
+      "bytes": 2764928,
+      "sha256": "f77917270d98a6da22a769f343e3f021e402ce00a74ad2c04398563d93ad26af"
+    },
+    "gripper_calibration/frame-0020.npy": {
+      "bytes": 2764928,
+      "sha256": "58113ccdc9db6410fda9648d4ec83e418b50af51321bdb070dddcd98371207be"
+    },
+    "gripper_calibration/frame-0021.npy": {
+      "bytes": 2764928,
+      "sha256": "bc4e5eb37553b24fe660848494bc1f98f50756662144ff8d2a7df874b377302a"
+    },
+    "gripper_calibration/frame-0022.npy": {
+      "bytes": 2764928,
+      "sha256": "a03ef635fef8e80a573466416280945de636e1556579c6cd001f2743290df712"
+    },
+    "gripper_calibration/frame-0023.npy": {
+      "bytes": 2764928,
+      "sha256": "44da38a7479665fa18d4edf01c7388682a348fe3b80ed625ef58deaea39c064f"
+    },
+    "gripper_calibration/frame-0024.npy": {
+      "bytes": 2764928,
+      "sha256": "8104d37c034d04408a0bafe3d1b949811faa7a95e765ed2ef183f3fc41da5c2e"
+    },
+    "gripper_calibration/frame-0025.npy": {
+      "bytes": 2764928,
+      "sha256": "3c3cbe37c9f8b37c2d6b17039831512e5e850dbfea2db8a4bfaa1ff080cdeddc"
+    },
+    "gripper_calibration/frame-0026.npy": {
+      "bytes": 2764928,
+      "sha256": "4a16f3001a3fc46aacd0611c44f195492574762d9ebcd679af28e296d88ac8cc"
+    },
+    "gripper_calibration/frame-0027.npy": {
+      "bytes": 2764928,
+      "sha256": "b45196ba65e13ae2f5c648696d39a99ed61b6f728dba464dfdc9ec03f66e2a07"
+    },
+    "gripper_calibration/frame-0028.npy": {
+      "bytes": 2764928,
+      "sha256": "5dbe0474410cc51ecab7372bc5e0ff1d647797927fbe038d72b1293c430539a0"
+    },
+    "gripper_calibration/frame-0029.npy": {
+      "bytes": 2764928,
+      "sha256": "6ace52846254c8ef0a8103aa46a70f06bd975047ad5b7d3f6490d16035ea0fb1"
+    },
+    "gripper_calibration/frame-0030.npy": {
+      "bytes": 2764928,
+      "sha256": "ed0eb723b56021a439f3839bb7fd82dbecaf9d00c04629fe56d8680e6b5a1bde"
+    },
+    "gripper_calibration/frame-0031.npy": {
+      "bytes": 2764928,
+      "sha256": "c33868f9fd41c1a213abe40599833189fbcc89e957b103fd8fa5467320c3e1e9"
+    },
+    "gripper_calibration/frame-0032.npy": {
+      "bytes": 2764928,
+      "sha256": "b5996539fda6710015aa0924389ea9b90d6324b4df29181f74ff84d93af5c1f5"
+    },
+    "gripper_calibration/frame-0033.npy": {
+      "bytes": 2764928,
+      "sha256": "407df8d51aeabd2e86597df551fc0664d9750cdf7c11d1ee69b01fe17c2dc161"
+    },
+    "gripper_calibration/frame-0034.npy": {
+      "bytes": 2764928,
+      "sha256": "72ed92534adc791f9bdc84e7a00e2975f6cae5527a410bed2c4775e8c8a85eec"
+    },
+    "gripper_calibration/frame-0035.npy": {
+      "bytes": 2764928,
+      "sha256": "68c877197530ce46ada4a69ed132d92d7bde651f4fb7f35ae0fffb7d6b8df814"
+    },
+    "gripper_calibration/frame-0036.npy": {
+      "bytes": 2764928,
+      "sha256": "b5fdc5a22a4f3748fb4fba8b27678c21401d7c2c8a68b3822b83d3074f6e840d"
+    },
+    "gripper_calibration/frame-0037.npy": {
+      "bytes": 2764928,
+      "sha256": "db3b54f8f5b96422e050d29da2e5d7f1a63fe8b4b98c848cdccb18221cc3e233"
+    },
+    "gripper_calibration/frame-0038.npy": {
+      "bytes": 2764928,
+      "sha256": "aa918d4b95bd854f1a06706ba851f36ba6ac28e24cf1f06847a90e71fc72d467"
+    },
+    "gripper_calibration/frame-0039.npy": {
+      "bytes": 2764928,
+      "sha256": "7a7de846f2a665c37cc996ae9a2da63e7687c4a4ab5c28a324e4e463a4a78025"
+    },
+    "gripper_calibration/frame-0040.npy": {
+      "bytes": 2764928,
+      "sha256": "cc76b80e73f19af363393c48a7eaa126578f649f9fa428db3774e7aa8580e2b1"
+    },
+    "gripper_calibration/frame-0041.npy": {
+      "bytes": 2764928,
+      "sha256": "9aae158c0ae38e51e9bef0ac606e6f475009ccf458dd28dd17d6c0d77feb96dd"
+    },
+    "gripper_calibration/frame-0042.npy": {
+      "bytes": 2764928,
+      "sha256": "3af3ba0ae57685157f4772cdaad79ab07650ff280190041e372ee078015c5177"
+    },
+    "gripper_calibration/frame-0043.npy": {
+      "bytes": 2764928,
+      "sha256": "d99ae49aef3ec715539cf141a7f5d7208681a60a42bd4de142860a9f0650ecb4"
+    },
+    "gripper_calibration/frame-0044.npy": {
+      "bytes": 2764928,
+      "sha256": "93dabb31ff61f76c3fbcc9b12f91aebaa6c1026251375fe13ff024e2fa906f88"
+    },
+    "gripper_calibration/frame-0045.npy": {
+      "bytes": 2764928,
+      "sha256": "3cd1cec190410df274f943c686ac8a9fb18d12fdcea9d37ceac4988818f5718c"
+    },
+    "gripper_calibration/frame-0046.npy": {
+      "bytes": 2764928,
+      "sha256": "37cbd510c5abeb461cfa45fbd25ee89a80132571e426307560d5306c2137be3d"
+    },
+    "gripper_calibration/frame-0047.npy": {
+      "bytes": 2764928,
+      "sha256": "f71142e7599b44b284924cad48621454e1ddf11c3e6330537488843114b8cdfa"
+    },
+    "gripper_calibration/frame-0048.npy": {
+      "bytes": 2764928,
+      "sha256": "b8c252825f1bc7503894e39f21f0d07fb6e6d0a1e3d0bc3f5e50238a745771dc"
+    },
+    "gripper_calibration/frame-0049.npy": {
+      "bytes": 2764928,
+      "sha256": "9048be8af7419fe5dbaded49f72a779348f732e83085951a5d743adf1edb4319"
+    },
+    "gripper_calibration/frame-0050.npy": {
+      "bytes": 2764928,
+      "sha256": "3b972fda6fb6f4e77607b51b889ab606b860b08a3e1b8c75d0a0bf50e8dfcfd2"
+    },
+    "gripper_calibration/frame-0051.npy": {
+      "bytes": 2764928,
+      "sha256": "fc7a55680c2ec2740d4840a245df4e44d7cc0d026a6242cd20f28079a109d248"
+    },
+    "gripper_calibration/frame-0052.npy": {
+      "bytes": 2764928,
+      "sha256": "7abb077c7cbcab31b2d17d6d754aa7be43134660fbae9254e5efc6347a82e157"
+    },
+    "gripper_calibration/frame-0053.npy": {
+      "bytes": 2764928,
+      "sha256": "c0700c46920bf29a63064050e5396e8dfc5943302c815b0490531d7d8c560c42"
+    },
+    "gripper_calibration/frame-0054.npy": {
+      "bytes": 2764928,
+      "sha256": "512301d354b4f3ad5bf8dcf4f93df4e7a048143f88b63b3ff5ca2229bc05156c"
+    },
+    "gripper_calibration/frame-0055.npy": {
+      "bytes": 2764928,
+      "sha256": "073a8d7d9fcb7b243ce77428ae7f709794d12f903fb041c7ce25ae941bb82fed"
+    },
+    "gripper_calibration/frame-0056.npy": {
+      "bytes": 2764928,
+      "sha256": "0744ccd20b88f75db1a6ff2c4499cd03b2205beac5b79d393bad7cca3ed6d8e8"
+    },
+    "gripper_calibration/frame-0057.npy": {
+      "bytes": 2764928,
+      "sha256": "6114ed2eb3bca40ee86241428e0bd681b8ca9cc58b7df0796dbdac2b2aae71b6"
+    },
+    "gripper_calibration/frame-0058.npy": {
+      "bytes": 2764928,
+      "sha256": "cf4dbdf8d8e04d021119d9d085414c818444b71434496e06e748e8fc024dfb60"
+    },
+    "gripper_calibration/frame-0059.npy": {
+      "bytes": 2764928,
+      "sha256": "60199a4d875cc77a09e6e5b4d4da0410dfec9ea08f887b93afb30715a23c1bfa"
+    },
+    "gripper_calibration/frame-0060.npy": {
+      "bytes": 2764928,
+      "sha256": "0a5c5116ed78ec4864d04c02326f8a9a186712d4fcdee4cf17da1302d4475389"
+    },
+    "gripper_calibration/geometry.json": {
+      "bytes": 8793,
+      "sha256": "a82274328a0ac323b37789aff0e2a765c07c2257495f4809ebc7cccd7755229b"
+    },
+    "gripper_calibration/receipt.json": {
+      "bytes": 301094,
+      "sha256": "1285f2d2b2a194bd98df440cc65ed72f16d1a2f11caaa77b5ae492c21b0ead44"
+    },
+    "gripper_calibration/state-0000.json": {
+      "bytes": 4548,
+      "sha256": "68b9aafb6579c62a465f60f14b02c3c618ea9f5b9ba3096db2bdd33e5dc1e54a"
+    },
+    "gripper_calibration/state-0001.json": {
+      "bytes": 4737,
+      "sha256": "270f52c6b28790f07302fcdf39622d33c5904f8f4381a900c4f5938df30e4cf1"
+    },
+    "gripper_calibration/state-0002.json": {
+      "bytes": 4737,
+      "sha256": "56a4436faf1fd21a451988770575ad11a308e8a11a3c0d5b6cc0f185788800a4"
+    },
+    "gripper_calibration/state-0003.json": {
+      "bytes": 4739,
+      "sha256": "bc9afdd7967e62d8c2b15711db1896e0b0474a1e5b0629c9e48a195a92a986e2"
+    },
+    "gripper_calibration/state-0004.json": {
+      "bytes": 4740,
+      "sha256": "4d7ba7b2af3e8b104f3ecc7c2f7d5e6c4675082739300d4d0c9e7decfe5daef6"
+    },
+    "gripper_calibration/state-0005.json": {
+      "bytes": 4729,
+      "sha256": "74fd6a3358d25588efdfa6c24f9bed388c6a845f862b6253888fb55cfc342c56"
+    },
+    "gripper_calibration/state-0006.json": {
+      "bytes": 4740,
+      "sha256": "188b5cb05778de1a1b5be1ddd747e7bce5d48829b7ff5c8179595049840b9131"
+    },
+    "gripper_calibration/state-0007.json": {
+      "bytes": 4731,
+      "sha256": "d94e47e79ef9b5e10f7164bc408e5a57ee883148d14b4ab2cd53c91ccc05f6ee"
+    },
+    "gripper_calibration/state-0008.json": {
+      "bytes": 4729,
+      "sha256": "cd821c59cc4687ed384ee2ffd8e367ab9fbb445918fdd4ea36d6913d33cc4eb2"
+    },
+    "gripper_calibration/state-0009.json": {
+      "bytes": 4734,
+      "sha256": "81d70b9e534fac03500ab122c043da6d488e9ab682a10c9e4d54ec10d0028932"
+    },
+    "gripper_calibration/state-0010.json": {
+      "bytes": 4747,
+      "sha256": "74781bd737336b518eda2785ad64b329e5d45043217fbd5274c411a3a28a155c"
+    },
+    "gripper_calibration/state-0011.json": {
+      "bytes": 4734,
+      "sha256": "8ccaa332e9ead23ffd3f6f92be433e7d525e656900426cf4817a3f277fd4016c"
+    },
+    "gripper_calibration/state-0012.json": {
+      "bytes": 4738,
+      "sha256": "d7ce307968b6703206ac5d582ac26b81e3263a4c7ca3c35fdc7cccd9420832ff"
+    },
+    "gripper_calibration/state-0013.json": {
+      "bytes": 4739,
+      "sha256": "55c5369163bef96c3ce5df2ea84c7574e57c32189cf5aa7aafa9d831dfa44849"
+    },
+    "gripper_calibration/state-0014.json": {
+      "bytes": 4738,
+      "sha256": "ef33e4c34c76b1b66fd03c330dc84d5d27eac3167481e35782c957e625a91753"
+    },
+    "gripper_calibration/state-0015.json": {
+      "bytes": 4740,
+      "sha256": "6fbecd6f76a34a74f62bced70305561548f77bd7f09bd52f87ba18baa54fba9f"
+    },
+    "gripper_calibration/state-0016.json": {
+      "bytes": 4735,
+      "sha256": "9ca2d95061ec8045bf3fcb4f302275b2a3ca919c290c57cc8832e98995b5cc62"
+    },
+    "gripper_calibration/state-0017.json": {
+      "bytes": 4731,
+      "sha256": "b3f3f18533da9383b31d26059e0231b8ae2912846ed2870a575623f9e01b3575"
+    },
+    "gripper_calibration/state-0018.json": {
+      "bytes": 4727,
+      "sha256": "453ca82169863c3b1ec37fb33a60636b5e8aeeada4d89cd8fb11d131ca5c8c19"
+    },
+    "gripper_calibration/state-0019.json": {
+      "bytes": 4741,
+      "sha256": "489d3c900cea6a86cb399b0dd5d02a7f0bb94eb6578bfe991fbb84b775d6c1a0"
+    },
+    "gripper_calibration/state-0020.json": {
+      "bytes": 4744,
+      "sha256": "662fbe2ee25d04b0796a01fc30282a353ad09803363148b18af811605cbb04b0"
+    },
+    "gripper_calibration/state-0021.json": {
+      "bytes": 4743,
+      "sha256": "d6cd2507096c32956ccafaeef82bf828f8c978be73109dfc8e466a45cda8a873"
+    },
+    "gripper_calibration/state-0022.json": {
+      "bytes": 4740,
+      "sha256": "8bcbde740a49173c3f05248dc8a869257a74f2556ece09eb30520b4f11212eb7"
+    },
+    "gripper_calibration/state-0023.json": {
+      "bytes": 4741,
+      "sha256": "5c865b0963489b1515ba6d7ce17f2614fa5f65eb97743ca15b0c50340c1dfccd"
+    },
+    "gripper_calibration/state-0024.json": {
+      "bytes": 4744,
+      "sha256": "87a0cd6e88d97a78365836c6ace0a416adad53d1ace34dc1630c077de9186fe5"
+    },
+    "gripper_calibration/state-0025.json": {
+      "bytes": 4738,
+      "sha256": "8ba7b387b616cea899bc1dcbf9c86053e8a981bc1477aa26d1db470feabe0a5b"
+    },
+    "gripper_calibration/state-0026.json": {
+      "bytes": 4733,
+      "sha256": "b6f9c12b58e48c3566898cabc4efe5604d61a7561521e2fcab1c84714668b1b7"
+    },
+    "gripper_calibration/state-0027.json": {
+      "bytes": 4743,
+      "sha256": "4556acfa0793be5a2563c2341a566d05df1f8df7c72ee589bc7ab1c68ceaf0ec"
+    },
+    "gripper_calibration/state-0028.json": {
+      "bytes": 4744,
+      "sha256": "c502d12fe968463542135627fa476174fc5e6e693e17849ee23d615c71f5022a"
+    },
+    "gripper_calibration/state-0029.json": {
+      "bytes": 4743,
+      "sha256": "2953184ff5fb02bfc29ef1886b264f7c7b4fe6615eb5f482a90b7eedf737620f"
+    },
+    "gripper_calibration/state-0030.json": {
+      "bytes": 4745,
+      "sha256": "d7314449cbd6927f44f6864d94408cf9e6e0a7878b879c210013c93bd66b7900"
+    },
+    "gripper_calibration/state-0031.json": {
+      "bytes": 4751,
+      "sha256": "864ab2a09da7e62d47b1dee7d4fa4c48adfbcfdec535261af5d32d1e56f34cc5"
+    },
+    "gripper_calibration/state-0032.json": {
+      "bytes": 4821,
+      "sha256": "08e33c5bfb7340937b5ae02fd4677110db794ba3c1306c7ff02ab0ae17bfc6b1"
+    },
+    "gripper_calibration/state-0033.json": {
+      "bytes": 4842,
+      "sha256": "4d1fb4c2489e92d0bf3cf7f7e87df223c7225016cc17a1b3fd85e2bfa84e5f2e"
+    },
+    "gripper_calibration/state-0034.json": {
+      "bytes": 4835,
+      "sha256": "60c1e0e98d21e8bff76f0426baeb21891d162cf3ff712a9eda56a9905e8844f2"
+    },
+    "gripper_calibration/state-0035.json": {
+      "bytes": 4841,
+      "sha256": "7912b612ffb3c9f07385a570f6ca9d3bc7e9672194b9afcbf72a48b89f73a996"
+    },
+    "gripper_calibration/state-0036.json": {
+      "bytes": 4841,
+      "sha256": "e662bb3c96e733aef73f61aa99de2b335c0cee575ba0a2c106b7f17c6b0d627e"
+    },
+    "gripper_calibration/state-0037.json": {
+      "bytes": 4840,
+      "sha256": "9e9a8981bc43cfe9629819b2608843c43a927e8229fb00f9c8d108325b2db60e"
+    },
+    "gripper_calibration/state-0038.json": {
+      "bytes": 4834,
+      "sha256": "070f8a145855c047d05f0110864d8b05aa289f51fde8eaa22456ea5c42557083"
+    },
+    "gripper_calibration/state-0039.json": {
+      "bytes": 4851,
+      "sha256": "e361c89619edb76c8336aa6e3cbfdb987a5c4f29565efa471e157daa3c4d001d"
+    },
+    "gripper_calibration/state-0040.json": {
+      "bytes": 4832,
+      "sha256": "d5cda1f21f3a9032d1d7cfbf611c31df1dea51730c3ac6caa836f06c243912a1"
+    },
+    "gripper_calibration/state-0041.json": {
+      "bytes": 4851,
+      "sha256": "f42b56be04d97ef5935e677ac9e421a082d21ee4f0ce08588849b8059e00f674"
+    },
+    "gripper_calibration/state-0042.json": {
+      "bytes": 4838,
+      "sha256": "161b73438b5fbc557fcc1b7d98c3335f308a7e43784e9debd0a5f21d658fd4b2"
+    },
+    "gripper_calibration/state-0043.json": {
+      "bytes": 4842,
+      "sha256": "6893d2e1ac79d754e504424853a6fce45e89916c756c07f1b1c7ee84307d7d5a"
+    },
+    "gripper_calibration/state-0044.json": {
+      "bytes": 4812,
+      "sha256": "852e3795c8b2a76f8d0b53f1145e2280bfb80e0e0a6e10b7e8bedd9df57059a9"
+    },
+    "gripper_calibration/state-0045.json": {
+      "bytes": 4821,
+      "sha256": "ab4c4cca165ba352301ef87017001a286827c889f0099b2268cd8c393c0a4e7e"
+    },
+    "gripper_calibration/state-0046.json": {
+      "bytes": 4816,
+      "sha256": "45b2d86275c76f9c0cec83b276c2514050a79f84a20854bd57bd4531a7c4f001"
+    },
+    "gripper_calibration/state-0047.json": {
+      "bytes": 4837,
+      "sha256": "f3cfe6e15377126abe76ffb3562436cce40741afd658788310961a517cee006e"
+    },
+    "gripper_calibration/state-0048.json": {
+      "bytes": 4845,
+      "sha256": "70000845fa51d148a6c57ad35901afd53eb287c6b37a674078c3e628d3291489"
+    },
+    "gripper_calibration/state-0049.json": {
+      "bytes": 4839,
+      "sha256": "bfd435ab5365550d5f11ec1166b24a1df157f820e8593d8cdd06b56a6f433317"
+    },
+    "gripper_calibration/state-0050.json": {
+      "bytes": 4838,
+      "sha256": "d1c06329fc4fca4f3f3d4e6ea49588dddf171c22c4207fb0984c1b224860d0d0"
+    },
+    "gripper_calibration/state-0051.json": {
+      "bytes": 4821,
+      "sha256": "e18c56f327fa654c7a28b2e4e9aea645b95fefb261f9cc30bcaa3a8e187a57cf"
+    },
+    "gripper_calibration/state-0052.json": {
+      "bytes": 4820,
+      "sha256": "0ae7a6fc88f330a1d3e4b46a0279424075b0be02e0edbcb84f1329a046d52238"
+    },
+    "gripper_calibration/state-0053.json": {
+      "bytes": 4825,
+      "sha256": "b73864089c1947627a1abd9c733b175aa6dd6867cd33df8207943b872963a062"
+    },
+    "gripper_calibration/state-0054.json": {
+      "bytes": 4817,
+      "sha256": "9b598f09bbd4f724da70e0a8115a1bc4042a91cbbf105591c1e69ebaafc25975"
+    },
+    "gripper_calibration/state-0055.json": {
+      "bytes": 4822,
+      "sha256": "b1b5d9e1d9e68ffc30adff7f4dde26f89db4202e6c1fc545dc8319f6cd482100"
+    },
+    "gripper_calibration/state-0056.json": {
+      "bytes": 4818,
+      "sha256": "c2fc689a50166f05dde3407ae17e00da617b359ace9799551f9589aefc1fb07f"
+    },
+    "gripper_calibration/state-0057.json": {
+      "bytes": 4821,
+      "sha256": "a1894e9e8a103988071873379e32c78b10a66c8172bd46c0aa8e54280da1a926"
+    },
+    "gripper_calibration/state-0058.json": {
+      "bytes": 4819,
+      "sha256": "5b9028944725c84b353bf966f0a654a174748b135172c74c535aeef403ff10ac"
+    },
+    "gripper_calibration/state-0059.json": {
+      "bytes": 4837,
+      "sha256": "0f9006fd14d530c3b3813c9764fa244904521749650e68e8bc1e724c26b630a2"
+    },
+    "gripper_calibration/state-0060.json": {
+      "bytes": 4822,
+      "sha256": "7a38fe77168f9f331bead707aec9dc5d69240ccd9490a83d2a1c5e51c7fba21e"
+    },
+    "gripper_calibration/viewport.mp4": {
+      "bytes": 196294,
+      "sha256": "0c87fb673fa5f1dca2400bd8a095dce2b808bb22ffafa43ce3152d26426429d9"
+    }
+  },
+  "raw_root": "/data/users/ali/sgw-01/qualification/gripper-calibration-20260923af",
+  "robot_asset": {
+    "bytes": 14156362,
+    "path": "/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/robots/franka_robotiq_2f_85_flattened.usd",
+    "sha256": "f555695465687548a1bd31b5e3f30385182d476a67c17080b7820ad0ef747e41"
+  },
+  "source_commit": "436f67a313e8b8a98a6af362e75eb2d1d9bd57b1",
+  "source_stage": {
+    "allocated_gpus": 0,
+    "bundle_sha256": "3d88ff366a14d41cc12a2b7c592d2a191a7b22afe1481354262c756493659a4a",
+    "completed_at_utc": "2026-09-23T00:41:01.969330+00:00",
+    "model_requests": 0,
+    "native_cli_help_sha256": "feb232886b86adb79bebe4ee7ee01c791afa46191294af47422f9db212e8b486",
+    "simulator_created": false,
+    "source_commit": "436f67a313e8b8a98a6af362e75eb2d1d9bd57b1",
+    "source_root": "/data/users/ali/sgw-01/source/436f67a-ae",
+    "status": "passed_exact_offline_source_stage_and_native_cli"
+  },
+  "status": "measured_geometry_and_motion_not_fixture_release",
+  "workspace_content_digest": "6e2f70ed6e898bf8d1df02963d952ff7883e6b42646cef2d5b95a0af08456a9b",
+  "workspace_sha256": "69a9a69f21afe1e588c4e8b1eab32018f34f3ea89f5dd6dd6d7b5f53eb25b0fd"
+}

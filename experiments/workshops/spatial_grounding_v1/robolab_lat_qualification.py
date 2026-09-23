@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import hashlib
 import json
 import os
@@ -22,14 +22,15 @@ from .simulator_bridge import (
     SimulatorSnapshot,
 )
 from .task_definitions import RoboLabTaskDefinition
-from .robolab_measurements import geometric_center_state
+from .robolab_measurements import articulation_body_frames, geometric_center_state
+from .lat_workspace_capture import render_only_warmup
 
 
 class RoboLabLatEnvironment:
     def __init__(self, env: Any, candidate: FixtureCandidate, evidence_root: Path) -> None:
         self._env = env
         self._candidate = candidate
-        self._evidence_root = Path(evidence_root).resolve()
+        self._evidence_root = evidence_root
         self._reset_index = 0
         self._initial: dict[str, tuple[float, float, float]] | None = None
         step_dt = getattr(env, "step_dt", None)
@@ -37,6 +38,7 @@ class RoboLabLatEnvironment:
             raise SimulatorBridgeError("RoboLab must expose a positive physical step_dt")
         self._step_dt_s = float(step_dt)
         self._steps = 0
+        self._observation: Any = None
 
     def _snapshot(self) -> SimulatorSnapshot:
         from robolab.core.task.conditionals import object_grabbed
@@ -45,9 +47,8 @@ class RoboLabLatEnvironment:
 
         world = get_world(self._env)
         sensors = get_contact_sensors(self._env.scene)
-        support_sensor_names = self._support_sensor_names()
         support_vectors = []
-        for sensor_name in support_sensor_names:
+        for sensor_name in self._support_sensor_names():
             support_sensor = sensors.get(sensor_name)
             if support_sensor is None:
                 raise SimulatorBridgeError(f"RoboLab scene lacks required {sensor_name} contact sensor")
@@ -88,7 +89,24 @@ class RoboLabLatEnvironment:
                     else False
                 ),
             )
-        return SimulatorSnapshot(rows, simulated_time_s=self._steps * self._step_dt_s, reset_root_poses=reset_roots)
+        return SimulatorSnapshot(
+            rows, simulated_time_s=self._steps * self._step_dt_s, reset_root_poses=reset_roots,
+            robot_body_frames=articulation_body_frames(self._env.scene["robot"].data),
+        )
+
+    def _support_sensor_names(self) -> tuple[str, ...]:
+        supports = self._candidate.metadata.get("goal_supports")
+        if supports is None:
+            return ("rubiks_cube__table",)
+        if not isinstance(supports, dict):
+            raise SimulatorBridgeError("candidate goal supports must be a mapping")
+        names = tuple(
+            support.get("contact_sensor_id") for support in supports.values()
+            if isinstance(support, dict)
+        )
+        if not names or any(not isinstance(name, str) or not name.strip() for name in names):
+            raise SimulatorBridgeError("candidate lacks measured nonempty support contact sensor IDs")
+        return tuple(dict.fromkeys(names))
 
     def reset(self) -> ResetResult:
         counter = getattr(self._env, "episode_length_buf", None)
@@ -96,6 +114,10 @@ class RoboLabLatEnvironment:
             raise SimulatorBridgeError("RoboLab must expose episode_length_buf for a physical reset")
         counter.zero_()
         observation, _ = self._env.reset()
+        observation, warmup = render_only_warmup(
+            self._env, observation, 120, self._evidence_root / f"reset-{self._reset_index + 1:02d}",
+        )
+        self._observation = observation
         self._steps = 0
         snapshot = self._snapshot()
         self._initial = {name: state.pose.position_m for name, state in snapshot.objects.items()}
@@ -118,22 +140,10 @@ class RoboLabLatEnvironment:
                 "camera_name": camera,
                 "fingerprint": fingerprint,
                 "temporal_cache_reset": True,
+                "control_step_dt_s": self._step_dt_s,
+                "render_only_warmup": warmup,
             },
         )
-
-    def _support_sensor_names(self) -> tuple[str, ...]:
-        supports = self._candidate.metadata.get("goal_supports")
-        if supports is None:
-            return ("rubiks_cube__table",)
-        if not isinstance(supports, dict):
-            raise SimulatorBridgeError("candidate goal supports must be a mapping")
-        names = tuple(
-            support.get("contact_sensor_id") for support in supports.values()
-            if isinstance(support, dict)
-        )
-        if not names or any(not isinstance(name, str) or not name for name in names):
-            raise SimulatorBridgeError("candidate lacks measured support contact sensor IDs")
-        return tuple(dict.fromkeys(names))
 
     def step(self, action: Sequence[float]) -> SimulatorSnapshot:
         import torch
@@ -141,15 +151,24 @@ class RoboLabLatEnvironment:
         tensor = action if isinstance(action, torch.Tensor) else torch.as_tensor(action, dtype=torch.float32)
         if tuple(tensor.shape) != (1, 8):
             raise SimulatorBridgeError(f"Abs-IK action must have shape (1, 8), got {tuple(tensor.shape)}")
-        self._env.step(tensor.to(self._env.device))
+        observation, _reward, terminated, truncated, _info = self._env.step(tensor.to(self._env.device))
+        self._observation = observation
         self._steps += 1
-        return self._snapshot()
+        snapshot = self._snapshot()
+        if bool(terminated[0]) or bool(truncated[0]):
+            snapshot = replace(snapshot, termination_reason="native_termination_or_truncation")
+        return snapshot
 
     def snapshot(self) -> SimulatorSnapshot:
         return self._snapshot()
 
-    def render_viewport(self) -> bytes:
-        raise SimulatorBridgeError("viewport writing belongs to the recorder, not qualification state extraction")
+    def render_viewport(self) -> np.ndarray:
+        if self._observation is None:
+            raise SimulatorBridgeError("viewport requested before a physical reset")
+        frame = self._observation["image_obs"]["over_shoulder_left_camera"][0].detach().cpu().numpy()
+        if frame.ndim != 3 or frame.shape[-1] != 3 or frame.dtype != np.uint8 or not np.ptp(frame):
+            raise SimulatorBridgeError("qualification viewport is not nonblank uint8 RGB")
+        return frame.copy()
 
     def close(self) -> None:
         self._env.close()
@@ -159,8 +178,8 @@ class RoboLabLatBridge:
     def __init__(self, *, study_root: Path, robolab_root: Path, evidence_root: Path, device: str, renderer: str, rendering_type: str) -> None:
         self._study_root = Path(study_root).resolve()
         self._robolab_root = Path(robolab_root).resolve()
-        self._evidence_root = Path(evidence_root).resolve()
         self._device = device
+        self._evidence_root = evidence_root
         if renderer != "realtime" or rendering_type != "balanced":
             raise SimulatorBridgeError("LAT qualification requires realtime/balanced RTX")
 
@@ -193,9 +212,42 @@ def register_lat_task(registrar: Any, task_path: Path, cameras: Any) -> None:
 class RoboLabLatScriptedController:
     """Execute candidate-recorded world-frame Abs-IK waypoints without a policy."""
 
+    def __init__(self, calibration_path: Path | None = None) -> None:
+        self.calibration = None
+        self.identity = {"recipe": "legacy_candidate_waypoints_unqualified"}
+        if calibration_path is not None:
+            from .grasp_calibration import SCHEMA
+            from .lat_candidate_generator import workspace_digest
+
+            raw = calibration_path.read_bytes()
+            self.calibration = json.loads(raw)
+            if (self.calibration.get("schema_version") != SCHEMA
+                    or self.calibration.get("receipt_sha256") != workspace_digest(self.calibration)):
+                raise SimulatorBridgeError("invalid grasp calibration identity")
+            self.identity = {
+                "recipe": SCHEMA, "calibration_sha256": hashlib.sha256(raw).hexdigest(),
+                "calibration": self.calibration,
+            }
+
     def actions_for_goal(self, environment: Environment, candidate: FixtureCandidate, goal_sign: int) -> Sequence[Sequence[float]]:
         if not isinstance(environment, RoboLabLatEnvironment):
             raise SimulatorBridgeError("LAT controller requires RoboLabLatEnvironment")
+        if self.calibration is not None:
+            from .grasp_calibration import calibrated_actions
+
+            robot = environment._env.scene["robot"]
+            if hashlib.sha256(Path(robot.cfg.spawn.usd_path).read_bytes()).hexdigest() != self.calibration["robot_asset"]["sha256"]:
+                raise SimulatorBridgeError("actual robot asset differs from measured gripper geometry")
+            data = robot.data
+            if not np.allclose(data.root_quat_w[0].detach().cpu().numpy(), [1, 0, 0, 0], atol=1e-6):
+                raise SimulatorBridgeError("calibrated controller requires identity robot-root orientation")
+            index = list(data.body_names).index("base_link")
+            return calibrated_actions(
+                candidate, goal_sign, self.calibration,
+                flange_quaternion_world_wxyz=data.body_quat_w[0, index].detach().cpu().numpy(),
+                environment_origin_world_xyz_m=environment._env.scene.env_origins[0].detach().cpu().numpy(),
+                robot_root_world_xyz_m=data.root_pos_w[0].detach().cpu().numpy(),
+            )
         key = "positive" if goal_sign == 1 else "negative"
         waypoints = candidate.metadata.get("abs_ik_waypoints", {}).get(key)
         if not isinstance(waypoints, list) or not waypoints:
@@ -234,11 +286,8 @@ def create_bridge(*, robolab_root: Path, assets_manifest: Path, evidence_root: P
     study_root = Path(__file__).resolve().parents[3]
     if not Path(assets_manifest).is_file():
         raise SimulatorBridgeError("measured asset manifest is required")
-    return RoboLabLatBridge(
-        study_root=study_root, robolab_root=robolab_root, evidence_root=evidence_root,
-        device=device, renderer=renderer, rendering_type=rendering_type,
-    )
+    return RoboLabLatBridge(study_root=study_root, robolab_root=robolab_root, evidence_root=evidence_root, device=device, renderer=renderer, rendering_type=rendering_type)
 
 
-def create_controller(**_: Any) -> RoboLabLatScriptedController:
-    return RoboLabLatScriptedController()
+def create_controller(*, controller_calibration: Path | None = None, **_: Any) -> RoboLabLatScriptedController:
+    return RoboLabLatScriptedController(controller_calibration)

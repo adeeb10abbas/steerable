@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/data/users/ali/sgw-01/source/35e627e-q/experiments/workshops/spatial_grounding_v1/gpu_idle_probe.py", line 69, in <module>
+    main()
+  File "/data/users/ali/sgw-01/source/35e627e-q/experiments/workshops/spatial_grounding_v1/gpu_idle_probe.py", line 36, in main
+    raw = subprocess.check_output([
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/users/ali/vla_wam/envs/python-builds-robolab/cpython-3.11.13-linux-x86_64-gnu/lib/python3.11/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/users/ali/vla_wam/envs/python-builds-robolab/cpython-3.11.13-linux-x86_64-gnu/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/users/ali/vla_wam/envs/python-builds-robolab/cpython-3.11.13-linux-x86_64-gnu/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/data/users/ali/vla_wam/envs/python-builds-robolab/cpython-3.11.13-linux-x86_64-gnu/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'nvidia-smi'

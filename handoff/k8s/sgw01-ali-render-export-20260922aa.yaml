@@ -1,0 +1,71 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-render-export-20260922aa
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: read-only-render-export}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 20
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: export
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              exec /data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python - <<'PY'
+              import base64
+              import gzip
+              import hashlib
+              import json
+              from pathlib import Path
+              root = Path("/data/users/ali/sgw-01/qualification/render-diagnostic-20260922z")
+              workspace = json.loads((root / "workspace.json").read_text())
+              paths = {root / n for n in ("workspace.json", "workspace.log", "gpu_selection.json", "gpu_identity.csv")}
+              for view in workspace["views"].values():
+                  paths.add(Path(view["lossless_array"]["path"]))
+              diagnostic = workspace["render_only_diagnostic"]
+              for snapshot in diagnostic["snapshots"]:
+                  if snapshot["render_frame"] in {0, 1, 10, 30, 60, 120}:
+                      paths.update(Path(row["path"]) for row in snapshot["views"].values())
+              paths.add(Path(diagnostic["viewport_video"]["path"]))
+              files = {}
+              for path in sorted(paths):
+                  if not path.resolve().is_relative_to(root.resolve()) or path.stat().st_size > 64 * 1024 * 1024:
+                      raise ValueError(f"diagnostic export escapes its bounded root: {path}")
+                  raw = path.read_bytes()
+                  files[str(path.relative_to(root))] = {"bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest(), "encoding": "gzip_base64", "data": base64.b64encode(gzip.compress(raw, mtime=0)).decode("ascii")}
+              print(json.dumps({"schema_version": "sgw-01-read-only-render-export-v1", "raw_root": str(root), "files": files, "model_requests": 0, "allocated_gpus": 0}))
+              PY
+          env:
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+          resources:
+            requests: {cpu: "1", memory: 1Gi}
+            limits: {cpu: "1", memory: 2Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data, readOnly: true}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc, readOnly: true}

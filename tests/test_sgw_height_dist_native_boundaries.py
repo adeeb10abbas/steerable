@@ -1,19 +1,21 @@
-import hashlib
 import json
-from pathlib import Path
+import os
+import sys
+import types
 
 import numpy as np
 import pytest
 
 from experiments.workshops.spatial_grounding_v1.fixtures import FixtureCandidate
 from experiments.workshops.spatial_grounding_v1.robolab_height_dist_qualification import (
-    _calibrated_actions_to_target,
-    _calibration_digest,
+    _validate_candidate_inputs,
     create_bridge,
     create_controller,
 )
 from experiments.workshops.spatial_grounding_v1.robolab_lat_qualification import RoboLabLatEnvironment
 from experiments.workshops.spatial_grounding_v1.simulator_bridge import SimulatorBridgeError
+from experiments.workshops.spatial_grounding_v1.task_definitions import build_task_definition
+import experiments.workshops.spatial_grounding_v1.robolab_height_dist_qualification as family_bridge
 
 
 def _candidate():
@@ -29,6 +31,10 @@ def _candidate():
         },
         "metadata": {
             "scoring_center_offsets_root_local_m": {"rubiks_cube": [0, 0, 0], "bowl": [0, 0, 0]},
+            "native_scene": {
+                "asset": "measured.usda",
+                "object_names": ["rubiks_cube", "bowl", "table", "upper_platform", "lower_platform"],
+            },
             "goal_supports": {
                 "higher": {"contact_sensor_id": "rubiks_cube__upper", "cube_center_env_local_xyz_m": [.4, 0, .21]},
                 "lower": {"contact_sensor_id": "rubiks_cube__lower", "cube_center_env_local_xyz_m": [.4, 0, .04]},
@@ -59,32 +65,112 @@ def test_family_bridge_requires_explicit_evidence_root_before_native_start(tmp_p
         device="cuda:0", renderer="realtime", rendering_type="balanced",
     )
     assert bridge._evidence_root == (tmp_path / "evidence").resolve()
+    missing_scene = FixtureCandidate.from_json({**_candidate().task_payload(), "seed": 7, "metadata": {
+        "scoring_center_offsets_root_local_m": {"rubiks_cube": [0, 0, 0], "bowl": [0, 0, 0]},
+        "goal_supports": _candidate().metadata["goal_supports"],
+    }})
+    with pytest.raises(SimulatorBridgeError, match="native scene"):
+        bridge.create_environment(build_task_definition(missing_scene), seed=7)
+
+
+def test_family_bridge_passes_candidate_payload_to_mocked_native_factory(tmp_path, monkeypatch):
+    manifest = tmp_path / "assets.json"
+    manifest.write_text("{}")
+    bridge = create_bridge(
+        robolab_root=tmp_path, assets_manifest=manifest, evidence_root=tmp_path / "evidence",
+        device="cuda:0", renderer="realtime", rendering_type="balanced",
+    )
+    calls = {}
+    runtime = types.ModuleType("robolab.core.environments.runtime")
+    runtime.create_env = lambda *args, **kwargs: (calls.setdefault("native_env", object()), calls.setdefault("create", (args, kwargs)))
+    registrations = types.ModuleType("robolab.registrations.droid.auto_env_registrations_abs_ik")
+    registrations.auto_register_droid_abs_ik_envs = lambda **kwargs: calls.setdefault("register", kwargs)
+    cameras = types.ModuleType("robolab.registrations.droid.camera_presets")
+    cameras.WRIST_LEFT_RIGHT_HEAD = "cameras"
+    for name, module in {
+        "robolab": types.ModuleType("robolab"),
+        "robolab.core": types.ModuleType("robolab.core"),
+        "robolab.core.environments": types.ModuleType("robolab.core.environments"),
+        "robolab.core.environments.runtime": runtime,
+        "robolab.registrations": types.ModuleType("robolab.registrations"),
+        "robolab.registrations.droid": types.ModuleType("robolab.registrations.droid"),
+        "robolab.registrations.droid.auto_env_registrations_abs_ik": registrations,
+        "robolab.registrations.droid.camera_presets": cameras,
+    }.items():
+        monkeypatch.setitem(sys.modules, name, module)
+    received = {}
+    monkeypatch.setattr(
+        family_bridge,
+        "RoboLabLatEnvironment",
+        lambda env, candidate, evidence_root: received.update(
+            env=env, candidate=candidate, evidence_root=evidence_root
+        ) or "wrapped-environment",
+    )
+
+    value = bridge.create_environment(build_task_definition(_candidate()), seed=17)
+
+    assert value == "wrapped-environment"
+    assert calls["create"][0] == ("SGWFamilyQualificationTask",)
+    assert calls["create"][1]["seed"] == 17
+    assert calls["register"]["task"][0].endswith("family_qualification_task.py")
+    assert json.loads(os.environ["SGW_FAMILY_CANDIDATE_JSON"])["goal_supports"]["higher"]["contact_sensor_id"] == "rubiks_cube__upper"
+    assert received["evidence_root"] == (tmp_path / "evidence").resolve()
 
 
 def test_family_controller_requires_calibration_and_preserves_measured_target_z(tmp_path):
     with pytest.raises(SimulatorBridgeError, match="controller-calibration"):
         create_controller()
 
+    asset = tmp_path / "robot.usd"
+    asset.write_bytes(b"verified robot")
     calibration = {
         "schema_version": "sgw-01-lat-closed-pad-midpoint-v1",
         "virtual_tcp_flange_xyz_m": [0, 0, 0],
         "lift_height_m": .12,
         "phase_hold_steps": [1] * 7 + [443],
-        "robot_asset": {"sha256": "a" * 64},
+        "robot_asset": {"sha256": __import__("hashlib").sha256(asset.read_bytes()).hexdigest()},
     }
-    calibration["receipt_sha256"] = _calibration_digest(calibration)
+    from experiments.workshops.spatial_grounding_v1.lat_candidate_generator import workspace_digest
+    calibration["receipt_sha256"] = workspace_digest(calibration)
     path = tmp_path / "calibration.json"
     path.write_text(json.dumps(calibration))
     controller = create_controller(controller_calibration=path)
     assert controller.calibration["receipt_sha256"] == calibration["receipt_sha256"]
+    assert controller.identity["calibration_sha256"]
 
-    actions = _calibrated_actions_to_target(
-        calibration,
-        cube_center_world_xyz_m=np.array([.3, 0, .1]),
-        target_center_world_xyz_m=np.array([.4, 0, .21]),
-        flange_quaternion_world_wxyz=np.array([1, 0, 0, 0]),
-        robot_root_world_xyz_m=np.zeros(3),
-    )
+    class Tensor:
+        def __init__(self, value): self.value = np.asarray(value)
+        def detach(self): return self
+        def cpu(self): return self
+        def numpy(self): return self.value
+
+    class TwoD:
+        def __getitem__(self, index):
+            assert index == (0, 0)
+            return Tensor([1, 0, 0, 0])
+
+    class Data:
+        root_quat_w = [Tensor([1, 0, 0, 0])]
+        body_names = ["base_link"]
+        body_quat_w = TwoD()
+        root_pos_w = [Tensor([0, 0, 0])]
+
+    class Robot:
+        data = Data()
+        class cfg:
+            class spawn:
+                usd_path = str(asset)
+
+    class Scene:
+        env_origins = [Tensor([0, 0, 0])]
+        def __getitem__(self, key):
+            return {"robot": Robot()}[key]
+
+    environment = object.__new__(RoboLabLatEnvironment)
+    environment._env = type("Native", (), {
+        "scene": Scene(),
+    })()
+    actions = controller.actions_for_goal(environment, _candidate(), 1)
     assert len(actions) == 450
     # Index 5 is the direct lowering-to-target phase; it must retain .21 m,
     # not overwrite height with the initial cube z.

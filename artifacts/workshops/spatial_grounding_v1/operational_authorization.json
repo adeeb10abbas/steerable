@@ -1,0 +1,44 @@
+{
+  "schema_version": "sgw-01-operational-authorization-v1",
+  "study_id": "SGW-01",
+  "recorded_at_utc": "2026-09-22T22:22:42Z",
+  "status": "approved",
+  "budget_mode": "existing_idle_capacity_no_aggregate_hour_cap",
+  "owner_approval_reference": {
+    "kind": "explicit_user_response",
+    "session_id": "c230f3cd-3fe9-4f1f-9ee4-e8b857151a60",
+    "question": "What maximum GPU-hour budget may I use for SGW-01's initial model qualification and pilot runs on your existing cluster? This is a runtime cap, not an estimate; I'll still stay within the frozen limit of four GPUs and two model workers.",
+    "response_verbatim": "as many as needed (if they're free on the clusters they're available to be used)"
+  },
+  "source_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
+  "source_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
+  "scope": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "pvc": "211247-prod-pvc",
+    "persistent_study_root": "/data/users/ali/sgw-01",
+    "models": ["N3", "D1"],
+    "initial_stages": ["model_blind_qualification", "runtime_qualification", "fixed_input_gate", "P"],
+    "later_stages_require_measured_engineering_release": ["D", "C"],
+    "maximum_registered_behavioral_episodes": 1044,
+    "maximum_attempts_per_behavioral_cell": 3
+  },
+  "constraints": {
+    "max_concurrent_model_workers": 2,
+    "max_total_allocated_gpus": 4,
+    "start_with_model_workers": 1,
+    "existing_authorized_cluster_capacity_only": true,
+    "fresh_idle_allocation_check_required": true,
+    "new_paid_capacity_allowed": false,
+    "new_cluster_provisioning_allowed": false,
+    "preempt_or_stop_unowned_workloads_allowed": false,
+    "bounded_job_deadline_required": true,
+    "automatic_infrastructure_retry_allowed": false,
+    "raw_output_on_persistent_storage_required": true,
+    "storage_reserve_and_stage_release_gates_unchanged": true
+  },
+  "interpretation": "The user did not impose an aggregate GPU-hour cap. Free means verified idle existing capacity, not permission to provision new paid infrastructure. This authorization is resource scope only: it neither attests current GPU availability nor releases unqualified fixtures, runtimes, prompts, or behavioral cells. D/C still require pilot-derived runtime/storage estimates and their engineering releases.",
+  "supersedes": "The coordinator's proposed requirement for a finite numeric owner-approved GPU-hour cap; no numeric cap was approved or invented.",
+  "scientific_protocol_modified": false,
+  "behavioral_cells_released_by_this_artifact": 0
+}

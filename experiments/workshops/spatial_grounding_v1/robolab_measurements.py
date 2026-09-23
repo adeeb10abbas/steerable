@@ -2,9 +2,29 @@
 
 from __future__ import annotations
 
-from typing import Sequence
+from typing import Any, Sequence
 
 import numpy as np
+
+
+def articulation_body_frames(data: Any) -> dict[str, Any]:
+    names = list(data.body_names)
+    positions = np.asarray(data.body_pos_w[0].detach().cpu().numpy(), dtype=np.float64)
+    rotations = np.asarray(data.body_quat_w[0].detach().cpu().numpy(), dtype=np.float64)
+    if (not names or len(set(names)) != len(names) or positions.shape != (len(names), 3)
+            or rotations.shape != (len(names), 4) or not np.isfinite(positions).all()
+            or not np.isfinite(rotations).all()):
+        raise ValueError("robot body frame inventory is malformed")
+    if not np.allclose(np.linalg.norm(rotations, axis=1), 1, atol=1e-3):
+        raise ValueError("robot body quaternions are not normalized")
+    return {
+        "source": "IsaacLab ArticulationData body_pos_w/body_quat_w; world frame",
+        "bodies": {
+            name: {"position_world_xyz_m": position.tolist(), "quaternion_world_wxyz": rotation.tolist()}
+            for name, position, rotation in zip(names, positions, rotations, strict=True)
+        },
+        "claim_boundary": "body frame origins, not inferred fingertip contact centers",
+    }
 
 
 def geometric_center_state(

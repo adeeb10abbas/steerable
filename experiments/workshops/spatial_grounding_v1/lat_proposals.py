@@ -1,109 +1,139 @@
-"""Deterministic, explicitly unqualified LAT fixture proposals."""
+"""Deterministic LAT proposals; acceptance requires six recorded physical trials."""
 
 from __future__ import annotations
 
-import hashlib
-import json
 import argparse
+import hashlib
+import itertools
+import json
 from pathlib import Path
-import math
 from typing import Any, Mapping
 
+import numpy as np
 
-def propose_lat_layouts(workspace: Mapping[str, Any], *, seed: int, count: int = 100) -> list[dict[str, Any]]:
-    """Propose neutral root-pose layouts from measured geometry, never qualify them."""
-
-    if workspace.get("measurement_schema_version") != "sgw-01-lat-measured-workspace-v2":
-        raise ValueError("LAT proposals require a measured-workspace v2 receipt")
-    if not 1 <= count <= 100:
-        raise ValueError("LAT proposal count must be within the frozen 1..100 cap")
-    objects = workspace["objects"]
-    cube, bowl, table = (objects[name] for name in ("rubiks_cube", "bowl", "table"))
-    for name, row in (("rubiks_cube", cube), ("bowl", bowl)):
-        if "com_position_env_local_xyz_m" not in row:
-            raise ValueError(f"{name} lacks required measured COM geometry")
-    table_min, table_max = table["bbox_env_local_min_xyz_m"], table["bbox_env_local_max_xyz_m"]
-    cube_half = _half_extent(cube)
-    bowl_half = _half_extent(bowl)
-    cube_offset, bowl_offset = cube["geometric_center_offset_root_local_xyz_m"], bowl["geometric_center_offset_root_local_xyz_m"]
-    cube_q, bowl_q = cube["root_quaternion_world_wxyz"], bowl["root_quaternion_world_wxyz"]
-    cube_z, bowl_z = cube["root_position_env_local_xyz_m"][2], bowl["root_position_env_local_xyz_m"][2]
-    y_delta = _rot_y(bowl_q, bowl_offset) - _rot_y(cube_q, cube_offset)
-    margin = 0.01
-    low_x = table_min[0] + cube_half[0] + bowl_half[0] + margin
-    high_x = table_max[0] - cube_half[0] - bowl_half[0] - margin
-    low_y = table_min[1] + max(cube_half[1], bowl_half[1]) + margin
-    high_y = table_max[1] - max(cube_half[1], bowl_half[1]) - margin
-    if low_x >= high_x or low_y >= high_y:
-        raise ValueError("measured table bounds cannot contain distinct neutral LAT proposals")
-    rows = []
-    for index in range(count):
-        digest = hashlib.sha256(f"{seed}|LAT|{index}".encode()).digest()
-        unit_x, unit_y = int.from_bytes(digest[:8], "big") / 2**64, int.from_bytes(digest[8:16], "big") / 2**64
-        bowl_x, bowl_y = low_x + unit_x * (high_x - low_x), low_y + unit_y * (high_y - low_y)
-        cube_x = bowl_x + (cube_half[0] + bowl_half[0] + margin) * (1 if index % 2 else -1)
-        if not table_min[0] + cube_half[0] <= cube_x <= table_max[0] - cube_half[0]:
-            cube_x = bowl_x - (cube_half[0] + bowl_half[0] + margin) * (1 if index % 2 else -1)
-        rows.append({
-            "proposal_id": f"LAT-PROPOSAL-{index + 1:03d}",
-            "status": "proposed_unqualified_requires_physical_validation",
-            "object_root_poses": {
-                "rubiks_cube": {"position_m": [cube_x, bowl_y + y_delta, cube_z], "quaternion_wxyz": cube_q},
-                "bowl": {"position_m": [bowl_x, bowl_y, bowl_z], "quaternion_wxyz": bowl_q},
-            },
-            "center_source": "pinned_robolab_geometric_center",
-            "scoring_center_offsets_root_local_m": {"rubiks_cube": cube_offset, "bowl": bowl_offset},
-            "waypoint_recipe": {
-                "source": "experiments/v3/phase_e/reference_controller_runner.py",
-                "phases": ["pregrasp", "grasp_approach", "close", "lift", "preplace", "place", "release"],
-                "eef_start_env_local_xyz_m": workspace["eef_position_env_local_xyz_m"],
-                "requires_live_abs_ik_validation": True,
-            },
-        })
-    return rows
+from .fixtures import ACTION_CAP, FixtureCandidate, candidate_order, write_json
+from .lat_candidate_generator import workspace_digest
 
 
-def proposal_to_candidate(proposal: Mapping[str, Any], workspace: Mapping[str, Any], *, seed: int) -> dict[str, Any]:
-    """Make an explicitly unqualified proposal startable by physical validation."""
-    poses = proposal["object_root_poses"]
-    cube_center = _center(poses["rubiks_cube"], proposal["scoring_center_offsets_root_local_m"]["rubiks_cube"])
-    bowl_center = _center(poses["bowl"], proposal["scoring_center_offsets_root_local_m"]["bowl"])
-    paths = {}
-    for sign, name in ((1, "positive"), (-1, "negative")):
-        target = [bowl_center[0], bowl_center[1] + sign * .04, cube_center[2]]
-        paths[name] = [
-            _waypoint([cube_center[0], cube_center[1], cube_center[2] + .12], 0.0),
-            _waypoint([cube_center[0], cube_center[1], cube_center[2] + .025], 0.0),
-            _waypoint([cube_center[0], cube_center[1], cube_center[2] + .025], .785398),
-            _waypoint([cube_center[0], cube_center[1], cube_center[2] + .12], .785398),
-            _waypoint([target[0], target[1], target[2] + .12], .785398),
-            _waypoint([target[0], target[1], target[2] + .04], .785398),
-            _waypoint([target[0], target[1], target[2] + .04], 0.0),
-        ]
+def _bounds(row: Mapping[str, Any], center: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    delta = center - np.asarray(row["geometric_center_env_local_xyz_m"])
+    return (
+        np.asarray(row["bbox_env_local_min_xyz_m"]) + delta,
+        np.asarray(row["bbox_env_local_max_xyz_m"]) + delta,
+    )
+
+
+def _overlap(first: tuple[np.ndarray, np.ndarray], second: tuple[np.ndarray, np.ndarray]) -> bool:
+    return bool(np.all(first[0] - 0.01 < second[1]) and np.all(second[0] - 0.01 < first[1]))
+
+
+def _root_pose(row: Mapping[str, Any], center: np.ndarray) -> dict[str, Any]:
+    delta = center - np.asarray(row["geometric_center_env_local_xyz_m"])
     return {
-        "candidate_id": proposal["proposal_id"].replace("PROPOSAL", "CANDIDATE"),
-        "family": "LAT", "seed": seed, "task_asset": workspace["task_asset"],
-        "asset_manifest_sha256": workspace["asset_manifest_sha256"], "object_poses": poses,
-        "metadata": {
-            "status": "unqualified_proposal_starting_physical_validation",
-            "workspace_receipt_sha256": workspace["receipt_sha256"],
-            "center_source": proposal["center_source"],
-            "scoring_center_offsets_root_local_m": proposal["scoring_center_offsets_root_local_m"],
-            "abs_ik_waypoints": paths, "historical_layout_fingerprint": None,
-        },
+        "position_m": (np.asarray(row["root_position_env_local_xyz_m"]) + delta).tolist(),
+        "quaternion_wxyz": row["root_quaternion_world_wxyz"],
     }
 
 
-def _waypoint(position: list[float], gripper: float) -> dict[str, Any]:
-    return {"position_world_xyz_m": position, "gripper_position": gripper, "hold_steps": 20}
+def _waypoints(cube: np.ndarray, target: np.ndarray, origin: np.ndarray) -> list[dict[str, Any]]:
+    phases = (
+        (cube, 0.12, 0.0, 20),
+        (cube, 0.025, 0.0, 20),
+        (cube, 0.025, 0.785398, 20),
+        (cube, 0.12, 0.785398, 20),
+        (target, 0.12, 0.785398, 20),
+        (target, 0.04, 0.785398, 20),
+        (target, 0.04, 0.0, ACTION_CAP - 120),
+    )
+    return [{
+        "position_world_xyz_m": (point + origin + np.asarray([0.0, 0.0, lift])).tolist(),
+        "gripper_position": grip,
+        "hold_steps": steps,
+    } for point, lift, grip, steps in phases]
 
 
-def _center(pose: Mapping[str, Any], offset: list[float]) -> list[float]:
-    q, p = pose["quaternion_wxyz"], pose["position_m"]
-    w, x, y, z = q; vx, vy, vz = offset
-    return [p[0] + (1-2*(y*y+z*z))*vx + 2*(x*y-z*w)*vy + 2*(x*z+y*w)*vz,
-            p[1] + 2*(x*y+z*w)*vx + (1-2*(x*x+z*z))*vy + 2*(y*z-x*w)*vz,
-            p[2] + 2*(x*z-y*w)*vx + 2*(y*z+x*w)*vy + (1-2*(x*x+y*y))*vz]
+def propose_lat_layouts(workspace: Mapping[str, Any], *, seed: int, count: int = 100) -> list[dict[str, Any]]:
+    if workspace.get("measurement_schema_version") != "sgw-01-lat-measured-workspace-v2":
+        raise ValueError("LAT proposals require a measured-workspace v2 receipt")
+    if workspace.get("receipt_sha256") != workspace_digest(workspace):
+        raise ValueError("workspace receipt digest mismatch")
+    if workspace.get("model_request_count") != 0 or workspace.get("behavioral_episode_count") != 0:
+        raise ValueError("workspace must be model blind")
+    if type(count) is not int or not 1 <= count <= 100:
+        raise ValueError("LAT proposal count must be within the frozen 1..100 cap")
+    objects = workspace["objects"]
+    cube, bowl, table, banana = (objects[name] for name in ("rubiks_cube", "bowl", "table", "banana"))
+    for row in (cube, bowl):
+        if len(row.get("com_position_env_local_xyz_m", [])) != 3:
+            raise ValueError("cube and bowl require measured COM geometry")
+    origin = np.asarray(workspace["environment_origin_world_xyz_m"], dtype=float)
+    if not np.allclose(workspace["robot"]["base_quaternion_world_wxyz"], [1, 0, 0, 0], atol=1e-6):
+        raise ValueError("LAT proposal axes require the measured robot/world-axis alignment")
+    measured_cube = np.asarray(cube["geometric_center_env_local_xyz_m"], dtype=float)
+    measured_bowl = np.asarray(bowl["geometric_center_env_local_xyz_m"], dtype=float)
+    table_min, table_max = np.asarray(table["bbox_env_local_min_xyz_m"]), np.asarray(table["bbox_env_local_max_xyz_m"])
+    cube_half = (np.asarray(cube["bbox_env_local_max_xyz_m"]) - cube["bbox_env_local_min_xyz_m"]) / 2
+    bowl_half = (np.asarray(bowl["bbox_env_local_max_xyz_m"]) - bowl["bbox_env_local_min_xyz_m"]) / 2
+    gap_x = float(cube_half[0] + bowl_half[0] + 0.02)
+    goal_depth = max(0.05, float(cube_half[1] + bowl_half[1] + 0.02))
+    low = table_min[:2] + np.asarray([bowl_half[0], goal_depth + cube_half[1]]) + 0.02
+    high = table_max[:2] - np.asarray([bowl_half[0], goal_depth + cube_half[1]]) - 0.02
+    if not np.all(high > low):
+        raise ValueError("measured table has no conservative proposal region")
+    # The cap includes geometrically rejected proposals; never refill it.
+    locations = list(itertools.product(np.linspace(low[0], high[0], 20), np.linspace(low[1], high[1], 20), (-1, 1)))
+    locations.sort(key=lambda point: hashlib.sha256(json.dumps([seed, *map(float, point)]).encode()).digest())
+    distractor = _bounds(banana, np.asarray(banana["geometric_center_env_local_xyz_m"]))
+    rows: list[dict[str, Any]] = []
+    for index, (x, y, side) in enumerate(locations[:count], 1):
+        bowl_center = np.asarray([x, y, measured_bowl[2]])
+        cube_center = np.asarray([x + side * gap_x, y, measured_cube[2]])
+        targets = [cube_center + [0, sign * goal_depth, 0] for sign in (1, -1)]
+        bounds = [_bounds(bowl, bowl_center), _bounds(cube, cube_center), *[_bounds(cube, point) for point in targets]]
+        rejections = []
+        if any(np.any(minimum[:2] < table_min[:2] + 0.01) or np.any(maximum[:2] > table_max[:2] - 0.01)
+               for minimum, maximum in bounds):
+            rejections.append("initial_or_target_bounds_outside_table_clearance")
+        if _overlap(bounds[0], bounds[1]):
+            rejections.append("initial_cube_bowl_overlap")
+        if any(_overlap(bound, distractor) for bound in bounds):
+            rejections.append("initial_or_target_distractor_overlap")
+        corridor = (np.minimum(bounds[2][0], bounds[3][0]), np.maximum(bounds[2][1], bounds[3][1]))
+        if _overlap(corridor, distractor):
+            rejections.append("transport_corridor_distractor_overlap")
+        if _overlap(corridor, bounds[0]):
+            rejections.append("transport_corridor_bowl_overlap")
+        candidate = {
+            "candidate_id": f"LAT-CANDIDATE-{index:03d}",
+            "family": "LAT", "seed": seed, "task_asset": workspace["task_asset"],
+            "asset_manifest_sha256": workspace["asset_manifest_sha256"],
+            "object_poses": {"rubiks_cube": _root_pose(cube, cube_center), "bowl": _root_pose(bowl, bowl_center)},
+            "metadata": {
+                "status": "proposed_unqualified_requires_physical_validation",
+                "workspace_receipt_sha256": workspace["receipt_sha256"],
+                "generator_source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                "center_source": "pinned_robolab_geometric_center",
+                "scoring_center_offsets_root_local_m": {
+                    name: objects[name]["geometric_center_offset_root_local_xyz_m"]
+                    for name in ("rubiks_cube", "bowl")
+                },
+                "abs_ik_waypoints": {
+                    name: _waypoints(cube_center, target, origin)
+                    for name, target in zip(("positive", "negative"), targets, strict=True)
+                },
+                "controller_recipe_source": "experiments/v3/phase_e/reference_controller_runner.py",
+                "eef_start_env_local_xyz_m": workspace["eef_position_env_local_xyz_m"],
+                "geometric_screen": "table_and_distractor_clearance_only_not_reachability",
+                "geometric_screen_status": "rejected" if rejections else "passed",
+                "geometric_rejection_reasons": rejections,
+                "robot_reachability_status": "unqualified_requires_native_ik_and_physical_trials",
+                "historical_layout_fingerprint": None,
+            },
+        }
+        FixtureCandidate.from_json(candidate)
+        rows.append(candidate)
+    candidate_order(seed, [FixtureCandidate.from_json(row) for row in rows])
+    return rows
 
 
 def main() -> None:
@@ -116,22 +146,21 @@ def main() -> None:
     if args.output.exists():
         raise FileExistsError(f"refusing to overwrite {args.output}")
     workspace = json.loads(args.workspace_receipt.read_text())
-    proposals = propose_lat_layouts(workspace, seed=args.seed, count=args.count)
-    value = {"schema_version": "sgw-01-lat-proposals-v1", "status": "proposed_unqualified",
-             "workspace_receipt_sha256": workspace["receipt_sha256"], "proposals": proposals,
-             "candidates": [proposal_to_candidate(row, workspace, seed=args.seed) for row in proposals]}
-    args.output.write_text(json.dumps(value, sort_keys=True, indent=2) + "\n")
+    candidates = propose_lat_layouts(workspace, seed=args.seed, count=args.count)
+    write_json(args.output, {
+        "schema_version": "sgw-01-lat-proposals-v1",
+        "status": "proposed_unqualified",
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "workspace_receipt_sha256": workspace["receipt_sha256"],
+        "seed": args.seed,
+        "candidate_cap_includes_geometric_rejections": True,
+        "qualification_order": [
+            item.candidate_id for item in candidate_order(args.seed, [FixtureCandidate.from_json(row) for row in candidates])
+        ],
+        "candidates": candidates,
+    })
 
 
 if __name__ == "__main__":
     main()
-
-
-def _half_extent(row: Mapping[str, Any]) -> list[float]:
-    return [(high - low) / 2 for low, high in zip(row["bbox_env_local_min_xyz_m"], row["bbox_env_local_max_xyz_m"], strict=True)]
-
-
-def _rot_y(q: list[float], v: list[float]) -> float:
-    w, x, y, z = q
-    vx, vy, vz = v
-    return 2*(x*y + z*w)*vx + (1 - 2*(x*x + z*z))*vy + 2*(y*z - x*w)*vz

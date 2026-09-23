@@ -1,0 +1,22 @@
+[
+  {
+    "op": "replace",
+    "path": "/metadata/name",
+    "value": "sgw01-ali-rtx-preflight-20260922c"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/0/resources/requests/nvidia.com~1gpu",
+    "value": "4"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/0/resources/limits/nvidia.com~1gpu",
+    "value": "4"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/0/args/0",
+    "value": "set -euo pipefail\nSTUDY=/data/users/ali/sgw-01/source/432796d\nROBOLAB=/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241\nPY=/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python\nOUT=/data/users/ali/sgw-01/preflight/rtx-20260922c\ntest ! -e \"$OUT/renderer.log\"\nmkdir -p \"$OUT\" \"$HOME/.cache\"\nexec > >(tee \"$OUT/renderer.log\") 2>&1\ntest \"$(git -C \"$STUDY\" rev-parse HEAD)\" = 432796d9b04e69febd4bf6adb764d859ef8fe58f\ntest -z \"$(git -C \"$STUDY\" status --porcelain)\"\ntest \"$(git -C \"$ROBOLAB\" rev-parse HEAD)\" = 0aef241fb088ca21bb4ebd24448940ed56620d17\ntest -z \"$(git -C \"$ROBOLAB\" status --porcelain --untracked-files=no)\"\ncd \"$STUDY\"\n\"$PY\" tools/validate_vla_wam_v3_protocol.py --quiet\n\"$PY\" tools/validate_vla_wam_v2_protocol.py > \"$OUT/v2_validation.json\"\nexport PYTHONPATH=\"$STUDY:$ROBOLAB\"\nexport CUDA_VISIBLE_DEVICES\nCUDA_VISIBLE_DEVICES=$(\"$PY\" -m experiments.workshops.spatial_grounding_v1.gpu_idle_probe --expected-count 4 --output \"$OUT/gpu_selection.json\")\necho \"Verified idle allocated GPU: $CUDA_VISIBLE_DEVICES\"\ntest -r \"$VK_ICD_FILENAMES\"\n\"$PY\" -m experiments.workshops.spatial_grounding_v1.build_asset_manifest --robolab-root \"$ROBOLAB\" --output \"$OUT/assets.json\"\ncd \"$ROBOLAB\"\nexec \"$PY\" -m experiments.workshops.spatial_grounding_v1.runtime_preflight --study-root \"$STUDY\" --robolab-root \"$ROBOLAB\" --assets-manifest \"$OUT/assets.json\" --output \"$OUT/renderer.json\" --headless --num-envs 1 --device cuda:0 --renderer realtime --rendering-type balanced\n"
+  }
+]

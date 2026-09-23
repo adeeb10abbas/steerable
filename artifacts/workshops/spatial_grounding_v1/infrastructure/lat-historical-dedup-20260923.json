@@ -1,0 +1,24 @@
+{
+  "behavioral_episode_count": 0,
+  "coordinate_contract": {
+    "historical_record_requirement": "independently verified source/hash bindings, actor-root poses, and root-local scoring-center offsets for cube and bowl",
+    "reset": "actor-root position plus quaternion; <=3 mm and <=2 degrees",
+    "scoring": "geometric center reconstructed from root pose plus measured root-local offset"
+  },
+  "coverage": {
+    "exhaustive_source_verified": false,
+    "historical_record_count": 0,
+    "valid_geometry_record_count": 0
+  },
+  "coverage_policy": "This initial gate is diagnostic-only. A supplied registry is not proof that all historical layouts were supplied, so it never authorizes release.",
+  "matches": [],
+  "missing_evidence": [
+    "No hash-bound historical LAT actor-root/scoring-center layout registry was supplied."
+  ],
+  "model_request_count": 0,
+  "proposal_count": 100,
+  "proposal_sha256": "5b47860f6eac16e318515534a918d9460677b58d6174b4b76a29f7cc6be34eb9",
+  "release_permitted": false,
+  "schema_version": "sgw-01-lat-historical-layout-dedup-v1",
+  "status": "blocked_missing_historical_layout_evidence"
+}

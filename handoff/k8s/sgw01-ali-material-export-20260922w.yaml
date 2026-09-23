@@ -1,0 +1,74 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-material-export-20260922w
+  namespace: 211247-prod
+  labels: {owner: ali, app.kubernetes.io/name: sgw-01}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels: {owner: ali, app.kubernetes.io/name: sgw-01, purpose: read-only-material-export}
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 20
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/hostname: dcwipphhgc191.edc.nam.gm.com}
+      tolerations:
+        - {key: nvidia.com/gpu, operator: Equal, value: present, effect: NoSchedule}
+      imagePullSecrets:
+        - {name: artifactory-ci-pull-secret}
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: export
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              exec /data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python - <<'PY'
+              import base64
+              import gzip
+              import hashlib
+              import json
+              from pathlib import Path
+              root = Path("/data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets")
+              manifest_path = Path("/data/users/ali/sgw-01/preflight/a40-20260922e/assets.json")
+              raw = manifest_path.read_bytes()
+              assert hashlib.sha256(raw).hexdigest() == "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806"
+              manifest = json.loads(raw)
+              files = {}
+              directories = {}
+              for row in [manifest["scene"], *manifest["assets"]]:
+                  path = Path(row["path"])
+                  if not path.resolve().is_relative_to(root.resolve()) or path.stat().st_size > 4 * 1024 * 1024:
+                      raise ValueError(f"asset escapes the scoped bounded export: {path}")
+                  raw = path.read_bytes()
+                  assert len(raw) == row["bytes"] and hashlib.sha256(raw).hexdigest() == row["sha256"], str(path)
+                  files[str(path.relative_to(root))] = {**row, "encoding": "gzip_base64", "data": base64.b64encode(gzip.compress(raw, mtime=0)).decode("ascii")}
+                  if str(path.parent) not in directories:
+                      children = sorted(path.parent.iterdir())
+                      if len(children) > 2000:
+                          raise ValueError("asset directory exceeds inspection bound")
+                      directories[str(path.parent)] = [{"name": p.name, "is_directory": p.is_dir()} for p in children]
+              print(json.dumps({"schema_version": "sgw-01-material-export-v1", "raw_root": str(root), "files": files, "directories": directories, "model_requests": 0, "allocated_gpus": 0}))
+              PY
+          env:
+            - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+          resources:
+            requests: {cpu: "1", memory: 512Mi}
+            limits: {cpu: "1", memory: 1Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - {name: workspace, mountPath: /data, readOnly: true}
+      volumes:
+        - name: workspace
+          persistentVolumeClaim: {claimName: 211247-prod-pvc, readOnly: true}

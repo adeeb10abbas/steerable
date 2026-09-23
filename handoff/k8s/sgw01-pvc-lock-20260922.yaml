@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sgw01-ali-pvc-lock-20260922
+  namespace: 211247-prod
+  labels:
+    owner: ali
+    app.kubernetes.io/name: sgw-01
+    app.kubernetes.io/managed-by: ali-research
+spec:
+  completionMode: Indexed
+  completions: 2
+  parallelism: 2
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels:
+        owner: ali
+        app.kubernetes.io/name: sgw-01
+        purpose: pvc-lock-qualification
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 20
+      automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: artifactory-ci-pull-secret
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: probe
+          image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+          command: ["/bin/bash", "-ec"]
+          args:
+            - |
+              role=owner
+              if [ "$JOB_COMPLETION_INDEX" = 1 ]; then role=contender; fi
+              exec /data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python \
+                /data/users/ali/sgw-01/infrastructure/lock-20260922/cluster_probe.py \
+                --root /data/users/ali/sgw-01/infrastructure/lock-20260922 \
+                --role "$role" --timeout-seconds 180
+          resources:
+            requests:
+              cpu: "1"
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            runAsGroup: 2518800
+            runAsNonRoot: true
+            runAsUser: 816149040
+          volumeMounts:
+            - name: workspace
+              mountPath: /data
+      volumes:
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: 211247-prod-pvc

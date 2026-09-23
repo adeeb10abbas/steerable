@@ -142,12 +142,9 @@ class FixtureCandidate:
             "goal_termination": False,
             "model_request_count": 0,
         }
-        native_scene = self.metadata.get("native_scene")
-        if native_scene is not None:
-            payload["native_scene"] = native_scene
-        supports = self.metadata.get("goal_supports")
-        if supports is not None:
-            payload["goal_supports"] = supports
+        for key in ("native_scene", "goal_supports"):
+            if key in self.metadata:
+                payload[key] = self.metadata[key]
         return payload
 
 

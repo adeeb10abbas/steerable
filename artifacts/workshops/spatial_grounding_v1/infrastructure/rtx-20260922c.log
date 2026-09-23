@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/data/users/ali/sgw-01/source/432796d/experiments/workshops/spatial_grounding_v1/gpu_idle_probe.py", line 69, in <module>
+    main()
+  File "/data/users/ali/sgw-01/source/432796d/experiments/workshops/spatial_grounding_v1/gpu_idle_probe.py", line 56, in main
+    selected = select_idle(gpus, occupied, args.expected_count)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/users/ali/sgw-01/source/432796d/experiments/workshops/spatial_grounding_v1/gpu_idle_probe.py", line 25, in select_idle
+    raise RuntimeError("No allocated GPU is idle; no simulator or model may start")
+RuntimeError: No allocated GPU is idle; no simulator or model may start

@@ -1,0 +1,11 @@
+usage: family_partition_worker.py [-h] --config CONFIG --rank RANK --root ROOT
+
+Finite CPU-only partition runner for frozen remaining HEIGHT/DIST slots. This
+module deliberately contains no Kubernetes or GPU integration. It only
+coordinates four deterministic callers around the existing single-slot runner.
+
+options:
+  -h, --help       show this help message and exit
+  --config CONFIG
+  --rank RANK
+  --root ROOT

@@ -1,0 +1,137 @@
+{
+  "asset_manifest_sha256": "3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806",
+  "candidate_id": "DIST-CANDIDATE-SGW-DIST-DESIGN-003",
+  "family": "DIST",
+  "metadata": {
+    "baseline_banana_pose": {
+      "position_m": [
+        0.800000011920929,
+        0.38999998569488525,
+        0.06946864724159241
+      ],
+      "quaternion_wxyz": [
+        0.9999781250953674,
+        -0.0026648887433111668,
+        -0.006051987875252962,
+        0.0001454032608307898
+      ]
+    },
+    "bowl_side": "right",
+    "candidate_capture_receipt_sha256": "3af43977160ed13d250c6f82ce71a8a1b0427a08548ef624082d522bd8161df7",
+    "candidate_capture_sha256": "bce9b92932088836903e20e5adb4c28a8306e7136daa7b9078b7fa23e56a6ccd",
+    "candidate_overlay_manifest_sha256": "a3d6f1abe06a9610ee346a8683bd6d7a9da867d844b1bf78be274d9449825554",
+    "controller_calibration": {
+      "bytes": 4031,
+      "path": "/data/users/ali/sgw-01/source/e43f5b40-bq/artifacts/workshops/spatial_grounding_v1/controller_calibrations/lat-closed-pad-20260923.json",
+      "sha256": "107442ccca01c4ac44ec6e1cb9674d51dbcd8663288a851dc54fa91a124f93d7"
+    },
+    "controller_calibration_sha256": "107442ccca01c4ac44ec6e1cb9674d51dbcd8663288a851dc54fa91a124f93d7",
+    "geometric_screen_status": "passed",
+    "geometry_guard_support_ids": [
+      "dist_bowl_support",
+      "dist_plate_support",
+      "dist_neutral_cube_support",
+      "dist_bowl_landing_support",
+      "dist_plate_landing_support"
+    ],
+    "goal_supports": {
+      "near_bowl": {
+        "contact_sensor_id": "rubiks_cube__dist_bowl_landing_support",
+        "cube_center_env_local_xyz_m": [
+          0.290118008852005,
+          -0.1742749959230423,
+          0.12000000476837158
+        ],
+        "support_surface_id": "dist_bowl_landing_support"
+      },
+      "near_plate": {
+        "contact_sensor_id": "rubiks_cube__dist_plate_landing_support",
+        "cube_center_env_local_xyz_m": [
+          0.6501179933547974,
+          0.3257249891757965,
+          0.12000000476837158
+        ],
+        "support_surface_id": "dist_plate_landing_support"
+      }
+    },
+    "historical_layout_fingerprint": null,
+    "native_scene": {
+      "asset": "/data/users/ali/sgw-01/qualification/family-native-smoke-20260923br/3/evidence/candidate-overlay.usda",
+      "object_names": [
+        "rubiks_cube",
+        "bowl",
+        "banana",
+        "table",
+        "plate",
+        "dist_bowl_support",
+        "dist_plate_support",
+        "dist_neutral_cube_support",
+        "dist_bowl_landing_support",
+        "dist_plate_landing_support"
+      ]
+    },
+    "prospective_design_id": "SGW-DIST-DESIGN-003",
+    "prospective_plan_sha256": "3d0e781f8786ae91f2422099104ce8e38d48e4b1c6bc0a6c8ca723f2c58936ab",
+    "scoring_center_offsets_root_local_m": {
+      "bowl": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "plate": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rubiks_cube": [
+        -0.01015971898322125,
+        0.028928753245158832,
+        -0.002403985121839028
+      ]
+    },
+    "status": "unqualified_proposal_starting_physical_validation"
+  },
+  "object_poses": {
+    "bowl": {
+      "position_m": [
+        0.43011799454689026,
+        -0.1742749959230423,
+        0.11999999731779099
+      ],
+      "quaternion_wxyz": [
+        0.9999999403953552,
+        -5.8753543271450326e-05,
+        -0.00032362030469812453,
+        -0.00010501052747713402
+      ]
+    },
+    "plate": {
+      "position_m": [
+        0.6501180529594421,
+        0.14572499692440033,
+        0.11999999731779099
+      ],
+      "quaternion_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "rubiks_cube": {
+      "position_m": [
+        0.550287663936615,
+        -0.043197646737098694,
+        0.12243536114692688
+      ],
+      "quaternion_wxyz": [
+        0.9999990463256836,
+        -0.0009071399690583348,
+        0.001037940033711493,
+        8.44117093947716e-05
+      ]
+    }
+  },
+  "seed": 20260922,
+  "task_asset": "/data/users/ali/sgw-01/qualification/family-native-smoke-20260923br/3/evidence/candidate-overlay.usda"
+}

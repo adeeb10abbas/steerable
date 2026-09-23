@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
-  "status": "lat_closed_below_release_gate_height_dist_native_visual_setup_accepted_qualification_unreleased",
-  "updated_at_utc": "2026-09-23T07:43:57Z",
+  "status": "lat_closed_height_dist_smoke_verified_remaining_qualification_registered_behavior_unreleased",
+  "updated_at_utc": "2026-09-23T08:12:51Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -57,6 +57,10 @@
     "preaction_guard_persisted_before_controller_planning": "9de6d9d71db6854d71e955404b9275047b5e5e1a",
     "native_contact_inventory_order": "c3c976db56fd694d2c5498a8409b08f9a510a41c",
     "native_single_environment_bbox_vectors": "e43f5b4054d1b65d192daa734fa9d99427b2eca3",
+    "finite_family_partition_worker": "b1519ece",
+    "shared_claim_and_smoke_integrity_hardening": "4204fa65",
+    "startup_failure_peer_stop": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d",
+    "partition_and_executor_targeted_tests_passed": 23,
     "local_sgw_tests_passed": 329,
     "local_sgw_tests_skipped_linux_identity": 1,
     "last_full_test_source_commit": "e43f5b4054d1b65d192daa734fa9d99427b2eca3",
@@ -402,25 +406,34 @@
   },
   "ongoing_work": {
     "fixture_session": "4920423a-07f0-47a0-a086-0c1a3a7df6eb",
-    "fixture_scope": "Four bi captures are artifact-valid and independently accepted for native visual setup only. bm froze both100-slot plans: HEIGHT57 capture-eligible/43 geometric rejections; DIST64/36. No native candidate has been physically qualified. Parent alone owns launches.",
+    "fixture_scope": "Four bi captures are accepted for native visual setup only. bm froze100 proposals per family. br completed24 full physical trials: HEIGHT000 and DIST000 pass all6; HEIGHT001 and DIST003 are valid5/6 rejections. All4 raw chains were independently reverified by bs. Historical deduplication and model release remain closed. Parent alone owns launches.",
     "runtime_session": "ae1cfe61-391d-4fa7-89c8-661027eef1db",
     "runtime_scope": "D1 accumulated native-latent decode and provenance are integrated, including distinct decoded_unmapped/decode_error/latent_only_retained states. Native startup, actual VAE execution and physical future time mapping remain unqualified. A real launch needs an explicit realistic finite SGW01_READINESS_TIMEOUT, not the default15-second budget. No model construction/server launch authorized.",
     "worker_session": "bded866b-8336-4613-9cc3-18802acd66df",
-    "worker_scope": "Existing child is implementing a finite four-rank worker for the frozen remaining117 slots, with independent smoke evidence gate, disjoint deterministic slicing, shared stop sentinel between slots, resource rechecks, bounded children and no retry/refill. CPU-only code/tests; no cluster or model authority. Parent retains all launches, pending br integrity. Parent source e43f5b40 passes329 source-backed tests/1skip.",
+    "worker_scope": "Finite four-rank worker and startup/claim/stop hardening integrated at68b9e100;23 parent partition/executor tests pass. bt registered for117 remaining slots, with fresh per-slot GPU checks, whole-registry storage reserve, shared exclusive claims and stop-between-slots sentinel. Child is correcting offline summary compiler b0c919fc, not integrated; no cluster or model authority.",
     "historical_coverage_session": "423119b8-f015-4dce-b22f-fc2b952c995f",
-    "historical_coverage_scope": "The24-layout WMF forecast registry is not V3-E004 coverage. All45 inventory sources remain unresolved for complete comparable geometry. bj recovered15 semantics probes and5 full E006 state payloads; bl now recovered bounded fields from all7 remaining files, hashing every source byte. Root-only/preflight records remain non-comparable. The additive exclusion audit found neither complete HEIGHT root intervals nor complete DIST no-plate inventories; no exemption, rerun or release.",
+    "historical_coverage_scope": "All45 inventory sources remain unresolved for complete comparable geometry; the24-layout WMF registry is not V3-E004 coverage. bl recovered bounded fields from all7 large sources with complete stream hashes. Audit correction: historical behavioral acceptance/release is not required to compare a failed/preflight reset. Complete frame/asset/layout lineage and a complete named population are required for coverage. Observed root gaps alone do not establish cohort exclusion; no exemption or release is claimed.",
     "independent_scene_reviewer": "89af7b05-595a-43d4-977b-ae0b077d6e9f",
     "scene_review_scope": "The same independent reviewer sealed bi acceptance as ACCEPT_NATIVE_VISUAL_SETUP_ONLY for all4 captures and exactly reproduced all20 policy preprocessing images. This is not an additional rater, physical qualification, category recognition, live tensor parity or behavioral release. Plate-category/wrist-occlusion caveats and per-candidate banana clearance remain binding."
   },
-  "active_task_gpu_jobs": [
+  "active_task_gpu_jobs": [],
+  "native_family_smoke_attempts": [
     {
       "job": "sgw01-ali-family-native-smoke-20260923br",
       "job_uid": "72b77b0a-bcdb-42b4-8a0a-0956a9492259",
       "started_at_utc": "2026-09-23T07:36:45Z",
-      "status": "real_native_controller_trials_running_first_450_action_trial_recorded_per_slot",
+      "status": "all_four_raw_verified_two_all_six_passes_two_valid_physical_rejections",
+      "completed_at_utc": "2026-09-23T08:02:52Z",
       "source_commit": "e43f5b4054d1b65d192daa734fa9d99427b2eca3",
       "raw_root": "/data/users/ali/sgw-01/qualification/family-native-smoke-20260923br",
-      "allocated_gpus": 4,
+      "allocated_gpus": 0,
+      "peak_allocated_gpus": 4,
+      "completed_trials": 24,
+      "controller_actions": 10800,
+      "all_six_pass_designs": ["SGW-HEIGHT-DESIGN-000", "SGW-DIST-DESIGN-000"],
+      "valid_physical_rejections": ["SGW-HEIGHT-DESIGN-001", "SGW-DIST-DESIGN-003"],
+      "compact_evidence": "infrastructure/native-smoke-20260923br/manifest.json",
+      "independent_recheck": "infrastructure/family-source-stage-20260923bs/receipt.json",
       "model_workers": 0,
       "automatic_retries_per_index": 0,
       "job_deadline_seconds": 4800,
@@ -428,8 +441,7 @@
       "child_deadline_seconds": 1800,
       "pods": ["sgw01-ali-family-native-smoke-20260923br-0-s8sj6", "sgw01-ali-family-native-smoke-20260923br-1-cff8x", "sgw01-ali-family-native-smoke-20260923br-2-5rdh8", "sgw01-ali-family-native-smoke-20260923br-3-zn5bl"]
     }
-  ],
-  "native_family_smoke_attempts": [
+    ,
     {
       "job": "sgw01-ali-family-native-smoke-20260923bp",
       "job_uid": "f8253c9e-1f98-49e5-9e5a-765ff71277f2",
@@ -480,11 +492,25 @@
   ],
   "active_task_cpu_jobs": [
     {
+      "job": "sgw01-ali-family-source-stage-20260923bs",
+      "job_uid": "40fcbc2c-a5f0-401d-8058-d4806e08e094",
+      "pod": "sgw01-ali-family-source-stage-20260923bs-5xsdq",
+      "pod_uid": "7709208c-cdca-4a71-9dd5-97f73e44dcb1",
+      "status": "all_four_smoke_raw_rechecks_complete_finite_export_window_active",
+      "allocated_gpus": 0,
+      "staged_at_utc": "2026-09-23T08:12:51.393259+00:00",
+      "bounded_export_window_seconds": 1800,
+      "receipt": "infrastructure/family-source-stage-20260923bs/receipt.json",
+      "receipt_sha256": "df3ffda569ac8d0ec30d01c221b2a35ec1c4331b404bca1aca33aaf0630b34c8"
+    }
+  ],
+  "completed_family_source_stages": [
+    {
       "job": "sgw01-ali-family-source-stage-20260923bq",
       "job_uid": "c386c1dd-13ae-4330-82ef-3148221fcbf9",
       "pod": "sgw01-ali-family-source-stage-20260923bq-9gqfj",
       "pod_uid": "b303603f-0245-440c-ba0a-3e73a82bde05",
-      "status": "source_stage_complete_finite_export_window_active",
+      "status": "completed_source_stage_and_finite_export_window",
       "allocated_gpus": 0,
       "staged_at_utc": "2026-09-23T07:35:48.879963+00:00",
       "bounded_export_window_seconds": 1800,
@@ -496,7 +522,7 @@
       "job_uid": "b76545c7-fec9-44ec-8712-da22564a18c7",
       "pod": "sgw01-ali-family-source-stage-20260923bo-jbtvh",
       "pod_uid": "41993e38-612a-4ce4-8c15-1cab06d2cd29",
-      "status": "source_stage_and_four_real_capture_replays_complete_finite_export_window_active",
+      "status": "completed_source_stage_and_four_real_capture_replays",
       "allocated_gpus": 0,
       "staged_at_utc": "2026-09-23T07:26:03.183909+00:00",
       "bounded_export_window_seconds": 1800,
@@ -516,12 +542,32 @@
     "dist": {"capture_eligible": 64, "geometric_rejections": 36, "left": 45, "right": 19},
     "native_smoke_design_ids": ["SGW-HEIGHT-DESIGN-000", "SGW-HEIGHT-DESIGN-001", "SGW-DIST-DESIGN-000", "SGW-DIST-DESIGN-003"],
     "native_smoke_manifest": "handoff/k8s/sgw01-ali-family-native-smoke-20260923bn.yaml",
-    "native_smoke_status": "br_real_native_physical_trials_running_after_preserved_bn_bp_setup_failures",
+    "native_smoke_status": "br_complete_two_all_six_passes_two_valid_physical_rejections_all_raw_independently_verified",
     "native_smoke_repair_manifest": "artifacts/workshops/spatial_grounding_v1/infrastructure/family-source-stage-20260923bq/native-smoke-br.json",
     "source_stage_job_completed_at_utc": "2026-09-23T07:27:43Z",
     "remaining_capture_eligible_slots": 117,
-    "physically_qualified_candidates": 0,
+    "physically_qualified_candidates": 2,
+    "physically_rejected_candidates": 2,
     "historical_coverage_complete": false,
+    "release_permitted": false
+  },
+  "remaining_family_partition": {
+    "status": "registered_not_started",
+    "job": "sgw01-ali-family-partition-20260923bt",
+    "manifest": "handoff/k8s/sgw01-ali-family-partition-20260923bt.json",
+    "source_commit": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d",
+    "source_root": "/data/users/ali/sgw-01/source/68b9e100-bs",
+    "config": "infrastructure/family-source-stage-20260923bs/partition-config.json",
+    "config_sha256": "aa6413ae35cce7e8a1c9d5770a6b22260e9089d8301e45afe630f00ebf5d6ee9",
+    "raw_root": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt",
+    "slots_per_rank": [30, 29, 29, 29],
+    "maximum_gpus": 4,
+    "model_workers": 0,
+    "automatic_retries": 0,
+    "job_deadline_seconds": 172800,
+    "pod_deadline_seconds": 171900,
+    "native_child_timeout_seconds": 2400,
+    "required_free_gib_before_each_claim": 3844,
     "release_permitted": false
   },
   "completed_capture_source_stages": [
@@ -640,7 +686,7 @@
       "kubernetes_failed_at_utc": "2026-09-23T06:33:03Z"
     }
   },
-  "next_authorized_step": "Let br finish the four exact native smoke slots, retain all physical outcomes and raw videos, and independently verify completed six-trial or genuine terminal-rejection evidence. Only after native integrity passes may the frozen remaining117 slots enter the finite four-GPU worker; preserve no retry/refill, source/calibration/geometry and stage resource gates. Learned runtime/historical/model release remains closed. No LAT rerun or threshold relaxation.",
+  "next_authorized_step": "br native integrity passed, including both preserved valid physical rejections. Upload the exact registered bt config and launch its117 fixed remaining slots only after confirming zero prior live GPU allocations. Four GPUs maximum, no retries/refill, whole-registry storage reserve, shared stop sentinel and unchanged source/calibration/geometry. Historical/runtime/model release remains closed; no LAT rerun or threshold relaxation.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",
@@ -909,7 +955,7 @@
     "No authenticated Overleaf connection is available."
   ],
   "next_safe_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 --request-timeout=30s -n 211247-prod get pods -l owner=ali,app.kubernetes.io/name=sgw-01",
-  "next_action": "Inspect running br native trials and preserve/verify terminal evidence. Integrate and test the bounded partition worker without launching remaining slots before the smoke integrity gate. Preserve bn/bp as infrastructure failures, never physical/model failures. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
+  "next_action": "Launch registered bt after exact config transfer and fresh resource gates; verify startup and first native capture. Preserve the2 br physical rejections and all24 complete trial videos. Prepare a fail-closed offline compiler without changing live worker source. No learned inference, LAT refill, threshold relaxation or overwriting old evidence.",
   "overleaf_project": "https://www.overleaf.com/project/6ab2bdb39b30df4bbc98a15e",
   "overleaf_modified": false
 }

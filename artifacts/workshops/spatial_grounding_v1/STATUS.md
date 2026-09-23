@@ -3,9 +3,11 @@
 **LAT qualification is complete: 20 all-six passes and 20 physical rejections,
 including candidate 032, plus 60 geometric rejections. The frozen 29-layout
 behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
-have verified receipts, views and complete videos. The new bi captures passed
-independent native-visual-setup review after support/distractor repair; physical
-candidate qualification and all learned-runtime release gates remain open.
+have verified receipts, views and complete videos. Native smoke br has completed
+24 full physical trials: two candidates pass all six trials and two are valid
+physical rejections. All four raw evidence chains passed independent rechecks.
+The remaining 117 frozen candidates have a registered finite four-GPU launcher.
+Historical coverage and all learned-runtime release gates remain open.
 Learned-policy requests and episodes remain at zero.**
 
 The supplied study is committed on
@@ -80,6 +82,37 @@ source-backed suite now passes 329 tests with one Linux-only identity skip.
 The finite remaining-slot worker is being implemented independently, but its
 launch remains conditional on completed native smoke integrity. All learned
 gates stay closed.
+
+Job br completed and released all four GPUs at 08:02:52 UTC. HEIGHT 000 and
+DIST 000 each passed all six trials. HEIGHT 001 and DIST 003 each passed five
+of six and remain valid physical rejections: HEIGHT's last negative-goal reset
+disturbed the reference, while DIST's first positive-goal reset failed the
+terminal physical predicate. Neither may be rerun or replaced. All 24 trials
+contain 450 actions and their complete state/frame/video records. Compact
+evidence is retained in
+[`infrastructure/native-smoke-20260923br/`](infrastructure/native-smoke-20260923br/);
+raw recordings remain on persistent cluster storage.
+
+CPU-only stage bs restored exact tested worker source `68b9e100` and
+independently reverified every raw smoke trial, reproducing all four existing
+verification files byte-for-byte. Its sealed receipt and the registered
+partition configuration are in
+[`infrastructure/family-source-stage-20260923bs/`](infrastructure/family-source-stage-20260923bs/).
+The partition/executor checks pass 23 tests. Registered Job bt assigns the
+117 remaining slots to four disjoint ranks of 30/29/29/29. It has no automatic
+retries, a shared stop sentinel for startup or slot infrastructure faults,
+exclusive shared claims, fresh GPU checks before each slot, and a conservative
+3,844 GiB free-space requirement before every claim. Already-running peers
+finish their current slot after a stop; they cannot claim another one.
+
+The observed complete smoke durations were below 27 minutes per candidate.
+The new engineering bounds are 40 minutes per native child and 48 hours for
+the finite Job, without changing six-trial/450-action scientific limits.
+This model-blind qualification queue can run without the app or laptop; it
+does not release any learned-policy queue or use a behavioral P95 estimate.
+Historical comparison does not require a prior layout to have passed or been
+released, but still requires complete frame/asset/layout lineage and population
+coverage. The recovered preflight roots do not close that gate.
 
 ## Scientific accounting
 

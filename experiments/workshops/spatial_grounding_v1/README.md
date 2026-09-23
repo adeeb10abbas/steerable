@@ -263,6 +263,27 @@ eight executed actions separately. Reset must evict the server session and
 clear local chunk state. Live server trace, reset eviction, decoded-future
 evidence, and checkpoint attestation remain required before D1 qualification.
 
+## Historical layout geometry evidence
+
+`historical_layout_evidence` is additive to the earlier source inventories and
+comparator. It resolves exact historical Git blobs and can join the 24
+forecast-layout pose manifests to their hash-bound accepted gate receipts.
+The resulting 144 object records preserve configured roots, settled roots,
+settled quaternions, AABBs and derived root-local geometric offsets separately.
+The historical field called `object_centers_robot_base_m` actually came from
+`world.get_pose`; it is not used as a geometric center. Geometry comes from
+the pinned producer's `world.get_bbox` extrema in the same environment-local
+axes. Reset displacement is never substituted for a geometric offset.
+
+Both export bytes and their independently pinned pose-manifest anchors are
+verified before a join. Raw exports stay outside Git; the compact registry
+retains provenance and JSON pointers. Set `SGW_HISTORICAL_POSE_EXPORT` and
+`SGW_HISTORICAL_GATE_EXPORT` to the retained exports for the optional real-data
+test, or pass `--pose-export` / `--gate-export` to regenerate the registry.
+This recovers one historical cohort, **not exhaustive historical coverage or
+permission to release any SGW family**. Historical poses are not replacement
+candidates.
+
 ## Native joint-position execution boundary
 
 `robolab_jointpos_environment:create_environment` is a simulator-process

@@ -45,6 +45,31 @@ def test_configure_app_uses_qualified_single_env_realtime_options(
     assert launcher.closed is True
 
 
+def test_configure_app_requires_all_renderer_fields_and_close(monkeypatch) -> None:
+    monkeypatch.setenv("SGW01_SIMULATOR_DEVICE", "cuda:0")
+    args = argparse.Namespace(device="cuda:0", headless=False, enable_cameras=False)
+    import pytest
+    with pytest.raises(RuntimeError, match="renderer/device"):
+        native_worker_entrypoint._configure_app(args)
+
+    class NoCloseLauncher:
+        app = object()
+
+        def __init__(self, args):
+            self.app = self.app
+
+    app_module = types.ModuleType("isaaclab.app")
+    app_module.AppLauncher = NoCloseLauncher
+    isaaclab = types.ModuleType("isaaclab")
+    isaaclab.app = app_module
+    monkeypatch.setitem(sys.modules, "isaaclab", isaaclab)
+    monkeypatch.setitem(sys.modules, "isaaclab.app", app_module)
+    args.num_envs = 1
+    args.rendering_mode = "balanced"
+    with pytest.raises(RuntimeError, match="app.close"):
+        native_worker_entrypoint._configure_app(args)
+
+
 def test_run_closes_simulator_after_existing_worker_returns(monkeypatch) -> None:
     events: list[str] = []
 
@@ -73,6 +98,29 @@ def test_run_closes_simulator_after_existing_worker_returns(monkeypatch) -> None
     assert events == ["worker", "close"]
 
 
+def test_preflight_rejects_false_stage_authorization_before_app(
+    monkeypatch, tmp_path: Path
+) -> None:
+    class Release:
+        def partition(self, model, family, stage):
+            return [object()]
+
+    contract = types.ModuleType("experiments.workshops.spatial_grounding_v1.contract")
+    contract.ContractError = RuntimeError
+    contract.load_release = lambda path: Release()
+    worker = types.ModuleType("experiments.workshops.spatial_grounding_v1.worker")
+    worker._stage_authorized = lambda release, stage: False
+    monkeypatch.setitem(sys.modules, contract.__name__, contract)
+    monkeypatch.setitem(sys.modules, worker.__name__, worker)
+    args = argparse.Namespace(
+        release=tmp_path / "release", model="N3", family="LAT", stage="P",
+        max_valid_episodes=1, max_cell_attempts=3,
+    )
+    import pytest
+    with pytest.raises(RuntimeError, match="not authorized"):
+        native_worker_entrypoint._preflight(args)
+
+
 def test_owned_server_gpu_override_changes_environment_not_argv(
     monkeypatch, tmp_path: Path
 ) -> None:
@@ -91,3 +139,13 @@ def test_owned_server_gpu_override_changes_environment_not_argv(
     runtime._launch_owned_server(argv, tmp_path, child_env={"CUDA_VISIBLE_DEVICES": "2"})
     assert captured["argv"] == argv
     assert captured["env"] == {"CUDA_VISIBLE_DEVICES": "2"}
+
+
+def test_policy_gpu_override_must_be_in_allocated_visible_set(monkeypatch) -> None:
+    monkeypatch.setenv("SGW01_POLICY_CUDA_VISIBLE_DEVICES", "2")
+    monkeypatch.setenv("CUDA_VISIBLE_DEVICES", "0,1")
+    import pytest
+    with pytest.raises(Exception, match="outside the allocated"):
+        runtime._policy_child_env()
+    monkeypatch.setenv("CUDA_VISIBLE_DEVICES", "1,2")
+    assert runtime._policy_child_env()["CUDA_VISIBLE_DEVICES"] == "2"

@@ -39,24 +39,29 @@ def _preflight(args: argparse.Namespace) -> Any:
     cells = release.partition(args.model, args.family, args.stage)
     if args.max_valid_episodes != len(cells) or args.max_cell_attempts != 3:
         raise ContractError("partition limits must equal the frozen stage ceiling and three total attempts")
-    worker._stage_authorized(release, args.stage)
+    if worker._stage_authorized(release, args.stage) is False:
+        raise ContractError(f"stage {args.stage} is not authorized by the release")
     return release
 
 
 def _configure_app(args: argparse.Namespace) -> Any:
-    from isaaclab.app import AppLauncher
-
     assigned = os.environ.get("SGW01_SIMULATOR_DEVICE", "").strip()
     if not assigned:
         raise RuntimeError("SGW01_SIMULATOR_DEVICE is required for the native simulator")
+    required = ("device", "headless", "enable_cameras", "num_envs", "rendering_mode")
+    if any(not hasattr(args, name) for name in required):
+        raise RuntimeError("AppLauncher arguments lack the required SGW-01 renderer/device fields")
+    from isaaclab.app import AppLauncher
+
     args.device = assigned
     args.headless = True
     args.enable_cameras = True
-    if hasattr(args, "num_envs"):
-        args.num_envs = 1
-    if hasattr(args, "rendering_mode"):
-        args.rendering_mode = "balanced"
+    args.num_envs = 1
+    args.rendering_mode = "balanced"
     launcher = AppLauncher(args)
+    app = getattr(launcher, "app", None)
+    if app is None or not callable(getattr(app, "close", None)):
+        raise RuntimeError("AppLauncher must expose an app.close() shutdown hook")
     return launcher
 
 
@@ -79,8 +84,9 @@ def run(args: argparse.Namespace) -> int:
     finally:
         app = getattr(launcher, "app", launcher)
         close = getattr(app, "close", None)
-        if callable(close):
-            close()
+        if not callable(close):
+            raise RuntimeError("AppLauncher app.close() is unavailable during shutdown")
+        close()
 
 
 def main() -> None:

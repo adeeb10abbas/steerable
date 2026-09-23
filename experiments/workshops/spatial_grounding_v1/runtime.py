@@ -337,6 +337,24 @@ def _write_launch_receipt(
     path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def _policy_child_env() -> dict[str, str] | None:
+    policy_gpu = os.environ.get("SGW01_POLICY_CUDA_VISIBLE_DEVICES", "").strip()
+    if not policy_gpu:
+        return None
+    if not policy_gpu.isdigit():
+        raise AdapterError("SGW01_POLICY_CUDA_VISIBLE_DEVICES must be a numeric GPU index")
+    visible = os.environ.get("CUDA_VISIBLE_DEVICES", "").strip()
+    if not visible or policy_gpu not in {
+        item.strip() for item in visible.split(",") if item.strip()
+    }:
+        raise AdapterError(
+            "SGW01_POLICY_CUDA_VISIBLE_DEVICES is outside the allocated visible GPU set"
+        )
+    child_env = dict(os.environ)
+    child_env["CUDA_VISIBLE_DEVICES"] = policy_gpu
+    return child_env
+
+
 class _NanoTransport:
     def __init__(self, host: str, port: int, trace_reader: Callable[..., Any]) -> None:
         try:
@@ -832,14 +850,12 @@ def create_runtime(*, model: str, config: Mapping[str, Any]) -> NativeRuntime:
     attestation_path = Path(_required_env("SGW01_SERVER_ATTESTATION"))
     server_process: subprocess.Popen[bytes] | None = None
     try:
-        child_env = None
-        policy_gpu = os.environ.get("SGW01_POLICY_CUDA_VISIBLE_DEVICES", "").strip()
-        if policy_gpu:
-            if not policy_gpu.isdigit():
-                raise AdapterError("SGW01_POLICY_CUDA_VISIBLE_DEVICES must be a numeric GPU index")
-            child_env = dict(os.environ)
-            child_env["CUDA_VISIBLE_DEVICES"] = policy_gpu
-        server_process = _launch_owned_server(argv, log_dir, child_env=child_env)
+        child_env = _policy_child_env()
+        server_process = (
+            _launch_owned_server(argv, log_dir)
+            if child_env is None
+            else _launch_owned_server(argv, log_dir, child_env=child_env)
+        )
         attestation = _read_server_attestation(attestation_path, server_process)
         if (
             attestation.get("model") != model

@@ -1,0 +1,918 @@
+{
+  "behavioral_episodes": 0,
+  "claim_boundary": "Retained worker verification and hash-checked qualification projection; not an independent rerun of raw verification or the final 117-slot compilation.",
+  "model_requests": 0,
+  "observed_at_utc": "2026-09-23T10:01:06.349097+00:00",
+  "records": [
+    {
+      "passed_trials": 5,
+      "qualification": {
+        "bytes": 2468024,
+        "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-016/qualification.json",
+        "sha256": "2deb492a2b5b2593e6ee5d690251248dfbb5b054c64a667b7c679478a668360d"
+      },
+      "rank": 0,
+      "retained_files": [
+        {
+          "bytes": 7529,
+          "export_path": "workers/0/slots/height-016/family_verification.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-016/family_verification.json",
+          "sha256": "a8436fadcc24b40440d17f3926c8777cb7874d31f642a556a800a5e75d9a9cc4"
+        },
+        {
+          "bytes": 495,
+          "export_path": "workers/0/slots/height-016/executor-receipt.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-016/executor-receipt.json",
+          "sha256": "f91608f83d23947e537850309365dc64b3057936455f65764439ec5264691f7a"
+        },
+        {
+          "bytes": 3759,
+          "export_path": "workers/0/slots/height-016/candidate.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-016/candidate.json",
+          "sha256": "578645c4cbf6894f11a83c8a8779197baecca763c27b1084da909ddc748ba7ed"
+        },
+        {
+          "bytes": 8952,
+          "export_path": "workers/0/slots/height-016/candidate_manifest.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-016/candidate_manifest.json",
+          "sha256": "011021823dfedacd3a8c9107b76729aef858bfde044c85f5eb04ed5d57bb8edc"
+        },
+        {
+          "bytes": 824,
+          "export_path": "workers/0/completed/height-016.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/completed/height-016.json",
+          "sha256": "204fd203261c80d1b98fda8b12ac0b70312292510ebb35ce2d1aea7508f2eb9f"
+        },
+        {
+          "bytes": 402,
+          "export_path": "workers/slot-claims/height-016.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/slot-claims/height-016.json",
+          "sha256": "c73665c155ec83093f8c79472ce31a512029c6d0e788dfaf495c7b9fe46a7220"
+        }
+      ],
+      "slot": "height-016",
+      "status": "rejected_model_blind_fixture_candidate",
+      "trial_count": 6,
+      "trials": [
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": true,
+          "reset_index": 0,
+          "score": {
+            "anchor_max_drift_m": 0.00019646756951052874,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": 0.03978583216667175,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.03978583216667175,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1160364,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-016/trials/goal-+1/reset-0/viewport.mp4",
+            "sha256": "040778dd4ab2e368b4014db8eb27e5ab42d30c0c4db344f2987df42fdd62037e"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": false,
+          "reset_index": 1,
+          "score": {
+            "anchor_max_drift_m": 0.00019646756951052874,
+            "failure_stage": "wrong_side",
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.081173375248909,
+            "release_detached": true,
+            "requested_success": false,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": -0.081173375248909,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1158829,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-016/trials/goal-+1/reset-1/viewport.mp4",
+            "sha256": "c124b2178a2cda32bced28dbb68ac76ecba7c6075bd74c46ac57d2fd8059b18b"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": true,
+          "reset_index": 2,
+          "score": {
+            "anchor_max_drift_m": 0.00019646756951052874,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": 0.03979068994522095,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.03979068994522095,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1163400,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-016/trials/goal-+1/reset-2/viewport.mp4",
+            "sha256": "d695a8fd8b87e9f14ffd19e0c6d1459e7e38df4959fcd5cc9f986a0974aa17f1"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": true,
+          "reset_index": 0,
+          "score": {
+            "anchor_max_drift_m": 0.00019646756951052874,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.04032503813505173,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.04032503813505173,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1094894,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-016/trials/goal--1/reset-0/viewport.mp4",
+            "sha256": "bfb997ff26684fabfa5738f833539d44d90dedc10df38907d470f0a0fedabdb1"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": true,
+          "reset_index": 1,
+          "score": {
+            "anchor_max_drift_m": 0.00019646756951052874,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.04019661992788315,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.04019661992788315,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1083052,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-016/trials/goal--1/reset-1/viewport.mp4",
+            "sha256": "0b02d3149ba72c26b63412877c75f08b1099f0662a84b863dd4c32c773725986"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": true,
+          "reset_index": 2,
+          "score": {
+            "anchor_max_drift_m": 0.00019646756951052874,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.04031158238649368,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.04031158238649368,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1091212,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/0/slots/height-016/trials/goal--1/reset-2/viewport.mp4",
+            "sha256": "58c2d27922e04196d8e398d3c8ca2ffe22984bf5794f09da70993a68aefb3eff"
+          }
+        }
+      ]
+    },
+    {
+      "passed_trials": 6,
+      "qualification": {
+        "bytes": 2468796,
+        "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-020/qualification.json",
+        "sha256": "2d95e72c70d8208f22e20e4de2b46a9e573ad60765b0eb8c35a7e7d69a04fac7"
+      },
+      "rank": 1,
+      "retained_files": [
+        {
+          "bytes": 7524,
+          "export_path": "workers/1/slots/height-020/family_verification.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-020/family_verification.json",
+          "sha256": "09c4b4c91804e139443a89a6586c9a1df7defa04642d44f3960b22e8d9f0eca9"
+        },
+        {
+          "bytes": 495,
+          "export_path": "workers/1/slots/height-020/executor-receipt.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-020/executor-receipt.json",
+          "sha256": "72bad50562c327ebc9017dcfba2fd82e54a9085196ca66688dce5ad4aab4d0f1"
+        },
+        {
+          "bytes": 3758,
+          "export_path": "workers/1/slots/height-020/candidate.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-020/candidate.json",
+          "sha256": "a32a399d69c9b2a4ac98a1d95eb46339cc348cd347183446d21e0b3f67924368"
+        },
+        {
+          "bytes": 8952,
+          "export_path": "workers/1/slots/height-020/candidate_manifest.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-020/candidate_manifest.json",
+          "sha256": "85440f180bf03c48e9f4c7c15fb63c301ded81868b64ec4cc44683dcc817a605"
+        },
+        {
+          "bytes": 824,
+          "export_path": "workers/1/completed/height-020.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/completed/height-020.json",
+          "sha256": "d20f94ef5e143598cec2afbef5394aadb7e7ccf260782df5c493b4e25ebaf366"
+        },
+        {
+          "bytes": 402,
+          "export_path": "workers/slot-claims/height-020.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/slot-claims/height-020.json",
+          "sha256": "1dd0b72739aa1820ee18020ee3bb4c62a598c56d3e784c7185ae87d12172ac65"
+        }
+      ],
+      "slot": "height-020",
+      "status": "accepted_model_blind_fixture_candidate",
+      "trial_count": 6,
+      "trials": [
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": true,
+          "reset_index": 0,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": 0.03979191184043884,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.03979191184043884,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1179434,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-020/trials/goal-+1/reset-0/viewport.mp4",
+            "sha256": "b3c985c302f8dfee0ee3a9504913dede76f28ac91d9002c990da078f7e48ca36"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": true,
+          "reset_index": 1,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": 0.03979089856147766,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.03979089856147766,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1183141,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-020/trials/goal-+1/reset-1/viewport.mp4",
+            "sha256": "1cf6b4831fbfb22c399ea14a312e6b709dc2dbaba59735fc70f8031fef778409"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": true,
+          "reset_index": 2,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": 0.03979112207889557,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.03979112207889557,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1170070,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-020/trials/goal-+1/reset-2/viewport.mp4",
+            "sha256": "05e3fa4c6480d75889c79ee1e51a97c3e31c32df781b6732e1a2d984a8eac4a5"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": true,
+          "reset_index": 0,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.04032561182975769,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.04032561182975769,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1108394,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-020/trials/goal--1/reset-0/viewport.mp4",
+            "sha256": "77258b8ce42bca78cdefca03d959c75df495ff435f5c43ae5633d7c490779279"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": true,
+          "reset_index": 1,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.040318891406059265,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.040318891406059265,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1083200,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-020/trials/goal--1/reset-1/viewport.mp4",
+            "sha256": "64c6a2bfb0c120d170e543e4754f662f3f4f195802b101f6be8fca2c19d147fd"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": true,
+          "reset_index": 2,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.04020850360393524,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.04020850360393524,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1082060,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/1/slots/height-020/trials/goal--1/reset-2/viewport.mp4",
+            "sha256": "0e52622f90cd444978b1e2052c96d2d1bbeadc6124dd2a98a941c8866d20a7ef"
+          }
+        }
+      ]
+    },
+    {
+      "passed_trials": 5,
+      "qualification": {
+        "bytes": 2469126,
+        "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-021/qualification.json",
+        "sha256": "1ff1dedcdff0f5a7450cfb2f5b554b3b8dd08689eb1381304ed001a69fe3d7c2"
+      },
+      "rank": 2,
+      "retained_files": [
+        {
+          "bytes": 7541,
+          "export_path": "workers/2/slots/height-021/family_verification.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-021/family_verification.json",
+          "sha256": "2977caef1f33aa59cb03ec662f3452746fa0db17b88b1e2971e197210b9cdf50"
+        },
+        {
+          "bytes": 495,
+          "export_path": "workers/2/slots/height-021/executor-receipt.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-021/executor-receipt.json",
+          "sha256": "bb46a833f778fb33396712b1b09063dfb775e32e6fa916f17575a9cf9087a9ed"
+        },
+        {
+          "bytes": 3760,
+          "export_path": "workers/2/slots/height-021/candidate.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-021/candidate.json",
+          "sha256": "85825f0f51d11f074431c3717cad955835d0290e12eabd9168968d85939a6612"
+        },
+        {
+          "bytes": 8956,
+          "export_path": "workers/2/slots/height-021/candidate_manifest.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-021/candidate_manifest.json",
+          "sha256": "f375f447db6fc03d210283e3a455af226147516abead62618ab7f0c8e18e706a"
+        },
+        {
+          "bytes": 825,
+          "export_path": "workers/2/completed/height-021.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/completed/height-021.json",
+          "sha256": "6be3fb4ae179b509565f92cdd80be0fb7ee0b508d426045ee3e308782f1194c4"
+        },
+        {
+          "bytes": 403,
+          "export_path": "workers/slot-claims/height-021.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/slot-claims/height-021.json",
+          "sha256": "9632c45b0a539b3958b9c715a33a750d0a24ce63f6be8d10db5a9358121e676b"
+        }
+      ],
+      "slot": "height-021",
+      "status": "rejected_model_blind_fixture_candidate",
+      "trial_count": 6,
+      "trials": [
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": true,
+          "reset_index": 0,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": 0.039791882038116455,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.039791882038116455,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1090925,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-021/trials/goal-+1/reset-0/viewport.mp4",
+            "sha256": "ecdb64456dccc8f7753d92ae157d58f71ee97eceba4fbf86cf9aeb72454a1e81"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": true,
+          "reset_index": 1,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": 0.039791569113731384,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.039791569113731384,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1077049,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-021/trials/goal-+1/reset-1/viewport.mp4",
+            "sha256": "76a57a8198827f82e41e3450b490f26a3956d7c91ce519b463fdbde44cbcd175"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": true,
+          "reset_index": 2,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": 0.03979155421257019,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.03979155421257019,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1066881,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-021/trials/goal-+1/reset-2/viewport.mp4",
+            "sha256": "ee1b0ab9feff1b5c3aa4b624012336cb8eb0e237d263f779e7111ab016969ecc"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": true,
+          "reset_index": 0,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.04028213769197464,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.04028213769197464,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1198515,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-021/trials/goal--1/reset-0/viewport.mp4",
+            "sha256": "13fad24e4f89c98f0966a402a487eab2279c775e6a4bf15c9920c5b51bbe8454"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": false,
+          "reset_index": 1,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": "transport_failed",
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.0398138090968132,
+            "release_detached": true,
+            "requested_success": false,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.0398138090968132,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1164445,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-021/trials/goal--1/reset-1/viewport.mp4",
+            "sha256": "51d57b01f8be97cca6443b548cdd65cd043d175f078befe4fbc4f3e4547a4e5a"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": true,
+          "reset_index": 2,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.040208399295806885,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.040208399295806885,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1175359,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/2/slots/height-021/trials/goal--1/reset-2/viewport.mp4",
+            "sha256": "25c4c09ee9884b7f02c8d9b42e3040c58842dbb8e74ca86bf97d4191ae372a31"
+          }
+        }
+      ]
+    },
+    {
+      "passed_trials": 6,
+      "qualification": {
+        "bytes": 2468769,
+        "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/slots/height-024/qualification.json",
+        "sha256": "115521d2f6f2db177eb0c7afbe6c4bc7a5133f762a1ea7a4badac27b541249ce"
+      },
+      "rank": 3,
+      "retained_files": [
+        {
+          "bytes": 7522,
+          "export_path": "workers/3/slots/height-024/family_verification.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/slots/height-024/family_verification.json",
+          "sha256": "8ed7a06d353c44d33682cce752af3d448affab72418d5a2a58cf8006b1ebfa64"
+        },
+        {
+          "bytes": 495,
+          "export_path": "workers/3/slots/height-024/executor-receipt.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/slots/height-024/executor-receipt.json",
+          "sha256": "ae947b8c7457505bf00d25a4c269f9821ddb8a3f7c2ec38a0f9c5bbb2c78121d"
+        },
+        {
+          "bytes": 3760,
+          "export_path": "workers/3/slots/height-024/candidate.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/slots/height-024/candidate.json",
+          "sha256": "d3bdc7d3f272591ad77bf449a2450b155e57049064f186cb0dc52f4a4a3e9529"
+        },
+        {
+          "bytes": 8952,
+          "export_path": "workers/3/slots/height-024/candidate_manifest.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/slots/height-024/candidate_manifest.json",
+          "sha256": "8eac4c7f69148bf011b174bbd7bc42dbbda78159f059915c5da9f6e63dd3de23"
+        },
+        {
+          "bytes": 824,
+          "export_path": "workers/3/completed/height-024.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/completed/height-024.json",
+          "sha256": "ccc33b99fb2d8fc6465cf3c7d828330d6e7b66e34999f9a33785583c840060e0"
+        },
+        {
+          "bytes": 402,
+          "export_path": "workers/slot-claims/height-024.json",
+          "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/slot-claims/height-024.json",
+          "sha256": "5728b12b56e4086882d0efec37ebd8fcb546b429ce57ce228d884d84a03bf8b5"
+        }
+      ],
+      "slot": "height-024",
+      "status": "accepted_model_blind_fixture_candidate",
+      "trial_count": 6,
+      "trials": [
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": true,
+          "reset_index": 0,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": 0.03979182243347168,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.03979182243347168,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1169316,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/slots/height-024/trials/goal-+1/reset-0/viewport.mp4",
+            "sha256": "56781e6c6d3e81d510c3af46083faf44d3da7ec068dea96156884719e9fb9af3"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": true,
+          "reset_index": 1,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": 0.03979133069515228,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.03979133069515228,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1189196,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/slots/height-024/trials/goal-+1/reset-1/viewport.mp4",
+            "sha256": "71a03949d5101acd3bc98c91541854d845ffb74eeb63253946ba07b5fcd7ab06"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": 1,
+          "passed": true,
+          "reset_index": 2,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": 0.03979252278804779,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.03979252278804779,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1152738,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/slots/height-024/trials/goal-+1/reset-2/viewport.mp4",
+            "sha256": "76beeae14535fa14a1febff3b6c456eaaf56ef3a4a3cb5f9cbcc7fd61d08e44e"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": true,
+          "reset_index": 0,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.04020875692367554,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.04020875692367554,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1094891,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/slots/height-024/trials/goal--1/reset-0/viewport.mp4",
+            "sha256": "8e20d0dbe14bf98fd2a569e012ea71654596ab39dbe26b21de65199b7f2ad1e2"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": true,
+          "reset_index": 1,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.04020868241786957,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.04020868241786957,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1074889,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/slots/height-024/trials/goal--1/reset-1/viewport.mp4",
+            "sha256": "afa93275b0bed980e63386f63bf63b364144dfa3117f0dc9c8b8b4a16a9958e8"
+          }
+        },
+        {
+          "actions_executed": 450,
+          "goal_sign": -1,
+          "passed": true,
+          "reset_index": 2,
+          "score": {
+            "anchor_max_drift_m": 0.00019646821187810278,
+            "failure_stage": null,
+            "first_success_step": null,
+            "infrastructure_reason": null,
+            "pickup_step": 62,
+            "reference_motion_ok": true,
+            "relation_m": -0.04020712524652481,
+            "release_detached": true,
+            "requested_success": true,
+            "safety_censored": false,
+            "status": "valid_model",
+            "terminal_margin_m": 0.04020712524652481,
+            "terminal_step": 450
+          },
+          "state_count": 451,
+          "viewport_video": {
+            "bytes": 1088684,
+            "fps": 15.0,
+            "frame_count": 451,
+            "path": "/data/users/ali/sgw-01/qualification/family-partition-20260923bt/workers/3/slots/height-024/trials/goal--1/reset-2/viewport.mp4",
+            "sha256": "57d94f277d055900d89b428cff26f74d43b7cb15ee8157dda70e7444beb8ae21"
+          }
+        }
+      ]
+    }
+  ],
+  "release_permitted": false,
+  "schema_version": "sgw-01-completed-native-partition-prefix-v1",
+  "source_job": "sgw01-ali-family-partition-20260923bt",
+  "source_job_uid": "7a70e5f9-b28a-41d2-88fc-7f13a18eff56",
+  "status": "four_worker_verified_complete_candidates_final_collector_still_pending",
+  "worker_source_commit": "68b9e1004ef289d320bfbdbfdf272b2c3cd9440d"
+}

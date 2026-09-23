@@ -1,0 +1,67 @@
+{
+  "behavioral_episodes": 0,
+  "claim_boundary": "The historical invocation pins RoboLab 0aef241 despite the directory's old 11142d4 name. Its recorder Git blobs request relative state. The currently installed IsaacLab2.2.0 getter matches its distribution RECORD and subtracts environment origins without rotation. This records the source contract, not an independent historical import-byte attestation, complete population recovery or a replacement for missing materialization states.",
+  "failure_report_sha256": "e858a4431bd0451a1e380d66c8c5d05c5486718f5b23388f874d24a7d271ae8e",
+  "historical_imported_getter_bytes_independently_attested": false,
+  "historical_population_coverage_complete": false,
+  "historical_robolab_expected_revision_argument": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "historical_robolab_root_argument": "/data/users/ali/vla_wam/external/RoboLab-11142d4",
+  "installed_isaaclab_getter": {
+    "bytes": 35269,
+    "distribution_record_sha256": "1JVznbNaKcglFi8ob8MfmqjWILJOQ-Vbdm0dXwmHzr8",
+    "get_state_lines": [
+      565,
+      646
+    ],
+    "matches_distribution_record": true,
+    "path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/scene/interactive_scene.py",
+    "sha256": "d495739db35a29c825162f286fc31f9aa8d620b24e43e55b766d1d5f0987cebf",
+    "version": "2.2.0"
+  },
+  "model_requests": 0,
+  "release_permitted": false,
+  "robolab_sources": [
+    {
+      "bytes": 7430,
+      "current_bytes_match_pinned_git_blob": true,
+      "expressions": [
+        {
+          "expression": "record_initial_state: InitialStateRecorderCfg = InitialStateRecorderCfg()",
+          "line": 52
+        },
+        {
+          "expression": "record_states: PostStepStatesRecorderCfg = PostStepStatesRecorderCfg()",
+          "line": 53
+        }
+      ],
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/core/environments/base.py",
+      "revision": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "sha256": "95664079a160982daa5e25e25d32968d33601e46a4181181f128ac3be9255d4e"
+    },
+    {
+      "bytes": 15427,
+      "current_bytes_match_pinned_git_blob": true,
+      "expressions": [
+        {
+          "expression": "self.initial_state = self.extract_env_ids_values(self._env.scene.get_state(is_relative=True), env_ids)",
+          "line": 76
+        },
+        {
+          "expression": "return \"states\", self._env.scene.get_state(is_relative=True)",
+          "line": 90
+        }
+      ],
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/core/events/basic_recorders.py",
+      "revision": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "sha256": "84944e9eedb664ba8f34eee40e2b0efe064d5460a942eecb68ad7d491a5ffacd"
+    }
+  ],
+  "schema_version": "sgw-01-r005-hdf5-recorder-source-contract-v1",
+  "source_contract": {
+    "initial_state_capture": "recorder reset, emitted by record_post_reset",
+    "is_relative": true,
+    "rigid_root_position": "native world actor-root position minus environment origin",
+    "rigid_root_quaternion": "world axes; no robot-base rotation",
+    "states_capture": "record_post_step"
+  }
+}

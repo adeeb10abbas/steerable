@@ -6,9 +6,9 @@ behavioral gate cannot pass. Four repaired HEIGHT/DIST baseline captures now
 have verified receipts, views and complete videos. Native smoke br has completed
 24 full physical trials: two candidates pass all six trials and two are valid
 physical rejections. All four raw evidence chains passed independent rechecks.
-Including the first twelve subsequent candidates, 16 candidates have completed
-96 full trials: six all-six passes and ten physical rejections. Four durable
-GPU workers continue the remaining 105 frozen slots.
+Including the first sixteen subsequent candidates, 20 HEIGHT/DIST candidates
+have completed 120 full trials: eight all-six passes and twelve physical
+rejections. Four durable GPU workers continue the remaining 101 frozen slots.
 Historical coverage and all learned-runtime release gates remain open.
 Learned-policy requests and episodes remain at zero.**
 
@@ -237,6 +237,30 @@ its exact inspector and source bindings are retained in
 and on the PVC. At 09:49 UTC, file-based replay reproduced the inventory
 byte-for-byte after correcting a recorded inspector-filename import collision.
 No new pod, simulator, model request or behavioral episode was created.
+
+At 10:01 UTC, the fourth remaining-slot wave was retained: HEIGHT 020/024
+passed all six trials, while HEIGHT 016/021 each passed five and remain valid
+physical rejections. Including smoke, HEIGHT/DIST now has 20 completed
+candidates, eight all-six passes and twelve physical rejections across 120
+full recorded trials / 54,000 scripted actions. All 24 new score projections
+agree with the canonical worker-verification receipts. The fourth prefix is in
+[`infrastructure/family-partition-20260923bt-prefix-bz/`](infrastructure/family-partition-20260923bt-prefix-bz/).
+At 10:03 UTC, HEIGHT 026/027/032/033 were active, no shared infrastructure
+stop existed, and no worker had emitted a terminal launcher receipt. The
+independent final collector result remains pending.
+
+The bounded R005 recorder audit resolves a misleading directory name:
+the historical invocation used `RoboLab-11142d4` but explicitly pinned commit
+`0aef241f`. That commit's initial-state and post-step recorders both request
+`scene.get_state(is_relative=True)`. The currently installed IsaacLab 2.2.0
+getter matches its distribution RECORD and subtracts environment origins
+without rotating actor roots into the robot frame. Exact sources and
+byte-identically reproduced audit output are in
+[`infrastructure/historical-r005-recorder-20260923bz/`](infrastructure/historical-r005-recorder-20260923bz/).
+This establishes the source contract, not an independent attestation of
+historically imported getter bytes. It does not recover missing materialization
+states or release a fixture/model. The pinned camera writer stores PNGs;
+its numerical geometry is returned in memory, not a separately saved pose file.
 
 ## Scientific accounting
 

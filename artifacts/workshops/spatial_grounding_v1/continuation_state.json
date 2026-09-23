@@ -1,7 +1,7 @@
 {
   "study_id": "SGW-01",
   "status": "lat_closed_height_dist_remaining_qualification_and_offline_collection_running_behavior_unreleased",
-  "updated_at_utc": "2026-09-23T09:49:19Z",
+  "updated_at_utc": "2026-09-23T10:03:19Z",
   "branch": "sz5vjy-gme-spatial-grounding-experiments",
   "source_package_protocol_sha256": "47981c57b61dc44ad0a9590c2cafbadd498481ce97ea79637833baea90ffcbc6",
   "source_package_queue_sha256": "b5137427c6a35f8fe84d9add7ff6e559b4bebdb4173306891781d3ba0cc7ebf6",
@@ -667,6 +667,27 @@
       "including_native_smoke_and_all_prefixes": {"completed_candidates": 16, "all_six_pass": 6, "physical_rejected": 10, "completed_trials": 96, "controller_actions": 43200},
       "claim_boundary": "Worker verification and hash-bound qualification projections, not final independent raw compilation."
     },
+    "verified_fourth_prefix": {
+      "observed_at_utc": "2026-09-23T10:01:06.349097+00:00",
+      "manifest": "infrastructure/family-partition-20260923bt-prefix-bz/manifest.json",
+      "manifest_sha256": "7f3b10dffaaf73b8599cac2110a342f81bfed32eaae0b10fae37d0e48c7aa66b",
+      "completed_remaining_slots_including_prior_prefixes": 16,
+      "remaining_slots_not_yet_terminal": 101,
+      "completed_trials_this_prefix": 24,
+      "all_six_pass_slots": ["HEIGHT-020", "HEIGHT-024"],
+      "valid_physical_rejections": [
+        {"slot": "HEIGHT-016", "passed_trials": 5},
+        {"slot": "HEIGHT-021", "passed_trials": 5}
+      ],
+      "including_native_smoke_and_all_prefixes": {"completed_candidates": 20, "all_six_pass": 8, "physical_rejected": 12, "completed_trials": 120, "controller_actions": 54000},
+      "claim_boundary": "Worker verification and hash-bound qualification projections, not final independent raw compilation."
+    },
+    "latest_worker_monitor": {
+      "observed_at_utc": "2026-09-23T10:03:19.380950+00:00",
+      "active_slots": ["HEIGHT-026", "HEIGHT-027", "HEIGHT-032", "HEIGHT-033"],
+      "shared_infrastructure_stop_present": false,
+      "terminal_launcher_receipts": 0
+    },
     "last_read_only_monitor": {
       "observed_at_utc": "2026-09-23T09:40:09.133125+00:00",
       "shared_infrastructure_stop_present": false,
@@ -883,6 +904,18 @@
     "coverage_complete": false,
     "release_permitted": false
   },
+  "failed_attempt_recorder_source_contract": {
+    "manifest": "infrastructure/historical-r005-recorder-20260923bz/manifest.json",
+    "manifest_sha256": "bf4a482cd0306c1ad4acaa98f4ff4d84df49dc9dc0d9ea1a242dbcc99e078a0f",
+    "source_contract": "infrastructure/historical-r005-recorder-20260923bz/source_contract.json",
+    "source_contract_sha256": "ea441562e57eb559aa63608af9473e4e35f526ab9ff21d1c0004af866cfbeec1",
+    "historical_robolab_directory": "/data/users/ali/vla_wam/external/RoboLab-11142d4",
+    "historical_expected_robolab_revision": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "recorder_semantics": "Both initial_state and states call scene.get_state(is_relative=True); current IsaacLab2.2.0 distribution-verified getter subtracts environment origins from actor-root positions and leaves quaternion world axes unchanged.",
+    "historical_imported_getter_bytes_independently_attested": false,
+    "byte_identical_target_replay": true,
+    "release_permitted": false
+  },
   "named_historical_root_nonmatches": {
     "native_frame_manifest": "infrastructure/native-root-frames-20260923bw/manifest.json",
     "native_frame_manifest_sha256": "9252c331fa8b3bd7553117818107884a7a8a2ab8cb6ae8761010cc2bc3ec01ee",
@@ -901,7 +934,7 @@
   },
   "next_authorized_step": "Let bt finish its fixed remaining slots and bu independently compile terminal evidence. Both run durably without this client. Monitor explicit infrastructure-stop and collector-error records; preserve partials and valid physical failures, never retry them automatically. Four GPUs maximum and no learned release. CPU-only historical work must account for earlier infrastructure attempts, including R005 98f0234 attempt01 and its missing rank1-3 state payloads. bx now accounts for149 snapshots/101 recorded lifecycles in seven named later executions, not complete historical coverage. The400 prior nonmatches remain limited to their original100 snapshots.",
   "next_read_only_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get jobs sgw01-ali-family-partition-20260923bt sgw01-ali-family-collector-20260923bu -o wide",
-  "next_historical_trace": "The R005 attempt01 failure report and all8 native HDF5 files are hash-bound in the by inventory. They are IK-only and cannot substitute for missing rank1-3 materialization states. Trace the exact historical recorder's root-pose coordinate semantics before using HDF5 channels;6 rank4 source snapshots have verified zero-origin frame records. Keep all other historical cohorts and earlier attempts explicitly unresolved until accounted for.",
+  "next_historical_trace": "The R005 attempt01 failure report and all8 native HDF5 files are hash-bound in by; bz identifies the pinned recorder's environment-local world-axis source contract, not independent historical import-byte attestation. IK telemetry cannot substitute for missing rank1-3 materialization states. The exact producer's _save_camera_evidence writes PNGs but returns numerical geometry in memory, so camera files alone are not recovered root measurements. Investigate other bound raw artifacts or rigorous source-specific exclusions; keep all unaccounted cohorts and earlier attempts unresolved.",
   "verification_recovery": {
     "am": {
       "status": "suspended_verifier_contract_bug_not_raw_trial_failure",

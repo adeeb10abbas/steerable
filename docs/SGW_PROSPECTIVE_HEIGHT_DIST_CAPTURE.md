@@ -14,13 +14,13 @@ whose receipt SHA-256 is
 the base asset manifest hash is
 `3a9b8ceeff333aa3a060dad97707b5f2a50e7c4db1423c84350bf4d8a19b0806`.
 
-Parent must choose an actual pinned base USD path and launch on the assigned
+Parent must use the pinned RoboLab `0aef241` base USD path below on the assigned
 lane only after reviewing the generated manifest:
 
 ```bash
 .venv/bin/python -m experiments.workshops.spatial_grounding_v1.prospective_family_scene \
   --family HEIGHT --upper-side left \
-  --base-scene /ABSOLUTE/PINNED/rubiks_cube_banana_bowl.usda \
+  --base-scene /data/users/ali/vla_wam/external/RoboLab-pi05-v3-0aef241/assets/scenes/rubiks_cube_banana_bowl.usda \
   --base-workspace-receipt artifacts/workshops/spatial_grounding_v1/infrastructure/a40-20260922r-workspace.json \
   --output-usda /data/users/ali/sgw-01/prospective/height-left.usda \
   --manifest-output /data/users/ali/sgw-01/prospective/height-left.manifest.json

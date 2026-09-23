@@ -31,11 +31,48 @@ def _manifest(path: Path) -> dict[str, Any]:
         raise ValueError("prospective overlay USD is missing")
     if _sha256(Path(overlay["path"])) != overlay.get("sha256"):
         raise ValueError("prospective overlay USD hash differs from manifest")
+    base = value.get("base_scene", {})
+    workspace = value.get("base_workspace_receipt", {})
+    if not isinstance(base, Mapping) or not Path(base.get("path", "")).is_file() or _sha256(Path(base["path"])) != base.get("sha256"):
+        raise ValueError("prospective base scene hash differs from manifest")
+    if not isinstance(workspace, Mapping) or not Path(workspace.get("path", "")).is_file():
+        raise ValueError("prospective base workspace receipt is missing")
+    receipt = json.loads(Path(workspace["path"]).read_text(encoding="utf-8"))
+    if _sha256(Path(workspace["path"])) != workspace.get("sha256") or receipt.get("receipt_sha256") != workspace.get("receipt_sha256"):
+        raise ValueError("prospective base workspace receipt hash differs from manifest")
+    if receipt.get("receipt_sha256") != workspace_digest(receipt):
+        raise ValueError("prospective base workspace receipt content digest differs")
     return value
 
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _usd_dependencies(overlay: Path) -> list[dict[str, Any]]:
+    """Capture composed USD layer dependencies with their current byte hashes."""
+
+    from pxr import Usd
+
+    stage = Usd.Stage.Open(str(overlay))
+    if stage is None:
+        raise RuntimeError("cannot open prospective overlay USD for dependency inventory")
+    rows = []
+    for layer in sorted(stage.GetUsedLayers(), key=lambda item: item.realPath):
+        if not layer.realPath:
+            # USD adds an in-memory session layer; it is not an asset dependency.
+            continue
+        path = Path(layer.realPath)
+        rows.append({
+            "identifier": layer.identifier,
+            "real_path": str(path),
+            "exists": path.is_file(),
+            "sha256": _sha256(path) if path.is_file() else None,
+            "bytes": path.stat().st_size if path.is_file() else None,
+        })
+    if not rows or any(not row["exists"] for row in rows):
+        raise RuntimeError("prospective overlay has unresolved USD layer dependencies")
+    return rows
 
 
 def parse_args() -> argparse.Namespace:
@@ -145,6 +182,7 @@ def main() -> None:
             "environment_seed": args.environment_seed,
             "environment_origin_world_xyz_m": _vector(origin),
             "objects": object_rows, "contact_sensor_inventory": contacts, "views": views,
+            "usd_dependency_inventory": _usd_dependencies(Path(manifest["overlay_usda"]["path"])),
             "render_only_diagnostic": warmup, "validated_slots": [],
             "versions": {name: importlib.metadata.version(name) for name in ("isaacsim", "isaaclab", "robolab")},
         }

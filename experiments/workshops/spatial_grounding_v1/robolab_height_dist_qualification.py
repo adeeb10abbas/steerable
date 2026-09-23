@@ -35,7 +35,7 @@ class RoboLabFamilyBridge:
     def create_environment(self, task: RoboLabTaskDefinition, seed: int) -> Environment:
         if task.candidate.family not in {"HEIGHT", "DIST"}:
             raise SimulatorBridgeError("family bridge only accepts HEIGHT or DIST candidates")
-        _validate_candidate_inputs(task.candidate)
+        validate_candidate_inputs(task.candidate)
         from robolab.core.environments.runtime import create_env
         from robolab.registrations.droid.auto_env_registrations_abs_ik import auto_register_droid_abs_ik_envs
         from robolab.registrations.droid.camera_presets import WRIST_LEFT_RIGHT_HEAD
@@ -140,7 +140,7 @@ def _goal_support(candidate: FixtureCandidate, goal_sign: int) -> dict[str, Any]
     return support
 
 
-def _validate_candidate_inputs(candidate: FixtureCandidate) -> None:
+def validate_candidate_inputs(candidate: FixtureCandidate) -> None:
     """Reject an incomplete capture before importing or starting RoboLab."""
 
     scene = candidate.metadata.get("native_scene")

@@ -8,7 +8,6 @@ import pytest
 
 from experiments.workshops.spatial_grounding_v1.fixtures import FixtureCandidate
 from experiments.workshops.spatial_grounding_v1.robolab_height_dist_qualification import (
-    _validate_candidate_inputs,
     create_bridge,
     create_controller,
 )
@@ -16,6 +15,7 @@ from experiments.workshops.spatial_grounding_v1.robolab_lat_qualification import
 from experiments.workshops.spatial_grounding_v1.simulator_bridge import SimulatorBridgeError
 from experiments.workshops.spatial_grounding_v1.task_definitions import build_task_definition
 import experiments.workshops.spatial_grounding_v1.robolab_height_dist_qualification as family_bridge
+import experiments.workshops.spatial_grounding_v1.model_blind_qualification as qualification
 
 
 def _candidate():
@@ -175,3 +175,29 @@ def test_family_controller_requires_calibration_and_preserves_measured_target_z(
     # Index 5 is the direct lowering-to-target phase; it must retain .21 m,
     # not overwrite height with the initial cube z.
     assert actions[5][0, 2] == pytest.approx(.21)
+
+
+def test_main_rejects_incomplete_family_candidate_before_applauncher(tmp_path, monkeypatch):
+    manifest = tmp_path / "assets.json"
+    manifest.write_bytes(b"assets")
+    candidate = _candidate()
+    candidate = FixtureCandidate.from_json({
+        **candidate.task_payload(),
+        "seed": 7,
+        "asset_manifest_sha256": __import__("hashlib").sha256(manifest.read_bytes()).hexdigest(),
+        "metadata": {
+            "scoring_center_offsets_root_local_m": {"rubiks_cube": [0, 0, 0], "bowl": [0, 0, 0]},
+            "goal_supports": candidate.metadata["goal_supports"],
+        },
+    })
+    args = type("Args", (), {
+        "headless": True, "renderer": "realtime", "rendering_type": "balanced",
+        "assets_manifest": manifest, "family": "HEIGHT", "output_root": tmp_path / "out",
+        "robolab_root": tmp_path, "device": "cuda:0", "bridge_factory": "unused:factory",
+        "controller_factory": "unused:factory", "controller_calibration": None, "seed": 7,
+    })()
+    monkeypatch.setattr(qualification, "parse_args", lambda: args)
+    monkeypatch.setattr(qualification, "_load_selected_candidate", lambda _: candidate)
+
+    with pytest.raises(SimulatorBridgeError, match="native scene"):
+        qualification.main()

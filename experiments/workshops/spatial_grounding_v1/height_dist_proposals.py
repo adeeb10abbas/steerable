@@ -78,6 +78,7 @@ def _candidate_from_measurement(row: Any, workspace: Mapping[str, Any], *, famil
             counterbalance_key: row[counterbalance_key],
             "goal_supports": row["goal_supports"],
             "controller_status": "requires_measured_abs_ik_calibration_before_qualification",
+            "geometric_screen_status": "passed",
             "historical_layout_fingerprint": None,
         },
     }
@@ -207,7 +208,9 @@ def main() -> None:
     value = {
         "schema_version": "sgw-01-measured-family-proposals-v1",
         "family": args.family,
-        "status": "proposed_unqualified_requires_physical_validation",
+        "status": "proposed_unqualified",
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
         "workspace_receipt_sha256": workspace["receipt_sha256"],
         "candidate_count": len(candidates),
         "candidates": candidates,

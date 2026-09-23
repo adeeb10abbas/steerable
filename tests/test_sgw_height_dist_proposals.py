@@ -1,8 +1,10 @@
 import json
+from argparse import Namespace
 
 import pytest
 
 from experiments.workshops.spatial_grounding_v1.height_dist_proposals import main, propose_family_layouts
+from experiments.workshops.spatial_grounding_v1.model_blind_qualification import _load_selected_candidate
 
 
 def _pose(position):
@@ -130,5 +132,8 @@ def test_cli_writes_explicitly_unqualified_proposals(tmp_path, monkeypatch):
     main()
 
     value = json.loads(output.read_text())
-    assert value["status"] == "proposed_unqualified_requires_physical_validation"
+    assert value["status"] == "proposed_unqualified"
     assert value["candidate_count"] == 1
+
+    candidate = _load_selected_candidate(Namespace(proposal_file=output, candidate_id=value["candidates"][0]["candidate_id"]))
+    assert candidate.family == "HEIGHT"

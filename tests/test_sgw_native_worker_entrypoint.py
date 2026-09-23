@@ -45,6 +45,42 @@ def test_configure_app_uses_qualified_single_env_realtime_options(
     assert launcher.closed is True
 
 
+def test_parser_uses_robolab_common_args_for_simulator_fields(monkeypatch) -> None:
+    class FakeLauncher:
+        @staticmethod
+        def add_app_launcher_args(parser):
+            parser.add_argument("--device", default="cuda:0")
+            parser.add_argument("--headless", action="store_true")
+            parser.add_argument("--enable-cameras", action="store_true")
+
+    def add_common_eval_args(parser):
+        parser.add_argument("--num-envs", type=int, default=1)
+        parser.add_argument("--rendering-mode", default="balanced")
+
+    app_module = types.ModuleType("isaaclab.app")
+    app_module.AppLauncher = FakeLauncher
+    isaaclab = types.ModuleType("isaaclab")
+    isaaclab.app = app_module
+    eval_module = types.ModuleType("robolab.eval.runner")
+    eval_module.add_common_eval_args = add_common_eval_args
+    robolab_eval = types.ModuleType("robolab.eval")
+    robolab_eval.runner = eval_module
+    robolab = types.ModuleType("robolab")
+    robolab.eval = robolab_eval
+    monkeypatch.setitem(sys.modules, "isaaclab", isaaclab)
+    monkeypatch.setitem(sys.modules, "isaaclab.app", app_module)
+    monkeypatch.setitem(sys.modules, "robolab", robolab)
+    monkeypatch.setitem(sys.modules, "robolab.eval", robolab_eval)
+    monkeypatch.setitem(sys.modules, "robolab.eval.runner", eval_module)
+    parser = native_worker_entrypoint._parser()
+    args = parser.parse_args([
+        "--release", "release", "--model", "N3", "--family", "LAT", "--stage", "P",
+        "--max-valid-episodes", "2",
+    ])
+    assert args.num_envs == 1
+    assert args.rendering_mode == "balanced"
+
+
 def test_configure_app_requires_all_renderer_fields_and_close(monkeypatch) -> None:
     monkeypatch.setenv("SGW01_SIMULATOR_DEVICE", "cuda:0")
     args = argparse.Namespace(device="cuda:0", headless=False, enable_cameras=False)
@@ -142,10 +178,10 @@ def test_owned_server_gpu_override_changes_environment_not_argv(
 
 
 def test_policy_gpu_override_must_be_in_allocated_visible_set(monkeypatch) -> None:
-    monkeypatch.setenv("SGW01_POLICY_CUDA_VISIBLE_DEVICES", "2")
-    monkeypatch.setenv("CUDA_VISIBLE_DEVICES", "0,1")
+    monkeypatch.setenv("SGW01_POLICY_CUDA_VISIBLE_DEVICES", "GPU-abc")
+    monkeypatch.setenv("CUDA_VISIBLE_DEVICES", "GPU-def,GPU-ghi")
     import pytest
     with pytest.raises(Exception, match="outside the allocated"):
         runtime._policy_child_env()
-    monkeypatch.setenv("CUDA_VISIBLE_DEVICES", "1,2")
-    assert runtime._policy_child_env()["CUDA_VISIBLE_DEVICES"] == "2"
+    monkeypatch.setenv("CUDA_VISIBLE_DEVICES", "GPU-ghi,GPU-abc")
+    assert runtime._policy_child_env()["CUDA_VISIBLE_DEVICES"] == "GPU-abc"

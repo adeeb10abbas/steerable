@@ -341,8 +341,8 @@ def _policy_child_env() -> dict[str, str] | None:
     policy_gpu = os.environ.get("SGW01_POLICY_CUDA_VISIBLE_DEVICES", "").strip()
     if not policy_gpu:
         return None
-    if not policy_gpu.isdigit():
-        raise AdapterError("SGW01_POLICY_CUDA_VISIBLE_DEVICES must be a numeric GPU index")
+    if any(character.isspace() for character in policy_gpu) or "," in policy_gpu:
+        raise AdapterError("SGW01_POLICY_CUDA_VISIBLE_DEVICES must be one GPU index or UUID")
     visible = os.environ.get("CUDA_VISIBLE_DEVICES", "").strip()
     if not visible or policy_gpu not in {
         item.strip() for item in visible.split(",") if item.strip()

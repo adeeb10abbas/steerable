@@ -25,8 +25,10 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-valid-episodes", type=int, required=True)
     parser.add_argument("--max-cell-attempts", type=int, default=3)
     parser.add_argument("--heartbeat-seconds", type=int, default=60)
+    from robolab.eval.runner import add_common_eval_args
     from isaaclab.app import AppLauncher
 
+    add_common_eval_args(parser)
     AppLauncher.add_app_launcher_args(parser)
     return parser
 

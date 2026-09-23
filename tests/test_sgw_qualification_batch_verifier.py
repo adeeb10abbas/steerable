@@ -153,6 +153,19 @@ def test_real_producer_and_full_decoders_verify_all_six(produced):
     assert sum(row["verified_warmup_files"] for row in report["checks"]) == 804
 
 
+def test_shared_trial_verifier_accepts_actual_unwrapped_producer_layout(produced):
+    registration, root = produced
+    check = json.loads((root / "result/qualification.json").read_text())["checks"][0]
+    report, _ = verifier.verify_trial_evidence(
+        evidence_root=root,
+        trial=root / "result/trials/goal-+1/reset-0",
+        check=check,
+        candidate=registration.candidates[registration.plan["candidate_ids_in_frozen_hash_order"][0]],
+    )
+    assert report["decoded_trial_frames"] == 451
+    assert report["decoded_warmup_frames"] == 121
+
+
 @pytest.mark.parametrize("index,remove", [(2, False), (10, True)])
 def test_warmup_enforces_frozen_sampled_camera_inventory(produced, index, remove):
     _, root = produced

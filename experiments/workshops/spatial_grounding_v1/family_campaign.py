@@ -61,11 +61,13 @@ def compile_campaign(
                     "required_output": "family_verification.json",
                 },
             })
-        else:
+        elif row["status"] == "prospective_design_rejected_geometrically":
             jobs.append({
                 "design_id": row["design_id"], "family": plan["family"], "side": row["side"],
                 "status": "geometrically_rejected_slot_no_refill", "retry_permitted": False,
             })
+        else:
+            raise ValueError(f"campaign plan has unknown design status: {row['status']!r}")
     value = {
         "schema_version": SCHEMA,
         "family": plan["family"],

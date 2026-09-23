@@ -171,3 +171,34 @@ before AppLauncher. Only that new hash-bound capture can become input to later
 measured-layout materialization and the separate six-trial qualification gate.
 Materialization rechecks those inherited bytes and the captured source/asset
 identity; a once-valid capture cannot authorize mutated scene dependencies.
+
+## Family campaign evidence layout
+
+The finite campaign descriptors are **not launchers**. Before its offline
+verifier can produce a non-release verification receipt, each design must
+retain this canonical evidence root:
+
+```text
+<design-root>/
+  candidate_manifest.json
+  candidate_capture.json
+  candidate.json
+  controller.json
+  qualification.json
+  trials/goal-+1/reset-0..2/{reset.json,command-*.json,action-*.npy,
+                             state-*.json,frame-*.npy,viewport.mp4,trial.json}
+  trials/goal--1/reset-0..2/{...same raw evidence...}
+```
+
+`candidate_manifest.json` is the immutable prospective overlay manifest;
+`candidate_capture.json` is its fresh zero-model capture; and
+`candidate.json` is the measured materialization. The materialization must
+bind the design ID, overlay-manifest SHA-256, capture-file SHA-256, and
+calibration SHA-256. `qualification.json` and `controller.json` are the
+existing `model_blind_qualification.py` outputs. The offline verifier
+recomputes every 451-state trace, its 450 issued native Abs-IK actions and
+commands, RGB/hash bindings, physical times, frozen scores, and three-reset
+gate from these files. It separately requires current measured banana/table
+containment and 20-mm support clearance. Any mismatch is technical-invalid
+evidence; a valid scripted physical rejection remains distinct and still
+never grants a fixture or behavioral release.

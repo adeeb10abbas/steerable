@@ -171,9 +171,17 @@ def _warmup(root: Path, receipt: Mapping[str, Any], shape: tuple[int, ...]) -> i
     return verified_files + 1
 
 
-def _trial(root: Path, check: dict[str, Any], candidate: FixtureCandidate) -> tuple[dict[str, Any], ResetSnapshot]:
+def verify_trial_evidence(
+    *, evidence_root: Path, trial: Path, check: Mapping[str, Any], candidate: FixtureCandidate,
+) -> tuple[dict[str, Any], ResetSnapshot]:
+    """Recompute one complete trial from the recorder's raw action/state/RGB evidence.
+
+    Shared by the LAT batch verifier and the family campaign verifier.  The
+    caller supplies the layout-specific trial directory; the retained evidence
+    format and all physical/scoring checks remain identical.
+    """
+
     sign, repeat = check["goal_sign"], check["reset_index"]
-    trial = root / "result/trials" / f"goal-{sign:+d}" / f"reset-{repeat}"
     saved = _json(trial / "trial.json")
     # The producer adds reset_validation/reset_error and may change passed only
     # after all three resets. The on-disk trial is the pre-reset-gate record.
@@ -237,14 +245,24 @@ def _trial(root: Path, check: dict[str, Any], candidate: FixtureCandidate) -> tu
     ).encode()).hexdigest()
     _require(reset["fingerprint"] == fingerprint, "reset scoring-pose fingerprint differs")
     roots = ResetSnapshot.from_json({"poses": initial["reset_root_poses"]})
-    _video(root, saved["viewport_video"], ACTION_CAP + 1, 1 / dt, shape)
-    warmup_files = _warmup(root, reset["render_only_warmup"], shape)
+    _video(evidence_root, saved["viewport_video"], ACTION_CAP + 1, 1 / dt, shape)
+    warmup_files = _warmup(evidence_root, reset["render_only_warmup"], shape)
     return {
         "goal_sign": sign, "reset_index": repeat, "score": asdict(score),
         "verified_trial_files": len(expected), "verified_warmup_files": warmup_files,
         "decoded_trial_frames": ACTION_CAP + 1, "decoded_warmup_frames": 121,
         "control_step_dt_s": dt, "trial_receipt_sha256": _digest(trial / "trial.json"),
     }, roots
+
+
+def _trial(root: Path, check: dict[str, Any], candidate: FixtureCandidate) -> tuple[dict[str, Any], ResetSnapshot]:
+    sign, repeat = check["goal_sign"], check["reset_index"]
+    return verify_trial_evidence(
+        evidence_root=root,
+        trial=root / "result/trials" / f"goal-{sign:+d}" / f"reset-{repeat}",
+        check=check,
+        candidate=candidate,
+    )
 
 
 def verify_candidate(registration: Registration, *, index: int, root: Path) -> dict[str, Any]:

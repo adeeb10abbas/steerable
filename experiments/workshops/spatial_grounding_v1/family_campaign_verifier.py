@@ -4,14 +4,20 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from pathlib import Path
 from typing import Any, Mapping
 
 import imageio.v2 as iio
 
-from .fixtures import ACTION_CAP
+from .fixtures import ACTION_CAP, FixtureCandidate, FixtureError, Pose, validate_reset
 from .family_campaign import SCHEMA
-from .prospective_family_designs import _digest
+from .prospective_family_designs import (
+    CANDIDATE_STATUS, _aabb_xy_clearance_m, _candidate_manifest, _digest, require_design_capture,
+)
+from .qualification_batch_verifier import VerificationError, verify_trial_evidence
+from .robolab_height_dist_qualification import CALIBRATION_SCHEMA, validate_candidate_inputs
+from .lat_candidate_generator import workspace_digest
 
 
 def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Path) -> dict[str, Any]:
@@ -25,42 +31,63 @@ def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Pa
     job = next((row for row in campaign["jobs"] if row["design_id"] == design_id), None)
     if not isinstance(job, Mapping) or job.get("status") != "blocked_pending_candidate_overlay_and_fresh_zero_model_capture":
         raise ValueError("design is not a campaign qualification job")
+    candidate_manifest = root / "candidate_manifest.json"
     candidate_capture = root / "candidate_capture.json"
+    materialized_candidate = root / "candidate.json"
     qualification = root / "qualification.json"
-    if not candidate_capture.is_file() or not qualification.is_file():
-        raise ValueError("candidate capture and qualification outputs are both required")
-    capture = json.loads(candidate_capture.read_text(encoding="utf-8"))
+    if not candidate_manifest.is_file() or not candidate_capture.is_file() or not materialized_candidate.is_file() or not qualification.is_file():
+        raise ValueError("candidate manifest, capture, materialization, and qualification outputs are all required")
+    manifest = _candidate_manifest(candidate_manifest)
+    capture = require_design_capture(candidate_manifest_path=candidate_manifest, capture_path=candidate_capture)
+    candidate_value = json.loads(materialized_candidate.read_text(encoding="utf-8"))
+    candidate = FixtureCandidate.from_json(candidate_value)
     result = json.loads(qualification.read_text(encoding="utf-8"))
+    _verify_design_chain(
+        job, manifest, capture, _sha256(candidate_capture), candidate_value, candidate, result,
+    )
     if capture.get("family") != campaign["family"] or result.get("family") != campaign["family"]:
         raise ValueError("family binding differs from campaign")
     if capture.get("model_request_count") != 0 or capture.get("behavioral_episode_count") != 0:
         raise ValueError("candidate capture is not zero-model")
-    if result.get("action_cap") != ACTION_CAP or result.get("controller_identity", {}).get("recipe") is None:
+    controller = _verified_calibration(root, candidate, result)
+    if result.get("action_cap") != ACTION_CAP or result.get("controller_identity") != controller:
         raise ValueError("qualification lacks calibrated 450-action controller identity")
     expected = [(sign, reset) for sign in (1, -1) for reset in range(3)]
     checks = result.get("checks")
     if not isinstance(checks, list) or [(row.get("goal_sign"), row.get("reset_index")) for row in checks] != expected:
         raise ValueError("qualification must retain both goals and three fresh resets per goal")
-    trial_reports = []
+    trial_reports, reset_groups = [], {1: [], -1: []}
     for check in checks:
         trial = root / "trials" / f"goal-{check['goal_sign']:+d}" / f"reset-{check['reset_index']}" / "trial.json"
         if not trial.is_file():
             raise ValueError("qualification trial receipt is missing")
-        receipt = json.loads(trial.read_text(encoding="utf-8"))
-        if receipt.get("goal_sign") != check["goal_sign"] or receipt.get("reset_index") != check["reset_index"]:
-            raise ValueError("trial identity differs from qualification aggregate")
-        if receipt.get("actions_executed") != ACTION_CAP or receipt.get("observed_actions") != ACTION_CAP:
-            raise ValueError("trial did not retain the full calibrated action sequence")
-        video = _bound_file(trial.parent, receipt.get("viewport_video"))
-        _decode_video(video, ACTION_CAP + 1)
-        warmup = receipt.get("reset_receipt", {}).get("render_only_warmup")
-        warmup_video = _bound_file(root, warmup.get("viewport_video") if isinstance(warmup, Mapping) else None)
-        _decode_video(warmup_video, 121)
+        try:
+            report, reset = verify_trial_evidence(
+                evidence_root=root, trial=trial, check=check, candidate=candidate,
+            )
+        except VerificationError as error:
+            raise ValueError(f"raw trial integrity or physical scoring differs: {error}") from error
+        reset_groups[check["goal_sign"]].append(reset)
+        _verify_aggregate_trial(check, report)
         trial_sha256 = _sha256(trial)
         trial_reports.append({
             "goal_sign": check["goal_sign"], "reset_index": check["reset_index"],
             "trial_sha256": trial_sha256, "sha256": trial_sha256, "bytes": trial.stat().st_size,
+            "recomputed_score": report["score"],
         })
+    reset_errors = _verify_reset_groups(candidate, checks, reset_groups)
+    expected_passes = {
+        (check["goal_sign"], check["reset_index"]): bool(check["score"]["requested_success"])
+        and reset_errors[check["goal_sign"]] is None
+        for check in checks
+    }
+    if any(check.get("passed") is not expected_passes[(check["goal_sign"], check["reset_index"])] for check in checks):
+        raise ValueError("aggregate pass differs from recomputed physical/reset gates")
+    accepted = all(expected_passes.values())
+    if result.get("status") != (
+        "accepted_model_blind_fixture_candidate" if accepted else "rejected_model_blind_fixture_candidate"
+    ):
+        raise ValueError("aggregate qualification status differs from recomputed physical/reset gates")
     value = {
         "schema_version": "sgw-01-family-campaign-verification-v1",
         "campaign_sha256": campaign["campaign_sha256"],
@@ -68,8 +95,12 @@ def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Pa
         "family": campaign["family"],
         "evidence_root": str(root.resolve()),
         "candidate_capture_sha256": _sha256(candidate_capture),
+        "candidate_manifest_sha256": _sha256(candidate_manifest),
+        "materialized_candidate_sha256": _sha256(materialized_candidate),
         "qualification_sha256": _sha256(qualification),
         "candidate_capture": _record(candidate_capture),
+        "candidate_manifest": _record(candidate_manifest),
+        "materialized_candidate": _record(materialized_candidate),
         "qualification": _record(qualification),
         "trials": [
             {**row, "path": str((root / "trials" / f"goal-{row['goal_sign']:+d}" / f"reset-{row['reset_index']}" / "trial.json").resolve())}
@@ -84,6 +115,156 @@ def verify_design(*, campaign_path: Path, design_id: str, root: Path, output: Pa
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return value
+
+
+def _verify_design_chain(
+    job: Mapping[str, Any], manifest: Mapping[str, Any], capture: Mapping[str, Any], capture_file_sha256: str,
+    candidate_value: Mapping[str, Any], candidate: FixtureCandidate, result: Mapping[str, Any],
+) -> None:
+    if manifest.get("status") != CANDIDATE_STATUS or manifest.get("design_id") != job["design_id"]:
+        raise ValueError("candidate overlay does not bind the selected campaign design")
+    if candidate.family != job["family"] or result.get("candidate_id") != candidate.candidate_id:
+        raise ValueError("materialized candidate identity differs from campaign qualification")
+    if result.get("candidate_sha256") != _candidate_sha256(candidate):
+        raise ValueError("qualification candidate hash differs from materialized candidate")
+    metadata = candidate_value.get("metadata")
+    if not isinstance(metadata, Mapping):
+        raise ValueError("materialized candidate lacks prospective chain metadata")
+    if (
+        metadata.get("prospective_design_id") != job["design_id"]
+        or metadata.get("candidate_overlay_manifest_sha256") != manifest["manifest_sha256"]
+        or metadata.get("candidate_capture_sha256") != capture_file_sha256
+    ):
+        raise ValueError("materialized candidate does not bind its design, overlay, and capture")
+    validate_candidate_inputs(candidate)
+    _verify_measured_candidate_geometry(capture, manifest, candidate)
+
+
+def _verified_calibration(root: Path, candidate: FixtureCandidate, result: Mapping[str, Any]) -> dict[str, Any]:
+    path = root / "controller.json"
+    if not path.is_file():
+        raise ValueError("qualification controller identity is missing")
+    controller = json.loads(path.read_text(encoding="utf-8"))
+    calibration = controller.get("calibration")
+    if (
+        controller.get("recipe") != CALIBRATION_SCHEMA
+        or not isinstance(calibration, Mapping)
+        or calibration.get("schema_version") != CALIBRATION_SCHEMA
+        or calibration.get("receipt_sha256") != workspace_digest(calibration)
+    ):
+        raise ValueError("controller calibration identity is malformed")
+    if candidate.metadata.get("controller_calibration_sha256") != controller.get("calibration_sha256"):
+        raise ValueError("materialized candidate calibration binding differs from qualification")
+    return controller
+
+
+def _verify_measured_candidate_geometry(
+    capture: Mapping[str, Any], manifest: Mapping[str, Any], candidate: FixtureCandidate,
+) -> None:
+    objects = capture.get("objects")
+    if not isinstance(objects, Mapping):
+        raise ValueError("candidate capture lacks measured objects")
+    required = set(candidate.object_poses) | {"banana", "table"}
+    if not required.issubset(objects):
+        raise ValueError("candidate capture lacks measured scored objects, banana, or table")
+    for name, expected in candidate.object_poses.items():
+        observed = _capture_pose(objects[name], name)
+        position_error, angle_error = _pose_error(observed, expected)
+        if position_error > 0.003 or angle_error > 2.0:
+            raise ValueError(f"candidate capture {name} differs from materialized pose")
+    banana = _capture_pose(objects["banana"], "banana")
+    source_baseline = manifest.get("source_baseline")
+    baseline_record = source_baseline.get("overlay_manifest") if isinstance(source_baseline, Mapping) else None
+    if not isinstance(baseline_record, Mapping):
+        raise ValueError("candidate overlay lacks its bound baseline manifest")
+    baseline_path = Path(str(baseline_record.get("path", "")))
+    if not baseline_path.is_file() or _sha256(baseline_path) != baseline_record.get("sha256"):
+        raise ValueError("candidate overlay baseline manifest bytes differ from binding")
+    baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
+    authored = baseline["prospective_design"]["authored_actor_root_overrides_env_local_xyz_m"]["banana"]
+    orientations = baseline["prospective_design"]["authored_actor_quaternion_overrides_wxyz"]["banana"]
+    position_error, angle_error = _pose_error(banana, Pose.from_json({"position_m": authored, "quaternion_wxyz": orientations}))
+    if position_error > 0.003 or angle_error > 2.0:
+        raise ValueError("candidate capture banana differs from authored prospective pose")
+    _verify_banana_clearance(objects, manifest["native_import_contract"]["kinematic_or_static_bodies"])
+
+
+def _verify_banana_clearance(objects: Mapping[str, Any], support_names: list[str]) -> None:
+    table_minimum, table_maximum = _bbox(objects["table"], "table")
+    banana_minimum, banana_maximum = _bbox(objects["banana"], "banana")
+    if (
+        banana_minimum[0] < table_minimum[0] or banana_maximum[0] > table_maximum[0]
+        or banana_minimum[1] < table_minimum[1] or banana_maximum[1] > table_maximum[1]
+    ):
+        raise ValueError("measured candidate banana leaves the measured table bounds")
+    for name in support_names:
+        minimum, maximum = _bbox(objects.get(name), name)
+        if _aabb_xy_clearance_m(banana_minimum, banana_maximum, minimum[:2], maximum[:2]) < 0.02:
+            raise ValueError(f"measured candidate banana clearance is below 20 mm for {name}")
+
+
+def _bbox(row: Any, name: str) -> tuple[list[float], list[float]]:
+    if not isinstance(row, Mapping):
+        raise ValueError(f"candidate capture lacks measured {name}")
+    minimum, maximum = row.get("bbox_env_local_min_xyz_m"), row.get("bbox_env_local_max_xyz_m")
+    if not _finite_vector(minimum, 3) or not _finite_vector(maximum, 3) or any(low > high for low, high in zip(minimum, maximum, strict=True)):
+        raise ValueError(f"candidate capture has invalid measured {name} bounds")
+    return list(minimum), list(maximum)
+
+
+def _capture_pose(row: Any, name: str) -> Pose:
+    if not isinstance(row, Mapping):
+        raise ValueError(f"candidate capture lacks measured {name}")
+    return Pose.from_json({
+        "position_m": row.get("root_position_env_local_xyz_m"),
+        "quaternion_wxyz": row.get("root_quaternion_world_wxyz"),
+    })
+
+
+def _pose_error(observed: Pose, expected: Pose) -> tuple[float, float]:
+    from .fixtures import pose_error
+    return pose_error(observed, expected)
+
+
+def _verify_aggregate_trial(check: Mapping[str, Any], report: Mapping[str, Any]) -> None:
+    passed = bool(report["score"]["requested_success"])
+    if check.get("passed") is not passed:
+        raise ValueError("aggregate pass differs from recomputed physical score")
+    if check.get("score") != report["score"] or check.get("requested_margin_m") != report["score"]["terminal_margin_m"]:
+        raise ValueError("aggregate score differs from recomputed physical score")
+
+
+def _verify_reset_groups(
+    candidate: FixtureCandidate, checks: list[Mapping[str, Any]], groups: Mapping[int, list[Any]],
+) -> dict[int, str | None]:
+    errors: dict[int, str | None] = {}
+    for sign in (1, -1):
+        try:
+            rows = validate_reset(candidate, groups[sign])
+        except FixtureError as error:
+            errors[sign] = str(error)
+            for check in checks:
+                if check["goal_sign"] == sign and check.get("reset_error") != str(error):
+                    raise ValueError("aggregate reset rejection differs from recomputation") from error
+        else:
+            errors[sign] = None
+            for check in checks:
+                if check["goal_sign"] == sign:
+                    expected = [row for row in rows if row["repeat"] == check["reset_index"]]
+                    if check.get("reset_validation") != expected or check.get("reset_error") is not None:
+                        raise ValueError("aggregate reset validation differs from recomputation")
+    return errors
+
+
+def _candidate_sha256(candidate: FixtureCandidate) -> str:
+    from dataclasses import asdict
+    return hashlib.sha256(json.dumps(asdict(candidate), sort_keys=True).encode()).hexdigest()
+
+
+def _finite_vector(value: Any, length: int) -> bool:
+    return isinstance(value, list) and len(value) == length and all(
+        isinstance(item, (int, float)) and math.isfinite(item) for item in value
+    )
 
 
 def _bound_file(root: Path, record: Any) -> Path:

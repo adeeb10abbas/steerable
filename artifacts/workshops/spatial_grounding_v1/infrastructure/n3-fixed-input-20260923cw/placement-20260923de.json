@@ -1,0 +1,44 @@
+{
+  "schema_version": "sgw-01-zero-request-recovery-placement-v1",
+  "status": "prospective_placement_change_before_any_recovery_container_start",
+  "registration_id": "SGW-N3-FIXED-20260923CW",
+  "prior_admission": {
+    "job": "sgw01-ali-n3-fixedinput-20260923dc",
+    "pod": "sgw01-ali-n3-fixedinput-20260923dc-cwnjx",
+    "pod_uid": "08dc492c-ed36-4b28-b0ca-df05a6867cae",
+    "node": "dcwipphhgc171.edc.nam.gm.com",
+    "status": "Failed",
+    "reason": "UnexpectedAdmissionError",
+    "message": "Requested one GPU; device plugin reported zero available.",
+    "container_started": false,
+    "output_exists": false,
+    "successor_claim_exists": false
+  },
+  "replacement": {
+    "job": "sgw01-ali-n3-fixedinput-20260923de",
+    "manifest": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923de.yaml",
+    "generated_from": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923dc.yaml",
+    "json_patch": "handoff/k8s/sgw01-ali-n3-fixedinput-20260923de-placement.json",
+    "scheduler": "default-scheduler",
+    "preemption_policy": "Never",
+    "priority": 0,
+    "eligible_nodes": [
+      "dcwipphhgc185.edc.nam.gm.com",
+      "dcwipphhgc191.edc.nam.gm.com",
+      "dcwipphhgc188.edc.nam.gm.com",
+      "dcwipphhgc189.edc.nam.gm.com"
+    ],
+    "node_scope": "Only the four original BT nodes whose owned workers completed their authorized candidate-boundary drains. Node readiness/advertised capacity is not claimed as physical device idleness.",
+    "requested_gpus": 1,
+    "automatic_retries": 0,
+    "deadline_seconds": 7200,
+    "output": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-de",
+    "exclusive_successor_claim_unchanged": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/request-owner/successor",
+    "native_source_inputs_config_and_six_request_limit": "unchanged",
+    "actual_idle_storage_and_prior_owner_gates": "unchanged"
+  },
+  "model_requests_at_registration": 0,
+  "additional_request_allocation": 0,
+  "behavioral_episodes": 0,
+  "release_permitted": false
+}

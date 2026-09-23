@@ -1,0 +1,76 @@
+[
+  {
+    "op": "replace",
+    "path": "/metadata/name",
+    "value": "sgw01-ali-n3-fixedinput-20260923de"
+  },
+  {
+    "op": "remove",
+    "path": "/spec/template/spec/nodeName"
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/schedulerName",
+    "value": "default-scheduler"
+  },
+  {
+    "op": "add",
+    "path": "/spec/template/spec/preemptionPolicy",
+    "value": "Never"
+  },
+  {
+    "op": "add",
+    "path": "/spec/template/spec/affinity",
+    "value": {
+      "nodeAffinity": {
+        "requiredDuringSchedulingIgnoredDuringExecution": {
+          "nodeSelectorTerms": [
+            {
+              "matchFields": [
+                {
+                  "key": "metadata.name",
+                  "operator": "In",
+                  "values": [
+                    "dcwipphhgc185.edc.nam.gm.com"
+                  ]
+                }
+              ]
+            },
+            {
+              "matchFields": [
+                {
+                  "key": "metadata.name",
+                  "operator": "In",
+                  "values": ["dcwipphhgc191.edc.nam.gm.com"]
+                }
+              ]
+            },
+            {
+              "matchFields": [
+                {
+                  "key": "metadata.name",
+                  "operator": "In",
+                  "values": ["dcwipphhgc188.edc.nam.gm.com"]
+                }
+              ]
+            },
+            {
+              "matchFields": [
+                {
+                  "key": "metadata.name",
+                  "operator": "In",
+                  "values": ["dcwipphhgc189.edc.nam.gm.com"]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/spec/template/spec/containers/0/env/2/value",
+    "value": "/data/users/ali/sgw-01/infrastructure/n3-fixedinput-20260923cw/run-de"
+  }
+]

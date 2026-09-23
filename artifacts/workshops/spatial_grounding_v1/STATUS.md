@@ -38,9 +38,24 @@ unchanged.
 
 Job bn started at 07:12:51 UTC on four existing A40 nodes. All four
 allocation probes measured zero MiB used before native simulator startup;
-native capture is progressing and the first slot has entered qualification.
-The Job does not depend on a laptop process and has a finite 4,800-second
-deadline. No native outcome is claimed from startup alone.
+all four candidate captures and materializations completed. At 07:15:21 UTC,
+all four workers were terminal infrastructure failures and released their GPUs.
+Qualification could not read its required support-contact sensors before its
+first controller action. All candidate capture and reset-warmup videos remain
+on the PVC; compact evidence is in
+[`infrastructure/native-smoke-20260923bn/`](infrastructure/native-smoke-20260923bn/).
+No physical or model failure is inferred.
+
+The cause is independently reproduced using the actual pinned native contact
+factory: materialization alphabetically sorted the object inventory, reversing
+support/cube sensor names relative to capture's original cube/support order.
+The correction preserves the manifest's exact native import order and surfaces
+native infrastructure receipts without obscuring them as candidate-hash errors.
+All 35 targeted campaign/executor/proposal/native-boundary checks pass.
+This is a disclosed engineering correction after bn, not a new scientific
+freeze: the exact bm designs, seed, thresholds and calibration remain fixed.
+Only the same four infrastructure-invalid slots may receive fresh technical
+attempts; no valid physical trial is rerun and no rejected proposal is replaced.
 
 ## Scientific accounting
 

@@ -144,6 +144,9 @@ def materialize_campaign_candidate(
     objects = capture.get("objects")
     if not isinstance(objects, Mapping):
         raise ValueError("candidate capture lacks measured object rows")
+    native_order = manifest["native_import_contract"]["objects_of_interest"]
+    if not isinstance(native_order, list) or len(native_order) != len(objects) or set(native_order) != set(objects):
+        raise ValueError("candidate capture inventory differs from the native import order")
     names = ("rubiks_cube", "bowl") + (("plate",) if plan["family"] == "DIST" else ())
     poses = {name: _captured_pose(objects.get(name), name) for name in names}
     offsets = {name: _captured_vector(objects.get(name), "geometric_center_offset_root_local_xyz_m", name) for name in names}
@@ -171,7 +174,8 @@ def materialize_campaign_candidate(
             "scoring_center_offsets_root_local_m": offsets,
             "native_scene": {
                 "asset": manifest["overlay_usda"]["path"],
-                "object_names": sorted(objects),
+                # RoboLab names pair-contact sensors in this registration order.
+                "object_names": list(native_order),
             },
             counterbalance_key: baseline["counterbalance"][counterbalance_key],
             "goal_supports": goal_supports,

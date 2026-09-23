@@ -280,6 +280,11 @@ def run_slot(
         values["candidate_id"] = candidate_id
         _run_child(qualification_command, label="qualification", root=root, values=values,
                    timeout_seconds=child_timeout_seconds)
+        qualification_path = Path(values["qualification"])
+        if qualification_path.is_file():
+            outcome = json.loads(qualification_path.read_text(encoding="utf-8"))
+            if outcome.get("status") == "infrastructure_invalid_qualification":
+                raise RuntimeError(f"native qualification reported infrastructure failure: {outcome.get('error')}")
         verification = verify(campaign_path=campaign_path, design_id=str(job["design_id"]), root=root,
                               output=root / "family_verification.json")
         rejected = verification.get("physical_geometry_rejection")

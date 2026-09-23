@@ -110,6 +110,31 @@ def test_exit_zero_without_capture_output_is_infrastructure_failure(tmp_path: Pa
     assert failure["model_request_count"] == 0 and "capture" in failure["error"].lower()
 
 
+def test_exit_zero_with_native_infrastructure_receipt_preserves_original_error(tmp_path, monkeypatch):
+    campaign, calibration = _campaign(tmp_path), _calibration(tmp_path)
+    _patch_fixture(monkeypatch, calibration)
+    capture, _ = _success_commands()
+    qualification = [
+        sys.executable, "-c",
+        "import json,sys;open(sys.argv[1],'w').write(json.dumps({'status':'infrastructure_invalid_qualification',"
+        "'error':'RoboLab scene lacks required rubiks_cube__height_upper_support contact sensor'}))",
+        "{qualification}",
+    ]
+    with pytest.raises(RuntimeError, match="lacks required rubiks_cube__height_upper_support"):
+        executor.run_slot(
+            campaign_path=campaign, index=0, root=tmp_path / "slot", controller_calibration=calibration,
+            capture_command=capture, qualification_command=qualification,
+            materialize=lambda **kwargs: (
+                kwargs["output"].write_text(json.dumps({"candidate_id": "mock-candidate"})),
+                {"candidate_id": "mock-candidate"},
+            )[1],
+            verify=lambda **_: pytest.fail("native infrastructure error must not become a candidate hash error"),
+        )
+    failure = json.loads((tmp_path / "slot" / "executor-failure.json").read_text())
+    assert "contact sensor" in failure["error"]
+    assert failure["model_request_count"] == failure["behavioral_episode_count"] == 0
+
+
 def test_missing_or_late_preaction_guard_stops_slot(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     campaign, calibration = _campaign(tmp_path), _calibration(tmp_path)
     _patch_fixture(monkeypatch, calibration)

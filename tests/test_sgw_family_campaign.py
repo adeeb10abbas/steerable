@@ -317,6 +317,13 @@ def test_complete_synthetic_family_campaign_chain_and_adversarial_bindings(tmp_p
         plan_path=plan_path, design_id=design["design_id"], candidate_manifest_path=candidate_manifest,
         candidate_capture_path=capture, controller_calibration_path=calibration, output=root / "candidate.json",
     )
+    native_order = candidate["metadata"]["native_scene"]["object_names"]
+    assert native_order == manifest["native_import_contract"]["objects_of_interest"]
+    assert native_order != sorted(native_order)
+    native_pairs = {
+        f"{first}__{second}" for index, first in enumerate(native_order) for second in native_order[index + 1:]
+    }
+    assert all(support["contact_sensor_id"] in native_pairs for support in candidate["metadata"]["goal_supports"].values())
     cli_args = Namespace(
         candidate_file=root / "candidate.json", candidate_manifest=candidate_manifest,
         candidate_capture=capture, candidate_id=candidate["candidate_id"], output_root=root,

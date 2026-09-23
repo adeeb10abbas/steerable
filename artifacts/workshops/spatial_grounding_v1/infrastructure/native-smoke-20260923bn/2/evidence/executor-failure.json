@@ -1,0 +1,11 @@
+{
+  "behavioral_episode_count": 0,
+  "campaign_path": "/data/users/ali/sgw-01/infrastructure/family-source-stage-20260923bm/dist-campaign.json",
+  "error": "qualification candidate hash differs from materialized candidate",
+  "error_type": "ValueError",
+  "index": 0,
+  "model_request_count": 0,
+  "release_permitted": false,
+  "schema_version": "sgw-01-family-campaign-executor-v1",
+  "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/sgw-01/source/cdb7a55b-bm/experiments/workshops/spatial_grounding_v1/family_campaign_executor.py\", line 283, in run_slot\n    verification = verify(campaign_path=campaign_path, design_id=str(job[\"design_id\"]), root=root,\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/users/ali/sgw-01/source/cdb7a55b-bm/experiments/workshops/spatial_grounding_v1/family_campaign_verifier.py\", line 47, in verify_design\n    _verify_design_chain(\n  File \"/data/users/ali/sgw-01/source/cdb7a55b-bm/experiments/workshops/spatial_grounding_v1/family_campaign_verifier.py\", line 265, in _verify_design_chain\n    raise ValueError(\"qualification candidate hash differs from materialized candidate\")\nValueError: qualification candidate hash differs from materialized candidate\n"
+}

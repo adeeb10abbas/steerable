@@ -1,0 +1,11 @@
+0, NVIDIA A40, GPU-db477339-3bef-0275-8ba9-82d6440cec44, 580.95.05, 46068 MiB, 0 MiB, 0 %
+Traceback (most recent call last):
+  File "<stdin>", line 50, in <module>
+  File "/data/users/ali/sgw-01/source/cdb7a55b-bm/experiments/workshops/spatial_grounding_v1/family_campaign_executor.py", line 283, in run_slot
+    verification = verify(campaign_path=campaign_path, design_id=str(job["design_id"]), root=root,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/users/ali/sgw-01/source/cdb7a55b-bm/experiments/workshops/spatial_grounding_v1/family_campaign_verifier.py", line 47, in verify_design
+    _verify_design_chain(
+  File "/data/users/ali/sgw-01/source/cdb7a55b-bm/experiments/workshops/spatial_grounding_v1/family_campaign_verifier.py", line 265, in _verify_design_chain
+    raise ValueError("qualification candidate hash differs from materialized candidate")
+ValueError: qualification candidate hash differs from materialized candidate

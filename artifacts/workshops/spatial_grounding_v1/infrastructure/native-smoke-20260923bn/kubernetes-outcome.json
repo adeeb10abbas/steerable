@@ -1,0 +1,139 @@
+{
+  "allocated_gpus_after_completion": 0,
+  "behavioral_episodes": 0,
+  "capture_valid_count": 4,
+  "completed_trials": 0,
+  "controller_action_files": 0,
+  "job": "sgw01-ali-family-native-smoke-20260923bn",
+  "job_status": {
+    "conditions": [
+      {
+        "lastProbeTime": "2026-09-23T07:15:21Z",
+        "lastTransitionTime": "2026-09-23T07:15:21Z",
+        "message": "Job has failed indexes",
+        "reason": "FailedIndexes",
+        "status": "True",
+        "type": "Failed"
+      }
+    ],
+    "failed": 4,
+    "failedIndexes": "0-3",
+    "ready": 0,
+    "startTime": "2026-09-23T07:12:51Z",
+    "terminating": 0,
+    "uncountedTerminatedPods": {}
+  },
+  "job_uid": "181cdd45-0bce-4acb-8388-0134e52cf34c",
+  "model_requests": 0,
+  "pods": [
+    {
+      "containers": [
+        {
+          "containerID": "containerd://7545b893659fe1decb4eacfb49a487edf2cc1a8e836c585c1965a35bec973e23",
+          "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base:ubuntu22.04",
+          "imageID": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+          "lastState": {},
+          "name": "qualify",
+          "ready": false,
+          "restartCount": 0,
+          "started": false,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://7545b893659fe1decb4eacfb49a487edf2cc1a8e836c585c1965a35bec973e23",
+              "exitCode": 1,
+              "finishedAt": "2026-09-23T07:14:49Z",
+              "reason": "Error",
+              "startedAt": "2026-09-23T07:12:52Z"
+            }
+          }
+        }
+      ],
+      "name": "sgw01-ali-family-native-smoke-20260923bn-0-wzwld",
+      "node": "dcwipphhgc185.edc.nam.gm.com",
+      "phase": "Failed",
+      "uid": "af6bd1de-afdf-4006-ac39-a4d2e4a99a1c"
+    },
+    {
+      "containers": [
+        {
+          "containerID": "containerd://bcebc56de15880f2b4f1f8a8932a9ac0199bc8854725b745b038385f996d14c4",
+          "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base:ubuntu22.04",
+          "imageID": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+          "lastState": {},
+          "name": "qualify",
+          "ready": false,
+          "restartCount": 0,
+          "started": false,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://bcebc56de15880f2b4f1f8a8932a9ac0199bc8854725b745b038385f996d14c4",
+              "exitCode": 1,
+              "finishedAt": "2026-09-23T07:15:16Z",
+              "reason": "Error",
+              "startedAt": "2026-09-23T07:12:52Z"
+            }
+          }
+        }
+      ],
+      "name": "sgw01-ali-family-native-smoke-20260923bn-1-gz848",
+      "node": "dcwipphhgc191.edc.nam.gm.com",
+      "phase": "Failed",
+      "uid": "3904cede-0349-4cd8-9e62-89c24ff1e001"
+    },
+    {
+      "containers": [
+        {
+          "containerID": "containerd://0fffa6e8bb554c195d3c66046fc23a7282a46dc097e46bea54e78d353163bb04",
+          "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base:ubuntu22.04",
+          "imageID": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+          "lastState": {},
+          "name": "qualify",
+          "ready": false,
+          "restartCount": 0,
+          "started": false,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://0fffa6e8bb554c195d3c66046fc23a7282a46dc097e46bea54e78d353163bb04",
+              "exitCode": 1,
+              "finishedAt": "2026-09-23T07:15:18Z",
+              "reason": "Error",
+              "startedAt": "2026-09-23T07:12:52Z"
+            }
+          }
+        }
+      ],
+      "name": "sgw01-ali-family-native-smoke-20260923bn-2-t9dtx",
+      "node": "dcwipphhgc188.edc.nam.gm.com",
+      "phase": "Failed",
+      "uid": "63904d60-7b40-416a-bf8d-382faf7d2d58"
+    },
+    {
+      "containers": [
+        {
+          "containerID": "containerd://79eceeef31f4cce1d36e0afa37b5c6c2414d34c1ac78f737cc0ebf141946213c",
+          "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base:ubuntu22.04",
+          "imageID": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+          "lastState": {},
+          "name": "qualify",
+          "ready": false,
+          "restartCount": 0,
+          "started": false,
+          "state": {
+            "terminated": {
+              "containerID": "containerd://79eceeef31f4cce1d36e0afa37b5c6c2414d34c1ac78f737cc0ebf141946213c",
+              "exitCode": 1,
+              "finishedAt": "2026-09-23T07:15:03Z",
+              "reason": "Error",
+              "startedAt": "2026-09-23T07:12:53Z"
+            }
+          }
+        }
+      ],
+      "name": "sgw01-ali-family-native-smoke-20260923bn-3-p8gc6",
+      "node": "dcwipphhgc189.edc.nam.gm.com",
+      "phase": "Failed",
+      "uid": "9606a483-dd31-458a-a25b-70ec880e06de"
+    }
+  ],
+  "release_permitted": false
+}

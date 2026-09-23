@@ -1,0 +1,30 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    subLayers = [@/data/users/ali/sgw-01/infrastructure/source-stage-20260923bh/prospective/height-left.usda@]
+)
+
+over "World" {
+    over "bowl" {
+        double3 xformOp:translate = (0.47462698807907105, 0.11007799523162842, 0.1599999964237213)
+        quatf xformOp:orient = (0.9999999403953552, -5.8753543271450326e-05, -0.00032362030469812453, -0.00010501052747713402)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+    over "rubiks_cube" {
+        double3 xformOp:translate = (0.3247966467399597, -0.14884464127731323, 0.1624353677034378)
+        quatf xformOp:orient = (0.9999990463256836, -0.0009071399690583348, 0.001037940033711493, 8.44117093947716e-05)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+    over "height_reference_support" {
+        double3 xformOp:translate = (0.474627, 0.11007800000000001, 0.09122701168060303)
+    }
+    over "height_neutral_cube_support" {
+        double3 xformOp:translate = (0.314627, -0.119922, 0.09045305654406548)
+    }
+    over "height_lower_support" {
+        double3 xformOp:translate = (0.674627, -0.249922, 0.07045305654406547)
+    }
+    over "height_upper_support" {
+        double3 xformOp:translate = (0.674627, 0.21007800000000001, 0.11045305654406548)
+    }
+}

@@ -19,5 +19,12 @@
     "geometry_attachment_preflight.*identity_sha256"
   ],
   "limits_bytes": {"object":131072,"comparison":262144,"reference_bounds":262144},
+  "bounded_schema_findings": [
+    {"cohort_id":"V3-E006-repair-r001","export_path":"00-state.json","sha256":"947b2f2292a6cbc827e7431ef5f4caaf524dfb87cf5ffe1ec09a7eddd04f0703","bytes":895621,"finding":"fresh_reset object roots and source-defined full-reset comparison present; no centroid/AABB"},
+    {"cohort_id":"V3-E006-repair-r002","export_path":"01-state.json","sha256":"afb8c3ba2b53f1513bd22fd6135b16cbfe3e4dd9de3fe3d818ac05e458311fe7","bytes":7103108,"finding":"fresh_reset object roots and source-defined full-reset comparison present; no centroid/AABB"},
+    {"cohort_id":"V3-E006-repair-r003","export_path":"02-state.json","sha256":"0bac94d3d1e5b93f3eb00f94f1c4a6cc989cbe54d01f2b9247ed6f5ecf5a9392","bytes":349923,"finding":"known-reachable diagnostic fresh-reset evidence; diagnostic failed and no accepted repair state"},
+    {"cohort_id":"V3-E006-repair-r010","export_path":"09-state.json","sha256":"4792f9c0f60a3af2c2549a16f89b45c4493e0ce0a303e588fb5be0d864ff1b10","bytes":170593,"finding":"geometry attachment preflight identity/inventory only; preflight failed; no accepted live pose"},
+    {"cohort_id":"V3-E006-repair-r011","export_path":"10-state.json","sha256":"160a253999d0b3ae55709bdebca742172fbd87ece22d5201062bffd4dd9af1a0","bytes":177116,"finding":"geometry attachment preflight identity/inventory only; preflight failed; no accepted live pose"}
+  ],
   "semantic_boundary": "root-only reset evidence and preflight identity are not comparable centroid/AABB geometry"
 }

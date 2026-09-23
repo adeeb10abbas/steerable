@@ -21,6 +21,29 @@ with its support top at the disc's bottom, and separate landing supports clear
 of the anchors. Both counterbalances are checked against the actual committed
 workspace geometry; these are authoring checks, not physical qualification.
 
+## Engineering repair boundary (SGW-ENG-007)
+
+The independent `bf` scene review found artifact-valid media but rejected all
+four scenes for engineering repair. New source overlays extend every added
+kinematic support from the measured table top to its existing authored top
+plane: footprint, color, side, scoring centers, and object orientations are
+unchanged. This is a prospective visual/collision repair, not a rewrite of
+the `bf` evidence or a fixture release.
+
+The inherited banana is moved consistently in both families and both sides
+using the measured root-local center offset, retained quaternion, measured
+root-to-bottom offset, and measured table top. Its target geometric center XY
+is `(0.80, 0.39)` m; the source does not describe that authored pose as an
+observation. Every replacement capture must measure the banana root, center,
+AABB, and filtered banana/table and banana/support contact matrices. Candidate
+geometry screens fail closed if the measured banana leaves the table or comes
+within 20 mm XY AABB clearance of any translated added support.
+
+The DIST anchor remains the frozen simplified disc at its existing dimensions
+and center, but is rendered off-white to contrast with its support. It retains
+a documented category caveat: actual policy-sized views must be reviewed later;
+the color change does not assert semantic recognition or alter a prompt.
+
 Parent must use the pinned RoboLab `0aef241` base USD path below on the assigned
 lane only after reviewing the generated manifest:
 

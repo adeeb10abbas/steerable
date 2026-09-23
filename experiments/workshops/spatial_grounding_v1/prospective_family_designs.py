@@ -77,7 +77,10 @@ def build_design_plan(
             "authored_scored_object_roots": roots,
             "required_next_step": "author immutable overlay then run this design's zero-model native capture",
         }
-        rejection = _geometric_rejection(binding["capture"], family, side, roots, translation, fingerprints)
+        rejection = _geometric_rejection(
+            binding["capture"], family, side, roots, translation, fingerprints,
+            support_specs=binding["manifest"]["prospective_design"]["dimensions_and_poses"],
+        )
         if rejection is None:
             row["status"] = "prospective_design_requires_zero_model_capture"
             row["candidate_overlay_status"] = CANDIDATE_STATUS
@@ -206,7 +209,7 @@ def _baseline_capture(path: Path, expected_sha256: str | None = None) -> dict[st
         raise ValueError("baseline capture must remain model blind")
     if value.get("receipt_sha256") != workspace_digest(value):
         raise ValueError("baseline capture receipt digest differs")
-    required = {"rubiks_cube", "bowl"} | ({"plate"} if value.get("family") == "DIST" else set())
+    required = {"rubiks_cube", "bowl", "banana", "table"} | ({"plate"} if value.get("family") == "DIST" else set())
     objects = value.get("objects")
     if not isinstance(objects, Mapping) or not required.issubset(objects):
         raise ValueError("baseline capture lacks required scored objects")
@@ -297,7 +300,8 @@ def _translated_roots(objects: Mapping[str, Any], family: str, translation: list
 
 
 def _geometric_rejection(
-    capture: Mapping[str, Any], family: str, side: str, roots: Mapping[str, Any], translation: list[float], fingerprints: list[Mapping[str, Any]],
+    capture: Mapping[str, Any], family: str, side: str, roots: Mapping[str, Any], translation: list[float],
+    fingerprints: list[Mapping[str, Any]], *, support_specs: list[Mapping[str, Any]] | None = None,
 ) -> str | None:
     if not all(math.isfinite(value) and abs(value) <= TRANSLATION_LIMIT_M for value in translation):
         return "translation_not_finite_or_outside_bounded_xy_range"
@@ -312,6 +316,31 @@ def _geometric_rejection(
         point = pose["position_m"]
         if not minimum[0] <= point[0] <= maximum[0] or not minimum[1] <= point[1] <= maximum[1]:
             return f"{name}_root_outside_measured_table_xy_bounds"
+    banana = capture["objects"].get("banana")
+    if not isinstance(banana, Mapping):
+        return "missing_measured_banana_bounds"
+    banana_minimum, banana_maximum = (
+        banana.get("bbox_env_local_min_xyz_m"),
+        banana.get("bbox_env_local_max_xyz_m"),
+    )
+    if not _finite_vector(banana_minimum, 3) or not _finite_vector(banana_maximum, 3):
+        return "missing_finite_measured_banana_bounds"
+    if (
+        banana_minimum[0] < minimum[0] or banana_maximum[0] > maximum[0]
+        or banana_minimum[1] < minimum[1] or banana_maximum[1] > maximum[1]
+    ):
+        return "banana_outside_measured_table_xy_bounds"
+    if support_specs is not None:
+        for spec in support_specs:
+            if not isinstance(spec, Mapping) or spec.get("name") == "plate":
+                continue
+            center, size = spec.get("center_m"), spec.get("size_m")
+            if not _finite_vector(center, 3) or not _finite_vector(size, 3) or size[0] <= 0 or size[1] <= 0:
+                return "malformed_authored_support_geometry"
+            support_minimum = [center[0] + translation[0] - size[0] / 2, center[1] + translation[1] - size[1] / 2]
+            support_maximum = [center[0] + translation[0] + size[0] / 2, center[1] + translation[1] + size[1] / 2]
+            if _aabb_xy_clearance_m(banana_minimum, banana_maximum, support_minimum, support_maximum) < 0.02:
+                return f"banana_support_clearance_below_20mm:{spec['name']}"
     for prior in fingerprints:
         if all(
             pose_error(
@@ -326,6 +355,17 @@ def _geometric_rejection(
         ):
             return "duplicate_layout_within_3mm_2deg"
     return None
+
+
+def _aabb_xy_clearance_m(
+    first_minimum: list[float], first_maximum: list[float],
+    second_minimum: list[float], second_maximum: list[float],
+) -> float:
+    """Return Euclidean XY separation between closed axis-aligned bounds."""
+
+    dx = max(second_minimum[0] - first_maximum[0], first_minimum[0] - second_maximum[0], 0.0)
+    dy = max(second_minimum[1] - first_maximum[1], first_minimum[1] - second_maximum[1], 0.0)
+    return math.hypot(dx, dy)
 
 
 def _object_row(row: Any, name: str) -> Mapping[str, Any]:

@@ -39,7 +39,14 @@ def _workspace():
                 root=[.44, .12, .077], quat=[math.sqrt(.5), 0, 0, math.sqrt(.5)],
                 offset=[.008, -.004, .001], bbox_min=[.36, .04, .05], bbox_max=[.53, .21, .105],
             ),
-            "table": {},
+            "banana": _object(
+                root=[.54, -.08, .07], quat=[1, 0, 0, 0],
+                offset=[0, 0, 0], bbox_min=[.49, -.17, .05], bbox_max=[.60, .01, .09],
+            ),
+            "table": _object(
+                root=[.2, 0, .05], quat=[1, 0, 0, 0],
+                offset=[.35, 0, -.35], bbox_min=[.2, -.48, -.65], bbox_max=[.9, .52, .05],
+            ),
         },
     }
     value["receipt_sha256"] = workspace_digest(value)
@@ -97,6 +104,10 @@ def test_height_overlay_is_prospective_and_parseable_with_usd_core(tmp_path):
         center = [root[index] + _rotate_wxyz(object_row["root_quaternion_world_wxyz"], object_row["geometric_center_offset_root_local_xyz_m"])[index] for index in range(3)]
         assert center[2] == pytest.approx(0.16)
     _assert_non_overlapping_supports(design["dimensions_and_poses"])
+    banana_root = overrides["banana"]
+    banana = workspace["objects"]["banana"]
+    assert _center(banana, banana_root)[:2] == pytest.approx([.80, .39])
+    assert banana_root[2] + (banana["bbox_env_local_min_xyz_m"][2] - banana["root_position_env_local_xyz_m"][2]) == pytest.approx(.05)
 
 
 def test_dist_overlay_has_visual_plate_and_counterbalance(tmp_path):
@@ -110,6 +121,7 @@ def test_dist_overlay_has_visual_plate_and_counterbalance(tmp_path):
 
     assert manifest["counterbalance"] == {"bowl_side": "right"}
     assert manifest["native_import_contract"]["dynamic_bodies"] == ["plate"]
+    assert manifest["prospective_design"]["plate_category_caveat"].startswith("The DIST plate is a simplified")
     assert "def Cylinder \"geometry\"" in output.read_text()
     try:
         from pxr import Usd, UsdPhysics
@@ -155,6 +167,9 @@ def test_real_measured_receipt_authors_supported_poses_and_goal_clearance(tmp_pa
         assert prim.HasAPI(UsdPhysics.RigidBodyAPI)
         assert UsdPhysics.RigidBodyAPI(prim).GetKinematicEnabledAttr().Get() is True
         assert prim.GetChild("geometry").HasAPI(UsdPhysics.CollisionAPI)
+        assert specs[name]["center_m"][2] - specs[name]["size_m"][2] / 2 == pytest.approx(
+            workspace["objects"]["table"]["bbox_env_local_max_xyz_m"][2]
+        )
     if family == "DIST":
         plate = stage.GetPrimAtPath("/World/plate")
         assert UsdPhysics.RigidBodyAPI(plate).GetKinematicEnabledAttr().Get() is False
@@ -179,6 +194,13 @@ def test_real_measured_receipt_authors_supported_poses_and_goal_clearance(tmp_pa
         )
         assert lowest == pytest.approx(support["center_m"][2] + support["size_m"][2] / 2)
         assert centers[name][:2] == pytest.approx(support["center_m"][:2])
+    banana = workspace["objects"]["banana"]
+    banana_root = roots["banana"]
+    banana_center = _center(banana, banana_root)
+    assert banana_center[:2] == pytest.approx([.80, .39])
+    assert banana_root[2] + (
+        banana["bbox_env_local_min_xyz_m"][2] - banana["root_position_env_local_xyz_m"][2]
+    ) == pytest.approx(workspace["objects"]["table"]["bbox_env_local_max_xyz_m"][2])
     _assert_non_overlapping_supports(list(specs.values()))
     if family == "DIST":
         plate = specs["plate"]
@@ -218,6 +240,35 @@ def test_overlay_refuses_workspace_with_forged_receipt_digest(tmp_path):
     receipt.write_text(json.dumps(value))
 
     with pytest.raises(ValueError, match="content digest"):
+        build_overlay(
+            family="HEIGHT", base_scene=_base_scene(tmp_path), workspace_receipt=receipt,
+            output=tmp_path / "height.usda", upper_side="left",
+        )
+
+
+@pytest.mark.parametrize("field", ("table", "banana"))
+def test_overlay_refuses_malformed_measured_table_or_banana(tmp_path, field):
+    value = _workspace()
+    value["objects"][field]["bbox_env_local_max_xyz_m"][2] = float("nan")
+    receipt = tmp_path / "bad.json"
+    receipt.write_text(json.dumps(value))
+
+    with pytest.raises(ValueError, match="finite|invalid"):
+        build_overlay(
+            family="HEIGHT", base_scene=_base_scene(tmp_path), workspace_receipt=receipt,
+            output=tmp_path / "height.usda", upper_side="left",
+        )
+
+
+def test_overlay_rejects_authored_banana_that_cannot_clear_supports(tmp_path):
+    value = _workspace()
+    value["objects"]["banana"]["bbox_env_local_min_xyz_m"][0] = .30
+    value["objects"]["banana"]["bbox_env_local_max_xyz_m"][0] = .50
+    value["receipt_sha256"] = workspace_digest(value)
+    receipt = tmp_path / "workspace.json"
+    receipt.write_text(json.dumps(value))
+
+    with pytest.raises(ValueError, match="banana clearance"):
         build_overlay(
             family="HEIGHT", base_scene=_base_scene(tmp_path), workspace_receipt=receipt,
             output=tmp_path / "height.usda", upper_side="left",
@@ -360,6 +411,15 @@ def test_support_contacts_require_actual_filtered_forces():
         capture._support_contact_measurements(sensors, ["height_neutral_cube_support"])
     with pytest.raises(RuntimeError, match="missing measured"):
         capture._support_contact_measurements(sensors, ["height_upper_support"])
+    sensor.data.force_matrix_w = Array(np.array([[[[0., 0., 1.]]]]))
+    sensors["banana__table"] = sensor
+    sensors["banana__height_neutral_cube_support"] = sensor
+    banana = capture._banana_contact_measurements(
+        sensors, ["table", "height_neutral_cube_support"],
+    )
+    assert set(banana) == {"table", "height_neutral_cube_support"}
+    with pytest.raises(RuntimeError, match="banana contact"):
+        capture._banana_contact_measurements(sensors, [])
 
 
 def test_capture_enables_cameras_before_native_application_start(tmp_path, monkeypatch):
@@ -489,6 +549,10 @@ def test_capture_output_check_requires_actual_receipt_and_complete_video(tmp_pat
         "schema_version": "sgw-01-prospective-family-native-capture-v1",
         "status": "prospective_native_capture_not_candidate_qualified",
         "model_request_count": 0, "behavioral_episode_count": 0,
+        "objects": {name: {} for name in manifest["native_import_contract"]["objects_of_interest"]},
+        "banana_contact_measurements": {
+            name: {} for name in manifest["native_import_contract"]["banana_contact_bodies"]
+        },
         "views": views, "render_only_diagnostic": warmup,
         "overlay_manifest": capture._record(manifest_path),
         "overlay_manifest_sha256": manifest["manifest_sha256"],

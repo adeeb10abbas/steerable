@@ -40,8 +40,19 @@ def _baseline_files(tmp_path, family):
         manifest_path.write_text(json.dumps(manifest))
         objects = {
             name: workspace["objects"][name]
-            for name in ("rubiks_cube", "bowl", "table")
+            for name in ("rubiks_cube", "bowl", "banana", "table")
         }
+        banana = dict(objects["banana"])
+        original_root = banana["root_position_env_local_xyz_m"]
+        captured_root = manifest["prospective_design"]["authored_actor_root_overrides_env_local_xyz_m"]["banana"]
+        delta = [captured_root[index] - original_root[index] for index in range(3)]
+        banana["root_position_env_local_xyz_m"] = captured_root
+        banana["geometric_center_env_local_xyz_m"] = [
+            value + delta[index] for index, value in enumerate(banana["geometric_center_env_local_xyz_m"])
+        ]
+        for key in ("bbox_env_local_min_xyz_m", "bbox_env_local_max_xyz_m"):
+            banana[key] = [value + delta[index] for index, value in enumerate(banana[key])]
+        objects["banana"] = banana
         if family == "DIST":
             plate = next(spec for spec in manifest["prospective_design"]["dimensions_and_poses"] if spec["name"] == "plate")
             objects["plate"] = {
@@ -188,9 +199,37 @@ def test_duplicate_gate_uses_fixture_component_tolerance_across_sides():
         name: {**pose, "position_m": [pose["position_m"][0] + .0025, pose["position_m"][1] + .0025, pose["position_m"][2]]}
         for name, pose in roots.items()
     }
-    capture = {"objects": {"table": {
-        "bbox_env_local_min_xyz_m": [0, 0, 0], "bbox_env_local_max_xyz_m": [1, 1, 1],
-    }}}
+    capture = {"objects": {
+        "table": {
+            "bbox_env_local_min_xyz_m": [0, 0, 0], "bbox_env_local_max_xyz_m": [1, 1, 1],
+        },
+        "banana": {
+            "bbox_env_local_min_xyz_m": [.8, .3, .05], "bbox_env_local_max_xyz_m": [.9, .4, .1],
+        },
+    }}
     assert _geometric_rejection(capture, "HEIGHT", "right", shifted, [0, 0], [{"roots": roots}]) == (
         "duplicate_layout_within_3mm_2deg"
+    )
+
+
+def test_candidate_geometry_rejects_banana_support_clearance_and_table_escape():
+    capture = {"objects": {
+        "table": {
+            "bbox_env_local_min_xyz_m": [0, 0, 0], "bbox_env_local_max_xyz_m": [1, 1, 1],
+        },
+        "banana": {
+            "bbox_env_local_min_xyz_m": [.745, .301, .05], "bbox_env_local_max_xyz_m": [.855, .479, .09],
+        },
+    }}
+    roots = {
+        "rubiks_cube": {"position_m": [.4, .2, .1], "quaternion_wxyz": [1, 0, 0, 0]},
+        "bowl": {"position_m": [.5, .2, .1], "quaternion_wxyz": [1, 0, 0, 0]},
+    }
+    support = {"name": "support", "center_m": [.65, .23, .1], "size_m": [.14, .14, .1]}
+    assert _geometric_rejection(capture, "HEIGHT", "left", roots, [.04, .04], [], support_specs=[support]) == (
+        "banana_support_clearance_below_20mm:support"
+    )
+    capture["objects"]["banana"]["bbox_env_local_max_xyz_m"][0] = 1.01
+    assert _geometric_rejection(capture, "HEIGHT", "left", roots, [0, 0], [], support_specs=[support]) == (
+        "banana_outside_measured_table_xy_bounds"
     )

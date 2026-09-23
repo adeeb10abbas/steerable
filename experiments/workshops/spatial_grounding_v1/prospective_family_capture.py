@@ -149,22 +149,38 @@ def _support_contact_measurements(sensors: Mapping[str, Any], supports: list[str
 
     rows = {}
     for support in supports:
-        names = (f"rubiks_cube__{support}", f"{support}__rubiks_cube")
-        sensor_name = next((name for name in names if name in sensors), None)
-        if sensor_name is None:
-            raise RuntimeError(f"missing measured cube contact sensor for {support}")
-        matrix = sensors[sensor_name].data.force_matrix_w
-        if matrix is None:
-            raise RuntimeError(f"missing filtered contact forces for {support}")
-        values = np.asarray(matrix.detach().cpu().numpy())
-        if values.ndim != 4 or values.shape[0] != 1 or values.shape[-1] != 3 or not values.size or not np.isfinite(values).all():
-            raise RuntimeError(f"invalid measured contact force matrix for {support}")
-        rows[support] = {
-            "sensor": sensor_name, "force_matrix_world_n": values.tolist(),
-            "shape": list(values.shape),
-            "nonzero_force_observed": bool(np.any(np.linalg.norm(values, axis=-1) > 0)),
-        }
+        rows[support] = _pair_contact_measurement(sensors, "rubiks_cube", support)
     return rows
+
+
+def _pair_contact_measurement(sensors: Mapping[str, Any], first: str, second: str) -> dict[str, Any]:
+    """Record a native filtered pair-contact matrix without inferring contact."""
+
+    import numpy as np
+
+    names = (f"{first}__{second}", f"{second}__{first}")
+    sensor_name = next((name for name in names if name in sensors), None)
+    if sensor_name is None:
+        raise RuntimeError(f"missing measured {first} contact sensor for {second}")
+    matrix = sensors[sensor_name].data.force_matrix_w
+    if matrix is None:
+        raise RuntimeError(f"missing filtered contact forces for {first}/{second}")
+    values = np.asarray(matrix.detach().cpu().numpy())
+    if values.ndim != 4 or values.shape[0] != 1 or values.shape[-1] != 3 or not values.size or not np.isfinite(values).all():
+        raise RuntimeError(f"invalid measured contact force matrix for {first}/{second}")
+    return {
+        "sensor": sensor_name, "force_matrix_world_n": values.tolist(),
+        "shape": list(values.shape),
+        "nonzero_force_observed": bool(np.any(np.linalg.norm(values, axis=-1) > 0)),
+    }
+
+
+def _banana_contact_measurements(sensors: Mapping[str, Any], bodies: list[str]) -> dict[str, Any]:
+    """Require observed native banana/table-and-support contact instrumentation."""
+
+    if not bodies or len(set(bodies)) != len(bodies):
+        raise RuntimeError("banana contact body contract is empty or contains duplicates")
+    return {body: _pair_contact_measurement(sensors, "banana", body) for body in bodies}
 
 
 def _validate_capture_bindings(args: argparse.Namespace, manifest: Mapping[str, Any]) -> None:
@@ -277,6 +293,14 @@ def verify_capture_artifacts(path: Path) -> dict[str, Any]:
     manifest = _manifest(Path(overlay_record["path"]))
     if manifest["manifest_sha256"] != receipt["overlay_manifest_sha256"]:
         raise ValueError("prospective capture overlay differs from its manifest")
+    contract = manifest["native_import_contract"]
+    objects = receipt.get("objects")
+    if not isinstance(objects, Mapping) or not set(contract["objects_of_interest"]).issubset(objects):
+        raise ValueError("prospective capture omits required measured objects")
+    banana_contacts = receipt.get("banana_contact_measurements")
+    expected_banana_contacts = contract.get("banana_contact_bodies")
+    if not isinstance(banana_contacts, Mapping) or set(banana_contacts) != set(expected_banana_contacts or ()):
+        raise ValueError("prospective capture omits required banana contact measurements")
     dependencies = receipt["usd_dependency_inventory"]
     required_layers = {manifest[key]["path"] for key in ("overlay_usda", "base_scene")}
     if not required_layers.issubset({row["real_path"] for row in dependencies}):
@@ -336,6 +360,10 @@ def main() -> None:
                 get_contact_sensors(env.scene),
                 manifest["native_import_contract"]["kinematic_or_static_bodies"],
             )
+            banana_contacts = _banana_contact_measurements(
+                get_contact_sensors(env.scene),
+                manifest["native_import_contract"]["banana_contact_bodies"],
+            )
             views = {}
             root = args.output.parent / "views"
             root.mkdir(parents=True, exist_ok=False)
@@ -360,6 +388,7 @@ def main() -> None:
                 "environment_origin_world_xyz_m": _vector(origin),
                 "objects": object_rows, "contact_sensor_inventory": contacts, "views": views,
                 "support_contact_measurements": support_contacts,
+                "banana_contact_measurements": banana_contacts,
                 "usd_dependency_inventory": _usd_dependencies(Path(manifest["overlay_usda"]["path"])),
                 "render_only_diagnostic": warmup, "validated_slots": [],
                 "versions": {name: importlib.metadata.version(name) for name in ("isaacsim", "isaaclab", "robolab")},

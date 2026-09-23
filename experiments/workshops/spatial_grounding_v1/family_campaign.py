@@ -13,7 +13,9 @@ from .prospective_family_designs import CANDIDATE_STATUS, PLAN_SCHEMA, _digest
 SCHEMA = "sgw-01-family-finite-campaign-v1"
 
 
-def compile_campaign(*, plan_path: Path, baseline_captures: Mapping[str, Path], output: Path) -> dict[str, Any]:
+def compile_campaign(
+    *, plan_path: Path, baseline_captures: Mapping[str, Path], baseline_reviews: Mapping[str, Path], output: Path,
+) -> dict[str, Any]:
     """Create immutable job descriptors; deliberately does not launch them."""
 
     if output.exists():
@@ -25,7 +27,13 @@ def compile_campaign(*, plan_path: Path, baseline_captures: Mapping[str, Path], 
         raise ValueError("campaign requires a fixed 1..100-slot plan")
     if set(baseline_captures) != {"left", "right"}:
         raise ValueError("both independently verified baseline captures are required")
+    if set(baseline_reviews) != {"left", "right"}:
+        raise ValueError("both independent reviewed baseline decisions are required")
     verified = {side: verify_capture_artifacts(Path(path)) for side, path in baseline_captures.items()}
+    reviewed = {
+        side: _reviewed_baseline(Path(baseline_reviews[side]), Path(baseline_captures[side]))
+        for side in ("left", "right")
+    }
     jobs = []
     for row in plan["designs"]:
         if row["status"] == "prospective_design_requires_zero_model_capture":
@@ -59,17 +67,34 @@ def compile_campaign(*, plan_path: Path, baseline_captures: Mapping[str, Path], 
         "family": plan["family"],
         "plan": {"path": str(plan_path.resolve()), "sha256": _sha256(plan_path), "plan_sha256": plan["plan_sha256"]},
         "baseline_capture_verification": verified,
+        "baseline_scene_review": reviewed,
         "fixed_slot_count": len(plan["designs"]),
         "jobs": jobs,
         "model_request_count": 0,
         "behavioral_episode_count": 0,
-        "status": "compiled_not_authorized_to_launch_or_release",
+        "status": "compiled_reviewed_baselines_not_authorized_to_launch_or_release",
         "release_permitted": False,
     }
     value["campaign_sha256"] = _digest(value, "campaign_sha256")
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return value
+
+
+def _reviewed_baseline(path: Path, capture_path: Path) -> dict[str, Any]:
+    """Require an independent scene-review decision beyond hash-valid media."""
+
+    if not path.is_file():
+        raise FileNotFoundError(f"independent baseline scene review is missing: {path}")
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if value.get("status") != "accepted_model_blind_scene_baseline_for_prospective_design":
+        raise ValueError("artifact-valid baseline is not an independently accepted scene baseline")
+    capture = value.get("baseline_capture")
+    if not isinstance(capture, Mapping) or capture.get("sha256") != _sha256(capture_path):
+        raise ValueError("baseline scene review is not bound to its capture receipt")
+    if value.get("model_request_count") != 0 or value.get("behavioral_episode_count") != 0:
+        raise ValueError("baseline scene review must remain model blind")
+    return {"path": str(path.resolve()), "sha256": _sha256(path), "status": value["status"]}
 
 
 def verify_external_postprocess(*, campaign_path: Path, output: Path, returncode: int, verification_path: Path) -> dict[str, Any]:

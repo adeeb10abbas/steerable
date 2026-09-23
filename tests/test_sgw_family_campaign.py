@@ -24,24 +24,52 @@ def _plan(tmp_path):
     return path
 
 
+def _reviews(tmp_path, captures):
+    paths = {}
+    for side, capture in captures.items():
+        path = tmp_path / f"{side}.review.json"
+        path.write_text(json.dumps({
+            "status": "accepted_model_blind_scene_baseline_for_prospective_design",
+            "baseline_capture": {"sha256": family_campaign._sha256(capture)},
+            "model_request_count": 0, "behavioral_episode_count": 0,
+        }))
+        paths[side] = path
+    return paths
+
+
 def test_campaign_compiles_fixed_slots_only_after_verified_baselines(tmp_path, monkeypatch):
     plan = _plan(tmp_path)
     left, right = tmp_path / "left.json", tmp_path / "right.json"
     left.write_text("{}")
     right.write_text("{}")
     monkeypatch.setattr(family_campaign, "verify_capture_artifacts", lambda path: {"receipt": {"path": str(path)}})
+    reviews = _reviews(tmp_path, {"left": left, "right": right})
 
     campaign = compile_campaign(
-        plan_path=plan, baseline_captures={"left": left, "right": right}, output=tmp_path / "campaign.json",
+        plan_path=plan, baseline_captures={"left": left, "right": right}, baseline_reviews=reviews,
+        output=tmp_path / "campaign.json",
     )
 
-    assert campaign["status"] == "compiled_not_authorized_to_launch_or_release"
+    assert campaign["status"] == "compiled_reviewed_baselines_not_authorized_to_launch_or_release"
     assert [job["status"] for job in campaign["jobs"]] == [
         "blocked_pending_candidate_overlay_and_fresh_zero_model_capture",
         "geometrically_rejected_slot_no_refill",
     ]
     assert campaign["jobs"][0]["fixed_trial_contract"]["total_scripted_trials"] == 6
     assert campaign["jobs"][0]["fixed_trial_contract"]["retry_permitted"] is False
+
+
+def test_artifact_valid_baselines_cannot_replace_independent_scene_review(tmp_path, monkeypatch):
+    plan = _plan(tmp_path)
+    left, right = tmp_path / "left.json", tmp_path / "right.json"
+    left.write_text("{}")
+    right.write_text("{}")
+    monkeypatch.setattr(family_campaign, "verify_capture_artifacts", lambda path: {"receipt": {"path": str(path)}})
+    with pytest.raises(ValueError, match="independently accepted"):
+        compile_campaign(
+            plan_path=plan, baseline_captures={"left": left, "right": right},
+            baseline_reviews={"left": left, "right": right}, output=tmp_path / "campaign.json",
+        )
 
 
 def test_postprocess_refuses_exit_zero_without_bound_verification(tmp_path, monkeypatch):
@@ -51,7 +79,10 @@ def test_postprocess_refuses_exit_zero_without_bound_verification(tmp_path, monk
     right.write_text("{}")
     monkeypatch.setattr(family_campaign, "verify_capture_artifacts", lambda path: {"receipt": {"path": str(path)}})
     campaign_path = tmp_path / "campaign.json"
-    campaign = compile_campaign(plan_path=plan, baseline_captures={"left": left, "right": right}, output=campaign_path)
+    reviews = _reviews(tmp_path, {"left": left, "right": right})
+    campaign = compile_campaign(
+        plan_path=plan, baseline_captures={"left": left, "right": right}, baseline_reviews=reviews, output=campaign_path,
+    )
 
     with pytest.raises(RuntimeError, match="without its verification"):
         verify_external_postprocess(
@@ -78,7 +109,10 @@ def test_family_verifier_refuses_missing_candidate_capture_and_trials(tmp_path, 
     right.write_text("{}")
     monkeypatch.setattr(family_campaign, "verify_capture_artifacts", lambda path: {"receipt": {"path": str(path)}})
     campaign_path = tmp_path / "campaign.json"
-    compile_campaign(plan_path=plan, baseline_captures={"left": left, "right": right}, output=campaign_path)
+    compile_campaign(
+        plan_path=plan, baseline_captures={"left": left, "right": right},
+        baseline_reviews=_reviews(tmp_path, {"left": left, "right": right}), output=campaign_path,
+    )
     with pytest.raises(ValueError, match="candidate capture and qualification"):
         verify_design(
             campaign_path=campaign_path, design_id="D-000", root=tmp_path / "design",

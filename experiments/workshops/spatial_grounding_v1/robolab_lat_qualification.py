@@ -47,15 +47,19 @@ class RoboLabLatEnvironment:
 
         world = get_world(self._env)
         sensors = get_contact_sensors(self._env.scene)
-        support_sensor = sensors.get("rubiks_cube__table")
-        if support_sensor is None:
-            raise SimulatorBridgeError("RoboLab scene lacks required rubiks_cube__table contact sensor")
-        force_matrix = getattr(support_sensor.data, "force_matrix_w", None)
-        raw_force = force_matrix if force_matrix is not None else getattr(support_sensor.data, "net_forces_w", None)
-        if raw_force is None:
-            raise SimulatorBridgeError("rubiks_cube__table contact sensor lacks a force stream")
-        support_vectors = np.asarray(raw_force.detach().cpu().numpy(), dtype=np.float64).reshape(-1, 3)
-        cube_supported = bool(support_vectors.size and np.max(np.linalg.norm(support_vectors, axis=1)) >= 1.0)
+        support_vectors = []
+        for sensor_name in self._support_sensor_names():
+            support_sensor = sensors.get(sensor_name)
+            if support_sensor is None:
+                raise SimulatorBridgeError(f"RoboLab scene lacks required {sensor_name} contact sensor")
+            force_matrix = getattr(support_sensor.data, "force_matrix_w", None)
+            raw_force = force_matrix if force_matrix is not None else getattr(support_sensor.data, "net_forces_w", None)
+            if raw_force is None:
+                raise SimulatorBridgeError(f"{sensor_name} contact sensor lacks a force stream")
+            support_vectors.append(np.asarray(raw_force.detach().cpu().numpy(), dtype=np.float64).reshape(-1, 3))
+        cube_supported = any(
+            vectors.size and np.max(np.linalg.norm(vectors, axis=1)) >= 1.0 for vectors in support_vectors
+        )
         rows: dict[str, ObjectState] = {}
         reset_roots: dict[str, Pose] = {}
         origin = self._env.scene.env_origins[0].detach().cpu().numpy()
@@ -89,6 +93,20 @@ class RoboLabLatEnvironment:
             rows, simulated_time_s=self._steps * self._step_dt_s, reset_root_poses=reset_roots,
             robot_body_frames=articulation_body_frames(self._env.scene["robot"].data),
         )
+
+    def _support_sensor_names(self) -> tuple[str, ...]:
+        supports = self._candidate.metadata.get("goal_supports")
+        if supports is None:
+            return ("rubiks_cube__table",)
+        if not isinstance(supports, dict):
+            raise SimulatorBridgeError("candidate goal supports must be a mapping")
+        names = tuple(
+            support.get("contact_sensor_id") for support in supports.values()
+            if isinstance(support, dict)
+        )
+        if not names or any(not isinstance(name, str) or not name.strip() for name in names):
+            raise SimulatorBridgeError("candidate lacks measured nonempty support contact sensor IDs")
+        return tuple(dict.fromkeys(names))
 
     def reset(self) -> ResetResult:
         counter = getattr(self._env, "episode_length_buf", None)

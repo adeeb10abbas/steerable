@@ -227,8 +227,23 @@ def main() -> None:
         raise QualificationError("candidate family differs from selected family")
     if hashlib.sha256(args.assets_manifest.read_bytes()).hexdigest() != candidate.asset_manifest_sha256:
         raise QualificationError("actual asset manifest differs from candidate binding")
+    if candidate.family in {"HEIGHT", "DIST"}:
+        from .robolab_height_dist_qualification import validate_candidate_inputs
+
+        validate_candidate_inputs(candidate)
     import imageio_ffmpeg
     imageio_ffmpeg.get_ffmpeg_exe()
+    # Keep candidate/calibration validation CPU-only: AppLauncher may reserve a
+    # renderer before the bridge has a chance to reject malformed captures.
+    bridge = load_factory(args.bridge_factory)(
+        robolab_root=args.robolab_root, assets_manifest=args.assets_manifest,
+        device=args.device, renderer=args.renderer, rendering_type=args.rendering_type,
+        evidence_root=args.output_root / "reset_warmup",
+    )
+    controller = load_factory(args.controller_factory)(
+        robolab_root=args.robolab_root, assets_manifest=args.assets_manifest, device=args.device,
+        controller_calibration=args.controller_calibration,
+    )
     from isaaclab.app import AppLauncher
     args.enable_cameras = True
     args.output_root.mkdir(parents=True, exist_ok=False)
@@ -242,15 +257,6 @@ def main() -> None:
         set_output_dir(str(args.output_root / "native"))
         robolab.constants.ENABLE_SUBTASK_PROGRESS_CHECKING = False
         robolab.constants.RECORD_IMAGE_DATA = False
-        bridge = load_factory(args.bridge_factory)(
-            robolab_root=args.robolab_root, assets_manifest=args.assets_manifest,
-            device=args.device, renderer=args.renderer, rendering_type=args.rendering_type,
-            evidence_root=args.output_root / "reset_warmup",
-        )
-        controller = load_factory(args.controller_factory)(
-            robolab_root=args.robolab_root, assets_manifest=args.assets_manifest, device=args.device,
-            controller_calibration=args.controller_calibration,
-        )
         atomic_json(args.output_root / "controller.json", getattr(controller, "identity", {"recipe": "unattested_controller"}))
         receipt = qualify_candidate(candidate, bridge, controller, seed=args.seed, evidence_root=args.output_root / "trials")
         atomic_json(args.output_root / "qualification.json", receipt)

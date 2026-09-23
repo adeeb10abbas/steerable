@@ -103,14 +103,40 @@ def calibrated_actions(
     cube = np.asarray(candidate.scoring_poses()["rubiks_cube"].position_m) + environment_origin_world_xyz_m
     frozen_target = np.asarray(candidate.metadata["abs_ik_waypoints"][key][-1]["position_world_xyz_m"])
     target = np.asarray([frozen_target[0], frozen_target[1], cube[2]])
+    return calibrated_actions_to_target(
+        calibration,
+        cube_center_world_xyz_m=cube,
+        target_center_world_xyz_m=target,
+        flange_quaternion_world_wxyz=flange_quaternion_world_wxyz,
+        robot_root_world_xyz_m=robot_root_world_xyz_m,
+    )
+
+
+def calibrated_actions_to_target(
+    calibration: dict[str, Any], *, cube_center_world_xyz_m: np.ndarray, target_center_world_xyz_m: np.ndarray,
+    flange_quaternion_world_wxyz: np.ndarray, robot_root_world_xyz_m: np.ndarray,
+) -> list[np.ndarray]:
+    """Build the measured-TCP plan to an explicitly measured 3D target center."""
+
+    if (calibration.get("schema_version") != SCHEMA
+            or calibration.get("receipt_sha256") != workspace_digest(calibration)):
+        raise ValueError("invalid grasp calibration identity")
+    cube = np.asarray(cube_center_world_xyz_m, dtype=np.float64)
+    target = np.asarray(target_center_world_xyz_m, dtype=np.float64)
+    quaternion = np.asarray(flange_quaternion_world_wxyz, dtype=np.float64)
+    root = np.asarray(robot_root_world_xyz_m, dtype=np.float64)
+    if cube.shape != (3,) or target.shape != (3,) or quaternion.shape != (4,) or root.shape != (3,):
+        raise ValueError("calibrated action inputs have invalid dimensions")
+    if not np.isfinite(np.concatenate((cube, target, quaternion, root))).all():
+        raise ValueError("calibrated action inputs must be finite")
     offset = np.asarray(_rotate_wxyz(flange_quaternion_world_wxyz, calibration["virtual_tcp_flange_xyz_m"]))
     lift = np.asarray([0, 0, calibration["lift_height_m"]])
     points = (cube + lift, cube, cube, cube + lift, target + lift, target, target, target + lift)
     grips = (0, 0, 0.785398, 0.785398, 0.785398, 0.785398, 0, 0)
     actions = []
     for point, grip, count in zip(points, grips, calibration["phase_hold_steps"], strict=True):
-        position = point - offset - robot_root_world_xyz_m
-        command = np.concatenate((position, flange_quaternion_world_wxyz, [grip])).astype(np.float32).reshape(1, 8)
+        position = point - offset - root
+        command = np.concatenate((position, quaternion, [grip])).astype(np.float32).reshape(1, 8)
         if not np.isfinite(command).all() or type(count) is not int or count < 1:
             raise ValueError("invalid calibrated command")
         actions.extend(command.copy() for _ in range(count))

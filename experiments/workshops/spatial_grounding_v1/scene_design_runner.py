@@ -114,6 +114,7 @@ def main():
             env.close(); return
         offsets={n:objects[n]['geometric_center_offset_root_local_xyz_m'] for n in ('rubiks_cube','bowl')}
         meta={'scoring_center_offsets_root_local_m':offsets,
+              'visual_style':row.get('visual_style','original-office'),
               'native_scene':{'asset':scene['path'],'asset_sha256':scene['sha256'],'object_names':scene['object_names']},
               'prospective_design_id':row['design_id'],
               'candidate_capture_sha256':hashlib.sha256((args.output/'capture.json').read_bytes()).hexdigest()}
@@ -130,6 +131,11 @@ def main():
             meta['baseline_banana_pose']={'position_m':objects['banana']['root_position_env_local_xyz_m'],
                                           'quaternion_wxyz':objects['banana']['root_quaternion_world_wxyz']}
             meta['geometry_guard_support_ids']=[s['name'] for s in row['supports']]
+            measured_side=('left' if objects['height_upper_support']['geometric_center_env_local_xyz_m'][1]
+                           > objects['height_lower_support']['geometric_center_env_local_xyz_m'][1] else 'right')
+            if measured_side != row['side']:
+                raise ValueError('Measured support arrangement differs from the registered side')
+            meta['upper_support_side']=measured_side
         candidate=FixtureCandidate.from_json({'candidate_id':row['design_id'],'family':row['family'],
             'seed':row.get('seed',20260923),'asset_manifest_sha256':launch['asset_manifest_sha256'],
             'task_asset':scene['path'],'object_poses':{n:{'position_m':objects[n]['root_position_env_local_xyz_m'],

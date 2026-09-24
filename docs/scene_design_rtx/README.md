@@ -19,6 +19,16 @@ table, object, robot and camera transforms are unchanged by this appearance
 revision. The initial LAT captures before/after the change have exactly equal
 measured object geometry, robot reset configuration and all three camera poses.
 The original room versions and every result are retained separately.
+Newly generated designs default to this clean appearance. Treat it as a new
+visual condition in the paper: every wording within a matched comparison
+must use the same appearance. Keep any existing office-background model
+results labeled separately.
+
+Commit `cd3018b7` preserves the exact three authoring/runner/task source files
+hashed in registration B and used by the already launched prototypes. Later
+changes only make the clean style the generation default and retain a measured
+support-side label for subsequent candidate selection. The running workstation
+prototypes continue with their recorded source snapshot.
 
 ## Current evidence and running work
 

@@ -41,7 +41,8 @@ def design(family, side, dx, dy, workspace):
                                      (width,width), (.55,.60,.65), top))
     banana = [.79, .36, objects['banana']['geometric_center_env_local_xyz_m'][2]]
     centers = {'rubiks_cube':cube, 'bowl':bowl, 'banana':banana}
-    return {'family':family, 'side':side, 'translation_xy_m':[dx,dy], 'centers':centers,
+    return {'family':family, 'side':side, 'visual_style':'clean-studio-v1',
+            'translation_xy_m':[dx,dy], 'centers':centers,
             'targets':targets, 'supports':supports,
             'roots':{n:_root_for_center(objects[n],c) for n,c in centers.items()},
             'orientations':{n:objects[n]['root_quaternion_world_wxyz'] for n in centers}}
@@ -69,6 +70,8 @@ def write_scene(row, workspace, robolab_root, output):
     output=Path(output)
     if output.exists():
         raise FileExistsError(output)
+    if row.get('visual_style') not in (None,'original-office','clean-studio-v1'):
+        raise ValueError('Unknown scene appearance')
     base=Path(robolab_root)/'assets/scenes/rubiks_cube_banana_bowl.usda'
     output.parent.mkdir(parents=True,exist_ok=True)
     text=_usda(base.resolve(),row['supports'],row['roots'],row['orientations'])

@@ -1,0 +1,46 @@
+\section{Ablation coverage and remaining experiments}
+\label{sec:coverage-update}
+\textbf{Implementation update, 24 September 2026 UTC.}
+The registered matrix contains all 18 instruction strings and all 1,044 planned cells. This establishes coverage in the design, not completed experiments. The following comparisons must each produce an output; most reuse the same six episodes per model and layout.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabularx}{\linewidth}{@{}p{0.24\linewidth}Xp{0.22\linewidth}@{}}
+\toprule
+Question & Controlled comparison & Required result \\
+\midrule
+Opposite goals & Positive versus negative goal within each of D, C and I & Physical separation and per-goal success \\
+Sentence construction & C minus D at the same physical goal & Paired success and margin effects \\
+Equivalent relation & I minus C at the same physical goal & Primary success effect and margin change \\
+Relation family & Repeat the above within LAT, HEIGHT and DIST & Separate results for each model and family \\
+Prediction accuracy & Generated future versus persistence, same view and physical time & Relative-position error, skill and coverage \\
+Prediction--execution disagreement & Predicted and executed relation at the same horizon & Four agreement categories and unknown cases \\
+Failure stage & Pickup, transport, placement, release and final stability & Stage timelines and reference motion \\
+\bottomrule
+\end{tabularx}
+\caption{Required coverage. All rows reuse the core queue; annotation and scripted fixture qualification are separate from learned-policy episode counts.}
+\end{table}
+
+The D--C contrast changes several wording features, including ``Put'' versus ``Place \ldots so that.'' It measures the specified construction change, not sentence length or syntax in isolation. The I--C contrast measures the specified equivalent reformulation, not a uniquely identified internal parsing mechanism. HEIGHT remains a higher/lower placement task, and DIST remains a two-anchor comparison; neither establishes coverage of every everyday use of up/down or closer/farther.
+
+\subsection{What is physically ready}
+Three clean templates have independently passed both goals across three resets: one LAT template and both HEIGHT support orientations. In a live workstation read at 02:17:50 UTC on 24 September, the new finite pool contained three qualifying LAT layouts and three qualifying HEIGHT layouts (two upper-left, one upper-right). One additional LAT candidate was a retained physical rejection. Both workers were still running. These are scripted feasibility results, not learned-policy results or completed 29-layout datasets.
+
+The fetched cluster revision \texttt{70a6bbaa} still records a 23:40 UTC snapshot from 23 September: six N3 fixed-input recording checks had completed, and the six assigned MAIN N3/LAT pilot episodes had launched. That snapshot does not establish their current completion. Raw decoded futures are available in those recording checks; their physical-time mapping is not thereby established. Official D1 runtime and prediction evidence must be checked separately from historical custom-guidance DreamZero results.
+
+\subsection{Work required to complete coverage}
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Complete the scene sets and resolve lateral balance.} Keep the running LAT/HEIGHT campaign unchanged and retain every failure. HEIGHT confirmation requires 12 upper-left and 12 upper-right layouts. The current LAT generator translates one historical arrangement and does not enforce the specification's starting-approach-side balance. Testing both goal directions is a different control. Before confirmation, define and verify that stratum, qualify a separately registered complementary set if needed, or explicitly narrow the workspace claim. Do not present translations of one arrangement as a completed reflection ablation.
+\item \textbf{Account for DIST explicitly.} DIST is absent from the new workstation campaign. Recover the existing cluster evidence first, then establish both bowl/plate arrangements and the 12/12 confirmation balance. A unified clean cohort needs the same declared appearance and fresh qualification receipts. If DIST uses the older office appearance, keep it a separate visual cohort and avoid attributing raw cross-family differences to the relation alone.
+\item \textbf{Reconcile existing pilots with clean fixtures.} Existing assigned or completed MAIN P cells must not be overwritten by a new campaign's P01 label. Record scene, appearance, runtime and completion identity for every cell. Retain the old pilot as technical evidence or register a distinct clean recording pilot and its additional budget. Both models must share the frozen confirmation fixtures; no duplicate or extra pilot is hidden inside the 1,044-cell budget.
+\item \textbf{Finish prediction measurement.} Verify generated-frame time and camera mappings within the actually executed prefix, then freeze H on development. Implement deterministic request selection, two-rater center localization, per-object checks and persistence skill. The current annotation helper records categorical labels, not the full localization/persistence analysis. The presence of a wrist camera does not prove that a model consumes it or that continuous wrist ground truth was recorded. Save and identify actual model-input images, crops and packed views.
+\item \textbf{Validate semantic labels.} Use 50 offline reference images per family: 40 balanced unambiguous states, split into 20 development and 20 held-out validation states, plus 10 ambiguous/occluded variants. This makes the prose consistent with the protocol's 50-state budget. Require at least 19/20 correct held-out signs and no forced labels on ambiguous cases. A failed semantic-label check restricts that claim; it does not erase valid execution evidence. Report all five prediction--execution categories, coverage and binary missingness bounds.
+\item \textbf{Correct and complete the reports.} The inspected compiler names $S(+)-S(-)$ ``separation.'' That is success asymmetry. Physical directional separation is $r(+)-r(-)=M(+)+M(-)$, in metres. For example, two successful placements at $+0.13$ and $-0.13$ m have separation $0.26$ m, not zero. Keep these outputs distinct. Complete C--D and I--C margin/success reports, per-goal transitions, stage timelines, censoring bounds and the two-endpoint equivalence calculation. Expose the number of complete layouts out of 24; a nonempty subset is not completed confirmation.
+\item \textbf{Verify the full export before confirmation.} One reproducible analysis command must produce coverage, language effects, prediction skill, disagreement and stage/side diagnostics. Check it with known successes, valid failures, technical missingness, safety censoring and unknown forecasts. Report stationary/moving prefixes, first/later requests and an alternative supported H as declared sensitivity analyses. These checks and analyses need no extra learned-policy runs.
+\end{enumerate}
+
+\subsection{Controls that remain optional}
+The core study keeps cameras fixed. Wrist-versus-shoulder input, camera-frame wording, clean-versus-office background, negation, extra paraphrases, anchor renaming, stable-grasp interventions, additional models and guidance sweeps are not covered by the current factorial and must not be claimed as results. The clean background is a declared setting change, not evidence of background robustness. A fresh $\pi_{0.5}$ LAT baseline remains optional at 174 additional episodes; it cannot isolate the causal benefit of world modeling.
+
+The detailed agent tasks, acceptance criteria and evidence links are in
+\href{https://github.com/adeeb10abbas/steerable/blob/scene-design-rtx-20260923/docs/scene_design_rtx/ABLATION_COVERAGE.md}{\texttt{ABLATION\_COVERAGE.md}}. This update does not modify frozen prompts, thresholds, old outcomes, current worker inputs or scientific sample counts. Missing results remain explicit. The central workshop contribution still depends on showing what physically aligned generated futures reveal beyond execution scores.

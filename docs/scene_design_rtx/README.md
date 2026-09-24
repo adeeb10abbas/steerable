@@ -8,6 +8,12 @@ scoring, or control Kubernetes workers.
 Workstation root: `/home/ali/sgw-scene-design-20260923`.
 Source branch: `scene-design-rtx-20260923`, based on `70a6bbaa`.
 
+The [ablation coverage handoff](ABLATION_COVERAGE.md) maps the live Overleaf
+plan to the implemented work and seven bounded remaining tasks. It identifies
+the missing clean DIST branch, unresolved LAT approach-side balance, pilot
+appearance reconciliation and unfinished prediction/analysis outputs. Completing
+this fixture campaign alone does not establish coverage of the full study.
+
 ## Clean scenes
 
 ![LAT](previews/lat.png)
@@ -40,7 +46,7 @@ This is **scene development**, not a completed 29-layout collection.
 | `prototype-01.json` | Revised HEIGHT, upper platform left, original appearance | Independently verified 6/6. |
 | `prototype-02.json` | Revised HEIGHT, upper platform right, original appearance | Authored, not launched; clean version used instead. |
 | `prototype-03.json` | Clean version of 00 | Independently verified 5/6; the same positive-reset-1 stability failure. |
-| `prototype-04.json` | Clean version of 01 | Running on GPU 1. |
+| `prototype-04.json` | Clean version of 01 | Independently verified 6/6; receipt also required before the HEIGHT batch can start. |
 | `prototype-05.json` | Clean version of 02 | Independently verified 6/6. |
 | `prototype-06.json` | Clean LAT using exact historical SGW-ENG-008 geometry | Independently verified 6/6. Historical reuse is disclosed in registration C. |
 

@@ -1,0 +1,26 @@
+{
+  "id": "SGW-RTX-SCENE-DEVELOPMENT-20260923-A",
+  "recorded_at_utc": "2026-09-24T00:24:41.555176+00:00",
+  "source_base": "70a6bbaa3660992fc5998e5e38bcc812a32ab4a1",
+  "status": "registered_before_native_outcomes",
+  "scope": "Three revised scene prototypes; both goals x three resets with existing 450-action controller and unchanged scorer. No learned policies or active worker changes. Separate from all old candidate pools.",
+  "prototype_count": 3,
+  "maximum_scripted_trials": 18,
+  "retention": "Keep every attempt, failure, raw state/action/frame, and video. Infrastructure retries use new output folders.",
+  "known_results_used": "Old LAT had 20/100 qualifying candidates; 0.50m translated example passed six trials. Old HEIGHT suffered reference disturbance and mirrored-side imbalance. These informed shorter transport paths with bowl outside the sweep.",
+  "prototypes": [
+    {
+      "file": "prototype-00.json",
+      "sha256": "bf762e3eca584da93aca4e466f2ab587046797d49e51dcbc136845424380c669"
+    },
+    {
+      "file": "prototype-01.json",
+      "sha256": "788e65c814572f5f2affddca544e7b3566126cfee9e2a7ff02c41d380544bcb8"
+    },
+    {
+      "file": "prototype-02.json",
+      "sha256": "c215de6ef69f5c2baf9e8376de269edb0158c7f87125f0e192b347ee71a911ec"
+    }
+  ],
+  "next_step": "Inspect native outcomes and recordings; disclose any revision before rerunning. Freeze a separate <=100-candidate/family campaign only after prototype design is settled."
+}

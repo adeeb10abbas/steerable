@@ -227,6 +227,7 @@ def verify_zero_action_trial_evidence(
 
 def verify_trial_evidence(
     *, evidence_root: Path, trial: Path, check: Mapping[str, Any], candidate: FixtureCandidate,
+    expect_geometry_guard: bool = False,
 ) -> tuple[dict[str, Any], ResetSnapshot]:
     """Recompute one complete trial from the recorder's raw action/state/RGB evidence.
 
@@ -249,7 +250,7 @@ def verify_trial_evidence(
     expected.update(f"{prefix}-{index:04d}.{suffix}" for prefix, suffix, start in (
         ("state", "json", 0), ("frame", "npy", 0), ("action", "npy", 1), ("command", "json", 1)
     ) for index in range(start, ACTION_CAP + 1))
-    if candidate.family in {"HEIGHT", "DIST"}:
+    if candidate.family in {"HEIGHT", "DIST"} or expect_geometry_guard:
         expected.add("preaction-geometry-guard.json")
     _require(set(saved["files"]) == expected, f"trial manifest omits/adds files: {trial}")
     _require({path.name for path in trial.iterdir()} == expected | {"trial.json"},

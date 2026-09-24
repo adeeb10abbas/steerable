@@ -1,0 +1,30 @@
+{
+  "id": "SGW-RTX-SCENE-DEVELOPMENT-20260923-B",
+  "recorded_at_utc": "2026-09-24T00:38:14.336328+00:00",
+  "source_base": "70a6bbaa3660992fc5998e5e38bcc812a32ab4a1",
+  "status": "registered_before_native_outcomes",
+  "scope": "User-requested clean studio revision: remove office HDR panorama, use uniform dome lighting, matte tabletop and visible neutral existing ground plane. Identical geometry, collision shapes, robot, cameras, controller and scorer to prototypes 00/01/02. No learned policies. Three clean prototypes; each may have a capture-only preview and one six-trial qualification.",
+  "known_outcomes": "At registration, original prototypes 00 and 01 were running. LAT positive goal reset 0 passed; reset 1 failed terminal stability despite a correct supported placement. HEIGHT positive goal reset 0 passed. No outcomes for any clean-studio scene.",
+  "retention": "Preserve original outcomes and every new attempt. Capture-only previews are not qualification. This is a new appearance revision, not a retry replacing failed originals.",
+  "prototypes": [
+    {
+      "file": "prototype-03.json",
+      "sha256": "1fb80773e7fca7464def6b6b6215ca206089d1e08ee10388a87057c894bde566"
+    },
+    {
+      "file": "prototype-04.json",
+      "sha256": "a814415855b2c9ed4888754f95f77768209798447e20a1b9e116b2340f645e1a"
+    },
+    {
+      "file": "prototype-05.json",
+      "sha256": "4ec36389ebfce358aea12dcf5c65fdcacbb94d13e5b5a0909cc5a0928d8beb64"
+    }
+  ],
+  "source_sha256": {
+    "experiments/workshops/spatial_grounding_v1/scene_design.py": "7391036d91dd7eae29b7da6645135233dd3e036816ff4b70834e1be577748665",
+    "experiments/workshops/spatial_grounding_v1/scene_design_task.py": "a0d94c6ebea7d5a9cecf17b754ebe7e07a5cce8f7fc7baad603308490cef544f",
+    "experiments/workshops/spatial_grounding_v1/scene_design_runner.py": "c9c5979a94c8905a66e32e7892de927f87c3ca0ed86783194ada25bef200cf0f"
+  },
+  "maximum_scripted_trials": 18,
+  "model_requests": 0
+}

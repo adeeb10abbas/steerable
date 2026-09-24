@@ -1,0 +1,17 @@
+{
+  "id": "SGW-RTX-SCENE-DEVELOPMENT-20260923-C",
+  "recorded_at_utc": "2026-09-24T00:47:02.506863+00:00",
+  "scope": "One clean LAT engineering example reusing the exact previously successful SGW-ENG-008 object poses and target lateral offsets, with unchanged controller/scorer. Six scripted trials. This is disclosed historical reuse and remains separate from the frozen/main-pilot assignment.",
+  "known_outcomes": "Prototype 00 gave five passes and one strict terminal-stability failure. Clean prototype 03 has the same positive-reset-1 failure and is still running. Original HEIGHT prototype 01 verified six passes. Prior SGW-ENG-008 was already known to pass six.",
+  "reason": "Use a demonstrated starting geometry, including exact target positions, rather than approximate its coordinates. No threshold or controller changes.",
+  "geometry_source": {
+    "path": "artifacts/workshops/spatial_grounding_v1/infrastructure/extra-capacity-20260923cq/native-milestone/translation-calculation.json",
+    "sha256": "12c149a4e0e908dbb12a8f13fa4ba6d08da87bdd215aec08ded2c3b8de044cfb"
+  },
+  "prototype": {
+    "file": "prototype-06.json",
+    "sha256": "9c7b5785d6c8cbf1d0753b02c50ab59d357b43d553d10252b9c63dff9a2078fd"
+  },
+  "model_requests": 0,
+  "retention": "Keep every outcome; never replace prototypes 00 or 03. New geometry is not an independent replicate or policy result."
+}

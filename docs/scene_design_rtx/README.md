@@ -40,9 +40,9 @@ This is **scene development**, not a completed 29-layout collection.
 | `prototype-01.json` | Revised HEIGHT, upper platform left, original appearance | Independently verified 6/6. |
 | `prototype-02.json` | Revised HEIGHT, upper platform right, original appearance | Authored, not launched; clean version used instead. |
 | `prototype-03.json` | Clean version of 00 | Independently verified 5/6; the same positive-reset-1 stability failure. |
-| `prototype-04.json` | Clean version of 01 | Queued after 05 on GPU 1. |
-| `prototype-05.json` | Clean version of 02 | Running on GPU 1. |
-| `prototype-06.json` | Clean LAT using exact historical SGW-ENG-008 geometry | Running on GPU 0. Historical reuse is disclosed in registration C. |
+| `prototype-04.json` | Clean version of 01 | Running on GPU 1. |
+| `prototype-05.json` | Clean version of 02 | Independently verified 6/6. |
+| `prototype-06.json` | Clean LAT using exact historical SGW-ENG-008 geometry | Native aggregate 6/6; independent recheck in progress. Historical reuse is disclosed in registration C. |
 
 For live status read
 `/home/ali/sgw-scene-design-20260923/evidence/scene-design-status.json`.
@@ -59,6 +59,58 @@ failed because terminal angular speed reached 0.235 rad/s, above the unchanged
 0.2 rad/s criterion. Do not describe this as an instruction-understanding
 failure; no learned model ran. Prototype 06 tests the exact previously
 successful coordinates rather than rounding that example to a new geometry.
+
+## Fixed qualification campaign
+
+The new campaign is recorded under
+`artifacts/workshops/spatial_grounding_v1/clean_campaign_20260924`.
+Its immutable plan SHA-256 is
+`3fdd3ab3fecad77aafd67d5fac834b2a3f7a7df729a1a3888e1d94b2014cabd1`.
+It lists 100 candidate inputs per family **before collecting their outcomes**,
+in a fixed order. It uses the exact historical LAT template translated on a
+10 mm lattice, and the revised short-transfer HEIGHT geometry. Zero
+translation is excluded so the reserved historical pilot is not reused.
+
+The two finite workers use GPU 0 for LAT and GPU 1 for HEIGHT. LAT waits for
+verified prototype 06; HEIGHT waits for verified 04 and 05. Each candidate
+gets one fresh simulator process, two goals, three resets and 450 actions per
+trial. Every physical rejection is retained. A family stops once its required
+29 scenes are available, or at 100 attempted candidates, 24 hours, less than
+40 GiB free, an occupied GPU, or an infrastructure/evidence failure. Stopping
+short of 29 is explicit; it cannot produce a completed assignment file.
+
+The campaign uses the same environment seed, 20260923. HEIGHT requires a
+right-side pilot, two development scenes per side and twelve confirmation
+scenes per side. Assignments are selected in the frozen candidate order.
+Additional accepted scenes on one side cannot substitute for the other side.
+
+Live files on the workstation:
+
+- `evidence/SGW-CLEAN-20260924/LAT/status.json`
+- `evidence/SGW-CLEAN-20260924/HEIGHT/status.json`
+- `logs/clean-campaign-LAT.log` and `logs/clean-campaign-HEIGHT.log`
+
+When a family finishes, its `assignments.json` maps P01/D01-D04/C01-C24 to
+the retained scene directories. This qualifies fixtures; it does not launch
+models, release a model experiment, modify active workers, or merge the new
+visual condition with old model results. At the measured prototype speed,
+building both full sets takes several hours even without rejections.
+
+To resume a stopped worker after addressing its recorded cause, use the
+same plan and output root. Never change a rejected candidate's input. The
+worker skips verified completed outputs, refuses partial attempts and uses a
+per-family lock to prevent duplicate launches:
+
+```bash
+PY=/home/ali/sgw-scene-design-20260923/venv/bin/python
+$PY -m experiments.workshops.spatial_grounding_v1.scene_design_batch run \
+  --plan artifacts/workshops/spatial_grounding_v1/clean_campaign_20260924/plan.json \
+  --expected-sha256 3fdd3ab3fecad77aafd67d5fac834b2a3f7a7df729a1a3888e1d94b2014cabd1 \
+  --family LAT --gpu 0 --task-root /home/ali/sgw-scene-design-20260923
+```
+
+Use `HEIGHT --gpu 1` for the other family. Leave current workers alone while
+they are running. Source hashes are checked against the recorded plan.
 
 ## Commands for an agent
 
@@ -169,6 +221,8 @@ solution.
 - `scene_design_archive.py`: verified, reversible lossless array storage.
 - `scene_design_collect.py`: bounded completion/verification of the four
   registered clean prototype jobs; never launches further experiments.
+- `scene_design_batch.py`: the finite, immutable two-family qualification
+  campaign; waits for verified templates and preserves rejected candidates.
 - Existing `grasp_calibration.py`, `model_blind_qualification.py`,
   `robolab_lat_qualification.py`, and `scoring.py`: unchanged execution and
   measurement contracts.

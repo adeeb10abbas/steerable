@@ -42,7 +42,7 @@ This is **scene development**, not a completed 29-layout collection.
 | `prototype-03.json` | Clean version of 00 | Independently verified 5/6; the same positive-reset-1 stability failure. |
 | `prototype-04.json` | Clean version of 01 | Running on GPU 1. |
 | `prototype-05.json` | Clean version of 02 | Independently verified 6/6. |
-| `prototype-06.json` | Clean LAT using exact historical SGW-ENG-008 geometry | Native aggregate 6/6; independent recheck in progress. Historical reuse is disclosed in registration C. |
+| `prototype-06.json` | Clean LAT using exact historical SGW-ENG-008 geometry | Independently verified 6/6. Historical reuse is disclosed in registration C. |
 
 For live status read
 `/home/ali/sgw-scene-design-20260923/evidence/scene-design-status.json`.
@@ -57,8 +57,10 @@ The numerical placement in LAT-00 was correct in the failed trial: signed
 margin 130.27 mm, supported and released, and bowl drift about 0.03 mm. It
 failed because terminal angular speed reached 0.235 rad/s, above the unchanged
 0.2 rad/s criterion. Do not describe this as an instruction-understanding
-failure; no learned model ran. Prototype 06 tests the exact previously
-successful coordinates rather than rounding that example to a new geometry.
+failure; no learned model ran. Prototype 06 reuses the full historical
+arrangement, including the bowl/banana positions and precise goal coordinates.
+Its six passes establish a working reference; this comparison does not
+isolate which geometric change removed the earlier settling failure.
 
 ## Fixed qualification campaign
 

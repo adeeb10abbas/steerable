@@ -1,0 +1,2999 @@
+{
+  "claim_boundaries": {
+    "descriptive_extrema_only": "Sign counts and extrema are exact descriptions, not tolerances, quality scores, camera rankings, representation rankings or fixture decisions.",
+    "frozen_representation_sensitivity_only": "This report compares deterministic representations inside the pinned Turn2848 package and adds no independent observation, model request, robot episode, image, label or scientific sample.",
+    "not_human_centroids": "Projected point centers and projected AABB-envelope centers are not object-pixel measurements, masks or human image centroids.",
+    "science_and_dispatch": "No A1-A9 result, measurement qualification, stage advance, dispatch authority or confirmation release follows.",
+    "selection_confounding": "All three pairs are availability-selected; D01/D02 are command-confounded and P00 has unequal command membership."
+  },
+  "confirmation_released": false,
+  "evidence_boundaries": {
+    "a1_a9_result": false,
+    "aabb_envelope_center_validated_as_human_centroid": false,
+    "camera_crop_or_time_alignment_authenticated": false,
+    "camera_ranking_estimated": false,
+    "causal_effect_estimated": false,
+    "counterfactual_or_temporal_transition_inferred": false,
+    "current_state_inferred": false,
+    "fitting_or_registration_performed": false,
+    "fixture_pass_fail_classification_created": false,
+    "fixture_reference_recovered": false,
+    "forecast_or_persistence_metric": false,
+    "gate_advanced": false,
+    "general_occlusion_analyzed": false,
+    "human_image_centroids_used": false,
+    "image_footprint_or_object_pixels_inferred": false,
+    "isolated_layout_or_command_effect_estimated": false,
+    "labelability_estimated": false,
+    "measurement_feasibility_qualified": false,
+    "normalization_applied": false,
+    "obb_or_exact_mesh_analyzed": false,
+    "projected_point_center_validated_as_human_centroid": false,
+    "raw_camera_bytes_read": false,
+    "raw_pvc_bytes_read": false,
+    "release_authority": false,
+    "representation_ranking_estimated": false,
+    "rgb_or_image_content_analyzed": false,
+    "robot_or_static_scene_occlusion_analyzed": false,
+    "scientific_threshold_applied": false,
+    "silhouette_or_segmentation_analyzed": false,
+    "task_success_or_model_rate": false,
+    "visibility_inferred": false
+  },
+  "finding": "Across three availability-selected original/reflected mapping pairs, nine world-object rows yield 27 exact center-versus-AABB-midpoint residual differences and 36 camera-object rows yield 72 projected point-center-versus-AABB-envelope-center residual differences. The largest absolute world component difference is +0.31600892543792725 mm on D02 cube x; the largest projected component difference is +0.5471362857456938 px on D02 cube wrist v. These representation-sensitivity descriptions do not validate an image centroid, estimate an effect or advance any scientific gate.",
+  "forecast_accuracy_estimated": false,
+  "labels_created": 0,
+  "new_actions": 0,
+  "new_behavioral_cells": 0,
+  "new_model_requests": 0,
+  "new_observations": 0,
+  "new_request_selections": 0,
+  "projected_rows": [
+    {
+      "actual_center_point_uv_px": [
+        535.7399880508634,
+        286.05454545800103
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.002681542864138464,
+        -0.05569555715698016
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.0026758388196412852,
+        -0.0554414198250015
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        535.7426638896831,
+        286.10998687782603
+      ],
+      "difference_l2_px": 0.000254201336795963,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.0002541373319786544,
+        "axis": "v",
+        "signed_px": 0.0002541373319786544
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        5.704044497178984e-06,
+        0.0002541373319786544
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+        "camera_name": "head_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        564.8171518980989,
+        363.80191798890036
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.0029083422280109517,
+        0.29295557804016426
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.0028855302705323993,
+        0.2752139300711747
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        564.8142663678284,
+        363.5267040588292
+      ],
+      "difference_l2_px": 0.017741662634628022,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.017741647968989582,
+        "axis": "v",
+        "signed_px": -0.017741647968989582
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -2.2811957478552358e-05,
+        -0.017741647968989582
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+        "camera_name": "head_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        601.8531991876185,
+        359.8933050842442
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.00018146316722322808,
+        -0.2151960816773908
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -1.0179686796618626e-05,
+        -0.21318191703630873
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        601.8532093673053,
+        360.1064870012805
+      ],
+      "difference_l2_px": 0.0020214344491108985,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.0020141646410820613,
+        "axis": "v",
+        "signed_px": 0.0020141646410820613
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.00017128348042660946,
+        0.0020141646410820613
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+        "camera_name": "head_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        770.4661162754926,
+        330.3935703947629
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.04080865054197602,
+        -0.024737971808121983
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.04083740264968583,
+        -0.0244689423666955
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        770.4252788728429,
+        330.4180393371296
+      ],
+      "difference_l2_px": 0.00027056149772649023,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.00026902944142648266,
+        "axis": "v",
+        "signed_px": 0.00026902944142648266
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        2.8752107709806296e-05,
+        0.00026902944142648266
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+        "camera_name": "over_shoulder_left_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        740.8560273551064,
+        389.37736898160824
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.28343662096301614,
+        0.1773033883519588
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.2846798767324117,
+        0.1724016197367746
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        741.1407072318389,
+        389.20496736187147
+      ],
+      "difference_l2_px": 0.005056977404036944,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.00490176861518421,
+        "axis": "v",
+        "signed_px": -0.00490176861518421
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.001243255769395546,
+        -0.00490176861518421
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+        "camera_name": "over_shoulder_left_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        820.0710453106785,
+        436.3877010198348
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.25273017048493784,
+        -0.18931767645841546
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.2454117238805793,
+        -0.17874588377480904
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        819.825633586798,
+        436.56644690360963
+      ],
+      "difference_l2_px": 0.012857778239104969,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.010571792683606418,
+        "axis": "v",
+        "signed_px": 0.010571792683606418
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.007318446604358542,
+        0.010571792683606418
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+        "camera_name": "over_shoulder_left_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        653.1899946359213,
+        405.25002616632213
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.06916521265338815,
+        0.03223114310304709
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.06788512347702635,
+        0.03134327007256843
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        653.1221095124442,
+        405.21868289624956
+      ],
+      "difference_l2_px": 0.0015578661103220598,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.0012800891763617983,
+        "axis": "u",
+        "signed_px": -0.0012800891763617983
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.0012800891763617983,
+        -0.0008878730304786586
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+        "camera_name": "over_shoulder_right_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        531.1345812309545,
+        384.93656377444483
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.2871021354402501,
+        -0.1655928523368857
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.2886831830733172,
+        -0.16110902224414758
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        531.4232644140278,
+        385.097672796689
+      ],
+      "difference_l2_px": 0.004754413099276397,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.004483830092738117,
+        "axis": "v",
+        "signed_px": 0.004483830092738117
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.0015810476330671008,
+        0.004483830092738117
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+        "camera_name": "over_shoulder_right_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        460.08976761279985,
+        436.76707088392186
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.2359865490507218,
+        0.1760621292715996
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.24506473581163846,
+        0.1794589928343271
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        459.8447028769882,
+        436.58761189108753
+      ],
+      "difference_l2_px": 0.009692892082854742,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.009078186760916651,
+        "axis": "u",
+        "signed_px": 0.009078186760916651
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.009078186760916651,
+        0.0033968635627275034
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+        "camera_name": "over_shoulder_right_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        420.55438095784234,
+        581.7920627567928
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.20299361052593667,
+        0.013183733110054163
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.20058956640758652,
+        0.01269317880928611
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        420.7549705242499,
+        581.7793695779835
+      ],
+      "difference_l2_px": 0.0024535834293897604,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.002404044118350157,
+        "axis": "u",
+        "signed_px": 0.002404044118350157
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.002404044118350157,
+        -0.0004905543007680535
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+        "camera_name": "wrist_cam",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        711.9576766003559,
+        452.9875062521861
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        1.3478055273149039,
+        -0.03686573279924232
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        1.1842205666368955,
+        -0.035725664315179984
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        710.773456033719,
+        453.0232319165013
+      ],
+      "difference_l2_px": 0.16358893335483887,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.16358496067800843,
+        "axis": "u",
+        "signed_px": -0.16358496067800843
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.16358496067800843,
+        0.0011400684840623398
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+        "camera_name": "wrist_cam",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        697.9705375844771,
+        195.64372122442148
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -1.1654749634238897,
+        0.023673943956055155
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -1.1502227968412626,
+        0.019590470814648597
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        699.1207603813184,
+        195.62413075360683
+      ],
+      "difference_l2_px": 0.015789342556319266,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.01525216658262707,
+        "axis": "u",
+        "signed_px": 0.01525216658262707
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.01525216658262707,
+        -0.004083473141406557
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+        "camera_name": "wrist_cam",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        546.7395203358196,
+        433.9155609734893
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.00240330617316431,
+        -0.05433203449325674
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.002409751313734887,
+        -0.05409584427889058
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        546.7371105845059,
+        433.96965681776817
+      ],
+      "difference_l2_px": 0.0002362781352544233,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.00023619021436616094,
+        "axis": "v",
+        "signed_px": 0.00023619021436616094
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        6.445140570576768e-06,
+        0.00023619021436616094
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+        "camera_name": "head_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        561.0775530562369,
+        371.21899740831657
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.012585644865339418,
+        0.27048716848645427
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.01252556847384767,
+        0.2539605282332218
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        561.065027487763,
+        370.96503688008335
+      ],
+      "difference_l2_px": 0.016526749445446874,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.016526640253232472,
+        "axis": "v",
+        "signed_px": -0.016526640253232472
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -6.007639149174793e-05,
+        -0.016526640253232472
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+        "camera_name": "head_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        598.5531226219864,
+        374.71312242228646
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.12003398881006433,
+        -0.5755248044524137
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.18576015935377654,
+        -0.5444568139186572
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        598.7388827813402,
+        375.2575792362051
+      ],
+      "difference_l2_px": 0.0726990339010549,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.06572617054371221,
+        "axis": "u",
+        "signed_px": -0.06572617054371221
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.06572617054371221,
+        0.03106799053375653
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+        "camera_name": "head_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        638.5745498007766,
+        418.94397103256466
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.07028482761575106,
+        -0.03503221038556603
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.06896515584617191,
+        -0.034084979973499685
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        638.5055846449304,
+        418.97805601253816
+      ],
+      "difference_l2_px": 0.0016244319108437671,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.001319671769579145,
+        "axis": "u",
+        "signed_px": -0.001319671769579145
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.001319671769579145,
+        0.0009472304120663466
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+        "camera_name": "over_shoulder_left_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        726.9442208821142,
+        389.5600658469162
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.24904339931504182,
+        0.17358041042712102
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.250542295050991,
+        0.16868494664760192
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        727.1947631771652,
+        389.3913809002686
+      ],
+      "difference_l2_px": 0.005119790429678753,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.004895463779519105,
+        "axis": "v",
+        "signed_px": -0.004895463779519105
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.0014988957359491906,
+        -0.004895463779519105
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+        "camera_name": "over_shoulder_left_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        794.4081419383954,
+        443.09692228496215
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.4404408751158826,
+        -0.7496077908900816
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.20711229335847747,
+        -0.8037053419394056
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        794.2010296450369,
+        443.90062762690155
+      ],
+      "difference_l2_px": 0.23951779076815213,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.23332858175740512,
+        "axis": "u",
+        "signed_px": -0.23332858175740512
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.23332858175740512,
+        -0.05409755104932401
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+        "camera_name": "over_shoulder_left_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        492.8545490321068,
+        338.25337678598345
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.04100684629167972,
+        0.025471204109294376
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.041007861857792705,
+        0.025157264590575323
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        492.813541170249,
+        338.2282195213929
+      ],
+      "difference_l2_px": 0.0003139411613472825,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.000313939518719053,
+        "axis": "v",
+        "signed_px": -0.000313939518719053
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        1.015566112982924e-06,
+        -0.000313939518719053
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+        "camera_name": "over_shoulder_right_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        529.84251535766,
+        376.5295994726209
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.27294684742969366,
+        -0.13480812644417028
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.27395913820930673,
+        -0.1313726000872748
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        530.1164744958693,
+        376.66097207270815
+      ],
+      "difference_l2_px": 0.0035815602705264026,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.0034355263568954797,
+        "axis": "v",
+        "signed_px": 0.0034355263568954797
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.0010122907796130676,
+        0.0034355263568954797
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+        "camera_name": "over_shoulder_right_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        451.90953186659874,
+        419.37665169721566
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.9082046575794038,
+        0.2688280652088224
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        1.0544104676657753,
+        0.12919964604776624
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        450.85512139893297,
+        419.2474520511679
+      ],
+      "difference_l2_px": 0.20216882633192418,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.14620581008637146,
+        "axis": "u",
+        "signed_px": 0.14620581008637146
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.14620581008637146,
+        -0.13962841916105617
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+        "camera_name": "over_shoulder_right_camera",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        983.2953821799799,
+        523.9137880039627
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.2121618206998619,
+        -0.006773293560058846
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.20877303022621163,
+        -0.0059725815169713314
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        983.5041552102061,
+        523.9197605854797
+      ],
+      "difference_l2_px": 0.0034821029063265975,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.0033887904736502605,
+        "axis": "u",
+        "signed_px": 0.0033887904736502605
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.0033887904736502605,
+        0.0008007120430875148
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+        "camera_name": "wrist_cam",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        742.7161236248407,
+        473.632117610491
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        1.2232154676487426,
+        -0.08491219371364878
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        1.0751837037224732,
+        -0.08486755509699151
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        741.6409399211183,
+        473.71698516558797
+      ],
+      "difference_l2_px": 0.1480317706566021,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.14803176392626938,
+        "axis": "u",
+        "signed_px": -0.14803176392626938
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.14803176392626938,
+        4.463861665726654e-05
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+        "camera_name": "wrist_cam",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        775.9703342971637,
+        223.33623010983774
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -3.1974150569245694,
+        1.1091961409205169
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -2.993567317068141,
+        1.6563324266662107
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        778.9639016142319,
+        221.67989768317153
+      ],
+      "difference_l2_px": 0.5838767132059366,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.5471362857456938,
+        "axis": "v",
+        "signed_px": 0.5471362857456938
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.20384773985642823,
+        0.5471362857456938
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+        "camera_name": "wrist_cam",
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        534.3276557568656,
+        418.5182100728008
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.002282200296690462,
+        -0.055897469041553904
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.002331946610297564,
+        -0.05580836885934559
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        534.3253238102553,
+        418.57401844166014
+      ],
+      "difference_l2_px": 0.00010204674510757627,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 8.910018220831262e-05,
+        "axis": "v",
+        "signed_px": 8.910018220831262e-05
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        4.974631360710191e-05,
+        8.910018220831262e-05
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+        "camera_name": "head_camera",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        569.7004175421808,
+        356.52763809268583
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.0016975714047475776,
+        0.3168293317360735
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.0017222146806261662,
+        0.2978621747280954
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        569.7021397568615,
+        356.22977591795774
+      ],
+      "difference_l2_px": 0.018967173016987533,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.01896715700797813,
+        "axis": "v",
+        "signed_px": -0.01896715700797813
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -2.464327587858861e-05,
+        -0.01896715700797813
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+        "camera_name": "head_camera",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        600.8210373221121,
+        354.8692243129935
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.011005709367509553,
+        -0.21670315263310158
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.0007357644165040256,
+        -0.21813176267801282
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        600.8217730865287,
+        355.0873560756715
+      ],
+      "difference_l2_px": 0.010368832912006309,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.010269944951005527,
+        "axis": "u",
+        "signed_px": 0.010269944951005527
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.010269944951005527,
+        -0.0014286100449112382
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+        "camera_name": "head_camera",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        643.0083985557199,
+        394.31656898256966
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.06639559667041794,
+        -0.030232739948473863
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.0651913483915223,
+        -0.029634579806611328
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        642.9432072073283,
+        394.3462035623763
+      ],
+      "difference_l2_px": 0.0013446224275000542,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.0012042482788956477,
+        "axis": "u",
+        "signed_px": -0.0012042482788956477
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.0012042482788956477,
+        0.000598160141862536
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+        "camera_name": "over_shoulder_left_camera",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        756.8841102481613,
+        390.6322056140797
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.31252008171566104,
+        0.18917718926559246
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.31402375371988,
+        0.1840364736690958
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        757.1981340018812,
+        390.4481691404106
+      ],
+      "difference_l2_px": 0.005356116722060469,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.005140715596496648,
+        "axis": "v",
+        "signed_px": -0.005140715596496648
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.00150367200421897,
+        -0.005140715596496648
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+        "camera_name": "over_shoulder_left_camera",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        823.145786008153,
+        430.4558565816688
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.22061334130125942,
+        -0.20005825706192581
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.243713354811689,
+        -0.17953214483139845
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        822.9020726533413,
+        430.6353887265002
+      ],
+      "difference_l2_px": 0.030901972550020706,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.023100013510429562,
+        "axis": "u",
+        "signed_px": 0.023100013510429562
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.023100013510429562,
+        0.02052611223052736
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+        "camera_name": "over_shoulder_left_camera",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        524.0009699366059,
+        336.1179174214953
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.04273932000091918,
+        0.02612101140937284
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.04292596923005476,
+        0.02567212782690831
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        523.9580439673758,
+        336.0922452936684
+      ],
+      "difference_l2_px": 0.0004861423714747559,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.0004488835824645321,
+        "axis": "v",
+        "signed_px": -0.0004488835824645321
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.00018664922913558257,
+        -0.0004488835824645321
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+        "camera_name": "over_shoulder_right_camera",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        530.3624455549825,
+        395.17925813791607
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.3135515039175516,
+        -0.19734443584752626
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.3153025929883597,
+        -0.1916528016764687
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        530.6777481479709,
+        395.37091093959253
+      ],
+      "difference_l2_px": 0.005954914984368265,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.005691634171057558,
+        "axis": "v",
+        "signed_px": 0.005691634171057558
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.0017510890708081206,
+        0.005691634171057558
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+        "camera_name": "over_shoulder_right_camera",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        468.54517121740207,
+        439.184918326948
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        0.26527943540264687,
+        0.16074527527985083
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        0.25698421792100135,
+        0.18311789950331558
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        468.28818699948107,
+        439.00180042744466
+      ],
+      "difference_l2_px": 0.023860950268423078,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.022372624223464754,
+        "axis": "v",
+        "signed_px": 0.022372624223464754
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.008295217481645523,
+        0.022372624223464754
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+        "camera_name": "over_shoulder_right_camera",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        909.0453291538101,
+        581.3033658423552
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -0.20483001881950713,
+        -0.007790422486323223
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -0.20385278364540227,
+        -0.007781372900922179
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        909.2491819374555,
+        581.3111472152561
+      ],
+      "difference_l2_px": 0.0009772770745820713,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.0009772351741048624,
+        "axis": "u",
+        "signed_px": 0.0009772351741048624
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.0009772351741048624,
+        9.049585401044169e-06
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+        "camera_name": "wrist_cam",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        680.5368937030676,
+        424.5927114345025
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        1.5007527999781587,
+        -0.010556647987357337
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        1.3153908893744983,
+        -0.010510127999964425
+      ],
+      "component_signs": {
+        "u": "negative",
+        "v": "positive"
+      },
+      "constructed_center_point_uv_px": [
+        679.2215028136931,
+        424.6032215625025
+      ],
+      "difference_l2_px": 0.18536191644118433,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.18536191060366036,
+        "axis": "u",
+        "signed_px": -0.18536191060366036
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        -0.18536191060366036,
+        4.65199873929123e-05
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+        "camera_name": "wrist_cam",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    },
+    {
+      "actual_center_point_uv_px": [
+        670.9791357607194,
+        205.3553833413895
+      ],
+      "actual_minus_constructed_projected_envelope_center_residual_px": [
+        -1.1728947514048969,
+        0.12175805679032692
+      ],
+      "actual_minus_constructed_projected_point_center_residual_px": [
+        -1.1677928367068944,
+        0.027990118282758658
+      ],
+      "component_signs": {
+        "u": "positive",
+        "v": "negative"
+      },
+      "constructed_center_point_uv_px": [
+        672.1469285974263,
+        205.32739322310675
+      ],
+      "difference_l2_px": 0.09390663355453008,
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_px": 0.09376793850756826,
+        "axis": "v",
+        "signed_px": -0.09376793850756826
+      },
+      "point_center_minus_envelope_center_residual_difference_px": [
+        0.005101914698002474,
+        -0.09376793850756826
+      ],
+      "provenance": {
+        "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+        "camera_name": "wrist_cam",
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      },
+      "stored_actual_center_projection_formula_exact": true
+    }
+  ],
+  "representation_semantics": {
+    "projected": "Project the retained actual object center and constructed reflected center point through the unchanged frozen camera configuration, form their residual, then subtract the frozen projected AABB-envelope-center residual. The independent identity compares point-minus-envelope-center offsets in the actual and constructed representations.",
+    "proxy_boundary": "Retained object centers, AABB midpoints, projected center points and projected AABB-envelope centers are geometric representations. Neither projected representation is an observed or human-labeled image centroid, and this diagnostic does not decide which representation is preferable.",
+    "signs_and_units": "World signs follow robot-base x/y/z and are stored in metres with exact 1000x millimetre copies. Projected signs follow stored u/v pixel coordinates. Zero means exact float equality; no epsilon, threshold, normalization, fitting or registration is applied.",
+    "world": "Subtract the frozen actual-minus-constructed AABB-midpoint residual from the frozen actual-minus-constructed retained object-center residual. The independent identity is the reflected-arm center-minus-AABB-midpoint offset minus the constructed-reference equivalent."
+  },
+  "resource_budget_qualified": false,
+  "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+  "schema_version": "wmf-retained-center-representation-residual-difference-diagnostic-v1",
+  "selection": {
+    "D01_D02_command_confounded": true,
+    "P00_shared_left_command_with_extra_reflected_right_member": true,
+    "availability_selected": true,
+    "comparable_original_reflected_mapping_pairs": 3,
+    "cross_time_field_join_performed": false,
+    "full_completed_cohort": false,
+    "isolated_layout_effect_estimated": false,
+    "mapping_pair_camera_rows": 12,
+    "projected_camera_object_rows": 36,
+    "projected_difference_components": 72,
+    "representative_sample": false,
+    "source_reset_mappings": 6,
+    "world_difference_components": 27,
+    "world_object_rows": 9
+  },
+  "summary": {
+    "camera_configuration_pairs_verified_exactly_identical": 12,
+    "maximum_absolute_projected_component_difference": {
+      "absolute_px": 0.5471362857456938,
+      "axis": "v",
+      "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+      "camera_name": "wrist_cam",
+      "command_membership_classification": "disjoint_single_commands_command_confounded",
+      "layout_pair_id": "D02",
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "original_member_cell_ids": [
+        "wmf1__development__D02__D1__original__left"
+      ],
+      "original_member_commands": [
+        "left"
+      ],
+      "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+      "phase": "development",
+      "reflected_member_cell_ids": [
+        "wmf1__development__D02__D1__reflected__right"
+      ],
+      "reflected_member_commands": [
+        "right"
+      ],
+      "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+      "signed_px": 0.5471362857456938,
+      "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+    },
+    "maximum_absolute_world_component_difference": {
+      "absolute_m": 0.00031600892543792725,
+      "absolute_mm": 0.31600892543792725,
+      "axis": "x",
+      "command_membership_classification": "disjoint_single_commands_command_confounded",
+      "layout_pair_id": "D02",
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "original_member_cell_ids": [
+        "wmf1__development__D02__D1__original__left"
+      ],
+      "original_member_commands": [
+        "left"
+      ],
+      "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+      "phase": "development",
+      "reflected_member_cell_ids": [
+        "wmf1__development__D02__D1__reflected__right"
+      ],
+      "reflected_member_commands": [
+        "right"
+      ],
+      "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+      "signed_m": 0.00031600892543792725,
+      "signed_mm": 0.31600892543792725,
+      "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+    },
+    "maximum_projected_row_l2_difference": {
+      "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+      "camera_name": "wrist_cam",
+      "command_membership_classification": "disjoint_single_commands_command_confounded",
+      "difference_px": [
+        0.20384773985642823,
+        0.5471362857456938
+      ],
+      "l2_px": 0.5838767132059366,
+      "layout_pair_id": "D02",
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "original_member_cell_ids": [
+        "wmf1__development__D02__D1__original__left"
+      ],
+      "original_member_commands": [
+        "left"
+      ],
+      "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+      "phase": "development",
+      "reflected_member_cell_ids": [
+        "wmf1__development__D02__D1__reflected__right"
+      ],
+      "reflected_member_commands": [
+        "right"
+      ],
+      "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+      "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+    },
+    "maximum_world_row_l2_difference": {
+      "command_membership_classification": "disjoint_single_commands_command_confounded",
+      "difference_m": [
+        0.00031600892543792725,
+        0.00011220201849937439,
+        4.284083843231201e-08
+      ],
+      "difference_mm": [
+        0.31600892543792725,
+        0.11220201849937439,
+        4.284083843231201e-05
+      ],
+      "l2_m": 0.0003353370479787535,
+      "l2_mm": 0.3353370479787535,
+      "layout_pair_id": "D02",
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "original_member_cell_ids": [
+        "wmf1__development__D02__D1__original__left"
+      ],
+      "original_member_commands": [
+        "left"
+      ],
+      "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+      "phase": "development",
+      "reflected_member_cell_ids": [
+        "wmf1__development__D02__D1__reflected__right"
+      ],
+      "reflected_member_commands": [
+        "right"
+      ],
+      "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+      "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+    },
+    "original_reflected_mapping_pairs": 3,
+    "projected_camera_object_rows": 36,
+    "projected_difference_components": 72,
+    "projected_direct_and_independent_component_matches": 72,
+    "projected_exact_zero_components": 0,
+    "projected_exact_zero_rows": 0,
+    "projected_sign_census": {
+      "u": {
+        "negative": 19,
+        "positive": 17,
+        "zero": 0
+      },
+      "v": {
+        "negative": 15,
+        "positive": 21,
+        "zero": 0
+      }
+    },
+    "source_reset_mappings": 6,
+    "stored_actual_center_projection_formula_matches": 36,
+    "world_difference_components": 27,
+    "world_direct_and_independent_component_matches": 27,
+    "world_exact_zero_components": 10,
+    "world_exact_zero_rows": 1,
+    "world_object_rows": 9,
+    "world_sign_census": {
+      "x": {
+        "negative": 3,
+        "positive": 2,
+        "zero": 4
+      },
+      "y": {
+        "negative": 6,
+        "positive": 1,
+        "zero": 2
+      },
+      "z": {
+        "negative": 2,
+        "positive": 3,
+        "zero": 4
+      }
+    }
+  },
+  "turn2848_residual_decomposition_package": {
+    "audit": {
+      "bytes": 29471,
+      "lines": 771,
+      "path": "workshops/corl2026_world_models/analysis/audit_retained_aabb_reflection_residual_decomposition.py",
+      "sha256": "d0968108eaee8c0118536c766dc1ac15a0752e6247dded1a59e41f8f21dbfe7f"
+    },
+    "canonical_regeneration_verified": true,
+    "commit": "dc026ae59781bd7d75d51714cd65ef1939262fce",
+    "parent": "6e717598b222db9f4432f048e15b93f37f9c051b",
+    "report": {
+      "bytes": 769389,
+      "lines": 17758,
+      "path": "workshops/corl2026_world_models/results/retained_aabb_reflection_residual_decomposition_diagnostic.json",
+      "sha256": "598db9917bab4e75ff13fbef14d8ffe0c203827baacf1a66d0dffa88e6f99f38"
+    },
+    "tree": "b6f7f8c01db2e79337cf5cbde918550315897a7e"
+  },
+  "world_rows": [
+    {
+      "actual_center_minus_actual_aabb_midpoint_m": [
+        0.0,
+        7.450580596923828e-09,
+        -1.862645149230957e-09
+      ],
+      "actual_minus_constructed_aabb_midpoint_residual_m": [
+        8.761882781982422e-06,
+        -0.0001414865255355835,
+        -7.282942533493042e-07
+      ],
+      "actual_minus_constructed_center_residual_m": [
+        8.761882781982422e-06,
+        -0.0001414865255355835,
+        -7.301568984985352e-07
+      ],
+      "center_minus_aabb_midpoint_residual_difference_m": [
+        0.0,
+        0.0,
+        -1.862645149230957e-09
+      ],
+      "component_signs": {
+        "x": "zero",
+        "y": "zero",
+        "z": "negative"
+      },
+      "constructed_center_minus_constructed_aabb_midpoint_m": [
+        0.0,
+        7.450580596923828e-09,
+        0.0
+      ],
+      "difference_l2_m": 1.862645149230957e-09,
+      "difference_l2_mm": 1.862645149230957e-06,
+      "difference_mm": [
+        0.0,
+        0.0,
+        -1.862645149230957e-06
+      ],
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_m": 1.862645149230957e-09,
+        "absolute_mm": 1.862645149230957e-06,
+        "axis": "z",
+        "signed_m": -1.862645149230957e-09,
+        "signed_mm": -1.862645149230957e-06
+      },
+      "provenance": {
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      }
+    },
+    {
+      "actual_center_minus_actual_aabb_midpoint_m": [
+        -1.4901161193847656e-08,
+        -2.7939677238464355e-09,
+        0.0
+      ],
+      "actual_minus_constructed_aabb_midpoint_residual_m": [
+        -1.2323260307312012e-05,
+        0.0007507801055908203,
+        -6.332993507385254e-07
+      ],
+      "actual_minus_constructed_center_residual_m": [
+        -1.233816146850586e-05,
+        0.0007507773116230965,
+        -6.332993507385254e-07
+      ],
+      "center_minus_aabb_midpoint_residual_difference_m": [
+        -1.4901161193847656e-08,
+        -2.7939677238464355e-09,
+        0.0
+      ],
+      "component_signs": {
+        "x": "negative",
+        "y": "negative",
+        "z": "zero"
+      },
+      "constructed_center_minus_constructed_aabb_midpoint_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "difference_l2_m": 1.5160833109263057e-08,
+      "difference_l2_mm": 1.5160833109263057e-05,
+      "difference_mm": [
+        -1.4901161193847656e-05,
+        -2.7939677238464355e-06,
+        0.0
+      ],
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_m": 1.4901161193847656e-08,
+        "absolute_mm": 1.4901161193847656e-05,
+        "axis": "x",
+        "signed_m": -1.4901161193847656e-08,
+        "signed_mm": -1.4901161193847656e-05
+      },
+      "provenance": {
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      }
+    },
+    {
+      "actual_center_minus_actual_aabb_midpoint_m": [
+        0.010138899087905884,
+        -0.028935127673321404,
+        0.002415234223008156
+      ],
+      "actual_minus_constructed_aabb_midpoint_residual_m": [
+        5.513429641723633e-07,
+        -0.0006369648035615683,
+        -2.3469328880310059e-07
+      ],
+      "actual_minus_constructed_center_residual_m": [
+        -5.364418029785156e-07,
+        -0.0006373673677444458,
+        -4.544854164123535e-07
+      ],
+      "center_minus_aabb_midpoint_residual_difference_m": [
+        -1.087784767150879e-06,
+        -4.025641828775406e-07,
+        -2.1979212760925293e-07
+      ],
+      "component_signs": {
+        "x": "negative",
+        "y": "negative",
+        "z": "negative"
+      },
+      "constructed_center_minus_constructed_aabb_midpoint_m": [
+        0.010139986872673035,
+        -0.028934725109138526,
+        0.002415454015135765
+      ],
+      "difference_l2_m": 1.1805262387343857e-06,
+      "difference_l2_mm": 0.0011805262387343857,
+      "difference_mm": [
+        -0.001087784767150879,
+        -0.0004025641828775406,
+        -0.00021979212760925293
+      ],
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_m": 1.087784767150879e-06,
+        "absolute_mm": 0.001087784767150879,
+        "axis": "x",
+        "signed_m": -1.087784767150879e-06,
+        "signed_mm": -0.001087784767150879
+      },
+      "provenance": {
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D01",
+        "model_id": "D1",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      }
+    },
+    {
+      "actual_center_minus_actual_aabb_midpoint_m": [
+        0.0,
+        -3.725290298461914e-09,
+        1.862645149230957e-09
+      ],
+      "actual_minus_constructed_aabb_midpoint_residual_m": [
+        -7.68899917602539e-06,
+        -0.00014180690050125122,
+        1.257285475730896e-06
+      ],
+      "actual_minus_constructed_center_residual_m": [
+        -7.68899917602539e-06,
+        -0.00014181435108184814,
+        1.259148120880127e-06
+      ],
+      "center_minus_aabb_midpoint_residual_difference_m": [
+        0.0,
+        -7.450580596923828e-09,
+        1.862645149230957e-09
+      ],
+      "component_signs": {
+        "x": "zero",
+        "y": "negative",
+        "z": "positive"
+      },
+      "constructed_center_minus_constructed_aabb_midpoint_m": [
+        0.0,
+        3.725290298461914e-09,
+        0.0
+      ],
+      "difference_l2_m": 7.679882693323606e-09,
+      "difference_l2_mm": 7.679882693323606e-06,
+      "difference_mm": [
+        0.0,
+        -7.450580596923828e-06,
+        1.862645149230957e-06
+      ],
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_m": 7.450580596923828e-09,
+        "absolute_mm": 7.450580596923828e-06,
+        "axis": "y",
+        "signed_m": -7.450580596923828e-09,
+        "signed_mm": -7.450580596923828e-06
+      },
+      "provenance": {
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      }
+    },
+    {
+      "actual_center_minus_actual_aabb_midpoint_m": [
+        0.0,
+        -1.862645149230957e-09,
+        0.0
+      ],
+      "actual_minus_constructed_aabb_midpoint_residual_m": [
+        -4.9501657485961914e-05,
+        0.0006873048841953278,
+        7.450580596923828e-08
+      ],
+      "actual_minus_constructed_center_residual_m": [
+        -4.9501657485961914e-05,
+        0.0006873011589050293,
+        7.450580596923828e-08
+      ],
+      "center_minus_aabb_midpoint_residual_difference_m": [
+        0.0,
+        -3.725290298461914e-09,
+        0.0
+      ],
+      "component_signs": {
+        "x": "zero",
+        "y": "negative",
+        "z": "zero"
+      },
+      "constructed_center_minus_constructed_aabb_midpoint_m": [
+        0.0,
+        1.862645149230957e-09,
+        0.0
+      ],
+      "difference_l2_m": 3.725290298461914e-09,
+      "difference_l2_mm": 3.725290298461914e-06,
+      "difference_mm": [
+        0.0,
+        -3.725290298461914e-06,
+        0.0
+      ],
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_m": 3.725290298461914e-09,
+        "absolute_mm": 3.725290298461914e-06,
+        "axis": "y",
+        "signed_m": -3.725290298461914e-09,
+        "signed_mm": -3.725290298461914e-06
+      },
+      "provenance": {
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      }
+    },
+    {
+      "actual_center_minus_actual_aabb_midpoint_m": [
+        0.010416537523269653,
+        -0.028836313635110855,
+        0.002415582537651062
+      ],
+      "actual_minus_constructed_aabb_midpoint_residual_m": [
+        0.0005720406770706177,
+        -0.0017481669783592224,
+        9.313225746154785e-09
+      ],
+      "actual_minus_constructed_center_residual_m": [
+        0.0008880496025085449,
+        -0.001635964959859848,
+        5.21540641784668e-08
+      ],
+      "center_minus_aabb_midpoint_residual_difference_m": [
+        0.00031600892543792725,
+        0.00011220201849937439,
+        4.284083843231201e-08
+      ],
+      "component_signs": {
+        "x": "positive",
+        "y": "positive",
+        "z": "positive"
+      },
+      "constructed_center_minus_constructed_aabb_midpoint_m": [
+        0.010100528597831726,
+        -0.02894851565361023,
+        0.0024155396968126297
+      ],
+      "difference_l2_m": 0.0003353370479787535,
+      "difference_l2_mm": 0.3353370479787535,
+      "difference_mm": [
+        0.31600892543792725,
+        0.11220201849937439,
+        4.284083843231201e-05
+      ],
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_m": 0.00031600892543792725,
+        "absolute_mm": 0.31600892543792725,
+        "axis": "x",
+        "signed_m": 0.00031600892543792725,
+        "signed_mm": 0.31600892543792725
+      },
+      "provenance": {
+        "command_membership_classification": "disjoint_single_commands_command_confounded",
+        "layout_pair_id": "D02",
+        "model_id": "D1",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "phase": "development",
+        "reflected_member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      }
+    },
+    {
+      "actual_center_minus_actual_aabb_midpoint_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "actual_minus_constructed_aabb_midpoint_residual_m": [
+        -8.463859558105469e-06,
+        -0.0001421421766281128,
+        -2.5331974029541016e-07
+      ],
+      "actual_minus_constructed_center_residual_m": [
+        -8.463859558105469e-06,
+        -0.0001421421766281128,
+        -2.5331974029541016e-07
+      ],
+      "center_minus_aabb_midpoint_residual_difference_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "component_signs": {
+        "x": "zero",
+        "y": "zero",
+        "z": "zero"
+      },
+      "constructed_center_minus_constructed_aabb_midpoint_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "difference_l2_m": 0.0,
+      "difference_l2_mm": 0.0,
+      "difference_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_m": 0.0,
+        "absolute_mm": 0.0,
+        "axis": "x",
+        "signed_m": 0.0,
+        "signed_mm": 0.0
+      },
+      "provenance": {
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "banana",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      }
+    },
+    {
+      "actual_center_minus_actual_aabb_midpoint_m": [
+        0.0,
+        -3.725290298461914e-09,
+        0.0
+      ],
+      "actual_minus_constructed_aabb_midpoint_residual_m": [
+        6.660819053649902e-06,
+        0.0008224304765462875,
+        -3.8743019104003906e-07
+      ],
+      "actual_minus_constructed_center_residual_m": [
+        6.67572021484375e-06,
+        0.0008224276825785637,
+        -3.8743019104003906e-07
+      ],
+      "center_minus_aabb_midpoint_residual_difference_m": [
+        1.4901161193847656e-08,
+        -2.7939677238464355e-09,
+        0.0
+      ],
+      "component_signs": {
+        "x": "positive",
+        "y": "negative",
+        "z": "zero"
+      },
+      "constructed_center_minus_constructed_aabb_midpoint_m": [
+        -1.4901161193847656e-08,
+        -9.313225746154785e-10,
+        0.0
+      ],
+      "difference_l2_m": 1.5160833109263057e-08,
+      "difference_l2_mm": 1.5160833109263057e-05,
+      "difference_mm": [
+        1.4901161193847656e-05,
+        -2.7939677238464355e-06,
+        0.0
+      ],
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_m": 1.4901161193847656e-08,
+        "absolute_mm": 1.4901161193847656e-05,
+        "axis": "x",
+        "signed_m": 1.4901161193847656e-08,
+        "signed_mm": 1.4901161193847656e-05
+      },
+      "provenance": {
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "bowl",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      }
+    },
+    {
+      "actual_center_minus_actual_aabb_midpoint_m": [
+        0.010124757885932922,
+        -0.028940058778971434,
+        0.002415446564555168
+      ],
+      "actual_minus_constructed_aabb_midpoint_residual_m": [
+        5.182623863220215e-05,
+        -0.0006335275247693062,
+        -1.6205012798309326e-07
+      ],
+      "actual_minus_constructed_center_residual_m": [
+        3.874301910400391e-06,
+        -0.0006503108888864517,
+        2.4586915969848633e-07
+      ],
+      "center_minus_aabb_midpoint_residual_difference_m": [
+        -4.795193672180176e-05,
+        -1.678336411714554e-05,
+        4.079192876815796e-07
+      ],
+      "component_signs": {
+        "x": "negative",
+        "y": "negative",
+        "z": "positive"
+      },
+      "constructed_center_minus_constructed_aabb_midpoint_m": [
+        0.010172709822654724,
+        -0.028923275414854288,
+        0.0024150386452674866
+      ],
+      "difference_l2_m": 5.080586525791713e-05,
+      "difference_l2_mm": 0.05080586525791713,
+      "difference_mm": [
+        -0.04795193672180176,
+        -0.01678336411714554,
+        0.0004079192876815796
+      ],
+      "direct_component_and_geometry_recomputation_exact": true,
+      "maximum_absolute_component": {
+        "absolute_m": 4.795193672180176e-05,
+        "absolute_mm": 0.04795193672180176,
+        "axis": "x",
+        "signed_m": -4.795193672180176e-05,
+        "signed_mm": -0.04795193672180176
+      },
+      "provenance": {
+        "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+        "layout_pair_id": "P00",
+        "model_id": "N3",
+        "object_name": "rubiks_cube",
+        "original_member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "original_member_commands": [
+          "left"
+        ],
+        "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "phase": "pilot",
+        "reflected_member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "reflected_member_commands": [
+          "left",
+          "right"
+        ],
+        "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "source_package_commit": "717136db3c518a3e59a01d33a86f95839ee83b23"
+      }
+    }
+  ]
+}

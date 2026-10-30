@@ -1,0 +1,1973 @@
+{
+  "claim_boundaries": {
+    "aabb_envelopes_only": "The projected rectangles bound retained axis-aligned boxes derived from world.get_bbox corner minima/maxima. They are not OBBs, exact meshes, silhouettes, segmentation masks, image footprints or object pixels.",
+    "no_measurement_or_endpoint_inference": "No RGB artifact, crop/time mapping, labelability, human annotation, measurement feasibility, r0/rhat/r endpoint or generated/executed correspondence is authenticated. No A1-A9 result follows.",
+    "no_visibility_or_occlusion_inference": "Rectangle overlap does not prove silhouette overlap or occlusion; rectangle separation does not prove object visibility. Camera-z order does not identify a visible front object. The robot, static scene, RGB content and general ray/surface occlusion are not analyzed.",
+    "science_and_release": "No scientific acceptance threshold, fixture/camera qualification, current-state inference, gate promotion, dispatch/release authority or new behavioral evidence follows.",
+    "selection_and_effects": "The six reset mappings are availability-selected from seven prior-authenticated cells and are not a representative or full cohort. No layout, command, model, task-success or population effect is estimated, and the per-camera descriptors do not define a camera ranking."
+  },
+  "confirmation_released": false,
+  "evidence_boundaries": {
+    "a1_a9_result": false,
+    "camera_crop_or_time_alignment_authenticated": false,
+    "camera_ranking_estimated": false,
+    "cross_time_field_join_performed": false,
+    "current_state_inferred": false,
+    "fixture_pass_fail_classification_created": false,
+    "forecast_or_persistence_metric": false,
+    "gate_advanced": false,
+    "general_occlusion_analyzed": false,
+    "human_image_centroids_used": false,
+    "labelability_estimated": false,
+    "measurement_feasibility_qualified": false,
+    "obb_analyzed": false,
+    "raw_camera_bytes_read": false,
+    "raw_pvc_bytes_read": false,
+    "release_authority": false,
+    "rgb_or_image_content_analyzed": false,
+    "robot_or_static_scene_occlusion_analyzed": false,
+    "scientific_threshold_applied": false,
+    "silhouette_or_segmentation_analyzed": false,
+    "task_success_or_model_rate": false
+  },
+  "finding": "Across six availability-selected unique reset mappings, four cameras and three retained-object pairs, 39 of 72 projected AABB-envelope pairs have positive rectangle-overlap area and 33 have positive rectangle separation; none only touch. Camera-z intervals overlap for 50 pairs and are strictly ordered for 22; none only touch. These are axis-aligned retained-geometry descriptors, not observed-object or visibility evidence.",
+  "forecast_accuracy_estimated": false,
+  "labels_created": 0,
+  "mappings": [
+    {
+      "camera_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                20.296300321799663,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                9.743719763835372
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 9.743719763835372,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.06101442403689106,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                33.21310568143804,
+                17.776624853833994
+              ],
+              "camera_z_interval_relation": "first_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 37.671192975539284,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.12200648664824132,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "banana"
+            },
+            {
+              "axis_overlap_uv_px": [
+                1.8644794284389263,
+                19.802150256120456
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "first_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.017755664919764547,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 36.920701791393206,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": "bowl"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                2.182414127263314,
+                80.05205577566937
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.16824223271366523,
+              "positive_overlap_area_px2": 174.70673744129164,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                38.01569517158839
+              ],
+              "axis_separation_uv_px": [
+                96.92057447641446,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 96.92057447641446,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.04381866498963605,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                33.13899811197882,
+                24.12357663282279
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.031034887085073737,
+              "positive_overlap_area_px2": 799.4311604892908,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                88.79142642042461,
+                26.379866087042785
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.03125445061651211,
+              "positive_overlap_area_px2": 2342.305938648314,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                14.20877866333501,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                36.12363093055171
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 36.12363093055171,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.11409751377367228,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                3.8887562796561497,
+                44.3686218732862
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.06842092386660659,
+              "positive_overlap_area_px2": 172.53875692943092,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                3.0175927128738067,
+                102.65833192275943
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.050828548504366855,
+              "positive_overlap_area_px2": 309.7810343258993,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                5.6453660023047405,
+                250.51480681969494
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 250.57840807461653,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.018915499649291678,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                126.17738962856697,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                80.00946609613138
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 80.00946609613138,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.03452928161841118,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        }
+      ],
+      "layout_arm": "original",
+      "layout_pair_id": "D01",
+      "member_cell_ids": [
+        "wmf1__development__D01__D1__original__left"
+      ],
+      "member_commands": [
+        "left"
+      ],
+      "model_id": "D1",
+      "phase": "development",
+      "representative_cell_id": "wmf1__development__D01__D1__original__left",
+      "representative_snapshot_cell_key": "00-wmf1-development-D01-D1-original-left",
+      "representative_snapshot_source": "D01_snapshot"
+    },
+    {
+      "camera_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                20.29023712071273,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                10.087983325773905
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 10.087983325773905,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.060996134540157954,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                33.21457443627685,
+                37.371038661749026
+              ],
+              "camera_z_interval_relation": "first_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 49.998024817395695,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.12201108136244243,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "banana"
+            },
+            {
+              "axis_overlap_uv_px": [
+                1.8661238896788745,
+                19.802978233061538
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "first_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.017746778487763626,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 36.954810767506885,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": "bowl"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                88.48885302042311,
+                26.202603353153847
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.03080382592890074,
+              "positive_overlap_area_px2": 2318.6383168696766,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                36.6379695005304,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                51.08778139751729
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 51.08778139751729,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.14212397257408016,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                26.034447465902417,
+                29.644503178579157
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.04082304743617915,
+              "positive_overlap_area_px2": 771.7782606554963,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                1.8158326089602497,
+                79.8721901526381
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.1678664007190368,
+              "positive_overlap_area_px2": 145.034527428234,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                52.936754168603784
+              ],
+              "axis_separation_uv_px": [
+                119.40538228302921,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 119.40538228302921,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.07182142590534979,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                11.002689248353704,
+                38.86238788239865
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.05864674573666484,
+              "positive_overlap_area_px2": 427.5907773190189,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                94.31621861565623
+              ],
+              "axis_separation_uv_px": [
+                18.042060546850166,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 18.042060546850166,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.04767835766629841,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                136.73430841994002,
+                258.41364006661803
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 292.3591634814255,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.02190138428149263,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                126.18134793695799,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                79.46974502252203
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 79.46974502252203,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.03468601610958405,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        }
+      ],
+      "layout_arm": "reflected",
+      "layout_pair_id": "D01",
+      "member_cell_ids": [
+        "wmf1__development__D01__D1__reflected__right"
+      ],
+      "member_commands": [
+        "right"
+      ],
+      "model_id": "D1",
+      "phase": "development",
+      "representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+      "representative_snapshot_cell_key": "01-wmf1-development-D01-D1-reflected-right",
+      "representative_snapshot_source": "D01_snapshot"
+    },
+    {
+      "camera_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                34.67876389687626,
+                5.041250559504874
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.10688909839104821,
+              "positive_overlap_area_px2": 174.8243378980649,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                19.77539186384513,
+                22.798294033718093
+              ],
+              "camera_z_interval_relation": "first_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 30.179932641019896,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0760315845918007,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "banana"
+            },
+            {
+              "axis_overlap_uv_px": [
+                1.724219516939911,
+                20.001376608909652
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "first_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.017653015931818894,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 34.486763914747435,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": "bowl"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                79.99079676928216,
+                45.72632763460825
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.08245503597750814,
+              "positive_overlap_area_px2": 3657.685380825559,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                44.10750778211366,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                25.326605430733764
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 25.326605430733764,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.08799362578031211,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                22.744534056909856,
+                30.417460138808735
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.043309821204874144,
+              "positive_overlap_area_px2": 691.8309580518332,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                37.21520673075668,
+                74.06457015524785
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.15046451966130225,
+              "positive_overlap_area_px2": 2756.32828975218,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                63.20436890657032
+              ],
+              "axis_separation_uv_px": [
+                80.72544589947677,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 80.72544589947677,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.08691767233368941,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                14.438196811187595,
+                38.05621397432782
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.05634201510625503,
+              "positive_overlap_area_px2": 549.4631072500127,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                41.404062687113935,
+                166.80480014192494
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.06515945839471127,
+              "positive_overlap_area_px2": 6906.396401587772,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                66.83770042712104,
+                176.42262946229744
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 188.65901087617488,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.004351221617544421,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                114.97740978035017,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                73.11745044869133
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 73.11745044869133,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.034763492482345504,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        }
+      ],
+      "layout_arm": "original",
+      "layout_pair_id": "D02",
+      "member_cell_ids": [
+        "wmf1__development__D02__D1__original__left"
+      ],
+      "member_commands": [
+        "left"
+      ],
+      "model_id": "D1",
+      "phase": "development",
+      "representative_cell_id": "wmf1__development__D02__D1__original__left",
+      "representative_snapshot_cell_key": "01-wmf1-development-D02-D1-original-left",
+      "representative_snapshot_source": "D02_snapshot"
+    },
+    {
+      "camera_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                34.6663178998665,
+                5.361343057097997
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.1068524264710653,
+              "positive_overlap_area_px2": 185.85802278760127,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                19.612104535192657,
+                3.3308657253224396
+              ],
+              "camera_z_interval_relation": "first_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 19.89294625688845,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.07540154737585336,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "banana"
+            },
+            {
+              "axis_overlap_uv_px": [
+                1.897803006792742,
+                20.92422378332151
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "first_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.016984625287562283,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 39.71005481079176,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": "bowl"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                37.548797736729625,
+                74.26856996165799
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.15086180929278326,
+              "positive_overlap_area_px2": 2788.695511686449,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                48.41078190137216
+              ],
+              "axis_separation_uv_px": [
+                57.01984403629979,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 57.01984403629979,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.05998973010232267,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                37.835217076269714,
+                23.472993738403773
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.0298270299887069,
+              "positive_overlap_area_px2": 888.1058135224265,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                80.29639247462592,
+                45.874557146575285
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.08284540619652936,
+              "positive_overlap_area_px2": 3683.561445241064,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                23.649360126348938,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                11.445762002408003
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 11.445762002408003,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0599264838764213,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                2.5704911641365698,
+                44.10329786830533
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.07100650246367868,
+              "positive_overlap_area_px2": 113.36713747976206,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                61.563315225542965,
+                174.20532987266847
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.06773703582792451,
+              "positive_overlap_area_px2": 10724.657636920785,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                69.210084435363,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                169.18319523548814
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 169.18319523548814,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.001748286047414227,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                133.3485767187267,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                72.97050037503067
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 72.97050037503067,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.034789683991468257,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        }
+      ],
+      "layout_arm": "reflected",
+      "layout_pair_id": "D02",
+      "member_cell_ids": [
+        "wmf1__development__D02__D1__reflected__right"
+      ],
+      "member_commands": [
+        "right"
+      ],
+      "model_id": "D1",
+      "phase": "development",
+      "representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+      "representative_snapshot_cell_key": "00-wmf1-development-D02-D1-reflected-right",
+      "representative_snapshot_source": "D02_snapshot"
+    },
+    {
+      "camera_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                13.540224386788964,
+                4.372897513116072
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.04018425095897049,
+              "positive_overlap_area_px2": 59.210013548023056,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                33.47545590844368,
+                27.408293125246075
+              ],
+              "camera_z_interval_relation": "first_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 43.264542992126565,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.12206080224414673,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "banana"
+            },
+            {
+              "axis_overlap_uv_px": [
+                7.3155129669133885,
+                20.10303728294764
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.0030102357489818488,
+              "positive_overlap_area_px2": 147.06402991774675,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                100.56784877637983,
+                27.97929002850981
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.034698594828136975,
+              "positive_overlap_area_px2": 2813.817008457647,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                31.407321613016165,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                46.932048123123025
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 46.932048123123025,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.12991902265876598,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                44.25193939520409,
+                34.541618466627824
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.049124242696612974,
+              "positive_overlap_area_px2": 1528.533606997477,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                9.265882366521055,
+                89.94647787331485
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.18103834720123602,
+              "positive_overlap_area_px2": 833.4334832570242,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                45.22335468566581
+              ],
+              "axis_separation_uv_px": [
+                107.82953614050973,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 107.82953614050973,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.059516857040015414,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                17.508070196354765,
+                51.22216180903064
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.08154922401580744,
+              "positive_overlap_area_px2": 896.8012045615505,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                37.095691816151884,
+                61.947673729748544
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.040192104683443475,
+              "positive_overlap_area_px2": 2297.99181340628,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                107.758357570405,
+                254.97052596153935
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 276.8064896915809,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.021723967605879524,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                130.97357964060973,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                39.625218279218984
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 39.625218279218984,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.04235351907382551,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        }
+      ],
+      "layout_arm": "original",
+      "layout_pair_id": "P00",
+      "member_cell_ids": [
+        "wmf1__pilot__P00__N3__original__left"
+      ],
+      "member_commands": [
+        "left"
+      ],
+      "model_id": "N3",
+      "phase": "pilot",
+      "representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+      "representative_snapshot_cell_key": "02-wmf1-pilot-P00-N3-original-left",
+      "representative_snapshot_source": "N3_snapshot_003"
+    },
+    {
+      "camera_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                13.5447517946061,
+                4.74189888688494
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.04019819217549836,
+              "positive_overlap_area_px2": 64.22784345797545,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                33.45306250108763,
+                8.011668780393961
+              ],
+              "camera_z_interval_relation": "first_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 34.399043988872926,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.12197507975170141,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "banana"
+            },
+            {
+              "axis_overlap_uv_px": [
+                7.332848111502017,
+                19.869358670242207
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.0030794109185356966,
+              "positive_overlap_area_px2": 145.69898920184178,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                9.653099844260055,
+                89.94940915254847
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.18103282100568652,
+              "positive_overlap_area_px2": 868.2906274817495,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                0.0,
+                30.72726937015807
+              ],
+              "axis_separation_uv_px": [
+                85.69176199510844,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 85.69176199510844,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.03160380552897535,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                39.279038340375905,
+                36.93137988321257
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.05405429522511307,
+              "positive_overlap_area_px2": 1450.629086395694,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                100.59021868757878,
+                28.164817490942312
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.03517391375952683,
+              "positive_overlap_area_px2": 2833.1051507096313,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                8.640422547861192,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                31.77320594331826
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 31.77320594331826,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.10182127699742272,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                21.798179702501784,
+                49.43985589600527
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.07676156124414346,
+              "positive_overlap_area_px2": 1077.6988632869152,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_pair_rows": [
+            {
+              "axis_overlap_uv_px": [
+                59.46298820443383,
+                68.58341407729858
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                0.0
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 0.0,
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.04271165966880097,
+              "positive_overlap_area_px2": 4078.1747422982066,
+              "projected_envelope_relation": "positive_area_overlap",
+              "strictly_nearer_object_in_camera_z": null
+            },
+            {
+              "axis_overlap_uv_px": [
+                17.52065311603144,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                247.61752226301525
+              ],
+              "camera_z_interval_relation": "second_strictly_nearer_in_camera_z",
+              "euclidean_rectangle_separation_px": 247.61752226301525,
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.01910005242367102,
+              "positive_camera_z_interval_overlap_m": 0.0,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": "rubiks_cube"
+            },
+            {
+              "axis_overlap_uv_px": [
+                120.54405217142266,
+                0.0
+              ],
+              "axis_separation_uv_px": [
+                0.0,
+                39.01758867728313
+              ],
+              "camera_z_interval_relation": "overlapping_camera_z_intervals",
+              "euclidean_rectangle_separation_px": 39.01758867728313,
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "positive_camera_z_interval_gap_m": 0.0,
+              "positive_camera_z_interval_overlap_m": 0.04245616119508877,
+              "positive_overlap_area_px2": 0.0,
+              "projected_envelope_relation": "positive_separation",
+              "strictly_nearer_object_in_camera_z": null
+            }
+          ]
+        }
+      ],
+      "layout_arm": "reflected",
+      "layout_pair_id": "P00",
+      "member_cell_ids": [
+        "wmf1__pilot__P00__N3__reflected__left",
+        "wmf1__pilot__P00__N3__reflected__right"
+      ],
+      "member_commands": [
+        "left",
+        "right"
+      ],
+      "model_id": "N3",
+      "phase": "pilot",
+      "representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+      "representative_snapshot_cell_key": "01-wmf1-pilot-P00-N3-reflected-left",
+      "representative_snapshot_source": "N3_snapshot_003"
+    }
+  ],
+  "new_behavioral_cells": 0,
+  "new_model_requests": 0,
+  "predicate_semantics": {
+    "camera_depth_intervals": "Camera z is computed for the same eight AABB corners. One AABB is strictly nearer in camera z only when its maximum z is below the other AABB's minimum z; otherwise intervals overlap or touch. Camera z is not Euclidean range and this order is not a visibility result.",
+    "inherited_method_label_boundary": "The retained label calibrated_projection_and_obb_occlusion fronts a per-axis min/max AABB and target-center-ray-only implementation. This audit does not reinterpret that label as OBB or general occlusion.",
+    "projected_envelopes": "For each retained world.get_bbox-derived robot-base AABB, project its eight corners with the pinned camera formula and take independent u/v minima and maxima. Pairwise positive-area rectangle overlap, positive rectangle separation or exact boundary touch is then computed without an epsilon or scientific threshold."
+  },
+  "prior_aabb_frame_support_package": {
+    "audit": {
+      "bytes": 27383,
+      "path": "workshops/corl2026_world_models/analysis/audit_retained_aabb_frame_support.py",
+      "sha256": "c0ba1ddaf7c3026d1cfda741a7b68080205751436dc31b315deac236265dd42f"
+    },
+    "canonical_regeneration_verified": true,
+    "commit": "196bc61303c22100a1b9676f29ee01a9be43de9a",
+    "report": {
+      "bytes": 25499,
+      "path": "workshops/corl2026_world_models/results/retained_aabb_frame_support_diagnostic.json",
+      "sha256": "aec60c8a6674e5dc9a57f13adaf568c7c621c0f88c57210a082a6b1ac98e165e"
+    },
+    "verified_source_scope": {
+      "all_occurrences_confined_to_four_pinned_snapshots": true,
+      "object_aabb_occurrences": 32,
+      "strict_json_blobs": 370,
+      "strict_json_bytes": 1925346
+    }
+  },
+  "resource_budget_qualified": false,
+  "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+  "schema_version": "wmf-retained-aabb-pair-geometry-diagnostic-v1",
+  "selection": {
+    "availability_selected": true,
+    "cross_time_field_join_performed": false,
+    "full_completed_cohort": false,
+    "mapping_camera_object_pairs": 72,
+    "mapping_camera_rows": 24,
+    "representative_sample": false,
+    "terminal_matched_unique_cells": 7,
+    "unique_arm_level_reset_mappings": 6
+  },
+  "summary": {
+    "camera_relation_counts": {
+      "head_camera": {
+        "first_strictly_nearer_in_camera_z": 10,
+        "overlapping_camera_z_intervals": 8,
+        "positive_area_overlap": 10,
+        "positive_separation": 8
+      },
+      "over_shoulder_left_camera": {
+        "overlapping_camera_z_intervals": 15,
+        "positive_area_overlap": 12,
+        "positive_separation": 6,
+        "second_strictly_nearer_in_camera_z": 3
+      },
+      "over_shoulder_right_camera": {
+        "overlapping_camera_z_intervals": 15,
+        "positive_area_overlap": 12,
+        "positive_separation": 6,
+        "second_strictly_nearer_in_camera_z": 3
+      },
+      "wrist_cam": {
+        "overlapping_camera_z_intervals": 12,
+        "positive_area_overlap": 5,
+        "positive_separation": 13,
+        "second_strictly_nearer_in_camera_z": 6
+      }
+    },
+    "camera_rows": 24,
+    "maximum_camera_z_gap": {
+      "camera_name": "over_shoulder_left_camera",
+      "layout_arm": "reflected",
+      "layout_pair_id": "D01",
+      "meters": 0.14212397257408016,
+      "model_id": "D1",
+      "object_pair": [
+        "banana",
+        "rubiks_cube"
+      ],
+      "representative_cell_id": "wmf1__development__D01__D1__reflected__right"
+    },
+    "maximum_camera_z_interval_overlap": {
+      "camera_name": "over_shoulder_right_camera",
+      "layout_arm": "original",
+      "layout_pair_id": "P00",
+      "meters": 0.18103834720123602,
+      "model_id": "N3",
+      "object_pair": [
+        "banana",
+        "bowl"
+      ],
+      "representative_cell_id": "wmf1__pilot__P00__N3__original__left"
+    },
+    "maximum_projected_overlap_area": {
+      "camera_name": "wrist_cam",
+      "layout_arm": "reflected",
+      "layout_pair_id": "D02",
+      "model_id": "D1",
+      "object_pair": [
+        "banana",
+        "bowl"
+      ],
+      "representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+      "square_pixels": 10724.657636920785
+    },
+    "maximum_projected_separation": {
+      "camera_name": "wrist_cam",
+      "layout_arm": "reflected",
+      "layout_pair_id": "D01",
+      "model_id": "D1",
+      "object_pair": [
+        "banana",
+        "rubiks_cube"
+      ],
+      "pixels": 292.3591634814255,
+      "representative_cell_id": "wmf1__development__D01__D1__reflected__right"
+    },
+    "minimum_positive_camera_z_gap": {
+      "camera_name": "wrist_cam",
+      "layout_arm": "reflected",
+      "layout_pair_id": "D02",
+      "meters": 0.001748286047414227,
+      "model_id": "D1",
+      "object_pair": [
+        "banana",
+        "rubiks_cube"
+      ],
+      "representative_cell_id": "wmf1__development__D02__D1__reflected__right"
+    },
+    "minimum_positive_projected_separation": {
+      "camera_name": "head_camera",
+      "layout_arm": "original",
+      "layout_pair_id": "D01",
+      "model_id": "D1",
+      "object_pair": [
+        "banana",
+        "bowl"
+      ],
+      "pixels": 9.743719763835372,
+      "representative_cell_id": "wmf1__development__D01__D1__original__left"
+    },
+    "object_pair_relation_counts": {
+      "banana|bowl": {
+        "overlapping_camera_z_intervals": 24,
+        "positive_area_overlap": 21,
+        "positive_separation": 3
+      },
+      "banana|rubiks_cube": {
+        "first_strictly_nearer_in_camera_z": 6,
+        "overlapping_camera_z_intervals": 6,
+        "positive_separation": 24,
+        "second_strictly_nearer_in_camera_z": 12
+      },
+      "bowl|rubiks_cube": {
+        "first_strictly_nearer_in_camera_z": 4,
+        "overlapping_camera_z_intervals": 20,
+        "positive_area_overlap": 18,
+        "positive_separation": 6
+      }
+    },
+    "object_pairs": 72,
+    "overlapping_camera_z_intervals": 50,
+    "positive_area_projected_envelope_overlaps": 39,
+    "positive_projected_envelope_separations": 33,
+    "projected_envelope_touches": 0,
+    "projected_overlap_and_depth_overlap": 35,
+    "projected_overlap_and_strict_depth_order": 4,
+    "projected_separation_and_depth_overlap": 15,
+    "projected_separation_and_strict_depth_order": 18,
+    "strictly_nearer_banana": 6,
+    "strictly_nearer_bowl": 4,
+    "strictly_nearer_rubiks_cube": 12,
+    "strictly_ordered_camera_z_intervals": 22,
+    "touching_camera_z_intervals": 0,
+    "unique_reset_mappings": 6
+  }
+}

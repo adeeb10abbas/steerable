@@ -1,0 +1,1010 @@
+{
+  "claim_boundaries": {
+    "aabb_envelopes_only": "The inherited projected rectangles bound retained axis-aligned boxes. They are not OBBs, exact meshes, silhouettes, segmentation masks, image footprints or object pixels.",
+    "no_measurement_or_endpoint_inference": "No RGB artifact, crop/time mapping, labelability, human annotation, measurement feasibility, r0/rhat/r endpoint or generated/executed correspondence is authenticated. No A1-A9 result follows.",
+    "no_visibility_or_occlusion_inference": "Envelope relation changes do not prove silhouette changes, visibility or occlusion. Camera-z relation changes do not identify a visible front object. RGB content, robot/static-scene surfaces and general occlusion are not analyzed.",
+    "science_and_release": "No scientific acceptance threshold, fixture/camera qualification, current-state inference, gate promotion, dispatch/release authority or new behavioral evidence follows.",
+    "selection_confounding_and_effects": "The three mapping pairs are availability-selected, not representative. D01/D02 are command-confounded and P00 has unequal command membership. The arrow denotes comparison direction, not time, causation or motion. No layout, command, model, task-success, population or camera-ranking effect is estimated."
+  },
+  "comparisons": [
+    {
+      "camera_transition_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.3442635619385328,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -1.828949673310376e-05,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "first_strictly_nearer_in_camera_z->first_strictly_nearer_in_camera_z",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 12.32683184185641,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 4.594714201111572e-06,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.0,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "banana->banana"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "first_strictly_nearer_in_camera_z->first_strictly_nearer_in_camera_z",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": -8.886432000920763e-06,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.0,
+              "reflected_minus_original_positive_overlap_area_px2": 0.03410897611367858,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "bowl->bowl"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -0.1374384067847645,
+              "reflected_minus_original_positive_overlap_area_px2": 2143.931579428385,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": true,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->second_strictly_nearer_in_camera_z",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": -45.83279307889717,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.14212397257408016,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -0.04381866498963605,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": true,
+              "strictly_nearer_object_transition": "none->rubiks_cube"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.009788160351105413,
+              "reflected_minus_original_positive_overlap_area_px2": -27.65289983379455,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.1366119501025247,
+              "reflected_minus_original_positive_overlap_area_px2": -2197.27141122008,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": true,
+              "camera_z_interval_relation_transition": "second_strictly_nearer_in_camera_z->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 83.2817513524775,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": -0.11409751377367228,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.07182142590534979,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": true,
+              "strictly_nearer_object_transition": "rubiks_cube->none"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -0.009774178129941746,
+              "reflected_minus_original_positive_overlap_area_px2": 255.052020389588,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": true,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 18.042060546850166,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -0.003150190838068445,
+              "reflected_minus_original_positive_overlap_area_px2": -309.7810343258993,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "second_strictly_nearer_in_camera_z->second_strictly_nearer_in_camera_z",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 41.78075540680899,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0029858846322009525,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.0,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "rubiks_cube->rubiks_cube"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": -0.5397210736093427,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.00015673449117287186,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            }
+          ]
+        }
+      ],
+      "command_comparison": {
+        "classification": "disjoint_single_commands_command_confounded",
+        "fully_command_matched": false,
+        "isolated_layout_effect_estimate": false,
+        "shared_commands": []
+      },
+      "layout_pair_id": "D01",
+      "model_id": "D1",
+      "original_mapping": {
+        "member_cell_ids": [
+          "wmf1__development__D01__D1__original__left"
+        ],
+        "member_commands": [
+          "left"
+        ],
+        "representative_cell_id": "wmf1__development__D01__D1__original__left",
+        "representative_snapshot_cell_key": "00-wmf1-development-D01-D1-original-left",
+        "representative_snapshot_source": "D01_snapshot"
+      },
+      "phase": "development",
+      "reflected_mapping": {
+        "member_cell_ids": [
+          "wmf1__development__D01__D1__reflected__right"
+        ],
+        "member_commands": [
+          "right"
+        ],
+        "representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+        "representative_snapshot_cell_key": "01-wmf1-development-D01-D1-reflected-right",
+        "representative_snapshot_source": "D01_snapshot"
+      }
+    },
+    {
+      "camera_transition_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -3.6671919982911305e-05,
+              "reflected_minus_original_positive_overlap_area_px2": 11.033684889536374,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "first_strictly_nearer_in_camera_z->first_strictly_nearer_in_camera_z",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": -10.286986384131446,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": -0.0006300372159473433,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.0,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "banana->banana"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "first_strictly_nearer_in_camera_z->first_strictly_nearer_in_camera_z",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": -0.0006683906442566112,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.0,
+              "reflected_minus_original_positive_overlap_area_px2": 5.223290896044325,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "bowl->bowl"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.06840677331527512,
+              "reflected_minus_original_positive_overlap_area_px2": -868.9898691391099,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": true,
+              "camera_z_interval_relation_transition": "second_strictly_nearer_in_camera_z->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 31.693238605566023,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": -0.08799362578031211,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.05998973010232267,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": true,
+              "strictly_nearer_object_transition": "rubiks_cube->none"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -0.013482791216167245,
+              "reflected_minus_original_positive_overlap_area_px2": 196.27485547059325,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -0.0676191134647729,
+              "reflected_minus_original_positive_overlap_area_px2": 927.2331554888842,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": true,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->second_strictly_nearer_in_camera_z",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": -69.27968389706876,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0599264838764213,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -0.08691767233368941,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": true,
+              "strictly_nearer_object_transition": "none->rubiks_cube"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.01466448735742365,
+              "reflected_minus_original_positive_overlap_area_px2": -436.0959697702507,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.0025775774332132406,
+              "reflected_minus_original_positive_overlap_area_px2": 3818.2612353330132,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "second_strictly_nearer_in_camera_z->second_strictly_nearer_in_camera_z",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": -19.475815640686733,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": -0.0026029355701301937,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.0,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "rubiks_cube->rubiks_cube"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": -0.14695007366066193,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 2.61915091227527e-05,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            }
+          ]
+        }
+      ],
+      "command_comparison": {
+        "classification": "disjoint_single_commands_command_confounded",
+        "fully_command_matched": false,
+        "isolated_layout_effect_estimate": false,
+        "shared_commands": []
+      },
+      "layout_pair_id": "D02",
+      "model_id": "D1",
+      "original_mapping": {
+        "member_cell_ids": [
+          "wmf1__development__D02__D1__original__left"
+        ],
+        "member_commands": [
+          "left"
+        ],
+        "representative_cell_id": "wmf1__development__D02__D1__original__left",
+        "representative_snapshot_cell_key": "01-wmf1-development-D02-D1-original-left",
+        "representative_snapshot_source": "D02_snapshot"
+      },
+      "phase": "development",
+      "reflected_mapping": {
+        "member_cell_ids": [
+          "wmf1__development__D02__D1__reflected__right"
+        ],
+        "member_commands": [
+          "right"
+        ],
+        "representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+        "representative_snapshot_cell_key": "00-wmf1-development-D02-D1-reflected-right",
+        "representative_snapshot_source": "D02_snapshot"
+      }
+    },
+    {
+      "camera_transition_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 1.3941216527868505e-05,
+              "reflected_minus_original_positive_overlap_area_px2": 5.017829909952397,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "first_strictly_nearer_in_camera_z->first_strictly_nearer_in_camera_z",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": -8.865499003253639,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": -8.572249244531704e-05,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.0,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "banana->banana"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 6.917516955384784e-05,
+              "reflected_minus_original_positive_overlap_area_px2": -1.3650407159049678,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.14633422617754954,
+              "reflected_minus_original_positive_overlap_area_px2": -1945.5263809758972,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": true,
+              "camera_z_interval_relation_transition": "second_strictly_nearer_in_camera_z->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 38.75971387198541,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": -0.12991902265876598,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.03160380552897535,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": true,
+              "strictly_nearer_object_transition": "rubiks_cube->none"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.004930052528500095,
+              "reflected_minus_original_positive_overlap_area_px2": -77.9045206017829,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -0.14586443344170918,
+              "reflected_minus_original_positive_overlap_area_px2": 1999.671667452607,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": true,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->second_strictly_nearer_in_camera_z",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": -76.05633019719147,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.10182127699742272,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -0.059516857040015414,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": true,
+              "strictly_nearer_object_transition": "none->rubiks_cube"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": -0.004787662771663981,
+              "reflected_minus_original_positive_overlap_area_px2": 180.89765872536464,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_pair_transition_rows": [
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "banana",
+                "bowl"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_area_overlap->positive_area_overlap",
+              "reflected_minus_original_euclidean_rectangle_separation_px": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.0025195549853574972,
+              "reflected_minus_original_positive_overlap_area_px2": 1780.1829288919266,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "second_strictly_nearer_in_camera_z->second_strictly_nearer_in_camera_z",
+              "objects": [
+                "banana",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": -29.18896742856566,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": -0.0026239151822085027,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.0,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "rubiks_cube->rubiks_cube"
+            },
+            {
+              "camera_z_interval_relation_changed": false,
+              "camera_z_interval_relation_transition": "overlapping_camera_z_intervals->overlapping_camera_z_intervals",
+              "objects": [
+                "bowl",
+                "rubiks_cube"
+              ],
+              "projected_envelope_relation_changed": false,
+              "projected_envelope_relation_transition": "positive_separation->positive_separation",
+              "reflected_minus_original_euclidean_rectangle_separation_px": -0.6076296019358551,
+              "reflected_minus_original_positive_camera_z_interval_gap_m": 0.0,
+              "reflected_minus_original_positive_camera_z_interval_overlap_m": 0.00010264212126326333,
+              "reflected_minus_original_positive_overlap_area_px2": 0.0,
+              "strictly_nearer_object_changed": false,
+              "strictly_nearer_object_transition": "none->none"
+            }
+          ]
+        }
+      ],
+      "command_comparison": {
+        "classification": "shared_left_command_with_extra_reflected_right_member",
+        "fully_command_matched": false,
+        "isolated_layout_effect_estimate": false,
+        "shared_commands": [
+          "left"
+        ]
+      },
+      "layout_pair_id": "P00",
+      "model_id": "N3",
+      "original_mapping": {
+        "member_cell_ids": [
+          "wmf1__pilot__P00__N3__original__left"
+        ],
+        "member_commands": [
+          "left"
+        ],
+        "representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+        "representative_snapshot_cell_key": "02-wmf1-pilot-P00-N3-original-left",
+        "representative_snapshot_source": "N3_snapshot_003"
+      },
+      "phase": "pilot",
+      "reflected_mapping": {
+        "member_cell_ids": [
+          "wmf1__pilot__P00__N3__reflected__left",
+          "wmf1__pilot__P00__N3__reflected__right"
+        ],
+        "member_commands": [
+          "left",
+          "right"
+        ],
+        "representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+        "representative_snapshot_cell_key": "01-wmf1-pilot-P00-N3-reflected-left",
+        "representative_snapshot_source": "N3_snapshot_003"
+      }
+    }
+  ],
+  "confirmation_released": false,
+  "evidence_boundaries": {
+    "a1_a9_result": false,
+    "camera_crop_or_time_alignment_authenticated": false,
+    "camera_ranking_estimated": false,
+    "causal_effect_estimated": false,
+    "current_state_inferred": false,
+    "fixture_pass_fail_classification_created": false,
+    "forecast_or_persistence_metric": false,
+    "gate_advanced": false,
+    "general_occlusion_analyzed": false,
+    "human_image_centroids_used": false,
+    "image_footprint_or_object_pixels_inferred": false,
+    "iou_computed": false,
+    "isolated_layout_or_command_effect_estimated": false,
+    "labelability_estimated": false,
+    "measurement_feasibility_qualified": false,
+    "obb_or_exact_mesh_analyzed": false,
+    "raw_camera_bytes_read": false,
+    "raw_pvc_bytes_read": false,
+    "release_authority": false,
+    "rgb_or_image_content_analyzed": false,
+    "robot_or_static_scene_occlusion_analyzed": false,
+    "scientific_threshold_applied": false,
+    "silhouette_or_segmentation_analyzed": false,
+    "task_success_or_model_rate": false,
+    "temporal_transition_inferred": false,
+    "visibility_inferred": false
+  },
+  "finding": "Across 36 availability-selected original-to-reflected retained-geometry rows, projected AABB-envelope relation is unchanged for 35 and changes from positive-area overlap to positive separation for one. Camera-z interval relation is unchanged for 30 and changes between interval overlap and second-object-strictly-nearer for six. D01 and D02 are command-confounded; these descriptive transitions do not estimate an effect.",
+  "forecast_accuracy_estimated": false,
+  "labels_created": 0,
+  "new_behavioral_cells": 0,
+  "new_model_requests": 0,
+  "predicate_semantics": {
+    "camera_depth_intervals": "The inherited camera-z intervals use the same AABB corners. Relation transitions and reflected-minus-original positive-gap and interval-overlap deltas use exact stored floats. Camera z is not Euclidean range and depth order is not visibility or silhouette order.",
+    "command_boundary": "D01 and D02 compare original-left against reflected-right mappings, so layout arm is command-confounded. P00 contains a shared left command, but its reflected mapping also contains a right-command member. No comparison isolates a layout, command, model or task effect.",
+    "comparison": "For each availability-selected phase/layout-pair/model key, compare the pinned original and reflected reset-mapping rows with identical camera configuration hashes and object-pair order. This is a paired retained-geometry description, not a temporal transition or causal intervention.",
+    "projected_envelopes": "The inherited rectangles are independent u/v minima and maxima of projected world.get_bbox-derived axis-aligned-box corners. Relation transitions and reflected-minus-original overlap-area and Euclidean rectangle-separation deltas use exact stored floats without epsilon or scientific threshold. No IoU is computed."
+  },
+  "resource_budget_qualified": false,
+  "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+  "schema_version": "wmf-retained-aabb-reflection-transition-diagnostic-v1",
+  "selection": {
+    "D01_D02_command_confounded": true,
+    "P00_shared_left_command_with_extra_reflected_right_member": true,
+    "availability_selected": true,
+    "comparable_original_reflected_mapping_pairs": 3,
+    "cross_time_field_join_performed": false,
+    "full_completed_cohort": false,
+    "isolated_layout_effect_estimated": false,
+    "mapping_pair_camera_rows": 12,
+    "object_pair_transition_rows": 36,
+    "representative_sample": false,
+    "source_reset_mappings": 6
+  },
+  "summary": {
+    "all_relations_unchanged": 29,
+    "any_relation_changed": 7,
+    "both_relations_changed": 0,
+    "camera_z_interval_relation_changed": 6,
+    "camera_z_interval_relation_transitions": {
+      "first_strictly_nearer_in_camera_z->first_strictly_nearer_in_camera_z": 5,
+      "overlapping_camera_z_intervals->overlapping_camera_z_intervals": 22,
+      "overlapping_camera_z_intervals->second_strictly_nearer_in_camera_z": 3,
+      "second_strictly_nearer_in_camera_z->overlapping_camera_z_intervals": 3,
+      "second_strictly_nearer_in_camera_z->second_strictly_nearer_in_camera_z": 3
+    },
+    "camera_z_interval_relation_unchanged": 30,
+    "comparable_original_reflected_mapping_pairs": 3,
+    "comparison_pairs_with_disjoint_command_sets": 2,
+    "comparison_pairs_with_identical_command_sets": 0,
+    "comparison_pairs_with_shared_commands": 1,
+    "isolated_layout_effect_estimates": 0,
+    "mapping_pair_camera_rows": 12,
+    "object_pair_transition_rows": 36,
+    "projected_relation_changed": 1,
+    "projected_relation_transitions": {
+      "positive_area_overlap->positive_area_overlap": 19,
+      "positive_area_overlap->positive_separation": 1,
+      "positive_separation->positive_separation": 16
+    },
+    "projected_relation_unchanged": 35,
+    "scalar_delta_extrema": {
+      "euclidean_rectangle_separation_px": {
+        "maximum": {
+          "camera_name": "over_shoulder_right_camera",
+          "layout_pair_id": "D01",
+          "model_id": "D1",
+          "object_pair": [
+            "banana",
+            "rubiks_cube"
+          ],
+          "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+          "phase": "development",
+          "reflected_minus_original": 83.2817513524775,
+          "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right"
+        },
+        "minimum": {
+          "camera_name": "over_shoulder_right_camera",
+          "layout_pair_id": "P00",
+          "model_id": "N3",
+          "object_pair": [
+            "banana",
+            "rubiks_cube"
+          ],
+          "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+          "phase": "pilot",
+          "reflected_minus_original": -76.05633019719147,
+          "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left"
+        }
+      },
+      "positive_camera_z_interval_gap_m": {
+        "maximum": {
+          "camera_name": "over_shoulder_left_camera",
+          "layout_pair_id": "D01",
+          "model_id": "D1",
+          "object_pair": [
+            "banana",
+            "rubiks_cube"
+          ],
+          "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+          "phase": "development",
+          "reflected_minus_original": 0.14212397257408016,
+          "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right"
+        },
+        "minimum": {
+          "camera_name": "over_shoulder_left_camera",
+          "layout_pair_id": "P00",
+          "model_id": "N3",
+          "object_pair": [
+            "banana",
+            "rubiks_cube"
+          ],
+          "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+          "phase": "pilot",
+          "reflected_minus_original": -0.12991902265876598,
+          "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left"
+        }
+      },
+      "positive_camera_z_interval_overlap_m": {
+        "maximum": {
+          "camera_name": "over_shoulder_left_camera",
+          "layout_pair_id": "P00",
+          "model_id": "N3",
+          "object_pair": [
+            "banana",
+            "bowl"
+          ],
+          "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+          "phase": "pilot",
+          "reflected_minus_original": 0.14633422617754954,
+          "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left"
+        },
+        "minimum": {
+          "camera_name": "over_shoulder_right_camera",
+          "layout_pair_id": "P00",
+          "model_id": "N3",
+          "object_pair": [
+            "banana",
+            "bowl"
+          ],
+          "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+          "phase": "pilot",
+          "reflected_minus_original": -0.14586443344170918,
+          "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left"
+        }
+      },
+      "positive_overlap_area_px2": {
+        "maximum": {
+          "camera_name": "wrist_cam",
+          "layout_pair_id": "D02",
+          "model_id": "D1",
+          "object_pair": [
+            "banana",
+            "bowl"
+          ],
+          "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+          "phase": "development",
+          "reflected_minus_original": 3818.2612353330132,
+          "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right"
+        },
+        "minimum": {
+          "camera_name": "over_shoulder_right_camera",
+          "layout_pair_id": "D01",
+          "model_id": "D1",
+          "object_pair": [
+            "banana",
+            "bowl"
+          ],
+          "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+          "phase": "development",
+          "reflected_minus_original": -2197.27141122008,
+          "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right"
+        }
+      }
+    },
+    "scalar_delta_sign_counts": {
+      "euclidean_rectangle_separation_px": {
+        "decrease": 10,
+        "increase": 7,
+        "unchanged": 19
+      },
+      "positive_camera_z_interval_gap_m": {
+        "decrease": 9,
+        "increase": 5,
+        "unchanged": 22
+      },
+      "positive_camera_z_interval_overlap_m": {
+        "decrease": 12,
+        "increase": 16,
+        "unchanged": 8
+      },
+      "positive_overlap_area_px2": {
+        "decrease": 8,
+        "increase": 12,
+        "unchanged": 16
+      }
+    },
+    "strictly_nearer_object_transitions": {
+      "banana->banana": 3,
+      "bowl->bowl": 2,
+      "none->none": 22,
+      "none->rubiks_cube": 3,
+      "rubiks_cube->none": 3,
+      "rubiks_cube->rubiks_cube": 3
+    }
+  },
+  "turn2845_pair_geometry_package": {
+    "audit": {
+      "bytes": 29316,
+      "path": "workshops/corl2026_world_models/analysis/audit_retained_aabb_pair_geometry.py",
+      "sha256": "afd3d390eab2aca7376769d05cc114e326411378b9ea75562e0177d1e37e75b5"
+    },
+    "canonical_regeneration_verified": true,
+    "commit": "5dc9da6b7093beec48597f50f265e3b1c207669e",
+    "report": {
+      "bytes": 75778,
+      "path": "workshops/corl2026_world_models/results/retained_aabb_pair_geometry_diagnostic.json",
+      "sha256": "6888c2b0e30e022ec30959fe44549df85c54030a39917ee197fc1ca44df595d7"
+    }
+  }
+}

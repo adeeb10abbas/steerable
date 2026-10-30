@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-10-30T10:50:33Z",
+  "as_of_utc": "2026-10-30T11:22:59Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -41,8 +41,8 @@
     "active_requests_launched_excluded": 0,
     "invariant": "18_nonbehavioral + 1440_valid_behavioral + 2_technical_invalid_behavioral = 1460_terminal_requests"
   },
-  "phase": "valid40_of_232_development_declared_request_cell_join_authenticated_results_publication_stalled_external_gm_inspection_required_confirmation_held",
-  "cluster_status": "The independent Git/PVC route previously passed after the work-Mac cutoff, but the results branch has not advanced beyond commit 12839900e5c46299e11fff4813e8602949055b86 at 2026-09-13T14:40:32Z. Its generation998 snapshot last published development-resource-compiler-formal-001 as claimed on worker09 with child PID16032 and heartbeat 2026-09-13T14:40:29.959470Z; current resource001 and camera002 states are unknown. The control queue is intentionally empty with shutdown false and SHA-256 9c1bd52373df4308c3954c5b4598d03d66c9d5940182674904b1279d01a7346f. No new job may be released until an authorized GM inspection reconciles owned processes, claims, results and the shared release lock and a fresh result publication succeeds. Confirmation inference remains unreleased.",
+  "phase": "valid40_of_232_development_request_recovery_lineage_manifest_and_fail_closed_verifier_published_results_publication_stalled_external_gm_inspection_required_confirmation_held",
+  "cluster_status": "The independent Git/PVC route previously passed after the work-Mac cutoff, but the bounded dedicated-branch watch through 2026-10-30T11:20:40Z found the results branch unchanged at commit 12839900e5c46299e11fff4813e8602949055b86. Its generation998 snapshot last published development-resource-compiler-formal-001 as claimed on worker09 with child PID16032 and heartbeat 2026-09-13T14:40:29.959470Z; current resource001 and camera002 states remain unknown. The cached control queue is empty with shutdown false and SHA-256 9c1bd52373df4308c3954c5b4598d03d66c9d5940182674904b1279d01a7346f, but this is not current GM state evidence. No new job or retrieval descriptor may be released until an authorized GM inspection reconciles owned processes, claims, results and the shared release lock and a fresh result publication succeeds. Confirmation inference remains unreleased.",
   "published_development_coverage_audit": {
     "source_commit": "df576e458e546dcd69c5d676077d16df9b0ae47d",
     "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
@@ -946,6 +946,194 @@
     "next_observation_not_before_utc": "2026-10-30T11:10:00Z",
     "next_action": "Keep the published queue empty and non-shutdown. First, an authorized GM operator or existing approved GM management path must reconcile only ali-owned coordinator/workers/task PVC and publish a fresh results snapshot; safe_to_release_new_work remains false and no retrieval descriptor may be released until that snapshot reopens the release gate. Only then use the dedicated control/results branches for 56-descriptor retrieval/return and byte/SHA verification. After retrieval, authenticate raw request contents and timing inventories against this fixed 1,152-row/32-cell mapping before determining eligibility, selection, blinded media, legitimate two-rater labels, consensus, threshold or confirmation release. Never rerun a valid, fenced or live episode."
   },
+  "development_request_recovery_lineage_20261030": {
+    "source_commit": "296fefc0ad14b3320d7c45a8a11fde6f0908deb6",
+    "authorized_control_push_verified": true,
+    "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+    "source_pins": {
+      "spec_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
+      "preflight_commit": "45c3a5d591c539779e8ff7db53d4af1c64273271",
+      "request_cell_join_commit": "dec8f8a63e3a45795cc47897396c20922961b4d6",
+      "results_commit": "12839900e5c46299e11fff4813e8602949055b86"
+    },
+    "audit_path": "../../analysis/audit_development_request_recovery_lineage.py",
+    "audit_sha256": "9ad43d75ab3d6ab97551842868839061282bca14e72f56bfed2039768e689d97",
+    "report_path": "../../results/development_request_recovery_lineage.json",
+    "report_sha256": "5714efd75bde846c41d1bb3f0ec88df427d3b18bf8c0df62633b6b38b8a95878",
+    "test_path": "../../tests/test_development_request_recovery_lineage.py",
+    "test_sha256": "6af96bb5ac5a965a9c1f16e3fcbddd0bdca2a9823b7c185162efcc3a41f66cdf",
+    "authenticated_source_blobs": {
+      "count": 3,
+      "source_bytes": 594799,
+      "canonical_bytes": 583,
+      "sha256": "234cd6f8dc73653fe8f14d831921ed22dea94292c1a7266104f37bdd4e6dab38"
+    },
+    "declared_request_recovery_lineage": {
+      "development_cells": 32,
+      "D1_cells": 16,
+      "N3_cells": 16,
+      "request_rows": 1152,
+      "D1_request_rows": 912,
+      "N3_request_rows": 240,
+      "cross_model_identity_overlap": 0,
+      "request_lineage_index": {
+        "count": 1152,
+        "canonical_bytes": 160740,
+        "sha256": "165b87ad0d260478fb2ba13348887edc723d962e3ed29b53539cf2025402d935"
+      },
+      "cell_lineage_index": {
+        "count": 32,
+        "canonical_bytes": 4590,
+        "sha256": "f25291d6eb1dbfbf970b0e9f42817fe3b5437294cdc513100384a2fd3687c2d3"
+      },
+      "declared_dependencies": 56,
+      "declared_dependency_bytes": 32664538,
+      "dependency_index": {
+        "count": 56,
+        "canonical_bytes": 17801,
+        "sha256": "0c13131e11b40ab710f8622c761f68b19f35a776d316d41cc128d3eb39294ad1"
+      },
+      "dependency_categories": {
+        "cell_receipts": {
+          "count": 32,
+          "bytes": 1711371
+        },
+        "timing_outputs": {
+          "count": 4,
+          "bytes": 10392930
+        },
+        "compiler_outputs": {
+          "count": 8,
+          "bytes": 14007403
+        },
+        "fixed_observation_capture_receipts": {
+          "count": 4,
+          "bytes": 320938
+        },
+        "fixed_observation_fixtures": {
+          "count": 8,
+          "bytes": 6231896
+        }
+      },
+      "cell_scope_dependencies": 48,
+      "study_scope_compiler_dependencies": 8,
+      "dependency_partition_complete": true,
+      "cell_scope_edges": 160,
+      "edges_per_cell": 5,
+      "edge_index": {
+        "count": 160,
+        "canonical_bytes": 23008,
+        "sha256": "18c4c537ca3514184579779fd4f81ae6d44b3f6b4c06d9d4770d55598ecc2686"
+      }
+    },
+    "historical_timing_scope": {
+      "D1_total_requests": 912,
+      "D1_source_proven_full_decode_requests": 240,
+      "D1_native_clock_matched_requests": 224,
+      "D1_prefix_truncated_requests": 16,
+      "D1_source_unmapped_incremental_decodes": 672,
+      "D1_physical_time_coverage_complete": false,
+      "N3_retained_request_identities": 240,
+      "all_request_identities_mapped_to_cells": true,
+      "all_requests_timing_complete": false
+    },
+    "future_bundle_verifier": {
+      "activation_requires_verify_verify_root_allow_byte_read_and_verification_output": true,
+      "exact_expected_regular_files": 56,
+      "exact_isolated_tree_required": true,
+      "no_concurrent_writers_precondition": true,
+      "component_by_component_nofollow_root_pin": true,
+      "metadata_before_content_read": true,
+      "held_directory_and_file_descriptor_barrier": true,
+      "receipt_output_nofollow_no_clobber": true,
+      "does_not_prove_external_writer_quiescence": true,
+      "does_not_prove_atomic_filesystem_snapshot": true,
+      "does_not_prove_post_barrier_immutability": true
+    },
+    "pending_raw_verification": {
+      "expected_manifest_created": true,
+      "retrieval_released": false,
+      "retrieval_queue_descriptor_created": false,
+      "raw_paths_opened": 0,
+      "raw_bytes_read": 0,
+      "raw_descriptor_count_verified": null,
+      "raw_descriptor_mismatch_count": null,
+      "current_raw_availability_verified": false,
+      "safe_to_release_new_work": false
+    },
+    "global_core_accounting": {
+      "planned": 232,
+      "launched": 44,
+      "terminal_valid": 40,
+      "terminal_technical_invalid": 4,
+      "active_scientific_ledger": 0
+    },
+    "global_request_accounting": {
+      "terminal": 1460,
+      "nonbehavioral": 18,
+      "valid_behavioral": 1440,
+      "technical_invalid_behavioral": 2
+    },
+    "global_valid_actions": 18000,
+    "global_valid_observations": 18040,
+    "confirmation_inference_cells": 0,
+    "new_activity": {
+      "model_requests": 0,
+      "behavioral_actions": 0,
+      "behavioral_cells": 0,
+      "request_selections": 0,
+      "annotation_media": 0,
+      "human_responses": 0,
+      "labels": 0,
+      "forecast_accuracy_estimates": 0
+    },
+    "readiness": {
+      "declared_request_recovery_lineage_ready": true,
+      "raw_request_content_ready": false,
+      "camera_alignment_ready": false,
+      "production_eligibility_ready": false,
+      "production_selection_ready": false,
+      "annotation_media_ready": false,
+      "human_annotation_ready": false,
+      "resource_freeze_ready": false,
+      "confirmation_release_ready": false
+    },
+    "qualification": {
+      "canonical_check": "passed",
+      "strict_duplicate_nonfinite_json": "passed",
+      "byte_identical_hash_seed_regenerations": 5,
+      "focused_tests": 10,
+      "clean_exact_checkout_full_tests": 826,
+      "full_test_seconds": 107.703,
+      "independent_operations_review": "GO",
+      "independent_science_review": "GO",
+      "independent_manifest_review": "GO"
+    },
+    "claim_boundary": "The retained Git audit cross-binds the exact 1,152 declared request identities and 32 cells to the exact 56-descriptor recovery manifest and emits a future fail-closed byte verifier. It opened no raw path, read no raw byte, established no current PVC availability, and created no selection, media, human evidence, label, estimate, retrieval job or scientific release.",
+    "bounded_watch": {
+      "opened_at_utc": "2026-10-30T11:10:00Z",
+      "sealed_at_utc": "2026-10-30T11:20:40Z",
+      "samples": 22,
+      "fetches": 44,
+      "first_attempt_fetches": 44,
+      "retries": 0,
+      "transients": 0,
+      "movement": 0,
+      "watched_control_commit": "2a71d32a22df674a4e94c3a791b1e794a6ddb411",
+      "watched_results_commit": "12839900e5c46299e11fff4813e8602949055b86"
+    },
+    "post_watch_control_publication": {
+      "control_commit": "296fefc0ad14b3320d7c45a8a11fde6f0908deb6",
+      "verified_at_utc": "2026-10-30T11:22:59Z",
+      "ahead": 0,
+      "behind": 0,
+      "results_commit": "12839900e5c46299e11fff4813e8602949055b86"
+    },
+    "latest_results_ref_check_utc": "2026-10-30T11:20:40Z",
+    "current_owned_process_state": "unknown_unreconciled",
+    "next_observation_not_before_utc": "2026-10-30T11:43:00Z",
+    "next_action": "Preserve the empty non-shutdown queue and exact 232-cell ceiling. First require an authorized GM operator or existing approved management path to reconcile only ali-owned coordinator, workers, task PVC, GPU descendants and release-lock state and publish a fresh results snapshot. Do not release a retrieval descriptor while safe_to_release_new_work is false. If a fresh snapshot reopens that gate, use only the dedicated control/results branches to retrieve exactly the 56 declared files into an isolated quiescent bundle, run the four-flag fail-closed byte verifier, then semantically replay request contents and timing against the frozen 1,152-row/32-cell mapping before any eligibility, selection, media, legitimate two-rater labeling, threshold or confirmation release. Never rerun a valid, fenced or live episode."
+  },
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",
     "runtime_N3": "passed_six_generation_requests_on_hash_bound_historical_observation_and_live_P00_six_request_timing_probe_with_native_time_authority",
@@ -971,7 +1159,7 @@
   "source_bundle_sha256": "a8cc6b8d393902bd4ea8561ec1236097d02c74c88c500b5477da72df576fde69",
   "durable_automatic_background_execution_configured": true,
   "automatic_background_execution_current_state": null,
-  "verified_workshop_tests": 816,
+  "verified_workshop_tests": 826,
   "prepared_schedule": {
     "path": "parallel_schedule.json",
     "jobs": 58,

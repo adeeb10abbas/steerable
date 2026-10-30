@@ -1,0 +1,370 @@
+{
+  "activation_slot_bindings": {
+    "D1.alignment_contract": {
+      "field": "alignment_contract",
+      "model_id": "D1",
+      "output_name": "d1_alignment_contract.json",
+      "producer_commit": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+      "producer_constant": "OUTPUT_NAMES",
+      "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py"
+    },
+    "D1.camera_crop_contract": {
+      "field": "camera_crop_contract",
+      "model_id": "D1",
+      "output_name": "d1_camera_crop_contract.json",
+      "producer_commit": "93993dae1902ba561b594b9ae0849bd45b37ecc2",
+      "producer_constant": "MODEL_CONTRACT_NAMES",
+      "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py"
+    },
+    "D1.physical_alignment_receipt": {
+      "field": "physical_alignment_receipt",
+      "model_id": "D1",
+      "output_name": "d1_physical_alignment_receipt.json",
+      "producer_commit": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+      "producer_constant": "OUTPUT_NAMES",
+      "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py"
+    },
+    "N3.alignment_contract": {
+      "field": "alignment_contract",
+      "model_id": "N3",
+      "output_name": "n3_alignment_contract.json",
+      "producer_commit": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+      "producer_constant": "OUTPUT_NAMES",
+      "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py"
+    },
+    "N3.camera_crop_contract": {
+      "field": "camera_crop_contract",
+      "model_id": "N3",
+      "output_name": "n3_camera_crop_contract.json",
+      "producer_commit": "93993dae1902ba561b594b9ae0849bd45b37ecc2",
+      "producer_constant": "MODEL_CONTRACT_NAMES",
+      "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py"
+    },
+    "N3.physical_alignment_receipt": {
+      "field": "physical_alignment_receipt",
+      "model_id": "N3",
+      "output_name": "n3_physical_alignment_receipt.json",
+      "producer_commit": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+      "producer_constant": "OUTPUT_NAMES",
+      "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py"
+    }
+  },
+  "audit_activity": {
+    "authenticated_git_blobs_read": 6,
+    "authenticated_git_bytes_read": 216167,
+    "external_system_reads": 0,
+    "producer_functions_invoked": 0,
+    "producer_modules_imported": 0,
+    "python_sources_parsed_with_ast": 2,
+    "raw_paths_opened": 0,
+    "runtime_bytes_read": 0
+  },
+  "authenticated_source_blobs": {
+    "canonical_framed_inventory_bytes": 1549,
+    "canonical_framed_inventory_sha256": "7361f98853ae53586f9020e81683b896e950ce3538a842e28bbd6d68145804c6",
+    "count": 6,
+    "source_bytes": 216167,
+    "sources": [
+      {
+        "bytes": 34824,
+        "commit": "9122bbf8c6b8cbdcaba5d9eda345b6c518dde8e3",
+        "path": "workshops/corl2026_world_models/results/development_annotation_activation_conformance.json",
+        "sha256": "ac0ed739b2e8026999ba318411596697a102efb5bd551ef8b96bc5822a9b4ebd"
+      },
+      {
+        "bytes": 9862,
+        "commit": "93993dae1902ba561b594b9ae0849bd45b37ecc2",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_contract.json",
+        "sha256": "31313288aac8cd917707d52eea8c4fca9ee77de1d3c0b42ade466aa78449706a"
+      },
+      {
+        "bytes": 51025,
+        "commit": "93993dae1902ba561b594b9ae0849bd45b37ecc2",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py",
+        "sha256": "6613de67a170d1719d5b4e1a5be1e2b9305e1a4b6087e8f1d2006f3e8b0f3145"
+      },
+      {
+        "bytes": 2900,
+        "commit": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_contract.json",
+        "sha256": "1f2cd1f30959d50b2e7096192240cbeeb7b6fd22c71d6d599a18fcf5feb18f61"
+      },
+      {
+        "bytes": 90462,
+        "commit": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py",
+        "sha256": "b805df1e251ca848a82a7ff0c39043d40154ce1030dd7db2e68b30b1ed09c44a"
+      },
+      {
+        "bytes": 27094,
+        "commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
+        "path": "workshops/corl2026_world_models/docs/ABLATION_SPEC.md",
+        "sha256": "fa8cbbac7bf2eff2e01f73150e5cf073f7e4f177d3c0bfd4fc1f41fb3ea9309f"
+      }
+    ]
+  },
+  "authorized_terminal_activation_chain": {
+    "authorized_queue_entrypoint_terminal_activation_reachable": false,
+    "chains": [
+      {
+        "authorized_queue_entrypoint_terminal_activation_reachable": false,
+        "model_id": "N3",
+        "nodes": [
+          {
+            "output_name": "n3_camera_crop_contract.json",
+            "producer_job_id": "camera-crop-replay-witness-002",
+            "runtime_byte_verified": false,
+            "semantic_replay_complete": false,
+            "slot_id": "N3.camera_crop_contract",
+            "state": "diagnostic_raw_outputs_may_exist_but_authorized_entrypoint_terminal_publication_is_unreachable"
+          },
+          {
+            "output_name": "n3_physical_alignment_receipt.json",
+            "producer_job_id": "development-physical-alignment-001",
+            "runtime_byte_verified": false,
+            "semantic_replay_complete": false,
+            "slot_id": "N3.physical_alignment_receipt",
+            "state": "blocked_by_absent_authenticated_passed_camera_attempt_ge_003_in_pinned_activation_evidence"
+          },
+          {
+            "output_name": "n3_alignment_contract.json",
+            "producer_job_id": "development-physical-alignment-001",
+            "runtime_byte_verified": false,
+            "semantic_replay_complete": false,
+            "slot_id": "N3.alignment_contract",
+            "state": "blocked_by_absent_authenticated_passed_camera_attempt_ge_003_in_pinned_activation_evidence"
+          }
+        ]
+      },
+      {
+        "authorized_queue_entrypoint_terminal_activation_reachable": false,
+        "model_id": "D1",
+        "nodes": [
+          {
+            "output_name": "d1_camera_crop_contract.json",
+            "producer_job_id": "camera-crop-replay-witness-002",
+            "runtime_byte_verified": false,
+            "semantic_replay_complete": false,
+            "slot_id": "D1.camera_crop_contract",
+            "state": "diagnostic_raw_outputs_may_exist_but_authorized_entrypoint_terminal_publication_is_unreachable"
+          },
+          {
+            "output_name": "d1_physical_alignment_receipt.json",
+            "producer_job_id": "development-physical-alignment-001",
+            "runtime_byte_verified": false,
+            "semantic_replay_complete": false,
+            "slot_id": "D1.physical_alignment_receipt",
+            "state": "blocked_by_absent_authenticated_passed_camera_attempt_ge_003_in_pinned_activation_evidence"
+          },
+          {
+            "output_name": "d1_alignment_contract.json",
+            "producer_job_id": "development-physical-alignment-001",
+            "runtime_byte_verified": false,
+            "semantic_replay_complete": false,
+            "slot_id": "D1.alignment_contract",
+            "state": "blocked_by_absent_authenticated_passed_camera_attempt_ge_003_in_pinned_activation_evidence"
+          }
+        ]
+      }
+    ],
+    "diagnostic_only_unreachable_slot_count": 2,
+    "downstream_blocked_slot_count": 4,
+    "end_to_end_activation_reachable_slot_count": 0,
+    "model_count": 2,
+    "required_slot_count": 6,
+    "runtime_byte_verified_slot_count": 0,
+    "semantic_replay_complete_slot_count": 0
+  },
+  "camera_producer": {
+    "diagnostic_only": true,
+    "functions": [
+      {
+        "bytes": 1452,
+        "end_line": 333,
+        "name": "build_wave",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py",
+        "sha256": "93092f9a95ec69bf63bb619aea92cef504c36b02b1b2df2471cf3d8f6138af70",
+        "start_line": 300
+      },
+      {
+        "bytes": 1285,
+        "end_line": 1098,
+        "name": "_publish_contracts",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py",
+        "sha256": "e9a64dd3690821adbd75e6e80e36f798f38c8df40132c95ddf455f94ddfb1ca8",
+        "start_line": 1068
+      },
+      {
+        "bytes": 1897,
+        "end_line": 1226,
+        "name": "run_job",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py",
+        "sha256": "2081a6e5a246a0fc9f3fa5a10d8ea7a50c47e054584229e63b7f9e8d36e28d3c",
+        "start_line": 1186
+      }
+    ],
+    "prospective_output_names": {
+      "D1": "d1_camera_crop_contract.json",
+      "N3": "n3_camera_crop_contract.json"
+    },
+    "publish_crop_contracts": false,
+    "publisher_call_site_count": 0,
+    "publisher_definition_count": 1,
+    "publisher_name_reference_count": 0,
+    "publisher_reachable_from_authorized_run_job_entrypoint": false,
+    "retained_job_id": "camera-crop-replay-witness-002",
+    "success_receipt_reachable_from_authorized_run_job_entrypoint": false,
+    "terminal_behavior": "technical_invalid_after_successful_diagnostic_children_with_raw_outputs_retained_but_not_terminally_published"
+  },
+  "claim_boundaries": {
+    "diagnostic_raw_outputs_may_exist_without_terminal_publication": true,
+    "not_established": [
+      "current GM PVC queue worker or release-lock state",
+      "current existence of any raw camera or alignment artifact",
+      "camera or physical alignment qualification",
+      "request inventory, eligibility, or selection",
+      "annotation media, labels, or rater responses",
+      "forecast accuracy or scientific treatment effect",
+      "authority to dispatch camera attempt 003 or any replacement work"
+    ],
+    "positive_claim": "Commit-pinned activation evidence and source prove that the authorized queue entrypoints cannot terminally authenticate and activate the six missing annotation slots through the pinned producer chain.",
+    "prospective_output_names_are_not_existing_artifacts": true,
+    "publisher_helper_callable_outside_authorized_entrypoint_is_not_assessed": true,
+    "retained_active_zero_is_not_live_quiescence": true,
+    "static_reachability_is_not_runtime_observation": true
+  },
+  "decision": {
+    "authorized_queue_entrypoint_terminal_activation_reachable": false,
+    "blocking_reasons": [
+      "retained camera attempt 002 is diagnostic-only",
+      "camera publisher has zero call sites",
+      "alignment rejects camera attempts below 003 and attempts 001/002",
+      "no authenticated passed camera attempt 003 or later is pinned",
+      "current GM PVC queue worker and live-quiescence state are unreconciled"
+    ],
+    "camera_attempt_003_or_later_authenticated_by_pinned_activation_evidence": false,
+    "safe_to_dispatch_replacement": false,
+    "safe_to_materialize_annotation_package": false,
+    "safe_to_release": false,
+    "status": "pinned_authorized_terminal_chain_cannot_authenticate_and_activate_six_missing_slots"
+  },
+  "gate_state": {
+    "annotation_media_ready": false,
+    "camera_alignment_ready": false,
+    "confirmation_release_ready": false,
+    "core_episode_ceiling": 232,
+    "current_GM_PVC_worker_state_reconciled": false,
+    "development_annotation_gate_ready": false,
+    "human_annotation_ready": false,
+    "live_quiescence_inferred": false,
+    "resource_freeze_ready": false,
+    "retained_snapshot_active_launched_cells": 0,
+    "safe_to_release_new_work": false
+  },
+  "global_study_snapshot": {
+    "active_launched_cells": 0,
+    "confirmation_inference_cells": 0,
+    "launched_core_cells": 44,
+    "nonbehavioral_requests": 18,
+    "planned_core_cells": 232,
+    "technical_invalid_behavioral_requests": 2,
+    "terminal_requests": 1460,
+    "terminal_technical_invalid_cells": 4,
+    "terminal_valid_cells": 40,
+    "valid_behavioral_actions": 18000,
+    "valid_behavioral_observations": 18040,
+    "valid_behavioral_requests": 1440
+  },
+  "new_activity": {
+    "annotation_media": 0,
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "confirmation_inference_cells": 0,
+    "forecast_accuracy_estimates": 0,
+    "human_responses": 0,
+    "labels": 0,
+    "model_requests": 0,
+    "queue_descriptors": 0,
+    "request_rows": 0,
+    "request_selections": 0,
+    "retrieval_jobs": 0,
+    "runnable_manifests": 0
+  },
+  "physical_alignment_producer": {
+    "camera_terminal_minimum_attempt": 3,
+    "forbidden_camera_job_ids": [
+      "camera-crop-replay-witness-001",
+      "camera-crop-replay-witness-002"
+    ],
+    "functions": [
+      {
+        "bytes": 435,
+        "end_line": 686,
+        "name": "_camera_attempt",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py",
+        "sha256": "1d19422bf045d545d14b8739a3e958ddba5c35de7d833b9ebf64b773cf7a0913",
+        "start_line": 677
+      },
+      {
+        "bytes": 3270,
+        "end_line": 767,
+        "name": "_validate_camera_job",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py",
+        "sha256": "b5f7911ca3cab219a30515770e425768a2358bd1e147cf133553f413530ac674",
+        "start_line": 689
+      },
+      {
+        "bytes": 4432,
+        "end_line": 912,
+        "name": "validate_local_prerequisites",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py",
+        "sha256": "1d5a2aae095e1f244d8455d407a9110c02181ea262c6f001cbaa7393fa4a3fc3",
+        "start_line": 805
+      },
+      {
+        "bytes": 1098,
+        "end_line": 1160,
+        "name": "build_wave_from_local_files",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py",
+        "sha256": "b9d49d21013acbdaccdfa8a3a8c44830204958e3f90547c47f40b4268ef00af4",
+        "start_line": 1141
+      }
+    ],
+    "prerequisite_chain": [
+      "build_wave_from_local_files",
+      "validate_local_prerequisites",
+      "_validate_camera_job",
+      "_camera_attempt"
+    ],
+    "prospective_output_names": {
+      "D1": {
+        "alignment": "d1_alignment_contract.json",
+        "mapping": "d1_physical_alignment_receipt.json"
+      },
+      "N3": {
+        "alignment": "n3_alignment_contract.json",
+        "mapping": "n3_physical_alignment_receipt.json"
+      }
+    },
+    "required_terminal_decision": "qualified_from_original_camera_pixels",
+    "required_terminal_status": "passed",
+    "requires_original_camera_pixels": true,
+    "requires_safe_for_physical_alignment_input": true
+  },
+  "retained_activation_snapshot": {
+    "complete_request_rows": 0,
+    "eligibility_feasible_rows": 0,
+    "request_field_values_authenticated": 4,
+    "request_field_values_missing": 26,
+    "required_runtime_slots": 14,
+    "runtime_byte_verified_slots": 0,
+    "sampling_key_feasible_rows": 0,
+    "selected_request_rows": 0,
+    "semantic_replay_complete_slots": 0,
+    "total_request_rows": 1152,
+    "unauthenticated_runtime_slots": 6
+  },
+  "schema_version": "wmf-development-annotation-producer-reachability-v1",
+  "status": "static_authorized_terminal_activation_chain_unreachable",
+  "study_id": "WMF-ABLATION-001"
+}

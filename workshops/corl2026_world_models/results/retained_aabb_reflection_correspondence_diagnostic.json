@@ -1,0 +1,2747 @@
+{
+  "claim_boundaries": {
+    "aabb_envelopes_only": "The retained shapes are world.get_bbox-derived axis-aligned boxes and their projected min/max envelopes, not OBBs, exact meshes, silhouettes, segmentation masks, image footprints or object pixels.",
+    "constructed_reference_only": "The constructed correspondent is derived from retained original geometry; it is not a recovered intended fixture array, acceptance target, observed image, counterfactual rollout or independent measurement.",
+    "no_measurement_or_endpoint_inference": "No crop/time mapping, labelability, human annotation, r0/rhat/r endpoint, generated/executed correspondence or A1-A9 result is authenticated.",
+    "no_visibility_or_occlusion_inference": "Positive-depth projected envelopes do not authenticate RGB content, visibility, general occlusion, or robot/static-scene occlusion.",
+    "science_and_release": "No scientific threshold, fixture/camera qualification, current-state inference, gate promotion, dispatch/release authority or new behavioral evidence follows.",
+    "selection_confounding_and_effects": "The three mapping pairs are availability-selected. D01/D02 are command-confounded and P00 has unequal command membership. No layout, command, model, task-success, population or camera-ranking effect is estimated."
+  },
+  "comparisons": [
+    {
+      "camera_configurations_exactly_identical_across_arms": true,
+      "camera_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -8.560701335813548e-06,
+                -5.260078431268411e-06
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.002681542864138464,
+                -0.05569555715698016
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.0036885220379190287,
+                -0.0016745636904715866,
+                -0.060114583996806914,
+                -0.05127653031712498
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.002013958347447442,
+                0.008838053679681934
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                1.228199279745255,
+                1.3422179836990544
+              ],
+              "actual_reflected_envelope_uv_px": [
+                513.9773455598701,
+                556.3623402489044,
+                246.22656738204182,
+                322.4992118453418
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                1.2282078404465908,
+                1.3422232437774857
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                513.981034081908,
+                556.3640148125949,
+                246.28668196603863,
+                322.5504883756589
+              ],
+              "envelope_center_l2_residual_px": 0.05576007316313937,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.008560701335813548,
+              "maximum_absolute_envelope_edge_residual_px": 0.060114583996806914,
+              "maximum_absolute_envelope_extent_residual_px": 0.008838053679681934,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                1.3036756756568124e-05,
+                8.228406225496698e-06
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.0029083422280109517,
+                0.29295557804016426
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.004383332358656844,
+                0.0014333520973650593,
+                0.2929820222998387,
+                0.29292913378043295
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.0029499802612917847,
+                -5.288851940576933e-05
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                1.2812218491588965,
+                1.4464822865737332
+              ],
+              "actual_reflected_envelope_uv_px": [
+                536.0721031281917,
+                591.4430385748601,
+                332.5871951711157,
+                395.507039015696
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                1.28120881240214,
+                1.4464740581675077
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                536.067719795833,
+                591.4416052227627,
+                332.29421314881586,
+                395.2141098819156
+              ],
+              "envelope_center_l2_residual_px": 0.29297001409591733,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.013036756756568124,
+              "maximum_absolute_envelope_edge_residual_px": 0.2929820222998387,
+              "maximum_absolute_envelope_extent_residual_px": 0.0029499802612917847,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -6.583678349159072e-07,
+                -3.145521176861621e-09
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.00018146316722322808,
+                -0.2151960816773908
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.00021086957553961838,
+                -0.00015205675902052462,
+                -0.21330206490119963,
+                -0.21709009845346827
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                5.881281651909376e-05,
+                -0.0037880335522686437
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                1.4642290650614969,
+                1.5451363380400953
+              ],
+              "actual_reflected_envelope_uv_px": [
+                589.5769146851812,
+                616.847952888192,
+                359.8702505070908,
+                379.67322874015235
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                1.4642297234293318,
+                1.5451363411856165
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                589.5771255547568,
+                616.848104944951,
+                360.083552571992,
+                379.8903188386058
+              ],
+              "envelope_center_l2_residual_px": 0.21519615818639354,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.0006583678349159072,
+              "maximum_absolute_envelope_edge_residual_px": 0.21709009845346827,
+              "maximum_absolute_envelope_extent_residual_px": 0.0037880335522686437,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                7.132384142316539e-05,
+                7.902283609473315e-05
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.04080865054197602,
+                -0.024737971808121983
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.04263418996333712,
+                0.03898311112061492,
+                -0.022604782757866815,
+                -0.026871160858377152
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.0036510788427221996,
+                -0.004266378100510337
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.9693618697977466,
+                1.1503955794106457
+              ],
+              "actual_reflected_envelope_uv_px": [
+                721.0612989413322,
+                820.1536739963833,
+                298.5052299645802,
+                366.5081728184626
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.9692905459563235,
+                1.150316556574551
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                721.0186647513689,
+                820.1146908852627,
+                298.5278347473381,
+                366.53504397932096
+              ],
+              "envelope_center_l2_residual_px": 0.04772120292109743,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.07902283609473315,
+              "maximum_absolute_envelope_edge_residual_px": 0.04263418996333712,
+              "maximum_absolute_envelope_extent_residual_px": 0.004266378100510337,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -0.0003725419342655023,
+                -0.0003769074705237685
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.28343662096301614,
+                0.1773033883519588
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.3023788508585312,
+                -0.26449439106750106,
+                0.1418771387231459,
+                0.2127296379807717
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.03788445979103017,
+                0.07085249925762582
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7864148497874873,
+                1.0001656957266474
+              ],
+              "actual_reflected_envelope_uv_px": [
+                676.3349432432528,
+                809.5501519617553,
+                340.30556946530874,
+                447.24045739455903
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7867873917217528,
+                1.0005426031971711
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                676.6373220941114,
+                809.8146463528228,
+                340.1636923265856,
+                447.02772775657826
+              ],
+              "envelope_center_l2_residual_px": 0.3343244077599151,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.3769074705237685,
+              "maximum_absolute_envelope_edge_residual_px": 0.3023788508585312,
+              "maximum_absolute_envelope_extent_residual_px": 0.07085249925762582,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                0.0003114154611041364,
+                0.00031292130747095914
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.25273017048493784,
+                -0.18931767645841546
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.257387288773657,
+                0.24807305219621867,
+                -0.17301468079011784,
+                -0.2056206721267131
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.00931423657743835,
+                -0.03260599133659525
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7268795117451411,
+                0.8272378972236665
+              ],
+              "actual_reflected_envelope_uv_px": [
+                783.5157044958529,
+                845.874626832409,
+                417.5959542159799,
+                482.7513648206092
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.726568096284037,
+                0.8269249759161955
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                783.2583172070792,
+                845.6265537802128,
+                417.76896889677,
+                482.9569854927359
+              ],
+              "envelope_center_l2_residual_px": 0.31577479584817886,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.31292130747095914,
+              "maximum_absolute_envelope_edge_residual_px": 0.257387288773657,
+              "maximum_absolute_envelope_extent_residual_px": 0.03260599133659525,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -6.712992451807231e-05,
+                -5.94324680860403e-05
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.06916521265338815,
+                0.03223114310304709
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.061833581091150336,
+                0.07649684421562597,
+                0.024159783727498052,
+                0.040302502478596125
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.014663263124475634,
+                0.016142718751098073
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7833319470738522,
+                0.964373027961574
+              ],
+              "actual_reflected_envelope_uv_px": [
+                593.3815305759247,
+                714.6873263079553,
+                361.81814885486676,
+                455.76470529371
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7833990769983703,
+                0.96443246042966
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                593.3196969948335,
+                714.6108294637397,
+                361.79398907113926,
+                455.7244027912314
+              ],
+              "envelope_center_l2_residual_px": 0.07630644289388351,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.06712992451807231,
+              "maximum_absolute_envelope_edge_residual_px": 0.07649684421562597,
+              "maximum_absolute_envelope_extent_residual_px": 0.016142718751098073,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                0.00036215577800169374,
+                0.00035779153388348917
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.2871021354402501,
+                -0.1655928523368857
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.2695155026849534,
+                -0.3046887681954331,
+                -0.12964030357886713,
+                -0.2015454010949611
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.03517326551047972,
+                -0.07190509751609397
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7965066272425372,
+                1.01027515125521
+              ],
+              "actual_reflected_envelope_uv_px": [
+                462.97345904454176,
+                595.1973631848849,
+                336.7184874455996,
+                441.69033900750486
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7961444714645355,
+                1.0099173597213265
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                463.2429745472267,
+                595.5020519530804,
+                336.84812774917845,
+                441.8918844085998
+              ],
+              "envelope_center_l2_residual_px": 0.3314341999845782,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.36215577800169374,
+              "maximum_absolute_envelope_edge_residual_px": 0.3046887681954331,
+              "maximum_absolute_envelope_extent_residual_px": 0.07190509751609397,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -0.0003119081660527545,
+                -0.00031040197923992707
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.2359865490507218,
+                0.1760621292715996
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.22977473209704158,
+                0.2421983660043452,
+                0.16038123581790842,
+                0.19174302272529076
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.01242363390730361,
+                0.03136178690738234
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7547960702812739,
+                0.855153372979202
+              ],
+              "actual_reflected_envelope_uv_px": [
+                412.5809065105668,
+                473.97614829289546,
+                402.8279511251062,
+                465.118621534126
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7551079784473267,
+                0.855463774958442
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                412.3511317784698,
+                473.7339499268911,
+                402.6675698892883,
+                464.92687851140073
+              ],
+              "envelope_center_l2_residual_px": 0.2944274523486527,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.3119081660527545,
+              "maximum_absolute_envelope_edge_residual_px": 0.2421983660043452,
+              "maximum_absolute_envelope_extent_residual_px": 0.03136178690738234,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                1.800590761047438e-06,
+                7.287885906759328e-06
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.20299361052593667,
+                0.013183733110054163
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.22460191839411436,
+                -0.18138530265775898,
+                0.011222706852322517,
+                0.01514475936778581
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.04321661573635538,
+                0.003922052515463292
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.4274687667273432,
+                0.5018735134296595
+              ],
+              "actual_reflected_envelope_uv_px": [
+                261.7019742429634,
+                556.6819171326533,
+                495.4057307777334,
+                668.7247370938421
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.42746696613658214,
+                0.5018662255437527
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                261.9265761613575,
+                556.8633024353111,
+                495.3945080708811,
+                668.7095923344743
+              ],
+              "envelope_center_l2_residual_px": 0.20342127895840398,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.007287885906759328,
+              "maximum_absolute_envelope_edge_residual_px": 0.22460191839411436,
+              "maximum_absolute_envelope_extent_residual_px": 0.04321661573635538,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -5.366088268565772e-06,
+                -1.2937802963186584e-05
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                1.3478055273149039,
+                -0.03686573279924232
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                1.3420678424804464,
+                1.3535432121493614,
+                -0.03663330347461624,
+                -0.03709816212381156
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.011475369668914936,
+                -0.00046485864919532105
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.3708813663362665,
+                0.4751471243936416
+              ],
+              "actual_reflected_envelope_uv_px": [
+                574.7239776795035,
+                864.2664611343044,
+                316.46183573363743,
+                589.7219493933897
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.37088673242453507,
+                0.4751600621966048
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                573.381909837023,
+                862.9129179221551,
+                316.49846903711205,
+                589.7590475555135
+              ],
+              "envelope_center_l2_residual_px": 1.3483096164143573,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.012937802963186584,
+              "maximum_absolute_envelope_edge_residual_px": 1.3535432121493614,
+              "maximum_absolute_envelope_extent_residual_px": 0.011475369668914936,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                5.5802270598204196e-06,
+                5.2189724787377045e-06
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -1.1654749634238897,
+                0.023673943956055155
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -1.04950538269577,
+                -1.2814445441518956,
+                0.023949686920047952,
+                0.023398200992062357
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.23193916145612548,
+                -0.0005514859279855955
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.3314898406339029,
+                0.40556738244585055
+              ],
+              "actual_reflected_envelope_uv_px": [
+                693.4162255525933,
+                819.5975734895513,
+                116.45464309405753,
+                236.9920907111154
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.3314842604068431,
+                0.4055621634733718
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                694.4657309352891,
+                820.8790180337032,
+                116.43069340713748,
+                236.96869251012333
+              ],
+              "envelope_center_l2_residual_px": 1.165715379494648,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.0055802270598204196,
+              "maximum_absolute_envelope_edge_residual_px": 1.2814445441518956,
+              "maximum_absolute_envelope_extent_residual_px": 0.23193916145612548,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        }
+      ],
+      "command_membership_classification": "disjoint_single_commands_command_confounded",
+      "layout_pair_id": "D01",
+      "model_id": "D1",
+      "original_member_cell_ids": [
+        "wmf1__development__D01__D1__original__left"
+      ],
+      "original_member_commands": [
+        "left"
+      ],
+      "original_representative_cell_id": "wmf1__development__D01__D1__original__left",
+      "phase": "development",
+      "reflected_member_cell_ids": [
+        "wmf1__development__D01__D1__reflected__right"
+      ],
+      "reflected_member_commands": [
+        "right"
+      ],
+      "reflected_representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+      "world_object_rows": [
+        {
+          "aabb_midpoint_l2_residual_mm": 0.14175943676008304,
+          "actual_minus_constructed_aabb_extent_m": [
+            2.384185791015625e-07,
+            8.463859558105469e-06,
+            5.628913640975952e-06
+          ],
+          "actual_minus_constructed_aabb_midpoint_m": [
+            8.761882781982422e-06,
+            -0.0001414865255355835,
+            -7.282942533493042e-07
+          ],
+          "actual_minus_constructed_center_target_m": [
+            8.761882781982422e-06,
+            -0.0001414865255355835,
+            -7.301568984985352e-07
+          ],
+          "actual_minus_constructed_lower_bounds_m": [
+            8.64267349243164e-06,
+            -0.00014571845531463623,
+            -3.5427510738372803e-06
+          ],
+          "actual_minus_constructed_upper_bounds_m": [
+            8.881092071533203e-06,
+            -0.00013725459575653076,
+            2.086162567138672e-06
+          ],
+          "actual_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.5203014016151428,
+              -0.2794729471206665,
+              0.04782736673951149
+            ],
+            "upper": [
+              0.6300517916679382,
+              -0.10066850483417511,
+              0.08853912353515625
+            ]
+          },
+          "actual_reflected_center_robot_base_m": [
+            0.5751765966415405,
+            -0.1900707185268402,
+            0.06818324327468872
+          ],
+          "center_target_l2_residual_mm": 0.14175944634172688,
+          "constructed_center_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.5202927589416504,
+              -0.27932722866535187,
+              0.04783090949058533
+            ],
+            "upper": [
+              0.6300429105758667,
+              -0.10053125023841858,
+              0.08853703737258911
+            ]
+          },
+          "constructed_center_reflection_target_robot_base_m": [
+            0.5751678347587585,
+            -0.18992923200130463,
+            0.06818397343158722
+          ],
+          "constructed_translation_robot_base_m": [
+            0.0,
+            -0.37985846400260925,
+            0.0
+          ],
+          "maximum_absolute_bound_residual_mm": 0.14571845531463623,
+          "maximum_absolute_extent_residual_mm": 0.008463859558105469,
+          "object_name": "banana",
+          "original_aabb_robot_base_m": {
+            "lower": [
+              0.5202927589416504,
+              0.10053123533725739,
+              0.04783090949058533
+            ],
+            "upper": [
+              0.6300429105758667,
+              0.2793272137641907,
+              0.08853703737258911
+            ]
+          },
+          "original_center_robot_base_m": [
+            0.5751678347587585,
+            0.18992923200130463,
+            0.06818397343158722
+          ]
+        },
+        {
+          "aabb_midpoint_l2_residual_mm": 0.7508815024780093,
+          "actual_minus_constructed_aabb_extent_m": [
+            -6.258487701416016e-07,
+            1.5050172805786133e-06,
+            -7.778406143188477e-06
+          ],
+          "actual_minus_constructed_aabb_midpoint_m": [
+            -1.2323260307312012e-05,
+            0.0007507801055908203,
+            -6.332993507385254e-07
+          ],
+          "actual_minus_constructed_center_target_m": [
+            -1.233816146850586e-05,
+            0.0007507773116230965,
+            -6.332993507385254e-07
+          ],
+          "actual_minus_constructed_lower_bounds_m": [
+            -1.2010335922241211e-05,
+            0.000750027596950531,
+            3.255903720855713e-06
+          ],
+          "actual_minus_constructed_upper_bounds_m": [
+            -1.2636184692382812e-05,
+            0.0007515326142311096,
+            -4.522502422332764e-06
+          ],
+          "actual_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.39409729838371277,
+              -0.07024380564689636,
+              0.04973600059747696
+            ],
+            "upper": [
+              0.5556661486625671,
+              0.0909847617149353,
+              0.10496576875448227
+            ]
+          },
+          "actual_reflected_center_robot_base_m": [
+            0.47488170862197876,
+            0.010370475240051746,
+            0.07735088467597961
+          ],
+          "center_target_l2_residual_mm": 0.7508789535900541,
+          "constructed_center_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.394109308719635,
+              -0.0709938332438469,
+              0.049732744693756104
+            ],
+            "upper": [
+              0.5556787848472595,
+              0.0902332291007042,
+              0.1049702912569046
+            ]
+          },
+          "constructed_center_reflection_target_robot_base_m": [
+            0.47489404678344727,
+            0.00961969792842865,
+            0.07735151797533035
+          ],
+          "constructed_translation_robot_base_m": [
+            0.0,
+            0.0192393958568573,
+            0.0
+          ],
+          "maximum_absolute_bound_residual_mm": 0.7515326142311096,
+          "maximum_absolute_extent_residual_mm": 0.0077784061431884766,
+          "object_name": "bowl",
+          "original_aabb_robot_base_m": {
+            "lower": [
+              0.394109308719635,
+              -0.0902332291007042,
+              0.049732744693756104
+            ],
+            "upper": [
+              0.5556787848472595,
+              0.0709938332438469,
+              0.1049702912569046
+            ]
+          },
+          "original_center_robot_base_m": [
+            0.47489404678344727,
+            -0.00961969792842865,
+            0.07735151797533035
+          ]
+        },
+        {
+          "aabb_midpoint_l2_residual_mm": 0.636965085413817,
+          "actual_minus_constructed_aabb_extent_m": [
+            1.341104507446289e-06,
+            2.398621290922165e-06,
+            -8.419156074523926e-07
+          ],
+          "actual_minus_constructed_aabb_midpoint_m": [
+            5.513429641723633e-07,
+            -0.0006369648035615683,
+            -2.3469328880310059e-07
+          ],
+          "actual_minus_constructed_center_target_m": [
+            -5.364418029785156e-07,
+            -0.0006373673677444458,
+            -4.544854164123535e-07
+          ],
+          "actual_minus_constructed_lower_bounds_m": [
+            -1.1920928955078125e-07,
+            -0.0006381641142070293,
+            1.862645149230957e-07
+          ],
+          "actual_minus_constructed_upper_bounds_m": [
+            1.2218952178955078e-06,
+            -0.0006357654929161072,
+            -6.556510925292969e-07
+          ],
+          "actual_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.2759891152381897,
+              -0.00037999681080691516,
+              0.049565400928258896
+            ],
+            "upper": [
+              0.33448028564453125,
+              0.05761219933629036,
+              0.10781516134738922
+            ]
+          },
+          "actual_reflected_center_robot_base_m": [
+            0.31537359952926636,
+            -0.0003190264105796814,
+            0.08110551536083221
+          ],
+          "center_target_l2_residual_mm": 0.6373677555323028,
+          "constructed_center_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.27598923444747925,
+              0.0002581673034001142,
+              0.04956521466374397
+            ],
+            "upper": [
+              0.33447906374931335,
+              0.05824796482920647,
+              0.10781581699848175
+            ]
+          },
+          "constructed_center_reflection_target_robot_base_m": [
+            0.31537413597106934,
+            0.0003183409571647644,
+            0.08110596984624863
+          ],
+          "constructed_translation_robot_base_m": [
+            0.0,
+            0.0006366819143295288,
+            0.0
+          ],
+          "maximum_absolute_bound_residual_mm": 0.6381641142070293,
+          "maximum_absolute_extent_residual_mm": 0.002398621290922165,
+          "object_name": "rubiks_cube",
+          "original_aabb_robot_base_m": {
+            "lower": [
+              0.27598923444747925,
+              -0.00037851461092941463,
+              0.04956521466374397
+            ],
+            "upper": [
+              0.33447906374931335,
+              0.05761128291487694,
+              0.10781581699848175
+            ]
+          },
+          "original_center_robot_base_m": [
+            0.31537413597106934,
+            -0.0003183409571647644,
+            0.08110596984624863
+          ]
+        }
+      ]
+    },
+    {
+      "camera_configurations_exactly_identical_across_arms": true,
+      "camera_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                7.68623626257181e-06,
+                3.7609601191146425e-06
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.00240330617316431,
+                -0.05433203449325674
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.0035963892777317596,
+                0.0012102230685968607,
+                -0.05024581090412994,
+                -0.058418258082383545
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.002386166209134899,
+                -0.008172447178253606
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                1.2615872395094991,
+                1.3756012152495007
+              ],
+              "actual_reflected_envelope_uv_px": [
+                525.8400823297708,
+                566.5708504579205,
+                398.3582282740854,
+                472.6863348954814
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                1.2615795532732366,
+                1.3755974542893816
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                525.836485940493,
+                566.5696402348519,
+                398.4084740849895,
+                472.7447531535638
+              ],
+              "envelope_center_l2_residual_px": 0.05438516206409989,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.007686236262571811,
+              "maximum_absolute_envelope_edge_residual_px": 0.058418258082383545,
+              "maximum_absolute_envelope_extent_residual_px": 0.008172447178253606,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                4.042679615579026e-05,
+                4.210830448214686e-05
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.012585644865339418,
+                0.27048716848645427
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.01366055555740786,
+                0.011510734173270976,
+                0.2711295281975481,
+                0.2698448087754173
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.002149821384136885,
+                -0.00128471942213082
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                1.2687487887784354,
+                1.4340181373377918
+              ],
+              "actual_reflected_envelope_uv_px": [
+                531.904532558054,
+                588.0807579999059,
+                340.17982989729376,
+                403.7195713311834
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                1.2687083619822797,
+                1.4339760290333097
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                531.8908720024966,
+                588.0692472657327,
+                339.9087003690962,
+                403.44972652240796
+              ],
+              "envelope_center_l2_residual_px": 0.2707798123429735,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.04210830448214686,
+              "maximum_absolute_envelope_edge_residual_px": 0.2711295281975481,
+              "maximum_absolute_envelope_extent_residual_px": 0.002149821384136885,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -0.0006262817661075726,
+                -0.0003284524032705072
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.12003398881006433,
+                -0.5755248044524137
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.16207309376557077,
+                -0.0779948838544442,
+                -0.6261452066672746,
+                -0.5249044022375529
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.08407820991112658,
+                0.10124080442972172
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                1.451002762625354,
+                1.532273209423251
+              ],
+              "actual_reflected_envelope_uv_px": [
+                586.1829549931132,
+                613.8187141623415,
+                374.10313876544143,
+                395.02736254876294
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                1.4516290443914617,
+                1.5326016618265215
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                586.3450280868788,
+                613.896709046196,
+                374.7292839721087,
+                395.5522669510005
+              ],
+              "envelope_center_l2_residual_px": 0.5879089717036505,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.6262817661075726,
+              "maximum_absolute_envelope_edge_residual_px": 0.6261452066672746,
+              "maximum_absolute_envelope_extent_residual_px": 0.10124080442972172,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                6.794951450039832e-05,
+                5.965306204325227e-05
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.07028482761575106,
+                -0.03503221038556603
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.07773524847914359,
+                0.06283440675235852,
+                -0.02594878299657921,
+                -0.04411563777455285
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.014900841726785075,
+                -0.01816685477797364
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7558630189414903,
+                0.9368875283478894
+              ],
+              "actual_reflected_envelope_uv_px": [
+                575.3376330253174,
+                700.3660433874467,
+                373.201205078345,
+                472.4075632029714
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7557950694269899,
+                0.9368278752858461
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                575.2598977768382,
+                700.3032089806943,
+                373.2271538613416,
+                472.45167884074596
+              ],
+              "envelope_center_l2_residual_px": 0.07853160355853178,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.06794951450039832,
+              "maximum_absolute_envelope_edge_residual_px": 0.07773524847914359,
+              "maximum_absolute_envelope_extent_residual_px": 0.01816685477797364,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -0.00036854748313408514,
+                -0.000366315512221993
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.24904339931504182,
+                0.17358041042712102
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.26922389182254847,
+                -0.22886290680753518,
+                0.1367645592218878,
+                0.21039626163235425
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.040360985015013284,
+                0.07363170241046646
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7860257190551061,
+                0.9997864339887126
+              ],
+              "actual_reflected_envelope_uv_px": [
+                662.817245650717,
+                795.2211045000162,
+                340.452250309036,
+                447.469775040003
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7863942665382402,
+                1.0001527495009346
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                663.0864695425396,
+                795.4499674068237,
+                340.3154857498141,
+                447.25937877837066
+              ],
+              "envelope_center_l2_residual_px": 0.30356675316384557,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.36854748313408514,
+              "maximum_absolute_envelope_edge_residual_px": 0.26922389182254847,
+              "maximum_absolute_envelope_extent_residual_px": 0.07363170241046646,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                0.0010142217823163602,
+                0.001414771802770609
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.4404408751158826,
+                -0.7496077908900816
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.3078488573667073,
+                0.5730328928651716,
+                -0.8071086828970806,
+                -0.6921068988831394
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.26518403549846425,
+                0.11500178401394123
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7150068218335808,
+                0.815852749043813
+              ],
+              "actual_reflected_envelope_uv_px": [
+                757.3858874237465,
+                819.6113696929714,
+                423.99678130159924,
+                490.72653948258755
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7139926000512644,
+                0.8144379772410424
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                757.0780385663797,
+                819.0383368001062,
+                424.8038899844963,
+                491.4186463814707
+              ],
+              "envelope_center_l2_residual_px": 0.8694251000724288,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 1.414771802770609,
+              "maximum_absolute_envelope_edge_residual_px": 0.8071086828970806,
+              "maximum_absolute_envelope_extent_residual_px": 0.26518403549846425,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -7.082311023720589e-05,
+                -7.911733850907154e-05
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.04100684629167972,
+                0.025471204109294376
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.03887682053652952,
+                0.04313687204682992,
+                0.02350644156638282,
+                0.027435966652205934
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.0042600515103004,
+                0.003929525085823116
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.9465785215602329,
+                1.1276104042206976
+              ],
+              "actual_reflected_envelope_uv_px": [
+                442.0184534930978,
+                543.3937149299361,
+                305.253433216071,
+                375.73037881119967
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.9466493446704701,
+                1.1276895215592067
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                441.9795766725613,
+                543.3505780578893,
+                305.22992677450463,
+                375.70294284454747
+              ],
+              "envelope_center_l2_residual_px": 0.04827363339926654,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.07911733850907154,
+              "maximum_absolute_envelope_edge_residual_px": 0.04313687204682992,
+              "maximum_absolute_envelope_extent_residual_px": 0.0042600515103004,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                0.0003040263350257977,
+                0.00030625858036814613
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.27294684742969366,
+                -0.13480812644417028
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.26053476968655787,
+                -0.2853589251727726,
+                -0.10779570109042425,
+                -0.16182055179785948
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.02482415548621475,
+                -0.054024850707435235
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.815645535220133,
+                1.0294239277567623
+              ],
+              "actual_reflected_envelope_uv_px": [
+                463.0973224553102,
+                592.6548722259789,
+                329.8558216646244,
+                431.279438681913
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.8153415088851071,
+                1.0291176691763941
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                463.35785722499674,
+                592.9402311511517,
+                329.9636173657148,
+                431.44125923371087
+              ],
+              "envelope_center_l2_residual_px": 0.3044227528901148,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.3062585803681461,
+              "maximum_absolute_envelope_edge_residual_px": 0.2853589251727726,
+              "maximum_absolute_envelope_extent_residual_px": 0.054024850707435235,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -0.0006964037463585981,
+                -0.00029579101725452084
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.9082046575794038,
+                0.2688280652088224
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.7577570226948183,
+                1.0586522924639894,
+                0.14169990279572175,
+                0.3959562276218094
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.30089526976917114,
+                0.2542563248260876
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7858071169832186,
+                0.8866520376838116
+              ],
+              "actual_reflected_envelope_uv_px": [
+                405.79299144741947,
+                465.66781361944675,
+                387.1761408136077,
+                446.78710654005283
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7865035207295772,
+                0.8869478287010661
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                405.03523442472465,
+                464.60916132698276,
+                387.03444091081195,
+                446.391150312431
+              ],
+              "envelope_center_l2_residual_px": 0.9471558629353677,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.6964037463585981,
+              "maximum_absolute_envelope_edge_residual_px": 1.0586522924639894,
+              "maximum_absolute_envelope_extent_residual_px": 0.30089526976917114,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                1.3303864817015842e-06,
+                -6.3011528333989375e-06
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.2121618206998619,
+                -0.006773293560058846
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.1867255014079774,
+                -0.23759813999186008,
+                -0.004297965170906082,
+                -0.009248621949154767
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.05087263858388269,
+                -0.0049506567782486854
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.411931356271235,
+                0.48632828969958647
+              ],
+              "actual_reflected_envelope_uv_px": [
+                835.9066796102104,
+                1157.3032558908353,
+                434.73890296498575,
+                613.6707331432286
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.4119300258847533,
+                0.48633459085241987
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                836.0934051116184,
+                1157.5408540308272,
+                434.74320093015666,
+                613.6799817651778
+              ],
+              "envelope_center_l2_residual_px": 0.21226991230113393,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.0063011528333989375,
+              "maximum_absolute_envelope_edge_residual_px": 0.23759813999186008,
+              "maximum_absolute_envelope_extent_residual_px": 0.05087263858388269,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -2.137261032170157e-05,
+                -2.053923811590197e-05
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                1.2232154676487426,
+                -0.08491219371364878
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                1.2113590582240477,
+                1.2350718770735511,
+                -0.09288095272853525,
+                -0.07694343469870546
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.023712818849503492,
+                0.01593751802982979
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.3753933862323525,
+                0.4796683920991595
+              ],
+              "actual_reflected_envelope_uv_px": [
+                611.2783038439762,
+                897.4699948357534,
+                338.5262081045283,
+                608.9442328376542
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.3754147588426742,
+                0.4796889313372754
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                610.0669447857522,
+                896.2349229586798,
+                338.6190890572568,
+                609.0211762723529
+              ],
+              "envelope_center_l2_residual_px": 1.2261591091438322,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.02137261032170157,
+              "maximum_absolute_envelope_edge_residual_px": 1.2350718770735511,
+              "maximum_absolute_envelope_extent_residual_px": 0.023712818849503492,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                0.00013542447178777062,
+                0.0002499257421777479
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -3.1974150569245694,
+                1.1091961409205169
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -3.1899249562791283,
+                -3.204905157569897,
+                0.7538518538472658,
+                1.464540427993768
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.014980201290768491,
+                0.7106885741465021
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.33596524001540806,
+                0.4101830702238208
+              ],
+              "actual_reflected_envelope_uv_px": [
+                764.1214181170267,
+                905.1167640455734,
+                146.35827548978295,
+                265.5557077294976
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.3358298155436203,
+                0.40993314448164303
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                767.3113430733058,
+                908.3216692031433,
+                145.6044236359357,
+                264.09116730150384
+              ],
+              "envelope_center_l2_residual_px": 3.384343233964444,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.24992574217774788,
+              "maximum_absolute_envelope_edge_residual_px": 3.204905157569897,
+              "maximum_absolute_envelope_extent_residual_px": 0.7106885741465021,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        }
+      ],
+      "command_membership_classification": "disjoint_single_commands_command_confounded",
+      "layout_pair_id": "D02",
+      "model_id": "D1",
+      "original_member_cell_ids": [
+        "wmf1__development__D02__D1__original__left"
+      ],
+      "original_member_commands": [
+        "left"
+      ],
+      "original_representative_cell_id": "wmf1__development__D02__D1__original__left",
+      "phase": "development",
+      "reflected_member_cell_ids": [
+        "wmf1__development__D02__D1__reflected__right"
+      ],
+      "reflected_member_commands": [
+        "right"
+      ],
+      "reflected_representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+      "world_object_rows": [
+        {
+          "aabb_midpoint_l2_residual_mm": 0.14202076786466186,
+          "actual_minus_constructed_aabb_extent_m": [
+            7.152557373046875e-07,
+            -7.718801498413086e-06,
+            -8.206814527511597e-06
+          ],
+          "actual_minus_constructed_aabb_midpoint_m": [
+            -7.68899917602539e-06,
+            -0.00014180690050125122,
+            1.257285475730896e-06
+          ],
+          "actual_minus_constructed_center_target_m": [
+            -7.68899917602539e-06,
+            -0.00014181435108184814,
+            1.259148120880127e-06
+          ],
+          "actual_minus_constructed_lower_bounds_m": [
+            -8.046627044677734e-06,
+            -0.00013794749975204468,
+            5.360692739486694e-06
+          ],
+          "actual_minus_constructed_upper_bounds_m": [
+            -7.331371307373047e-06,
+            -0.00014566630125045776,
+            -2.8461217880249023e-06
+          ],
+          "actual_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.4802936315536499,
+              0.1055312231183052,
+              0.04783250018954277
+            ],
+            "upper": [
+              0.5900436639785767,
+              0.28432726860046387,
+              0.08853621780872345
+            ]
+          },
+          "actual_reflected_center_robot_base_m": [
+            0.5351686477661133,
+            0.19492924213409424,
+            0.06818436086177826
+          ],
+          "center_target_l2_residual_mm": 0.14202822372713433,
+          "constructed_center_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.4803016781806946,
+              0.10566917061805725,
+              0.047827139496803284
+            ],
+            "upper": [
+              0.590050995349884,
+              0.2844729349017143,
+              0.08853906393051147
+            ]
+          },
+          "constructed_center_reflection_target_robot_base_m": [
+            0.5351763367652893,
+            0.1950710564851761,
+            0.06818310171365738
+          ],
+          "constructed_translation_robot_base_m": [
+            0.0,
+            0.3901421129703522,
+            0.0
+          ],
+          "maximum_absolute_bound_residual_mm": 0.14566630125045776,
+          "maximum_absolute_extent_residual_mm": 0.008206814527511597,
+          "object_name": "banana",
+          "original_aabb_robot_base_m": {
+            "lower": [
+              0.4803016781806946,
+              -0.2844729423522949,
+              0.047827139496803284
+            ],
+            "upper": [
+              0.590050995349884,
+              -0.10566917806863785,
+              0.08853906393051147
+            ]
+          },
+          "original_center_robot_base_m": [
+            0.5351763367652893,
+            -0.1950710564851761,
+            0.06818310171365738
+          ]
+        },
+        {
+          "aabb_midpoint_l2_residual_mm": 0.6890852077092684,
+          "actual_minus_constructed_aabb_extent_m": [
+            1.8477439880371094e-06,
+            1.8775463104248047e-06,
+            2.5331974029541016e-07
+          ],
+          "actual_minus_constructed_aabb_midpoint_m": [
+            -4.9501657485961914e-05,
+            0.0006873048841953278,
+            7.450580596923828e-08
+          ],
+          "actual_minus_constructed_center_target_m": [
+            -4.9501657485961914e-05,
+            0.0006873011589050293,
+            7.450580596923828e-08
+          ],
+          "actual_minus_constructed_lower_bounds_m": [
+            -5.042552947998047e-05,
+            0.0006863661110401154,
+            -5.21540641784668e-08
+          ],
+          "actual_minus_constructed_upper_bounds_m": [
+            -4.857778549194336e-05,
+            0.0006882436573505402,
+            2.0116567611694336e-07
+          ],
+          "actual_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.40903574228286743,
+              -0.05029366910457611,
+              0.04973268508911133
+            ],
+            "upper": [
+              0.5706100463867188,
+              0.11093828082084656,
+              0.10497036576271057
+            ]
+          },
+          "actual_reflected_center_robot_base_m": [
+            0.4898228943347931,
+            0.030322303995490074,
+            0.07735152542591095
+          ],
+          "center_target_l2_residual_mm": 0.689081492043698,
+          "constructed_center_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.4090861678123474,
+              -0.050980035215616226,
+              0.04973273724317551
+            ],
+            "upper": [
+              0.5706586241722107,
+              0.11025003716349602,
+              0.10497016459703445
+            ]
+          },
+          "constructed_center_reflection_target_robot_base_m": [
+            0.48987239599227905,
+            0.029635002836585045,
+            0.07735145092010498
+          ],
+          "constructed_translation_robot_base_m": [
+            0.0,
+            0.05927000567317009,
+            0.0
+          ],
+          "maximum_absolute_bound_residual_mm": 0.6882436573505402,
+          "maximum_absolute_extent_residual_mm": 0.0018775463104248047,
+          "object_name": "bowl",
+          "original_aabb_robot_base_m": {
+            "lower": [
+              0.4090861678123474,
+              -0.11025004088878632,
+              0.04973273724317551
+            ],
+            "upper": [
+              0.5706586241722107,
+              0.05098003149032593,
+              0.10497016459703445
+            ]
+          },
+          "original_center_robot_base_m": [
+            0.48987239599227905,
+            -0.029635002836585045,
+            0.07735145092010498
+          ]
+        },
+        {
+          "aabb_midpoint_l2_residual_mm": 1.8393798739074432,
+          "actual_minus_constructed_aabb_extent_m": [
+            0.00035688281059265137,
+            0.00036071985960006714,
+            2.60770320892334e-08
+          ],
+          "actual_minus_constructed_aabb_midpoint_m": [
+            0.0005720406770706177,
+            -0.0017481669783592224,
+            9.313225746154785e-09
+          ],
+          "actual_minus_constructed_center_target_m": [
+            0.0008880496025085449,
+            -0.001635964959859848,
+            5.21540641784668e-08
+          ],
+          "actual_minus_constructed_lower_bounds_m": [
+            0.000393599271774292,
+            -0.001928526908159256,
+            -3.725290298461914e-09
+          ],
+          "actual_minus_constructed_upper_bounds_m": [
+            0.0007504820823669434,
+            -0.0015678070485591888,
+            2.2351741790771484e-08
+          ],
+          "actual_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.2914036214351654,
+              0.04321969300508499,
+              0.049565188586711884
+            ],
+            "upper": [
+              0.35032936930656433,
+              0.10164957493543625,
+              0.10781589895486832
+            ]
+          },
+          "actual_reflected_center_robot_base_m": [
+            0.3312830328941345,
+            0.043598320335149765,
+            0.08110612630844116
+          ],
+          "center_target_l2_residual_mm": 1.8614546594330106,
+          "constructed_center_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.2910100221633911,
+              0.04514821991324425,
+              0.04956519231200218
+            ],
+            "upper": [
+              0.3495788872241974,
+              0.10321738198399544,
+              0.10781587660312653
+            ]
+          },
+          "constructed_center_reflection_target_robot_base_m": [
+            0.330394983291626,
+            0.04523428529500961,
+            0.08110607415437698
+          ],
+          "constructed_translation_robot_base_m": [
+            0.0,
+            0.09046857059001923,
+            0.0
+          ],
+          "maximum_absolute_bound_residual_mm": 1.928526908159256,
+          "maximum_absolute_extent_residual_mm": 0.36071985960006714,
+          "object_name": "rubiks_cube",
+          "original_aabb_robot_base_m": {
+            "lower": [
+              0.2910100221633911,
+              -0.04532035067677498,
+              0.04956519231200218
+            ],
+            "upper": [
+              0.3495788872241974,
+              0.012748811393976212,
+              0.10781587660312653
+            ]
+          },
+          "original_center_robot_base_m": [
+            0.330394983291626,
+            -0.04523428529500961,
+            0.08110607415437698
+          ]
+        }
+      ]
+    },
+    {
+      "camera_configurations_exactly_identical_across_arms": true,
+      "camera_rows": [
+        {
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                4.499925421619366e-06,
+                9.905255411890579e-06
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.002282200296690462,
+                -0.055897469041553904
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.0014734047363162972,
+                0.0030909958571783136,
+                -0.052325324032892695,
+                -0.05946961405027196
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.0016175911208620164,
+                -0.007144290017379262
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                1.2240330537872897,
+                1.338054680370239
+              ],
+              "actual_reflected_envelope_uv_px": [
+                512.4526024246219,
+                555.0528436764383,
+                382.61852082148073,
+                457.7620418287638
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                1.224028553861868,
+                1.338044775114827
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                512.4511290198856,
+                555.0497526805812,
+                382.6708461455136,
+                457.8215114428141
+              ],
+              "envelope_center_l2_residual_px": 0.055944038855321225,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.009905255411890579,
+              "maximum_absolute_envelope_edge_residual_px": 0.05946961405027196,
+              "maximum_absolute_envelope_extent_residual_px": 0.007144290017379262,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -4.041862818437991e-06,
+                -6.647969182038693e-06
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.0016975714047475776,
+                0.3168293317360735
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.0014321413203788325,
+                -0.0019630014893436964,
+                0.31698234077265397,
+                0.3166763226994931
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.000530860168964864,
+                -0.00030601807316088525
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                1.2978564881947405,
+                1.463109171040476
+              ],
+              "actual_reflected_envelope_uv_px": [
+                541.5080918818322,
+                595.838754289028,
+                325.25273209917026,
+                387.36041970836567
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                1.297860530057559,
+                1.463115819009658
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                541.5095240231526,
+                595.8407172905173,
+                324.9357497583976,
+                387.0437433856662
+              ],
+              "envelope_center_l2_residual_px": 0.3168338794968132,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.006647969182038693,
+              "maximum_absolute_envelope_edge_residual_px": 0.31698234077265397,
+              "maximum_absolute_envelope_extent_residual_px": 0.000530860168964864,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -7.582329456057302e-05,
+                -1.0495007553679159e-05
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.011005709367509553,
+                -0.21670315263310158
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.019298055488889077,
+                -0.0027133632460163426,
+                -0.2310466052093716,
+                -0.20235970005677473
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.016584692242872734,
+                0.028686905152596864
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                1.4600297601219403,
+                1.5409572733624093
+              ],
+              "actual_reflected_envelope_uv_px": [
+                588.505906177526,
+                615.869047237019,
+                354.73749337084456,
+                374.60685204108677
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                1.4601055834165009,
+                1.540967768369963
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                588.5252042330148,
+                615.871760600265,
+                354.96853997605393,
+                374.80921174114354
+              ],
+              "envelope_center_l2_residual_px": 0.21698244629418162,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.07582329456057302,
+              "maximum_absolute_envelope_edge_residual_px": 0.2310466052093716,
+              "maximum_absolute_envelope_extent_residual_px": 0.028686905152596864,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                6.347090701297464e-05,
+                6.531604119819345e-05
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.06639559667041794,
+                -0.030232739948473863
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.07153485095261658,
+                0.06125634238844668,
+                -0.025313035399847195,
+                -0.035152444497157376
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.010278508564169897,
+                -0.009839409097310181
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.8061263699157297,
+                0.9871591909214162
+              ],
+              "actual_reflected_envelope_uv_px": [
+                583.5124542110731,
+                701.340452955174,
+                352.64581165073196,
+                442.5952208032804
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.8060628990087167,
+                0.987093874880218
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                583.4409193601205,
+                701.2791966127855,
+                352.6711246861318,
+                442.6303732477776
+              ],
+              "envelope_center_l2_residual_px": 0.0729547381738353,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.06531604119819345,
+              "maximum_absolute_envelope_edge_residual_px": 0.07153485095261658,
+              "maximum_absolute_envelope_extent_residual_px": 0.010278508564169897,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -0.0003966254249607726,
+                -0.00039940793679671405
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.31252008171566104,
+                0.18917718926559246
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.33195962335389595,
+                -0.2930805400774261,
+                0.15029734835735553,
+                0.2280570301738294
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.03887908327646983,
+                0.07775968181647386
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.783675880219592,
+                0.997414957891272
+              ],
+              "actual_reflected_envelope_uv_px": [
+                691.6873531109139,
+                826.3112532906583,
+                341.3266115606408,
+                448.79933131633493
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7840725056445528,
+                0.9978143658280687
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                692.0193127342678,
+                826.6043338307358,
+                341.17631421228344,
+                448.5712742861611
+              ],
+              "envelope_center_l2_residual_px": 0.36531741049940836,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.39940793679671405,
+              "maximum_absolute_envelope_edge_residual_px": 0.33195962335389595,
+              "maximum_absolute_envelope_extent_residual_px": 0.07775968181647386,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                0.00029855475517415186,
+                0.00038670389021144835
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.22061334130125942,
+                -0.20005825706192581
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.19104958503737635,
+                0.25017709756491513,
+                -0.20821439785657958,
+                -0.1919021162672152
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.059127512527538784,
+                0.016312281589364375
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7373437127921534,
+                0.8377301754447051
+              ],
+              "actual_reflected_envelope_uv_px": [
+                787.0322149502824,
+                848.7630988078596,
+                411.86795143312236,
+                475.9351857942306
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7370451580369792,
+                0.8373434715544936
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                786.841165365245,
+                848.5129217102947,
+                412.07616583097894,
+                476.12708791049783
+              ],
+              "envelope_center_l2_residual_px": 0.29781462787909124,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.38670389021144835,
+              "maximum_absolute_envelope_edge_residual_px": 0.25017709756491513,
+              "maximum_absolute_envelope_extent_residual_px": 0.059127512527538784,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -7.562982223974224e-05,
+                -7.378340216224188e-05
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.04273932000091918,
+                0.02612101140937284
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.039041866651302826,
+                0.04643677335047869,
+                0.021516686468601165,
+                0.030725336350144516
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.007394906699175863,
+                0.009208649881543352
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.9528156624271695,
+                1.1338558560484833
+              ],
+              "actual_reflected_envelope_uv_px": [
+                473.55928098235296,
+                574.1494996699317,
+                303.4284727543013,
+                373.2139469099471
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.9528912922494093,
+                1.1339296394506455
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                473.52023911570166,
+                574.1030628965813,
+                303.4069560678327,
+                373.18322157359694
+              ],
+              "envelope_center_l2_residual_px": 0.05008948703260552,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.07562982223974224,
+              "maximum_absolute_envelope_edge_residual_px": 0.04643677335047869,
+              "maximum_absolute_envelope_extent_residual_px": 0.009208649881543352,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                0.0004081934877178117,
+                0.0004054106644526545
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.3135515039175516,
+                -0.19734443584752626
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.29138341157454306,
+                -0.3357195962606738,
+                -0.15489488809055274,
+                -0.23979398360455662
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.044336184686130764,
+                -0.08489909551400387
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7742328241856034,
+                0.9879895761866964
+              ],
+              "actual_reflected_envelope_uv_px": [
+                460.40152382771237,
+                596.0135022611985,
+                345.04912941900477,
+                454.4270087492706
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7738246306978855,
+                0.9875841655222437
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                460.6929072392869,
+                596.3492218574592,
+                345.2040243070953,
+                454.66680273287517
+              ],
+              "envelope_center_l2_residual_px": 0.37048531950528996,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.4081934877178117,
+              "maximum_absolute_envelope_edge_residual_px": 0.3357195962606738,
+              "maximum_absolute_envelope_extent_residual_px": 0.08489909551400387,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -0.0003214003112456121,
+                -0.00023323657677154497
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                0.26527943540264687,
+                0.16074527527985083
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                0.22557985551304682,
+                0.3049790152922469,
+                0.12190609928592266,
+                0.19958445127389268
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.07939915977920009,
+                0.07767835198797002
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.7506090003427776,
+                0.8509943854297468
+              ],
+              "actual_reflected_envelope_uv_px": [
+                420.91133225475926,
+                482.19970353021415,
+                404.98715285326534,
+                467.7066066807691
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.7509304006540232,
+                0.8512276220065184
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                420.6857523992462,
+                481.8947245149219,
+                404.8652467539794,
+                467.5070222294952
+              ],
+              "envelope_center_l2_residual_px": 0.31018095101463294,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.3214003112456121,
+              "maximum_absolute_envelope_edge_residual_px": 0.3049790152922469,
+              "maximum_absolute_envelope_extent_residual_px": 0.07939915977920009,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        },
+        {
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "object_rows": [
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -2.8427005442366315e-06,
+                2.6188599555609926e-07
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -0.20483001881950713,
+                -0.007790422486323223
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -0.18599225716582168,
+                -0.2236677804730789,
+                -0.01197302780303744,
+                -0.0036078171698363803
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.03767552330725721,
+                0.008365210633201059
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.4263585698411919,
+                0.5007640124172966
+              ],
+              "actual_reflected_envelope_uv_px": [
+                771.4172669051675,
+                1070.6913837845836,
+                494.71020913512575,
+                668.4451848465523
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.42636141254173615,
+                0.5007637505313011
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                771.6032591623333,
+                1070.9150515650567,
+                494.7221821629288,
+                668.4487926637221
+              ],
+              "envelope_center_l2_residual_px": 0.20497811417835576,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.0028427005442366315,
+              "maximum_absolute_envelope_edge_residual_px": 0.2236677804730789,
+              "maximum_absolute_envelope_extent_residual_px": 0.03767552330725721,
+              "object_name": "banana"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                -3.150607573387809e-06,
+                -4.868683161185494e-06
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                1.5007527999781587,
+                -0.010556647987357337
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                1.4980647255491704,
+                1.503440874407147,
+                -0.009728852625073614,
+                -0.011384443349697904
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                0.005376148857976659,
+                -0.0016555907246242896
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.3648023562224321,
+                0.4690702295099929
+              ],
+              "actual_reflected_envelope_uv_px": [
+                536.6720624444835,
+                830.8802551096013,
+                286.11027554939363,
+                563.2936232124243
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.3648055068300055,
+                0.46907509819315407
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                535.1739977189343,
+                829.3768142351942,
+                286.1200044020187,
+                563.305007655774
+              ],
+              "envelope_center_l2_residual_px": 1.5007899284906638,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.004868683161185494,
+              "maximum_absolute_envelope_edge_residual_px": 1.503440874407147,
+              "maximum_absolute_envelope_extent_residual_px": 0.005376148857976659,
+              "object_name": "bowl"
+            },
+            {
+              "actual_minus_constructed_camera_z_interval_edges_m": [
+                9.774230956494101e-06,
+                3.291330851851182e-05
+              ],
+              "actual_minus_constructed_envelope_center_uv_px": [
+                -1.1728947514048969,
+                0.12175805679032692
+              ],
+              "actual_minus_constructed_envelope_edges_px": [
+                -1.1551409437713573,
+                -1.19064855903855,
+                0.04732428157339541,
+                0.19619183200723
+              ],
+              "actual_minus_constructed_envelope_extent_wh_px": [
+                -0.035507615267192705,
+                0.1488675504338346
+              ],
+              "actual_reflected_camera_z_interval_m": [
+                0.33317555851769104,
+                0.4072585174175209
+              ],
+              "actual_reflected_envelope_uv_px": [
+                668.3938678497763,
+                788.9379200211989,
+                127.67976024880468,
+                247.0926868721105
+              ],
+              "constructed_center_reflected_camera_z_interval_m": [
+                0.33316578428673455,
+                0.4072256041090024
+              ],
+              "constructed_center_reflected_envelope_uv_px": [
+                669.5490087935476,
+                790.1285685802375,
+                127.63243596723129,
+                246.89649504010328
+              ],
+              "envelope_center_l2_residual_px": 1.1791976603888388,
+              "maximum_absolute_camera_z_interval_edge_residual_mm": 0.03291330851851182,
+              "maximum_absolute_envelope_edge_residual_px": 1.19064855903855,
+              "maximum_absolute_envelope_extent_residual_px": 0.1488675504338346,
+              "object_name": "rubiks_cube"
+            }
+          ]
+        }
+      ],
+      "command_membership_classification": "shared_left_command_with_extra_reflected_right_member",
+      "layout_pair_id": "P00",
+      "model_id": "N3",
+      "original_member_cell_ids": [
+        "wmf1__pilot__P00__N3__original__left"
+      ],
+      "original_member_commands": [
+        "left"
+      ],
+      "original_representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+      "phase": "pilot",
+      "reflected_member_cell_ids": [
+        "wmf1__pilot__P00__N3__reflected__left",
+        "wmf1__pilot__P00__N3__reflected__right"
+      ],
+      "reflected_member_commands": [
+        "left",
+        "right"
+      ],
+      "reflected_representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+      "world_object_rows": [
+        {
+          "aabb_midpoint_l2_residual_mm": 0.1423941693542533,
+          "actual_minus_constructed_aabb_extent_m": [
+            5.4836273193359375e-06,
+            -5.125999450683594e-06,
+            1.5050172805786133e-06
+          ],
+          "actual_minus_constructed_aabb_midpoint_m": [
+            -8.463859558105469e-06,
+            -0.0001421421766281128,
+            -2.5331974029541016e-07
+          ],
+          "actual_minus_constructed_center_target_m": [
+            -8.463859558105469e-06,
+            -0.0001421421766281128,
+            -2.5331974029541016e-07
+          ],
+          "actual_minus_constructed_lower_bounds_m": [
+            -1.1205673217773438e-05,
+            -0.000139579176902771,
+            -1.0058283805847168e-06
+          ],
+          "actual_minus_constructed_upper_bounds_m": [
+            -5.7220458984375e-06,
+            -0.0001447051763534546,
+            4.991888999938965e-07
+          ],
+          "actual_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.525290310382843,
+              0.06052960455417633,
+              0.04782755672931671
+            ],
+            "upper": [
+              0.635044515132904,
+              0.23932792246341705,
+              0.08853884041309357
+            ]
+          },
+          "actual_reflected_center_robot_base_m": [
+            0.5801674127578735,
+            0.1499287635087967,
+            0.06818319857120514
+          ],
+          "center_target_l2_residual_mm": 0.1423941693542533,
+          "constructed_center_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.5253015160560608,
+              0.0606691837310791,
+              0.047828562557697296
+            ],
+            "upper": [
+              0.6350502371788025,
+              0.2394726276397705,
+              0.08853834122419357
+            ]
+          },
+          "constructed_center_reflection_target_robot_base_m": [
+            0.5801758766174316,
+            0.1500709056854248,
+            0.06818345189094543
+          ],
+          "constructed_translation_robot_base_m": [
+            0.0,
+            0.3001418113708496,
+            0.0
+          ],
+          "maximum_absolute_bound_residual_mm": 0.1447051763534546,
+          "maximum_absolute_extent_residual_mm": 0.0054836273193359375,
+          "object_name": "banana",
+          "original_aabb_robot_base_m": {
+            "lower": [
+              0.5253015160560608,
+              -0.2394726276397705,
+              0.047828562557697296
+            ],
+            "upper": [
+              0.6350502371788025,
+              -0.0606691837310791,
+              0.08853834122419357
+            ]
+          },
+          "original_center_robot_base_m": [
+            0.5801758766174316,
+            -0.1500709056854248,
+            0.06818345189094543
+          ]
+        },
+        {
+          "aabb_midpoint_l2_residual_mm": 0.8224575401592303,
+          "actual_minus_constructed_aabb_extent_m": [
+            -2.473592758178711e-06,
+            -1.296401023864746e-06,
+            -9.834766387939453e-07
+          ],
+          "actual_minus_constructed_aabb_midpoint_m": [
+            6.660819053649902e-06,
+            0.0008224304765462875,
+            -3.8743019104003906e-07
+          ],
+          "actual_minus_constructed_center_target_m": [
+            6.67572021484375e-06,
+            0.0008224276825785637,
+            -3.8743019104003906e-07
+          ],
+          "actual_minus_constructed_lower_bounds_m": [
+            7.897615432739258e-06,
+            0.0008230786770582199,
+            1.043081283569336e-07
+          ],
+          "actual_minus_constructed_upper_bounds_m": [
+            5.424022674560547e-06,
+            0.0008217822760343552,
+            -8.791685104370117e-07
+          ],
+          "actual_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.3741747736930847,
+              -0.090193971991539,
+              0.04973283410072327
+            ],
+            "upper": [
+              0.5357297658920288,
+              0.07101976871490479,
+              0.10496951639652252
+            ]
+          },
+          "actual_reflected_center_robot_base_m": [
+            0.45495226979255676,
+            -0.009587105363607407,
+            0.0773511752486229
+          ],
+          "center_target_l2_residual_mm": 0.8224548670985458,
+          "constructed_center_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.374166876077652,
+              -0.09101705066859722,
+              0.04973272979259491
+            ],
+            "upper": [
+              0.5357243418693542,
+              0.07019798643887043,
+              0.10497039556503296
+            ]
+          },
+          "constructed_center_reflection_target_robot_base_m": [
+            0.4549455940723419,
+            -0.01040953304618597,
+            0.07735156267881393
+          ],
+          "constructed_translation_robot_base_m": [
+            0.0,
+            -0.02081906609237194,
+            0.0
+          ],
+          "maximum_absolute_bound_residual_mm": 0.8230786770582199,
+          "maximum_absolute_extent_residual_mm": 0.002473592758178711,
+          "object_name": "bowl",
+          "original_aabb_robot_base_m": {
+            "lower": [
+              0.374166876077652,
+              -0.07019798457622528,
+              0.04973272979259491
+            ],
+            "upper": [
+              0.5357243418693542,
+              0.09101705253124237,
+              0.10497039556503296
+            ]
+          },
+          "original_center_robot_base_m": [
+            0.4549455940723419,
+            0.01040953304618597,
+            0.07735156267881393
+          ]
+        },
+        {
+          "aabb_midpoint_l2_residual_mm": 0.6356438546161913,
+          "actual_minus_constructed_aabb_extent_m": [
+            8.004903793334961e-05,
+            8.07587057352066e-05,
+            -2.6710331439971924e-06
+          ],
+          "actual_minus_constructed_aabb_midpoint_m": [
+            5.182623863220215e-05,
+            -0.0006335275247693062,
+            -1.6205012798309326e-07
+          ],
+          "actual_minus_constructed_center_target_m": [
+            3.874301910400391e-06,
+            -0.0006503108888864517,
+            2.4586915969848633e-07
+          ],
+          "actual_minus_constructed_lower_bounds_m": [
+            1.1801719665527344e-05,
+            -0.0006739068776369095,
+            1.173466444015503e-06
+          ],
+          "actual_minus_constructed_upper_bounds_m": [
+            9.185075759887695e-05,
+            -0.0005931481719017029,
+            -1.4975666999816895e-06
+          ],
+          "actual_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.2809962034225464,
+              -0.015366864390671253,
+              0.04956667497754097
+            ],
+            "upper": [
+              0.33951374888420105,
+              0.04265284910798073,
+              0.10781322419643402
+            ]
+          },
+          "actual_reflected_center_robot_base_m": [
+            0.32037973403930664,
+            -0.015297066420316696,
+            0.08110539615154266
+          ],
+          "center_target_l2_residual_mm": 0.6503224760618562,
+          "constructed_center_reflected_aabb_robot_base_m": {
+            "lower": [
+              0.28098440170288086,
+              -0.014692957513034344,
+              0.049565501511096954
+            ],
+            "upper": [
+              0.3394218981266022,
+              0.04324599727988243,
+              0.107814721763134
+            ]
+          },
+          "constructed_center_reflection_target_robot_base_m": [
+            0.32037585973739624,
+            -0.014646755531430244,
+            0.08110515028238297
+          ],
+          "constructed_translation_robot_base_m": [
+            0.0,
+            -0.02929351106286049,
+            0.0
+          ],
+          "maximum_absolute_bound_residual_mm": 0.6739068776369095,
+          "maximum_absolute_extent_residual_mm": 0.0807587057352066,
+          "object_name": "rubiks_cube",
+          "original_aabb_robot_base_m": {
+            "lower": [
+              0.28098440170288086,
+              0.014600553549826145,
+              0.049565501511096954
+            ],
+            "upper": [
+              0.3394218981266022,
+              0.07253950834274292,
+              0.107814721763134
+            ]
+          },
+          "original_center_robot_base_m": [
+            0.32037585973739624,
+            0.014646755531430244,
+            0.08110515028238297
+          ]
+        }
+      ]
+    }
+  ],
+  "confirmation_released": false,
+  "evidence_boundaries": {
+    "a1_a9_result": false,
+    "camera_crop_or_time_alignment_authenticated": false,
+    "camera_ranking_estimated": false,
+    "causal_effect_estimated": false,
+    "counterfactual_or_temporal_transition_inferred": false,
+    "current_state_inferred": false,
+    "fixture_pass_fail_classification_created": false,
+    "fixture_target_recovered": false,
+    "forecast_or_persistence_metric": false,
+    "gate_advanced": false,
+    "general_occlusion_analyzed": false,
+    "human_image_centroids_used": false,
+    "image_footprint_or_object_pixels_inferred": false,
+    "isolated_layout_or_command_effect_estimated": false,
+    "labelability_estimated": false,
+    "measurement_feasibility_qualified": false,
+    "obb_or_exact_mesh_analyzed": false,
+    "raw_camera_bytes_read": false,
+    "raw_pvc_bytes_read": false,
+    "release_authority": false,
+    "rgb_or_image_content_analyzed": false,
+    "robot_or_static_scene_occlusion_analyzed": false,
+    "scientific_threshold_applied": false,
+    "silhouette_or_segmentation_analyzed": false,
+    "task_success_or_model_rate": false,
+    "visibility_inferred": false
+  },
+  "finding": "Across nine availability-selected original/reflected object correspondences and their 36 camera projections, camera configurations match exactly across all 12 arm-camera pairs. Relative to a constructed pure center-reflection translation of each original retained AABB, the largest actual reflected bound residual is 1.928526908159256 mm; the largest projected envelope-edge residual is 3.204905157569897 pixels. Both occur for the D02 cube, and no tolerance is applied. D01/D02 are command-confounded and P00 has unequal command membership, so no effect or fixture conclusion is estimated.",
+  "forecast_accuracy_estimated": false,
+  "labels_created": 0,
+  "new_behavioral_cells": 0,
+  "new_model_requests": 0,
+  "reference_semantics": {
+    "actual_correspondent": "Compare that constructed box with the availability-selected actual reflected-arm retained box, then project both through the unchanged retained camera calibration. Residuals use exact stored floats without epsilon, thresholding, fitting, registration or normalization.",
+    "camera_boundary": "The four camera configuration objects and hashes are required to match exactly across each original/reflected mapping pair. Per-camera residual summaries are descriptive and do not rank or qualify cameras.",
+    "command_boundary": "D01 and D02 compare original-left against reflected-right mappings, so layout arm is command-confounded. P00 contains a shared left command, but its reflected mapping also contains a right-command member. No comparison isolates a layout, command, model or task effect.",
+    "constructed_center_reflection": "For each original retained object center (x,y,z), construct the exact robot-base target (x,-y,z). Translate the original retained robot-base axis-aligned box by (0,-2y,0), preserving its original extents. This is a deterministic geometric reference, not an observed target, frozen fixture pose, scientific tolerance or pass/fail predicate.",
+    "orientation_and_settling_boundary": "Preserving the original AABB extents represents pure center translation with the original retained box shape. Actual-minus-constructed residuals can mix center settling, orientation settling, axis-aligned-box shape changes and numeric capture; they are not attributed to any one cause."
+  },
+  "resource_budget_qualified": false,
+  "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+  "schema_version": "wmf-retained-aabb-reflection-correspondence-diagnostic-v1",
+  "selection": {
+    "D01_D02_command_confounded": true,
+    "P00_shared_left_command_with_extra_reflected_right_member": true,
+    "availability_selected": true,
+    "comparable_original_reflected_mapping_pairs": 3,
+    "cross_time_field_join_performed": false,
+    "full_completed_cohort": false,
+    "isolated_layout_effect_estimated": false,
+    "mapping_pair_camera_rows": 12,
+    "projected_camera_object_correspondence_rows": 36,
+    "representative_sample": false,
+    "source_reset_mappings": 6,
+    "world_object_correspondence_rows": 9
+  },
+  "summary": {
+    "camera_configuration_pairs_verified_exactly_identical": 12,
+    "camera_summary": {
+      "head_camera": {
+        "descriptive_only_not_camera_ranking": true,
+        "maximum_absolute_camera_z_interval_edge_residual_mm": 0.6262817661075726,
+        "maximum_absolute_envelope_edge_residual_px": 0.6261452066672746,
+        "maximum_absolute_envelope_extent_residual_px": 0.10124080442972172,
+        "maximum_envelope_center_l2_residual_px": 0.5879089717036505,
+        "projected_object_rows": 9
+      },
+      "over_shoulder_left_camera": {
+        "descriptive_only_not_camera_ranking": true,
+        "maximum_absolute_camera_z_interval_edge_residual_mm": 1.414771802770609,
+        "maximum_absolute_envelope_edge_residual_px": 0.8071086828970806,
+        "maximum_absolute_envelope_extent_residual_px": 0.26518403549846425,
+        "maximum_envelope_center_l2_residual_px": 0.8694251000724288,
+        "projected_object_rows": 9
+      },
+      "over_shoulder_right_camera": {
+        "descriptive_only_not_camera_ranking": true,
+        "maximum_absolute_camera_z_interval_edge_residual_mm": 0.6964037463585981,
+        "maximum_absolute_envelope_edge_residual_px": 1.0586522924639894,
+        "maximum_absolute_envelope_extent_residual_px": 0.30089526976917114,
+        "maximum_envelope_center_l2_residual_px": 0.9471558629353677,
+        "projected_object_rows": 9
+      },
+      "wrist_cam": {
+        "descriptive_only_not_camera_ranking": true,
+        "maximum_absolute_camera_z_interval_edge_residual_mm": 0.24992574217774788,
+        "maximum_absolute_envelope_edge_residual_px": 3.204905157569897,
+        "maximum_absolute_envelope_extent_residual_px": 0.7106885741465021,
+        "maximum_envelope_center_l2_residual_px": 3.384343233964444,
+        "projected_object_rows": 9
+      }
+    },
+    "exact_zero_projected_envelope_edge_residual_rows": 0,
+    "exact_zero_world_aabb_bound_residual_rows": 0,
+    "maximum_aabb_midpoint_l2_residual": {
+      "layout_pair_id": "D02",
+      "mm": 1.8393798739074432,
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "phase": "development"
+    },
+    "maximum_camera_z_interval_edge_residual": {
+      "camera_name": "over_shoulder_left_camera",
+      "layout_pair_id": "D02",
+      "mm": 1.414771802770609,
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "phase": "development"
+    },
+    "maximum_center_target_l2_residual": {
+      "layout_pair_id": "D02",
+      "mm": 1.8614546594330106,
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "phase": "development"
+    },
+    "maximum_projected_envelope_center_l2_residual": {
+      "camera_name": "wrist_cam",
+      "layout_pair_id": "D02",
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "phase": "development",
+      "px": 3.384343233964444
+    },
+    "maximum_projected_envelope_edge_residual": {
+      "camera_name": "wrist_cam",
+      "layout_pair_id": "D02",
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "phase": "development",
+      "px": 3.204905157569897
+    },
+    "maximum_projected_envelope_extent_residual": {
+      "camera_name": "wrist_cam",
+      "layout_pair_id": "D02",
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "phase": "development",
+      "px": 0.7106885741465021
+    },
+    "maximum_world_aabb_bound_residual": {
+      "layout_pair_id": "D02",
+      "mm": 1.928526908159256,
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "phase": "development"
+    },
+    "maximum_world_aabb_extent_residual": {
+      "layout_pair_id": "D02",
+      "mm": 0.36071985960006714,
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "phase": "development"
+    },
+    "original_reflected_mapping_pairs": 3,
+    "projected_camera_object_correspondence_rows": 36,
+    "world_object_correspondence_rows": 9
+  },
+  "turn2846_reflection_transition_package": {
+    "audit": {
+      "bytes": 39416,
+      "path": "workshops/corl2026_world_models/analysis/audit_retained_aabb_reflection_transitions.py",
+      "sha256": "3ca348838bda8e8ea6e96f6f75aa64934da6a03a0209d304427716bdcbe29136"
+    },
+    "canonical_regeneration_verified": true,
+    "commit": "e587e29cb5b5292db98d8b1eb0bcdba076cf17c1",
+    "report": {
+      "bytes": 52327,
+      "path": "workshops/corl2026_world_models/results/retained_aabb_reflection_transition_diagnostic.json",
+      "sha256": "5592a16da4d607ec591f2fb85c7ca7d4cfe5c5ed0f816f108447fbc53437345a"
+    }
+  }
+}

@@ -1,0 +1,511 @@
+{
+  "claim_boundaries": {
+    "aabb_not_object_silhouette": "The audited shape is the per-axis min/max box derived from retained world.get_bbox corners. It may be loose and is not an exact mesh, oriented box, segmentation mask, image footprint or object silhouette.",
+    "frame_support_not_visibility": "Positive depth and strict frame inclusion of these AABB corners do not authenticate RGB bytes, image content, object identity, focus, lighting, silhouette visibility, crop mapping, camera-time alignment or human labelability. No measurement-feasibility qualification follows.",
+    "occlusion_scope": "The pinned implementation tests only target-center rays against the other two retained movable-object axis-aligned boxes. It does not test the projected AABB envelopes for occlusion and does not include the robot or static scene geometry. No general unoccluded claim follows.",
+    "science_and_release": "No fixture/camera/crop/time qualification, scientific acceptance threshold, A1-A9 result, forecast/persistence metric, task success, model comparison, label, current-state inference, gate promotion, dispatch/release authority or new behavioral evidence follows.",
+    "stage_and_selection": "Only reset-stage simulator geometry in six availability-selected unique mappings from seven prior-authenticated embedded receipts is analyzed. These are not executed-motion endpoints, generated forecasts, observed centroids, a representative sample or the full completed cohort."
+  },
+  "confirmation_released": false,
+  "evidence_boundaries": {
+    "a1_a9_result": false,
+    "camera_crop_or_time_alignment_authenticated": false,
+    "cross_time_field_join_performed": false,
+    "current_state_inferred": false,
+    "fixture_pass_fail_classification_created": false,
+    "forecast_or_persistence_metric": false,
+    "gate_advanced": false,
+    "human_image_centroids_used": false,
+    "measurement_feasibility_qualified": false,
+    "raw_camera_bytes_read": false,
+    "raw_pvc_bytes_read": false,
+    "release_authority": false,
+    "rgb_or_image_content_analyzed": false,
+    "robot_or_static_scene_occlusion_analyzed": false,
+    "scientific_threshold_applied": false,
+    "silhouette_or_segmentation_analyzed": false,
+    "task_success_or_model_rate": false
+  },
+  "exhaustive_results_inventory": {
+    "all_occurrences_confined_to_four_pinned_snapshots": true,
+    "commit": "12839900e5c46299e11fff4813e8602949055b86",
+    "object_aabbs_robot_base_m_occurrences": 32,
+    "occurrences_by_path": {
+      "results/jobs/d1-development-d01-snapshot-001/publish/diagnostic.json": 8,
+      "results/jobs/d1-development-d02-snapshot-001/publish/diagnostic.json": 8,
+      "results/jobs/detached-attempt-snapshot-002/publish/diagnostic.json": 4,
+      "results/jobs/detached-attempt-snapshot-003/publish/diagnostic.json": 12
+    },
+    "scope": "results/jobs/**/*.json",
+    "strict_json_blobs_parsed": 370,
+    "strict_json_bytes_parsed": 1925346
+  },
+  "finding": "After collapsing seven terminal-matched retained cells to six unique arm-level reset mappings, all 576 projections of the eight corners of 72 world.get_bbox-derived axis-aligned boxes have positive camera depth and lie strictly inside their retained 1280x720 frames. The smallest corner-envelope boundary margin is 46.21332507478144 pixels. This is only a retained-geometric AABB-corner frame-support result.",
+  "forecast_accuracy_estimated": false,
+  "labels_created": 0,
+  "mappings": [
+    {
+      "camera_rows": [
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "maximum_object_envelope_height_px": 76.26380823917418,
+          "maximum_object_envelope_width_px": 55.37388543167663,
+          "minimum_object_envelope_frame_margin_px": 246.28665994909795,
+          "minimum_positive_corner_depth_m": 1.2282078334619027
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "maximum_object_envelope_height_px": 105.03549746779066,
+          "maximum_object_envelope_width_px": 132.2419867156566,
+          "minimum_object_envelope_frame_margin_px": 237.24890168032152,
+          "minimum_positive_corner_depth_m": 0.7268796380643955
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "maximum_object_envelope_height_px": 106.8721188908807,
+          "maximum_object_envelope_width_px": 133.19405243378935,
+          "minimum_object_envelope_frame_margin_px": 254.88179118442622,
+          "minimum_positive_corner_depth_m": 0.7547964735185139
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "maximum_object_envelope_height_px": 273.163672646323,
+          "maximum_object_envelope_width_px": 310.0250161892742,
+          "minimum_object_envelope_frame_margin_px": 58.106508394094476,
+          "minimum_positive_corner_depth_m": 0.3314892624027577
+        }
+      ],
+      "layout_arm": "original",
+      "layout_pair_id": "D01",
+      "member_cell_ids": [
+        "wmf1__development__D01__D1__original__left"
+      ],
+      "member_commands": [
+        "left"
+      ],
+      "model_id": "D1",
+      "phase": "development",
+      "representative_cell_id": "wmf1__development__D01__D1__original__left",
+      "representative_snapshot_cell_key": "00-wmf1-development-D01-D1-original-left",
+      "representative_snapshot_source": "D01_snapshot",
+      "same_aabb_mapping_copied_across_four_cameras": true
+    },
+    {
+      "camera_rows": [
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "maximum_object_envelope_height_px": 76.27264446329997,
+          "maximum_object_envelope_width_px": 55.370935446668454,
+          "minimum_object_envelope_frame_margin_px": 246.22656738204182,
+          "minimum_positive_corner_depth_m": 1.228199279745255
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "maximum_object_envelope_height_px": 106.9348879292503,
+          "maximum_object_envelope_width_px": 133.21520871850248,
+          "minimum_object_envelope_frame_margin_px": 237.24863517939082,
+          "minimum_positive_corner_depth_m": 0.7268795117451411
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "maximum_object_envelope_height_px": 104.97185156190528,
+          "maximum_object_envelope_width_px": 132.22390414034317,
+          "minimum_object_envelope_frame_margin_px": 254.88137846587398,
+          "minimum_positive_corner_depth_m": 0.7547960702812739
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "maximum_object_envelope_height_px": 273.2601136597522,
+          "maximum_object_envelope_width_px": 294.97994288968994,
+          "minimum_object_envelope_frame_margin_px": 51.27526290615788,
+          "minimum_positive_corner_depth_m": 0.3314898406339029
+        }
+      ],
+      "layout_arm": "reflected",
+      "layout_pair_id": "D01",
+      "member_cell_ids": [
+        "wmf1__development__D01__D1__reflected__right"
+      ],
+      "member_commands": [
+        "right"
+      ],
+      "model_id": "D1",
+      "phase": "development",
+      "representative_cell_id": "wmf1__development__D01__D1__reflected__right",
+      "representative_snapshot_cell_key": "01-wmf1-development-D01-D1-reflected-right",
+      "representative_snapshot_source": "D01_snapshot",
+      "same_aabb_mapping_copied_across_four_cameras": true
+    },
+    {
+      "camera_rows": [
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "maximum_object_envelope_height_px": 74.33627710087507,
+          "maximum_object_envelope_width_px": 56.1783752776613,
+          "minimum_object_envelope_frame_margin_px": 247.2552710621739,
+          "minimum_positive_corner_depth_m": 1.2615795604470164
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "maximum_object_envelope_height_px": 101.47039320415075,
+          "maximum_object_envelope_width_px": 129.56589037894446,
+          "minimum_object_envelope_frame_margin_px": 257.15175359282944,
+          "minimum_positive_corner_depth_m": 0.7582607642848652
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "maximum_object_envelope_height_px": 106.95052096574176,
+          "maximum_object_envelope_width_px": 132.37884944142104,
+          "minimum_object_envelope_frame_margin_px": 247.03819414275728,
+          "minimum_positive_corner_depth_m": 0.7422405928731866
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "maximum_object_envelope_height_px": 270.10997915553105,
+          "maximum_object_envelope_width_px": 305.5219098443005,
+          "minimum_object_envelope_frame_margin_px": 98.79781419447568,
+          "minimum_positive_corner_depth_m": 0.3365405682920632
+        }
+      ],
+      "layout_arm": "original",
+      "layout_pair_id": "D02",
+      "member_cell_ids": [
+        "wmf1__development__D02__D1__original__left"
+      ],
+      "member_commands": [
+        "left"
+      ],
+      "model_id": "D1",
+      "phase": "development",
+      "representative_cell_id": "wmf1__development__D02__D1__original__left",
+      "representative_snapshot_cell_key": "01-wmf1-development-D02-D1-original-left",
+      "representative_snapshot_source": "D02_snapshot",
+      "same_aabb_mapping_copied_across_four_cameras": true
+    },
+    {
+      "camera_rows": [
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "maximum_object_envelope_height_px": 74.32810662139605,
+          "maximum_object_envelope_width_px": 56.1762254418519,
+          "minimum_object_envelope_frame_margin_px": 247.31366510451858,
+          "minimum_positive_corner_depth_m": 1.2615872395094991
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "maximum_object_envelope_height_px": 107.01752473096701,
+          "maximum_object_envelope_width_px": 132.40385884929913,
+          "minimum_object_envelope_frame_margin_px": 229.27346051741245,
+          "minimum_positive_corner_depth_m": 0.7150068218335808
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "maximum_object_envelope_height_px": 101.42361701728862,
+          "maximum_object_envelope_width_px": 129.55754977066874,
+          "minimum_object_envelope_frame_margin_px": 273.21289345994717,
+          "minimum_positive_corner_depth_m": 0.7858071169832186
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "maximum_object_envelope_height_px": 270.41802473312595,
+          "maximum_object_envelope_width_px": 321.3965762806249,
+          "minimum_object_envelope_frame_margin_px": 106.32926685677137,
+          "minimum_positive_corner_depth_m": 0.33596524001540806
+        }
+      ],
+      "layout_arm": "reflected",
+      "layout_pair_id": "D02",
+      "member_cell_ids": [
+        "wmf1__development__D02__D1__reflected__right"
+      ],
+      "member_commands": [
+        "right"
+      ],
+      "model_id": "D1",
+      "phase": "development",
+      "representative_cell_id": "wmf1__development__D02__D1__reflected__right",
+      "representative_snapshot_cell_key": "00-wmf1-development-D02-D1-reflected-right",
+      "representative_snapshot_source": "D02_snapshot",
+      "same_aabb_mapping_copied_across_four_cameras": true
+    },
+    {
+      "camera_rows": [
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "maximum_object_envelope_height_px": 75.15066311990648,
+          "maximum_object_envelope_width_px": 54.33119326214603,
+          "minimum_object_envelope_frame_margin_px": 262.17851650900036,
+          "minimum_positive_corner_depth_m": 1.2240285593807574
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "maximum_object_envelope_height_px": 109.45295661826066,
+          "maximum_object_envelope_width_px": 135.63823126141415,
+          "minimum_object_envelope_frame_margin_px": 234.47716935555445,
+          "minimum_positive_corner_depth_m": 0.7227112302402624
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "maximum_object_envelope_height_px": 107.40493146332045,
+          "maximum_object_envelope_width_px": 134.60348870338555,
+          "minimum_object_envelope_frame_margin_px": 261.2271279206092,
+          "minimum_positive_corner_depth_m": 0.7652626329240755
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "maximum_object_envelope_height_px": 277.2929814120689,
+          "maximum_object_envelope_width_px": 294.46635084461025,
+          "minimum_object_envelope_frame_margin_px": 46.21332507478144,
+          "minimum_positive_corner_depth_m": 0.3329356442130749
+        }
+      ],
+      "layout_arm": "original",
+      "layout_pair_id": "P00",
+      "member_cell_ids": [
+        "wmf1__pilot__P00__N3__original__left"
+      ],
+      "member_commands": [
+        "left"
+      ],
+      "model_id": "N3",
+      "phase": "pilot",
+      "representative_cell_id": "wmf1__pilot__P00__N3__original__left",
+      "representative_snapshot_cell_key": "02-wmf1-pilot-P00-N3-original-left",
+      "representative_snapshot_source": "N3_snapshot_003",
+      "same_aabb_mapping_copied_across_four_cameras": true
+    },
+    {
+      "camera_rows": [
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "6d43b168602cb25d52ac444cbc0213f0e46f53270d386747dfa34e38f2a05192",
+          "camera_name": "head_camera",
+          "maximum_object_envelope_height_px": 75.14352100728308,
+          "maximum_object_envelope_width_px": 54.330662407195746,
+          "minimum_object_envelope_frame_margin_px": 262.2379581712362,
+          "minimum_positive_corner_depth_m": 1.2240330537872897
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "8fbccf8b6dad2608560da9698389795642a2229ae9d6aa930c2fa097c81e403b",
+          "camera_name": "over_shoulder_left_camera",
+          "maximum_object_envelope_height_px": 107.47271975569413,
+          "maximum_object_envelope_width_px": 134.6239001797444,
+          "minimum_object_envelope_frame_margin_px": 244.06481420576938,
+          "minimum_positive_corner_depth_m": 0.7373437127921534
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "2430537c4923ed0a05f06f08e3af12ba6b95951944bb4329306776d543e8cd39",
+          "camera_name": "over_shoulder_right_camera",
+          "maximum_object_envelope_height_px": 109.37787933026584,
+          "maximum_object_envelope_width_px": 135.61197843348612,
+          "minimum_object_envelope_frame_margin_px": 252.29339331923092,
+          "minimum_positive_corner_depth_m": 0.7506090003427776
+        },
+        {
+          "all_24_corners_positive_depth_and_strictly_in_frame": true,
+          "camera_configuration_sha256": "ddc5005188ee810a90c154f9bf69e7b908e3e43c1b9f2b700821a24e68ec1b11",
+          "camera_name": "wrist_cam",
+          "maximum_object_envelope_height_px": 277.1833476630307,
+          "maximum_object_envelope_width_px": 299.27411687941617,
+          "minimum_object_envelope_frame_margin_px": 51.55481515344775,
+          "minimum_positive_corner_depth_m": 0.33317555851769104
+        }
+      ],
+      "layout_arm": "reflected",
+      "layout_pair_id": "P00",
+      "member_cell_ids": [
+        "wmf1__pilot__P00__N3__reflected__left",
+        "wmf1__pilot__P00__N3__reflected__right"
+      ],
+      "member_commands": [
+        "left",
+        "right"
+      ],
+      "model_id": "N3",
+      "phase": "pilot",
+      "representative_cell_id": "wmf1__pilot__P00__N3__reflected__left",
+      "representative_snapshot_cell_key": "01-wmf1-pilot-P00-N3-reflected-left",
+      "representative_snapshot_source": "N3_snapshot_003",
+      "same_aabb_mapping_copied_across_four_cameras": true
+    }
+  ],
+  "new_behavioral_cells": 0,
+  "new_model_requests": 0,
+  "prior_reset_projection_package": {
+    "audit": {
+      "bytes": 34959,
+      "path": "workshops/corl2026_world_models/analysis/audit_retained_reset_projection.py",
+      "sha256": "e97c4c1c5cdb5272ede1e6991dffdd7c8eb27aa9e85f412b61f0ffbff3eb3c57"
+    },
+    "canonical_regeneration_verified": true,
+    "commit": "9263a6ce0eb37ba3264d09f46b7519abe2d4ae32",
+    "report": {
+      "bytes": 64195,
+      "path": "workshops/corl2026_world_models/results/retained_reset_projection_diagnostic.json",
+      "sha256": "38e637cfd09a5951684e80361ff44026f353c123f6c83c4d11dc27a7237b3c72"
+    }
+  },
+  "resource_budget_qualified": false,
+  "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+  "schema_version": "wmf-retained-aabb-frame-support-diagnostic-v1",
+  "selection": {
+    "availability_selected": true,
+    "cross_time_field_join_performed": false,
+    "full_completed_cohort": false,
+    "mapping_camera_object_envelopes": 72,
+    "mapping_camera_rows": 24,
+    "projected_aabb_corners": 576,
+    "representative_sample": false,
+    "terminal_matched_unique_cells": 7,
+    "unique_arm_level_reset_mappings": 6
+  },
+  "source_semantics": {
+    "identical_at_recorded_source_commits": [
+      {
+        "git_blob": "0113723ed554a7fd2e5014606b37fc7483237813",
+        "model_id": "N3",
+        "source_commit": "b8914413f6293c165dd3a57c737f4b977e7e84be"
+      },
+      {
+        "git_blob": "0113723ed554a7fd2e5014606b37fc7483237813",
+        "model_id": "D1",
+        "source_commit": "25ff299ca0d2b9964eb48286990ee2301cb207b8"
+      }
+    ],
+    "method_label_implementation_mismatch": "The retained visibility_method string says calibrated_projection_and_obb_occlusion, but the implementation stores axis-aligned min/max bounds and tests only each target-center ray against the other two retained movable-object AABBs. The label is not treated as proof of OBB, silhouette, robot/static-scene, RGB or general occlusion analysis.",
+    "source_file": {
+      "bytes": 23395,
+      "git_blob": "0113723ed554a7fd2e5014606b37fc7483237813",
+      "path": "workshops/corl2026_world_models/experiments/forecast_layout/robolab_fixture_gate_adapter.py",
+      "sha256": "28cd6105010892dcabe2f4bfd61277f1e7cf41d0a42086f4879087f4d3268b23"
+    },
+    "verified_implementation": "For each of banana, bowl and rubiks_cube, the pinned adapter obtains world.get_bbox corners, converts them to numeric rows, and stores the per-axis minima/maxima as a robot-base axis-aligned box before the camera loop. This audit projects only the eight corners of that retained AABB."
+  },
+  "summary": {
+    "camera_rows": 24,
+    "camera_summary": {
+      "head_camera": {
+        "all_corners_positive_depth_and_strictly_in_frame": true,
+        "maximum_corner_envelope_height_px": 76.27264446329997,
+        "maximum_corner_envelope_width_px": 56.1783752776613,
+        "minimum_corner_envelope_frame_margin_px": 246.22656738204182,
+        "minimum_positive_corner_depth_m": 1.2240285593807574,
+        "projected_aabb_corners": 144,
+        "unique_mapping_object_envelopes": 18
+      },
+      "over_shoulder_left_camera": {
+        "all_corners_positive_depth_and_strictly_in_frame": true,
+        "maximum_corner_envelope_height_px": 109.45295661826066,
+        "maximum_corner_envelope_width_px": 135.63823126141415,
+        "minimum_corner_envelope_frame_margin_px": 229.27346051741245,
+        "minimum_positive_corner_depth_m": 0.7150068218335808,
+        "projected_aabb_corners": 144,
+        "unique_mapping_object_envelopes": 18
+      },
+      "over_shoulder_right_camera": {
+        "all_corners_positive_depth_and_strictly_in_frame": true,
+        "maximum_corner_envelope_height_px": 109.37787933026584,
+        "maximum_corner_envelope_width_px": 135.61197843348612,
+        "minimum_corner_envelope_frame_margin_px": 247.03819414275728,
+        "minimum_positive_corner_depth_m": 0.7422405928731866,
+        "projected_aabb_corners": 144,
+        "unique_mapping_object_envelopes": 18
+      },
+      "wrist_cam": {
+        "all_corners_positive_depth_and_strictly_in_frame": true,
+        "maximum_corner_envelope_height_px": 277.2929814120689,
+        "maximum_corner_envelope_width_px": 321.3965762806249,
+        "minimum_corner_envelope_frame_margin_px": 46.21332507478144,
+        "minimum_positive_corner_depth_m": 0.3314892624027577,
+        "projected_aabb_corners": 144,
+        "unique_mapping_object_envelopes": 18
+      }
+    },
+    "center_projections_inside_corner_envelopes": 72,
+    "fully_frame_supported_corner_envelopes": 72,
+    "mapping_camera_object_envelopes": 72,
+    "maximum_corner_envelope_height": {
+      "camera_name": "wrist_cam",
+      "layout_arm": "original",
+      "layout_pair_id": "P00",
+      "model_id": "N3",
+      "object_name": "bowl",
+      "pixels": 277.2929814120689,
+      "representative_cell_id": "wmf1__pilot__P00__N3__original__left"
+    },
+    "maximum_corner_envelope_width": {
+      "camera_name": "wrist_cam",
+      "layout_arm": "reflected",
+      "layout_pair_id": "D02",
+      "model_id": "D1",
+      "object_name": "banana",
+      "pixels": 321.3965762806249,
+      "representative_cell_id": "wmf1__development__D02__D1__reflected__right"
+    },
+    "minimum_corner_envelope_frame_margin": {
+      "camera_name": "wrist_cam",
+      "layout_arm": "original",
+      "layout_pair_id": "P00",
+      "model_id": "N3",
+      "object_name": "banana",
+      "pixels": 46.21332507478144,
+      "representative_cell_id": "wmf1__pilot__P00__N3__original__left"
+    },
+    "minimum_positive_corner_depth": {
+      "camera_name": "wrist_cam",
+      "layout_arm": "original",
+      "layout_pair_id": "D01",
+      "meters": 0.3314892624027577,
+      "model_id": "D1",
+      "object_name": "rubiks_cube",
+      "representative_cell_id": "wmf1__development__D01__D1__original__left"
+    },
+    "positive_depth_corner_projections": 576,
+    "projected_aabb_corners": 576,
+    "retained_centers_inside_their_aabbs": 72,
+    "strictly_in_frame_corner_projections": 576,
+    "unique_arm_level_reset_mappings": 6
+  }
+}

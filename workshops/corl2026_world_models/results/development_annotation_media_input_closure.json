@@ -1,0 +1,454 @@
+{
+  "authenticated_source_blobs": {
+    "canonical_bytes": 1604,
+    "canonicalization": "lexicographically sorted UTF-8 rows with LF terminators",
+    "count": 8,
+    "sha256": "c0dea0a177d96a8f513df555020b5a15ee3b6bdbbef4cde2c9eaa321ce9631e1",
+    "source_bytes": 892007,
+    "sources": [
+      {
+        "bytes": 12374,
+        "commit": "12839900e5c46299e11fff4813e8602949055b86",
+        "path": "results/jobs/development-evidence-compiler-formal-004/publish/development_evidence_compiler_job_receipt.json",
+        "sha256": "00329a3c991ee6eb0c68996ecaca1aed59ea3017329272cd82b4b5bfb5cee434"
+      },
+      {
+        "bytes": 79824,
+        "commit": "12839900e5c46299e11fff4813e8602949055b86",
+        "path": "results/jobs/timing-d1-development-sidecar-002/publish/timing_job_receipt.json",
+        "sha256": "75490aab357d8290afa10f0e1a85437794a37c81f6a9a0524c94c746198da68d"
+      },
+      {
+        "bytes": 29935,
+        "commit": "12839900e5c46299e11fff4813e8602949055b86",
+        "path": "results/jobs/timing-n3-development-sidecar-001/publish/timing_job_receipt.json",
+        "sha256": "7c4aa556d37f170308ef5529489936e3fd7fbce819909d8e1d5937c16965f9d9"
+      },
+      {
+        "bytes": 106292,
+        "commit": "26fd6a4c426df3b20c0f5276eee52d34cf9194f0",
+        "path": "workshops/corl2026_world_models/execution/20260912/status.json",
+        "sha256": "b01b9171211aa197caf41698194153fd8bdc2a1f5c4c270c6e95f2e929473881"
+      },
+      {
+        "bytes": 573283,
+        "commit": "296fefc0ad14b3320d7c45a8a11fde6f0908deb6",
+        "path": "workshops/corl2026_world_models/results/development_request_recovery_lineage.json",
+        "sha256": "5714efd75bde846c41d1bb3f0ec88df427d3b18bf8c0df62633b6b38b8a95878"
+      },
+      {
+        "bytes": 10092,
+        "commit": "84332bf638595ff7ed955fd263586ecc0e06ab93",
+        "path": "workshops/corl2026_world_models/results/development_annotation_readiness_inventory.json",
+        "sha256": "41303ab00b78f90f0f7e3fc721550a8ca6547f74f8d2c38f9b912aae06e8c672"
+      },
+      {
+        "bytes": 3498,
+        "commit": "cfcfd241fbd8b82e416f814a019c8c20d9c1c359",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_bridge_contract.json",
+        "sha256": "893996c8157dad803c1bd57e57b3922f4c340a66846aa457e0d6bf27c1491d39"
+      },
+      {
+        "bytes": 76709,
+        "commit": "cfcfd241fbd8b82e416f814a019c8c20d9c1c359",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+        "sha256": "13d1bbbbd19e3ded30d3bc9d27f1e8a909d478b691afa320bc7e6c68a5425190"
+      }
+    ]
+  },
+  "claim_boundaries": {
+    "annotation": "Contract eligibility and selection counts are expectations only. No eligibility, selection, media, rater handoff, response, label, consensus, threshold or usability result was created.",
+    "artifact": "This is a retained-Git top-level input-closure ledger, not a runnable annotation-media input manifest or queue descriptor.",
+    "identity": "Five exact raw-pointer identities and three exact retained Git payloads bind eight of fourteen top-level slots; no current runtime placement or availability is inferred.",
+    "missing": "Six slots lack authenticated descriptors in the pinned sources. That is an evidence-closure statement, not proof that files are absent from every external system.",
+    "operations": "Retained Git evidence does not establish current GM, PVC, queue, worker, GPU, child, reap, lock or live-quiescence state.",
+    "release": "safe_to_release_new_work remains false; no descriptor, retrieval job, semantic replay, scientific cell or confirmation work was released.",
+    "science": "No policy skill, forecast accuracy, model comparison, resource qualification or confirmation result is inferred; the 232-cell ceiling is unchanged.",
+    "transitive": "The 56-file recovery set does not establish the nested payload closure required by request provenance, timing validation, camera replay, or rendering."
+  },
+  "contract_expectations_not_observed_results": {
+    "d1_forecast_timing_unavailable_requests": 672,
+    "eligible_requests_per_episode_expected": 14,
+    "episodes": 32,
+    "observed_selected_requests": 0,
+    "production_eligibility_determined": false,
+    "production_selection_manifest_created": false,
+    "request_inclusion_probability_exact_expected": "4/14",
+    "requests": 1152,
+    "selected_requests_by_model_expected": {
+      "D1": 64,
+      "N3": 64
+    },
+    "selected_requests_expected": 128,
+    "source_timing_capable_requests": 480,
+    "timing_camera_action_eligible_requests_expected": 448
+  },
+  "gate_state": {
+    "annotation_media_ready": false,
+    "camera_alignment_ready": false,
+    "confirmation_release_ready": false,
+    "core_episode_ceiling": 232,
+    "current_GM_PVC_worker_state_reconciled": false,
+    "human_annotation_ready": false,
+    "resource_freeze_ready": false,
+    "safe_to_release_new_work": false
+  },
+  "input_pins": {
+    "lineage_commit": "296fefc0ad14b3320d7c45a8a11fde6f0908deb6",
+    "media_contract_commit": "cfcfd241fbd8b82e416f814a019c8c20d9c1c359",
+    "readiness_commit": "84332bf638595ff7ed955fd263586ecc0e06ab93",
+    "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+    "status_commit": "26fd6a4c426df3b20c0f5276eee52d34cf9194f0"
+  },
+  "media_join_domain": {
+    "cells": 32,
+    "cells_by_model": {
+      "D1": 16,
+      "N3": 16
+    },
+    "duplicate_join_keys": 0,
+    "join_key_index": {
+      "canonical_bytes": 57280,
+      "canonicalization": "ordered UTF-8 rows with LF terminators",
+      "count": 1152,
+      "sha256": "a736e247c263db5f91639954407e2d47deadce400a8d74af84e002e5f49daac4"
+    },
+    "lineage_index": {
+      "canonical_bytes": 160740,
+      "canonicalization": "ordered UTF-8 rows with LF terminators",
+      "count": 1152,
+      "sha256": "165b87ad0d260478fb2ba13348887edc723d962e3ed29b53539cf2025402d935"
+    },
+    "requests": 1152,
+    "requests_by_model": {
+      "D1": 912,
+      "N3": 240
+    },
+    "requests_per_cell": {
+      "D1": 57,
+      "N3": 15
+    }
+  },
+  "new_activity": {
+    "annotation_media": 0,
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "confirmation_inference_cells": 0,
+    "forecast_accuracy_estimates": 0,
+    "human_responses": 0,
+    "labels": 0,
+    "model_requests": 0,
+    "queue_descriptors": 0,
+    "raw_bytes_read": 0,
+    "raw_paths_opened": 0,
+    "request_selections": 0,
+    "retrieval_jobs": 0
+  },
+  "recovery_manifest_boundary": {
+    "all_declared_bytes": 32664538,
+    "all_declared_dependencies": 56,
+    "compiler_output_inventory_is_not_compiler_job_receipt": true,
+    "current_raw_availability_verified": false,
+    "direct_top_level_media_slots": 5,
+    "non_direct_dependency_id_index": {
+      "canonical_bytes": 714,
+      "canonicalization": "lexicographically sorted UTF-8 rows with LF terminators",
+      "count": 51,
+      "sha256": "62b782d0c142acfbe2989de3d286844bdc592d00c50769e12581927a2b879de6"
+    },
+    "non_direct_top_level_dependencies": 51,
+    "raw_bytes_read": 0,
+    "raw_paths_opened": 0,
+    "raw_request_inventories_are_not_timing_job_receipts": true,
+    "transitive_dependency_closure_authenticated": false
+  },
+  "runtime_input_contract": {
+    "closure_schema_is_not_runtime_input_schema": true,
+    "compiler_fields": [
+      "compiler_receipt",
+      "job_receipt"
+    ],
+    "descriptor_fields": [
+      "bytes",
+      "path",
+      "sha256"
+    ],
+    "emitted_job_descriptor_released": true,
+    "join_key": [
+      "model_id",
+      "cell_id",
+      "request_index"
+    ],
+    "mode": "formal_full_development",
+    "model_fields": [
+      "alignment_contract",
+      "camera_crop_contract",
+      "physical_alignment_receipt",
+      "request_provenance",
+      "timing_job_receipt",
+      "timing_sidecar"
+    ],
+    "models": [
+      "N3",
+      "D1"
+    ],
+    "queue_descriptor_created": false,
+    "raw_root": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912",
+    "required_top_level_slots": 14,
+    "runnable_input_manifest_created": false,
+    "runtime_input_schema": "wmf-development-annotation-media-input-v1",
+    "top_level_fields": [
+      "compiler",
+      "mode",
+      "models",
+      "raw_root",
+      "schema_version",
+      "study_id"
+    ]
+  },
+  "schema_version": "wmf-development-annotation-media-input-closure-v1",
+  "study_id": "WMF-ABLATION-001",
+  "top_level_input_closure": {
+    "current_runtime_byte_verified_slots": 0,
+    "direct_recovery_dependency_ids": [
+      "dependency-33",
+      "dependency-35",
+      "dependency-38",
+      "dependency-52",
+      "dependency-54"
+    ],
+    "exact_identity_bound_slots": 8,
+    "recovery_manifest_pointer_slots": 5,
+    "recovery_pointer_declared_bytes": 20803049,
+    "required_slots": 14,
+    "retained_git_payload_bytes": 122133,
+    "retained_git_payload_slots_outside_recovery_manifest": 3,
+    "semantic_replay_complete_slots": 0,
+    "slots": [
+      {
+        "declared_runtime_descriptor": null,
+        "field": "alignment_contract",
+        "lineage_dependency_id": null,
+        "model_id": "D1",
+        "prospective_runtime_descriptor": null,
+        "retained_git_blob": null,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.alignment_contract",
+        "source_state": "no_authenticated_descriptor_in_pinned_sources"
+      },
+      {
+        "declared_runtime_descriptor": null,
+        "field": "camera_crop_contract",
+        "lineage_dependency_id": null,
+        "model_id": "D1",
+        "prospective_runtime_descriptor": null,
+        "retained_git_blob": null,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.camera_crop_contract",
+        "source_state": "no_authenticated_descriptor_in_pinned_sources"
+      },
+      {
+        "declared_runtime_descriptor": null,
+        "field": "physical_alignment_receipt",
+        "lineage_dependency_id": null,
+        "model_id": "D1",
+        "prospective_runtime_descriptor": null,
+        "retained_git_blob": null,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.physical_alignment_receipt",
+        "source_state": "no_authenticated_descriptor_in_pinned_sources"
+      },
+      {
+        "declared_runtime_descriptor": {
+          "bytes": 8628502,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/development-evidence-compiler-formal-004/raw/compiler_bundle/d1_development_request_provenance.json",
+          "sha256": "209427bcd1511d8eed01a6b7566eea1eb501fa675c8faaaf0339c2f3e70b9575"
+        },
+        "field": "request_provenance",
+        "lineage_dependency_id": "dependency-35",
+        "model_id": "D1",
+        "prospective_runtime_descriptor": null,
+        "retained_git_blob": null,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.request_provenance",
+        "source_state": "declared_raw_pointer_in_recovery_manifest_current_availability_unknown"
+      },
+      {
+        "declared_runtime_descriptor": null,
+        "field": "timing_job_receipt",
+        "lineage_dependency_id": null,
+        "model_id": "D1",
+        "prospective_runtime_descriptor": {
+          "bytes": 79824,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-d1-development-sidecar-002/publish/timing_job_receipt.json",
+          "sha256": "75490aab357d8290afa10f0e1a85437794a37c81f6a9a0524c94c746198da68d"
+        },
+        "retained_git_blob": {
+          "bytes": 79824,
+          "commit": "12839900e5c46299e11fff4813e8602949055b86",
+          "path": "results/jobs/timing-d1-development-sidecar-002/publish/timing_job_receipt.json",
+          "sha256": "75490aab357d8290afa10f0e1a85437794a37c81f6a9a0524c94c746198da68d"
+        },
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.timing_job_receipt",
+        "source_state": "retained_git_blob_outside_recovery_manifest_runtime_materialization_unverified"
+      },
+      {
+        "declared_runtime_descriptor": {
+          "bytes": 3360158,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-d1-development-sidecar-002/raw/d1_development_timing_sidecar.json",
+          "sha256": "6bd497fce7ed5cbff8d78b6769ca4fcc8545fdefdcdf3b41126e92d01ae06ab3"
+        },
+        "field": "timing_sidecar",
+        "lineage_dependency_id": "dependency-52",
+        "model_id": "D1",
+        "prospective_runtime_descriptor": null,
+        "retained_git_blob": null,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.timing_sidecar",
+        "source_state": "declared_raw_pointer_in_recovery_manifest_current_availability_unknown"
+      },
+      {
+        "declared_runtime_descriptor": null,
+        "field": "alignment_contract",
+        "lineage_dependency_id": null,
+        "model_id": "N3",
+        "prospective_runtime_descriptor": null,
+        "retained_git_blob": null,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.alignment_contract",
+        "source_state": "no_authenticated_descriptor_in_pinned_sources"
+      },
+      {
+        "declared_runtime_descriptor": null,
+        "field": "camera_crop_contract",
+        "lineage_dependency_id": null,
+        "model_id": "N3",
+        "prospective_runtime_descriptor": null,
+        "retained_git_blob": null,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.camera_crop_contract",
+        "source_state": "no_authenticated_descriptor_in_pinned_sources"
+      },
+      {
+        "declared_runtime_descriptor": null,
+        "field": "physical_alignment_receipt",
+        "lineage_dependency_id": null,
+        "model_id": "N3",
+        "prospective_runtime_descriptor": null,
+        "retained_git_blob": null,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.physical_alignment_receipt",
+        "source_state": "no_authenticated_descriptor_in_pinned_sources"
+      },
+      {
+        "declared_runtime_descriptor": {
+          "bytes": 3288433,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/development-evidence-compiler-formal-004/raw/compiler_bundle/n3_development_request_provenance.json",
+          "sha256": "0986b89f3cdb75ce3e07ec3317bfb3651140fb7c35a23596a4ef7caa74bfd6fd"
+        },
+        "field": "request_provenance",
+        "lineage_dependency_id": "dependency-38",
+        "model_id": "N3",
+        "prospective_runtime_descriptor": null,
+        "retained_git_blob": null,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.request_provenance",
+        "source_state": "declared_raw_pointer_in_recovery_manifest_current_availability_unknown"
+      },
+      {
+        "declared_runtime_descriptor": null,
+        "field": "timing_job_receipt",
+        "lineage_dependency_id": null,
+        "model_id": "N3",
+        "prospective_runtime_descriptor": {
+          "bytes": 29935,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-development-sidecar-001/publish/timing_job_receipt.json",
+          "sha256": "7c4aa556d37f170308ef5529489936e3fd7fbce819909d8e1d5937c16965f9d9"
+        },
+        "retained_git_blob": {
+          "bytes": 29935,
+          "commit": "12839900e5c46299e11fff4813e8602949055b86",
+          "path": "results/jobs/timing-n3-development-sidecar-001/publish/timing_job_receipt.json",
+          "sha256": "7c4aa556d37f170308ef5529489936e3fd7fbce819909d8e1d5937c16965f9d9"
+        },
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.timing_job_receipt",
+        "source_state": "retained_git_blob_outside_recovery_manifest_runtime_materialization_unverified"
+      },
+      {
+        "declared_runtime_descriptor": {
+          "bytes": 5473068,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/timing-n3-development-sidecar-001/raw/n3_development_timing_sidecar.json",
+          "sha256": "6d01b278f317015911f5d46d6b0ed1a3512dc9d89c68a7cbfc43ae5d4d832e0d"
+        },
+        "field": "timing_sidecar",
+        "lineage_dependency_id": "dependency-54",
+        "model_id": "N3",
+        "prospective_runtime_descriptor": null,
+        "retained_git_blob": null,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.timing_sidecar",
+        "source_state": "declared_raw_pointer_in_recovery_manifest_current_availability_unknown"
+      },
+      {
+        "declared_runtime_descriptor": {
+          "bytes": 52888,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/development-evidence-compiler-formal-004/raw/compiler_bundle/compiler_receipt.json",
+          "sha256": "efc6ca7487fc85e3d8cb8e976c4e77e756d51edcacc31a0dbf017bb73ab5d84a"
+        },
+        "field": "compiler_receipt",
+        "lineage_dependency_id": "dependency-33",
+        "model_id": null,
+        "prospective_runtime_descriptor": null,
+        "retained_git_blob": null,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "compiler.compiler_receipt",
+        "source_state": "declared_raw_pointer_in_recovery_manifest_current_availability_unknown"
+      },
+      {
+        "declared_runtime_descriptor": null,
+        "field": "job_receipt",
+        "lineage_dependency_id": null,
+        "model_id": null,
+        "prospective_runtime_descriptor": {
+          "bytes": 12374,
+          "path": "/data/users/ali/vla_wam/raw/wmf_ablation_001_20260912/control/jobs/development-evidence-compiler-formal-004/publish/development_evidence_compiler_job_receipt.json",
+          "sha256": "00329a3c991ee6eb0c68996ecaca1aed59ea3017329272cd82b4b5bfb5cee434"
+        },
+        "retained_git_blob": {
+          "bytes": 12374,
+          "commit": "12839900e5c46299e11fff4813e8602949055b86",
+          "path": "results/jobs/development-evidence-compiler-formal-004/publish/development_evidence_compiler_job_receipt.json",
+          "sha256": "00329a3c991ee6eb0c68996ecaca1aed59ea3017329272cd82b4b5bfb5cee434"
+        },
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "compiler.job_receipt",
+        "source_state": "retained_git_blob_outside_recovery_manifest_runtime_materialization_unverified"
+      }
+    ],
+    "unauthenticated_slots": 6,
+    "unfilled_required_slot_ids": [
+      "D1.alignment_contract",
+      "D1.camera_crop_contract",
+      "D1.physical_alignment_receipt",
+      "N3.alignment_contract",
+      "N3.camera_crop_contract",
+      "N3.physical_alignment_receipt"
+    ]
+  }
+}

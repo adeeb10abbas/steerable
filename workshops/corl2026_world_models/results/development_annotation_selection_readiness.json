@@ -1,0 +1,363 @@
+{
+  "annotation_and_release_boundary": {
+    "annotation_media_created": 0,
+    "camera_crop_contract_authenticated": false,
+    "confirmation_inference_cells": 0,
+    "forecast_accuracy_estimates": 0,
+    "human_handoff_ready": false,
+    "human_responses": 0,
+    "labels": 0,
+    "measured_resource_freeze_authenticated": false,
+    "physical_alignment_authenticated": false,
+    "production_eligibility_determined": false,
+    "production_request_selection_manifest_created": false,
+    "safe_to_release_confirmation": false,
+    "selected_request_count": 0
+  },
+  "annotation_workload_ceilings": {
+    "boundary": "Arithmetic ceilings only; these are not selections, media, responses, labels, or completed workload, and A9 applies only where an earlier horizon is supported.",
+    "development_episode_count": 32,
+    "maximum_selected_requests": 128,
+    "primary_current_predicted_executed": {
+      "images": 384,
+      "two_rater_judgments": 768
+    },
+    "request_sample_cap_per_episode": 4,
+    "with_A4_and_A9_if_supported": {
+      "images": 768,
+      "two_rater_judgments": 1536
+    },
+    "with_A4_preceding": {
+      "images": 512,
+      "two_rater_judgments": 1024
+    }
+  },
+  "audit_activity": {
+    "eligibility_decisions": 0,
+    "external_system_reads": 0,
+    "labels_created": 0,
+    "raw_bytes_read": 0,
+    "raw_paths_opened": 0,
+    "sampling_ranks_created": 0,
+    "selection_manifests_created": 0
+  },
+  "authenticated_source_blobs": {
+    "canonical_bytes": 571,
+    "canonicalization": "lexicographically sorted UTF-8 rows with LF terminators",
+    "count": 3,
+    "sha256": "53ea16e191ae961038e0f6278eacc7eb4bec769e8f37ba518c6230e6a3ce6d0f",
+    "source_bytes": 740501,
+    "sources": [
+      {
+        "bytes": 573283,
+        "commit": "296fefc0ad14b3320d7c45a8a11fde6f0908deb6",
+        "path": "workshops/corl2026_world_models/results/development_request_recovery_lineage.json",
+        "sha256": "5714efd75bde846c41d1bb3f0ec88df427d3b18bf8c0df62633b6b38b8a95878"
+      },
+      {
+        "bytes": 8590,
+        "commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/ablation_spec.json",
+        "sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15"
+      },
+      {
+        "bytes": 158628,
+        "commit": "fad1441a5e30b6a3c0895f26413fa9d6978835f3",
+        "path": "workshops/corl2026_world_models/analysis/forecast_annotation_workflow.py",
+        "sha256": "483fbb64059ee0e76932e6ba6904bbf850710c17093b54fd45b38474109e12e8"
+      }
+    ]
+  },
+  "claim_boundaries": {
+    "annotation": "No eligibility boolean, exclusion reason, sampling rank, selected flag, media path, response, label, consensus, threshold, usability decision, or estimate was emitted.",
+    "identity": "Receipt hashes, request indexes, model ordinals, cell IDs, and scheduled conditions are not substitutes for source_request_id, episode_id, or condition_id.",
+    "lineage": "The audit authenticates the declared 1,152-row/32-cell recovery-lineage population and its exact schema; it does not authenticate request content.",
+    "release": "The audit cannot authorize raw retrieval, annotation packaging, confirmation, or any queue/release action; every scientific gate and the 232-cell ceiling are unchanged.",
+    "science": "This is a preregistration/readiness receipt only. It does not establish policy skill, forecast accuracy, model comparison, or a confirmation result.",
+    "timing": "D1 remains aggregate-only: 224 native-clock matched plus 16 prefix-truncated among 240 source-proven requests, with 672 source-unmapped incremental decodes. N3 remains 240 retained identities without a broader timing-completeness claim."
+  },
+  "design_contract": {
+    "confirmation_cells": 192,
+    "core_cell_ceiling": 232,
+    "counts_authorize_execution": false,
+    "development_cells": 32,
+    "pilot_cells": 8,
+    "raters": 2,
+    "selection_manifest_timing": "algorithm and seed frozen before confirmation; selection manifest generated from actual metadata after execution and before labels",
+    "selection_metadata_policy": "uniform from time/action/camera-qualified metadata before labels; unclear images never replaced"
+  },
+  "forbidden_identity_substitutions": [
+    {
+      "required_field": "source_request_id",
+      "retained_fields_that_are_not_equivalent": [
+        "model_request_ordinal",
+        "request_index",
+        "source_request_receipt_sha256"
+      ]
+    },
+    {
+      "required_field": "episode_id",
+      "retained_fields_that_are_not_equivalent": [
+        "cell_id"
+      ]
+    },
+    {
+      "required_field": "condition_id",
+      "retained_fields_that_are_not_equivalent": [
+        "scheduled_condition"
+      ]
+    }
+  ],
+  "gate_state": {
+    "annotation_media_ready": false,
+    "camera_alignment_ready": false,
+    "compiler_ready": true,
+    "confirmation_release_ready": false,
+    "development_annotation_gate_ready": false,
+    "human_annotation_ready": false,
+    "resource_freeze_ready": false,
+    "timing_partially_ready": true
+  },
+  "global_study_snapshot": {
+    "active_launched_cells": 0,
+    "confirmation_inference_cells": 0,
+    "launched_core_cells": 44,
+    "nonbehavioral_requests": 18,
+    "planned_core_cells": 232,
+    "technical_invalid_behavioral_requests": 2,
+    "terminal_requests": 1460,
+    "terminal_technical_invalid_cells": 4,
+    "terminal_valid_cells": 40,
+    "valid_behavioral_actions": 18000,
+    "valid_behavioral_observations": 18040,
+    "valid_behavioral_requests": 1440
+  },
+  "input_pins": {
+    "recovery_lineage_commit": "296fefc0ad14b3320d7c45a8a11fde6f0908deb6",
+    "spec_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
+    "workflow_commit": "fad1441a5e30b6a3c0895f26413fa9d6978835f3"
+  },
+  "negative_invariants": [
+    "reject any sampling seed, cap, algorithm, workflow function, or request schema drift",
+    "reject any source_request_id or episode_id fallback to receipt hash, ordinal, index, cell, or condition",
+    "reject eligibility or selection before a complete authenticated actual request inventory",
+    "reject any use of object visibility, forecast quality, outcomes, or labels in eligibility or sampling",
+    "reject altered 232/44/40+4/1460/18+1440+2/18000/18040/0-of-192 accounting",
+    "reject request population drift, duplicate cell/index mappings, duplicate receipt hashes, or cross-model overlap",
+    "reject row-level D1 timing-class inference and any N3 or all-request timing-completeness promotion",
+    "reject any raw, camera, selection, media, human, resource-freeze, confirmation, or release gate promotion",
+    "reject any new model request, action, cell, selection, media, response, label, or estimate"
+  ],
+  "new_activity": {
+    "annotation_media": 0,
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "forecast_accuracy_estimates": 0,
+    "human_responses": 0,
+    "labels": 0,
+    "model_requests": 0,
+    "request_selections": 0
+  },
+  "retained_population": {
+    "annotation_request_schema_field_count": 30,
+    "cells": 32,
+    "cells_by_model": {
+      "D1": 16,
+      "N3": 16
+    },
+    "declared_request_mapping_authenticated": true,
+    "exact_annotation_schema_coverage_complete": false,
+    "exact_annotation_schema_fields_available": [
+      "cell_id",
+      "layout_pair_id",
+      "model_id",
+      "request_index"
+    ],
+    "exact_annotation_schema_fields_available_count": 4,
+    "exact_annotation_schema_fields_missing": [
+      "action_manifest_sha256",
+      "alignment_contract_id",
+      "alignment_contract_sha256",
+      "alignment_receipt_id",
+      "alignment_receipt_sha256",
+      "camera_crop_id",
+      "camera_crop_sha256",
+      "camera_id",
+      "camera_identity_match",
+      "condition_id",
+      "early_horizon_supported",
+      "episode_id",
+      "executed_prefix_actions",
+      "generated_frame_index",
+      "history_mode",
+      "request_start_action_index",
+      "source_request_id",
+      "source_video_id",
+      "source_video_sha256",
+      "target_executed_action_offset",
+      "target_physical_time_s",
+      "target_within_executed_prefix",
+      "technical_invalid_reason",
+      "technical_valid",
+      "timestamp_error_s",
+      "timestamp_tolerance_s"
+    ],
+    "exact_annotation_schema_fields_missing_count": 26,
+    "mapping_index": {
+      "canonical_bytes": 160740,
+      "canonicalization": "ordered UTF-8 rows with LF terminators",
+      "count": 1152,
+      "sha256": "165b87ad0d260478fb2ba13348887edc723d962e3ed29b53539cf2025402d935"
+    },
+    "mapping_index_reconstruction": {
+      "D1": {
+        "canonical_bytes": 123872,
+        "canonicalization": "ordered ASCII pipe-delimited mapping rows with LF terminators",
+        "count": 912,
+        "sha256": "4a620dc2a859a703c6d3ae327ddfbdb21f8a3fbb26277bf54579e994b322282b"
+      },
+      "N3": {
+        "canonical_bytes": 32480,
+        "canonicalization": "ordered ASCII pipe-delimited mapping rows with LF terminators",
+        "count": 240,
+        "sha256": "3e2a85618beabd88e33de69edfa1f1398bc277a2c5c9791153b0ecf3c4b0e3ab"
+      },
+      "combined": {
+        "canonical_bytes": 156352,
+        "canonicalization": "ordered ASCII pipe-delimited mapping rows with LF terminators",
+        "count": 1152,
+        "sha256": "6d84f5801a2b0caab68b201fec9f0066fde9ba4a5466bc154d6b48e63c783ade"
+      }
+    },
+    "request_identity_index": {
+      "canonical_bytes": 78336,
+      "canonicalization": "lexicographically sorted UTF-8 rows with LF terminators",
+      "count": 1152,
+      "sha256": "3a6206f1e5fc790f1b8c92d9d023c1ce71f969ec95c19ea4482073a96cb86a71"
+    },
+    "retained_row_fields": [
+      "cell_id",
+      "layout_pair_id",
+      "model_id",
+      "model_request_ordinal",
+      "request_index",
+      "scheduled_condition",
+      "scheduled_ordinal",
+      "source_request_receipt_sha256"
+    ],
+    "rows": 1152,
+    "rows_by_model": {
+      "D1": 912,
+      "N3": 240
+    },
+    "rows_per_cell": {
+      "D1": 57,
+      "N3": 15
+    }
+  },
+  "schema_version": "wmf-development-annotation-selection-readiness-v1",
+  "selection_readiness": {
+    "action_manifests_authenticated": false,
+    "actual_request_inventory_authenticated": false,
+    "alignment_contracts_authenticated": false,
+    "boundary": "All 1,152 retained rows have an authenticated declared cell/index/receipt-hash mapping, but zero rows have the authenticated episode_id plus source_request_id needed for the frozen rank or all five metadata fields needed for eligibility. The rows are undetermined, not ineligible.",
+    "eligibility_decision_feasible_rows": 0,
+    "eligibility_decision_required_fields": [
+      "camera_identity_match",
+      "target_within_executed_prefix",
+      "technical_valid",
+      "timestamp_error_s",
+      "timestamp_tolerance_s"
+    ],
+    "eligibility_decision_status": "undetermined_not_ineligible",
+    "eligibility_rows_emitted": 0,
+    "episode_roster_authenticated": false,
+    "production_eligibility_determined": false,
+    "sampling_key_feasible_rows": 0,
+    "sampling_key_required_fields": [
+      "episode_id",
+      "source_request_id"
+    ],
+    "sampling_ranks_emitted": 0,
+    "selected_request_count": 0,
+    "selection_manifest_created": false,
+    "total_retained_rows": 1152
+  },
+  "study_id": "WMF-ABLATION-001",
+  "timing_boundary": {
+    "D1_action_prefix_truncated_requests": 16,
+    "D1_native_clock_matched_requests": 224,
+    "D1_physical_time_coverage_complete": false,
+    "D1_retained_request_identities": 912,
+    "D1_source_proven_full_decode_requests": 240,
+    "D1_source_unmapped_incremental_decode_requests": 672,
+    "N3_retained_request_identities": 240,
+    "all_request_identities_mapped_to_cells": true,
+    "all_requests_timing_complete": false
+  },
+  "workflow_contract": {
+    "annotation_request_schema_field_count": 30,
+    "annotation_request_schema_fields": [
+      "action_manifest_sha256",
+      "alignment_contract_id",
+      "alignment_contract_sha256",
+      "alignment_receipt_id",
+      "alignment_receipt_sha256",
+      "camera_crop_id",
+      "camera_crop_sha256",
+      "camera_id",
+      "camera_identity_match",
+      "cell_id",
+      "condition_id",
+      "early_horizon_supported",
+      "episode_id",
+      "executed_prefix_actions",
+      "generated_frame_index",
+      "history_mode",
+      "layout_pair_id",
+      "model_id",
+      "request_index",
+      "request_start_action_index",
+      "source_request_id",
+      "source_video_id",
+      "source_video_sha256",
+      "target_executed_action_offset",
+      "target_physical_time_s",
+      "target_within_executed_prefix",
+      "technical_invalid_reason",
+      "technical_valid",
+      "timestamp_error_s",
+      "timestamp_tolerance_s"
+    ],
+    "eligibility_function": {
+      "bytes": 604,
+      "end_line": 582,
+      "sha256": "219ed71740c4b87613030d436153a6ebd35278596ad94e1166808629cc700c6b",
+      "start_line": 568
+    },
+    "eligibility_metadata_fields": [
+      "camera_identity_match",
+      "target_within_executed_prefix",
+      "technical_valid",
+      "timestamp_error_s",
+      "timestamp_tolerance_s"
+    ],
+    "request_sample_cap_per_episode": 4,
+    "request_sampling_algorithm": "Within each episode, sort eligible source_request_id values by SHA256(UTF8(seed) || NUL || UTF8(episode_id) || NUL || UTF8(source_request_id)), breaking digest ties by source_request_id; select the first min(4, eligible_count).",
+    "request_sampling_seed": 2026091302,
+    "sampling_identity_components": [
+      "seed",
+      "episode_id",
+      "source_request_id"
+    ],
+    "selection_function": {
+      "bytes": 12411,
+      "end_line": 1096,
+      "sha256": "3c855e540147cd1611f0ea7751b69bda063a50993bcf8fa7904720aa166f001e",
+      "start_line": 865
+    },
+    "selection_requires_complete_inventory": true,
+    "selection_requires_not_started_annotation_state": true,
+    "selection_uses_object_visibility_or_forecast_quality": false
+  }
+}

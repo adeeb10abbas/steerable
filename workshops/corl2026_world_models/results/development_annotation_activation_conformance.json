@@ -1,0 +1,886 @@
+{
+  "activation_decision": {
+    "authenticated_field_value_coverage": "4/30",
+    "blocking_reasons": [
+      "six required runtime descriptors are unauthenticated",
+      "no required runtime slot has current byte verification",
+      "no required runtime slot has semantic replay",
+      "twenty-six request field values are not authenticated",
+      "zero rows have feasible sampling identities",
+      "zero rows have feasible eligibility metadata"
+    ],
+    "complete_rows": "0/1152",
+    "pipeline_dependency_graph_fully_accounted_for": true,
+    "runtime_byte_verified_slots": "0/14",
+    "safe_to_release": false,
+    "semantic_replay_complete_slots": "0/14",
+    "status": "not_activatable_from_authenticated_retained_evidence"
+  },
+  "audit_activity": {
+    "authenticated_git_blobs_read": 15,
+    "authenticated_git_bytes_read": 1711890,
+    "external_system_reads": 0,
+    "raw_bytes_read": 0,
+    "raw_paths_opened": 0,
+    "runtime_functions_imported": 0,
+    "runtime_functions_invoked": 0
+  },
+  "authenticated_source_blobs": {
+    "canonical_bytes": 2917,
+    "canonicalization": "lexicographically sorted UTF-8 rows with LF terminators",
+    "count": 15,
+    "sha256": "8873bd82223f6b690baf7749b6e1fe9e5518dc1f6aaa597078ecacfdde4f3fef",
+    "source_bytes": 1711890,
+    "sources": [
+      {
+        "bytes": 573283,
+        "commit": "296fefc0ad14b3320d7c45a8a11fde6f0908deb6",
+        "path": "workshops/corl2026_world_models/results/development_request_recovery_lineage.json",
+        "sha256": "5714efd75bde846c41d1bb3f0ec88df427d3b18bf8c0df62633b6b38b8a95878"
+      },
+      {
+        "bytes": 64040,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/camera_crop_replay_witness.py",
+        "sha256": "30d13920383ea36d26a8a3208685ab057fb070a39e520fcdc6caa4e8449a9f4f"
+      },
+      {
+        "bytes": 159374,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/compile_development_evidence.py",
+        "sha256": "e8dc390f47925b8ec4e06555a417bf80f662a46d718a2ee991c930e80f013deb"
+      },
+      {
+        "bytes": 158628,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/forecast_annotation_workflow.py",
+        "sha256": "483fbb64059ee0e76932e6ba6904bbf850710c17093b54fd45b38474109e12e8"
+      },
+      {
+        "bytes": 91793,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/freeze_development_release.py",
+        "sha256": "1dbba3d3afb736e178782d39e0eaea9b451b2ca196bb6d6a94e80461bcd39e44"
+      },
+      {
+        "bytes": 152381,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/prepare_development_annotation_media.py",
+        "sha256": "5fc8f03d31fceb3609786c97cb8dcdc9ed2299586be5eede6e15539a1ac58d32"
+      },
+      {
+        "bytes": 143587,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/qualify_forecast_timing.py",
+        "sha256": "4d8994d75fd0fe8fd9178bad1f88efad010b067a90ef97352bd9ca4ab65f49ff"
+      },
+      {
+        "bytes": 3498,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_bridge_contract.json",
+        "sha256": "893996c8157dad803c1bd57e57b3922f4c340a66846aa457e0d6bf27c1491d39"
+      },
+      {
+        "bytes": 76709,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+        "sha256": "13d1bbbbd19e3ded30d3bc9d27f1e8a909d478b691afa320bc7e6c68a5425190"
+      },
+      {
+        "bytes": 86978,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_queue_jobs.py",
+        "sha256": "d448a02ad627bc65c143a3932ae2a4378be642e36a49645f5dc8c3727f00c353"
+      },
+      {
+        "bytes": 19058,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/results/development_annotation_media_input_closure.json",
+        "sha256": "762e95ce616ecc42486f382792ad4216af54715173ccffe3af353bd21ed8bf48"
+      },
+      {
+        "bytes": 13980,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/results/development_annotation_selection_readiness.json",
+        "sha256": "1ecd3be3f4a26483581454a625db17da302dc66bbbf558286dd24c30d83a70f0"
+      },
+      {
+        "bytes": 51025,
+        "commit": "93993dae1902ba561b594b9ae0849bd45b37ecc2",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py",
+        "sha256": "6613de67a170d1719d5b4e1a5be1e2b9305e1a4b6087e8f1d2006f3e8b0f3145"
+      },
+      {
+        "bytes": 90462,
+        "commit": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py",
+        "sha256": "b805df1e251ca848a82a7ff0c39043d40154ce1030dd7db2e68b30b1ed09c44a"
+      },
+      {
+        "bytes": 27094,
+        "commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
+        "path": "workshops/corl2026_world_models/docs/ABLATION_SPEC.md",
+        "sha256": "fa8cbbac7bf2eff2e01f73150e5cf073f7e4f177d3c0bfd4fc1f41fb3ea9309f"
+      }
+    ]
+  },
+  "claim_boundaries": {
+    "contract_expectations_are_not_observed_results": true,
+    "not_established": [
+      "request field values",
+      "current raw or PVC availability",
+      "production eligibility",
+      "request selection",
+      "timing completion",
+      "camera or alignment qualification",
+      "annotation readiness",
+      "release authority",
+      "forecast accuracy",
+      "current GM PVC queue worker or live-quiescence state"
+    ],
+    "positive_claim": "The frozen builder's 30-field expression dependency graph is fully accounted for by authenticated retained Git sources.",
+    "prospective_output_names_are_not_evidence_of_existing_outputs": true,
+    "software_conformance_is_not_scientific_evidence": true
+  },
+  "existing_pipeline_entrypoints": {
+    "assembler": {
+      "bytes": 19818,
+      "end_line": 3121,
+      "name": "prepare",
+      "path": "workshops/corl2026_world_models/analysis/prepare_development_annotation_media.py",
+      "sha256": "42144746ac1cc98a251e20f1c29a0dd7932bea16ef872550c646ecae278e6eb0",
+      "start_line": 2720
+    },
+    "builder": {
+      "bytes": 1203,
+      "end_line": 397,
+      "name": "build_formal_wave",
+      "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+      "sha256": "e8b28981134503f07e1121d0baa53ea505fdd3ea9c80e0f22662493737dc6e7c",
+      "start_line": 369
+    },
+    "builder_release_flag_is_future_descriptor_behavior_not_current_release": true,
+    "descriptor_shape": {
+      "bytes": 853,
+      "end_line": 271,
+      "name": "_descriptor_shape",
+      "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+      "sha256": "5f5c54b61c380a9c056c6b75f00177b40d798c71d47cdfb58b97ad278d395837",
+      "start_line": 258
+    },
+    "functions": [
+      {
+        "bytes": 604,
+        "end_line": 582,
+        "name": "_eligibility_reasons",
+        "path": "workshops/corl2026_world_models/analysis/forecast_annotation_workflow.py",
+        "sha256": "219ed71740c4b87613030d436153a6ebd35278596ad94e1166808629cc700c6b",
+        "start_line": 568
+      },
+      {
+        "bytes": 12411,
+        "end_line": 1096,
+        "name": "select_requests",
+        "path": "workshops/corl2026_world_models/analysis/forecast_annotation_workflow.py",
+        "sha256": "3c855e540147cd1611f0ea7751b69bda063a50993bcf8fa7904720aa166f001e",
+        "start_line": 865
+      },
+      {
+        "bytes": 2505,
+        "end_line": 324,
+        "name": "validate_input_shape",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+        "sha256": "f72824e3edd3ceec2e0f29470ad8d109c37599da39b990e199b4f31b6c7b7774",
+        "start_line": 274
+      },
+      {
+        "bytes": 522,
+        "end_line": 160,
+        "name": "_source_paths",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+        "sha256": "09408b7cc1ce8a7a8fe8ea3c1fd19aef63bd2689f34cd778063087af855a6a59",
+        "start_line": 149
+      },
+      {
+        "bytes": 853,
+        "end_line": 271,
+        "name": "_descriptor_shape",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+        "sha256": "5f5c54b61c380a9c056c6b75f00177b40d798c71d47cdfb58b97ad278d395837",
+        "start_line": 258
+      },
+      {
+        "bytes": 1149,
+        "end_line": 366,
+        "name": "_job_descriptor",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+        "sha256": "18cffa020338e6630e6321c9947f0c6018c4e0b81f11bca0810af470f36f94ce",
+        "start_line": 336
+      },
+      {
+        "bytes": 1203,
+        "end_line": 397,
+        "name": "build_formal_wave",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+        "sha256": "e8b28981134503f07e1121d0baa53ea505fdd3ea9c80e0f22662493737dc6e7c",
+        "start_line": 369
+      },
+      {
+        "bytes": 8776,
+        "end_line": 1672,
+        "name": "_build_request_inventory",
+        "path": "workshops/corl2026_world_models/analysis/prepare_development_annotation_media.py",
+        "sha256": "e1a56b3cccadb7347b9e6ca5e30dcb5d5fa609cadecd171b72cd48fe14d3023c",
+        "start_line": 1522
+      },
+      {
+        "bytes": 7889,
+        "end_line": 1818,
+        "name": "_assert_inventory_and_selection",
+        "path": "workshops/corl2026_world_models/analysis/prepare_development_annotation_media.py",
+        "sha256": "65d918a86c82f3dc11d5bf83f92c0d2f452224a2526a2f9fbe1a2e259cba3255",
+        "start_line": 1675
+      },
+      {
+        "bytes": 19818,
+        "end_line": 3121,
+        "name": "prepare",
+        "path": "workshops/corl2026_world_models/analysis/prepare_development_annotation_media.py",
+        "sha256": "42144746ac1cc98a251e20f1c29a0dd7932bea16ef872550c646ecae278e6eb0",
+        "start_line": 2720
+      }
+    ],
+    "functions_imported_by_audit": false,
+    "functions_invoked_by_audit": false,
+    "implementation_source_inventory": {
+      "annotation_workflow": {
+        "bytes": 158628,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/forecast_annotation_workflow.py",
+        "sha256": "483fbb64059ee0e76932e6ba6904bbf850710c17093b54fd45b38474109e12e8"
+      },
+      "bridge": {
+        "bytes": 152381,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/prepare_development_annotation_media.py",
+        "sha256": "5fc8f03d31fceb3609786c97cb8dcdc9ed2299586be5eede6e15539a1ac58d32"
+      },
+      "camera_replay": {
+        "bytes": 64040,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/camera_crop_replay_witness.py",
+        "sha256": "30d13920383ea36d26a8a3208685ab057fb070a39e520fcdc6caa4e8449a9f4f"
+      },
+      "compiler": {
+        "bytes": 159374,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/compile_development_evidence.py",
+        "sha256": "e8dc390f47925b8ec4e06555a417bf80f662a46d718a2ee991c930e80f013deb"
+      },
+      "freeze_validator": {
+        "bytes": 91793,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/freeze_development_release.py",
+        "sha256": "1dbba3d3afb736e178782d39e0eaea9b451b2ca196bb6d6a94e80461bcd39e44"
+      },
+      "queue_contract": {
+        "bytes": 3498,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_bridge_contract.json",
+        "sha256": "893996c8157dad803c1bd57e57b3922f4c340a66846aa457e0d6bf27c1491d39"
+      },
+      "queue_support": {
+        "bytes": 86978,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/forecast_timing_queue_jobs.py",
+        "sha256": "d448a02ad627bc65c143a3932ae2a4378be642e36a49645f5dc8c3727f00c353"
+      },
+      "queue_wrapper": {
+        "bytes": 76709,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+        "sha256": "13d1bbbbd19e3ded30d3bc9d27f1e8a909d478b691afa320bc7e6c68a5425190"
+      },
+      "timing_validator": {
+        "bytes": 143587,
+        "commit": "393982967660f490717576fb9bf82033dbc0753e",
+        "path": "workshops/corl2026_world_models/analysis/qualify_forecast_timing.py",
+        "sha256": "4d8994d75fd0fe8fd9178bad1f88efad010b067a90ef97352bd9ca4ab65f49ff"
+      }
+    },
+    "implementation_source_path_count": 9,
+    "implementation_source_path_expressions": {
+      "annotation_workflow": "root / ANNOTATION_RELATIVE",
+      "bridge": "root / BRIDGE_RELATIVE",
+      "camera_replay": "root / CAMERA_REPLAY_RELATIVE",
+      "compiler": "root / COMPILER_RELATIVE",
+      "freeze_validator": "root / FREEZE_RELATIVE",
+      "queue_contract": "root / CONTRACT_RELATIVE",
+      "queue_support": "root / QUEUE_RELATIVE",
+      "queue_wrapper": "root / THIS_RELATIVE",
+      "timing_validator": "root / TIMING_RELATIVE"
+    },
+    "implementation_source_paths_function": {
+      "bytes": 522,
+      "end_line": 160,
+      "name": "_source_paths",
+      "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+      "sha256": "09408b7cc1ce8a7a8fe8ea3c1fd19aef63bd2689f34cd778063087af855a6a59",
+      "start_line": 149
+    },
+    "prepare_static_call_graph": {
+      "_assert_inventory_and_selection": 2,
+      "_build_request_inventory": 1,
+      "_render_selected": 1,
+      "annotation.select_requests": 2
+    },
+    "selection": {
+      "bytes": 12411,
+      "end_line": 1096,
+      "name": "select_requests",
+      "path": "workshops/corl2026_world_models/analysis/forecast_annotation_workflow.py",
+      "sha256": "3c855e540147cd1611f0ea7751b69bda063a50993bcf8fa7904720aa166f001e",
+      "start_line": 865
+    },
+    "validate_input_shape": {
+      "bytes": 2505,
+      "end_line": 324,
+      "name": "validate_input_shape",
+      "path": "workshops/corl2026_world_models/experiments/forecast_layout/development_annotation_media_jobs.py",
+      "sha256": "f72824e3edd3ceec2e0f29470ad8d109c37599da39b990e199b4f31b6c7b7774",
+      "start_line": 274
+    }
+  },
+  "gate_state": {
+    "annotation_media_ready": false,
+    "camera_alignment_ready": false,
+    "confirmation_release_ready": false,
+    "core_episode_ceiling": 232,
+    "current_GM_PVC_worker_state_reconciled": false,
+    "development_annotation_gate_ready": false,
+    "human_annotation_ready": false,
+    "live_quiescence_inferred": false,
+    "resource_freeze_ready": false,
+    "retained_snapshot_active_launched_cells": 0,
+    "safe_to_release_new_work": false
+  },
+  "global_study_snapshot": {
+    "active_launched_cells": 0,
+    "confirmation_inference_cells": 0,
+    "launched_core_cells": 44,
+    "nonbehavioral_requests": 18,
+    "planned_core_cells": 232,
+    "technical_invalid_behavioral_requests": 2,
+    "terminal_requests": 1460,
+    "terminal_technical_invalid_cells": 4,
+    "terminal_valid_cells": 40,
+    "valid_behavioral_actions": 18000,
+    "valid_behavioral_observations": 18040,
+    "valid_behavioral_requests": 1440
+  },
+  "negative_invariants": {
+    "core_ceiling_changed": false,
+    "eligibility_decisions_emitted": 0,
+    "human_responses_emitted": 0,
+    "labels_emitted": 0,
+    "media_emitted": 0,
+    "queue_descriptor_emitted": false,
+    "raw_or_pvc_reads": 0,
+    "request_rows_emitted": 0,
+    "runtime_manifest_emitted": false,
+    "sampling_ranks_emitted": 0,
+    "scientific_estimates_emitted": 0,
+    "selected_flags_emitted": 0
+  },
+  "new_activity": {
+    "annotation_media": 0,
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "confirmation_inference_cells": 0,
+    "forecast_accuracy_estimates": 0,
+    "human_responses": 0,
+    "labels": 0,
+    "model_requests": 0,
+    "queue_descriptors": 0,
+    "request_rows": 0,
+    "request_selections": 0,
+    "retrieval_jobs": 0,
+    "runnable_manifests": 0
+  },
+  "request_field_provenance": {
+    "authenticated_value_field_count": 4,
+    "authenticated_value_fields": [
+      "cell_id",
+      "layout_pair_id",
+      "model_id",
+      "request_index"
+    ],
+    "builder_row_expressions": {
+      "action_manifest_sha256": "action_manifest['sha256']",
+      "alignment_contract_id": "alignment['contract_id']",
+      "alignment_contract_sha256": "alignment['contract_sha256']",
+      "alignment_receipt_id": "alignment['mapping_receipt_id']",
+      "alignment_receipt_sha256": "mapping_sha_by_model[model]",
+      "camera_crop_id": "alignment['camera_crop_id']",
+      "camera_crop_sha256": "alignment['camera_crop_sha256']",
+      "camera_id": "alignment['camera_id']",
+      "camera_identity_match": "binding.get('camera_id') == alignment['camera_id']",
+      "cell_id": "source['cell_id']",
+      "condition_id": "source['condition_id']",
+      "early_horizon_supported": "alignment['early_horizon'] is not None",
+      "episode_id": "source['recording_id']",
+      "executed_prefix_actions": "executed_prefix",
+      "generated_frame_index": "alignment['generated_frame_index']",
+      "history_mode": "source['history_mode']",
+      "layout_pair_id": "source['layout_pair_id']",
+      "model_id": "model",
+      "request_index": "source['request_index']",
+      "request_start_action_index": "source['action_step_start']",
+      "source_request_id": "source['source_request_id']",
+      "source_video_id": "source['source_video_id']",
+      "source_video_sha256": "source['source_video']['sha256']",
+      "target_executed_action_offset": "alignment['target_executed_action_offset']",
+      "target_physical_time_s": "alignment['primary_horizon_s']",
+      "target_within_executed_prefix": "within_prefix",
+      "technical_invalid_reason": "None if technical_valid else 'forecast_timing_unavailable'",
+      "technical_valid": "technical_valid",
+      "timestamp_error_s": "timestamp_error",
+      "timestamp_tolerance_s": "alignment['timestamp_tolerance_s']"
+    },
+    "complete_rows": 0,
+    "field_count": 30,
+    "groups": {
+      "alignment_contract": {
+        "count": 11,
+        "fields": [
+          "alignment_contract_id",
+          "alignment_contract_sha256",
+          "alignment_receipt_id",
+          "camera_crop_id",
+          "camera_crop_sha256",
+          "camera_id",
+          "early_horizon_supported",
+          "generated_frame_index",
+          "target_executed_action_offset",
+          "target_physical_time_s",
+          "timestamp_tolerance_s"
+        ]
+      },
+      "cross_source_derivation": {
+        "count": 5,
+        "fields": [
+          "camera_identity_match",
+          "target_within_executed_prefix",
+          "technical_valid",
+          "technical_invalid_reason",
+          "timestamp_error_s"
+        ]
+      },
+      "physical_mapping_identity": {
+        "count": 1,
+        "fields": [
+          "alignment_receipt_sha256"
+        ]
+      },
+      "request_provenance": {
+        "count": 9,
+        "fields": [
+          "action_manifest_sha256",
+          "condition_id",
+          "episode_id",
+          "executed_prefix_actions",
+          "history_mode",
+          "request_start_action_index",
+          "source_request_id",
+          "source_video_id",
+          "source_video_sha256"
+        ]
+      },
+      "retained_mapping": {
+        "count": 4,
+        "fields": [
+          "cell_id",
+          "layout_pair_id",
+          "model_id",
+          "request_index"
+        ]
+      }
+    },
+    "identity_substitution_permitted": false,
+    "missing_value_field_count": 26,
+    "missing_value_fields": [
+      "action_manifest_sha256",
+      "alignment_contract_id",
+      "alignment_contract_sha256",
+      "alignment_receipt_id",
+      "alignment_receipt_sha256",
+      "camera_crop_id",
+      "camera_crop_sha256",
+      "camera_id",
+      "camera_identity_match",
+      "condition_id",
+      "early_horizon_supported",
+      "episode_id",
+      "executed_prefix_actions",
+      "generated_frame_index",
+      "history_mode",
+      "request_start_action_index",
+      "source_request_id",
+      "source_video_id",
+      "source_video_sha256",
+      "target_executed_action_offset",
+      "target_physical_time_s",
+      "target_within_executed_prefix",
+      "technical_invalid_reason",
+      "technical_valid",
+      "timestamp_error_s",
+      "timestamp_tolerance_s"
+    ],
+    "partition_is_disjoint": true,
+    "partition_union_is_exact": true,
+    "total_rows": 1152
+  },
+  "request_inventory_contract": {
+    "builder_function": {
+      "bytes": 8776,
+      "end_line": 1672,
+      "name": "_build_request_inventory",
+      "path": "workshops/corl2026_world_models/analysis/prepare_development_annotation_media.py",
+      "sha256": "e1a56b3cccadb7347b9e6ca5e30dcb5d5fa609cadecd171b72cd48fe14d3023c",
+      "start_line": 1522
+    },
+    "cells": 32,
+    "complete_inventory_required": true,
+    "inventory_dictionary_fields": {
+      "alignment_contracts": "[dict(alignment_by_model[model]) for model in MODELS]",
+      "annotation_state": "'not_started'",
+      "cohort_branch": "'full_two_model'",
+      "episode_roster": "combined_roster",
+      "inventory_complete": "True",
+      "inventory_finalized_at": "inventory_finalized_at",
+      "requests": "rows",
+      "schema_version": "REQUEST_INVENTORY_SCHEMA",
+      "stage": "'development'",
+      "study_id": "STUDY_ID"
+    },
+    "join_key": [
+      "model_id",
+      "cell_id",
+      "request_index"
+    ],
+    "join_key_index": {
+      "canonical_bytes": 57280,
+      "canonicalization": "ordered UTF-8 rows with LF terminators",
+      "count": 1152,
+      "sha256": "a736e247c263db5f91639954407e2d47deadce400a8d74af84e002e5f49daac4"
+    },
+    "request_rows_materialized_by_audit": 0,
+    "request_schema_field_count": 30,
+    "required_annotation_state": "not_started",
+    "rows": 1152,
+    "rows_by_model": {
+      "D1": 912,
+      "N3": 240
+    },
+    "rows_per_cell": {
+      "D1": 57,
+      "N3": 15
+    }
+  },
+  "runtime_manifest_contract": {
+    "builder_invoked": false,
+    "compiler_fields": [
+      "compiler_receipt",
+      "job_receipt"
+    ],
+    "descriptor_fields": [
+      "bytes",
+      "path",
+      "sha256"
+    ],
+    "join_key": [
+      "model_id",
+      "cell_id",
+      "request_index"
+    ],
+    "model_fields": [
+      "alignment_contract",
+      "camera_crop_contract",
+      "physical_alignment_receipt",
+      "request_provenance",
+      "timing_job_receipt",
+      "timing_sidecar"
+    ],
+    "models": [
+      "N3",
+      "D1"
+    ],
+    "queue_descriptor_created": false,
+    "required_slots": 14,
+    "runnable_manifest_created": false,
+    "schema_version": "wmf-development-annotation-media-input-v1",
+    "top_level_fields": [
+      "compiler",
+      "mode",
+      "models",
+      "raw_root",
+      "schema_version",
+      "study_id"
+    ]
+  },
+  "runtime_slot_activation_matrix": {
+    "identity_bound_slots": 8,
+    "recovery_manifest_pointer_slots": 5,
+    "required_slots": 14,
+    "retained_git_payload_slots_outside_recovery_manifest": 3,
+    "runtime_byte_verified_slots": 0,
+    "semantic_replay_complete_slots": 0,
+    "slots": [
+      {
+        "current_source_state": "no_authenticated_descriptor_in_pinned_sources",
+        "field": "alignment_contract",
+        "identity_bound": false,
+        "model_id": "D1",
+        "prospective_output": {
+          "output_name": "d1_alignment_contract.json",
+          "producer_commit": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+          "producer_constant": "OUTPUT_NAMES",
+          "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py"
+        },
+        "prospective_output_is_not_existing_evidence": true,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.alignment_contract"
+      },
+      {
+        "current_source_state": "no_authenticated_descriptor_in_pinned_sources",
+        "field": "camera_crop_contract",
+        "identity_bound": false,
+        "model_id": "D1",
+        "prospective_output": {
+          "output_name": "d1_camera_crop_contract.json",
+          "producer_commit": "93993dae1902ba561b594b9ae0849bd45b37ecc2",
+          "producer_constant": "MODEL_CONTRACT_NAMES",
+          "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py"
+        },
+        "prospective_output_is_not_existing_evidence": true,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.camera_crop_contract"
+      },
+      {
+        "current_source_state": "no_authenticated_descriptor_in_pinned_sources",
+        "field": "physical_alignment_receipt",
+        "identity_bound": false,
+        "model_id": "D1",
+        "prospective_output": {
+          "output_name": "d1_physical_alignment_receipt.json",
+          "producer_commit": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+          "producer_constant": "OUTPUT_NAMES",
+          "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py"
+        },
+        "prospective_output_is_not_existing_evidence": true,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.physical_alignment_receipt"
+      },
+      {
+        "current_source_state": "declared_raw_pointer_in_recovery_manifest_current_availability_unknown",
+        "field": "request_provenance",
+        "identity_bound": true,
+        "model_id": "D1",
+        "prospective_output": null,
+        "prospective_output_is_not_existing_evidence": false,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.request_provenance"
+      },
+      {
+        "current_source_state": "retained_git_blob_outside_recovery_manifest_runtime_materialization_unverified",
+        "field": "timing_job_receipt",
+        "identity_bound": true,
+        "model_id": "D1",
+        "prospective_output": null,
+        "prospective_output_is_not_existing_evidence": false,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.timing_job_receipt"
+      },
+      {
+        "current_source_state": "declared_raw_pointer_in_recovery_manifest_current_availability_unknown",
+        "field": "timing_sidecar",
+        "identity_bound": true,
+        "model_id": "D1",
+        "prospective_output": null,
+        "prospective_output_is_not_existing_evidence": false,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "D1.timing_sidecar"
+      },
+      {
+        "current_source_state": "no_authenticated_descriptor_in_pinned_sources",
+        "field": "alignment_contract",
+        "identity_bound": false,
+        "model_id": "N3",
+        "prospective_output": {
+          "output_name": "n3_alignment_contract.json",
+          "producer_commit": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+          "producer_constant": "OUTPUT_NAMES",
+          "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py"
+        },
+        "prospective_output_is_not_existing_evidence": true,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.alignment_contract"
+      },
+      {
+        "current_source_state": "no_authenticated_descriptor_in_pinned_sources",
+        "field": "camera_crop_contract",
+        "identity_bound": false,
+        "model_id": "N3",
+        "prospective_output": {
+          "output_name": "n3_camera_crop_contract.json",
+          "producer_commit": "93993dae1902ba561b594b9ae0849bd45b37ecc2",
+          "producer_constant": "MODEL_CONTRACT_NAMES",
+          "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_jobs.py"
+        },
+        "prospective_output_is_not_existing_evidence": true,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.camera_crop_contract"
+      },
+      {
+        "current_source_state": "no_authenticated_descriptor_in_pinned_sources",
+        "field": "physical_alignment_receipt",
+        "identity_bound": false,
+        "model_id": "N3",
+        "prospective_output": {
+          "output_name": "n3_physical_alignment_receipt.json",
+          "producer_commit": "a38b73ca539fe3cc7618fb1294b67b0e24861b58",
+          "producer_constant": "OUTPUT_NAMES",
+          "producer_path": "workshops/corl2026_world_models/experiments/forecast_layout/development_physical_alignment_jobs.py"
+        },
+        "prospective_output_is_not_existing_evidence": true,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.physical_alignment_receipt"
+      },
+      {
+        "current_source_state": "declared_raw_pointer_in_recovery_manifest_current_availability_unknown",
+        "field": "request_provenance",
+        "identity_bound": true,
+        "model_id": "N3",
+        "prospective_output": null,
+        "prospective_output_is_not_existing_evidence": false,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.request_provenance"
+      },
+      {
+        "current_source_state": "retained_git_blob_outside_recovery_manifest_runtime_materialization_unverified",
+        "field": "timing_job_receipt",
+        "identity_bound": true,
+        "model_id": "N3",
+        "prospective_output": null,
+        "prospective_output_is_not_existing_evidence": false,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.timing_job_receipt"
+      },
+      {
+        "current_source_state": "declared_raw_pointer_in_recovery_manifest_current_availability_unknown",
+        "field": "timing_sidecar",
+        "identity_bound": true,
+        "model_id": "N3",
+        "prospective_output": null,
+        "prospective_output_is_not_existing_evidence": false,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "N3.timing_sidecar"
+      },
+      {
+        "current_source_state": "declared_raw_pointer_in_recovery_manifest_current_availability_unknown",
+        "field": "compiler_receipt",
+        "identity_bound": true,
+        "model_id": null,
+        "prospective_output": null,
+        "prospective_output_is_not_existing_evidence": false,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "compiler.compiler_receipt"
+      },
+      {
+        "current_source_state": "retained_git_blob_outside_recovery_manifest_runtime_materialization_unverified",
+        "field": "job_receipt",
+        "identity_bound": true,
+        "model_id": null,
+        "prospective_output": null,
+        "prospective_output_is_not_existing_evidence": false,
+        "runtime_byte_verified": false,
+        "semantic_replay_complete": false,
+        "slot_id": "compiler.job_receipt"
+      }
+    ],
+    "source_state_counts": {
+      "declared_raw_pointer_in_recovery_manifest_current_availability_unknown": 5,
+      "no_authenticated_descriptor_in_pinned_sources": 6,
+      "retained_git_blob_outside_recovery_manifest_runtime_materialization_unverified": 3
+    },
+    "unauthenticated_slots": 6
+  },
+  "schema_version": "wmf-development-annotation-activation-conformance-v1",
+  "selection_contract": {
+    "algorithm": "Within each episode, sort eligible source_request_id values by SHA256(UTF8(seed) || NUL || UTF8(episode_id) || NUL || UTF8(source_request_id)), breaking digest ties by source_request_id; select the first min(4, eligible_count).",
+    "cap_per_episode": 4,
+    "eligibility_feasible_rows": 0,
+    "eligibility_fields": [
+      "camera_identity_match",
+      "target_within_executed_prefix",
+      "technical_valid",
+      "timestamp_error_s",
+      "timestamp_tolerance_s"
+    ],
+    "eligibility_function": {
+      "bytes": 604,
+      "end_line": 582,
+      "name": "_eligibility_reasons",
+      "path": "workshops/corl2026_world_models/analysis/forecast_annotation_workflow.py",
+      "sha256": "219ed71740c4b87613030d436153a6ebd35278596ad94e1166808629cc700c6b",
+      "start_line": 568
+    },
+    "eligibility_status": "undetermined_not_ineligible",
+    "expected_eligible_requests_contract_only": 448,
+    "expected_selected_requests_contract_only": 128,
+    "observed_selected_requests": 0,
+    "requires_annotation_state_not_started": true,
+    "requires_complete_inventory": true,
+    "sampling_identity_fields": [
+      "episode_id",
+      "source_request_id"
+    ],
+    "sampling_key_feasible_rows": 0,
+    "seed": 2026091302,
+    "selection_function": {
+      "bytes": 12411,
+      "end_line": 1096,
+      "name": "select_requests",
+      "path": "workshops/corl2026_world_models/analysis/forecast_annotation_workflow.py",
+      "sha256": "3c855e540147cd1611f0ea7751b69bda063a50993bcf8fa7904720aa166f001e",
+      "start_line": 865
+    },
+    "selection_manifest_created": false,
+    "uses_labels_visibility_or_forecast_quality": false
+  },
+  "study_id": "WMF-ABLATION-001",
+  "timing_boundary": {
+    "D1_action_prefix_truncated_requests": 16,
+    "D1_native_clock_matched_requests": 224,
+    "D1_physical_time_coverage_complete": false,
+    "D1_retained_request_identities": 912,
+    "D1_source_proven_full_decode_requests": 240,
+    "D1_source_unmapped_incremental_decode_requests": 672,
+    "N3_retained_request_identities": 240,
+    "all_request_identities_mapped_to_cells": true,
+    "all_requests_timing_complete": false
+  }
+}

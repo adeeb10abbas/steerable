@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-10-30T09:41:40Z",
+  "as_of_utc": "2026-10-30T10:14:39Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -41,7 +41,7 @@
     "active_requests_launched_excluded": 0,
     "invariant": "18_nonbehavioral + 1440_valid_behavioral + 2_technical_invalid_behavioral = 1460_terminal_requests"
   },
-  "phase": "valid40_of_232_development_annotation_input_pointer_inventory_audited_results_publication_stalled_external_gm_inspection_required_confirmation_held",
+  "phase": "valid40_of_232_development_annotation_raw_retrieval_preflight_audited_results_publication_stalled_external_gm_inspection_required_confirmation_held",
   "cluster_status": "The independent Git/PVC route previously passed after the work-Mac cutoff, but the results branch has not advanced beyond commit 12839900e5c46299e11fff4813e8602949055b86 at 2026-09-13T14:40:32Z. Its generation998 snapshot last published development-resource-compiler-formal-001 as claimed on worker09 with child PID16032 and heartbeat 2026-09-13T14:40:29.959470Z; current resource001 and camera002 states are unknown. The control queue is intentionally empty with shutdown false and SHA-256 9c1bd52373df4308c3954c5b4598d03d66c9d5940182674904b1279d01a7346f. No new job may be released until an authorized GM inspection reconciles owned processes, claims, results and the shared release lock and a fresh result publication succeeds. Confirmation inference remains unreleased.",
   "published_development_coverage_audit": {
     "source_commit": "df576e458e546dcd69c5d676077d16df9b0ae47d",
@@ -600,6 +600,178 @@
     "latest_results_ref_check_utc": "2026-10-30T09:41:40Z",
     "next_observation_not_before_utc": "2026-10-30T10:04:00Z",
     "next_action": "Keep the queue empty and non-shutdown. Before any dispatch or release, obtain authorized current GM/PVC/worker/GPU/child/reap/release-lock reconciliation and fresh results publication, then satisfy signed camera-crop/alignment, measured resources, real blinded media and legitimate two-rater labeling/consensus/usability/threshold gates. Use this inventory only to locate authorized raw inputs; retrieve and rehash them before any request-to-cell mapping, eligibility or selection, and never rerun a valid, fenced or live episode."
+  },
+  "development_annotation_raw_retrieval_preflight_20261030": {
+    "source_commit": "45c3a5d591c539779e8ff7db53d4af1c64273271",
+    "authorized_control_push_verified": true,
+    "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
+    "source_pins": {
+      "spec_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
+      "fixture_inventory_commit": "4dbb162020fff36d3791735d8bcb665610b30170",
+      "readiness_commit": "84332bf638595ff7ed955fd263586ecc0e06ab93",
+      "request_identity_commit": "33a7483b4cc8255fd97fadb1684b3a4082ee3c9f",
+      "design_execution_parity_commit": "9c1a17acda5f6565cf116c26b941e47bb4c681d6",
+      "annotation_input_pointer_commit": "a0cfa6cabdf76d230026c4055729630cdf8e93f9",
+      "results_commit": "12839900e5c46299e11fff4813e8602949055b86"
+    },
+    "audit_path": "../../analysis/audit_development_annotation_raw_retrieval_preflight.py",
+    "audit_sha256": "a92ac5cce78d01ecd61ba153eb9c4989c1faf614e2519713344b832c33aeda14",
+    "report_path": "../../results/development_annotation_raw_retrieval_preflight.json",
+    "report_sha256": "3d5e1c030bf8d7b607cd586f8a80b5ac1382529d3ce81210b2495cf4a734b35f",
+    "authenticated_source_blobs": {
+      "count": 6,
+      "source_bytes": 402667,
+      "canonical_bytes": 1173,
+      "sha256": "87c7adb9f6f400e29446ee0407a8f22462f38420868693be8eaacbc1ea020464"
+    },
+    "protocol": {
+      "core_episode_ceiling": 232,
+      "development_cells": 32,
+      "confirmation_cells": 192,
+      "optional_D2_selected": false,
+      "request_sampling_seed": 2026091302,
+      "request_sample_cap_per_episode": 4,
+      "development_selected_request_ceiling": 128,
+      "independent_raters_required": 2,
+      "counts_authorize_execution": false
+    },
+    "recovery_scope": {
+      "availability": "declared_pointer_only_current_availability_unknown",
+      "development_cells": 32,
+      "D1_cells": 16,
+      "N3_cells": 16,
+      "scheduled_requests": 1152,
+      "D1_scheduled_requests": 912,
+      "N3_scheduled_requests": 240,
+      "declared_pointer_dependencies": 44,
+      "declared_fixture_dependencies": 12,
+      "combined_unique_dependencies": 56,
+      "combined_declared_bytes": 32664538,
+      "indexes": {
+        "cell_lineage": {
+          "count": 32,
+          "canonical_bytes": 37360,
+          "sha256": "0fc384c9b32a415ae8ee8fbd7231327d04a3f0b806020382f2e85acf82117666"
+        },
+        "cell_receipts": {
+          "count": 32,
+          "canonical_bytes": 10384,
+          "sha256": "93268de436fea9788913cea35d8aac74a089fa8565d446975c130fe2b0441220"
+        },
+        "timing_outputs": {
+          "count": 4,
+          "canonical_bytes": 1047,
+          "sha256": "158544edb2f77651277affc00375d1bed9c897757e27ea5860d52a835f2c78c6"
+        },
+        "compiler_outputs": {
+          "count": 8,
+          "canonical_bytes": 2474,
+          "sha256": "4b88b8c7fb4523b462da78bd3d9b2f434477bcef2b643fb7dc0ca99702617490"
+        },
+        "fixture_inputs": {
+          "count": 12,
+          "canonical_bytes": 3112,
+          "sha256": "2156b35857d4bea77906ce17bf20f9b94f5ff78cce22db222304901cec8cfe18"
+        },
+        "combined": {
+          "count": 56,
+          "canonical_bytes": 17017,
+          "sha256": "518ef94a22d156bba50640e7b42e94bc044e3d737dac12bd967cf8eb0162adb7"
+        }
+      }
+    },
+    "request_identity_population": {
+      "rows": 1152,
+      "identity_rows_copied_into_report": 0,
+      "D1": {
+        "count": 912,
+        "canonical_bytes": 62016,
+        "sha256": "0ca707976b59e0957b4bb636982743bb4e5458f5bd08f8177eda09dcec0f0110"
+      },
+      "N3": {
+        "count": 240,
+        "canonical_bytes": 16320,
+        "sha256": "d25a670fbc024960aeff5d667b4ccf9c6b90b2f3c24691348bc1db3bd0367051"
+      },
+      "combined": {
+        "count": 1152,
+        "canonical_bytes": 78336,
+        "sha256": "3a6206f1e5fc790f1b8c92d9d023c1ce71f969ec95c19ea4482073a96cb86a71"
+      },
+      "joined_to_cells": false,
+      "request_to_cell_mapping_materialized": false,
+      "request_to_cell_mapping_authenticated": false
+    },
+    "historical_timing_scope": {
+      "D1_total_requests": 912,
+      "D1_native_clock_matched_requests": 224,
+      "D1_prefix_truncated_requests": 16,
+      "D1_source_unmapped_incremental_decodes": 672,
+      "D1_physical_time_coverage_complete": false,
+      "N3_historical_receipt_requests": 240,
+      "N3_physical_time_qualified": true,
+      "N3_physical_time_coverage_complete_field_present": false,
+      "N3_request_timing_coverage_breakdown_present": false
+    },
+    "prospective_annotation_packaging": {
+      "production_eligibility_determined": false,
+      "production_request_selection_manifest_created": false,
+      "selected_request_count": 0,
+      "annotation_media_created": false,
+      "human_handoff_ready": false,
+      "human_responses": 0,
+      "human_labels": 0
+    },
+    "global_core_accounting": {
+      "planned": 232,
+      "launched": 44,
+      "terminal_valid": 40,
+      "terminal_technical_invalid": 4,
+      "active_scientific_ledger": 0
+    },
+    "global_request_accounting": {
+      "terminal": 1460,
+      "nonbehavioral": 18,
+      "valid_behavioral": 1440,
+      "technical_invalid_behavioral": 2
+    },
+    "global_valid_actions": 18000,
+    "global_valid_observations": 18040,
+    "confirmation_inference_cells": 0,
+    "new_activity": {
+      "model_requests": 0,
+      "behavioral_actions": 0,
+      "behavioral_cells": 0,
+      "request_selections": 0,
+      "annotation_media": 0,
+      "labels": 0,
+      "human_responses": 0,
+      "forecast_accuracy_estimates": 0
+    },
+    "readiness": {
+      "formal_compiler_ready": true,
+      "timing_partial": true,
+      "camera_alignment_ready": false,
+      "annotation_media_ready": false,
+      "human_annotation_ready": false,
+      "resource_freeze_ready": false,
+      "development_annotation_gate_ready": false,
+      "confirmation_release_ready": false
+    },
+    "current_raw_availability_verified": false,
+    "raw_pvc_paths_revalidated": false,
+    "raw_pvc_bytes_opened": false,
+    "raw_bytes_rehashed": false,
+    "current_GM_PVC_worker_state_reconciled": false,
+    "current_live_quiescence_inferred": false,
+    "safe_to_release_confirmation": false,
+    "claim_boundary": "Recovery-lineage preflight only. The 32 cell-receipt declarations and layout-scoped fixture context are cross-bound to the frozen cell lineage; four timing and eight compiler outputs remain separate recovery pointers, and all 1,152 request identities remain separate. Raw availability, request-to-cell mapping, eligibility, selection, timing completeness, camera/alignment, media, human evidence, labels, policy skill, model comparison, forecast estimates, measured resources, current operations, quiescence, queue release and confirmation remain unauthenticated or absent.",
+    "independent_review": "Final operations, science and publication GO after fail-closed repairs; pycompile, canonical --check, strict duplicate/nonfinite JSON, byte-identical multi-hash-seed regeneration, clean detached replay and coherent-repin mutations passed.",
+    "bounded_watch": "OPEN+S01-S20+FINAL through 2026-10-30T10:14:39Z; 44/44 first-attempt fetches, zero retries, transients or movement",
+    "latest_results_ref_check_utc": "2026-10-30T10:14:39Z",
+    "current_owned_process_state": "unknown_unreconciled",
+    "next_observation_not_before_utc": "2026-10-30T10:37:00Z",
+    "next_action": "Keep the queue empty and non-shutdown. Through an authorized path, byte/SHA verify all 56 exact descriptors and then fail closed while joining the raw request inventories to exactly the existing 1,152 identities and 32 cell lineages with no missing, extra, duplicate or cross-model drift. Retrieval and joining alone do not promote timing or annotation gates. Separately require current GM/PVC/worker/GPU/child/reap/release-lock reconciliation and fresh publication before any dispatch or release; never rerun a valid, fenced or live episode."
   },
   "execution_gates": {
     "archive_recovery": "complete_hash_verified_historical_only",

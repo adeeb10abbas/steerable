@@ -941,6 +941,8 @@ def analyze_documents(documents: Mapping[str, Any], provenance: Mapping[str, Any
                     "cohort": cohort,
                     "model_family": info["model_family"],
                     "model_id": info["model_id"],
+                    "baseline_model_id": info["baseline_model_id"],
+                    "intervention_model_id": info["model_id"],
                     "environment_seed": seed,
                     "relation": relation,
                     "baseline_cell_id": baseline_cell_id,
@@ -1020,6 +1022,7 @@ def analyze_documents(documents: Mapping[str, Any], provenance: Mapping[str, Any
             "model_id": info["model_id"],
             "model_family": info["model_family"],
             "baseline_model_id": info["baseline_model_id"],
+            "intervention_model_id": info["model_id"],
             "model_label": info["model_label"],
             "baseline_label": info["baseline_label"],
             "intervention_label": info["intervention_label"],
@@ -1168,7 +1171,8 @@ def analyze_documents(documents: Mapping[str, Any], provenance: Mapping[str, Any
             "official_dreamzero_action_cfg_claim": False,
             "core_D1_qualification": False,
             "H04_s1_may_fill_core_D1": False,
-            "d2_extension_selected": False,
+            "new_confirmation_d2_extension_selected": False,
+            "historical_h04_custom_s2_retained": True,
             "independent_scene_generalization": False,
             "environment_seed_labels_claimed_as_independent_scenes": False,
             "fixed_noise_labels_claimed_as_independent_noise_replicates": False,
@@ -1191,7 +1195,8 @@ def analyze_documents(documents: Mapping[str, Any], provenance: Mapping[str, Any
 
 
 CSV_FIELDS = (
-    "cohort", "model_family", "model_id", "environment_seed", "relation",
+    "cohort", "model_family", "model_id", "baseline_model_id",
+    "intervention_model_id", "environment_seed", "relation",
     "baseline_cell_id", "intervention_cell_id", "baseline_configuration_id",
     "intervention_configuration_id", "baseline_label", "intervention_label",
     "baseline_success", "intervention_success", "success_transition",

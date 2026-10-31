@@ -108,7 +108,8 @@ episode rows. The final manuscript incorporates the following corrections:
   every cell shares one retained reset fingerprint and DreamZero fixes effective
   model-noise seed 1140. The pilots are post-result, exploratory and descriptive;
   their historical baselines are not double counted, the models are not pooled,
-  and H04 neither selects D2 nor qualifies D1. Original raw files remain external
+  and H04's historical custom-s2 arm neither selects a new-confirmation D2
+  extension nor qualifies D1. Original raw files remain external
   and were not replayed. No new inference, episode, annotation, confirmation,
   release gate or change to the 232-cell core follows.
 - The retained H05 package authenticates a 15-seed by seven-level by two-command

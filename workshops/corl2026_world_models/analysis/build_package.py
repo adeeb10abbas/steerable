@@ -133,12 +133,21 @@ def main():
     }:
         raise RuntimeError("H03/H04 source authentication receipt changed")
     expected_h03_h04 = {
-        "H03": ("cosmos3_nano_policy_droid", 6, 4),
-        "H04": ("dreamzero_droid_action_cfg", 3, 4),
+        "H03": ("cosmos3_nano_policy_droid", "cosmos3_nano_policy_droid", 6, 4),
+        "H04": ("dreamzero_droid", "dreamzero_droid_action_cfg", 3, 4),
     }
-    for cohort, (model, baseline_successes, intervention_successes) in expected_h03_h04.items():
+    for cohort, (
+        baseline_model,
+        intervention_model,
+        baseline_successes,
+        intervention_successes,
+    ) in expected_h03_h04.items():
         observed = h03_h04["cohorts"][cohort]
-        if observed["model_id"] != model:
+        if (
+            observed["model_id"] != intervention_model
+            or observed["baseline_model_id"] != baseline_model
+            or observed["intervention_model_id"] != intervention_model
+        ):
             raise RuntimeError(f"{cohort} model identity changed")
         if observed["authenticated_population"] != {
             "baseline_behavioral_episodes": 6,
@@ -156,6 +165,14 @@ def main():
             raise RuntimeError(f"{cohort} success totals changed")
     if len(h03_h04["matched_cell_contrasts"]) != 12:
         raise RuntimeError("H03/H04 matched-cell count changed")
+    for row in h03_h04["matched_cell_contrasts"]:
+        baseline_model, intervention_model, _, _ = expected_h03_h04[row["cohort"]]
+        if (
+            row["baseline_model_id"] != baseline_model
+            or row["intervention_model_id"] != intervention_model
+            or row["model_id"] != intervention_model
+        ):
+            raise RuntimeError("H03/H04 matched-cell model identity changed")
     if len(h03_h04["matched_seed_diagnostics"]) != 6:
         raise RuntimeError("H03/H04 matched-seed diagnostic count changed")
     if len(h03_h04["new_activity"]) != 13 or any(h03_h04["new_activity"].values()):
@@ -168,12 +185,14 @@ def main():
     for flag in (
         "powered_or_general_performance_claim",
         "models_pooled",
-        "d2_extension_selected",
+        "new_confirmation_d2_extension_selected",
         "forecast_accuracy_claim",
         "changes_232_cell_core_bound",
     ):
         if h03_h04_boundary[flag] is not False:
             raise RuntimeError(f"H03/H04 claim boundary changed: {flag}")
+    if h03_h04_boundary["historical_h04_custom_s2_retained"] is not True:
+        raise RuntimeError("H03/H04 historical custom-s2 retention boundary changed")
     if "/data/users/" in json.dumps(h03_h04):
         raise RuntimeError("H03/H04 canonical output leaked a raw source path")
     expected_h09_h10 = {

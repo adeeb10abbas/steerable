@@ -133,6 +133,10 @@ class PaperStoppingIntegrationTests(unittest.TestCase):
             '"retained_h03_h04_guidance_pilots": {',
             '"matched_cell_rows": len(h03_h04["matched_cell_contrasts"])',
             '"matched_seed_diagnostic_rows": len(h03_h04["matched_seed_diagnostics"])',
+            'row["baseline_model_id"] != baseline_model',
+            'row["intervention_model_id"] != intervention_model',
+            '"new_confirmation_d2_extension_selected"',
+            '"historical_h04_custom_s2_retained"',
             'if "/data/users/" in json.dumps(h03_h04)',
         ):
             with self.subTest(required=required):
@@ -141,7 +145,7 @@ class PaperStoppingIntegrationTests(unittest.TestCase):
             "H03/H04 post-result guidance pilots",
             "Nano g3 to g1 changes 6/6 to 4/6",
             "DreamZero s1-equivalent to custom s2 changes 3/6 to 4/6",
-            "not powered guidance evidence or D2 selection",
+            "historical custom-s2 arm is retained, not a new-confirmation D2 selection",
         ):
             with self.subTest(required=required):
                 self.assertIn(required, paper)

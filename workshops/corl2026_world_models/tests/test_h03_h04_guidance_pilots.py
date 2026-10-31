@@ -117,6 +117,16 @@ class H03H04GuidancePilotTests(unittest.TestCase):
         self.assertEqual(len(path_ids), 24)
         self.assertEqual(len(trace_ids), 24)
         self.assertEqual({row["physical_initial_state_sha256"] for row in rows}, {ANALYSIS.PHYSICAL_RESET_FINGERPRINT})
+        self.assertEqual(
+            {
+                (row["cohort"], row["baseline_model_id"], row["intervention_model_id"])
+                for row in rows
+            },
+            {
+                ("H03", "cosmos3_nano_policy_droid", "cosmos3_nano_policy_droid"),
+                ("H04", "dreamzero_droid", "dreamzero_droid_action_cfg"),
+            },
+        )
         self.assertTrue(all("::seed" in cell_id and cell_id.count("::") == 3 for cell_id in cell_ids))
         self.assertEqual(
             {(row["cohort"], row["environment_seed_label"]) for row in self.report["matched_seed_diagnostics"]},
@@ -126,6 +136,8 @@ class H03H04GuidancePilotTests(unittest.TestCase):
     def test_h03_counts_margins_transitions_and_accounting_reproduce(self):
         cohort = self.report["cohorts"]["H03"]
         self.assertEqual(cohort["model_id"], "cosmos3_nano_policy_droid")
+        self.assertEqual(cohort["baseline_model_id"], "cosmos3_nano_policy_droid")
+        self.assertEqual(cohort["intervention_model_id"], "cosmos3_nano_policy_droid")
         self.assertEqual(
             cohort["authenticated_population"],
             {
@@ -151,6 +163,7 @@ class H03H04GuidancePilotTests(unittest.TestCase):
         cohort = self.report["cohorts"]["H04"]
         self.assertEqual(cohort["model_id"], "dreamzero_droid_action_cfg")
         self.assertEqual(cohort["baseline_model_id"], "dreamzero_droid")
+        self.assertEqual(cohort["intervention_model_id"], "dreamzero_droid_action_cfg")
         self.assertEqual(cohort["successes"], {"baseline": 3, "intervention": 4})
         self.assertEqual(cohort["behavioral_request_action_accounting"], ANALYSIS.EXPECTED_BEHAVIORAL_ACCOUNTING["H04"])
         self.assertEqual(cohort["baseline"]["by_relation"]["left"]["successes"], 2)
@@ -309,7 +322,7 @@ class H03H04GuidancePilotTests(unittest.TestCase):
             "official_dreamzero_action_cfg_claim",
             "core_D1_qualification",
             "H04_s1_may_fill_core_D1",
-            "d2_extension_selected",
+            "new_confirmation_d2_extension_selected",
             "independent_scene_generalization",
             "environment_seed_labels_claimed_as_independent_scenes",
             "fixed_noise_labels_claimed_as_independent_noise_replicates",
@@ -321,6 +334,7 @@ class H03H04GuidancePilotTests(unittest.TestCase):
         ):
             with self.subTest(key=key):
                 self.assertFalse(boundary[key])
+        self.assertTrue(boundary["historical_h04_custom_s2_retained"])
         self.assertEqual(boundary["maximum_core_behavioral_cells"], 232)
         rendered = ANALYSIS.render_json(self.report)
         self.assertNotIn("/data/users/", rendered)
@@ -335,12 +349,22 @@ class H03H04GuidancePilotTests(unittest.TestCase):
         self.assertEqual(len(rows), 12)
         self.assertEqual({row["cohort"] for row in rows}, {"H03", "H04"})
         self.assertEqual(
+            {
+                (row["cohort"], row["baseline_model_id"], row["intervention_model_id"])
+                for row in rows
+            },
+            {
+                ("H03", "cosmos3_nano_policy_droid", "cosmos3_nano_policy_droid"),
+                ("H04", "dreamzero_droid", "dreamzero_droid_action_cfg"),
+            },
+        )
+        self.assertEqual(
             hashlib.sha256(JSON_PATH.read_bytes()).hexdigest(),
-            "24a28a49b4fd2dd2a0d79ce83f1506266e20702a71b997356a9902c62b2ac7b8",
+            "4319a5fa14e4c07cadd6ebb7002d258e995c295c835db6e4e9bd91e9ea1c37e0",
         )
         self.assertEqual(
             hashlib.sha256(CSV_PATH.read_bytes()).hexdigest(),
-            "6d4225e4466b23511763da887629114e3e7ac4293b5bc5722fc8cc22ca8f845f",
+            "6e9b90404ffd0b629bd82e28fabec592485f28ea019d5f42621791e7b430c51f",
         )
         result = subprocess.run(
             [sys.executable, str(MODULE_PATH), "--check"],

@@ -48,8 +48,9 @@ fixed-input gate record and claim boundaries; the
 [12-row CSV](paper/data/h03_h04_guidance_pilots.csv) exposes one matched
 configuration contrast per model, seed label and command. These are
 exploratory post-result pilots, not powered or general guidance evidence; the
-historical baselines are not counted again, models are not pooled, and H04
-does not select the optional D2 extension or qualify D1. Referenced raw files
+historical baselines are not counted again, models are not pooled, and H04's
+historical custom-s2 arm does not select a new-confirmation D2 extension or
+qualify D1. Referenced raw files
 remain external and were not replayed. No current inference, episode,
 annotation, confirmation, release gate or change to the 232-cell core follows.
 
@@ -207,8 +208,9 @@ This is a working paper for the evaluation theme of
 [Do Robots Need World Models?](https://do-robots-need-world-models.github.io/).
 The primary position-reflection experiment studies two world–action
 configurations; retained controls include post-result H03/H04 guidance pilots
-and a separate Edge context, and models are never pooled. H03/H04 do not select
-the optional D2 extension, and H13 is a separate older evaluator audit, not
+and a separate Edge context, and models are never pooled. H04's historical
+custom-s2 arm is retained but does not select a new-confirmation D2 extension,
+and H13 is a separate older evaluator audit, not
 another behavioral cohort or a forecast-fidelity result. The paper does not
 compare world modeling against its removal. The
 final author list and submission details

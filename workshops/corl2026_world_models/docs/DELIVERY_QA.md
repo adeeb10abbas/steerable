@@ -171,6 +171,37 @@ censoring independence, failure enrichment, language/model diagnosis,
 forecast skill or new cohort. The 232-cell ceiling, 13 zero activity counters
 and nine false gates remain unchanged.
 
+The Turn2914 first-unavailability extension was committed as science commit
+`949d22fcd793addae8920ac937d98e5fa95920c9`. It changes exactly six package
+paths by 4,388 insertions and five deletions; `paper/main.tex`, the PDF and the
+request CSV remain byte-identical. A fresh detached build at `949d22fc` passed
+all **20 stages**, including **1074/1074 tests in 135.218 s**, in **151.43 s**
+wall time with a peak resident set size of **921,432 KiB**. Its 564,222-byte/
+12,261-line validation log, 713,396-byte/19,484-line build report,
+714,144-byte/19,504-line stdout and 1,176-byte/23-line resource receipt have
+SHA256 `5fe896bac56e5c3f41efff17d08dca6a831c736504218720e1433b0ff1872820`,
+`96341b1e34a6b2d00672371a40dea0d21a22b698d5586b1c83b35b72c7e26f06`,
+`a9bf4bc60bce799120f5f687b74535e3e845266fe49b06085edd7fc2c197737d`
+and `a1bbe57bdb451d386c3a9b277a6164cf37a196cfd5946d34e18d5237ea078bae`.
+The final serial protected-tree discovery passed **1081/1081 tests in 128.341
+s** (**130.79 s** wall; peak resident set size **922,288 KiB**), including the
+seven protected-only N3 methods. Its 144,166-byte/1,095-line stdout and
+839-byte/23-line resource receipt have SHA256
+`e66127d143a3dc5553b62b732720ac6420d8deac9eb0bd03c00cfbda51261f3c`
+and `d5b77547e2c784b5114a3e4ff7e2b1d0e82ca363874d7df1dff42d4d81b4083a`.
+
+Canonical H01 v5 JSON is 45,505 lines/1,594,790 bytes at SHA256
+`c9f9159dee7b7cccef3c592e905d5e8a13a273f6bd545083ccbaaabfec766a63`;
+the 739-line/388,814-byte request CSV remains at SHA256
+`10dbc70122b36493398622b9e5882e1508468a762fb4d5d6d9b5ee7e2ba3eb29`.
+The four-page PDF and LaTeX source remain byte-identical at the hashes recorded
+above, and all four fresh renders passed visual review. Four independent
+read-only audits plus root review returned GO on the recurrence identities,
+limiter attribution, terminal evidence, mutation defenses and claim boundary.
+These checks qualify a deterministic re-expression of existing v4 support;
+they add no episode, request, inference, label, confirmation result,
+independent scientific signal, activity or gate advance.
+
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock

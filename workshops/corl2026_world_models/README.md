@@ -26,6 +26,15 @@ pretermination comparison and fixed-action coverage bounds. This retrospective
 control uses one base scene and its reflection; it is neither prospective
 fixed-duration evidence nor forecast accuracy.
 
+The H01 representative-video deliverable is also packaged without selecting on
+outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
+seed 9400 are authenticated directly from the pinned Git commit. The compact
+[media manifest](paper/media/representative_h01_videos.json) records every MP4
+blob, byte count, SHA-256, historical full-stream qualification and the declared
+selection rule. These side-by-side actual/local-prediction videos are
+presentation media, not timing maps, physical-time alignment, annotations or
+forecast-accuracy evidence.
+
 - [Research and experiment plan](docs/superpowers/plans/2026-09-12-world-model-paper.md):
   repair existing results, qualify archived recordings, then test whether
   generated futures anticipate executed motion across new object layouts.
@@ -69,10 +78,11 @@ uv run --no-project --python 3.11 --with-requirements workshops/corl2026_world_m
 ```
 
 This runs the tests, recomputes results and the stopping-time control from the
-pinned repository, produces figures and compiles the official CoRL template.
-The build report records the stopping JSON, CSV, analyzer, source commit and
-input JSONL identity. It checks page count, citations and layout errors. Final
-page images are reviewed separately.
+pinned repository, authenticates the four representative H01 video blobs,
+produces figures and compiles the official CoRL template. The build report
+records the stopping JSON, CSV, analyzer, source commit and input JSONL identity,
+plus the representative-media selection and package hashes. It checks page
+count, citations and layout errors. Final page images are reviewed separately.
 
 ## Earlier analysis
 

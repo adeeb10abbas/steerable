@@ -1,0 +1,201 @@
+{
+  "schema_version": "wmf-h01-representative-media-package-v1",
+  "status": "authenticated_git_blob_pointers_not_worktree_copies",
+  "source": {
+    "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+    "publication_manifest": {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/nano_v3b001_publication_media_manifest.json",
+      "git_blob": "ab487db038551f52be52dcc506901c28ca1c35cd",
+      "bytes": 47015,
+      "sha256": "2a9023b976b6a877b2da266ce1333f6639d89a971a4e082f50a7af1f0cf246ea"
+    },
+    "episode_table": {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl",
+      "git_blob": "5c2f4a6fa4795ec054dbce2d4d68554245ceb4cb",
+      "bytes": 5822218,
+      "sha256": "ce67aecb2705394e8161fa4b65df7130e62648e2f6d8b6a93408c8da685a7207"
+    }
+  },
+  "selection": {
+    "rule_id": "lowest_released_seed_all_four_cells_all_exposed_predictions_v1",
+    "rule": "Select the minimum released environment seed and retain all four control/position-reflected \u00d7 LEFT/RIGHT cells irrespective of outcome; for every selected cell retain the complete actual rollout and every exposed decoded local prediction in request-index order.",
+    "selected_seed": 9400,
+    "selected_cell_count": 4,
+    "all_four_registered_conditions_included": true,
+    "outcome_used_for_selection": false,
+    "request_used_for_selection": false,
+    "no_substitution_for_missing_media": true,
+    "no_outcome_hiding_audit": {
+      "full_cohort_condition_outcomes": {
+        "control:left": {
+          "episodes": 27,
+          "failure_taxonomy_counts": {
+            "correct": 26,
+            "transport_failed": 1
+          },
+          "successes": 26
+        },
+        "control:right": {
+          "episodes": 27,
+          "failure_taxonomy_counts": {
+            "correct": 26,
+            "release_failed": 1
+          },
+          "successes": 26
+        },
+        "position_mirrored:left": {
+          "episodes": 27,
+          "failure_taxonomy_counts": {
+            "correct": 27
+          },
+          "successes": 27
+        },
+        "position_mirrored:right": {
+          "episodes": 27,
+          "failure_taxonomy_counts": {
+            "correct": 23,
+            "transport_failed": 4
+          },
+          "successes": 23
+        }
+      },
+      "full_cohort_failure_taxonomy_counts": {
+        "correct": 102,
+        "pick_failed": 0,
+        "release_failed": 1,
+        "transport_failed": 5,
+        "wrong_side": 0
+      },
+      "selected_failures": 0,
+      "selected_successes": 4
+    }
+  },
+  "videos": [
+    {
+      "registered_cell_id": "v3b001:nano:seed9400:control:left",
+      "arm": "control",
+      "requested_relation": "left",
+      "environment_seed": 9400,
+      "actions_executed": 122,
+      "behavioral_result_valid": true,
+      "requested_success": true,
+      "final_detached_release": true,
+      "git_object": {
+        "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/nano_v3b001_seed9400_control_left_actual_vs_local_predictions.mp4",
+        "git_blob": "0f12b9e60c0697929b90b5303b77e78567095056",
+        "bytes": 1662892,
+        "sha256": "78e9c2111faf3f4c180724314e8d0fe8a61dbdfb78e0fefa44d34434318a0b62"
+      },
+      "historical_full_stream_qualification": {
+        "codec_name": "h264",
+        "pixel_format": "yuv420p",
+        "width": 1280,
+        "height": 720,
+        "fps": 15.0,
+        "has_audio": false,
+        "frame_count": 164,
+        "decoded_duration_seconds": 10.933333,
+        "validation_policy": "H.264/yuv420p/no-audio, moov-before-mdat fast-start, full-stream decode, exact frame count and duration, and first/middle/last RGB frame decode"
+      }
+    },
+    {
+      "registered_cell_id": "v3b001:nano:seed9400:control:right",
+      "arm": "control",
+      "requested_relation": "right",
+      "environment_seed": 9400,
+      "actions_executed": 353,
+      "behavioral_result_valid": true,
+      "requested_success": true,
+      "final_detached_release": true,
+      "git_object": {
+        "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/nano_v3b001_seed9400_control_right_actual_vs_local_predictions.mp4",
+        "git_blob": "59d744da63e3bb8ff0f6ba041631cf6b5fb33e6e",
+        "bytes": 4944505,
+        "sha256": "67422e7d8d52dcdc74325d3d08e37cbd5b6c45bdef3721f4323625166065d84b"
+      },
+      "historical_full_stream_qualification": {
+        "codec_name": "h264",
+        "pixel_format": "yuv420p",
+        "width": 1280,
+        "height": 720,
+        "fps": 15.0,
+        "has_audio": false,
+        "frame_count": 492,
+        "decoded_duration_seconds": 32.8,
+        "validation_policy": "H.264/yuv420p/no-audio, moov-before-mdat fast-start, full-stream decode, exact frame count and duration, and first/middle/last RGB frame decode"
+      }
+    },
+    {
+      "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:left",
+      "arm": "position_mirrored",
+      "requested_relation": "left",
+      "environment_seed": 9400,
+      "actions_executed": 217,
+      "behavioral_result_valid": true,
+      "requested_success": true,
+      "final_detached_release": true,
+      "git_object": {
+        "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/nano_v3b001_seed9400_position_mirrored_left_actual_vs_local_predictions.mp4",
+        "git_blob": "a2a51663dbc8741a77d9b352c30e06a10032b85f",
+        "bytes": 2903051,
+        "sha256": "db73e5c504f6aa802008b4679165861b575b371604b84be0a6bdb12cd9e38df2"
+      },
+      "historical_full_stream_qualification": {
+        "codec_name": "h264",
+        "pixel_format": "yuv420p",
+        "width": 1280,
+        "height": 720,
+        "fps": 15.0,
+        "has_audio": false,
+        "frame_count": 287,
+        "decoded_duration_seconds": 19.133333,
+        "validation_policy": "H.264/yuv420p/no-audio, moov-before-mdat fast-start, full-stream decode, exact frame count and duration, and first/middle/last RGB frame decode"
+      }
+    },
+    {
+      "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+      "arm": "position_mirrored",
+      "requested_relation": "right",
+      "environment_seed": 9400,
+      "actions_executed": 193,
+      "behavioral_result_valid": true,
+      "requested_success": true,
+      "final_detached_release": true,
+      "git_object": {
+        "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/nano_v3b001_seed9400_position_mirrored_right_actual_vs_local_predictions.mp4",
+        "git_blob": "1406493af421f8fdd10321fc2ebc092eef6a8a7b",
+        "bytes": 2964567,
+        "sha256": "296c8128b98674c94b402a56206314e48dc28e11ff62eedec55c0ea1ad5a46df"
+      },
+      "historical_full_stream_qualification": {
+        "codec_name": "h264",
+        "pixel_format": "yuv420p",
+        "width": 1280,
+        "height": 720,
+        "fps": 15.0,
+        "has_audio": false,
+        "frame_count": 287,
+        "decoded_duration_seconds": 19.133333,
+        "validation_policy": "H.264/yuv420p/no-audio, moov-before-mdat fast-start, full-stream decode, exact frame count and duration, and first/middle/last RGB frame decode"
+      }
+    }
+  ],
+  "totals": {
+    "video_count": 4,
+    "video_bytes": 12475015,
+    "source_manifest_and_video_file_count": 5,
+    "source_manifest_and_video_bytes": 12522030,
+    "new_model_requests": 0,
+    "new_behavioral_episodes": 0,
+    "new_human_labels": 0
+  },
+  "claim_boundary": {
+    "use": "Representative H01 presentation media for the four-condition minimum-seed block.",
+    "not_scientific_timing_maps": true,
+    "not_physical_time_alignment": true,
+    "not_forecast_accuracy_evidence": true,
+    "not_annotation_evidence": true,
+    "does_not_complete_a5_or_any_forecast_gate": true,
+    "reason": "Each video juxtaposes the complete actual rollout with stitched, request-local decoded horizons; stitching does not create a continuous full-task prediction."
+  }
+}

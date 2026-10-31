@@ -35,6 +35,7 @@ def main():
 
     run("regression tests", [sys.executable, "-m", "unittest", "discover", "-s", str(package / "tests"), "-v"])
     run("stopping-time controls", [sys.executable, str(package / "analysis/analyze_stopping_controls.py")])
+    run("representative H01 media", [sys.executable, str(package / "analysis/package_representative_media.py")])
     run("paper experiment results", [sys.executable, str(package / "analysis/extract_paper_results.py")])
     run("historical evidence replay", [sys.executable, str(package / "analysis/evidence_audit.py")])
     run("private annotation draw", [sys.executable, str(package / "analysis/prepare_annotation_sample.py")])
@@ -61,6 +62,8 @@ def main():
         return hashlib.sha256(path.read_bytes()).hexdigest()
     stopping_path = results / "stopping_controls.json"
     stopping = json.loads(stopping_path.read_text())
+    representative_media_path = package / "paper/media/representative_h01_videos.json"
+    representative_media = json.loads(representative_media_path.read_text())
     stopping_source_path = "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl"
     stopping_source = stopping["provenance"]["files"][stopping_source_path]
     expected_stopping_source_sha256 = "ce67aecb2705394e8161fa4b65df7130e62648e2f6d8b6a93408c8da685a7207"
@@ -86,6 +89,20 @@ def main():
             "json_sha256": digest(stopping_path),
             "csv_sha256": digest(results / "stopping_controls.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_stopping_controls.py"),
+        },
+        "representative_media": {
+            "scope": representative_media["claim_boundary"],
+            "selection": representative_media["selection"],
+            "video_count": representative_media["totals"]["video_count"],
+            "video_bytes": representative_media["totals"]["video_bytes"],
+            "source_manifest_and_video_file_count": representative_media["totals"][
+                "source_manifest_and_video_file_count"
+            ],
+            "source_manifest_and_video_bytes": representative_media["totals"][
+                "source_manifest_and_video_bytes"
+            ],
+            "manifest_sha256": digest(representative_media_path),
+            "packager_sha256": digest(package / "analysis/package_representative_media.py"),
         },
         "corrected_fidelity_measured": False,
         "independent_human_labels_collected": False,

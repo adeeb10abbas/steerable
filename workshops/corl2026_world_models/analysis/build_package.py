@@ -75,7 +75,11 @@ def main():
     problems = [marker for marker in forbidden if marker in latex_log]
     if len(reader.pages) != 4 or problems:
         raise RuntimeError(f"PDF check failed: pages={len(reader.pages)}; layout/citation flags={problems}")
-    body = "\n".join(page.extract_text() for page in reader.pages)
+    raw_body = "\n".join(page.extract_text() for page in reader.pages)
+    # pdfTeX may wrap a word as ``in-\\nference`` even though the rendered word
+    # is continuous. Normalize line-end hyphenation and whitespace before
+    # asserting the required scientific text.
+    body = " ".join(raw_body.replace("-\n", "").split())
     for required in ["108", "13/54", "50/54", "26/27", "DreamZero-s2", "31.1", "35.8",
                      "18/27", "17/27", "23/27", "81.4", "104 entries", "1.125", "13/15",
                      "H07/H08", "Edge", "12.4", "19.2", "endpoint interactions",

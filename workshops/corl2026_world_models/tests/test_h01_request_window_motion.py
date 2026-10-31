@@ -114,6 +114,116 @@ class H01RequestWindowMotionTests(unittest.TestCase):
         self.assertEqual(request_level["cube_displacement_m"]["n"], 164)
         self.assertAlmostEqual(request_level["cube_displacement_m"]["mean"], 0.04190115262348475)
 
+    def test_matched_complete_windows_expose_selection_and_signed_motion(self):
+        self.assertEqual(self.report["schema_version"], "wmf-retained-h01-request-window-motion-v2")
+        matched = self.report["matched_complete_window_analysis"]
+        self.assertEqual(
+            matched["status"],
+            "retrospective matched-window selection and execution-motion audit",
+        )
+        expected = {
+            "control": {
+                "pairs": 114,
+                "excluded": {"left": 50, "right": 51, "total": 101},
+                "excluded_timing": {
+                    "counterpart_request_terminated_before_32_action_endpoint": {
+                        "left": 11, "right": 11, "total": 22,
+                    },
+                    "owner_request_started_at_or_after_counterpart_episode_end": {
+                        "left": 39, "right": 40, "total": 79,
+                    },
+                },
+                "window_signs": {"positive": 50, "negative": 18, "exact_zero": 46},
+                "seed_signs": {"positive": 26, "negative": 0, "exact_zero": 1},
+                "seed_mean": 0.05754318106229658,
+                "seed_median": 0.04749090472857157,
+                "pair_outcomes": {
+                    "cap_failure_left__success_right": 1,
+                    "success_left__cap_failure_right": 1,
+                    "success_left__success_right": 25,
+                },
+                "outcome_windows": {
+                    "cap_failure_left__success_right": 4,
+                    "success_left__cap_failure_right": 4,
+                    "success_left__success_right": 106,
+                },
+            },
+            "position_mirrored": {
+                "pairs": 113,
+                "excluded": {"left": 5, "right": 72, "total": 77},
+                "excluded_timing": {
+                    "counterpart_request_terminated_before_32_action_endpoint": {
+                        "left": 2, "right": 19, "total": 21,
+                    },
+                    "owner_request_started_at_or_after_counterpart_episode_end": {
+                        "left": 3, "right": 53, "total": 56,
+                    },
+                },
+                "window_signs": {"positive": 52, "negative": 17, "exact_zero": 44},
+                "seed_signs": {"positive": 27, "negative": 0, "exact_zero": 0},
+                "seed_mean": 0.06396968954323251,
+                "seed_median": 0.0648304121568799,
+                "pair_outcomes": {
+                    "success_left__cap_failure_right": 4,
+                    "success_left__success_right": 23,
+                },
+                "outcome_windows": {
+                    "success_left__cap_failure_right": 22,
+                    "success_left__success_right": 91,
+                },
+            },
+        }
+        for layout, wanted in expected.items():
+            with self.subTest(layout=layout):
+                observed = matched["by_layout"][layout]
+                self.assertEqual(observed["shared_complete_window_pairs"], wanted["pairs"])
+                self.assertEqual(
+                    observed["complete_window_records_excluded_without_exact_counterpart_endpoint"],
+                    wanted["excluded"],
+                )
+                self.assertEqual(observed["excluded_record_timing"], wanted["excluded_timing"])
+                self.assertEqual(
+                    observed["request_window_signed_lateral_contrast_m"]["sign_counts"],
+                    wanted["window_signs"],
+                )
+                seed_summary = observed[
+                    "equal_seed_mean_signed_lateral_contrast_m_per_32_action_window"
+                ]
+                self.assertEqual(seed_summary["sign_counts"], wanted["seed_signs"])
+                self.assertAlmostEqual(seed_summary["mean"], wanted["seed_mean"], places=15)
+                self.assertAlmostEqual(seed_summary["median"], wanted["seed_median"], places=15)
+                self.assertEqual(observed["pair_outcome_counts"], wanted["pair_outcomes"])
+                self.assertEqual(
+                    observed["shared_window_pairs_by_pair_outcome"], wanted["outcome_windows"]
+                )
+                first = observed["fixed_first_0_to_32_action_window_contrast_m"]
+                self.assertEqual(first["sign_counts"], {
+                    "positive": 0, "negative": 0, "exact_zero": 27,
+                })
+                self.assertEqual(first["min"], first["max"])
+                self.assertEqual(first["max"], 0.0)
+                self.assertTrue(all(
+                    abs(row["telescoping_residual_m"]) <= 1e-15
+                    for row in observed["per_seed"]
+                ))
+
+        same = matched["four_condition_same_request_index_support"]
+        self.assertEqual(same["matched_seed_labels"], 27)
+        self.assertEqual(same["shared_complete_window_pairs_per_layout"], 96)
+        self.assertEqual(
+            same["shared_window_pair_count_per_seed"],
+            {"n": 27, "mean": 3.5555555555555554, "median": 3, "min": 2, "max": 6},
+        )
+        interaction = same[
+            "position_mirrored_minus_control_mean_contrast_m_per_32_action_window"
+        ]
+        self.assertAlmostEqual(interaction["mean"], 0.006533360597390084, places=15)
+        self.assertAlmostEqual(interaction["median"], 0.004710602884491287, places=15)
+        self.assertEqual(
+            interaction["sign_counts"],
+            {"positive": 15, "negative": 11, "exact_zero": 1},
+        )
+
     def test_every_request_has_exact_lineage_and_censoring_is_null(self):
         for request in self.report["request_windows"]:
             with self.subTest(request=request["request_id"]):
@@ -236,7 +346,7 @@ class H01RequestWindowMotionTests(unittest.TestCase):
             self.assertNotIn(forbidden, csv_text)
         self.assertEqual(
             hashlib.sha256(json_text.encode()).hexdigest(),
-            "d9ab1595ae4aa3395f39758c950b5d81ce5e4ae25533d703b65b5841a9a35fd0",
+            "2e19a9ac3ef16786f304bea834019a49f1ba50537e02af0ad068e6799386bd5f",
         )
         self.assertEqual(
             hashlib.sha256(csv_text.encode()).hexdigest(),
@@ -252,6 +362,10 @@ class H01RequestWindowMotionTests(unittest.TestCase):
             '"complete_32_action_windows"',
             '"censored_windows"',
             '"censored_windows_by_episode_outcome"',
+            '"matched_complete_window_analysis"',
+            '"shared_complete_window_pairs"',
+            '"complete_window_records_excluded_without_exact_counterpart_endpoint"',
+            '"four_condition_same_request_index_support"',
             '"forecast_payload_bytes_reopened_or_reverified"',
             '"A6_movement_threshold_established"',
             '"maximum_core_behavioral_cells"',

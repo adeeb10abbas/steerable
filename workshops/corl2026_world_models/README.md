@@ -222,6 +222,20 @@ recorded descriptor metadata but does not reopen forecast payload bytes, score
 forecast accuracy, advance A3--A9, add activity, open a gate or change the
 232-cell core bound.
 
+The same supplement now makes LEFT/RIGHT counterpart selection explicit. It
+retains 114 control and 113 reflected exact +32-action window pairs; 101 and 77
+otherwise-complete single-command records lack an exact counterpart because
+the paired episode terminates before their +32 endpoint (43 terminate within
+that counterpart window and 135 start at or after the counterpart end).
+Equal-seed signed lateral means are positive/tied/
+negative for 26/1/0 control and 27/0/0 reflected seed labels, while the first
+0--32 window is exactly tied in all 54 pairs. Raw window signs are mixed and a
+same-request-index four-condition audit gives only 15/11/1 positive/negative/
+tied reflected-minus-control seed differences. These post-hoc values telescope
+to an outcome-selected request boundary divided by a variable number of
+windows; they are not an independent endpoint, physical-time rate, movement
+threshold, instruction-understanding result, forecast score or confirmation.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact

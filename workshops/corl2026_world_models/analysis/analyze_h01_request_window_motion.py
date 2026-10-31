@@ -12,6 +12,7 @@ comparison is made.
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import csv
 import hashlib
 import io
@@ -270,6 +271,249 @@ def _condition(layout: str, command: str) -> str:
     return f"{layout}_{command}"
 
 
+def _sign_counts(values: Iterable[float]) -> dict[str, int]:
+    values = list(values)
+    if any(not math.isfinite(value) for value in values):
+        raise ValueError("sign counts require finite values")
+    return {
+        "positive": sum(value > 0.0 for value in values),
+        "negative": sum(value < 0.0 for value in values),
+        "exact_zero": sum(value == 0.0 for value in values),
+    }
+
+
+def matched_complete_window_analysis(
+    requests: list[dict[str, Any]],
+    indexed: Mapping[tuple[int, str, str], dict[str, Any]],
+) -> dict[str, Any]:
+    """Pair only exact +32 windows observed for both commands.
+
+    This is selection accounting for the retained request-window census.  It is
+    deliberately outcome-conditioned: a window is retained only through the
+    shorter historical LEFT/RIGHT trace.  The equal-seed mean telescopes to the
+    last shared request-boundary response divided by a variable window count;
+    it is not an independent endpoint or a physical-time rate.
+    """
+    all_windows: dict[tuple[int, str, str], dict[int, dict[str, Any]]] = {}
+    complete: dict[tuple[int, str, str], dict[int, dict[str, Any]]] = {}
+    for seed in SEEDS:
+        for layout in LAYOUTS:
+            for command in COMMANDS:
+                observed = {
+                    request["request_index"]: request
+                    for request in requests
+                    if request["seed"] == seed
+                    and request["layout"] == layout
+                    and request["command"] == command
+                }
+                if sorted(observed) != list(range(len(observed))):
+                    raise ValueError("H01 request windows must be a contiguous prefix")
+                rows = {
+                    index: request for index, request in observed.items()
+                    if request["complete_32_action_window"]
+                }
+                if sorted(rows) != list(range(len(rows))):
+                    raise ValueError("complete H01 request windows must be a contiguous prefix")
+                all_windows[(seed, layout, command)] = observed
+                complete[(seed, layout, command)] = rows
+
+    by_layout: dict[str, Any] = {}
+    for layout in LAYOUTS:
+        records: list[dict[str, Any]] = []
+        window_contrasts: list[float] = []
+        outcome_counts: Counter[str] = Counter()
+        outcome_windows: Counter[str] = Counter()
+        for seed in SEEDS:
+            left = complete[(seed, layout, "left")]
+            right = complete[(seed, layout, "right")]
+            common = sorted(set(left) & set(right))
+            if not common or common != list(range(len(common))):
+                raise ValueError("matched H01 request windows must be a nonempty contiguous prefix")
+            contrasts = [
+                left[index]["signed_lateral_relative_change_m"]
+                - right[index]["signed_lateral_relative_change_m"]
+                for index in common
+            ]
+            if any(value is None or not math.isfinite(value) for value in contrasts):
+                raise ValueError("matched H01 request-window contrast is unavailable")
+            left_raw = indexed[(seed, layout, "left")]
+            right_raw = indexed[(seed, layout, "right")]
+            boundary = WINDOW_ACTIONS * len(common)
+
+            def relative_y(raw: Mapping[str, Any], action_step: int) -> float:
+                sample = raw["steps"][action_step]
+                return _xyz(sample["object_xyz"], "matched cube")[1] - _xyz(
+                    sample["reference_xyz"], "matched bowl"
+                )[1]
+
+            direct = (
+                relative_y(left_raw, boundary) - relative_y(left_raw, 0)
+                - (relative_y(right_raw, boundary) - relative_y(right_raw, 0))
+            )
+            cumulative = sum(contrasts)
+            residual = cumulative - direct
+            if abs(residual) > 1e-15:
+                raise ValueError("matched request-window telescoping identity changed")
+            outcome = (
+                ("success" if left_raw["requested_success"] else "cap_failure")
+                + "_left__"
+                + ("success" if right_raw["requested_success"] else "cap_failure")
+                + "_right"
+            )
+            outcome_counts[outcome] += 1
+            outcome_windows[outcome] += len(common)
+            record = {
+                "seed": seed,
+                "layout": layout,
+                "shared_complete_window_pairs": len(common),
+                "shared_request_indices": common,
+                "last_shared_action_boundary": boundary,
+                "left_complete_windows": len(left),
+                "right_complete_windows": len(right),
+                "left_requested_success": left_raw["requested_success"],
+                "right_requested_success": right_raw["requested_success"],
+                "pair_outcome": outcome,
+                "window_contrast_signs": _sign_counts(contrasts),
+                "mean_signed_lateral_contrast_m_per_32_action_window": statistics.mean(contrasts),
+                "cumulative_signed_lateral_contrast_m": cumulative,
+                "direct_boundary_contrast_m": direct,
+                "telescoping_residual_m": residual,
+                "first_window_contrast_m": contrasts[0],
+            }
+            records.append(record)
+            window_contrasts.extend(contrasts)
+        seed_means = [row["mean_signed_lateral_contrast_m_per_32_action_window"] for row in records]
+        cumulative = [row["cumulative_signed_lateral_contrast_m"] for row in records]
+        first = [row["first_window_contrast_m"] for row in records]
+        left_complete = sum(len(complete[(seed, layout, "left")]) for seed in SEEDS)
+        right_complete = sum(len(complete[(seed, layout, "right")]) for seed in SEEDS)
+        paired = len(window_contrasts)
+        exclusion_timing = {
+            "counterpart_request_terminated_before_32_action_endpoint": {
+                "left": 0, "right": 0,
+            },
+            "owner_request_started_at_or_after_counterpart_episode_end": {
+                "left": 0, "right": 0,
+            },
+        }
+        for seed in SEEDS:
+            for owner, counterpart in (("left", "right"), ("right", "left")):
+                owner_complete = complete[(seed, layout, owner)]
+                counterpart_complete = complete[(seed, layout, counterpart)]
+                counterpart_all = all_windows[(seed, layout, counterpart)]
+                for index in set(owner_complete) - set(counterpart_complete):
+                    if index in counterpart_all:
+                        if counterpart_all[index]["complete_32_action_window"]:
+                            raise ValueError("counterpart exclusion classification changed")
+                        exclusion_timing[
+                            "counterpart_request_terminated_before_32_action_endpoint"
+                        ][owner] += 1
+                    else:
+                        owner_start = owner_complete[index]["action_step_start"]
+                        counterpart_end = indexed[(seed, layout, counterpart)]["actions_executed"]
+                        if owner_start < counterpart_end:
+                            raise ValueError("absent counterpart request predates counterpart termination")
+                        exclusion_timing[
+                            "owner_request_started_at_or_after_counterpart_episode_end"
+                        ][owner] += 1
+        for timing in exclusion_timing.values():
+            timing["total"] = timing["left"] + timing["right"]
+        excluded = {
+            "left": left_complete - paired,
+            "right": right_complete - paired,
+            "total": left_complete + right_complete - 2 * paired,
+        }
+        if sum(timing["total"] for timing in exclusion_timing.values()) != excluded["total"]:
+            raise ValueError("counterpart exclusion timing does not close")
+        by_layout[layout] = {
+            "matched_seed_labels": len(records),
+            "shared_complete_window_pairs": paired,
+            "shared_window_pairs_by_pair_outcome": dict(sorted(outcome_windows.items())),
+            "pair_outcome_counts": dict(sorted(outcome_counts.items())),
+            "complete_window_records": {"left": left_complete, "right": right_complete},
+            "complete_window_records_used_in_pairs": {"left": paired, "right": paired},
+            "complete_window_records_excluded_without_exact_counterpart_endpoint": excluded,
+            "excluded_record_timing": exclusion_timing,
+            "shared_window_pair_count_per_seed": _summary(
+                row["shared_complete_window_pairs"] for row in records
+            ),
+            "request_window_signed_lateral_contrast_m": {
+                **_summary(window_contrasts),
+                "sign_counts": _sign_counts(window_contrasts),
+            },
+            "equal_seed_mean_signed_lateral_contrast_m_per_32_action_window": {
+                **_summary(seed_means),
+                "sign_counts": _sign_counts(seed_means),
+            },
+            "last_shared_boundary_cumulative_signed_lateral_contrast_m": {
+                **_summary(cumulative),
+                "sign_counts": _sign_counts(cumulative),
+            },
+            "fixed_first_0_to_32_action_window_contrast_m": {
+                **_summary(first),
+                "sign_counts": _sign_counts(first),
+            },
+            "per_seed": records,
+        }
+
+    same_support_records = []
+    for seed in SEEDS:
+        shared = sorted(set.intersection(*(
+            set(complete[(seed, layout, command)])
+            for layout in LAYOUTS
+            for command in COMMANDS
+        )))
+        if not shared or shared != list(range(len(shared))):
+            raise ValueError("four-condition shared H01 support must be a nonempty contiguous prefix")
+        layout_means = {}
+        for layout in LAYOUTS:
+            layout_means[layout] = statistics.mean(
+                complete[(seed, layout, "left")][index]["signed_lateral_relative_change_m"]
+                - complete[(seed, layout, "right")][index]["signed_lateral_relative_change_m"]
+                for index in shared
+            )
+        same_support_records.append({
+            "seed": seed,
+            "shared_complete_window_pairs_per_layout": len(shared),
+            "shared_request_indices": shared,
+            "control_mean_contrast_m_per_32_action_window": layout_means["control"],
+            "position_mirrored_mean_contrast_m_per_32_action_window": layout_means["position_mirrored"],
+            "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": (
+                layout_means["position_mirrored"] - layout_means["control"]
+            ),
+        })
+    same_support_differences = [
+        row["position_mirrored_minus_control_mean_contrast_m_per_32_action_window"]
+        for row in same_support_records
+    ]
+    return {
+        "status": "retrospective matched-window selection and execution-motion audit",
+        "by_layout": by_layout,
+        "four_condition_same_request_index_support": {
+            "matched_seed_labels": len(same_support_records),
+            "shared_complete_window_pairs_per_layout": sum(
+                row["shared_complete_window_pairs_per_layout"] for row in same_support_records
+            ),
+            "shared_window_pair_count_per_seed": _summary(
+                row["shared_complete_window_pairs_per_layout"] for row in same_support_records
+            ),
+            "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": {
+                **_summary(same_support_differences),
+                "sign_counts": _sign_counts(same_support_differences),
+            },
+            "per_seed": same_support_records,
+        },
+        "definitions": {
+            "pairing": "Within a seed and layout, retain request indices whose exact +32-action endpoint exists in both LEFT and RIGHT historical cells. An otherwise-complete record is excluded when its counterpart episode ends before that endpoint; never fill a stopped counterpart.",
+            "window_contrast": "D_window = change(cube_y-bowl_y)_LEFT - change(cube_y-bowl_y)_RIGHT in robot-base coordinates. Positive means the two commands increased LEFT/RIGHT ordering over that window; exact zero is a tie without a calibrated motion threshold.",
+            "seed_weighting": "Average the matched windows within each seed; summaries then weight the 27 seed labels equally. Window counts remain variable and outcome-conditioned.",
+            "telescoping": "Contiguous window contrasts sum exactly (within 1e-15 m) to the paired relative-offset response at the last shared 32-action boundary. The seed mean is that response divided by a variable window count, not independent evidence or a physical-time rate.",
+            "same_support_layout_audit": "The layout comparison restricts each seed to request indices complete in all four layout-command cells. This removes unequal request-index support between layouts but not historical goal/cap outcome selection.",
+            "first_window": "Availability and selection of the 0-to-32 action window are outcome-independent in this retained cohort because all cells survive past action 32. Its exact-zero measurement duplicates the stopping-control action-32 information rather than adding an endpoint.",
+        },
+    }
+
+
 def analyze_rows(rows: list[dict[str, Any]], provenance: dict[str, Any]) -> dict[str, Any]:
     expected_cells = {(seed, layout, command) for seed in SEEDS for layout in LAYOUTS for command in COMMANDS}
     indexed: dict[tuple[int, str, str], dict[str, Any]] = {}
@@ -481,8 +725,9 @@ def analyze_rows(rows: list[dict[str, Any]], provenance: dict[str, Any]) -> dict
     } or (sum(prefix_actions), min(prefix_actions), max(prefix_actions)) != (1748, 1, 31):
         raise ValueError("H01 incomplete-window censoring inventory changed")
 
+    matched = matched_complete_window_analysis(requests, indexed)
     return {
-        "schema_version": "wmf-retained-h01-request-window-motion-v1",
+        "schema_version": "wmf-retained-h01-request-window-motion-v2",
         "provenance": provenance,
         "cohort": {
             "historical_id": "H01",
@@ -519,6 +764,7 @@ def analyze_rows(rows: list[dict[str, Any]], provenance: dict[str, Any]) -> dict
             "by_action_step_start": by_start,
             "by_condition": condition_summaries,
         },
+        "matched_complete_window_analysis": matched,
         "request_windows": requests,
         "definitions": {
             "window": "Recorded simulator state at request action_step_start versus the exact observed state at start+32 actions.",
@@ -529,6 +775,7 @@ def analyze_rows(rows: list[dict[str, Any]], provenance: dict[str, Any]) -> dict
             "signed_lateral_relative_change_m": "Change in robot-base (cube_y-bowl_y); positive is toward robot LEFT.",
             "request_level": "Descriptive complete-window requests; variable request counts do not represent independent episodes.",
             "episode_balanced": "Mean complete-window metric within each cell, then descriptive summary over 27 matched seed labels per condition.",
+            "matched_complete_window_analysis": "Selection-transparent LEFT/RIGHT pairing of exact complete +32 windows. It remains a post-hoc, outcome-conditioned execution-motion view and is algebraically linked to the last shared request boundary.",
             "descriptor_provenance": "Public output authenticates recorded descriptor byte counts, recorded content hashes and shapes from the pinned JSONL plus hashes of private recovery pointers. Payload files were not reopened or byte-reverified, and absolute prefixes are never exported.",
         },
         "claim_boundary": {

@@ -613,6 +613,57 @@ def main():
         "administrative_cap_censored_failure": 6,
     } or request_window["coverage"]["censored_observed_prefix_actions"]["sum"] != 1748:
         raise RuntimeError("H01 request-window outcome/prefix censoring changed")
+    matched_windows = request_window["matched_complete_window_analysis"]
+    if {
+        layout: matched_windows["by_layout"][layout]["shared_complete_window_pairs"]
+        for layout in ("control", "position_mirrored")
+    } != {"control": 114, "position_mirrored": 113}:
+        raise RuntimeError("H01 matched request-window pair inventory changed")
+    if {
+        layout: matched_windows["by_layout"][layout][
+            "complete_window_records_excluded_without_exact_counterpart_endpoint"
+        ]["total"]
+        for layout in ("control", "position_mirrored")
+    } != {"control": 101, "position_mirrored": 77}:
+        raise RuntimeError("H01 matched request-window counterpart censoring changed")
+    if {
+        layout: {
+            timing: matched_windows["by_layout"][layout]["excluded_record_timing"][timing]["total"]
+            for timing in (
+                "counterpart_request_terminated_before_32_action_endpoint",
+                "owner_request_started_at_or_after_counterpart_episode_end",
+            )
+        }
+        for layout in ("control", "position_mirrored")
+    } != {
+        "control": {
+            "counterpart_request_terminated_before_32_action_endpoint": 22,
+            "owner_request_started_at_or_after_counterpart_episode_end": 79,
+        },
+        "position_mirrored": {
+            "counterpart_request_terminated_before_32_action_endpoint": 21,
+            "owner_request_started_at_or_after_counterpart_episode_end": 56,
+        },
+    }:
+        raise RuntimeError("H01 matched request-window exclusion timing changed")
+    if {
+        layout: matched_windows["by_layout"][layout][
+            "equal_seed_mean_signed_lateral_contrast_m_per_32_action_window"
+        ]["sign_counts"]
+        for layout in ("control", "position_mirrored")
+    } != {
+        "control": {"positive": 26, "negative": 0, "exact_zero": 1},
+        "position_mirrored": {"positive": 27, "negative": 0, "exact_zero": 0},
+    }:
+        raise RuntimeError("H01 matched request-window equal-seed signs changed")
+    same_support = matched_windows["four_condition_same_request_index_support"]
+    if (
+        same_support["shared_complete_window_pairs_per_layout"] != 96
+        or same_support[
+            "position_mirrored_minus_control_mean_contrast_m_per_32_action_window"
+        ]["sign_counts"] != {"positive": 15, "negative": 11, "exact_zero": 1}
+    ):
+        raise RuntimeError("H01 four-condition shared-support audit changed")
     request_boundary = request_window["claim_boundary"]
     for field in (
         "forecast_arrays_retrieved", "forecast_payload_bytes_reopened_or_reverified",
@@ -696,6 +747,7 @@ def main():
             },
             "cohort": request_window["cohort"],
             "coverage": request_window["coverage"],
+            "matched_complete_window_analysis": matched_windows,
             "new_activity": request_window["new_activity"],
             "gate_state": request_window["gate_state"],
             "json_sha256": digest(request_window_path),

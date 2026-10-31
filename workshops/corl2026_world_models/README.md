@@ -34,6 +34,25 @@ sustained-entry status without assigning goal-terminated transient cases a
 common-horizon time. This is fixed-scene onset geometry, not physical-time
 latency, release success, language understanding, A5--A7 or forecast accuracy.
 
+The retained H03/H04 V2-A015 guidance pilots are now packaged from seven
+byte-authenticated compact Git objects (810,860 bytes/18,939 lines). Each pilot
+compares six historical baseline cells with six post-result intervention cells
+over seed labels 8300--8302 and both commands. Nano changes from g3 6/6 to g1
+4/6; DreamZero changes from the conditional-action-equivalent s1 baseline 3/6
+to custom negative-branch action-guidance s2 4/6. All three LEFT/RIGHT pairs
+remain endpoint ordered in every configuration, but all cells share one
+retained physical-reset fingerprint and DreamZero fixes effective model-noise
+seed 1140. The [canonical JSON](paper/data/h03_h04_guidance_pilots.json)
+records the exact source identities, baseline/intervention joins, historical
+fixed-input gate record and claim boundaries; the
+[12-row CSV](paper/data/h03_h04_guidance_pilots.csv) exposes one matched
+configuration contrast per model, seed label and command. These are
+exploratory post-result pilots, not powered or general guidance evidence; the
+historical baselines are not counted again, models are not pooled, and H04
+does not select the optional D2 extension or qualify D1. Referenced raw files
+remain external and were not replayed. No current inference, episode,
+annotation, confirmation, release gate or change to the 232-cell core follows.
+
 The separate retained H05 position sweep is now authenticated and reproduced
 at report level. Its prospectively frozen design has 15 matched seed blocks,
 seven prescribed bowl-y positions and two commands (210 episodes). The
@@ -187,10 +206,11 @@ forecast-accuracy claim, or planned annotation study presented as a result.
 This is a working paper for the evaluation theme of
 [Do Robots Need World Models?](https://do-robots-need-world-models.github.io/).
 The primary position-reflection experiment studies two world–action
-configurations; retained controls include a separate Edge context, and models
-are never pooled. H13 is a separate older evaluator audit, not another behavioral
-cohort or a forecast-fidelity result. It does not compare world modeling against
-its removal. The
+configurations; retained controls include post-result H03/H04 guidance pilots
+and a separate Edge context, and models are never pooled. H03/H04 do not select
+the optional D2 extension, and H13 is a separate older evaluator audit, not
+another behavioral cohort or a forecast-fidelity result. The paper does not
+compare world modeling against its removal. The
 final author list and submission details
 remain to be settled. Nothing has been submitted or published by this task.
 
@@ -225,8 +245,9 @@ uv pip install --python "$WMF_BUILD_ENV/bin/python" --requirement workshops/corl
 
 The `--system-site-packages` boundary is intentional: `requirements-build.txt`
 does not download or replace Torch, while the regression suite includes
-Torch-backed qualification tests. The retained H05--H12 replays use NumPy;
-H13 uses the standard library and Git object reads.
+Torch-backed qualification tests. The retained H03--H12 analyses use pinned
+Git objects; the numerical replays use NumPy, while H13 uses the standard
+library and Git object reads.
 `build_package.py` fails before running the suite if any required package is
 unavailable and records all five resolved versions in the build report.
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341`, the pinned
@@ -235,7 +256,8 @@ both values. The retained PDF still carries TeX-produced wall-clock metadata,
 so this environment record is not evidence of byte-identical PDF rebuilding.
 
 This runs the tests, recomputes results, the stopping-time control, the H01
-requested-region entry diagnostic, the retained H05/H06 dose responses, the
+requested-region entry diagnostic, the H03/H04 exploratory guidance pilots,
+the retained H05/H06 dose responses, the
 H07/H08 endpoint interactions, the H09/H10 exploratory wording controls, the
 separate H11/H12 Phase-A direct-command cohorts and the retained H13 Edge V1
 evaluator audit from pinned Git objects, authenticates and

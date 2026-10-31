@@ -120,6 +120,42 @@ class PaperStoppingIntegrationTests(unittest.TestCase):
             with self.subTest(required=required):
                 self.assertIn(required, build)
 
+    def test_h03_h04_guidance_pilots_are_integrated_without_release_overclaim(self):
+        build = (PACKAGE / "analysis/build_package.py").read_text()
+        paper = (PACKAGE / "paper/main.tex").read_text()
+        readme = (PACKAGE / "README.md").read_text()
+        delivery = (PACKAGE / "docs/DELIVERY_QA.md").read_text()
+        for required in (
+            'run("H03 H04 retained guidance pilots"',
+            "analysis/analyze_h03_h04_guidance_pilots.py",
+            "paper/data/h03_h04_guidance_pilots.json",
+            "paper/data/h03_h04_guidance_pilots.csv",
+            '"retained_h03_h04_guidance_pilots": {',
+            '"matched_cell_rows": len(h03_h04["matched_cell_contrasts"])',
+            '"matched_seed_diagnostic_rows": len(h03_h04["matched_seed_diagnostics"])',
+            'if "/data/users/" in json.dumps(h03_h04)',
+        ):
+            with self.subTest(required=required):
+                self.assertIn(required, build)
+        for required in (
+            "H03/H04 post-result guidance pilots",
+            "Nano g3 to g1 changes 6/6 to 4/6",
+            "DreamZero s1-equivalent to custom s2 changes 3/6 to 4/6",
+            "not powered guidance evidence or D2 selection",
+        ):
+            with self.subTest(required=required):
+                self.assertIn(required, paper)
+        for document in (readme, delivery):
+            with self.subTest(document="readme" if document is readme else "delivery"):
+                self.assertIn("810,860 bytes/18,939 lines", document)
+                self.assertIn("H03/H04", document)
+                self.assertIn("232-cell core", document)
+                self.assertIn("not", document)
+        self.assertLess(
+            build.index('run("H03 H04 retained guidance pilots"'),
+            build.index('run("H05 retained lateral dose response"'),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

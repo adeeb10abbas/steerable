@@ -52,6 +52,7 @@ def main():
     run("regression tests", [sys.executable, "-m", "unittest", "discover", "-s", str(package / "tests"), "-v"])
     run("stopping-time controls", [sys.executable, str(package / "analysis/analyze_stopping_controls.py")])
     run("H01 requested-region entry", [sys.executable, str(package / "analysis/analyze_h01_requested_region_entry.py")])
+    run("H03 H04 retained guidance pilots", [sys.executable, str(package / "analysis/analyze_h03_h04_guidance_pilots.py")])
     run("H05 retained lateral dose response", [sys.executable, str(package / "analysis/analyze_h05_lateral_dose_response.py")])
     run("H06 retained graded symmetry", [sys.executable, str(package / "analysis/analyze_h06_graded_symmetry.py")])
     run("H07 H08 retained endpoint symmetry", [sys.executable, str(package / "analysis/analyze_h07_h08_endpoint_symmetry.py")])
@@ -84,6 +85,7 @@ def main():
     body = " ".join(raw_body.replace("-\n", "").split())
     for required in ["108", "13/54", "50/54", "26/27", "DreamZero-s2", "31.1", "35.8",
                      "18/27", "17/27", "23/27", "81.4", "104 entries", "1.125", "13/15",
+                     "H03/H04", "post-result guidance pilots", "6/6 to 4/6", "3/6 to 4/6",
                      "H07/H08", "Edge", "12.4", "19.2", "endpoint interactions",
                      "H09/H10", "134/160", "123/160", "wording inference was not registered",
                      "H11/H12 are separate fixed-scene Phase-A direct-command cohorts",
@@ -104,6 +106,8 @@ def main():
     stopping = json.loads(stopping_path.read_text())
     entry_path = package / "paper/data/h01_requested_region_entry.json"
     entry = json.loads(entry_path.read_text())
+    h03_h04_path = package / "paper/data/h03_h04_guidance_pilots.json"
+    h03_h04 = json.loads(h03_h04_path.read_text())
     h05_path = package / "paper/data/h05_lateral_dose_response.json"
     h05 = json.loads(h05_path.read_text())
     h06_path = package / "paper/data/h06_graded_symmetry.json"
@@ -116,6 +120,62 @@ def main():
     h11_h12 = json.loads(h11_h12_path.read_text())
     h13_path = package / "paper/data/h13_v1_forecast_corpus.json"
     h13 = json.loads(h13_path.read_text())
+    if h03_h04["provenance"]["commit"] != "ce561e66f82e95055e39d3d7711691982f6b2086":
+        raise RuntimeError("H03/H04 pinned source commit changed")
+    if h03_h04["source_manifest"] != {
+        "authenticated_bytes": 810_860,
+        "authenticated_file_count": 7,
+        "authenticated_lines": 18_939,
+        "compact_git_files_byte_rehashed_now": True,
+        "exported_source_paths_are_git_object_paths_only": True,
+        "raw_pvc_files_revalidated_now": False,
+        "raw_source_paths_exported": False,
+    }:
+        raise RuntimeError("H03/H04 source authentication receipt changed")
+    expected_h03_h04 = {
+        "H03": ("cosmos3_nano_policy_droid", 6, 4),
+        "H04": ("dreamzero_droid_action_cfg", 3, 4),
+    }
+    for cohort, (model, baseline_successes, intervention_successes) in expected_h03_h04.items():
+        observed = h03_h04["cohorts"][cohort]
+        if observed["model_id"] != model:
+            raise RuntimeError(f"{cohort} model identity changed")
+        if observed["authenticated_population"] != {
+            "baseline_behavioral_episodes": 6,
+            "intervention_behavioral_episodes": 6,
+            "matched_configuration_cells": 6,
+            "matched_seed_labels": 3,
+            "missing_value_imputation": "none",
+            "physical_reset_fingerprints": 1,
+        }:
+            raise RuntimeError(f"{cohort} authenticated population changed")
+        if observed["successes"] != {
+            "baseline": baseline_successes,
+            "intervention": intervention_successes,
+        }:
+            raise RuntimeError(f"{cohort} success totals changed")
+    if len(h03_h04["matched_cell_contrasts"]) != 12:
+        raise RuntimeError("H03/H04 matched-cell count changed")
+    if len(h03_h04["matched_seed_diagnostics"]) != 6:
+        raise RuntimeError("H03/H04 matched-seed diagnostic count changed")
+    if len(h03_h04["new_activity"]) != 13 or any(h03_h04["new_activity"].values()):
+        raise RuntimeError("H03/H04 receipt records new activity")
+    if len(h03_h04["gate_state"]) != 9 or any(
+        value is not False for value in h03_h04["gate_state"].values()
+    ):
+        raise RuntimeError("H03/H04 receipt advances a release gate")
+    h03_h04_boundary = h03_h04["claim_boundary"]
+    for flag in (
+        "powered_or_general_performance_claim",
+        "models_pooled",
+        "d2_extension_selected",
+        "forecast_accuracy_claim",
+        "changes_232_cell_core_bound",
+    ):
+        if h03_h04_boundary[flag] is not False:
+            raise RuntimeError(f"H03/H04 claim boundary changed: {flag}")
+    if "/data/users/" in json.dumps(h03_h04):
+        raise RuntimeError("H03/H04 canonical output leaked a raw source path")
     expected_h09_h10 = {
         "H09": ("cosmos3_nano_policy_droid", 160, 134),
         "H10": ("cosmos3_edge_policy_droid", 160, 123),
@@ -415,6 +475,21 @@ def main():
             "json_sha256": digest(entry_path),
             "csv_sha256": digest(package / "paper/data/h01_requested_region_entry.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h01_requested_region_entry.py"),
+        },
+        "retained_h03_h04_guidance_pilots": {
+            "scope": h03_h04["claim_boundary"],
+            "source_commit": h03_h04["provenance"]["commit"],
+            "design": h03_h04["design"],
+            "cohorts": h03_h04["cohorts"],
+            "matched_cell_rows": len(h03_h04["matched_cell_contrasts"]),
+            "matched_seed_diagnostic_rows": len(h03_h04["matched_seed_diagnostics"]),
+            "source_manifest": h03_h04["source_manifest"],
+            "reproduction": h03_h04["reproduction"],
+            "new_activity": h03_h04["new_activity"],
+            "gate_state": h03_h04["gate_state"],
+            "json_sha256": digest(h03_h04_path),
+            "csv_sha256": digest(package / "paper/data/h03_h04_guidance_pilots.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h03_h04_guidance_pilots.py"),
         },
         "retained_h05_lateral_dose_response": {
             "scope": h05["claim_boundary"],

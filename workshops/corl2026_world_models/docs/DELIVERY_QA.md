@@ -40,8 +40,9 @@ including another **1030/1030 tests in 129.223 s**, in **144.25 s** wall time
 with a peak resident set size of **908,820 KiB**. The post-merge protected-tree
 discovery then passed **1037/1037 tests** in **126.000 s** (**128.43 s** wall;
 peak resident set size **905,792 KiB**); seven of those methods belong to the protected untracked
-N3 test and are not package files. The sixteen build
-steps cover tests, retained-data analyses, media packaging and four full MP4
+N3 test and are not package files. The next qualified build will contain
+seventeen steps; those steps will cover tests, retained-data analyses, media
+packaging and four full MP4
 decodes plus verification, paper results, historical replay, the private
 annotation draw, figures and the official-template PDF.
 
@@ -63,7 +64,9 @@ its 138,203-byte build report has SHA256
 `6545f8bc8aa9ac3425d81288191b85a0820a5298ec757bc8d080daac076b3790`.
 Independent inspection confirmed that the report binds the exact environment,
 all 16 successful stages, the four-page PDF above, the eight retained-analysis
-receipts including H13, and H13's zero media/alignment/label counts. Durable
+receipts including H13, and H13's zero media/alignment/label counts. The
+H03/H04 integration must be requalified before these historical counts and
+hashes are replaced; no unrun build is presented as complete. Durable
 inputs and receipts are checked in under `paper/data/` and `paper/media/`; the
 execution status/progress ledger records this qualification receipt without
 recreating the protected deleted results.
@@ -97,6 +100,17 @@ episode rows. The final manuscript incorporates the following corrections:
   cap-censored, reports 104 entries and the matched entry-index interaction, and
   does not turn action indices into physical time or goal-terminated transients
   into common-horizon sustained entries.
+- The retained H03/H04 package byte-authenticates seven compact Git objects
+  (810,860 bytes/18,939 lines) and rejoins six baseline/intervention cells for
+  each model. Nano changes from g3 6/6 to g1 4/6; DreamZero changes from the
+  conditional-action-equivalent s1 baseline 3/6 to custom negative-branch s2
+  4/6. All three command pairs remain endpoint ordered per configuration, but
+  every cell shares one retained reset fingerprint and DreamZero fixes effective
+  model-noise seed 1140. The pilots are post-result, exploratory and descriptive;
+  their historical baselines are not double counted, the models are not pooled,
+  and H04 neither selects D2 nor qualifies D1. Original raw files remain external
+  and were not replayed. No new inference, episode, annotation, confirmation,
+  release gate or change to the 232-cell core follows.
 - The retained H05 package authenticates a 15-seed by seven-level by two-command
   design, reproduces the 1.125 m/m registered slope and its 20,000-resample
   matched-seed interval, and preserves the nonmonotone level means and
@@ -176,7 +190,10 @@ episode rows. The final manuscript incorporates the following corrections:
 ## Remaining research and submission work
 
 The main results cover two checkpoints, one task and two fixed physical layouts;
-H05 adds seven positions within one fixed simulator setup, not seven scenes.
+H03/H04 reuse one retained physical reset across three seed labels and two
+commands per configuration; they are not independent scenes or confirmatory
+guidance evidence. H05 adds seven positions within one fixed simulator setup,
+not seven scenes.
 H06 adds four inventory-matched positive symmetry levels within 27 repeated
 seed blocks, not 216 independent scenes. H07/H08 add two endpoint-only model
 contexts over repeated seed blocks; their level-zero inventory differs from

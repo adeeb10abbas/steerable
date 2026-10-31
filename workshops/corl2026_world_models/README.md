@@ -248,8 +248,8 @@ uv pip install --python "$WMF_BUILD_ENV/bin/python" --requirement workshops/corl
 
 The `--system-site-packages` boundary is intentional: `requirements-build.txt`
 does not download or replace Torch, while the regression suite includes
-Torch-backed qualification tests. The retained H03--H12 analyses use pinned
-Git objects; the numerical replays use NumPy, while H13 uses the standard
+Torch-backed qualification tests. The retained H03/H04 package and H05--H12 replays
+use pinned Git objects; the numerical replays use NumPy, while H13 uses the standard
 library and Git object reads.
 `build_package.py` fails before running the suite if any required package is
 unavailable and records all five resolved versions in the build report.

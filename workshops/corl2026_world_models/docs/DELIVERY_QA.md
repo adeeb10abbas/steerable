@@ -12,8 +12,8 @@ supporting analysis remains available but is not presented as the current paper.
 `paper/main.pdf` has **four pages total including references**, compiled with the
 unchanged official CoRL 2026 style in preprint mode and an anonymous author line.
 
-- PDF SHA256: `90ff4b846b8fd202752983124d6f12eb1fb1fa80f5df968eadf2e59e96efd187`.
-- LaTeX source SHA256: `c7fa1c90f09aa73a574799ac11a473c96024b524764779cc423b64853e94155b`.
+- PDF SHA256: `3745c8dda1095e3b368a906d7d4dfa71df63f3ecb5f5dfb208cfe1266bcb787f`.
+- LaTeX source SHA256: `57c3ab659c4f05fc1b2c45909357f4298dcc7d1e3773967fa2437f68d1d79bf6`.
 - Official style SHA256: `62f38cd8df7ad718796617595c8230da136fc83ea1d7e1ba80084113409ec957`.
 - Numerical figure input SHA256: `f437fec607ea969a4c0293b157a74175c410b5f88709ac73262b3035314f1230`.
 - Design figure PDF/PNG SHA256: `9896dafc73897ca19fe6558d9385a8b1512cae858ba815c88743642185ea8201` / `9f1dbac8c32485ebdbaa0df80f8dc1b40c36c9369fd118c700c4e591e4cd94df`.
@@ -43,13 +43,18 @@ the next clean isolated discovery passed **1041/1041 tests in 129.042 s**
 (**131.87 s** wall; peak resident set size **909,184 KiB**). After integrating
 H02, a clean isolated pre-build discovery passed **1048/1048 tests in
 128.217 s** (**130.96 s** wall; peak resident set size **913,632 KiB**).
-The final authoritative isolated build then passed all **18 stages**, including
-another **1048/1048 tests in 136.784 s**, in **152.45 s** wall time with a peak
-resident set size of **906,768 KiB**. The stages cover tests, retained-data
-analyses, media packaging and four full MP4 decodes plus verification, paper
-results, historical replay, the private annotation draw, figures and the
-official-template PDF. These software qualifications validate the package; they
-are not behavioral episodes, model-policy competence or scientific evidence.
+The final Turn2909 authoritative isolated build passed all **19 stages**, including
+**1060/1060 tests in 130.452 s**, in **146.35 s** wall time with a peak resident
+set size of **915,176 KiB**. The stages cover tests, retained-data analyses,
+media packaging and four full MP4 decodes plus verification, paper results, the
+retained H01--H13 historical-evidence coverage audit, historical replay, the
+private annotation draw, figures and the official-template PDF. A preceding
+clean attempt stopped fail-closed when the new audit treated the freshly
+regenerated `paper_results.json` checkout as immutable; the correction still
+authenticates and parses the pinned base Git object while allowing only that
+builder-generated checkout copy to evolve, and adds a regression test for the
+boundary. These software qualifications validate the package; they are not
+behavioral episodes, model-policy competence or scientific evidence.
 
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
@@ -62,23 +67,27 @@ undefined citations or undefined references. All four isolated pages were
 rendered and passed visual review.
 
 `results/validation.log` and `results/build_report.json` are generated build
-products, not retained checkout evidence in this protected worktree. The
-authoritative isolated validation log is 495,679 bytes/10,726 lines with
-SHA256 `168411f23a9d91c8f72221d4b025fa99f34b74f2607fd1aba908349896c599da`;
-its 164,502-byte/4,865-line build report has SHA256
-`4b8181465389ad5478d737294b2b39370a23950a8ea2f67f06fb3d2cc6c23a1a`.
-The complete 165,160-byte/4,883-line build stdout and 832-byte/23-line resource
+products, not retained checkout evidence in this protected worktree. The final
+authoritative isolated validation log is 562,124 bytes/12,245 lines with
+SHA256 `b8b67b85ae76bcb8bdd1b8141503022b87f1b17d955b808d1036629112896069`;
+its 170,490-byte/5,004-line build report has SHA256
+`3a342066e80cb64ae1b89c3d54dcf5bc2ff27e133b09ffedc472679823f47618`.
+The complete 171,194-byte/5,023-line build stdout and 1,210-byte/23-line resource
 receipt have SHA256
-`e133e18179fd03e9949ac8339be2f826e87b51e18037913af566f5301bd4ce59` and
-`2e0e6b4229878fbad34137b8458d3f56b7e5d06f7cb2940a1206da02dd793e71`.
+`da45ed19c5a5d9146d779585878aba946480125ba2643f2542ce8795856d419d` and
+`9750548454f5a3299849ee0080b62bf44c9784668f8944ed2c79d1c860f7796b`.
+The post-merge protected discovery passed **1067/1067 tests in 128.005 s**
+(**130.43 s** wall; peak resident set size **910,392 KiB**), including exactly
+seven protected-only N3 methods. Its 142,409-byte/1,081-line stdout and
+869-byte/23-line resource receipt have SHA256
+`996687e510658f5137c91cbcbc970d697afb510c96ad85c110cd10646aed88a4` and
+`2bebd163e0253099a2c8a7e34ed77077696fdb3b33e5ca64e842559cd682babf`.
 Independent inspection confirmed that the report binds the exact environment,
-all 18 successful stages, the four-page 162,526-byte PDF and 12,648-byte LaTeX
-source above, the retained-analysis receipts including H02, H03/H04 and H13,
-the 27 H02 matched blocks, 12 H03/H04 matched contrasts, six paired-seed
-diagnostics and their pinned source objects, and all current activity
-counters/gates at zero/false. Independent reviewers returned GO on the H02
-science, fail-closed stage-gate and layout boundaries after source
-recomputation, mutation tests and rendered-page inspection. Durable
+all 19 successful stages, the four-page 162,589-byte PDF and 12,767-byte LaTeX
+source above, all nine grouped retained-analysis packages and all 13 registered
+historical IDs, and all current activity counters/gates at zero/false. The
+coverage review returned GO after pinned-source authentication, mutation tests,
+canonical regeneration and rendered-page inspection. Durable
 inputs and receipts are checked in under `paper/data/` and `paper/media/`; the
 execution status/progress ledger records this qualification receipt without
 recreating the protected deleted results.
@@ -217,6 +226,21 @@ episode rows. The final manuscript incorporates the following corrections:
   model inference, behavioral episode, fidelity estimate, annotation or
   confirmation gate follows: all 13 activity counters are zero, all nine gates
   false and the 232-cell core ceiling unchanged.
+- The retained historical-evidence coverage audit authenticates 50 exact Git
+  objects (2,054,896 bytes/45,726 lines; canonical manifest SHA256
+  `26dac013bb654e28145e0f2bdfbfe2d8622080c9af84b3773efe5c217a337b38`)
+  at the pinned Turn2908 control snapshot. It maps every registered H01--H13 ID
+  exactly once to nine grouped analysis packages with explicit closed claim
+  boundaries. H01, H02 and H07 have additional primary, supplemental or
+  presentation roles that do not create extra cohorts. H02, H04, H07 and H12
+  remain historical custom-s2 configurations, not official conditional D1.
+  Episode counts and models are not pooled; no outcome is re-estimated. Raw
+  H01/H02 recovery, manifest-host availability, physical-time pairing,
+  independent labels, qualified D1, prospective varied-layout forecast
+  accuracy and fixed-duration H01 evidence remain unestablished. The audit
+  creates no new inference, behavioral episode, label, generalization,
+  equivalence, language-understanding or forecast-accuracy evidence, and changes
+  neither the 232-cell bound nor any science/release gate.
 - The four representative seed-9400 videos are authenticated and fully decoded,
   but remain presentation media rather than blinded annotation inputs, timing
   maps, forecast-accuracy evidence or a release-gate advance.

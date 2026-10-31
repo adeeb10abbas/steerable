@@ -338,7 +338,7 @@ Three full detached attempts were made and only this one is promoted: the first
 correctly rejected a five-page draft, and the second stopped at one regression
 failure among 1,099 tests after compaction removed the required `540` marker.
 An independent audit also caught pdfTeX extraction of `+227` as `+ 227`; the
-validator now accepts only that whitespace normalization and all 65 required
+validator now accepts only that whitespace normalization and all 66 required
 markers pass. Three independent read-only reviews plus root review return GO.
 
 The eight ledger rows exactly partition the already sealed command totals.

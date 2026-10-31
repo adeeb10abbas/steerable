@@ -247,6 +247,52 @@ the only promoted build. These checks qualify post-result algebra over the same
 request, inference, label, confirmation result, independent scene/noise sample,
 registered estimand, activity, gate advance or change to the 232-cell ceiling.
 
+The Turn2916 retained H02 cap-composite decomposition was introduced at science
+commit `ec86de756bfbf309546efa49474b3f8b8a23ea22`; compact four-page manuscript
+corrections are `cdd07887f35eb84fd5d031801e7cfae6fb8eaa5a` and
+`c96a535f9a212f81de7eb49c06839b3adba16db8`, and the fail-closed PDF boundary
+checker correction is `1dfdf70e8c97533e02096fb84db93a60526c3202`. Relative to the
+published Turn2915 seal `1622efadc689d95093789bef8d91d3e353d5ba3c`, that tree changes
+exactly eight package paths by 1,734 insertions and three deletions. The
+469-line/20,089-byte analyzer, 336-line/13,843-byte test, 808-line/37,325-byte
+JSON and 28-line/4,581-byte CSV have SHA256
+`bbfe43b7dde0ec4f30e7a7f2fb40c11389c8ced5175d6196dae512f7c363c11a`,
+`99b0763dcd226dfbd5b2297399780638a14122c5d48498681de4160418ca7c74`,
+`33d66ed365d2fe330f2a4988a578a6fdbdc83c335184fb9098aeaa0f0c676f09`
+and `11fd4944b7cb5f9d3509bda6d9c0d1764d5d077461a05b027a13f980b16e3cb4`.
+The eight focused tests pass and canonical regeneration is byte-exact.
+
+A fresh detached authoritative build at `1dfdf70e` passed all **22 stages**,
+including **1089/1089 tests in 130.367 s**, in **146.68 s** wall time with peak
+resident set size **915,844 KiB**. Its 567,027-byte/12,316-line validation log,
+736,752-byte/20,165-line build report, 737,576-byte/20,187-line stdout and
+769-byte/23-line resource receipt have SHA256
+`c373a2c16f4fe5dc117091ab0048416cfd2a83b92b98ffc4e15fd15d72803781`,
+`01b32b25075f30f8f83fe5d0975a41427f2610b8b697079b57941f4f6a2c1f68`,
+`31c98f81aa08064d3a22beaac2edd5db3c76818c194d50ba0f73c62dd7981ccc`
+and `742aaf30c086f328fe1c6dcf17ee0a8686e57cd5676c72cea7588e2d4d0c3683`.
+The final protected-tree discovery passed **1096/1096 tests in 128.188 s**
+(**130.65 s** wall; peak resident set size **918,460 KiB**), including exactly
+seven protected-only N3 methods. Its 145,909-byte/1,110-line stdout and
+807-byte/23-line resource receipt have SHA256
+`c0efdf3276250c236194decfa0349ec4aa6df99f1be27d0e183b6a297f11eeff`
+and `7dd38247caceffdd9db9f736cd990eadaaf30f49cd6a27380391a86a952407ac`.
+
+The generated 163,370-byte four-page PDF and 13,161-byte/106-line TeX source
+have SHA256 `69fdc40e8a0c6eef1713bb92e085a04d9ffcca6e83a79a703219c8bc921eaba1`
+and `e99c404f0eff8505b4bf25f1407fd66778f758d035117bb923df0b2f00d603f1`.
+All four fresh page renders passed visual review with no clipping, overlap,
+missing glyph, overfull box, unresolved citation/reference or LaTeX error.
+Two preceding drafts were rejected at five pages, and the first four-page build
+stopped fail-closed on the exact extracted boundary phrase; none was promoted.
+Independent arithmetic and package reviews plus root review return GO. The
+decomposition is exact post-result algebra: `Delta U = -450 Delta E + Delta Z`,
+where `Z` is the zero-masked recorded-index term. Cross-layout status pairs are
+not temporal transitions, entrant timing, causal or counterfactual effects,
+survival estimates, physical time, forecast skill, D1/default evidence, A3--A9
+evidence, a new cohort or a release gate. These software checks add no episode,
+request, inference, annotation, label, confirmation or activity.
+
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock

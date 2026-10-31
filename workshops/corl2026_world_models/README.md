@@ -49,6 +49,21 @@ repeated positions in one fixed simulator setup, not seven scenes, and this
 retained executed-behavior result supplies no forecast-accuracy or annotation
 gate evidence.
 
+The retained H06 Nano graded-symmetry study is also authenticated from its
+prospectively registered compact evidence. Its primary inventory-matched grid
+contains 27 matched seeds at symmetry levels 0.25, 0.50, 0.75 and 1.00 (216
+episodes/108 command pairs). The within-seed requested-depth-gap slope against
+realised object-layout asymmetry averages 0.020 m per unit asymmetry (95%
+matched-seed bootstrap interval 0.0004--0.0400; 20/27 positive, exact
+$p=0.0192$). [Canonical JSON](paper/data/h06_graded_symmetry.json) authenticates
+and strictly parses the full 4,096-episode compact V3-E004 table, while the
+[108-row CSV](paper/data/h06_graded_symmetry.csv) exposes the exact primary
+contrasts. Level zero is excluded because companion objects are absent there;
+it is not inventory matched to positive levels. Original raw simulator files
+remain external. This is historical executed behavior, not independent scenes,
+position-reflection replication, equivalence, forecast accuracy or a release-
+gate advance.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact
@@ -115,7 +130,7 @@ uv pip install --python "$WMF_BUILD_ENV/bin/python" --requirement workshops/corl
 
 The `--system-site-packages` boundary is intentional: `requirements-build.txt`
 does not download or replace Torch, while the regression suite includes
-Torch-backed qualification tests. The retained H05 replay also uses NumPy.
+Torch-backed qualification tests. The retained H05 and H06 replays also use NumPy.
 `build_package.py` fails before running the suite if any required package is
 unavailable and records all five resolved versions in the build report.
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341`, the pinned
@@ -124,8 +139,8 @@ both values. The retained PDF still carries TeX-produced wall-clock metadata,
 so this environment record is not evidence of byte-identical PDF rebuilding.
 
 This runs the tests, recomputes results, the stopping-time control, the H01
-requested-region entry diagnostic and the retained H05 dose response from the
-pinned repository, authenticates and
+requested-region entry diagnostic and the retained H05 and H06 dose responses
+from the pinned repository, authenticates and
 fully decodes the four representative H01 video blobs, produces figures and
 compiles the official CoRL template. The build report records all retained-data
 analyses, their source identities and output hashes, plus the representative-

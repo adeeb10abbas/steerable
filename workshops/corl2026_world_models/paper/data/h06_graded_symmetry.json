@@ -1,0 +1,1568 @@
+{
+  "authenticated_historical_population": {
+    "full_h06_behavioral_episodes": 2246,
+    "full_h06_matched_pairs": 1123,
+    "infrastructure_attempts_included": false,
+    "missing_value_imputation": "none",
+    "primary_behavioral_episodes": 216,
+    "primary_levels": 4,
+    "primary_matched_pairs": 108,
+    "primary_matched_seeds": 27,
+    "valid_behavioral_failures_included": true
+  },
+  "binary_success_secondary": {
+    "bootstrap_seed": 7516021344275608729,
+    "ci95": [
+      -0.08207887794256187,
+      -2.0326222347120013e-05
+    ],
+    "estimand": "within-seed OLS slope of success_RIGHT-success_LEFT versus realised object-layout asymmetry A",
+    "mean": -0.03909169870630973,
+    "median": 0.0,
+    "method": "nonparametric_percentile_bootstrap",
+    "per_seed_by_seed": {
+      "9400": -0.10582410393387663,
+      "9401": 0.0,
+      "9402": 0.0,
+      "9403": 0.0,
+      "9404": -0.31644282811396907,
+      "9405": 0.0,
+      "9406": 0.0,
+      "9407": 0.0,
+      "9408": 0.0,
+      "9409": 0.0,
+      "9410": 0.0,
+      "9411": -0.3164430400958323,
+      "9412": -0.10558958125166851,
+      "9413": 0.0,
+      "9414": 0.0,
+      "9415": 0.2108561687903014,
+      "9416": 0.0,
+      "9417": 0.0,
+      "9418": 0.0,
+      "9419": 0.0,
+      "9420": -0.31644282811396907,
+      "9421": 0.0,
+      "9422": 0.0,
+      "9423": 0.0,
+      "9424": -0.10558965235134853,
+      "9425": 0.0,
+      "9426": 0.0
+    },
+    "replicates": 20000,
+    "sign_test": {
+      "method": "exact_two_sided_paired_sign_test_zero_ties_excluded",
+      "negative": 6,
+      "non_tied_n": 7,
+      "positive": 1,
+      "ties": 20,
+      "two_sided_p": 0.125
+    },
+    "unit": "matched_seed"
+  },
+  "by_level": [
+    {
+      "left_successes": 27,
+      "matched_pairs": 27,
+      "realised_asymmetry_A_mean": 2.8477300686975164,
+      "requested_depth_gap_R_minus_L_mean_m": 0.09186856300328616,
+      "right_successes": 24,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "left_successes": 27,
+      "matched_pairs": 27,
+      "realised_asymmetry_A_mean": 1.9022673937412102,
+      "requested_depth_gap_R_minus_L_mean_m": 0.08871804895224394,
+      "right_successes": 25,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "left_successes": 25,
+      "matched_pairs": 27,
+      "realised_asymmetry_A_mean": 0.953240371390666,
+      "requested_depth_gap_R_minus_L_mean_m": 0.0676189372660937,
+      "right_successes": 27,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "left_successes": 27,
+      "matched_pairs": 27,
+      "realised_asymmetry_A_mean": 0.005673092476433332,
+      "requested_depth_gap_R_minus_L_mean_m": 0.03556595413721408,
+      "right_successes": 26,
+      "symmetry_level_s": 1.0
+    }
+  ],
+  "claim_boundary": {
+    "boundaries": [
+      "The 216 primary episodes are repeated commands and levels within 27 matched seed blocks, not 216 independent scenes.",
+      "Level zero is excluded prospectively because its object inventory differs from every positive level.",
+      "Object-layout symmetry does not assert symmetry of the robot, reset posture, camera rig or embodiment.",
+      "The compact Git rows are byte-authenticated; original raw simulator files and media remain external and were not rehashed here.",
+      "This is retained executed-behavior evidence, not generated-future accuracy, annotation evidence, confirmation or a release-gate advance.",
+      "No equivalence claim passes, and H06 is not a replication or generalization test of position-only reflection."
+    ],
+    "changes_232_cell_core_bound": false,
+    "confirmation_test_or_stage_gate": false,
+    "equivalence_claim": false,
+    "forecast_accuracy_evidence": false,
+    "new_human_labels": false,
+    "new_model_inference": false,
+    "new_robot_episodes": false,
+    "object_layout_symmetry_is_robot_camera_or_embodiment_symmetry": false,
+    "position_only_reflection_replication": false,
+    "primary_rows_are_independent_scenes": false,
+    "status": "retrospective compact-row authentication and independent arithmetic reproduction"
+  },
+  "design": {
+    "amendment_id": "V3-E004",
+    "excluded_level": 0.0,
+    "excluded_level_reason": "Companion objects are absent at s=0 and active at all positive levels; s=0 is not inventory matched.",
+    "inferential_unit": "matched seed",
+    "inventory_matched_levels": [
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "matched_seeds": [
+      9400,
+      9401,
+      9402,
+      9403,
+      9404,
+      9405,
+      9406,
+      9407,
+      9408,
+      9409,
+      9410,
+      9411,
+      9412,
+      9413,
+      9414,
+      9415,
+      9416,
+      9417,
+      9418,
+      9419,
+      9420,
+      9421,
+      9422,
+      9423,
+      9424,
+      9425,
+      9426
+    ],
+    "model_id": "cosmos3_nano_policy_droid",
+    "study_id": "vla_wam_language_steerability_v3"
+  },
+  "gate_state": {
+    "annotation_media_ready": false,
+    "camera_alignment_ready": false,
+    "confirmation_release_ready": false,
+    "current_GM_PVC_worker_state_reconciled": false,
+    "development_annotation_gate_ready": false,
+    "human_annotation_ready": false,
+    "live_quiescence_inferred": false,
+    "resource_freeze_ready": false,
+    "safe_to_release_new_work": false
+  },
+  "matched_seed_levels": [
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.10582410393387663,
+      "depth_slope_m_per_A": -0.05025439978782271,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.037426091730594635,
+      "right_success": true,
+      "seed": 9400,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": -1,
+      "binary_success_slope_per_A": -0.10582410393387663,
+      "depth_slope_m_per_A": -0.05025439978782271,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": -0.3293890506029129,
+      "right_success": false,
+      "seed": 9400,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.10582410393387663,
+      "depth_slope_m_per_A": -0.05025439978782271,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.08734704181551933,
+      "right_success": true,
+      "seed": 9400,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.10582410393387663,
+      "depth_slope_m_per_A": -0.05025439978782271,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.056895048124715686,
+      "right_success": true,
+      "seed": 9400,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.004290095481798401,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.0776619017124176,
+      "right_success": true,
+      "seed": 9401,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.004290095481798401,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.09865465015172958,
+      "right_success": true,
+      "seed": 9401,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.004290095481798401,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.08393155038356781,
+      "right_success": true,
+      "seed": 9401,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.004290095481798401,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.06903935421723872,
+      "right_success": true,
+      "seed": 9401,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": -0.002309500604551669,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": -0.03466421365737915,
+      "right_success": true,
+      "seed": 9402,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": -0.002309500604551669,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.1609760820865631,
+      "right_success": true,
+      "seed": 9402,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": -0.002309500604551669,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532340320984752,
+      "requested_depth_gap_R_minus_L_m": 0.1675431802868843,
+      "right_success": true,
+      "seed": 9402,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": -0.002309500604551669,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": -0.029416645760647953,
+      "right_success": true,
+      "seed": 9402,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.05040652594510405,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.17631853371858597,
+      "right_success": true,
+      "seed": 9403,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.05040652594510405,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": -0.0056554824113845825,
+      "right_success": true,
+      "seed": 9403,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.05040652594510405,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": -0.02220936492085457,
+      "right_success": true,
+      "seed": 9403,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.05040652594510405,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.02253030240535736,
+      "right_success": true,
+      "seed": 9403,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": -1,
+      "binary_success_slope_per_A": -0.31644282811396907,
+      "depth_slope_m_per_A": -0.07598804340563117,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477357449267178,
+      "requested_depth_gap_R_minus_L_m": -0.0658951923251152,
+      "right_success": false,
+      "seed": 9404,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.31644282811396907,
+      "depth_slope_m_per_A": -0.07598804340563117,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.06846847385168076,
+      "right_success": true,
+      "seed": 9404,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.31644282811396907,
+      "depth_slope_m_per_A": -0.07598804340563117,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.12228529155254364,
+      "right_success": true,
+      "seed": 9404,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.31644282811396907,
+      "depth_slope_m_per_A": -0.07598804340563117,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.15621456084772944,
+      "right_success": true,
+      "seed": 9404,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.0058469329977701365,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.1655406802892685,
+      "right_success": true,
+      "seed": 9405,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.0058469329977701365,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.11059139668941498,
+      "right_success": true,
+      "seed": 9405,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.0058469329977701365,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.1515374630689621,
+      "right_success": true,
+      "seed": 9405,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.0058469329977701365,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005645019914309567,
+      "requested_depth_gap_R_minus_L_m": 0.13338378351181746,
+      "right_success": true,
+      "seed": 9405,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.013609562279973817,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.14246056973934174,
+      "right_success": true,
+      "seed": 9406,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.013609562279973817,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.11693132668733597,
+      "right_success": true,
+      "seed": 9406,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.013609562279973817,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.1554177664220333,
+      "right_success": true,
+      "seed": 9406,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.013609562279973817,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.0866330546559766,
+      "right_success": true,
+      "seed": 9406,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.010987992474234596,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.041021957993507385,
+      "right_success": true,
+      "seed": 9407,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.010987992474234596,
+      "left_success": true,
+      "realised_asymmetry_A": 1.902251548451285,
+      "requested_depth_gap_R_minus_L_m": 0.12369679659605026,
+      "right_success": true,
+      "seed": 9407,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.010987992474234596,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": -0.06712094694375992,
+      "right_success": true,
+      "seed": 9407,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.010987992474234596,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.07000881957355887,
+      "right_success": true,
+      "seed": 9407,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.120327694749499,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.2044200822710991,
+      "right_success": true,
+      "seed": 9408,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.120327694749499,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.09437768161296844,
+      "right_success": true,
+      "seed": 9408,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.120327694749499,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": -0.007399264723062515,
+      "right_success": true,
+      "seed": 9408,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.120327694749499,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": -0.14169514493551105,
+      "right_success": true,
+      "seed": 9408,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.031287592813278205,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.21629440784454346,
+      "right_success": true,
+      "seed": 9409,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.031287592813278205,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.1574837639927864,
+      "right_success": true,
+      "seed": 9409,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.031287592813278205,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.10109033063054085,
+      "right_success": true,
+      "seed": 9409,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.031287592813278205,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.13625456066802144,
+      "right_success": true,
+      "seed": 9409,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.08718391421367412,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.285267174243927,
+      "right_success": true,
+      "seed": 9410,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.08718391421367412,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": -0.052912645041942596,
+      "right_success": true,
+      "seed": 9410,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.08718391421367412,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532340320984752,
+      "requested_depth_gap_R_minus_L_m": -0.019705653190612793,
+      "right_success": true,
+      "seed": 9410,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.08718391421367412,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": -0.0013636564835906029,
+      "right_success": true,
+      "seed": 9410,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": -1,
+      "binary_success_slope_per_A": -0.3164430400958323,
+      "depth_slope_m_per_A": -0.09471152739540017,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": -0.1768796592950821,
+      "right_success": false,
+      "seed": 9411,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.3164430400958323,
+      "depth_slope_m_per_A": -0.09471152739540017,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.03836309164762497,
+      "right_success": true,
+      "seed": 9411,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.3164430400958323,
+      "depth_slope_m_per_A": -0.09471152739540017,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.15122802183032036,
+      "right_success": true,
+      "seed": 9411,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.3164430400958323,
+      "depth_slope_m_per_A": -0.09471152739540017,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.08472599578090012,
+      "right_success": true,
+      "seed": 9411,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.10558958125166851,
+      "depth_slope_m_per_A": -0.00126444698022927,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477357449267178,
+      "requested_depth_gap_R_minus_L_m": -0.05217290297150612,
+      "right_success": true,
+      "seed": 9412,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.10558958125166851,
+      "depth_slope_m_per_A": -0.00126444698022927,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.17262259125709534,
+      "right_success": true,
+      "seed": 9412,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 1,
+      "binary_success_slope_per_A": -0.10558958125166851,
+      "depth_slope_m_per_A": -0.00126444698022927,
+      "left_success": false,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.061163280159235,
+      "right_success": true,
+      "seed": 9412,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.10558958125166851,
+      "depth_slope_m_per_A": -0.00126444698022927,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": -0.010850197519175708,
+      "right_success": true,
+      "seed": 9412,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.09342140402973187,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.26611222326755524,
+      "right_success": true,
+      "seed": 9413,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.09342140402973187,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.32499054819345474,
+      "right_success": true,
+      "seed": 9413,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.09342140402973187,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.1634821556508541,
+      "right_success": true,
+      "seed": 9413,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.09342140402973187,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005645019914309567,
+      "requested_depth_gap_R_minus_L_m": 0.025000491994433105,
+      "right_success": true,
+      "seed": 9413,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.05410984865476404,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.22762202471494675,
+      "right_success": true,
+      "seed": 9414,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.05410984865476404,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.14682535082101822,
+      "right_success": true,
+      "seed": 9414,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.05410984865476404,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.09853820130228996,
+      "right_success": true,
+      "seed": 9414,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.05410984865476404,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.07279520714655519,
+      "right_success": true,
+      "seed": 9414,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.2108561687903014,
+      "depth_slope_m_per_A": 0.03139597818020911,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": -0.04548725765198469,
+      "right_success": true,
+      "seed": 9415,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": -1,
+      "binary_success_slope_per_A": 0.2108561687903014,
+      "depth_slope_m_per_A": 0.03139597818020911,
+      "left_success": true,
+      "realised_asymmetry_A": 1.902251548451285,
+      "requested_depth_gap_R_minus_L_m": 0.07958996295928955,
+      "right_success": false,
+      "seed": 9415,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.2108561687903014,
+      "depth_slope_m_per_A": 0.03139597818020911,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": -0.0247819647192955,
+      "right_success": true,
+      "seed": 9415,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": -1,
+      "binary_success_slope_per_A": 0.2108561687903014,
+      "depth_slope_m_per_A": 0.03139597818020911,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": -0.10973670985549688,
+      "right_success": false,
+      "seed": 9415,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.1341404896771012,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.18193859606981277,
+      "right_success": true,
+      "seed": 9416,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.1341404896771012,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.017005786299705505,
+      "right_success": true,
+      "seed": 9416,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.1341404896771012,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.11555575951933861,
+      "right_success": true,
+      "seed": 9416,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.1341404896771012,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": -0.27463005704339594,
+      "right_success": true,
+      "seed": 9416,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.010502179021045211,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.04613198712468147,
+      "right_success": true,
+      "seed": 9417,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.010502179021045211,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.021697692573070526,
+      "right_success": true,
+      "seed": 9417,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.010502179021045211,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.030686240643262863,
+      "right_success": true,
+      "seed": 9417,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.010502179021045211,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.009953206987120211,
+      "right_success": true,
+      "seed": 9417,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.026719649352367935,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.17582117021083832,
+      "right_success": true,
+      "seed": 9418,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.026719649352367935,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.11696909368038177,
+      "right_success": true,
+      "seed": 9418,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.026719649352367935,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532340320984752,
+      "requested_depth_gap_R_minus_L_m": 0.12997155636548996,
+      "right_success": true,
+      "seed": 9418,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.026719649352367935,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.08706709160469472,
+      "right_success": true,
+      "seed": 9418,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.02881613166762706,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.15751174092292786,
+      "right_success": true,
+      "seed": 9419,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.02881613166762706,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.17261774837970734,
+      "right_success": true,
+      "seed": 9419,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.02881613166762706,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.2032863199710846,
+      "right_success": true,
+      "seed": 9419,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.02881613166762706,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.05630191485397518,
+      "right_success": true,
+      "seed": 9419,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": -1,
+      "binary_success_slope_per_A": -0.31644282811396907,
+      "depth_slope_m_per_A": -0.04881603372569248,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477357449267178,
+      "requested_depth_gap_R_minus_L_m": -0.13593443483114243,
+      "right_success": false,
+      "seed": 9420,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.31644282811396907,
+      "depth_slope_m_per_A": -0.04881603372569248,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.10434717684984207,
+      "right_success": true,
+      "seed": 9420,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.31644282811396907,
+      "depth_slope_m_per_A": -0.04881603372569248,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.017521433532238007,
+      "right_success": true,
+      "seed": 9420,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.31644282811396907,
+      "depth_slope_m_per_A": -0.04881603372569248,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.04734433232806623,
+      "right_success": true,
+      "seed": 9420,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": -0.033498687223477826,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.006958179175853729,
+      "right_success": true,
+      "seed": 9421,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": -0.033498687223477826,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.07607639580965042,
+      "right_success": true,
+      "seed": 9421,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": -0.033498687223477826,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.00019470974802970886,
+      "right_success": true,
+      "seed": 9421,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": -0.033498687223477826,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005645019914309567,
+      "requested_depth_gap_R_minus_L_m": 0.13809254090301692,
+      "right_success": true,
+      "seed": 9421,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.01791224813318343,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.0026378855109214783,
+      "right_success": true,
+      "seed": 9422,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.01791224813318343,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.10682974010705948,
+      "right_success": true,
+      "seed": 9422,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.01791224813318343,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.10083836689591408,
+      "right_success": true,
+      "seed": 9422,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.01791224813318343,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": -0.05185033555608243,
+      "right_success": true,
+      "seed": 9422,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.06435275295895088,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.2027299925684929,
+      "right_success": true,
+      "seed": 9423,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.06435275295895088,
+      "left_success": true,
+      "realised_asymmetry_A": 1.902251548451285,
+      "requested_depth_gap_R_minus_L_m": 0.0011929646134376526,
+      "right_success": true,
+      "seed": 9423,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.06435275295895088,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.025488514453172684,
+      "right_success": true,
+      "seed": 9423,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.06435275295895088,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": -0.008730900357477367,
+      "right_success": true,
+      "seed": 9423,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.10558965235134853,
+      "depth_slope_m_per_A": 0.002439777673169481,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.10732773691415787,
+      "right_success": true,
+      "seed": 9424,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.10558965235134853,
+      "depth_slope_m_per_A": 0.002439777673169481,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.06608862429857254,
+      "right_success": true,
+      "seed": 9424,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 1,
+      "binary_success_slope_per_A": -0.10558965235134853,
+      "depth_slope_m_per_A": 0.002439777673169481,
+      "left_success": false,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": 0.023369114845991135,
+      "right_success": true,
+      "seed": 9424,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": -0.10558965235134853,
+      "depth_slope_m_per_A": 0.002439777673169481,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.11383685725741088,
+      "right_success": true,
+      "seed": 9424,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.024663685484984852,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.1621578112244606,
+      "right_success": true,
+      "seed": 9425,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.024663685484984852,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.1494961678981781,
+      "right_success": true,
+      "seed": 9425,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.024663685484984852,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532414738762642,
+      "requested_depth_gap_R_minus_L_m": -0.045843757688999176,
+      "right_success": true,
+      "seed": 9425,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.024663685484984852,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.14939789206255227,
+      "right_success": true,
+      "seed": 9425,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.035962962154993366,
+      "left_success": true,
+      "realised_asymmetry_A": 2.8477293591688664,
+      "requested_depth_gap_R_minus_L_m": 0.10812411457300186,
+      "right_success": true,
+      "seed": 9426,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.035962962154993366,
+      "left_success": true,
+      "realised_asymmetry_A": 1.9022693744024508,
+      "requested_depth_gap_R_minus_L_m": 0.2574513927102089,
+      "right_success": true,
+      "seed": 9426,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.035962962154993366,
+      "left_success": true,
+      "realised_asymmetry_A": 0.9532340320984752,
+      "requested_depth_gap_R_minus_L_m": 0.022295959293842316,
+      "right_success": true,
+      "seed": 9426,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "binary_success_gap_R_minus_L": 0,
+      "binary_success_slope_per_A": 0.0,
+      "depth_slope_m_per_A": 0.035962962154993366,
+      "left_success": true,
+      "realised_asymmetry_A": 0.005676601546698804,
+      "requested_depth_gap_R_minus_L_m": 0.07307939429301769,
+      "right_success": true,
+      "seed": 9426,
+      "symmetry_level_s": 1.0
+    }
+  ],
+  "new_activity": {
+    "annotation_media": 0,
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "confirmation_inference_cells": 0,
+    "forecast_accuracy_estimates": 0,
+    "human_responses": 0,
+    "labels": 0,
+    "model_requests": 0,
+    "queue_descriptors": 0,
+    "request_rows": 0,
+    "request_selections": 0,
+    "retrieval_jobs": 0,
+    "runnable_manifests": 0
+  },
+  "primary_depth_dose_response": {
+    "bootstrap_seed": 14039700604037383425,
+    "ci95": [
+      0.0004103051233714798,
+      0.040038464864258154
+    ],
+    "estimand": "within-seed OLS slope of requested-side depth gap B=(-y_RIGHT)-y_LEFT versus realised object-layout asymmetry A",
+    "interpretation": "A positive slope means the RIGHT-minus-LEFT requested-side depth gap shrinks as realised asymmetry decreases toward symmetry.",
+    "mean": 0.02005684366002428,
+    "median": 0.01791224813318343,
+    "method": "nonparametric_percentile_bootstrap",
+    "per_seed": [
+      {
+        "seed": 9400,
+        "slope_m_per_A": -0.05025439978782271
+      },
+      {
+        "seed": 9401,
+        "slope_m_per_A": 0.004290095481798401
+      },
+      {
+        "seed": 9402,
+        "slope_m_per_A": -0.002309500604551669
+      },
+      {
+        "seed": 9403,
+        "slope_m_per_A": 0.05040652594510405
+      },
+      {
+        "seed": 9404,
+        "slope_m_per_A": -0.07598804340563117
+      },
+      {
+        "seed": 9405,
+        "slope_m_per_A": 0.0058469329977701365
+      },
+      {
+        "seed": 9406,
+        "slope_m_per_A": 0.013609562279973817
+      },
+      {
+        "seed": 9407,
+        "slope_m_per_A": 0.010987992474234596
+      },
+      {
+        "seed": 9408,
+        "slope_m_per_A": 0.120327694749499
+      },
+      {
+        "seed": 9409,
+        "slope_m_per_A": 0.031287592813278205
+      },
+      {
+        "seed": 9410,
+        "slope_m_per_A": 0.08718391421367412
+      },
+      {
+        "seed": 9411,
+        "slope_m_per_A": -0.09471152739540017
+      },
+      {
+        "seed": 9412,
+        "slope_m_per_A": -0.00126444698022927
+      },
+      {
+        "seed": 9413,
+        "slope_m_per_A": 0.09342140402973187
+      },
+      {
+        "seed": 9414,
+        "slope_m_per_A": 0.05410984865476404
+      },
+      {
+        "seed": 9415,
+        "slope_m_per_A": 0.03139597818020911
+      },
+      {
+        "seed": 9416,
+        "slope_m_per_A": 0.1341404896771012
+      },
+      {
+        "seed": 9417,
+        "slope_m_per_A": 0.010502179021045211
+      },
+      {
+        "seed": 9418,
+        "slope_m_per_A": 0.026719649352367935
+      },
+      {
+        "seed": 9419,
+        "slope_m_per_A": 0.02881613166762706
+      },
+      {
+        "seed": 9420,
+        "slope_m_per_A": -0.04881603372569248
+      },
+      {
+        "seed": 9421,
+        "slope_m_per_A": -0.033498687223477826
+      },
+      {
+        "seed": 9422,
+        "slope_m_per_A": 0.01791224813318343
+      },
+      {
+        "seed": 9423,
+        "slope_m_per_A": 0.06435275295895088
+      },
+      {
+        "seed": 9424,
+        "slope_m_per_A": 0.002439777673169481
+      },
+      {
+        "seed": 9425,
+        "slope_m_per_A": 0.024663685484984852
+      },
+      {
+        "seed": 9426,
+        "slope_m_per_A": 0.035962962154993366
+      }
+    ],
+    "replicates": 20000,
+    "sign_test": {
+      "method": "exact_two_sided_paired_sign_test_zero_ties_excluded",
+      "negative": 7,
+      "non_tied_n": 27,
+      "positive": 20,
+      "ties": 0,
+      "two_sided_p": 0.0191572904586792
+    },
+    "unit": "matched_seed"
+  },
+  "provenance": {
+    "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+    "files": {
+      "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/evidence_manifest.json": {
+        "bytes": 13178,
+        "git_blob": "7c2d6a26aaac6fd2fcee957fa9439c4c8d444717",
+        "lines": 294,
+        "sha256": "21db6089f67533f270064047e62123e2c69389783aeb314f7a24164a688290d5"
+      },
+      "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json": {
+        "bytes": 16100,
+        "git_blob": "758a77c1227b43c41c66e3ffea27882c78382f02",
+        "lines": 359,
+        "sha256": "3e3786510ebba933d0c7a4606afa51627ea6bf706f9e64b34cfd74b29e318db2"
+      },
+      "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/episodes.jsonl": {
+        "bytes": 78300627,
+        "git_blob": "5b7b2e5d1118f38d96a753499cfb583fcb9ce800",
+        "lines": 4096,
+        "sha256": "3f5528a686f0f1f04767ba97414429ef0aff30576edc3d440d611facd363f328"
+      },
+      "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/pairs.jsonl": {
+        "bytes": 3981781,
+        "git_blob": "3ed2574b169e1fd1b1774febbc5470f81c6de409",
+        "lines": 2048,
+        "sha256": "fe2d7d8879314122a48aa269374118a45d13f204c9c83691735920e917d68bcc"
+      },
+      "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json": {
+        "bytes": 212799,
+        "git_blob": "7f65771c434d95a60e1856c4774de38608f0416f",
+        "lines": 6592,
+        "sha256": "be8cd0c9a2458a7eefec0ed7760d1e6f6f19e4162d8c427f12f8a113d3290493"
+      },
+      "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/analysis.py": {
+        "bytes": 13506,
+        "git_blob": "fe258d889f4ce164e5c938b02214a902100e0621",
+        "lines": 236,
+        "sha256": "82d0552d1197cc00c08f3888137fd2b75031a4e69dcc2b50411b9e628a05e5db"
+      }
+    }
+  },
+  "reproduction": {
+    "full_compact_episode_rows_strictly_parsed": 4096,
+    "full_compact_pair_rows_strictly_parsed": 2048,
+    "per_seed_slopes_recomputed": 27,
+    "primary_episode_rows_rejoined": 216,
+    "primary_pair_rows_rejoined": 108,
+    "registered_bootstraps_exactly_reproduced": true,
+    "registered_full_level_successes_exactly_reproduced": true,
+    "registered_sign_tests_exactly_reproduced": true
+  },
+  "schema_version": "wmf-retained-h06-graded-symmetry-v1",
+  "source_manifest": {
+    "authenticated_bytes": 82537991,
+    "authenticated_file_count": 6,
+    "compact_files_byte_rehashed_now": true,
+    "original_raw_episode_and_media_bytes_rehashed_now": false,
+    "original_raw_episode_and_media_status": "external hash-bound paths only"
+  }
+}

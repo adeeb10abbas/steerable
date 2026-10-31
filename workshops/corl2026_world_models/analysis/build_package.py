@@ -53,6 +53,7 @@ def main():
     run("stopping-time controls", [sys.executable, str(package / "analysis/analyze_stopping_controls.py")])
     run("H01 requested-region entry", [sys.executable, str(package / "analysis/analyze_h01_requested_region_entry.py")])
     run("H05 retained lateral dose response", [sys.executable, str(package / "analysis/analyze_h05_lateral_dose_response.py")])
+    run("H06 retained graded symmetry", [sys.executable, str(package / "analysis/analyze_h06_graded_symmetry.py")])
     run("representative H01 media", [sys.executable, str(package / "analysis/package_representative_media.py")])
     run("representative H01 media verification", [sys.executable, str(package / "analysis/verify_representative_media.py")])
     run("paper experiment results", [sys.executable, str(package / "analysis/extract_paper_results.py")])
@@ -88,6 +89,8 @@ def main():
     entry = json.loads(entry_path.read_text())
     h05_path = package / "paper/data/h05_lateral_dose_response.json"
     h05 = json.loads(h05_path.read_text())
+    h06_path = package / "paper/data/h06_graded_symmetry.json"
+    h06 = json.loads(h06_path.read_text())
     representative_media_path = package / "paper/media/representative_h01_videos.json"
     representative_media = json.loads(representative_media_path.read_text())
     representative_verification_path = package / "paper/media/representative_h01_video_verification.json"
@@ -160,6 +163,22 @@ def main():
             "json_sha256": digest(h05_path),
             "csv_sha256": digest(package / "paper/data/h05_lateral_dose_response.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h05_lateral_dose_response.py"),
+        },
+        "retained_h06_graded_symmetry": {
+            "scope": h06["claim_boundary"],
+            "source_commit": h06["provenance"]["commit"],
+            "design": h06["design"],
+            "population": h06["authenticated_historical_population"],
+            "primary_depth_dose_response": h06["primary_depth_dose_response"],
+            "binary_success_secondary": h06["binary_success_secondary"],
+            "by_level": h06["by_level"],
+            "source_manifest": h06["source_manifest"],
+            "reproduction": h06["reproduction"],
+            "new_activity": h06["new_activity"],
+            "gate_state": h06["gate_state"],
+            "json_sha256": digest(h06_path),
+            "csv_sha256": digest(package / "paper/data/h06_graded_symmetry.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h06_graded_symmetry.py"),
         },
         "representative_media": {
             "scope": representative_media["claim_boundary"],

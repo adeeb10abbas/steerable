@@ -105,6 +105,31 @@ artifacts, and all four freshly rendered pages passed visual review. Two
 independent reviewers and the root review returned GO within the closed claim
 boundary.
 
+The Turn2912 fixed-request-index extension at commit
+`524b6d876651dbedb211367502a4d77efdd1d578` was rebuilt from a new detached
+worktree in the same qualified environment. The authoritative build passed all
+**20 stages**, including **1071/1071 tests in 137.601 s**, in **157.21 s** wall
+time with a peak resident set size of **924,392 KiB**. Its 563,725-byte/12,258-line
+validation log, 329,693-byte/9,772-line build report, 330,441-byte/9,792-line
+stdout and 834-byte/23-line resource receipt have SHA256
+`70b0af3e038cfed319f1a4a5983e2b5e6d2758f212f6c972edae569425042396`,
+`bc1ed95e16b13c87b10b40d0bcbee955a1921df5c60397f640decb1f87c13e7a`,
+`a5f43ac10a82a894ad0eafddab6e26b83b7778968cdf59f460a954d16976dfba`
+and `06481e4ecf15063a1f4a891893b593dd29a146b76fc52a03b224843bc482ea3b`.
+The resulting protected-tree discovery passed **1078/1078 tests in 137.496 s**
+(**141.21 s** wall; peak resident set size **921,476 KiB**), including exactly
+seven protected-only N3 methods. Its 143,779-byte/1,092-line stdout and
+839-byte/23-line resource receipt have SHA256
+`8ef3d25ee3f074136460d8312dea8b6eed6a63516c75d302a8b997b899243fce`
+and `686dcf652e537bfad448b7d2d95928855eed5201f56fe6105cfc58b0a20db9b9`.
+Canonical H01 JSON/CSV regeneration is byte-identical at SHA256
+`b85462e4b9dbc6fe03c6217bf11488604ed7d36306a081f2a84f2f3fb5b8cc4d`
+and `10dbc70122b36493398622b9e5882e1508468a762fb4d5d6d9b5ee7e2ba3eb29`.
+The PDF and LaTeX remain byte-identical to Turn2910, and all four pages passed
+fresh visual review. Two independent recomputations and root review returned
+GO. These checks qualify the package; they add no episode, request, inference,
+label, confirmation result, physical-time evidence or gate advance.
+
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock
@@ -192,6 +217,16 @@ episode rows. The final manuscript incorporates the following corrections:
   positive/negative/tied. These telescoping, outcome-selected action-window
   summaries are not independent endpoints, physical-time rates, movement
   thresholds, instruction-understanding results or forecast scores.
+  The fixed request-index extension preserves all 27 paired seeds per layout
+  through actions 32--64 (signs 2/6/19 and 3/8/16), then retains 26 and 27 at
+  actions 64--96 (20/6/0 and 25/1/1). Its exact four-condition support is 26
+  seeds at 64--96 with interaction signs 15/11/0, falls to 12 at 96--128 and
+  two at 128--192, and is empty later. Full-27-seed strict-positive bounds keep
+  every unavailable seed unresolved rather than carrying a stopped trace.
+  Request indices 10--14 remain explicit zero-support rows rather than being
+  omitted. This is same-population descriptive selection accounting, not a new
+  confirmatory estimand or cohort, physical-time endpoint, A8 completion,
+  activity/gate advance or change to the 232-cell core.
 - The retained H02 package byte-authenticates nine compact Git objects
   (831,259 bytes/1,429 lines), including the bridge that defines the 45-degree
   cone and three-sample sustained rule, and rejoins the exact 108-cell/54-pair V3-B003

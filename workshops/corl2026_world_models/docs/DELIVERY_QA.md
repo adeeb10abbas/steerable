@@ -34,16 +34,13 @@ design figure is explicitly labeled as a schematic, not a measured trajectory.
 The exact documented disposable environment uses Python 3.10.21, inherits
 Torch 2.7.0+cu128 from the qualified any6d environment, and resolves NumPy
 2.2.6, matplotlib 3.10.9, pypdf 6.18.1 and jsonschema 4.26.0. The active
-protected-worktree discovery passed **994/994 tests** before H06; after the 15
-H06 and five H07/H08 checks were added, the current discovery passed
-**1014/1014 tests in 120.479 s** (**122.87 s** wall);
-seven of those methods
-belong to the protected untracked N3 test and are not package
-files. An earlier H05-era clean isolated-worktree invocation passed the
-authorized package's **987/987 tests in 119.102 s**. The current clean isolated
-build's regression stage passed **1007/1007 tests in 121.302 s**; its full
-thirteen-step build exited zero in **132.94 s**. Those steps are tests, five
-retained-data analyses, media packaging and four full MP4 decodes plus
+protected-worktree discovery passed **1021/1021 tests in 126.890 s**
+(**129.30 s** wall); seven of those methods belong to the protected untracked
+N3 test and are not package files. The clean isolated build at commit
+`27bead766cc3411a28442afa8fc906b4f910e225` passed the authorized package's
+**1014/1014 tests in 121.944 s**; its full fourteen-step build exited zero in
+**134.20 s**. Those steps are tests, six retained-data analyses, media
+packaging and four full MP4 decodes plus
 verification, paper results, historical replay, the private annotation draw,
 figures and the official-template PDF.
 
@@ -51,23 +48,25 @@ Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock
 metadata, so these settings do not establish byte-identical PDF rebuilding.
-TeX Live 2026 latexmk 4.88 and pdfTeX 1.40.29 validated the previous four-page
-package build. The current H09/H10 manuscript was rebuilt from the same official
-template with cached Tectonic 0.17.0, then checked as four pages with zero
-errors, overfull boxes, undefined citations or undefined references. Its four
-rendered pages passed visual review. The exact current publication hashes are
-recorded above; this does not claim byte-identical rebuilding across TeX engines.
+TeX Live 2026 latexmk 4.88 and pdfTeX 1.40.29 validated the current clean
+isolated four-page H09/H10 package. The checked-in manuscript was separately
+rebuilt from the same official template with cached Tectonic 0.17.0. Both were
+checked as four pages with zero errors, overfull boxes, undefined citations or
+undefined references. All four isolated pdfTeX pages were rendered and passed
+visual review. The exact checked-in publication hashes are recorded above; this
+does not claim byte-identical rebuilding across TeX engines.
 
 `results/validation.log` and `results/build_report.json` are generated build
 products, not retained checkout evidence in this protected worktree. The
-current isolated validation log is 315,693 bytes with SHA256
-`6462817ccf27c19b3b35aaef41385c48e36a8c17fd137df24ea9aec82fc6dafb`;
-the 75,398-byte build report has SHA256
-`37cf5c0d6fbce7eae0eaa6cb30f35a7f5ebb2ca0ffcae8c12687d8b38df2c91a`.
-The isolated build report was independently inspected before publication and
+current isolated validation log is 490,605 bytes with SHA256
+`df4d463a66a3f393b681a0e7718241a8e47ae50d67aa9391ace8668778ff8d4b`;
+the 106,711-byte build report has SHA256
+`67148eb2eb32fcb49ad73ff366f465e0315f0c8b9e303d1011fd0ec38eb5c5d0`.
+The isolated build report was independently inspected before this branch update and
 binds the dependency versions, four-page pdfTeX PDF SHA256
-`066abe8af0f31a4bfc6e73cf78927c51d804113e12b79749fc09bf062254fc1e`,
-retained-analysis hashes and media zero-activity counters. Durable inputs and
+`b7fbd23936409b46e58c5cdca9ae00788c13fd1afe24a30f13ad0fe3d96cfaba`,
+all six retained-analysis receipts (including H09/H10) and media zero-activity
+counters. Durable inputs and
 receipts are instead checked in under
 `paper/data/` and `paper/media/`; the execution status/progress ledger records
 the qualification receipt without recreating the protected deleted results.

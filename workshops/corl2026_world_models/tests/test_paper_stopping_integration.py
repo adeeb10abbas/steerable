@@ -55,9 +55,12 @@ class PaperStoppingIntegrationTests(unittest.TestCase):
         delivery = (PACKAGE / "docs/DELIVERY_QA.md").read_text()
         pdf_sha256 = hashlib.sha256((PACKAGE / "paper/main.pdf").read_bytes()).hexdigest()
         self.assertIn(pdf_sha256, delivery)
-        self.assertIn("994/994 tests", delivery)
-        self.assertIn("987/987 tests", delivery)
-        self.assertIn("seven of those methods\nbelong to the protected untracked N3 test", delivery)
+        self.assertIn("1021/1021 tests", delivery)
+        self.assertIn("1014/1014 tests", delivery)
+        self.assertIn(
+            "seven of those methods belong to the protected untracked\nN3 test",
+            delivery,
+        )
         self.assertIn("generated build\nproducts, not retained checkout evidence", delivery)
         self.assertNotIn("23 tests", delivery)
         self.assertNotIn("paper/qa_pages", delivery)

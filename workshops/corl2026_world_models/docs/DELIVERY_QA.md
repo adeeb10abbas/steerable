@@ -81,6 +81,30 @@ seven protected-only N3 methods. Its 143,646-byte/1,091-line stdout and
 `a98ac3422d1df61e07c6b4942af11d79512856eb375266811ae89333cb8579d7` and
 `ea68a67afeb96ca19bb2624df91e6eb6ae583a256d914fbc7554cb84c1231760`.
 
+The Turn2911 matched-window extension at commit
+`1a1602f9dea4715234bb8f5c6495290dcf5f634d` was then rebuilt from a fresh
+detached worktree in the same qualified environment. The authoritative build
+passed all **20 stages**, including **1071/1071 tests in 137.794 s**, in
+**157.42 s** wall time with a peak resident set size of **918,488 KiB**. Its
+563,791-byte/12,258-line validation log, 265,033-byte/7,516-line build report,
+265,781-byte/7,536-line stdout and 832-byte/23-line resource receipt have
+SHA256 `7c720bdd0da23740e8e7aa37c020ac9d4c4a016b0b96766153b57bda74d439a0`,
+`bfe3aeda0f3cd3c0436fbe2cbd555666e8265634e9ec9b311fce3a15b43b3bab`,
+`2846b5ad42f20fd8305d155ef56146697865f4fba29a539b63af3e7442537e15`
+and `53c66509e7c1ed6c4689ba44cd5f71b8c45c4c76db0afc6b9821456d1c3c1a8b`.
+A clean preceding attempt passed the first 19 stages and stopped before the
+PDF because the pinned TeX wrapper was absent from `PATH`; no result from that
+attempt was promoted. The qualified protected-tree discovery subsequently
+passed **1078/1078 tests in 137.835 s** (**141.55 s** wall; peak resident set
+size **919,012 KiB**), including exactly seven protected-only N3 methods. Its
+143,779-byte/1,092-line stdout and 841-byte/23-line resource receipt have
+SHA256 `65771a99dface27f724364628ce9a0946efcb27076368dc07d994b65cf396a02`
+and `930f5d2ac6cd11450a72478841f559f86f902100df1a170dfde1dd9e1de03bbb`.
+The four-page PDF and LaTeX source are byte-identical to the Turn2910
+artifacts, and all four freshly rendered pages passed visual review. Two
+independent reviewers and the root review returned GO within the closed claim
+boundary.
+
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock
@@ -157,6 +181,17 @@ episode rows. The final manuscript incorporates the following corrections:
   and descriptor-provenance evidence, not physical-time pairing, an A6
   threshold, generated-versus-executed comparison, forecast accuracy, A3--A9
   completion, new inference, new labeling or a change to the 232-cell core.
+  The matched complete-window supplement retains 114 control and 113 reflected
+  exact LEFT/RIGHT pairs and exposes 101 and 77 otherwise-complete records that
+  lack an exact counterpart endpoint. Of those exclusions, 43 counterpart
+  requests terminate before the 32-action endpoint and 135 owner requests
+  begin at or after the counterpart episode ended. Equal-seed signed means are
+  positive/tied/negative for 26/1/0 control and 27/0/0 reflected seed labels,
+  but raw window signs are mixed, every first 0--32 window is tied, and the
+  same-request-index reflected-minus-control audit is only 15/11/1
+  positive/negative/tied. These telescoping, outcome-selected action-window
+  summaries are not independent endpoints, physical-time rates, movement
+  thresholds, instruction-understanding results or forecast scores.
 - The retained H02 package byte-authenticates nine compact Git objects
   (831,259 bytes/1,429 lines), including the bridge that defines the 45-degree
   cone and three-sample sustained rule, and rejoins the exact 108-cell/54-pair V3-B003

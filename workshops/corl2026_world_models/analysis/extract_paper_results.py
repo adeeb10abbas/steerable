@@ -26,6 +26,27 @@ ROOT = PACKAGE.parents[1]
 V3 = "artifacts/vla_wam_shared_v3/"
 ARMS = ("control", "position_mirrored")
 SEEDS = list(range(9400, 9427))
+DREAMZERO_S2_RUNTIME_EXACT = {
+    "action_cfg_style_scale": 2,
+    "baseline_action_cfg_equivalent": 1,
+    "baseline_s1_used": False,
+    "identity_binding": "V2-A015:dreamzero_action_cfg_s2",
+    "runtime_identity": {
+        "id": "dreamzero-v2a015-s2-v3-0b24153-b20023-rtx0-20260805",
+        "sha256": "a590a06f0389d4c5c75f59e83ef71ce6e5e0af9bdb55bf71e0ca775dd544b6c3",
+    },
+    "video_cfg_scale": 5,
+}
+DREAMZERO_RUNTIME_REPORT_FIELDS = (
+    "checkpoint",
+    "action_cap",
+    "open_loop_horizon",
+    "effective_official_model_noise_seed",
+    "registered_seed_semantics",
+    "instruction_controller",
+    "frozen_predicate_id",
+    *DREAMZERO_S2_RUNTIME_EXACT,
+)
 
 
 def check(condition, message):
@@ -36,6 +57,23 @@ def check(condition, message):
 def near(actual, expected, label):
     check(math.isclose(actual, expected, rel_tol=1e-11, abs_tol=1e-12),
           f"{label}: recomputed {actual!r}, source {expected!r}")
+
+
+def dreamzero_s2_runtime(contract):
+    """Validate and retain the registered V2-A015 DreamZero-s2 identity."""
+    check(isinstance(contract, dict), "DreamZero runtime contract is not an object")
+    for field, expected in DREAMZERO_S2_RUNTIME_EXACT.items():
+        check(field in contract, f"DreamZero runtime contract missing {field}")
+        actual = contract[field]
+        check(
+            type(actual) is type(expected) and actual == expected,
+            f"DreamZero runtime contract {field} changed",
+        )
+    check(
+        all(field in contract for field in DREAMZERO_RUNTIME_REPORT_FIELDS),
+        "DreamZero runtime report field missing",
+    )
+    return {field: contract[field] for field in DREAMZERO_RUNTIME_REPORT_FIELDS}
 
 
 class PinnedSource:
@@ -182,7 +220,7 @@ def reflection(source, model):
     if model == "dreamzero":
         registration = source.json(V3 + "phase_b/dreamzero_mirror_v3b003/post_result_dreamzero_mirror_v3b003_amendment.json")
         contract = registration["runtime_contract_source"]
-        runtime = {key: contract[key] for key in ("checkpoint", "action_cap", "open_loop_horizon", "effective_official_model_noise_seed", "registered_seed_semantics", "instruction_controller", "frozen_predicate_id")}
+        runtime = dreamzero_s2_runtime(contract)
         check(runtime["effective_official_model_noise_seed"] == 1140, "DreamZero sampling semantics changed")
     else:
         check(all(row["policy_seed"] == row["environment_seed"] for row in original_rows), "Nano sampling seed differs from matched block")
@@ -217,7 +255,7 @@ def reflection(source, model):
             "distinct_recorded_action_hash_pairs": sum(p["recorded_action_hashes_differ"] for p in pairs),
             "action_hash_interpretation": "Hashes of retained executed-action arrays differ; raw array values were not loaded here.",
             "unique_physical_reset_fingerprints_by_arm": {arm: len({r["initial_state_sha256"] for r in rows if r["arm"] == arm}) for arm in ARMS},
-            "sampling_scope": "Nano policy seeds vary with seed block; DreamZero released model-noise seed remains 1140. Seed blocks are not independent physical layouts.",
+            "sampling_scope": "Nano policy seeds vary with seed block; custom DreamZero-s2 model-noise seed remains 1140. Seed blocks are not independent physical layouts.",
             "exact_prompts": summary["exact_prompts"], "runtime": runtime, "claim_boundary": summary["claim_boundary"],
             "original_uncertainty_contract": summary["uncertainty_contract"], "pairs": pairs, "episodes_compact": rows}
 

@@ -1,5 +1,6 @@
 """Stopping-time controls must retain missingness and reject endpoint artifacts."""
 import copy
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -152,18 +153,57 @@ class StoppingControlsTests(unittest.TestCase):
         self.assertAlmostEqual(control["metrics"]["offset_separation_m"]["mean"], 0.3110371443822428, places=12)
         self.assertAlmostEqual(reflected["metrics"]["offset_separation_m"]["mean"], 0.35844855979774837, places=12)
         self.assertEqual(control["common_action_step"], {"n": 27, "min": 89, "max": 290, "median": 133, "mean": 149.7037037037037})
+        self.assertEqual(reflected["common_action_step"], {"n": 27, "min": 96, "max": 320, "median": 149, "mean": 149.37037037037038})
         fixed = result["analyses"]["fixed_action_checkpoints"]
         self.assertEqual([fixed[str(t)]["control"]["eligible_pairs"] for t in STOP.CHECKPOINTS],
                          [27, 27, 27, 26, 18, 8, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0])
         self.assertEqual([fixed[str(t)]["position_mirrored"]["eligible_pairs"] for t in STOP.CHECKPOINTS],
                          [27, 27, 27, 27, 17, 5, 4, 2, 2, 1, 1, 0, 0, 0, 0, 0])
+        self.assertEqual(
+            {arm: {key: fixed["96"][arm][key] for key in ("eligible_pairs", "ordered_pairs", "ties")}
+             for arm in STOP.ARMS},
+            {"control": {"eligible_pairs": 26, "ordered_pairs": 20, "ties": 0},
+             "position_mirrored": {"eligible_pairs": 27, "ordered_pairs": 25, "ties": 1}},
+        )
+        self.assertEqual(
+            {arm: fixed["96"][arm]["reversed_pairs"] for arm in STOP.ARMS},
+            {"control": 6, "position_mirrored": 1},
+        )
+        self.assertEqual(
+            {arm: fixed["450"][arm]["eligible_pairs"] for arm in STOP.ARMS},
+            {"control": 0, "position_mirrored": 0},
+        )
+        action64_displacements = [
+            fixed["64"][arm]["metrics"][f"{direction}_cube_displacement_m"]["mean"]
+            for arm in STOP.ARMS for direction in ("left", "right")
+        ]
+        self.assertTrue(all(0 <= value < 0.00099 for value in action64_displacements))
+        self.assertAlmostEqual(fixed["96"]["control"]["metrics"]["offset_separation_m"]["mean"],
+                               0.08567184417580183, places=12)
+        self.assertAlmostEqual(fixed["96"]["position_mirrored"]["metrics"]["offset_separation_m"]["mean"],
+                               0.09453654623831864, places=12)
+        self.assertEqual(
+            {arm: {key: fixed["128"][arm][key] for key in
+                   ("eligible_pairs", "ordered_pairs", "ordered_fraction_full_cohort_bounds")}
+             for arm in STOP.ARMS},
+            {"control": {"eligible_pairs": 18, "ordered_pairs": 17,
+                         "ordered_fraction_full_cohort_bounds": [17 / 27, 26 / 27]},
+             "position_mirrored": {"eligible_pairs": 17, "ordered_pairs": 16,
+                                    "ordered_fraction_full_cohort_bounds": [16 / 27, 26 / 27]}},
+        )
 
     def test_cli_writes_reproducible_json_and_csv_from_pin(self):
         with tempfile.TemporaryDirectory() as directory:
             subprocess.run(["python3", str(MODULE_PATH), "--output-dir", directory], check=True, capture_output=True)
-            result = json.loads((Path(directory) / "stopping_controls.json").read_text())
+            json_path = Path(directory) / "stopping_controls.json"
+            csv_path = Path(directory) / "stopping_controls.csv"
+            result = json.loads(json_path.read_text())
             self.assertEqual(result["cohort"]["valid_episodes"], 108)
-            self.assertEqual(len((Path(directory) / "stopping_controls.csv").read_text().splitlines()), 37)
+            self.assertEqual(len(csv_path.read_text().splitlines()), 37)
+            self.assertEqual(hashlib.sha256(json_path.read_bytes()).hexdigest(),
+                             "fc4660475fdc68d623fbea0f0572ae3249147c5512406a593c88d408c40ebcd5")
+            self.assertEqual(hashlib.sha256(csv_path.read_bytes()).hexdigest(),
+                             "72047c5261c9f60411689bdaafc54ff31fd5f21db738b4ef44412493fa8b0e75")
 
 
 if __name__ == "__main__":

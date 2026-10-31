@@ -1,4 +1,5 @@
 """Paper figures from verified executed-behavior results; no invented rollouts."""
+import argparse
 import json
 from pathlib import Path
 
@@ -12,9 +13,13 @@ from matplotlib.ticker import PercentFormatter
 
 def main():
     package = Path(__file__).resolve().parents[1]
-    results = json.loads((package / "results/paper_results.json").read_text())
-    output = package / "paper/figures"
-    output.mkdir(exist_ok=True)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--results", type=Path, default=package / "results/paper_results.json")
+    parser.add_argument("--output-dir", type=Path, default=package / "paper/figures")
+    args = parser.parse_args()
+    results = json.loads(args.results.read_text())
+    output = args.output_dir
+    output.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 8,
                          "pdf.fonttype": 42, "axes.spines.top": False,
                          "axes.spines.right": False})
@@ -47,7 +52,7 @@ def main():
     plt.close(fig)
 
     fig, (left, right) = plt.subplots(1, 2, figsize=(5.5, 2.02), gridspec_kw={"width_ratios": [1, 1.25]})
-    names, keys = ["Nano", "DreamZero"], ["nano_reflection", "dreamzero_reflection"]
+    names, keys = ["Nano", "DreamZero-s2"], ["nano_reflection", "dreamzero_reflection"]
     for i, key in enumerate(keys):
         cohort = results["cohorts"][key]
         for j, (arm, color) in enumerate([("control", original), ("position_mirrored", reflected)]):

@@ -4,9 +4,9 @@ The paper asks a simple question: **when a robot fails a left/right placement
 command, did the instruction fail to redirect it, or did the resulting execution
 fail in that scene?**
 
-The manuscript now presents completed Cosmos 3 Nano and DreamZero experiments.
+The manuscript now presents completed Cosmos 3 Nano and DreamZero-s2 experiments.
 Each model has 108 trials across two directions and two fixed object layouts.
-Reflection changes DreamZero's completion from 13/54 to 50/54 trials. Nano remains
+Reflection changes DreamZero-s2 completion from 13/54 to 50/54 trials. Nano remains
 highly successful, but which requested side produces greater placement depth
 changes. Both models generally order their final cube–bowl positions according
 to the command.
@@ -17,10 +17,14 @@ to the command.
   existing-experiment inventory, 232 planned core cells and separately listed
   optional guidance extension. All new cells remain unreleased.
 
-The current draft has received a weak-reject internal review. In particular,
-its DreamZero results use custom action guidance at scale 2, and its endpoint
-response measure needs a stopping-rule control. These revisions are planned,
-not yet incorporated into the manuscript.
+The current draft has received a weak-reject internal review. Its DreamZero-s2
+label now identifies the custom action-guidance scale 2 condition and states
+that baseline scale 1 was not used. The retained Nano
+stopping-sensitivity analysis is now incorporated: historical goal-dependent
+endpoint responses are distinguished from the latest shared strictly
+pretermination comparison and fixed-action coverage bounds. This retrospective
+control uses one base scene and its reflection; it is neither prospective
+fixed-duration evidence nor forecast accuracy.
 
 - [Research and experiment plan](docs/superpowers/plans/2026-09-12-world-model-paper.md):
   repair existing results, qualify archived recordings, then test whether
@@ -53,20 +57,22 @@ experiment is retained in the extracted supporting data but is not pooled with
 the reflection experiments or included in this paper's trial counts.
 
 The two layouts have fixed physical resets. Nano varies policy-sampling seeds;
-DreamZero retains its released fixed noise seed. The manuscript reports
-DreamZero descriptively and uses sampling-seed intervals only for Nano.
+DreamZero-s2 retains its released fixed noise seed. The manuscript reports
+DreamZero-s2 descriptively and uses sampling-seed intervals only for Nano.
 
 ## Rebuild
 
 From the repository root, with `uv` and a TeX distribution providing `latexmk`:
 
 ```sh
-uv run --no-project --with-requirements workshops/corl2026_world_models/requirements-build.txt python workshops/corl2026_world_models/analysis/build_package.py
+uv run --no-project --python 3.11 --with-requirements workshops/corl2026_world_models/requirements-build.txt python workshops/corl2026_world_models/analysis/build_package.py
 ```
 
-This runs the tests, recomputes results from the pinned repository, produces
-figures and compiles the official CoRL template. It checks page count, citations
-and layout errors. Final page images are reviewed separately.
+This runs the tests, recomputes results and the stopping-time control from the
+pinned repository, produces figures and compiles the official CoRL template.
+The build report records the stopping JSON, CSV, analyzer, source commit and
+input JSONL identity. It checks page count, citations and layout errors. Final
+page images are reviewed separately.
 
 ## Earlier analysis
 

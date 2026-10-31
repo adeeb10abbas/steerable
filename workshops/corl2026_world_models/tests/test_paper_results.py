@@ -1,4 +1,5 @@
 """Checks on the behavioral-paper extraction, independent of any new model run."""
+import copy
 import importlib.util
 from pathlib import Path
 import unittest
@@ -23,7 +24,76 @@ def complete_fixture():
     return rows
 
 
+def dreamzero_runtime_fixture():
+    return {
+        "checkpoint": {"id": "checkpoint"},
+        "action_cap": 450,
+        "open_loop_horizon": 8,
+        "effective_official_model_noise_seed": 1140,
+        "registered_seed_semantics": "matched labels; fixed model noise",
+        "instruction_controller": "static_episode_prompt",
+        "frozen_predicate_id": "predicate",
+        **copy.deepcopy(PAPER.DREAMZERO_S2_RUNTIME_EXACT),
+    }
+
+
 class PaperResultsTests(unittest.TestCase):
+    def test_dreamzero_s2_runtime_contract_is_preserved(self):
+        contract = dreamzero_runtime_fixture()
+        runtime = PAPER.dreamzero_s2_runtime(contract)
+        self.assertEqual(set(runtime), set(PAPER.DREAMZERO_RUNTIME_REPORT_FIELDS))
+        for field, expected in PAPER.DREAMZERO_S2_RUNTIME_EXACT.items():
+            self.assertEqual(runtime[field], expected)
+            self.assertIs(type(runtime[field]), type(expected))
+
+    def test_dreamzero_s2_runtime_contract_mutations_fail(self):
+        mutations = {
+            "action_cfg_style_scale": 3,
+            "baseline_action_cfg_equivalent": 2,
+            "baseline_s1_used": True,
+            "identity_binding": "other",
+            "video_cfg_scale": 4,
+        }
+        for field, replacement in mutations.items():
+            with self.subTest(field=field):
+                contract = dreamzero_runtime_fixture()
+                contract[field] = replacement
+                with self.assertRaisesRegex(ValueError, field):
+                    PAPER.dreamzero_s2_runtime(contract)
+        for field in ("id", "sha256"):
+            with self.subTest(runtime_identity_field=field):
+                contract = dreamzero_runtime_fixture()
+                contract["runtime_identity"][field] = "changed"
+                with self.assertRaisesRegex(ValueError, "runtime_identity"):
+                    PAPER.dreamzero_s2_runtime(contract)
+
+    def test_dreamzero_s2_runtime_contract_missing_fields_fail(self):
+        for field in PAPER.DREAMZERO_S2_RUNTIME_EXACT:
+            with self.subTest(field=field):
+                contract = dreamzero_runtime_fixture()
+                del contract[field]
+                with self.assertRaisesRegex(ValueError, field):
+                    PAPER.dreamzero_s2_runtime(contract)
+        for field in ("id", "sha256"):
+            with self.subTest(runtime_identity_field=field):
+                contract = dreamzero_runtime_fixture()
+                del contract["runtime_identity"][field]
+                with self.assertRaisesRegex(ValueError, "runtime_identity"):
+                    PAPER.dreamzero_s2_runtime(contract)
+
+    def test_dreamzero_s2_runtime_contract_types_are_exact(self):
+        for field, replacement in (
+            ("action_cfg_style_scale", 2.0),
+            ("baseline_action_cfg_equivalent", 1.0),
+            ("baseline_s1_used", 0),
+            ("video_cfg_scale", 5.0),
+        ):
+            with self.subTest(field=field):
+                contract = dreamzero_runtime_fixture()
+                contract[field] = replacement
+                with self.assertRaisesRegex(ValueError, field):
+                    PAPER.dreamzero_s2_runtime(contract)
+
     def test_signed_depth_is_separate_from_endpoint_ordering(self):
         values, conditions, pairs = PAPER.block_contrasts(complete_fixture(), PAPER.ARMS)
         self.assertEqual(values["control"]["endpoint_response_m"], [3] * 27)

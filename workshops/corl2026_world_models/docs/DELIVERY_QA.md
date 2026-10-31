@@ -12,8 +12,8 @@ supporting analysis remains available but is not presented as the current paper.
 `paper/main.pdf` has **four pages total including references**, compiled with the
 unchanged official CoRL 2026 style in preprint mode and an anonymous author line.
 
-- PDF SHA256: `1d93d5541485ec76accc67d79c2f48b59d607db37cfcba33a417557d9f2bdfcc`.
-- LaTeX source SHA256: `427712c4ee02eb3e73d06001e8764d245a29395c8f804e6776a80af483b7ba8e`.
+- PDF SHA256: `f6c1dd64d96b73895b0f3999b04fbe62ecb7ca960dd198130920db0eb738bd4d`.
+- LaTeX source SHA256: `fdc70b47c2ac8c16a27ab0daa5670d302fe7f7bd39321a80c9ae7d5e6b66ffc7`.
 - Official style SHA256: `62f38cd8df7ad718796617595c8230da136fc83ea1d7e1ba80084113409ec957`.
 - Numerical figure input SHA256: `f437fec607ea969a4c0293b157a74175c410b5f88709ac73262b3035314f1230`.
 - Design figure PDF/PNG SHA256: `9896dafc73897ca19fe6558d9385a8b1512cae858ba815c88743642185ea8201` / `9f1dbac8c32485ebdbaa0df80f8dc1b40c36c9369fd118c700c4e591e4cd94df`.
@@ -34,8 +34,8 @@ design figure is explicitly labeled as a schematic, not a measured trajectory.
 The exact documented disposable environment uses Python 3.10.21, inherits
 Torch 2.7.0+cu128 from the qualified any6d environment, and resolves NumPy
 2.2.6, matplotlib 3.10.9, pypdf 6.18.1 and jsonschema 4.26.0. The active
-protected-worktree discovery passed **1021/1021 tests in 126.890 s**
-(**129.30 s** wall); seven of those methods belong to the protected untracked
+protected-worktree discovery passed **1029/1029 tests in 120.191 s**
+(**122.59 s** wall); seven of those methods belong to the protected untracked
 N3 test and are not package files. The clean isolated build at commit
 `27bead766cc3411a28442afa8fc906b4f910e225` passed the authorized package's
 **1014/1014 tests in 121.944 s**; its full fourteen-step build exited zero in
@@ -140,6 +140,20 @@ episode rows. The final manuscript incorporates the following corrections:
   so all contrasts remain exploratory descriptive repeated-block evidence. No new
   inference, episode, annotation, confirmation or release gate follows, and the
   232-cell core bound remains unchanged.
+- The retained H11/H12 Phase-A package byte-authenticates the exact 54
+  authorized-new direct-command cells and 27 matched LEFT/RIGHT reset blocks
+  for each model while excluding six preserved V2 cells per model. Its eight
+  payload objects total 5,636,174 bytes; two design/overlap helpers bring the
+  authenticated boundary to ten objects and 5,654,967 bytes. Nano
+  succeeds in 51/54 and reconciles 349 decoded RGB futures/action chunks;
+  DreamZero-s2 succeeds in 3/27 LEFT and 17/27 RIGHT and reconciles 2,554
+  latent futures but only 54 official full-reset decodes and 54 rollout videos.
+  The models and interfaces remain separate, fixed model-noise seed 1140 is not
+  an independent draw, and H12's numerically matching H07 directional totals
+  arise from identity-distinct seed cohorts. Original raw Phase-A payload bytes
+  remain external and were not revalidated. No raw recovery, forecast accuracy,
+  annotation, confirmation, new activity, gate advance or change to the
+  232-cell core bound follows.
 - The four representative seed-9400 videos are authenticated and fully decoded,
   but remain presentation media rather than blinded annotation inputs, timing
   maps, forecast-accuracy evidence or a release-gate advance.
@@ -153,7 +167,9 @@ seed blocks, not 216 independent scenes. H07/H08 add two endpoint-only model
 contexts over repeated seed blocks; their level-zero inventory differs from
 level one. H09/H10 reuse 20 seeds across eight wording/direction cells per model
 in one neutral scene; they are not 320 independent scenes or confirmatory
-wording evidence.
+wording evidence. H11/H12 each reuse 27 neutral-scene reset labels across two
+directions; they are separate model-specific development/recovery cohorts, not
+54 independent scenes, a cross-model experiment or recovered raw evidence.
 They establish neither prediction accuracy nor the causal benefit of world modeling.
 They also do not isolate visibility, reachability or grasp geometry as the mechanism.
 

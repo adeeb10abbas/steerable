@@ -56,6 +56,7 @@ def main():
     run("H06 retained graded symmetry", [sys.executable, str(package / "analysis/analyze_h06_graded_symmetry.py")])
     run("H07 H08 retained endpoint symmetry", [sys.executable, str(package / "analysis/analyze_h07_h08_endpoint_symmetry.py")])
     run("H09 H10 retained wording control", [sys.executable, str(package / "analysis/analyze_h09_h10_wording_control.py")])
+    run("H11 H12 retained Phase A direct commands", [sys.executable, str(package / "analysis/analyze_h11_h12_phase_a_direct.py")])
     run("representative H01 media", [sys.executable, str(package / "analysis/package_representative_media.py")])
     run("representative H01 media verification", [sys.executable, str(package / "analysis/verify_representative_media.py")])
     run("paper experiment results", [sys.executable, str(package / "analysis/extract_paper_results.py")])
@@ -84,6 +85,9 @@ def main():
                      "18/27", "17/27", "23/27", "81.4", "104 entries", "1.125", "13/15",
                      "H07/H08", "Edge", "12.4", "19.2", "endpoint interactions",
                      "H09/H10", "134/160", "123/160", "wording inference was not registered",
+                     "H11/H12 are separate fixed-scene Phase-A direct-command cohorts",
+                     "Nano 51/54; DreamZero-s2 3/27 LEFT and 17/27 RIGHT",
+                     "2,554 retained futures are latents, not per-request RGB decodes",
                      "Results", "Conclusion", "References"]:
         if required not in body:
             raise RuntimeError(f"PDF is missing expected text: {required}")
@@ -103,6 +107,8 @@ def main():
     h07_h08 = json.loads(h07_h08_path.read_text())
     h09_h10_path = package / "paper/data/h09_h10_wording_control.json"
     h09_h10 = json.loads(h09_h10_path.read_text())
+    h11_h12_path = package / "paper/data/h11_h12_phase_a_direct.json"
+    h11_h12 = json.loads(h11_h12_path.read_text())
     expected_h09_h10 = {
         "H09": ("cosmos3_nano_policy_droid", 160, 134),
         "H10": ("cosmos3_edge_policy_droid", 160, 123),
@@ -162,6 +168,116 @@ def main():
         raise RuntimeError("H09/H10 claim boundary changed")
     if "/data/users/" in json.dumps(h09_h10):
         raise RuntimeError("H09/H10 canonical output leaked a raw source path")
+    if h11_h12["source_manifest"] != {
+        "authenticated_bytes": 5_654_967,
+        "authenticated_file_count": 10,
+        "authenticated_lines": 101_058,
+        "compact_git_files_byte_rehashed_now": True,
+        "design_and_overlap_helper_bytes": 18_793,
+        "design_and_overlap_helper_file_count": 2,
+        "design_and_overlap_helper_lines": 383,
+        "exported_source_paths_are_git_object_paths_only": True,
+        "h11_h12_payload_bytes": 5_636_174,
+        "h11_h12_payload_file_count": 8,
+        "h11_h12_payload_lines": 100_675,
+        "prospective_freeze_ancestry_verified": True,
+        "raw_pvc_files_revalidated_now": False,
+        "raw_source_paths_exported": False,
+    }:
+        raise RuntimeError("H11/H12 source authentication receipt changed")
+    if h11_h12["reproduction"] != {
+        "directional_successes_wilson_intervals_and_failure_taxonomies_exactly_reproduced": True,
+        "dream_request_latent_and_official_decode_counts_exactly_reconciled": True,
+        "full_phase_a_registry_rows_strictly_parsed": 780,
+        "h11_h12_identity_overlap_with_h06_h07_h08_canonical_core": 0,
+        "h11_h12_matched_pairs_reconstructed": 54,
+        "h11_h12_registered_cells_rejoined": 108,
+        "h11_h12_summary_episode_rows_strictly_parsed": 108,
+        "historical_v2_baseline_cells_double_counted": 0,
+        "infrastructure_invalid_attempts_verified_prebehavior_and_excluded": True,
+        "matched_discordance_and_endpoint_ordering_exactly_reproduced": True,
+        "model_request_counts_exactly_reconciled": True,
+        "models_pooled": False,
+        "nano_decoded_future_and_action_chunk_counts_exactly_reconciled": True,
+        "preserved_v2_candidate_cells_excluded": 12,
+    }:
+        raise RuntimeError("H11/H12 reproduction receipt changed")
+    if h11_h12["provenance"]["commit"] != "ce561e66f82e95055e39d3d7711691982f6b2086":
+        raise RuntimeError("H11/H12 pinned source commit changed")
+    if h11_h12["provenance"]["result_commits"] != {
+        "H11": "150a362701656a3992c9738f497f1fd09605dc54",
+        "H12": "8651aef704f6369b5b514d17ba7fd4bd0913b8d3",
+    } or h11_h12["provenance"]["result_commits_are_ancestors_of_pinned_evidence"] is not True:
+        raise RuntimeError("H11/H12 result-commit ancestry changed")
+    design = h11_h12["design"]
+    if (
+        design["matched_environment_seed_labels"] != list(range(8303, 8330))
+        or design["preserved_v2_seed_labels_excluded"] != [8300, 8301, 8302]
+        or design["h06_h07_h08_canonical_core_seed_labels"] != list(range(9400, 9427))
+        or design["h11_h12_overlap_with_h06_h07_h08_canonical_core"] != []
+    ):
+        raise RuntimeError("H11/H12 population identity boundary changed")
+    expected_h11_h12 = {
+        "H11": ("cosmos3_nano_policy_droid", {"left": 26, "right": 25}, 349, 3, 2),
+        "H12": ("dreamzero_droid_action_cfg", {"left": 3, "right": 17}, 2_554, 34, 4),
+    }
+    for cohort, (model, successes, requests, failures, infra) in expected_h11_h12.items():
+        observed = h11_h12["cohorts"][cohort]
+        population = observed["authenticated_population"]
+        if observed["model_id"] != model or population != {
+            "behavioral_episodes": 54,
+            "historical_v2_baseline_episodes_counted": 0,
+            "infrastructure_invalid_attempts_excluded": infra,
+            "matched_pairs": 27,
+            "matched_seed_labels": 27,
+            "missing_value_imputation": "none",
+            "model_requests": requests,
+            "preserved_v2_candidate_episodes_excluded": 6,
+            "valid_behavioral_failures": failures,
+            "valid_behavioral_failures_included": True,
+        }:
+            raise RuntimeError(f"{cohort} authenticated population changed")
+        if {
+            relation: observed["directional"][relation]["successes"]
+            for relation in ("left", "right")
+        } != successes:
+            raise RuntimeError(f"{cohort} directional successes changed")
+    nano_future = h11_h12["cohorts"]["H11"]["future_accounting"]
+    dream_future = h11_h12["cohorts"]["H12"]["future_accounting"]
+    if (
+        nano_future["model_requests"] != 349
+        or nano_future["decoded_rgb_future_records"] != 349
+        or nano_future["returned_action_chunks"] != 349
+        or dream_future["model_requests"] != 2_554
+        or dream_future["retained_latent_future_records"] != 2_554
+        or dream_future["official_full_reset_decodes"] != 54
+        or dream_future["actual_rollout_videos"] != 54
+        or dream_future["decoded_rgb_future_records"] != 0
+        or dream_future["latent_records_are_per_request_decoded_rgb"] is not False
+    ):
+        raise RuntimeError("H11/H12 future-interface accounting changed")
+    if len(h11_h12["matched_seed_pairs"]) != 54:
+        raise RuntimeError("H11/H12 pair-row count changed")
+    if len(h11_h12["new_activity"]) != 13 or any(h11_h12["new_activity"].values()):
+        raise RuntimeError("H11/H12 receipt records new activity")
+    if len(h11_h12["gate_state"]) != 9 or any(
+        value is not False for value in h11_h12["gate_state"].values()
+    ):
+        raise RuntimeError("H11/H12 receipt advances a release gate")
+    h11_h12_boundary = h11_h12["claim_boundary"]
+    for flag in (
+        "new_model_inference", "new_robot_episodes", "forecast_accuracy_evidence",
+        "independent_scene_claim", "annotation_evidence", "equivalence_claim",
+        "confirmation_test_or_stage_gate", "models_pooled",
+        "historical_v2_baselines_double_counted", "changes_232_cell_core_bound",
+    ):
+        if h11_h12_boundary[flag] is not False:
+            raise RuntimeError(f"H11/H12 claim boundary changed: {flag}")
+    if h11_h12_boundary["maximum_core_behavioral_cells"] != 232:
+        raise RuntimeError("H11/H12 core-cell ceiling changed")
+    serialized_h11_h12 = json.dumps(h11_h12)
+    if "/data/users/" in serialized_h11_h12 or "gate_root" in serialized_h11_h12:
+        raise RuntimeError("H11/H12 canonical output leaked a raw source path")
     representative_media_path = package / "paper/media/representative_h01_videos.json"
     representative_media = json.loads(representative_media_path.read_text())
     representative_verification_path = package / "paper/media/representative_h01_video_verification.json"
@@ -277,6 +393,20 @@ def main():
             "json_sha256": digest(h09_h10_path),
             "csv_sha256": digest(package / "paper/data/h09_h10_wording_control.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h09_h10_wording_control.py"),
+        },
+        "retained_h11_h12_phase_a": {
+            "scope": h11_h12["claim_boundary"],
+            "source_commit": h11_h12["provenance"]["commit"],
+            "design": h11_h12["design"],
+            "cohorts": h11_h12["cohorts"],
+            "matched_seed_pair_rows": len(h11_h12["matched_seed_pairs"]),
+            "source_manifest": h11_h12["source_manifest"],
+            "reproduction": h11_h12["reproduction"],
+            "new_activity": h11_h12["new_activity"],
+            "gate_state": h11_h12["gate_state"],
+            "json_sha256": digest(h11_h12_path),
+            "csv_sha256": digest(package / "paper/data/h11_h12_phase_a_direct.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h11_h12_phase_a_direct.py"),
         },
         "representative_media": {
             "scope": representative_media["claim_boundary"],

@@ -107,6 +107,29 @@ external. This is exploratory retained executed behavior, not general language
 comprehension, forecast accuracy, annotation, confirmation or a release-gate
 advance.
 
+The retained H11/H12 Phase-A direct-command package separately authenticates
+the completed Nano and custom DreamZero-s2 additions over seeds 8303--8329.
+Each model contributes 27 matched LEFT/RIGHT reset blocks (54 behavioral
+episodes): Nano succeeds in 51/54 (26/27 LEFT, 25/27 RIGHT), while DreamZero-s2
+succeeds in 20/54 (3/27 LEFT, 17/27 RIGHT). Nano's 349 historical requests each
+retain a decoded RGB future and returned action chunk. DreamZero-s2 instead
+retains 2,554 latent futures under fixed model-noise seed 1140, with only 54
+official full-reset decode MP4s and 54 rollout videos; the latent count is not a
+per-request RGB-decode count or an independent-sample count. The
+[canonical JSON](paper/data/h11_h12_phase_a_direct.json) authenticates the
+compact Git summaries, manifests, ledgers, exact cohort selection and claim
+boundaries: eight H11/H12 payload objects total 5,636,174 bytes, while two
+design/overlap helpers add 18,793 bytes (ten objects and 5,654,967 bytes total).
+The [54-row CSV](paper/data/h11_h12_phase_a_direct.csv) exposes one
+LEFT/RIGHT contrast per model and reset block. Six preserved V2 cells per model
+at seeds 8300--8302 are evidence-only and excluded. The models remain separate,
+and H12's directional totals matching H07 are a numerical coincidence across
+identity-distinct cohorts, not a replication or pooled confirmation. Referenced
+raw Phase-A payload bytes remain external and were not revalidated. This is
+retrospective fixed-scene behavior, not independent-scene, forecast-accuracy,
+annotation, recovery-completion or release-gate evidence; all current activity
+counters remain zero, all gates false and the 232-cell core bound unchanged.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact
@@ -178,7 +201,7 @@ uv pip install --python "$WMF_BUILD_ENV/bin/python" --requirement workshops/corl
 
 The `--system-site-packages` boundary is intentional: `requirements-build.txt`
 does not download or replace Torch, while the regression suite includes
-Torch-backed qualification tests. The retained H05--H10 replays also use NumPy.
+Torch-backed qualification tests. The retained H05--H12 replays also use NumPy.
 `build_package.py` fails before running the suite if any required package is
 unavailable and records all five resolved versions in the build report.
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341`, the pinned
@@ -188,8 +211,9 @@ so this environment record is not evidence of byte-identical PDF rebuilding.
 
 This runs the tests, recomputes results, the stopping-time control, the H01
 requested-region entry diagnostic, the retained H05/H06 dose responses, the
-H07/H08 endpoint interactions and the H09/H10 exploratory wording controls from
-the pinned repository, authenticates and
+H07/H08 endpoint interactions, the H09/H10 exploratory wording controls and
+the separate H11/H12 Phase-A direct-command cohorts from the pinned repository,
+authenticates and
 fully decodes the four representative H01 video blobs, produces figures and
 compiles the official CoRL template. The build report records all retained-data
 analyses, their source identities and output hashes, plus the representative-

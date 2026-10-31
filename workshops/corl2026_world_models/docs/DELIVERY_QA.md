@@ -12,8 +12,8 @@ supporting analysis remains available but is not presented as the current paper.
 `paper/main.pdf` has **four pages total including references**, compiled with the
 unchanged official CoRL 2026 style in preprint mode and an anonymous author line.
 
-- PDF SHA256: `b7ffd60a1aa26db57c908600cdce29bf16be4a7be1a56d644bd46e02548f7579`.
-- LaTeX source SHA256: `45bddd2572a0fb725a4550f3534ea8b1c398cca09fddb00f89e684ca4bcda184`.
+- PDF SHA256: `1d93d5541485ec76accc67d79c2f48b59d607db37cfcba33a417557d9f2bdfcc`.
+- LaTeX source SHA256: `427712c4ee02eb3e73d06001e8764d245a29395c8f804e6776a80af483b7ba8e`.
 - Official style SHA256: `62f38cd8df7ad718796617595c8230da136fc83ea1d7e1ba80084113409ec957`.
 - Numerical figure input SHA256: `f437fec607ea969a4c0293b157a74175c410b5f88709ac73262b3035314f1230`.
 - Design figure PDF/PNG SHA256: `9896dafc73897ca19fe6558d9385a8b1512cae858ba815c88743642185ea8201` / `9f1dbac8c32485ebdbaa0df80f8dc1b40c36c9369fd118c700c4e591e4cd94df`.
@@ -52,7 +52,7 @@ retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock
 metadata, so these settings do not establish byte-identical PDF rebuilding.
 TeX Live 2026 latexmk 4.88 and pdfTeX 1.40.29 validated the previous four-page
-package build. The current H07/H08 manuscript was rebuilt from the same official
+package build. The current H09/H10 manuscript was rebuilt from the same official
 template with cached Tectonic 0.17.0, then checked as four pages with zero
 errors, overfull boxes, undefined citations or undefined references. Its four
 rendered pages passed visual review. The exact current publication hashes are
@@ -130,6 +130,17 @@ episode rows. The final manuscript incorporates the following corrections:
   external. No equivalence, forecast-accuracy, annotation, confirmation or
   release-gate claim follows, and all current activity/gate counters remain
   zero/false.
+- The retained H09/H10 wording package byte-authenticates the frozen 480-row
+  three-checkpoint V3-C001 registration and all 320 ABLATION_SPEC-selected
+  Nano/Edge compact episode rows. It reconstructs 120 same-seed direct-control
+  contrast rows without pooling models or exporting raw PVC paths; the excluded
+  GR00T cohort remains explicitly disclosed. Nano/Edge successes are 134/160
+  and 123/160; historical requests/failures are 1,234/26 and 1,365/37. The
+  requested-margin and endpoint-shift views are algebraically paired rather
+  than independent signals. Confirmatory wording inference was not registered,
+  so all contrasts remain exploratory descriptive repeated-block evidence. No new
+  inference, episode, annotation, confirmation or release gate follows, and the
+  232-cell core bound remains unchanged.
 - The four representative seed-9400 videos are authenticated and fully decoded,
   but remain presentation media rather than blinded annotation inputs, timing
   maps, forecast-accuracy evidence or a release-gate advance.
@@ -141,7 +152,9 @@ H05 adds seven positions within one fixed simulator setup, not seven scenes.
 H06 adds four inventory-matched positive symmetry levels within 27 repeated
 seed blocks, not 216 independent scenes. H07/H08 add two endpoint-only model
 contexts over repeated seed blocks; their level-zero inventory differs from
-level one.
+level one. H09/H10 reuse 20 seeds across eight wording/direction cells per model
+in one neutral scene; they are not 320 independent scenes or confirmatory
+wording evidence.
 They establish neither prediction accuracy nor the causal benefit of world modeling.
 They also do not isolate visibility, reachability or grasp geometry as the mechanism.
 

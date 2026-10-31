@@ -55,6 +55,7 @@ def main():
     run("H05 retained lateral dose response", [sys.executable, str(package / "analysis/analyze_h05_lateral_dose_response.py")])
     run("H06 retained graded symmetry", [sys.executable, str(package / "analysis/analyze_h06_graded_symmetry.py")])
     run("H07 H08 retained endpoint symmetry", [sys.executable, str(package / "analysis/analyze_h07_h08_endpoint_symmetry.py")])
+    run("H09 H10 retained wording control", [sys.executable, str(package / "analysis/analyze_h09_h10_wording_control.py")])
     run("representative H01 media", [sys.executable, str(package / "analysis/package_representative_media.py")])
     run("representative H01 media verification", [sys.executable, str(package / "analysis/verify_representative_media.py")])
     run("paper experiment results", [sys.executable, str(package / "analysis/extract_paper_results.py")])
@@ -72,12 +73,13 @@ def main():
     latex_log = (package / "paper/main.log").read_text()
     forbidden = ["Overfull", "undefined citations", "undefined references", "LaTeX Error"]
     problems = [marker for marker in forbidden if marker in latex_log]
-    if len(reader.pages) > 4 or not reader.pages or problems:
+    if len(reader.pages) != 4 or problems:
         raise RuntimeError(f"PDF check failed: pages={len(reader.pages)}; layout/citation flags={problems}")
     body = "\n".join(page.extract_text() for page in reader.pages)
     for required in ["108", "13/54", "50/54", "26/27", "DreamZero-s2", "31.1", "35.8",
                      "18/27", "17/27", "23/27", "81.4", "104 entries", "1.125", "13/15",
                      "H07/H08", "Edge", "12.4", "19.2", "endpoint interactions",
+                     "H09/H10", "134/160", "123/160", "wording inference was not registered",
                      "Results", "Conclusion", "References"]:
         if required not in body:
             raise RuntimeError(f"PDF is missing expected text: {required}")
@@ -95,6 +97,67 @@ def main():
     h06 = json.loads(h06_path.read_text())
     h07_h08_path = package / "paper/data/h07_h08_endpoint_symmetry.json"
     h07_h08 = json.loads(h07_h08_path.read_text())
+    h09_h10_path = package / "paper/data/h09_h10_wording_control.json"
+    h09_h10 = json.loads(h09_h10_path.read_text())
+    expected_h09_h10 = {
+        "H09": ("cosmos3_nano_policy_droid", 160, 134),
+        "H10": ("cosmos3_edge_policy_droid", 160, 123),
+    }
+    if h09_h10["reproduction"] != {
+        "complete_seed_prompt_direction_grids": True,
+        "failure_counts_and_taxonomies_exactly_reconciled": True,
+        "full_registered_cells_strictly_parsed": 480,
+        "h09_h10_compact_episode_rows_strictly_parsed": 320,
+        "h09_h10_registered_cells_rejoined": 320,
+        "matched_seed_contrast_rows": 120,
+        "model_episode_rows": {"H09": 160, "H10": 160},
+        "model_request_counts_exactly_reconciled": True,
+        "registered_failure_taxonomies_exactly_reproduced": True,
+        "registered_relation_endpoint_diagnostics_exactly_reproduced": True,
+        "registered_success_counts_and_wilson_intervals_exactly_reproduced": True,
+        "requested_margin_endpoint_algebraic_dependency_validated": True,
+        "same_seed_direct_control_contrasts_recomputed": 6,
+    }:
+        raise RuntimeError("H09/H10 reproduction receipt changed")
+    historical_counts = {"H09": (1234, 26), "H10": (1365, 37)}
+    for cohort, (model, episodes, successes) in expected_h09_h10.items():
+        observed = h09_h10["cohorts"][cohort]
+        if observed["model_id"] != model:
+            raise RuntimeError(f"{cohort} model identity changed")
+        if observed["authenticated_population"] != {
+            "behavioral_episodes": episodes,
+            "directions": 2,
+            "infrastructure_attempts_included": False,
+            "matched_seed_blocks": 20,
+            "missing_value_imputation": "none",
+            "model_requests": historical_counts[cohort][0],
+            "prompt_forms": 4,
+            "valid_behavioral_failures": historical_counts[cohort][1],
+            "valid_behavioral_failures_included": True,
+        }:
+            raise RuntimeError(f"{cohort} authenticated population changed")
+        actual_successes = sum(
+            form["both_directions"]["successes"]
+            for form in observed["condition_summaries"].values()
+        )
+        if actual_successes != successes:
+            raise RuntimeError(f"{cohort} success total changed")
+    if len(h09_h10["matched_seed_contrasts"]) != 120:
+        raise RuntimeError("H09/H10 contrast-row count changed")
+    if any(h09_h10["new_activity"].values()):
+        raise RuntimeError("H09/H10 receipt records new activity")
+    if any(value is not False for value in h09_h10["gate_state"].values()):
+        raise RuntimeError("H09/H10 receipt advances a release gate")
+    h09_h10_boundary = h09_h10["claim_boundary"]
+    if (
+        h09_h10_boundary["wording_inference"] != "not_registered"
+        or h09_h10_boundary["confirmatory_wording_claim"] is not False
+        or h09_h10_boundary["changes_232_cell_core_bound"] is not False
+        or h09_h10_boundary["models_pooled"] is not False
+    ):
+        raise RuntimeError("H09/H10 claim boundary changed")
+    if "/data/users/" in json.dumps(h09_h10):
+        raise RuntimeError("H09/H10 canonical output leaked a raw source path")
     representative_media_path = package / "paper/media/representative_h01_videos.json"
     representative_media = json.loads(representative_media_path.read_text())
     representative_verification_path = package / "paper/media/representative_h01_video_verification.json"
@@ -196,6 +259,20 @@ def main():
             "json_sha256": digest(h07_h08_path),
             "csv_sha256": digest(package / "paper/data/h07_h08_endpoint_symmetry.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h07_h08_endpoint_symmetry.py"),
+        },
+        "retained_h09_h10_wording_control": {
+            "scope": h09_h10["claim_boundary"],
+            "source_commit": h09_h10["provenance"]["commit"],
+            "design": h09_h10["design"],
+            "cohorts": h09_h10["cohorts"],
+            "matched_seed_contrast_rows": len(h09_h10["matched_seed_contrasts"]),
+            "source_manifest": h09_h10["source_manifest"],
+            "reproduction": h09_h10["reproduction"],
+            "new_activity": h09_h10["new_activity"],
+            "gate_state": h09_h10["gate_state"],
+            "json_sha256": digest(h09_h10_path),
+            "csv_sha256": digest(package / "paper/data/h09_h10_wording_control.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h09_h10_wording_control.py"),
         },
         "representative_media": {
             "scope": representative_media["claim_boundary"],

@@ -82,6 +82,31 @@ level zero, so these are inventory-transition interactions in separate model
 contexts, not position-reflection replications, equivalence, independent
 scenes, forecast accuracy or a release-gate advance.
 
+The retained H09/H10 wording-control package authenticates the prospectively
+frozen V3-C001 registration and all 320 Nano/Edge episode rows selected by this
+ablation specification. Each model contributes 20 matched seed blocks crossed
+with four fixed prompt forms and LEFT/RIGHT (160 episodes): Nano succeeds in
+134/160 and Edge in 123/160; the historical rows contain 1,234/1,365 model
+requests and 26/37 valid behavioral failures. Against the within-seed
+direct-command control, the block-balanced success contrasts for
+short-command/goal-as-outcome/desired-plus-negated-opposite wording are
+0.000/-0.100/-0.450 for Nano and -0.350/-0.125/-0.250 for Edge;
+the requested-margin contrasts are -1.93/-6.02/-19.39 cm and
+-13.17/-2.15/-10.84 cm, respectively. Requested-margin and endpoint-shift
+contrasts are algebraically paired views, not independent signals. The
+[canonical JSON](paper/data/h09_h10_wording_control.json) records the frozen
+registration, exact compact-Git provenance, all-condition summaries, matched
+discordance tables and claim boundaries; the
+[120-row CSV](paper/data/h09_h10_wording_control.csv) exposes every model x
+seed x non-direct-form contrast. The full registration contains 480 rows and a
+third GR00T cohort; the ablation specification fixes Nano and Edge as this
+retrospective retained slice, and models are never pooled.
+The 20 seeds repeat across eight cells in one neutral scene, confirmatory
+wording inference was not registered, and original raw PVC bytes remain
+external. This is exploratory retained executed behavior, not general language
+comprehension, forecast accuracy, annotation, confirmation or a release-gate
+advance.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact
@@ -116,8 +141,10 @@ forecast-accuracy claim, or planned annotation study presented as a result.
 
 This is a working paper for the evaluation theme of
 [Do Robots Need World Models?](https://do-robots-need-world-models.github.io/).
-It studies executed behavior of two world–action models. It does not compare
-world modeling against its removal. The final author list and submission details
+The primary position-reflection experiment studies two world–action
+configurations; retained controls include a separate Edge context, and models
+are never pooled. It does not compare world modeling against its removal. The
+final author list and submission details
 remain to be settled. Nothing has been submitted or published by this task.
 
 The measurements come from the committed steerability study at
@@ -151,7 +178,7 @@ uv pip install --python "$WMF_BUILD_ENV/bin/python" --requirement workshops/corl
 
 The `--system-site-packages` boundary is intentional: `requirements-build.txt`
 does not download or replace Torch, while the regression suite includes
-Torch-backed qualification tests. The retained H05--H08 replays also use NumPy.
+Torch-backed qualification tests. The retained H05--H10 replays also use NumPy.
 `build_package.py` fails before running the suite if any required package is
 unavailable and records all five resolved versions in the build report.
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341`, the pinned
@@ -160,8 +187,9 @@ both values. The retained PDF still carries TeX-produced wall-clock metadata,
 so this environment record is not evidence of byte-identical PDF rebuilding.
 
 This runs the tests, recomputes results, the stopping-time control, the H01
-requested-region entry diagnostic, the retained H05/H06 dose responses and the
-H07/H08 endpoint interactions from the pinned repository, authenticates and
+requested-region entry diagnostic, the retained H05/H06 dose responses, the
+H07/H08 endpoint interactions and the H09/H10 exploratory wording controls from
+the pinned repository, authenticates and
 fully decodes the four representative H01 video blobs, produces figures and
 compiles the official CoRL template. The build report records all retained-data
 analyses, their source identities and output hashes, plus the representative-

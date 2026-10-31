@@ -130,6 +130,47 @@ fresh visual review. Two independent recomputations and root review returned
 GO. These checks qualify the package; they add no episode, request, inference,
 label, confirmation result, physical-time evidence or gate advance.
 
+The Turn2913 outcome-stratified fixed-index attrition extension was committed
+as science commit `ee668d9252d3ca5ce85f76b25556bb2c2b03b603`; corrective layout commit
+`8cf265835833d949ff1eeb22928f0f2af54c368d` removes the one added manuscript
+sentence after the four-page gate rejected a five-page render. The resulting
+net slice changes exactly five package paths by 6,484 insertions and nine
+deletions; `paper/main.tex` and the PDF remain byte-identical to their preceding
+qualified versions. A fresh detached build at `8cf26583` passed all **20
+stages**, including **1073/1073 tests in 130.663 s**, in **146.85 s** wall time
+with a peak resident set size of **920,520 KiB**. Its 564,094-byte/12,260-line
+validation log, 568,709-byte/15,720-line build report, 569,457-byte/15,740-line
+stdout and 1,267-byte/23-line resource receipt have SHA256
+`c1a308567dd93f49f987c7b1d9d6cc47087a32fb01fb157d6b3a60843e0789e6`,
+`268faed3991cd0c9e2069d3f69cb332dd52e88bf7c7fef7356183b4312ead368`,
+`482f001b3ed4addc77e85e3b20c78648f209121eacaabad65a3c3134794a1ea3`
+and `f8b12fd646c28d859b2d537f50ff3f6bce04f861d82b3124afb3e17704ccb8b6`.
+The final serial protected-tree discovery passed **1080/1080 tests in 128.396
+s** (**130.85 s** wall; peak resident set size **923,268 KiB**), including the
+seven protected-only N3 methods. Its two-line/3,030-byte stdout and combined
+1,115-line/141,847-byte verbose-test/resource stream have SHA256
+`f714843bf3ee8fdae3dd813630b908f367dfffe4d4ec91e67fa0ebd802d028ce`
+and `4261e843cf21c4ccb315745fa782aea0467315d6c181e9d6b42fbd793222af45`.
+
+Canonical H01 v4 JSON is 41,741 lines/1,457,631 bytes at SHA256
+`62ca025b0a5429bb798844c319cce9a1b45472f2692db034c67bc1a5d5995a0e`;
+the 739-line/388,814-byte request CSV remains byte-identical at SHA256
+`10dbc70122b36493398622b9e5882e1508468a762fb4d5d6d9b5ee7e2ba3eb29`.
+All four freshly rendered pages were visually inspected and pass; PDF and TeX
+remain `58a657b3ab86e36e6dfe6aa979efc9011c9c66700b6717385e66bc773998e965`
+and `3abc21d3745781e2896e2834c6f7b62d464f82983f5fe8b3633767c620f0602d`.
+Two initial suites run concurrently were discarded after a shared confirmation-
+ledger mutation fixture caused the same raw-root identity race in both; the
+three affected methods passed 3/3 serially. The first uncontaminated detached
+build at `ee668d92` passed its 1,073 tests and all 20 stages but was also
+discarded when the page-count gate found five pages. Neither discarded run is
+promoted. Three independent read-only audits and root review returned GO on
+the v4 identities, exact arrays and boundaries. The extension is retrospective
+risk-set composition only: it estimates no outcome-stratum motion effect,
+censoring independence, failure enrichment, language/model diagnosis,
+forecast skill or new cohort. The 232-cell ceiling, 13 zero activity counters
+and nine false gates remain unchanged.
+
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock

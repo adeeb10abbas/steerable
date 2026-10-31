@@ -52,6 +52,7 @@ def main():
     run("regression tests", [sys.executable, "-m", "unittest", "discover", "-s", str(package / "tests"), "-v"])
     run("stopping-time controls", [sys.executable, str(package / "analysis/analyze_stopping_controls.py")])
     run("H01 requested-region entry", [sys.executable, str(package / "analysis/analyze_h01_requested_region_entry.py")])
+    run("H01 request-window execution motion", [sys.executable, str(package / "analysis/analyze_h01_request_window_motion.py")])
     run("H02 retained position reflection", [sys.executable, str(package / "analysis/analyze_h02_position_reflection.py")])
     run("H03 H04 retained guidance pilots", [sys.executable, str(package / "analysis/analyze_h03_h04_guidance_pilots.py")])
     run("H05 retained lateral dose response", [sys.executable, str(package / "analysis/analyze_h05_lateral_dose_response.py")])
@@ -96,6 +97,7 @@ def main():
                      "H13 evaluator-development audit", "3,008 cached forecast frames",
                      "20 matched blocks", "421/752", "331 abstained", "25/97", "413/421",
                      "396/421", "413/752", "744/752", "A3–A9",
+                     "request-window audit", "632/738", "106 +32 targets",
                      "annotation/confirmation-gate", "new-inference claim",
                      "All 13 registered historical IDs have authenticated packages",
                      "not pooled inference or confirmation",
@@ -110,6 +112,8 @@ def main():
     stopping = json.loads(stopping_path.read_text())
     entry_path = package / "paper/data/h01_requested_region_entry.json"
     entry = json.loads(entry_path.read_text())
+    request_window_path = package / "paper/data/h01_request_window_motion.json"
+    request_window = json.loads(request_window_path.read_text())
     h02_path = package / "paper/data/h02_position_reflection.json"
     h02 = json.loads(h02_path.read_text())
     h03_h04_path = package / "paper/data/h03_h04_guidance_pilots.json"
@@ -592,6 +596,35 @@ def main():
             raise RuntimeError(f"retained historical coverage boundary changed: {field}")
     if coverage_boundary["maximum_core_behavioral_cells"] != 232:
         raise RuntimeError("retained historical coverage changed the core-cell ceiling")
+    if request_window["cohort"]["episodes"] != 108 or request_window["coverage"]["requests"] != 738:
+        raise RuntimeError("H01 request-window retained population changed")
+    if (
+        request_window["coverage"]["complete_32_action_windows"],
+        request_window["coverage"]["censored_windows"],
+    ) != (632, 106):
+        raise RuntimeError("H01 request-window coverage/censoring changed")
+    if request_window["coverage"]["censored_windows_by_episode_outcome"] != {
+        "goal_stopped_success": 100,
+        "administrative_cap_censored_failure": 6,
+    } or request_window["coverage"]["censored_observed_prefix_actions"]["sum"] != 1748:
+        raise RuntimeError("H01 request-window outcome/prefix censoring changed")
+    request_boundary = request_window["claim_boundary"]
+    for field in (
+        "forecast_arrays_retrieved", "forecast_payload_bytes_reopened_or_reverified",
+        "forecast_accuracy_or_skill_estimated",
+        "generated_versus_executed_comparison", "A3_A9_completed",
+        "physical_time_established", "A6_movement_threshold_established",
+        "independent_scene_or_layout_generalization_established",
+        "language_understanding_established", "new_episodes_or_requests_created",
+        "new_labels_or_retrieval_created", "models_or_cohorts_pooled",
+        "changes_232_cell_core_bound",
+    ):
+        if request_boundary[field] is not False:
+            raise RuntimeError(f"H01 request-window boundary changed: {field}")
+    if request_boundary["maximum_core_behavioral_cells"] != 232:
+        raise RuntimeError("H01 request-window package changed the core-cell ceiling")
+    if any(request_window["new_activity"].values()) or any(request_window["gate_state"].values()):
+        raise RuntimeError("H01 request-window package advanced activity or gates")
     representative_media_path = package / "paper/media/representative_h01_videos.json"
     representative_media = json.loads(representative_media_path.read_text())
     representative_verification_path = package / "paper/media/representative_h01_video_verification.json"
@@ -648,6 +681,21 @@ def main():
             "json_sha256": digest(entry_path),
             "csv_sha256": digest(package / "paper/data/h01_requested_region_entry.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h01_requested_region_entry.py"),
+        },
+        "retained_h01_request_window_motion": {
+            "scope": request_boundary,
+            "source_commit": request_window["provenance"]["commit"],
+            "source_jsonl": {
+                "path": stopping_source_path,
+                **request_window["provenance"]["files"][stopping_source_path],
+            },
+            "cohort": request_window["cohort"],
+            "coverage": request_window["coverage"],
+            "new_activity": request_window["new_activity"],
+            "gate_state": request_window["gate_state"],
+            "json_sha256": digest(request_window_path),
+            "csv_sha256": digest(package / "paper/data/h01_request_window_motion.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h01_request_window_motion.py"),
         },
         "retained_h02_position_reflection": {
             "scope": h02["claim_boundary"],

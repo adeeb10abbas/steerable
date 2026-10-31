@@ -213,6 +213,15 @@ labels, qualified official D1 predictions and prospective varied-layout forecast
 accuracy remain missing; activity stays zero, gates false and the 232-cell bound
 unchanged.
 
+A post-snapshot [H01 request-window supplement](paper/data/h01_request_window_motion.json)
+adds a same-H01 execution-motion view over 738 recorded request descriptors and
+108 already-counted cells; it is not a tenth grouped cohort. The Turn2909
+coverage artifact above remains a sealed pre-T2910 base-snapshot crosswalk and
+does not authenticate this additional analytical role. The supplement checks
+recorded descriptor metadata but does not reopen forecast payload bytes, score
+forecast accuracy, advance A3--A9, add activity, open a gate or change the
+232-cell core bound.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact

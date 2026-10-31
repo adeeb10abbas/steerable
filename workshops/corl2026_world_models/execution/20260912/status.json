@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-10-31T13:10:40Z",
+  "as_of_utc": "2026-10-31T13:12:15Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -13152,7 +13152,7 @@
   "turn_2909_retained_historical_evidence_coverage_20261031": {
     "basis_control_commit": "432c4bdcbb3b2ebb3ec94aab5ce5455b56f531c6",
     "basis_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
-    "status": "bounded_git_observation_no_movement_retained_historical_evidence_coverage_authenticated_qualified_tracking_publication_pending_release_gate_closed",
+    "status": "bounded_git_observation_no_movement_retained_historical_evidence_coverage_authenticated_qualified_tracking_publication_sealed_release_gate_closed",
     "authority": {
       "host": "ali-MS-7D25",
       "boot_id": "c469f76b-70a1-4fe4-929e-dc312aa55a9f",
@@ -13328,7 +13328,8 @@
       "first_attempt_validation_sha256": "b50e6cddc664efc669df3374e2544e7212f68cfedb701420fa4fc4268ba6af99",
       "focused_coverage_tests": 12,
       "focused_test_failures": 0,
-      "focused_test_seconds": 1.265,
+      "isolated_focused_test_seconds": 1.353,
+      "protected_main_focused_test_seconds": 1.265,
       "authoritative_build_tests": 1060,
       "authoritative_build_test_seconds": 130.452,
       "authoritative_build_steps": 19,
@@ -13422,7 +13423,7 @@
       "post_watch_results_fetches": 0
     },
     "publication": {
-      "status": "substantive_qualification_complete_tracking_and_push_pending",
+      "status": "substantive_qualification_and_first_tracking_commit_published_seal_update_pending",
       "base_control_commit": "432c4bdcbb3b2ebb3ec94aab5ce5455b56f531c6",
       "science_commit": {
         "commit": "b65d3053edbc022b18b7031c063fc133d3d6fbac",
@@ -13442,8 +13443,27 @@
       },
       "authorized_substantive_paths_unique": 9,
       "authorized_tracking_paths": 3,
-      "tracking_commit_pending": true,
-      "push_pending": true,
+      "tracking_commit": {
+        "commit": "4bff8daf143ec676dadfa477a1dae6692e0e2b88",
+        "tree": "78711db7fce3c3bcfcf07e8b8169733e60b48cd7",
+        "parent": "5c6e6a46ef29b03c44f982a3460f92f5a03011b1",
+        "paths": 3,
+        "insertions": 325,
+        "deletions": 2
+      },
+      "push_attempts": 1,
+      "push_started_at_utc": "2026-10-31T13:12:13Z",
+      "push_finished_at_utc": "2026-10-31T13:12:14Z",
+      "verification_fetch_attempts": 1,
+      "verification_fetch_started_at_utc": "2026-10-31T13:12:14Z",
+      "verification_fetch_finished_at_utc": "2026-10-31T13:12:15Z",
+      "verified_remote_control_commit": "4bff8daf143ec676dadfa477a1dae6692e0e2b88",
+      "head_control_divergence": "0/0",
+      "verification_fetch_head_lines": 1,
+      "verification_fetch_head_bytes": 130,
+      "verification_fetch_head_sha256": "4e69d9211c199ed75653c2331e139d93f30eabaf6017a2d8ee8d80a7a493cec2",
+      "tracking_commit_pending": false,
+      "push_pending": false,
       "publication_seal_update_pending": true,
       "cached_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
       "results_sampled_after_watch": false

@@ -12,8 +12,8 @@ supporting analysis remains available but is not presented as the current paper.
 `paper/main.pdf` has **four pages total including references**, compiled with the
 unchanged official CoRL 2026 style in preprint mode and an anonymous author line.
 
-- PDF SHA256: `3745c8dda1095e3b368a906d7d4dfa71df63f3ecb5f5dfb208cfe1266bcb787f`.
-- LaTeX source SHA256: `57c3ab659c4f05fc1b2c45909357f4298dcc7d1e3773967fa2437f68d1d79bf6`.
+- PDF SHA256: `58a657b3ab86e36e6dfe6aa979efc9011c9c66700b6717385e66bc773998e965`.
+- LaTeX source SHA256: `3abc21d3745781e2896e2834c6f7b62d464f82983f5fe8b3633767c620f0602d`.
 - Official style SHA256: `62f38cd8df7ad718796617595c8230da136fc83ea1d7e1ba80084113409ec957`.
 - Numerical figure input SHA256: `f437fec607ea969a4c0293b157a74175c410b5f88709ac73262b3035314f1230`.
 - Design figure PDF/PNG SHA256: `9896dafc73897ca19fe6558d9385a8b1512cae858ba815c88743642185ea8201` / `9f1dbac8c32485ebdbaa0df80f8dc1b40c36c9369fd118c700c4e591e4cd94df`.
@@ -23,8 +23,8 @@ unchanged official CoRL 2026 style in preprint mode and an anonymous author line
 - All four pages were rendered to temporary PNGs and visually inspected. The
   review renders are intentionally not checked in or cited as persistent files.
   Body text, equations, table, figures and references are readable, with no
-  clipping, overlap or missing glyphs. The requested-region paragraph continues
-  naturally from page 3 to page 4 without an incomplete sentence.
+  clipping, overlap or missing glyphs. The retained analyses, limitations and
+  references fit on page 4 without a blank or spill page.
 
 The result figure is generated from `results/paper_results.json`. The experimental
 design figure is explicitly labeled as a schematic, not a measured trajectory.
@@ -55,6 +55,31 @@ authenticates and parses the pinned base Git object while allowing only that
 builder-generated checkout copy to evolve, and adds a regression test for the
 boundary. These software qualifications validate the package; they are not
 behavioral episodes, model-policy competence or scientific evidence.
+
+The final Turn2910 authoritative isolated build at commit
+`5d9c5f7f0611fc3add97d0417221d52214e42c2a` passed all **20 stages**, including
+**1070/1070 tests in 133.302 s**, in **150.21 s** wall time with a peak resident
+set size of **920,312 KiB**. It produced the four-page, 162,571-byte PDF and
+12,981-byte LaTeX source whose hashes are recorded above. Its 563,702-byte/
+12,257-line validation log and 186,768-byte/5,480-line build report have SHA256
+`6e36d8b8d302044442f091b6bf3623b82c7f15347a45614873b8b5d45b596218` and
+`580434f7f4dfeb3afa3f7d797ba97bd80495c52b9916b5bbbb64cd01b216405e`.
+The complete 187,516-byte/5,500-line stdout and 801-byte/23-line resource
+receipt have SHA256
+`d105a77f1fb1cd2ac549bad82a1402ba4209321daace76b5978bae51737eed2f` and
+`7af3b9ddf370d563584ae401572fd2cada551036ca9fa38fbe33d28c60f54a4d`.
+A preceding isolated attempt passed the same 1,070 tests and 20 stages and made
+the same clean four-page PDF, then stopped fail-closed because pypdf removes
+spaces around the TeX math phrase `106 $+32$ targets`. The checker correction
+accepts only optional whitespace around that exact phrase; focused tests and a
+direct check against the failed PDF passed before the clean rerun. Root and an
+independent reviewer rendered and inspected every page and both returned GO.
+The resulting protected-tree discovery passed **1077/1077 tests in 128.264 s**
+(**130.71 s** wall; peak resident set size **922,052 KiB**), including exactly
+seven protected-only N3 methods. Its 143,646-byte/1,091-line stdout and
+839-byte/23-line resource receipt have SHA256
+`a98ac3422d1df61e07c6b4942af11d79512856eb375266811ae89333cb8579d7` and
+`ea68a67afeb96ca19bb2624df91e6eb6ae583a256d914fbc7554cb84c1231760`.
 
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
@@ -121,6 +146,17 @@ episode rows. The final manuscript incorporates the following corrections:
   cap-censored, reports 104 entries and the matched entry-index interaction, and
   does not turn action indices into physical time or goal-terminated transients
   into common-horizon sustained entries.
+- The retained H01 request-window package authenticates 108 cells and 738
+  request descriptors. Exact start-to-start-plus-32-action windows exist for
+  632 requests; 106 targets are censored by 100 goal-stopped successes and six
+  cap-censored failures, with 1,748 observed prefix actions across those
+  censored windows. Equal-cell cube displacement means are 0.0450153,
+  0.0785662, 0.0765150 and 0.0680017 m across the four registered conditions.
+  Descriptor path/hash identities are unique, but forecast payload bytes were
+  not reopened, reverified or scored. This is retrospective execution-motion
+  and descriptor-provenance evidence, not physical-time pairing, an A6
+  threshold, generated-versus-executed comparison, forecast accuracy, A3--A9
+  completion, new inference, new labeling or a change to the 232-cell core.
 - The retained H02 package byte-authenticates nine compact Git objects
   (831,259 bytes/1,429 lines), including the bridge that defines the 45-degree
   cone and three-sample sustained rule, and rejoins the exact 108-cell/54-pair V3-B003

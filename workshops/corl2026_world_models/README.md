@@ -47,7 +47,25 @@ transient exits. All 42 no-entry traces are valid failures cap-censored at
 action 450. The authenticated bridge defines the 45-degree cone and
 three-sample rule. These action indices are upstream recorded fields, not
 physical time or a rederivation from raw XYZ.
-Its [canonical JSON](paper/data/h02_position_reflection.json) inventories 540
+A post-snapshot [matched-entry supplement](paper/data/h02_matched_entry.json)
+aggregates the already-exported 27 rows without modifying the sealed H02 v1
+package or creating another cohort. With equal LEFT/RIGHT weighting inside each
+registered environment label, the position-mirrored-minus-control descriptive
+recorded requested-cone-entry indicator contrast has mean 0.740741
+(positive/zero/negative in 25/2/0 blocks). The parallel capped first-entry-index
+variable $U$ contrast has mean -238.296
+action indices, median -267.5, range -328.5 to -37.5 and is negative in 27/27
+blocks. Command-specific contrasts are -250.556 LEFT and -226.037 RIGHT; their
+RIGHT-minus-LEFT difference-in-differences is +24.519 action indices with signs
+positive/zero/negative=19/0/8. $U$ is the recorded first-entry index, or 450
+when no entry was recorded by the common administrative cap. $U=450$ is not an
+event at 450 or an imputed entry: the -238.296 composite mixes entry-by-cap
+incidence with first-entry index among entrants, so it is not a pure timing or
+physical-latency contrast and does not extrapolate event times beyond the cap.
+The aggregate is post-result descriptive, not a model-based survival curve or
+hazard, censoring-independence claim, registered estimand, independent
+scene/noise evidence or new cohort.
+The sealed H02 v1 [canonical JSON](paper/data/h02_position_reflection.json) inventories 540
 distinct raw path/SHA descriptors (237,163,185 declared bytes), while the
 [27-row CSV](paper/data/h02_position_reflection.csv) exposes all four cells and
 entry/censor contrasts for each matched environment-label block. Those external

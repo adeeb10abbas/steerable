@@ -328,7 +328,23 @@ episode rows. The final manuscript incorporates the following corrections:
   classified transient exits. All 42 no-entry traces remain action-450
   cap-censored failures. These are upstream action indices, not physical time or
   a raw-XYZ replay. The canonical 27-row matched-block CSV exposes the four
-  cells and entry/censor contrasts per seed. Its 540 distinct raw
+  cells and entry/censor contrasts per seed. A separate post-snapshot supplement
+  preserves that sealed v1 package and weights LEFT and RIGHT equally inside
+  every registered label: the reflected-minus-control descriptive contrasts
+  are +0.740741 for the recorded requested-cone-entry indicator (25/2/0
+  positive/zero/negative blocks) and -238.296 action indices for the capped
+  first-entry-index variable $U$ (median -267.5, range -328.5 to -37.5;
+  negative in 27/27 blocks). LEFT/RIGHT $U$ contrasts are -250.556/-226.037 and
+  the command-by-layout difference-in-differences is +24.519 with
+  positive/zero/negative=19/0/8. $U$ is the recorded first-entry index, or 450
+  when no entry was recorded by the common administrative cap. $U=450$ is not
+  an event at 450 or an imputed entry: this composite mixes entry-by-cap
+  incidence with first-entry index among entrants, so it is not a pure timing
+  or physical-latency contrast and does not extrapolate event times beyond the
+  cap. These are post-result aggregates of the same exported rows, not a
+  model-based survival curve or hazard, censoring-independence claim, new
+  registered estimand, cohort, independent scene/noise sample, equivalence
+  result or p-value claim. Its 540 distinct raw
   path/SHA descriptors total 237,163,185 declared bytes; the external PVC bytes
   were not opened or rehashed. H02 remains custom DreamZero negative-branch
   action guidance s2 with fixed effective noise 1140, not default DreamZero or

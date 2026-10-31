@@ -55,6 +55,7 @@ def main():
     run("H01 requested-region entry", [sys.executable, str(package / "analysis/analyze_h01_requested_region_entry.py")])
     run("H01 request-window execution motion", [sys.executable, str(package / "analysis/analyze_h01_request_window_motion.py")])
     run("H02 retained position reflection", [sys.executable, str(package / "analysis/analyze_h02_position_reflection.py")])
+    run("H02 matched entry supplement", [sys.executable, str(package / "analysis/analyze_h02_matched_entry.py")])
     run("H03 H04 retained guidance pilots", [sys.executable, str(package / "analysis/analyze_h03_h04_guidance_pilots.py")])
     run("H05 retained lateral dose response", [sys.executable, str(package / "analysis/analyze_h05_lateral_dose_response.py")])
     run("H06 retained graded symmetry", [sys.executable, str(package / "analysis/analyze_h06_graded_symmetry.py")])
@@ -89,7 +90,7 @@ def main():
     body = " ".join(raw_body.replace("-\n", "").split())
     for required in ["108", "13/54", "50/54", "26/27", "DreamZero-s2", "31.1", "35.8",
                      "18/27", "17/27", "23/27", "81.4", "104 entries", "1.125", "13/15",
-                     "H02 compact audit", "540 descriptors", "post-result descriptive", "13/54 to 53/54 entries", "42 no-entry traces", "H03/H04", "post-result guidance pilots", "6/6 to 4/6", "3/6 to 4/6",
+                     "H02 compact audit", "540 descriptors", "post-result descriptive", "recorded requested-cone entries rise from 13/54 to 53/54", "42 no-entry traces", "0.741", "238.3", "27/27 blocks", "positive/zero/negative=19/0/8", "not an event at 450 or an imputed entry", "mixes entry-by-cap incidence", "H03/H04", "post-result guidance pilots", "6/6 to 4/6", "3/6 to 4/6",
                      "H07/H08", "Edge", "12.4", "19.2", "endpoint interactions",
                      "H09/H10", "134/160", "123/160", "wording inference was not registered",
                      "H11/H12 are separate fixed-scene Phase-A direct-command cohorts",
@@ -121,6 +122,8 @@ def main():
     request_window = json.loads(request_window_path.read_text())
     h02_path = package / "paper/data/h02_position_reflection.json"
     h02 = json.loads(h02_path.read_text())
+    h02_matched_path = package / "paper/data/h02_matched_entry.json"
+    h02_matched = json.loads(h02_matched_path.read_text())
     h03_h04_path = package / "paper/data/h03_h04_guidance_pilots.json"
     h03_h04 = json.loads(h03_h04_path.read_text())
     h05_path = package / "paper/data/h05_lateral_dose_response.json"
@@ -171,6 +174,47 @@ def main():
         raise RuntimeError("H02 entry/censor classification changed")
     if len(h02["matched_entry_censor_blocks"]) != 27:
         raise RuntimeError("H02 matched entry/censor block count changed")
+    if h02["schema_version"] != "wmf-retained-h02-position-reflection-v1":
+        raise RuntimeError("sealed H02 package schema changed")
+    if h02_matched["schema_version"] != "wmf-retained-h02-matched-entry-supplement-v1":
+        raise RuntimeError("H02 matched-entry supplement schema changed")
+    if h02_matched["population"]["matched_environment_label_blocks"] != 27:
+        raise RuntimeError("H02 matched entry aggregate population changed")
+    if h02_matched["summaries"]["entry_observed"][
+        "block_balanced_position_mirrored_minus_control"
+    ] != {
+        "n": 27,
+        "sum": 20.0,
+        "mean": 20 / 27,
+        "median": 1.0,
+        "minimum": 0.0,
+        "maximum": 1.0,
+        "sign_counts": {"positive": 25, "zero": 2, "negative": 0},
+    }:
+        raise RuntimeError("H02 block-balanced recorded-entry indicator contrast changed")
+    h02_waiting = h02_matched["summaries"]["cap_restricted_waiting_action_index"][
+        "block_balanced_position_mirrored_minus_control"
+    ]
+    if (
+        h02_waiting["sum"] != -6434.0
+        or h02_waiting["mean"] != -6434 / 27
+        or h02_waiting["median"] != -267.5
+        or (h02_waiting["minimum"], h02_waiting["maximum"])
+        != (-328.5, -37.5)
+        or h02_waiting["sign_counts"]
+        != {"positive": 0, "zero": 0, "negative": 27}
+    ):
+        raise RuntimeError("H02 block-balanced restricted-waiting contrast changed")
+    h02_waiting_did = h02_matched["summaries"][
+        "cap_restricted_waiting_action_index"
+    ]["command_by_layout_difference_in_differences"]
+    if (
+        h02_waiting_did["sum"] != 662.0
+        or h02_waiting_did["mean"] != 662 / 27
+        or h02_waiting_did["sign_counts"]
+        != {"positive": 19, "zero": 0, "negative": 8}
+    ):
+        raise RuntimeError("H02 restricted-waiting command interaction changed")
     if h02["audit_operations"] != {
         "compact_git_objects_byte_authenticated": 9,
         "remote_fetches": 0,
@@ -1013,6 +1057,19 @@ def main():
             "json_sha256": digest(h02_path),
             "csv_sha256": digest(package / "paper/data/h02_position_reflection.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h02_position_reflection.py"),
+        },
+        "retained_h02_matched_entry_supplement": {
+            "scope": h02_matched["claim_boundary"],
+            "provenance": h02_matched["provenance"],
+            "configuration": h02_matched["configuration"],
+            "population": h02_matched["population"],
+            "summaries": h02_matched["summaries"],
+            "definitions": h02_matched["definitions"],
+            "new_activity": h02_matched["new_activity"],
+            "gate_state": h02_matched["gate_state"],
+            "json_sha256": digest(h02_matched_path),
+            "csv_sha256": digest(package / "paper/data/h02_matched_entry.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h02_matched_entry.py"),
         },
         "retained_h03_h04_guidance_pilots": {
             "scope": h03_h04["claim_boundary"],

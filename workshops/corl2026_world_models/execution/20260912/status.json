@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-10-31T12:41:26Z",
+  "as_of_utc": "2026-10-31T12:42:03Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -12844,7 +12844,7 @@
   "turn_2908_retained_h02_position_reflection_20261031": {
     "basis_control_commit": "9a2f9063c2a326132d7667d760fdc914345941d3",
     "basis_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
-    "status": "bounded_git_observation_no_movement_retained_h02_authenticated_qualified_tracking_publication_pending_release_gate_closed",
+    "status": "bounded_git_observation_no_movement_retained_h02_authenticated_qualified_tracking_publication_sealed_release_gate_closed",
     "authority": {
       "host": "ali-MS-7D25",
       "boot_id": "c469f76b-70a1-4fe4-929e-dc312aa55a9f",
@@ -13101,7 +13101,7 @@
       "post_watch_results_fetches": 0
     },
     "publication": {
-      "status": "substantive_and_qualification_commits_local_tracking_pending",
+      "status": "substantive_qualification_and_first_tracking_commit_published_seal_update_pending",
       "base_control_commit": "9a2f9063c2a326132d7667d760fdc914345941d3",
       "science_commit": {
         "commit": "f2b6537817bc694fbebba78ad839c0eecd3989c5",
@@ -13121,12 +13121,32 @@
       },
       "authorized_substantive_paths_unique": 9,
       "authorized_tracking_paths": 3,
-      "tracking_commit_pending": true,
-      "push_pending": true,
+      "tracking_commit": {
+        "commit": "c2184c49e13d1ea21c73a31cf5c6979c3ae6b933",
+        "tree": "b9fafb3d0a8ee43f0364de73befda2ae7bc77b09",
+        "parent": "13f5079e82b06457c6501ed50ef64318a8108957",
+        "paths": 3,
+        "insertions": 310,
+        "deletions": 2
+      },
+      "push_attempts": 1,
+      "push_started_at_utc": "2026-10-31T12:41:59Z",
+      "push_finished_at_utc": "2026-10-31T12:42:01Z",
+      "verification_fetch_attempts": 1,
+      "verification_fetch_started_at_utc": "2026-10-31T12:42:03Z",
+      "verification_fetch_finished_at_utc": "2026-10-31T12:42:03Z",
+      "verified_remote_control_commit": "c2184c49e13d1ea21c73a31cf5c6979c3ae6b933",
+      "head_control_divergence": "0/0",
+      "verification_fetch_head_lines": 1,
+      "verification_fetch_head_bytes": 130,
+      "verification_fetch_head_sha256": "bb54756141085e4d43fd25c62af3ae3a76f6c0ffd1d5fd97af08afb086e5750c",
+      "tracking_commit_pending": false,
+      "push_pending": false,
+      "publication_seal_update_pending": true,
       "cached_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
       "results_sampled_after_watch": false
     },
-    "next_remote_observation_not_before_utc": null,
+    "next_remote_observation_not_before_utc": "2026-10-31T13:00:00Z",
     "next_action": "Keep every release gate closed. Require authorized current GM/PVC/coordinator/worker/GPU/child/reap/release-lock reconciliation and a fresh results publication explicitly reopening safe_to_release_new_work. Only then materialize the exact attempt002 receipt in a separately trusted results checkout,compose and independently inspect a candidate,and separately authorize publication or dispatch. Never reuse a valid,fenced or live identifier."
   },
   "independent_preparation_review": "reviewed_runtime_findings_are_fixed_or_tracked_before_release"

@@ -11,11 +11,11 @@ When a robot succeeds at \emph{right of the bowl} but fails at \emph{left of the
 \keywords{World--action models, spatial instructions, robot manipulation}
 
 \section{Introduction}
-A robot asked to place a cube beside a bowl must recognize \emph{left} and \emph{right}, grasp, transport and release. The instruction can redirect motion correctly while placement still fails. Different LEFT/RIGHT success rates therefore do not show whether language failed to influence the policy or execution failed to complete the task.
+Cube placement beside a bowl requires spatial recognition plus successful grasp, transport and release. Instructions can redirect motion while placement fails; unequal LEFT/RIGHT success therefore cannot distinguish policy-language influence from execution failure.
 
-This distinction matters for world--action models. DreamZero jointly models future video and actions, while Cosmos 3 supports world modeling and policy generation~\citep{ye2026dreamzero,nvidia2026cosmos3}. Spatial following must still be established through robot behavior; world-model benchmarks likewise assess functional utility alongside visual quality~\citep{shang2026worldarena}.
+DreamZero jointly models future video and actions; Cosmos 3 supports world modeling and policy generation~\citep{ye2026dreamzero,nvidia2026cosmos3}. Spatial following still requires robot behavior, while world-model benchmarks assess functional utility alongside visual quality~\citep{shang2026worldarena}.
 
-We mirror movable-object positions while fixing policy and commands; LEFT/RIGHT trials share a start state within each layout. We measure final cube--bowl relation, requested-side depth and success. Layout changes DreamZero-s2 completion and near-ceiling Nano placement, so success and directional response support different conclusions.
+Mirroring movable objects fixes policy and commands and shares LEFT/RIGHT starts within each layout. We measure cube--bowl relation, requested-side depth and success. Layout changes DreamZero-s2 completion and near-ceiling Nano placement, separating success from directional response.
 
 \section{Experimental Setup}
 \paragraph{Task and models.}

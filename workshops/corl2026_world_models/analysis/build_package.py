@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -102,7 +103,11 @@ def main():
                      "All 13 registered historical IDs have authenticated packages",
                      "not pooled inference or confirmation",
                      "Results", "Conclusion", "References"]:
-        if required not in body:
+        math_spacing_match = (
+            required == "106 +32 targets"
+            and re.search(r"106\s*\+32\s*targets", body) is not None
+        )
+        if required not in body and not math_spacing_match:
             raise RuntimeError(f"PDF is missing expected text: {required}")
     if "??" in body:
         raise RuntimeError("Unresolved reference marker in PDF")

@@ -109,6 +109,9 @@ def main():
         math_spacing_match = (
             required == "106 +32 targets"
             and re.search(r"106\s*\+32\s*targets", body) is not None
+        ) or (
+            required == "+227"
+            and re.search(r"\+\s*227", body) is not None
         )
         if required not in body and not math_spacing_match:
             raise RuntimeError(f"PDF is missing expected text: {required}")

@@ -633,6 +633,30 @@ episode rows. The final manuscript incorporates the following corrections:
   but remain presentation media rather than blinded annotation inputs, timing
   maps, forecast-accuracy evidence or a release-gate advance.
 
+### Turn2918 exact H02 one-label-deletion sensitivity
+
+The retained package authenticates and byte-regenerates the sealed Turn2917
+entry-status contribution inputs before dynamically executing them. It deletes
+each of the 27 registered environment labels once, leaving 26 labels, and
+reports 324 exact rational deletion means across four scopes and the three
+unchanged components of $U=450(1-E)+Z$. All 12 means preserve their
+full-population signs in all 27 deletions. Composite $U$ ranges are LEFT
+-268.923 to -247.423, RIGHT -234.231 to -221.923, block-balanced -246.019 to
+-234.827 and command-by-layout interaction +13.577 to +45.808 action indices.
+All deletion-level component identities and balanced/interaction scope
+identities close exactly; tied extrema are retained rather than discarded.
+
+This is deterministic post-result sensitivity for the fixed observed
+27-label population. It is not jackknife inference, a standard error,
+confidence interval, p-value, bootstrap or other resampling distribution,
+influence-function analysis, equivalence evidence, robustness to unobserved
+labels, independent-scene/model-noise generalization, physical time,
+entrant-only timing, a registered estimand or a new cohort. The analysis adds
+zero episodes, requests, labels, annotations, retrievals or inference, retains
+all 13 activity counters at zero and all nine gates false, and does not change
+the 232-cell core bound. Authoritative build, protected-tree and four-page PDF
+qualification receipts are recorded below only after those checks complete.
+
 ## Remaining research and submission work
 
 The main results cover two checkpoints, one task and two fixed physical layouts;

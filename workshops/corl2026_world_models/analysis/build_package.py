@@ -18,6 +18,17 @@ import sys
 
 from pypdf import PdfReader
 
+PDF_REQUIRED_MARKERS = (
+    "Deleting each label preserves all 12",
+    "246.019",
+    "234.827",
+    "13.577",
+    "45.808",
+    "not jackknife inference",
+    "unobserved",
+    "robustness",
+)
+
 
 def main():
     package = Path(__file__).resolve().parents[1]
@@ -58,6 +69,7 @@ def main():
     run("H02 matched entry supplement", [sys.executable, str(package / "analysis/analyze_h02_matched_entry.py")])
     run("H02 capped-index decomposition", [sys.executable, str(package / "analysis/analyze_h02_capped_index_decomposition.py")])
     run("H02 entry-status contributions", [sys.executable, str(package / "analysis/analyze_h02_entry_status_contributions.py")])
+    run("H02 label-deletion sensitivity", [sys.executable, str(package / "analysis/analyze_h02_label_deletion_sensitivity.py")])
     run("H03 H04 retained guidance pilots", [sys.executable, str(package / "analysis/analyze_h03_h04_guidance_pilots.py")])
     run("H05 retained lateral dose response", [sys.executable, str(package / "analysis/analyze_h05_lateral_dose_response.py")])
     run("H06 retained graded symmetry", [sys.executable, str(package / "analysis/analyze_h06_graded_symmetry.py")])
@@ -105,7 +117,7 @@ def main():
                      "annotation/confirmation-gate", "new-inference claim",
                      "All 13 registered historical IDs have authenticated packages",
                      "not pooled inference or confirmation",
-                     "Results", "Conclusion", "References"]:
+                     "Results", "Conclusion", "References", *PDF_REQUIRED_MARKERS]:
         math_spacing_match = (
             required == "106 +32 targets"
             and re.search(r"106\s*\+32\s*targets", body) is not None
@@ -133,6 +145,8 @@ def main():
     h02_decomposition = json.loads(h02_decomposition_path.read_text())
     h02_status_contributions_path = package / "paper/data/h02_entry_status_contributions.json"
     h02_status_contributions = json.loads(h02_status_contributions_path.read_text())
+    h02_label_deletion_path = package / "paper/data/h02_label_deletion_sensitivity.json"
+    h02_label_deletion = json.loads(h02_label_deletion_path.read_text())
     h03_h04_path = package / "paper/data/h03_h04_guidance_pilots.json"
     h03_h04 = json.loads(h03_h04_path.read_text())
     h05_path = package / "paper/data/h05_lateral_dose_response.json"
@@ -334,6 +348,172 @@ def main():
         or any(h02_status_contributions["gate_state"].values())
     ):
         raise RuntimeError("H02 entry-status contribution advanced activity or a gate")
+    if h02_label_deletion["schema_version"] != "wmf-retained-h02-label-deletion-sensitivity-v1":
+        raise RuntimeError("H02 label-deletion sensitivity schema changed")
+    if h02_label_deletion["population"] != {
+        "base_behavioral_episodes": 108,
+        "matched_environment_label_blocks": 27,
+        "conditions_per_block": 4,
+        "seed_labels": list(range(9400, 9427)),
+        "sensitivity_rows": 12,
+        "deletion_estimates_per_row": 27,
+        "total_deletion_means": 324,
+        "new_cohort_created": False,
+    }:
+        raise RuntimeError("H02 label-deletion sensitivity population changed")
+    expected_h02_deletion_configuration = {
+        "action_guidance_scale": 2,
+        "amendment": "V3-B003",
+        "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
+        "cohort": "H02",
+        "effective_model_noise_seed": 1140,
+        "label": "DreamZero custom negative-branch action guidance s2",
+        "model_id": "dreamzero_droid_action_cfg",
+        "noise_seed_semantics": (
+            "fixed effective model noise; the 27 environment labels are not "
+            "independent model-noise draws"
+        ),
+        "official_conditional_D1": False,
+    }
+    if h02_label_deletion["configuration"] != expected_h02_deletion_configuration:
+        raise RuntimeError("H02 label-deletion sensitivity configuration changed")
+    expected_h02_deletion_sources = {
+        "analyzer": {
+            "bytes": 21753,
+            "lines": 483,
+            "path": "workshops/corl2026_world_models/analysis/analyze_h02_entry_status_contributions.py",
+            "sha256": "6aa3d0b1f6276ac57b8b3838f2ac22bae5929a5d764f57a5370cb75ba04e8a5e",
+        },
+        "json": {
+            "bytes": 15060,
+            "lines": 386,
+            "path": "workshops/corl2026_world_models/paper/data/h02_entry_status_contributions.json",
+            "sha256": "9bc4c8ade7cdcea065a7eee53d74059c0098ca79a55ddf9f930f29c9d771d9d9",
+        },
+        "csv": {
+            "bytes": 1639,
+            "lines": 9,
+            "path": "workshops/corl2026_world_models/paper/data/h02_entry_status_contributions.csv",
+            "sha256": "5a48495fb332ca7ec764df36f69e064899797cea562913f1add5840b3923e1ba",
+        },
+    }
+    h02_deletion_provenance = h02_label_deletion["provenance"]
+    if (
+        h02_deletion_provenance["historical_source_commit"]
+        != "ce561e66f82e95055e39d3d7711691982f6b2086"
+        or h02_deletion_provenance["historical_authenticated_file_count"] != 9
+        or h02_deletion_provenance["historical_authenticated_bytes"] != 831259
+        or h02_deletion_provenance["historical_authenticated_lines"] != 1429
+        or h02_deletion_provenance["sealed_entry_status_files"]
+        != expected_h02_deletion_sources
+    ):
+        raise RuntimeError("H02 label-deletion sensitivity provenance changed")
+    expected_h02_deletion_scopes = {
+        "left",
+        "right",
+        "block_balanced",
+        "command_by_layout_interaction",
+    }
+    expected_h02_deletion_components = {
+        "entry_incidence_at_cap_term",
+        "zero_masked_recorded_entry_index_term",
+        "cap_restricted_waiting_action_index_contrast",
+    }
+    raw_h02_deletion_rows = h02_label_deletion["sensitivity_rows"]
+    h02_deletion_rows = {
+        (row["scope"], row["component"]): row
+        for row in raw_h02_deletion_rows
+    }
+    expected_h02_deletion_keys = {
+        (scope, component)
+        for scope in expected_h02_deletion_scopes
+        for component in expected_h02_deletion_components
+    }
+    if (
+        len(raw_h02_deletion_rows) != 12
+        or len(h02_deletion_rows) != 12
+        or set(h02_deletion_rows) != expected_h02_deletion_keys
+    ):
+        raise RuntimeError("H02 label-deletion sensitivity row shape changed")
+    for row in raw_h02_deletion_rows:
+        summary = row["leave_one_registered_label_out"]
+        deletions = row["deletion_estimates"]
+        if (
+            len(deletions) != 27
+            or [item["omitted_seed"] for item in deletions] != list(range(9400, 9427))
+            or any(item["remaining_labels"] != 26 for item in deletions)
+            or summary["estimates"] != 27
+            or summary["remaining_labels_per_estimate"] != 26
+            or set(summary["mean_sign_counts"]) != {"positive", "zero", "negative"}
+            or sum(summary["mean_sign_counts"].values()) != 27
+        ):
+            raise RuntimeError("H02 label-deletion sensitivity deletion shape changed")
+    h02_deletion_component = "cap_restricted_waiting_action_index_contrast"
+    expected_h02_deletion_composites = {
+        "left": ("-3496/13", "-6433/26", "negative"),
+        "right": ("-3045/13", "-2885/13", "negative"),
+        "block_balanced": ("-12793/52", "-12211/52", "negative"),
+        "command_by_layout_interaction": ("353/26", "1191/26", "positive"),
+    }
+    for scope, (minimum, maximum, sign) in expected_h02_deletion_composites.items():
+        summary = h02_deletion_rows[(scope, h02_deletion_component)][
+            "leave_one_registered_label_out"
+        ]
+        if (
+            summary["minimum_mean"]["exact_fraction"] != minimum
+            or summary["maximum_mean"]["exact_fraction"] != maximum
+            or summary["mean_sign_counts"][sign] != 27
+            or not summary["all_means_retain_full_population_sign"]
+        ):
+            raise RuntimeError("H02 label-deletion composite sensitivity changed")
+    if not all(
+        row["leave_one_registered_label_out"][
+            "all_means_retain_full_population_sign"
+        ]
+        for row in h02_label_deletion["sensitivity_rows"]
+    ):
+        raise RuntimeError("H02 label-deletion component sign retention changed")
+    expected_h02_deletion_boundary_fields = {
+        "A3_A9_completed",
+        "advances_any_gate",
+        "bootstrap_or_resampling_distribution_reported",
+        "changes_232_cell_core_bound",
+        "confidence_interval_or_p_value_reported",
+        "current_GM_PVC_state_reconciled",
+        "default_DreamZero_evidence",
+        "equivalence_or_causal_effect_established",
+        "exact_leave_one_registered_label_out_reported",
+        "forecast_accuracy_or_generated_execution_comparison",
+        "independent_scene_or_model_noise_generalization",
+        "influence_function_estimated",
+        "jackknife_inference_or_standard_error_reported",
+        "model_based_survival_curve_or_hazard_estimated",
+        "new_cohort_or_registered_estimand",
+        "new_inference_episode_request_or_label",
+        "new_underlying_behavioral_evidence",
+        "official_conditional_D1_evidence",
+        "physical_time_or_latency_estimated",
+        "retained_post_result_finite_population_sensitivity_only",
+        "robustness_to_unobserved_labels_established",
+    }
+    h02_deletion_boundary = h02_label_deletion["claim_boundary"]
+    if (
+        set(h02_deletion_boundary) != expected_h02_deletion_boundary_fields
+        or any(type(value) is not bool for value in h02_deletion_boundary.values())
+        or {key for key, value in h02_deletion_boundary.items() if value}
+        != {
+            "exact_leave_one_registered_label_out_reported",
+            "retained_post_result_finite_population_sensitivity_only",
+        }
+    ):
+        raise RuntimeError("H02 label-deletion sensitivity claim boundary changed")
+    if (
+        len(h02_label_deletion["new_activity"]) != 13
+        or any(h02_label_deletion["new_activity"].values())
+        or len(h02_label_deletion["gate_state"]) != 9
+        or any(h02_label_deletion["gate_state"].values())
+    ):
+        raise RuntimeError("H02 label-deletion sensitivity advanced activity or a gate")
     if h02["audit_operations"] != {
         "compact_git_objects_byte_authenticated": 9,
         "remote_fetches": 0,
@@ -1223,6 +1403,20 @@ def main():
             "json_sha256": digest(h02_status_contributions_path),
             "csv_sha256": digest(package / "paper/data/h02_entry_status_contributions.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h02_entry_status_contributions.py"),
+        },
+        "retained_h02_label_deletion_sensitivity": {
+            "scope": h02_label_deletion["claim_boundary"],
+            "provenance": h02_label_deletion["provenance"],
+            "configuration": h02_label_deletion["configuration"],
+            "population": h02_label_deletion["population"],
+            "identity": h02_label_deletion["identity"],
+            "sensitivity_rows": h02_label_deletion["sensitivity_rows"],
+            "definitions": h02_label_deletion["definitions"],
+            "new_activity": h02_label_deletion["new_activity"],
+            "gate_state": h02_label_deletion["gate_state"],
+            "json_sha256": digest(h02_label_deletion_path),
+            "csv_sha256": digest(package / "paper/data/h02_label_deletion_sensitivity.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h02_label_deletion_sensitivity.py"),
         },
         "retained_h03_h04_guidance_pilots": {
             "scope": h03_h04["claim_boundary"],

@@ -90,6 +90,16 @@ twice the block-balanced -6,434 sum. Empty strata have no conditional mean.
 These are comparison-direction categories across different layouts, not
 temporal transitions, within-episode conversions, principal strata or
 counterfactual changes.
+The exact [one-label-deletion sensitivity report](paper/data/h02_label_deletion_sensitivity.json)
+then removes each of the 27 registered labels in turn without changing the
+estimand. All 12 scope/component means retain sign in all 27 deletions. The
+composite $U$ ranges are LEFT -268.923 to -247.423, RIGHT -234.231 to -221.923,
+block-balanced -246.019 to -234.827 and interaction +13.577 to +45.808 action
+indices. This is deterministic fixed-population arithmetic, not jackknife
+inference, a standard error, confidence interval, p-value, bootstrap,
+influence-function analysis, robustness to unobserved labels, independent-scene
+or model-noise generalization, physical time, entrant-only timing, new
+inference, D1/default evidence or a gate advance.
 The $Z$ term is a zero-masked recorded-index term, not an entrant-only timing
 effect: algebraic zero when no entry is recorded is not an imputed entry index.
 This is deterministic post-result algebra on the same 27 labels, not a causal

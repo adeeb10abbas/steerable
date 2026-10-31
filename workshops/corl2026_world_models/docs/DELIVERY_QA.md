@@ -12,8 +12,8 @@ supporting analysis remains available but is not presented as the current paper.
 `paper/main.pdf` has **four pages total including references**, compiled with the
 unchanged official CoRL 2026 style in preprint mode and an anonymous author line.
 
-- PDF SHA256: `cfcd56eff4f8cfd22dff28cef6ae10c45d1549ad926323f580e1e454a9461c58`.
-- LaTeX source SHA256: `59f64dea771fe12781ea30b5c1d76a54ee8799bea0b48625b6d524a45070522b`.
+- PDF SHA256: `53935071ee11851f0b78b9155ce9b9052b37120d32d2e13228d430c33e90c5bb`.
+- LaTeX source SHA256: `d67b59f92179620cf4e7ab05eb286ee58c1e55167d00ee161ce6394df7fd1b70`.
 - Official style SHA256: `62f38cd8df7ad718796617595c8230da136fc83ea1d7e1ba80084113409ec957`.
 - Numerical figure input SHA256: `f437fec607ea969a4c0293b157a74175c410b5f88709ac73262b3035314f1230`.
 - Design figure PDF/PNG SHA256: `9896dafc73897ca19fe6558d9385a8b1512cae858ba815c88743642185ea8201` / `9f1dbac8c32485ebdbaa0df80f8dc1b40c36c9369fd118c700c4e591e4cd94df`.
@@ -35,38 +35,43 @@ The exact documented disposable environment uses Python 3.10.21, inherits
 Torch 2.7.0+cu128 from the qualified any6d environment, and resolves NumPy
 2.2.6, matplotlib 3.10.9, pypdf 6.18.1 and jsonschema 4.26.0. The clean
 isolated pre-build discovery passed **1030/1030 tests in 129.990 s**
-(**132.87 s** wall). The authoritative isolated build then passed all 16 stages,
-including another **1030/1030 tests in 129.223 s**, in **144.25 s** wall time
-with a peak resident set size of **908,820 KiB**. The post-merge protected-tree
-discovery then passed **1037/1037 tests** in **126.000 s** (**128.43 s** wall;
-peak resident set size **905,792 KiB**); seven of those methods belong to the protected untracked
-N3 test and are not package files. The next qualified build will contain
-seventeen steps; those steps will cover tests, retained-data analyses, media
-packaging and four full MP4
-decodes plus verification, paper results, historical replay, the private
-annotation draw, figures and the official-template PDF.
+(**132.87 s** wall) for the preceding H13-only package. Its corresponding
+protected-tree discovery passed **1037/1037 tests** in 126.000 s (128.43 s
+wall; peak resident set size 905,792 KiB); seven of those methods belong to the protected untracked
+N3 test and are not package files. After integrating H03/H04,
+the final clean isolated pre-build discovery passed **1041/1041 tests in
+129.042 s** (**131.87 s** wall; peak resident set size **909,184 KiB**). The
+authoritative isolated build then passed all **17 stages**, including another
+**1041/1041 tests in 128.263 s**, in **143.60 s** wall time with a peak
+resident set size of **911,708 KiB**. The stages cover tests, retained-data
+analyses, media packaging and four full MP4 decodes plus verification, paper
+results, historical replay, the private annotation draw, figures and the
+official-template PDF. These software qualifications validate the package; they
+are not behavioral episodes, model-policy competence or scientific evidence.
 
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock
 metadata, so these settings do not establish byte-identical PDF rebuilding.
 The pinned TeX Live 2026 latexmk 4.88 and pdfTeX 1.40.29 toolchain produced both
-the checked-in manuscript and the clean isolated four-page H11--H13 package with
+the checked-in manuscript and the clean isolated four-page retained-analysis package with
 the exact PDF SHA256 recorded above. The build had zero errors, overfull boxes,
 undefined citations or undefined references. All four isolated pages were
 rendered and passed visual review.
 
 `results/validation.log` and `results/build_report.json` are generated build
 products, not retained checkout evidence in this protected worktree. The
-authoritative isolated H13 validation log is 466,739 bytes with SHA256
-`798863915dbe72bb336842cb6ed311f2e895a6e630918ff8f54885a3dc9eff76`;
-its 138,203-byte build report has SHA256
-`6545f8bc8aa9ac3425d81288191b85a0820a5298ec757bc8d080daac076b3790`.
+authoritative isolated validation log is 468,395 bytes/10,076 lines with
+SHA256 `864ad01d27756d1aa300ad528ae82dc6f5fccd1f65042193c4a5ebd052001215`;
+its 148,790-byte/4,369-line build report has SHA256
+`391060dc1b09c07c89e7955bca2bf62515956d5223988737bc367170e6a213b0`.
 Independent inspection confirmed that the report binds the exact environment,
-all 16 successful stages, the four-page PDF above, the eight retained-analysis
-receipts including H13, and H13's zero media/alignment/label counts. The
-H03/H04 integration must be requalified before these historical counts and
-hashes are replaced; no unrun build is presented as complete. Durable
+all 17 successful stages, the four-page 162,433-byte PDF and 12,610-byte LaTeX
+source above, the retained-analysis receipts including H03/H04 and H13, the
+12 H03/H04 matched contrasts, six paired-seed diagnostics and seven pinned
+source objects, and all current activity counters/gates at zero/false. Two
+independent reviewers also returned GO on the H03/H04 diagnostic package after
+independent source recomputation and mutation tests. Durable
 inputs and receipts are checked in under `paper/data/` and `paper/media/`; the
 execution status/progress ledger records this qualification receipt without
 recreating the protected deleted results.

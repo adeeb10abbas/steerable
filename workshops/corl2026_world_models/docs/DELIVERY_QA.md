@@ -105,6 +105,25 @@ episode rows. The final manuscript incorporates the following corrections:
   cap-censored, reports 104 entries and the matched entry-index interaction, and
   does not turn action indices into physical time or goal-terminated transients
   into common-horizon sustained entries.
+- The retained H02 package byte-authenticates nine compact Git objects
+  (831,259 bytes/1,429 lines), including the bridge that defines the 45-degree
+  cone and three-sample sustained rule, and rejoins the exact 108-cell/54-pair V3-B003
+  population and reproduces 13/54 original-layout versus 50/54 reflected-layout
+  successes, the five-category failure inventory and registered endpoint,
+  requested-depth and binary-success interactions. The compact requested-cone
+  fields add a post-result descriptive 13/54 versus 53/54 recorded-entry
+  summary: 63 entries have an observed three-sample run and three successful
+  goal-terminated entries have no observed three-sample follow-up; they are not
+  classified transient exits. All 42 no-entry traces remain action-450
+  cap-censored failures. These are upstream action indices, not physical time or
+  a raw-XYZ replay. The canonical 27-row matched-block CSV exposes the four
+  cells and entry/censor contrasts per seed. Its 540 distinct raw
+  path/SHA descriptors total 237,163,185 declared bytes; the external PVC bytes
+  were not opened or rehashed. H02 remains custom DreamZero negative-branch
+  action guidance s2 with fixed effective noise 1140, not default DreamZero or
+  official conditional D1. No forecast-accuracy, current raw recovery, new
+  inference, annotation, confirmation, release gate or 232-cell-bound change
+  follows; all current activity counters are zero and all gates false.
 - The retained H03/H04 package byte-authenticates seven compact Git objects
   (810,860 bytes/18,939 lines) and rejoins six baseline/intervention cells for
   each model. Nano changes from g3 6/6 to g1 4/6; DreamZero changes from the

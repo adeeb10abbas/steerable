@@ -34,6 +34,30 @@ sustained-entry status without assigning goal-terminated transient cases a
 common-horizon time. This is fixed-scene onset geometry, not physical-time
 latency, release success, language understanding, A5--A7 or forecast accuracy.
 
+The retained H02 V3-B003 cohort now has a dedicated compact-source audit. It
+byte-authenticates nine immutable Git objects (831,259 bytes/1,429 lines),
+strictly rejoins all 108 registered custom DreamZero-s2 episodes into 54
+LEFT/RIGHT pairs and independently reproduces the 13/54 to 50/54 layout
+completion shift, failure taxonomy and registered endpoint/depth interactions.
+The post-result descriptive, previously unpackaged compact requested-cone
+fields record 13/54 original and 53/54 reflected entry events. Of 66 entries,
+63 have an observed three-sample sustained run; the other three are successful
+goal-terminated entries with no observed three-sample follow-up, not classified
+transient exits. All 42 no-entry traces are valid failures cap-censored at
+action 450. The authenticated bridge defines the 45-degree cone and
+three-sample rule. These action indices are upstream recorded fields, not
+physical time or a rederivation from raw XYZ.
+Its [canonical JSON](paper/data/h02_position_reflection.json) inventories 540
+distinct raw path/SHA descriptors (237,163,185 declared bytes), while the
+[27-row CSV](paper/data/h02_position_reflection.csv) exposes all four cells and
+entry/censor contrasts for each matched environment-label block. Those external
+PVC bytes were not opened or rehashed. H02 uses fixed effective model-noise seed 1140 and custom
+negative-branch action guidance s2; it is neither default DreamZero nor the
+official conditional-action D1 configuration. This is retained fixed-scene
+behavior, not current raw recovery, physical-time/forecast accuracy, new
+inference, annotation, confirmation or release evidence; all activity counters
+remain zero, all gates false and the 232-cell core bound unchanged.
+
 The retained H03/H04 V2-A015 guidance pilots are now packaged from seven
 byte-authenticated compact Git objects (810,860 bytes/18,939 lines). Each pilot
 compares six historical baseline cells with six post-result intervention cells

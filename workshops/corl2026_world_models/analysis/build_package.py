@@ -52,6 +52,7 @@ def main():
     run("regression tests", [sys.executable, "-m", "unittest", "discover", "-s", str(package / "tests"), "-v"])
     run("stopping-time controls", [sys.executable, str(package / "analysis/analyze_stopping_controls.py")])
     run("H01 requested-region entry", [sys.executable, str(package / "analysis/analyze_h01_requested_region_entry.py")])
+    run("H02 retained position reflection", [sys.executable, str(package / "analysis/analyze_h02_position_reflection.py")])
     run("H03 H04 retained guidance pilots", [sys.executable, str(package / "analysis/analyze_h03_h04_guidance_pilots.py")])
     run("H05 retained lateral dose response", [sys.executable, str(package / "analysis/analyze_h05_lateral_dose_response.py")])
     run("H06 retained graded symmetry", [sys.executable, str(package / "analysis/analyze_h06_graded_symmetry.py")])
@@ -85,7 +86,7 @@ def main():
     body = " ".join(raw_body.replace("-\n", "").split())
     for required in ["108", "13/54", "50/54", "26/27", "DreamZero-s2", "31.1", "35.8",
                      "18/27", "17/27", "23/27", "81.4", "104 entries", "1.125", "13/15",
-                     "H03/H04", "post-result guidance pilots", "6/6 to 4/6", "3/6 to 4/6",
+                     "H02 compact audit", "540 descriptors", "post-result descriptive", "13/54 to 53/54 entries", "42 no-entry traces", "H03/H04", "post-result guidance pilots", "6/6 to 4/6", "3/6 to 4/6",
                      "H07/H08", "Edge", "12.4", "19.2", "endpoint interactions",
                      "H09/H10", "134/160", "123/160", "wording inference was not registered",
                      "H11/H12 are separate fixed-scene Phase-A direct-command cohorts",
@@ -106,6 +107,8 @@ def main():
     stopping = json.loads(stopping_path.read_text())
     entry_path = package / "paper/data/h01_requested_region_entry.json"
     entry = json.loads(entry_path.read_text())
+    h02_path = package / "paper/data/h02_position_reflection.json"
+    h02 = json.loads(h02_path.read_text())
     h03_h04_path = package / "paper/data/h03_h04_guidance_pilots.json"
     h03_h04 = json.loads(h03_h04_path.read_text())
     h05_path = package / "paper/data/h05_lateral_dose_response.json"
@@ -120,6 +123,51 @@ def main():
     h11_h12 = json.loads(h11_h12_path.read_text())
     h13_path = package / "paper/data/h13_v1_forecast_corpus.json"
     h13 = json.loads(h13_path.read_text())
+    if h02["source_provenance"]["commit"] != "ce561e66f82e95055e39d3d7711691982f6b2086":
+        raise RuntimeError("H02 pinned source commit changed")
+    if h02["source_provenance"]["authenticated_file_count"] != 9:
+        raise RuntimeError("H02 authenticated file count changed")
+    if h02["source_provenance"]["authenticated_bytes"] != 831_259:
+        raise RuntimeError("H02 authenticated byte count changed")
+    if h02["source_provenance"]["authenticated_lines"] != 1_429:
+        raise RuntimeError("H02 authenticated line count changed")
+    if h02["layout_totals"] != {
+        "control": {"episodes": 54, "successes": 13, "failures": 41},
+        "position_mirrored": {"episodes": 54, "successes": 50, "failures": 4},
+    }:
+        raise RuntimeError("H02 layout outcomes changed")
+    if h02["declared_raw_artifact_inventory"]["distinct_path_sha_identities"] != 540:
+        raise RuntimeError("H02 raw descriptor identity count changed")
+    if h02["recorded_requested_region_entry"]["layouts"] != {
+        "control": {"episodes": 54, "recorded_entry_events": 13, "no_entry_cap_censored": 41},
+        "position_mirrored": {"episodes": 54, "recorded_entry_events": 53, "no_entry_cap_censored": 1},
+    }:
+        raise RuntimeError("H02 requested-region entry totals changed")
+    if h02["recorded_requested_region_entry"]["totals"]["no_entry_cap_censored"] != 42:
+        raise RuntimeError("H02 no-entry censoring count changed")
+    if h02["recorded_requested_region_entry"]["totals"] != {
+        "episodes": 108,
+        "recorded_entry_events": 66,
+        "no_entry_cap_censored": 42,
+        "observed_sustained_entries": 63,
+        "goal_terminated_entry_without_observed_three_sample_sustained_run": 3,
+        "successes_with_entry": 63,
+        "valid_failures_with_entry": 3,
+    }:
+        raise RuntimeError("H02 entry/censor classification changed")
+    if len(h02["matched_entry_censor_blocks"]) != 27:
+        raise RuntimeError("H02 matched entry/censor block count changed")
+    if h02["audit_operations"] != {
+        "compact_git_objects_byte_authenticated": 9,
+        "remote_fetches": 0,
+        "raw_pvc_files_opened": 0,
+        "raw_pvc_bytes_rehashed": 0,
+    }:
+        raise RuntimeError("H02 audit-operation boundary changed")
+    if h02["configuration"]["official_conditional_D1"] is not False:
+        raise RuntimeError("H02 custom-s2/D1 boundary changed")
+    if any(h02["new_activity"].values()) or any(h02["gate_state"].values()):
+        raise RuntimeError("H02 retained audit advanced activity or a gate")
     if h03_h04["provenance"]["commit"] != "ce561e66f82e95055e39d3d7711691982f6b2086":
         raise RuntimeError("H03/H04 pinned source commit changed")
     if h03_h04["source_manifest"] != {
@@ -553,6 +601,30 @@ def main():
             "json_sha256": digest(entry_path),
             "csv_sha256": digest(package / "paper/data/h01_requested_region_entry.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h01_requested_region_entry.py"),
+        },
+        "retained_h02_position_reflection": {
+            "scope": h02["claim_boundary"],
+            "source_commit": h02["source_provenance"]["commit"],
+            "source_authentication": {
+                key: h02["source_provenance"][key]
+                for key in (
+                    "authenticated_file_count", "authenticated_bytes", "authenticated_lines"
+                )
+            },
+            "configuration": h02["configuration"],
+            "population": h02["authenticated_population"],
+            "condition_outcomes": h02["condition_outcomes"],
+            "layout_totals": h02["layout_totals"],
+            "failure_taxonomy_counts": h02["failure_taxonomy_counts"],
+            "recorded_requested_region_entry": h02["recorded_requested_region_entry"],
+            "registered_point_estimands": h02["registered_point_estimands"],
+            "descriptive_execution": h02["descriptive_execution"],
+            "declared_raw_artifact_inventory": h02["declared_raw_artifact_inventory"],
+            "new_activity": h02["new_activity"],
+            "gate_state": h02["gate_state"],
+            "json_sha256": digest(h02_path),
+            "csv_sha256": digest(package / "paper/data/h02_position_reflection.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h02_position_reflection.py"),
         },
         "retained_h03_h04_guidance_pilots": {
             "scope": h03_h04["claim_boundary"],

@@ -80,8 +80,10 @@ Nano completes 26/27 trials for each original-layout command, yet rightward dept
 \label{fig:placement}
 \end{figure}
 
-\paragraph{Most original-layout DreamZero-s2 failures precede placement.}
-Of its 41 unsuccessful trials, the recorded checks classify 26 as pickup failures, 14 as transport failures and one as wrong-side placement. These categories describe execution stages, rather than what the model understood. They show why the overall failure count cannot be treated as a count of directional-language errors.
+\paragraph{Original-layout DreamZero-s2 failures precede placement.}
+Recorded checks classify its 41 failures as 26 pickup, 14 transport and one wrong-side-placement failure. These are execution-stage labels, not model-understanding diagnoses or directional-language errors.
+
+Retained H02 compact audit (108 custom-s2 episodes; 540 descriptors): post-result descriptive 13/54 to 53/54 entries, with 42 no-entry traces cap-censored; three final-sample successes lack three-sample follow-up (not transient exits). These action indices are not time/raw replay and support no forecast, D1 or new-inference claim.
 
 \paragraph{Instruction response and placement depth need not change together.}
 At unequal goal-stopped endpoints, Nano orders 27/27 pairs in both layouts with mean $R_{\mathrm{end}}$ 44.8 and 45.3\,cm; DreamZero-s2 orders 26/27 and 27/27. Nano's latest shared strictly pretermination action retains 27/27 ordering and mean response 31.1 and 35.8\,cm; pair actions span 89--290 (median 133) and 96--320 (median 149). At action 64 all pairs remain, but all four mean cube displacements are below 0.99\,mm. At action 96, ordering is 20/26 (six reversed) and 25/27 (one reversed, one tie). At action 128 only 18/27 and 17/27 are observable, bounding full-cohort ordering at 17/27--26/27 and 16/27--26/27. At action 450 no matched pair remains. This is not A5 fixed-duration evidence or forecast accuracy.
@@ -91,19 +93,16 @@ On the same $t_{\mathrm{pre}}$ pairs, define $\Delta y_o=y_{o,\mathrm{LEFT}}(t_{
 Requested-cone entries are 27/27 original LEFT, 27/27 original RIGHT, 27/27 reflected LEFT and 23/27 reflected RIGHT; all four absent entries are cap-censored reflected RIGHT trials. Restricted action-index means are 168.2, 176.9, 119.6 and 209.6; the interaction has mean 81.4 actions (20/27 positive). There are 91 sustained and 13 transient entries, and 104 entries but 102 successes; no common follow-up is imputed. This is neither physical-time latency, language understanding, A5--A7, nor forecast accuracy.
 
 \paragraph{H05 dose response.}
-The seven fixed bowl-$y$ levels span 18\,cm within 15 matched seed blocks (210 episodes); the registered within-seed depth-gap slope was 1.125\,m/m (95\% interval 0.719--1.562; 13/15 positive, $p=0.0074$). Level means were not monotone; crossing 0.0188\,m was outside the registered 0.0366--0.2166\,m support. Seven levels are not seven independent scenes: not new-scene generalization or forecast accuracy.
+The seven fixed bowl-$y$ levels span 18\,cm in 15 matched seed blocks (210 episodes); the registered within-seed depth-gap slope was 1.125\,m/m (95\% interval 0.719--1.562; 13/15 positive, $p=0.0074$). Level means were not monotone; crossing 0.0188\,m was outside the registered 0.0366--0.2166\,m support. Repeated levels are not seven independent scenes: not new-scene generalization or forecast accuracy.
 
 \paragraph{H03/H04 post-result guidance pilots; H06--H12 retained controls.}
-Nano g3 to g1 changes 6/6 to 4/6; DreamZero s1-equivalent to custom s2 changes 3/6 to 4/6. The historical custom-s2 arm is retained, not a new-confirmation D2 selection; one-reset results are descriptive, not powered. H06: 0.020\,m/asymmetry (interval 0.0004--0.0400; 27 seeds). H07/H08 (DreamZero-s2/Edge) inventory depth/endpoint interactions are $-12.4/+10.4$ and $-19.2/-2.7$\,cm; all DreamZero and Edge depth intervals exclude zero. H09/H10 (Nano/Edge) succeed in 134/160 and 123/160; Confirmatory wording inference was not registered and models stay separate. H11/H12 are separate fixed-scene Phase-A direct-command cohorts: Nano 51/54; DreamZero-s2 3/27 LEFT and 17/27 RIGHT; its 2,554 retained futures are latents, not per-request RGB decodes. H12's totals match H07 numerically but use distinct seeds and are not a replication. None supplies independent-scene, equivalence, annotation, confirmation, position-reflection or forecast evidence.
+Nano g3 to g1 changes 6/6 to 4/6; DreamZero s1-equivalent to custom s2 changes 3/6 to 4/6. The historical custom-s2 arm is retained, not a new-confirmation D2 selection; one-reset results are descriptive. H06: 0.020\,m/asymmetry (interval 0.0004--0.0400; 27 seeds). H07/H08 (DreamZero-s2/Edge) inventory depth/endpoint interactions: $-12.4/+10.4$ and $-19.2/-2.7$\,cm; all depth intervals exclude zero. H09/H10 (Nano/Edge) succeed in 134/160 and 123/160; Confirmatory wording inference was not registered and models stay separate. H11/H12 are separate fixed-scene Phase-A direct-command cohorts: Nano 51/54; DreamZero-s2 3/27 LEFT and 17/27 RIGHT; its 2,554 retained futures are latents, not per-request RGB decodes. H12's totals match H07 numerically but use distinct seeds and are not a replication. None supplies independent-scene, equivalence, annotation, confirmation, position-reflection or forecast evidence.
 
 \paragraph{H13 evaluator-development audit.}
-Edge V1's historical scorer labeled 421/752 chunks (331 abstained), but covered only 25/97 executed-positive horizons. Same-subset apparent label agreement was 413/421 versus constant-negative 396/421; historical-label missingness bounds were 413/752--744/752. The 80 episodes/3,008 cached forecast frames/20 matched blocks lack validated time/image alignment, raw-media recovery/replay and independent labels: evaluator development only, with no fidelity, A3--A9, annotation/confirmation-gate or new-inference claim.
+Edge V1 labeled 421/752 chunks (331 abstained), only 25/97 executed-positive; same-subset agreement was 413/421 versus 396/421 constant-negative, with bounds 413/752--744/752. Its 80 episodes/3,008 cached forecast frames/20 matched blocks lack validated alignment/replay/independent labels: development only; no fidelity, A3--A9, annotation/confirmation-gate or new-inference claim.
 
 \section{Discussion and Limitations}
-H03/H04 and H05--H12 reuse fixed scenes or matched seeds; H13 is an older audit. None establishes comprehension or fixed-duration/forecast evidence. Without a non-world-model policy, no causal claim follows.
-
-\section{Conclusion}
-Layout changes spatial performance; success alone hides response and depth.
+H03/H04 and H05--H12 reuse fixed scenes or matched seeds; H13 is an older audit. None establishes comprehension or fixed-duration/forecast evidence. Without a non-world-model policy, no causal claim follows. \textbf{Conclusion.} Layout changes spatial performance; success alone hides response and depth.
 
 \bibliography{references}
 \end{document}

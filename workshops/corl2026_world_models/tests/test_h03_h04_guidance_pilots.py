@@ -132,6 +132,87 @@ class H03H04GuidancePilotTests(unittest.TestCase):
             {(row["cohort"], row["environment_seed_label"]) for row in self.report["matched_seed_diagnostics"]},
             {(cohort, seed) for cohort in ANALYSIS.COHORTS for seed in ANALYSIS.SEEDS},
         )
+        expected_diagnostic_identities = {
+            "H03": (
+                "cosmos3_nano_policy_droid",
+                "cosmos3_nano_policy_droid",
+                "joint_guidance_g3",
+                "conditional_prediction_g1",
+            ),
+            "H04": (
+                "dreamzero_droid",
+                "dreamzero_droid_action_cfg",
+                "conditional_action_equivalent_s1",
+                "negative_branch_action_guidance_s2",
+            ),
+        }
+        for diagnostic in self.report["matched_seed_diagnostics"]:
+            cohort = diagnostic["cohort"]
+            seed = diagnostic["environment_seed_label"]
+            baseline_model, intervention_model, baseline_configuration, intervention_configuration = (
+                expected_diagnostic_identities[cohort]
+            )
+            self.assertEqual(
+                (
+                    diagnostic["baseline_model_id"],
+                    diagnostic["intervention_model_id"],
+                    diagnostic["model_id"],
+                ),
+                (baseline_model, intervention_model, intervention_model),
+            )
+            self.assertEqual(
+                (
+                    diagnostic["baseline_configuration_id"],
+                    diagnostic["intervention_configuration_id"],
+                ),
+                (baseline_configuration, intervention_configuration),
+            )
+            self.assertEqual(diagnostic["pair_id"], f"droid_pair_seed_{seed}")
+            seed_rows = {
+                row["relation"]: row
+                for row in rows
+                if row["cohort"] == cohort and row["environment_seed"] == seed
+            }
+            baseline_separation = sum(
+                seed_rows[relation]["baseline_requested_margin_m"] for relation in ANALYSIS.RELATIONS
+            )
+            intervention_separation = sum(
+                seed_rows[relation]["intervention_requested_margin_m"] for relation in ANALYSIS.RELATIONS
+            )
+            baseline_gap = (
+                seed_rows["right"]["baseline_requested_margin_m"]
+                - seed_rows["left"]["baseline_requested_margin_m"]
+            )
+            intervention_gap = (
+                seed_rows["right"]["intervention_requested_margin_m"]
+                - seed_rows["left"]["intervention_requested_margin_m"]
+            )
+            self.assertEqual(diagnostic["baseline_endpoint_ordering"], "aligned")
+            self.assertEqual(diagnostic["intervention_endpoint_ordering"], "aligned")
+            self.assertAlmostEqual(
+                diagnostic["baseline_endpoint_separation_right_minus_left_m"],
+                baseline_separation,
+            )
+            self.assertAlmostEqual(
+                diagnostic["intervention_endpoint_separation_right_minus_left_m"],
+                intervention_separation,
+            )
+            self.assertAlmostEqual(
+                diagnostic["intervention_minus_baseline_endpoint_separation_m"],
+                intervention_separation - baseline_separation,
+            )
+            self.assertAlmostEqual(
+                diagnostic["baseline_seed_balance_gap_right_minus_left_margin_m"],
+                baseline_gap,
+            )
+            self.assertAlmostEqual(
+                diagnostic["intervention_seed_balance_gap_right_minus_left_margin_m"],
+                intervention_gap,
+            )
+            self.assertAlmostEqual(
+                diagnostic["intervention_minus_baseline_seed_balance_gap_m"],
+                intervention_gap - baseline_gap,
+            )
 
     def test_h03_counts_margins_transitions_and_accounting_reproduce(self):
         cohort = self.report["cohorts"]["H03"]
@@ -230,6 +311,7 @@ class H03H04GuidancePilotTests(unittest.TestCase):
         self.assertEqual(reproduction["authenticated_compact_git_files_rehashed"], 7)
         self.assertEqual(reproduction["authenticated_compact_git_bytes_rehashed"], 810_860)
         self.assertEqual(reproduction["authenticated_compact_git_lines_counted"], 18_939)
+        self.assertEqual(reproduction["source_paired_seed_diagnostics_validated"], 6)
         self.assertFalse(reproduction["raw_fixed_observation_probe_bytes_replayed"])
         self.assertFalse(reproduction["external_model_source_commits_locally_authenticated"])
         self.assertEqual(reproduction["external_model_source_commit_literals"], ANALYSIS.EXTERNAL_MODEL_SOURCE_COMMITS)
@@ -296,6 +378,18 @@ class H03H04GuidancePilotTests(unittest.TestCase):
         changed[ANALYSIS.COMPARISON]["comparisons"]["dreamzero"]["cells"][0]["physical_initial_state_sha256"] = "0" * 64
         cases.append((changed, "comparison prompt/state changed"))
 
+        changed = copy.deepcopy(self.documents)
+        changed[ANALYSIS.COMPARISON]["comparisons"]["dreamzero"]["paired_seed_diagnostics"][0][
+            "endpoint_ordering"
+        ][ANALYSIS.COHORTS["H04"]["baseline_label"]] = "reversed"
+        cases.append((changed, "paired endpoint ordering changed"))
+
+        changed = copy.deepcopy(self.documents)
+        changed[ANALYSIS.COMPARISON]["comparisons"]["cosmos3_nano"]["paired_seed_diagnostics"][0][
+            "seed_balance_gap_right_minus_left_margin_m"
+        ]["intervention_minus_baseline"] += 0.01
+        cases.append((changed, "seed_balance_gap"))
+
         for changed, message in cases:
             with self.subTest(message=message):
                 with self.assertRaisesRegex(ValueError, message):
@@ -360,7 +454,7 @@ class H03H04GuidancePilotTests(unittest.TestCase):
         )
         self.assertEqual(
             hashlib.sha256(JSON_PATH.read_bytes()).hexdigest(),
-            "4319a5fa14e4c07cadd6ebb7002d258e995c295c835db6e4e9bd91e9ea1c37e0",
+            "ee2b68b5fa931117a9cb7e30c6cef3a9f7d8d60f55f266b411544de68e65e23f",
         )
         self.assertEqual(
             hashlib.sha256(CSV_PATH.read_bytes()).hexdigest(),

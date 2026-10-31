@@ -43,8 +43,9 @@ to custom negative-branch action-guidance s2 4/6. All three LEFT/RIGHT pairs
 remain endpoint ordered in every configuration, but all cells share one
 retained physical-reset fingerprint and DreamZero fixes effective model-noise
 seed 1140. The [canonical JSON](paper/data/h03_h04_guidance_pilots.json)
-records the exact source identities, baseline/intervention joins, historical
-fixed-input gate record and claim boundaries; the
+records the exact source identities, baseline/intervention joins, six
+source-validated paired endpoint ordering/separation/margin-gap diagnostics,
+historical fixed-input gate record and claim boundaries; the
 [12-row CSV](paper/data/h03_h04_guidance_pilots.csv) exposes one matched
 configuration contrast per model, seed label and command. These are
 exploratory post-result pilots, not powered or general guidance evidence; the

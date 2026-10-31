@@ -104,7 +104,9 @@ episode rows. The final manuscript incorporates the following corrections:
   (810,860 bytes/18,939 lines) and rejoins six baseline/intervention cells for
   each model. Nano changes from g3 6/6 to g1 4/6; DreamZero changes from the
   conditional-action-equivalent s1 baseline 3/6 to custom negative-branch s2
-  4/6. All three command pairs remain endpoint ordered per configuration, but
+  4/6. All six paired-seed records independently reproduce and source-validate
+  endpoint ordering, separation and right-minus-left requested-margin gaps; all
+  three command pairs remain endpoint ordered per configuration, but
   every cell shares one retained reset fingerprint and DreamZero fixes effective
   model-noise seed 1140. The pilots are post-result, exploratory and descriptive;
   their historical baselines are not double counted, the models are not pooled,

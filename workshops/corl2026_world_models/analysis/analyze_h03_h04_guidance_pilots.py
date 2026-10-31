@@ -882,6 +882,45 @@ def analyze_documents(documents: Mapping[str, Any], provenance: Mapping[str, Any
         compact_by_id = {row.get("cell_id"): row for row in compact_cells if isinstance(row, dict)}
         if len(compact_by_id) != 6:
             raise ValueError(f"{cohort} comparison cell identities changed")
+        labels = (info["baseline_label"], info["intervention_label"])
+        source_seed_diagnostics = compact.get("paired_seed_diagnostics")
+        if not isinstance(source_seed_diagnostics, list) or len(source_seed_diagnostics) != 3:
+            raise ValueError(f"{cohort} comparison must contain three paired-seed diagnostics")
+        source_seed_diagnostics_by_seed: dict[int, Mapping[str, Any]] = {}
+        for source_diagnostic in source_seed_diagnostics:
+            if not isinstance(source_diagnostic, dict):
+                raise ValueError(f"{cohort} paired-seed diagnostic is not an object")
+            source_seed = _integer(
+                source_diagnostic.get("environment_seed"),
+                f"{cohort}.paired_seed.environment_seed",
+            )
+            if source_seed not in SEEDS or source_seed in source_seed_diagnostics_by_seed:
+                raise ValueError(f"{cohort} paired-seed diagnostic identity changed: {source_seed}")
+            if (
+                source_diagnostic.get("pair_id") != f"droid_pair_seed_{source_seed}"
+                or source_diagnostic.get("left_prompt") != PROMPTS["left"]
+                or source_diagnostic.get("right_prompt") != PROMPTS["right"]
+            ):
+                raise ValueError(f"{cohort} paired-seed prompt/pair contract changed: {source_seed}")
+            source_ordering = source_diagnostic.get("endpoint_ordering")
+            source_separation = source_diagnostic.get(
+                "endpoint_separation_right_minus_left_m"
+            )
+            source_margin_gap = source_diagnostic.get(
+                "seed_balance_gap_right_minus_left_margin_m"
+            )
+            if (
+                not isinstance(source_ordering, dict)
+                or set(source_ordering) != set(labels)
+                or not isinstance(source_separation, dict)
+                or set(source_separation) != {*labels, "intervention_minus_baseline"}
+                or not isinstance(source_margin_gap, dict)
+                or set(source_margin_gap) != {*labels, "intervention_minus_baseline"}
+            ):
+                raise ValueError(f"{cohort} paired-seed endpoint diagnostic schema changed: {source_seed}")
+            source_seed_diagnostics_by_seed[source_seed] = source_diagnostic
+        if set(source_seed_diagnostics_by_seed) != set(SEEDS):
+            raise ValueError(f"{cohort} paired-seed diagnostic population changed")
 
         transitions: Counter[str] = Counter()
         for seed in SEEDS:
@@ -928,7 +967,6 @@ def analyze_documents(documents: Mapping[str, Any], provenance: Mapping[str, Any
                     raise ValueError(f"{cohort} comparison join changed: {cell_id}")
                 if source_cell.get("prompt") != PROMPTS[relation] or source_cell.get("physical_initial_state_sha256") != before["physical_initial_state_sha256"]:
                     raise ValueError(f"{cohort} comparison prompt/state changed: {cell_id}")
-                labels = (info["baseline_label"], info["intervention_label"])
                 source_success = source_cell.get("success", {})
                 source_margin = source_cell.get("requested_signed_final_margin_m", {})
                 if source_success.get(labels[0]) is not before["success"] or source_success.get(labels[1]) is not after["success"]:
@@ -978,14 +1016,90 @@ def analyze_documents(documents: Mapping[str, Any], provenance: Mapping[str, Any
             ]
             if len(seed_rows) != 2 or {row["relation"] for row in seed_rows} != set(RELATIONS):
                 raise ValueError(f"{cohort} matched-seed diagnostic join changed: {seed}")
+            seed_rows_by_relation = {row["relation"]: row for row in seed_rows}
+            left_row = seed_rows_by_relation["left"]
+            right_row = seed_rows_by_relation["right"]
+            baseline_endpoint_separation = (
+                left_row["baseline_requested_margin_m"]
+                + right_row["baseline_requested_margin_m"]
+            )
+            intervention_endpoint_separation = (
+                left_row["intervention_requested_margin_m"]
+                + right_row["intervention_requested_margin_m"]
+            )
+            baseline_margin_gap = (
+                right_row["baseline_requested_margin_m"]
+                - left_row["baseline_requested_margin_m"]
+            )
+            intervention_margin_gap = (
+                right_row["intervention_requested_margin_m"]
+                - left_row["intervention_requested_margin_m"]
+            )
+            baseline_endpoint_ordering = (
+                "aligned" if baseline_endpoint_separation > 0.0
+                else "reversed" if baseline_endpoint_separation < 0.0
+                else "tied"
+            )
+            intervention_endpoint_ordering = (
+                "aligned" if intervention_endpoint_separation > 0.0
+                else "reversed" if intervention_endpoint_separation < 0.0
+                else "tied"
+            )
+            source_diagnostic = source_seed_diagnostics_by_seed[seed]
+            source_ordering = source_diagnostic["endpoint_ordering"]
+            if (
+                source_ordering[labels[0]] != baseline_endpoint_ordering
+                or source_ordering[labels[1]] != intervention_endpoint_ordering
+            ):
+                raise ValueError(f"{cohort} paired endpoint ordering changed: {seed}")
+            source_separation = source_diagnostic[
+                "endpoint_separation_right_minus_left_m"
+            ]
+            source_margin_gap = source_diagnostic[
+                "seed_balance_gap_right_minus_left_margin_m"
+            ]
+            for observed, expected, name in (
+                (source_separation[labels[0]], baseline_endpoint_separation, "baseline_endpoint_separation"),
+                (source_separation[labels[1]], intervention_endpoint_separation, "intervention_endpoint_separation"),
+                (
+                    source_separation["intervention_minus_baseline"],
+                    intervention_endpoint_separation - baseline_endpoint_separation,
+                    "intervention_minus_baseline_endpoint_separation",
+                ),
+                (source_margin_gap[labels[0]], baseline_margin_gap, "baseline_seed_balance_gap"),
+                (source_margin_gap[labels[1]], intervention_margin_gap, "intervention_seed_balance_gap"),
+                (
+                    source_margin_gap["intervention_minus_baseline"],
+                    intervention_margin_gap - baseline_margin_gap,
+                    "intervention_minus_baseline_seed_balance_gap",
+                ),
+            ):
+                _close(observed, expected, f"{cohort}.seed{seed}.{name}")
             matched_seed_diagnostics.append({
                 "cohort": cohort,
                 "model_family": info["model_family"],
                 "model_id": info["model_id"],
+                "baseline_model_id": info["baseline_model_id"],
+                "intervention_model_id": info["model_id"],
+                "baseline_configuration_id": info["baseline_configuration_id"],
+                "intervention_configuration_id": info["intervention_configuration_id"],
                 "environment_seed_label": seed,
+                "pair_id": source_diagnostic["pair_id"],
                 "relations": list(RELATIONS),
                 "physical_reset_fingerprint_sha256": PHYSICAL_RESET_FINGERPRINT,
                 "same_physical_reset_fingerprint_for_both_relations": True,
+                "baseline_endpoint_ordering": baseline_endpoint_ordering,
+                "intervention_endpoint_ordering": intervention_endpoint_ordering,
+                "baseline_endpoint_separation_right_minus_left_m": baseline_endpoint_separation,
+                "intervention_endpoint_separation_right_minus_left_m": intervention_endpoint_separation,
+                "intervention_minus_baseline_endpoint_separation_m": (
+                    intervention_endpoint_separation - baseline_endpoint_separation
+                ),
+                "baseline_seed_balance_gap_right_minus_left_margin_m": baseline_margin_gap,
+                "intervention_seed_balance_gap_right_minus_left_margin_m": intervention_margin_gap,
+                "intervention_minus_baseline_seed_balance_gap_m": (
+                    intervention_margin_gap - baseline_margin_gap
+                ),
                 "baseline_successes": sum(row["baseline_success"] for row in seed_rows),
                 "intervention_successes": sum(row["intervention_success"] for row in seed_rows),
                 "baseline_model_requests": sum(row["baseline_model_requests"] for row in seed_rows),
@@ -1122,6 +1236,7 @@ def analyze_documents(documents: Mapping[str, Any], provenance: Mapping[str, Any
             "episode_rows_recomputed": 24,
             "matched_cell_contrasts_recomputed": 12,
             "matched_seed_diagnostics_recomputed": 6,
+            "source_paired_seed_diagnostics_validated": 6,
             "request_action_totals_recomputed": True,
             "right_censoring_recomputed": True,
             "raw_fixed_observation_probe_bytes_replayed": False,

@@ -136,6 +136,10 @@ def main():
         "H03": ("cosmos3_nano_policy_droid", "cosmos3_nano_policy_droid", 6, 4),
         "H04": ("dreamzero_droid", "dreamzero_droid_action_cfg", 3, 4),
     }
+    expected_h03_h04_configurations = {
+        "H03": ("joint_guidance_g3", "conditional_prediction_g1"),
+        "H04": ("conditional_action_equivalent_s1", "negative_branch_action_guidance_s2"),
+    }
     for cohort, (
         baseline_model,
         intervention_model,
@@ -175,6 +179,61 @@ def main():
             raise RuntimeError("H03/H04 matched-cell model identity changed")
     if len(h03_h04["matched_seed_diagnostics"]) != 6:
         raise RuntimeError("H03/H04 matched-seed diagnostic count changed")
+    if h03_h04["reproduction"]["source_paired_seed_diagnostics_validated"] != 6:
+        raise RuntimeError("H03/H04 paired-seed source validation receipt changed")
+    for diagnostic in h03_h04["matched_seed_diagnostics"]:
+        cohort = diagnostic["cohort"]
+        seed = diagnostic["environment_seed_label"]
+        baseline_model, intervention_model, _, _ = expected_h03_h04[cohort]
+        baseline_configuration, intervention_configuration = expected_h03_h04_configurations[cohort]
+        if (
+            diagnostic["model_id"] != intervention_model
+            or diagnostic["baseline_model_id"] != baseline_model
+            or diagnostic["intervention_model_id"] != intervention_model
+            or diagnostic["baseline_configuration_id"] != baseline_configuration
+            or diagnostic["intervention_configuration_id"] != intervention_configuration
+            or diagnostic["pair_id"] != f"droid_pair_seed_{seed}"
+        ):
+            raise RuntimeError("H03/H04 matched-seed diagnostic identity changed")
+        seed_rows = {
+            row["relation"]: row
+            for row in h03_h04["matched_cell_contrasts"]
+            if row["cohort"] == cohort and row["environment_seed"] == seed
+        }
+        if set(seed_rows) != {"left", "right"}:
+            raise RuntimeError("H03/H04 matched-seed diagnostic join changed")
+        baseline_separation = sum(
+            seed_rows[relation]["baseline_requested_margin_m"] for relation in ("left", "right")
+        )
+        intervention_separation = sum(
+            seed_rows[relation]["intervention_requested_margin_m"] for relation in ("left", "right")
+        )
+        baseline_gap = (
+            seed_rows["right"]["baseline_requested_margin_m"]
+            - seed_rows["left"]["baseline_requested_margin_m"]
+        )
+        intervention_gap = (
+            seed_rows["right"]["intervention_requested_margin_m"]
+            - seed_rows["left"]["intervention_requested_margin_m"]
+        )
+        if (
+            diagnostic["baseline_endpoint_ordering"] != "aligned"
+            or diagnostic["intervention_endpoint_ordering"] != "aligned"
+        ):
+            raise RuntimeError("H03/H04 paired endpoint ordering changed")
+        expected_diagnostic_metrics = {
+            "baseline_endpoint_separation_right_minus_left_m": baseline_separation,
+            "intervention_endpoint_separation_right_minus_left_m": intervention_separation,
+            "intervention_minus_baseline_endpoint_separation_m": (
+                intervention_separation - baseline_separation
+            ),
+            "baseline_seed_balance_gap_right_minus_left_margin_m": baseline_gap,
+            "intervention_seed_balance_gap_right_minus_left_margin_m": intervention_gap,
+            "intervention_minus_baseline_seed_balance_gap_m": intervention_gap - baseline_gap,
+        }
+        for field, expected in expected_diagnostic_metrics.items():
+            if abs(diagnostic[field] - expected) > 1e-12:
+                raise RuntimeError(f"H03/H04 paired diagnostic metric changed: {field}")
     if len(h03_h04["new_activity"]) != 13 or any(h03_h04["new_activity"].values()):
         raise RuntimeError("H03/H04 receipt records new activity")
     if len(h03_h04["gate_state"]) != 9 or any(

@@ -37,9 +37,9 @@ Torch 2.7.0+cu128 from the qualified any6d environment, and resolves NumPy
 protected-worktree discovery passed **1029/1029 tests in 120.191 s**
 (**122.59 s** wall); seven of those methods belong to the protected untracked
 N3 test and are not package files. The clean isolated build at commit
-`27bead766cc3411a28442afa8fc906b4f910e225` passed the authorized package's
-**1014/1014 tests in 121.944 s**; its full fourteen-step build exited zero in
-**134.20 s**. Those steps are tests, six retained-data analyses, media
+`2b0725765c9fb8906dfacf3b66615a00e5233bb9` passed the authorized package's
+**1022/1022 tests in 126.108 s**; its full fifteen-step build exited zero in
+**138.54 s**. Those steps are tests, seven retained-data analyses, media
 packaging and four full MP4 decodes plus
 verification, paper results, historical replay, the private annotation draw,
 figures and the official-template PDF.
@@ -48,24 +48,22 @@ Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock
 metadata, so these settings do not establish byte-identical PDF rebuilding.
-TeX Live 2026 latexmk 4.88 and pdfTeX 1.40.29 validated the current clean
-isolated four-page H09/H10 package. The checked-in manuscript was separately
-rebuilt from the same official template with cached Tectonic 0.17.0. Both were
-checked as four pages with zero errors, overfull boxes, undefined citations or
-undefined references. All four isolated pdfTeX pages were rendered and passed
-visual review. The exact checked-in publication hashes are recorded above; this
-does not claim byte-identical rebuilding across TeX engines.
+The pinned TeX Live 2026 latexmk 4.88 and pdfTeX 1.40.29 toolchain produced both
+the checked-in manuscript and the clean isolated four-page H11/H12 package with
+the exact PDF SHA256 recorded above. The build had zero errors, overfull boxes,
+undefined citations or undefined references. All four isolated pages were
+rendered and passed visual review.
 
 `results/validation.log` and `results/build_report.json` are generated build
 products, not retained checkout evidence in this protected worktree. The
-current isolated validation log is 490,605 bytes with SHA256
-`df4d463a66a3f393b681a0e7718241a8e47ae50d67aa9391ace8668778ff8d4b`;
-the 106,711-byte build report has SHA256
-`67148eb2eb32fcb49ad73ff366f465e0315f0c8b9e303d1011fd0ec38eb5c5d0`.
+current isolated validation log is 491,631 bytes with SHA256
+`68421e7b5f44ed96a64bbf42aa813a3c32cf647b2b23f8c19af17d6025bb0767`;
+the 125,660-byte build report has SHA256
+`df3251ce19e64d0284e10c469f30e7d3a6975ab2aa96b05206311aeed5d203fb`.
 The isolated build report was independently inspected before this branch update and
 binds the dependency versions, four-page pdfTeX PDF SHA256
-`b7fbd23936409b46e58c5cdca9ae00788c13fd1afe24a30f13ad0fe3d96cfaba`,
-all six retained-analysis receipts (including H09/H10) and media zero-activity
+`f6c1dd64d96b73895b0f3999b04fbe62ecb7ca960dd198130920db0eb738bd4d`,
+all seven retained-analysis receipts (including H11/H12) and media zero-activity
 counters. Durable inputs and
 receipts are instead checked in under
 `paper/data/` and `paper/media/`; the execution status/progress ledger records

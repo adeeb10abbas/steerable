@@ -56,7 +56,7 @@ class PaperStoppingIntegrationTests(unittest.TestCase):
         pdf_sha256 = hashlib.sha256((PACKAGE / "paper/main.pdf").read_bytes()).hexdigest()
         self.assertIn(pdf_sha256, delivery)
         self.assertIn("1029/1029 tests", delivery)
-        self.assertIn("1014/1014 tests", delivery)
+        self.assertIn("1022/1022 tests", delivery)
         self.assertIn(
             "seven of those methods belong to the protected untracked\nN3 test",
             delivery,

@@ -12,8 +12,8 @@ supporting analysis remains available but is not presented as the current paper.
 `paper/main.pdf` has **four pages total including references**, compiled with the
 unchanged official CoRL 2026 style in preprint mode and an anonymous author line.
 
-- PDF SHA256: `f6c1dd64d96b73895b0f3999b04fbe62ecb7ca960dd198130920db0eb738bd4d`.
-- LaTeX source SHA256: `fdc70b47c2ac8c16a27ab0daa5670d302fe7f7bd39321a80c9ae7d5e6b66ffc7`.
+- PDF SHA256: `cfcd56eff4f8cfd22dff28cef6ae10c45d1549ad926323f580e1e454a9461c58`.
+- LaTeX source SHA256: `59f64dea771fe12781ea30b5c1d76a54ee8799bea0b48625b6d524a45070522b`.
 - Official style SHA256: `62f38cd8df7ad718796617595c8230da136fc83ea1d7e1ba80084113409ec957`.
 - Numerical figure input SHA256: `f437fec607ea969a4c0293b157a74175c410b5f88709ac73262b3035314f1230`.
 - Design figure PDF/PNG SHA256: `9896dafc73897ca19fe6558d9385a8b1512cae858ba815c88743642185ea8201` / `9f1dbac8c32485ebdbaa0df80f8dc1b40c36c9369fd118c700c4e591e4cd94df`.
@@ -33,41 +33,40 @@ design figure is explicitly labeled as a schematic, not a measured trajectory.
 
 The exact documented disposable environment uses Python 3.10.21, inherits
 Torch 2.7.0+cu128 from the qualified any6d environment, and resolves NumPy
-2.2.6, matplotlib 3.10.9, pypdf 6.18.1 and jsonschema 4.26.0. The active
-protected-worktree discovery passed **1029/1029 tests in 120.191 s**
-(**122.59 s** wall); seven of those methods belong to the protected untracked
-N3 test and are not package files. The clean isolated build at commit
-`2b0725765c9fb8906dfacf3b66615a00e5233bb9` passed the authorized package's
-**1022/1022 tests in 126.108 s**; its full fifteen-step build exited zero in
-**138.54 s**. Those steps are tests, seven retained-data analyses, media
-packaging and four full MP4 decodes plus
-verification, paper results, historical replay, the private annotation draw,
-figures and the official-template PDF.
+2.2.6, matplotlib 3.10.9, pypdf 6.18.1 and jsonschema 4.26.0. The clean
+isolated pre-build discovery passed **1030/1030 tests in 129.990 s**
+(**132.87 s** wall). The authoritative isolated build then passed all 16 stages,
+including another **1030/1030 tests in 129.223 s**, in **144.25 s** wall time
+with a peak resident set size of **908,820 KiB**. The post-merge
+protected-worktree pass predicate is **1037/1037 tests**; its live timing is
+sealed after the H13 commit is installed; seven of those methods belong to the protected untracked
+N3 test and are not package files. The sixteen build
+steps cover tests, retained-data analyses, media packaging and four full MP4
+decodes plus verification, paper results, historical replay, the private
+annotation draw, figures and the official-template PDF.
 
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock
 metadata, so these settings do not establish byte-identical PDF rebuilding.
 The pinned TeX Live 2026 latexmk 4.88 and pdfTeX 1.40.29 toolchain produced both
-the checked-in manuscript and the clean isolated four-page H11/H12 package with
+the checked-in manuscript and the clean isolated four-page H11--H13 package with
 the exact PDF SHA256 recorded above. The build had zero errors, overfull boxes,
 undefined citations or undefined references. All four isolated pages were
 rendered and passed visual review.
 
 `results/validation.log` and `results/build_report.json` are generated build
 products, not retained checkout evidence in this protected worktree. The
-current isolated validation log is 491,631 bytes with SHA256
-`68421e7b5f44ed96a64bbf42aa813a3c32cf647b2b23f8c19af17d6025bb0767`;
-the 125,660-byte build report has SHA256
-`df3251ce19e64d0284e10c469f30e7d3a6975ab2aa96b05206311aeed5d203fb`.
-The isolated build report was independently inspected before this branch update and
-binds the dependency versions, four-page pdfTeX PDF SHA256
-`f6c1dd64d96b73895b0f3999b04fbe62ecb7ca960dd198130920db0eb738bd4d`,
-all seven retained-analysis receipts (including H11/H12) and media zero-activity
-counters. Durable inputs and
-receipts are instead checked in under
-`paper/data/` and `paper/media/`; the execution status/progress ledger records
-the qualification receipt without recreating the protected deleted results.
+authoritative isolated H13 validation log is 466,739 bytes with SHA256
+`798863915dbe72bb336842cb6ed311f2e895a6e630918ff8f54885a3dc9eff76`;
+its 138,203-byte build report has SHA256
+`6545f8bc8aa9ac3425d81288191b85a0820a5298ec757bc8d080daac076b3790`.
+Independent inspection confirmed that the report binds the exact environment,
+all 16 successful stages, the four-page PDF above, the eight retained-analysis
+receipts including H13, and H13's zero media/alignment/label counts. Durable
+inputs and receipts are checked in under `paper/data/` and `paper/media/`; the
+execution status/progress ledger records this qualification receipt without
+recreating the protected deleted results.
 
 The extractor verifies nine source Git blobs at upstream commit
 `ce561e66f82e95055e39d3d7711691982f6b2086`. It recomputes counts and continuous
@@ -152,6 +151,24 @@ episode rows. The final manuscript incorporates the following corrections:
   remain external and were not revalidated. No raw recovery, forecast accuracy,
   annotation, confirmation, new activity, gate advance or change to the
   232-cell core bound follows.
+- The retained H13 evaluator-development package byte-authenticates five audit
+  objects (998,249 bytes) and reopens all 761 ledger-listed pinned upstream
+  source Git blobs (7,230,812 bytes; 752 cache files). It strictly validates
+  immutable reconciled rows and matched-block identities for 80 episodes,
+  752 replan chunks, 3,008 cached forecast frames and 20 four-episode blocks,
+  then independently replays the registered arithmetic.
+  The historical scorer labels 421/752 chunks but covers only 25/97
+  executed-positive horizons. Its same-covered-subset apparent historical-label
+  agreement is 413/421 versus 396/421 for constant-negative; 331 abstentions
+  imply historical-label missingness bounds of 413/752--744/752, not a fidelity
+  interval. The endpoint/threshold and 2,000-resample matched-block summaries are
+  descriptive evaluator diagnostics only. A frozen 160-row stratified sampling
+  design reproduces exactly, but verified media/alignment items and collected
+  human labels remain 0/0/0. Corrected fidelity remains blocked on 840 required
+  configuration/alignment/trajectory paths plus current raw-media recovery/replay. No new
+  model inference, behavioral episode, fidelity estimate, annotation or
+  confirmation gate follows: all 13 activity counters are zero, all nine gates
+  false and the 232-cell core ceiling unchanged.
 - The four representative seed-9400 videos are authenticated and fully decoded,
   but remain presentation media rather than blinded annotation inputs, timing
   maps, forecast-accuracy evidence or a release-gate advance.
@@ -168,6 +185,8 @@ in one neutral scene; they are not 320 independent scenes or confirmatory
 wording evidence. H11/H12 each reuse 27 neutral-scene reset labels across two
 directions; they are separate model-specific development/recovery cohorts, not
 54 independent scenes, a cross-model experiment or recovered raw evidence.
+H13 is an older evaluator audit with missing raw alignment/media prerequisites,
+not an 80-scene behavioral study, a fidelity estimate or annotation completion.
 They establish neither prediction accuracy nor the causal benefit of world modeling.
 They also do not isolate visibility, reachability or grasp geometry as the mechanism.
 

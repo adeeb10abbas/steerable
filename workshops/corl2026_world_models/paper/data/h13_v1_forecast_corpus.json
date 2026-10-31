@@ -1,0 +1,482 @@
+{
+  "annotation_sampling": {
+    "alignment_verified": 0,
+    "csv_sha256": "b23bbd0f879f53489aed7cc534a7b29bafb96650aabf3477985ac6b8a1bb0eab",
+    "draw_sha256": "ab780ea4e1b91918ca72801ef0641b563725d0a7d935f6de15e1d135b0ed6d47",
+    "gate_advanced": false,
+    "human_labels_collected": 0,
+    "media_recovered_and_verified": 0,
+    "population_size": 752,
+    "sample_size": 160,
+    "seed": 20260912,
+    "status": "PROVISIONAL PRE-ANNOTATION DESIGN",
+    "strata": [
+      {
+        "inclusion_probability": 1.0,
+        "population": 22,
+        "population_weight": 1.0,
+        "sample": 22,
+        "stratum": "both_positive"
+      },
+      {
+        "inclusion_probability": 1.0,
+        "population": 5,
+        "population_weight": 1.0,
+        "sample": 5,
+        "stratum": "future_only_positive"
+      },
+      {
+        "inclusion_probability": 1.0,
+        "population": 3,
+        "population_weight": 1.0,
+        "sample": 3,
+        "stratum": "execution_only_positive"
+      },
+      {
+        "inclusion_probability": 0.1278772378516624,
+        "population": 391,
+        "population_weight": 7.82,
+        "sample": 50,
+        "stratum": "both_negative"
+      },
+      {
+        "inclusion_probability": 0.5555555555555556,
+        "population": 72,
+        "population_weight": 1.8,
+        "sample": 40,
+        "stratum": "forecast_abstention_execution_positive"
+      },
+      {
+        "inclusion_probability": 0.15444015444015444,
+        "population": 259,
+        "population_weight": 6.475,
+        "sample": 40,
+        "stratum": "forecast_abstention_execution_negative"
+      }
+    ],
+    "visibility": "PRIVATE SAMPLING MANIFEST; NEVER DISTRIBUTE TO RATERS"
+  },
+  "claim_boundary": {
+    "allowed_interpretation": "authenticated retrospective evaluator coverage, missingness, and historical-label arithmetic",
+    "annotation_or_release_gate_advanced": false,
+    "core_232_cell_accounting_changed": false,
+    "forecast_fidelity_or_accuracy_estimated": false,
+    "maximum_core_behavioral_cells": 232,
+    "new_behavioral_episodes": 0,
+    "new_human_labels": 0,
+    "new_model_inference": false,
+    "prohibited_interpretations": [
+      "validated forecast accuracy or fidelity",
+      "incremental predictive utility over persistence",
+      "752 independent trials or 80 independent scenes",
+      "annotation completion or confirmation evidence",
+      "cross-model ranking or a new Edge policy experiment"
+    ]
+  },
+  "corrected_fidelity_readiness": {
+    "actual_execution_imagery_verified": false,
+    "missing_by_role": {
+      "camera_and_coordinate_configuration": 8,
+      "chunk_alignment_metadata": 752,
+      "execution_trajectory": 80
+    },
+    "ready": false,
+    "reason": "raw trajectories, alignment metadata, common geometry, and actual execution imagery remain unresolved",
+    "required_paths": 840,
+    "supporting_generated_media_and_action_receipts_requiring_recovery": 2256
+  },
+  "endpoint_sensitivity": {
+    "coverage_uncertainty": {
+      "confidence": 0.95,
+      "episodes_per_block": 4,
+      "independent_seed_blocks": 20,
+      "intervals": {
+        "coverage": [
+          0.33288770053475936,
+          0.413447782546495
+        ],
+        "positive_execution_coverage": [
+          0.12871287128712872,
+          0.2982456140350877
+        ]
+      },
+      "limitations": "Descriptive sampling uncertainty only; does not include evaluator error or selection bias.",
+      "method": "percentile matched-seed-block bootstrap within 6100 and 7200 tiers; four episodes per block, all chunks; pooled chunk ratio",
+      "replicates": 2000,
+      "seed": 20260912,
+      "seed_blocks_by_tier": {
+        "6100": 10,
+        "7200": 10
+      },
+      "seed_identity_validation": "sampling_seed == (tier + episode_index) * 1000 + replan_index for every row; both wordings and both directions required per block"
+    },
+    "metrics": {
+      "abstained": 470,
+      "certain": 282,
+      "coverage": 0.375,
+      "covered_executed_positive": 21,
+      "executed_positive": 97,
+      "n": 752,
+      "positive_execution_coverage": 0.21649484536082475,
+      "quadrants": {
+        "does_not_imagine_requested_executes_requested": 3,
+        "imagines_requested_executes_not_requested": 9,
+        "imagines_requested_executes_requested": 18,
+        "neither_imagines_nor_executes_requested": 252,
+        "uncertain_future": 470
+      },
+      "same_covered_subset_arithmetic": {
+        "constant_negative_agreement": 0.925531914893617,
+        "constant_negative_agreement_numerator": 261,
+        "denominator": 282,
+        "difference_numerator": 9,
+        "difference_percentage_points": 3.1914893617021276,
+        "interpretation": "same covered subset only; not validated fidelity or utility",
+        "observed_agreement": 0.9574468085106383,
+        "observed_agreement_numerator": 270
+      }
+    },
+    "status": "posthoc aggregation sensitivity; NOT corrected fidelity"
+  },
+  "gate_state": {
+    "annotation_media_ready": false,
+    "camera_alignment_ready": false,
+    "confirmation_release_ready": false,
+    "current_GM_PVC_worker_state_reconciled": false,
+    "development_annotation_gate_ready": false,
+    "human_annotation_ready": false,
+    "live_quiescence_inferred": false,
+    "resource_freeze_ready": false,
+    "safe_to_release_new_work": false
+  },
+  "legacy_coverage_uncertainty": {
+    "confidence": 0.95,
+    "episodes_per_block": 4,
+    "independent_seed_blocks": 20,
+    "intervals": {
+      "coverage": [
+        0.5361216730038023,
+        0.583011583011583
+      ],
+      "positive_execution_coverage": [
+        0.19,
+        0.3333333333333333
+      ]
+    },
+    "limitations": "Descriptive sampling uncertainty only; does not include evaluator error or selection bias.",
+    "method": "percentile matched-seed-block bootstrap within 6100 and 7200 tiers; four episodes per block, all chunks; pooled chunk ratio",
+    "replicates": 2000,
+    "seed": 20260912,
+    "seed_blocks_by_tier": {
+      "6100": 10,
+      "7200": 10
+    },
+    "seed_identity_validation": "sampling_seed == (tier + episode_index) * 1000 + replan_index for every row; both wordings and both directions required per block"
+  },
+  "legacy_replay": {
+    "abstained": 331,
+    "certain": 421,
+    "coverage": 0.5598404255319149,
+    "covered_executed_positive": 25,
+    "executed_positive": 97,
+    "n": 752,
+    "positive_execution_coverage": 0.25773195876288657,
+    "quadrants": {
+      "does_not_imagine_requested_executes_requested": 3,
+      "imagines_requested_executes_not_requested": 5,
+      "imagines_requested_executes_requested": 22,
+      "neither_imagines_nor_executes_requested": 391,
+      "uncertain_future": 331
+    },
+    "same_covered_subset_arithmetic": {
+      "constant_negative_agreement": 0.9406175771971497,
+      "constant_negative_agreement_numerator": 396,
+      "denominator": 421,
+      "difference_numerator": 17,
+      "difference_percentage_points": 4.038004750593824,
+      "interpretation": "same covered subset only; not validated fidelity or utility",
+      "observed_agreement": 0.9809976247030879,
+      "observed_agreement_numerator": 413
+    },
+    "unresolved_case_full_corpus_agreement_bounds": {
+      "denominator": 752,
+      "interpretation": "historical-label missingness bound only; not a forecast-fidelity interval",
+      "lower": 0.5492021276595744,
+      "lower_numerator": 413,
+      "upper": 0.9893617021276596,
+      "upper_numerator": 744
+    }
+  },
+  "new_activity": {
+    "annotation_media": 0,
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "confirmation_inference_cells": 0,
+    "forecast_accuracy_estimates": 0,
+    "human_responses": 0,
+    "labels": 0,
+    "model_requests": 0,
+    "queue_descriptors": 0,
+    "request_rows": 0,
+    "request_selections": 0,
+    "retrieval_jobs": 0,
+    "runnable_manifests": 0
+  },
+  "population": {
+    "blocks_by_tier": {
+      "6100": 10,
+      "7200": 10
+    },
+    "cells": [
+      {
+        "chunks": 99,
+        "endpoint_certain": 30,
+        "endpoint_coverage": 0.30303030303030304,
+        "episodes": 10,
+        "legacy_abstained": 48,
+        "legacy_certain": 51,
+        "legacy_coverage": 0.5151515151515151,
+        "legacy_covered_executed_positive": 1,
+        "legacy_executed_positive": 9,
+        "requested_relation": "left",
+        "wording": "canonical"
+      },
+      {
+        "chunks": 86,
+        "endpoint_certain": 35,
+        "endpoint_coverage": 0.4069767441860465,
+        "episodes": 10,
+        "legacy_abstained": 32,
+        "legacy_certain": 54,
+        "legacy_coverage": 0.627906976744186,
+        "legacy_covered_executed_positive": 6,
+        "legacy_executed_positive": 16,
+        "requested_relation": "right",
+        "wording": "canonical"
+      },
+      {
+        "chunks": 125,
+        "endpoint_certain": 46,
+        "endpoint_coverage": 0.368,
+        "episodes": 10,
+        "legacy_abstained": 54,
+        "legacy_certain": 71,
+        "legacy_coverage": 0.568,
+        "legacy_covered_executed_positive": 2,
+        "legacy_executed_positive": 4,
+        "requested_relation": "left",
+        "wording": "short"
+      },
+      {
+        "chunks": 64,
+        "endpoint_certain": 21,
+        "endpoint_coverage": 0.328125,
+        "episodes": 10,
+        "legacy_abstained": 33,
+        "legacy_certain": 31,
+        "legacy_coverage": 0.484375,
+        "legacy_covered_executed_positive": 6,
+        "legacy_executed_positive": 21,
+        "requested_relation": "right",
+        "wording": "short"
+      },
+      {
+        "chunks": 66,
+        "endpoint_certain": 20,
+        "endpoint_coverage": 0.30303030303030304,
+        "episodes": 10,
+        "legacy_abstained": 32,
+        "legacy_certain": 34,
+        "legacy_coverage": 0.5151515151515151,
+        "legacy_covered_executed_positive": 2,
+        "legacy_executed_positive": 15,
+        "requested_relation": "left",
+        "wording": "declarative"
+      },
+      {
+        "chunks": 87,
+        "endpoint_certain": 42,
+        "endpoint_coverage": 0.4827586206896552,
+        "episodes": 10,
+        "legacy_abstained": 40,
+        "legacy_certain": 47,
+        "legacy_coverage": 0.5402298850574713,
+        "legacy_covered_executed_positive": 4,
+        "legacy_executed_positive": 16,
+        "requested_relation": "right",
+        "wording": "declarative"
+      },
+      {
+        "chunks": 146,
+        "endpoint_certain": 62,
+        "endpoint_coverage": 0.4246575342465753,
+        "episodes": 10,
+        "legacy_abstained": 57,
+        "legacy_certain": 89,
+        "legacy_coverage": 0.6095890410958904,
+        "legacy_covered_executed_positive": 0,
+        "legacy_executed_positive": 1,
+        "requested_relation": "left",
+        "wording": "contrastive"
+      },
+      {
+        "chunks": 79,
+        "endpoint_certain": 26,
+        "endpoint_coverage": 0.3291139240506329,
+        "episodes": 10,
+        "legacy_abstained": 35,
+        "legacy_certain": 44,
+        "legacy_coverage": 0.5569620253164557,
+        "legacy_covered_executed_positive": 4,
+        "legacy_executed_positive": 15,
+        "requested_relation": "right",
+        "wording": "contrastive"
+      }
+    ],
+    "cohort": {
+      "chunks": 752,
+      "episodes": 80,
+      "frame_rejection_reasons_overlapping": {
+        "bowl_cross_camera_disagreement": 338,
+        "camera_relation_disagreement": 1201,
+        "cube_cross_camera_disagreement": 710,
+        "missing_localization": 1
+      },
+      "frames": 3008,
+      "reliable_frames": 1460,
+      "unreliable_frames": 1548
+    },
+    "episodes_per_block": 4,
+    "independence_boundary": "20 matched seed blocks; 80 episodes and 752 chunks are not independent replicates",
+    "matched_seed_blocks": 20
+  },
+  "provenance": {
+    "audit_commit": "4eac280b73be3fcaf6fa4ab12697a153a485b422",
+    "audit_commit_descends_from_upstream": true,
+    "bundle": {
+      "workshops/corl2026_world_models/results/annotation_sample.csv": {
+        "bytes": 65583,
+        "git_blob": "7ae8b6f42f360167f16844f069901cc1e84ddb4b",
+        "sha256": "b23bbd0f879f53489aed7cc534a7b29bafb96650aabf3477985ac6b8a1bb0eab"
+      },
+      "workshops/corl2026_world_models/results/annotation_sample.json": {
+        "bytes": 144051,
+        "git_blob": "e1ffa6ee09c5e16fbd47fb4c956d9d86c8d23d6c",
+        "sha256": "f50cf289355c3dd5d509b98b089ff80ceff9ea34814b8841be8e1e91984995c5"
+      },
+      "workshops/corl2026_world_models/results/audit_summary.json": {
+        "bytes": 7913,
+        "git_blob": "2e8bebb27cda6ba4d14aca4983564af44700ff3b",
+        "sha256": "3d5752446c577f7049d02bb084c87800d5c9c001394e0782e4ab42eedd6ba0a5"
+      },
+      "workshops/corl2026_world_models/results/reconciled_chunks.jsonl": {
+        "bytes": 476042,
+        "git_blob": "92d3c799d448eeb99306728e0a4206f4f40e6389",
+        "sha256": "2b5c0067d1d3bc69f95fe0db4d9cbc1b1491e355043eaf918f1cf82e856c4dd7"
+      },
+      "workshops/corl2026_world_models/results/source_hashes.json": {
+        "bytes": 304660,
+        "git_blob": "19f6b797bec3cca5e3f0a3078ea1324a2c98aa74",
+        "sha256": "495bf12a236b46ac2b6dbb841324c729ee122e6a80b20d5132e6cf4173f35885"
+      }
+    },
+    "bundle_bytes": 998249,
+    "bundle_files": 5,
+    "upstream_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+    "upstream_sources": {
+      "bytes": 7230812,
+      "cache_bytes": 5269817,
+      "cache_files": 752,
+      "cache_lines": 210592,
+      "cache_manifest_sha256": "c40ef7924cbf6ebd5a879dab05dd4bbf47c6b2fa73d8f3969ec9cabd4c4c7a7c",
+      "files": 761,
+      "lines": 222796,
+      "manifest_sha256": "ce7da897256d7583365f876e9697c08639e754dd30951bf476259ce7915b9490",
+      "other_bytes": 1960995,
+      "other_files": 9,
+      "other_lines": 12204
+    }
+  },
+  "schema_version": "h13-v1-retained-evaluator-package-v1",
+  "status": "RETAINED EVALUATOR DEVELOPMENT ONLY",
+  "threshold_replay": {
+    "0.1": {
+      "abstained": 711,
+      "certain": 41,
+      "coverage": 0.05452127659574468,
+      "covered_executed_positive": 1,
+      "executed_positive": 97,
+      "n": 752,
+      "positive_execution_coverage": 0.010309278350515464,
+      "quadrants": {
+        "does_not_imagine_requested_executes_requested": 0,
+        "imagines_requested_executes_not_requested": 1,
+        "imagines_requested_executes_requested": 1,
+        "neither_imagines_nor_executes_requested": 39,
+        "uncertain_future": 711
+      },
+      "same_covered_subset_arithmetic": {
+        "constant_negative_agreement": 0.975609756097561,
+        "constant_negative_agreement_numerator": 40,
+        "denominator": 41,
+        "difference_numerator": 0,
+        "difference_percentage_points": 0.0,
+        "interpretation": "same covered subset only; not validated fidelity or utility",
+        "observed_agreement": 0.975609756097561,
+        "observed_agreement_numerator": 40
+      }
+    },
+    "0.15": {
+      "abstained": 490,
+      "certain": 262,
+      "coverage": 0.3484042553191489,
+      "covered_executed_positive": 10,
+      "executed_positive": 97,
+      "n": 752,
+      "positive_execution_coverage": 0.10309278350515463,
+      "quadrants": {
+        "does_not_imagine_requested_executes_requested": 1,
+        "imagines_requested_executes_not_requested": 1,
+        "imagines_requested_executes_requested": 9,
+        "neither_imagines_nor_executes_requested": 251,
+        "uncertain_future": 490
+      },
+      "same_covered_subset_arithmetic": {
+        "constant_negative_agreement": 0.9618320610687023,
+        "constant_negative_agreement_numerator": 252,
+        "denominator": 262,
+        "difference_numerator": 8,
+        "difference_percentage_points": 3.053435114503817,
+        "interpretation": "same covered subset only; not validated fidelity or utility",
+        "observed_agreement": 0.9923664122137404,
+        "observed_agreement_numerator": 260
+      }
+    },
+    "0.2": {
+      "abstained": 331,
+      "certain": 421,
+      "coverage": 0.5598404255319149,
+      "covered_executed_positive": 25,
+      "executed_positive": 97,
+      "n": 752,
+      "positive_execution_coverage": 0.25773195876288657,
+      "quadrants": {
+        "does_not_imagine_requested_executes_requested": 3,
+        "imagines_requested_executes_not_requested": 5,
+        "imagines_requested_executes_requested": 22,
+        "neither_imagines_nor_executes_requested": 391,
+        "uncertain_future": 331
+      },
+      "same_covered_subset_arithmetic": {
+        "constant_negative_agreement": 0.9406175771971497,
+        "constant_negative_agreement_numerator": 396,
+        "denominator": 421,
+        "difference_numerator": 17,
+        "difference_percentage_points": 4.038004750593824,
+        "interpretation": "same covered subset only; not validated fidelity or utility",
+        "observed_agreement": 0.9809976247030879,
+        "observed_agreement_numerator": 413
+      }
+    }
+  }
+}

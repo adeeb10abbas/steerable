@@ -130,6 +130,28 @@ retrospective fixed-scene behavior, not independent-scene, forecast-accuracy,
 annotation, recovery-completion or release-gate evidence; all current activity
 counters remain zero, all gates false and the 232-cell core bound unchanged.
 
+The retained H13 evaluator-development package reopens and rehashes all 761
+ledger-listed upstream source Git blobs (7,230,812 bytes), including the 752
+Edge V1 chunk caches,
+plus five immutable audit/annotation objects (998,249 bytes). The historical
+scorer labeled 421/752 chunks but covered only 25/97 executed-positive horizons;
+on that same covered subset its apparent historical-label agreement is 413/421,
+versus 396/421 for constant-negative, and 331 abstentions give missingness
+bounds of 413/752--744/752. The
+[canonical JSON](paper/data/h13_v1_forecast_corpus.json) records exact object
+identities, strict immutable reconciled-row and matched-block identity validation,
+arithmetic replay, threshold and endpoint sensitivity,
+and a 2,000-resample matched-block descriptive interval; the
+[eight-row CSV](paper/data/h13_v1_forecast_corpus.csv) exposes the fixed
+wording-by-direction cells. A frozen 160-row stratified draw is reproduced only
+as a private pre-annotation design: zero media/alignment items are verified and
+zero human labels are collected. The corrected-fidelity gate remains blocked on
+840 required configuration/alignment/trajectory paths and current raw-media
+recovery/replay. This older 80-episode/752-chunk/3,008-frame corpus is evaluator
+development, not new inference, validated fidelity, annotation or confirmation;
+all 13 activity counters remain zero, all nine gates false and the 232-cell core
+bound unchanged.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact
@@ -166,7 +188,9 @@ This is a working paper for the evaluation theme of
 [Do Robots Need World Models?](https://do-robots-need-world-models.github.io/).
 The primary position-reflection experiment studies two world–action
 configurations; retained controls include a separate Edge context, and models
-are never pooled. It does not compare world modeling against its removal. The
+are never pooled. H13 is a separate older evaluator audit, not another behavioral
+cohort or a forecast-fidelity result. It does not compare world modeling against
+its removal. The
 final author list and submission details
 remain to be settled. Nothing has been submitted or published by this task.
 
@@ -201,7 +225,8 @@ uv pip install --python "$WMF_BUILD_ENV/bin/python" --requirement workshops/corl
 
 The `--system-site-packages` boundary is intentional: `requirements-build.txt`
 does not download or replace Torch, while the regression suite includes
-Torch-backed qualification tests. The retained H05--H12 replays also use NumPy.
+Torch-backed qualification tests. The retained H05--H12 replays use NumPy;
+H13 uses the standard library and Git object reads.
 `build_package.py` fails before running the suite if any required package is
 unavailable and records all five resolved versions in the build report.
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341`, the pinned
@@ -211,9 +236,9 @@ so this environment record is not evidence of byte-identical PDF rebuilding.
 
 This runs the tests, recomputes results, the stopping-time control, the H01
 requested-region entry diagnostic, the retained H05/H06 dose responses, the
-H07/H08 endpoint interactions, the H09/H10 exploratory wording controls and
-the separate H11/H12 Phase-A direct-command cohorts from the pinned repository,
-authenticates and
+H07/H08 endpoint interactions, the H09/H10 exploratory wording controls, the
+separate H11/H12 Phase-A direct-command cohorts and the retained H13 Edge V1
+evaluator audit from pinned Git objects, authenticates and
 fully decodes the four representative H01 video blobs, produces figures and
 compiles the official CoRL template. The build report records all retained-data
 analyses, their source identities and output hashes, plus the representative-

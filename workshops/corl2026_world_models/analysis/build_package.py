@@ -57,6 +57,7 @@ def main():
     run("H07 H08 retained endpoint symmetry", [sys.executable, str(package / "analysis/analyze_h07_h08_endpoint_symmetry.py")])
     run("H09 H10 retained wording control", [sys.executable, str(package / "analysis/analyze_h09_h10_wording_control.py")])
     run("H11 H12 retained Phase A direct commands", [sys.executable, str(package / "analysis/analyze_h11_h12_phase_a_direct.py")])
+    run("H13 retained V1 evaluator corpus", [sys.executable, str(package / "analysis/analyze_h13_v1_forecast_corpus.py")])
     run("representative H01 media", [sys.executable, str(package / "analysis/package_representative_media.py")])
     run("representative H01 media verification", [sys.executable, str(package / "analysis/verify_representative_media.py")])
     run("paper experiment results", [sys.executable, str(package / "analysis/extract_paper_results.py")])
@@ -88,6 +89,10 @@ def main():
                      "H11/H12 are separate fixed-scene Phase-A direct-command cohorts",
                      "Nano 51/54; DreamZero-s2 3/27 LEFT and 17/27 RIGHT",
                      "2,554 retained futures are latents, not per-request RGB decodes",
+                     "H13 evaluator-development audit", "3,008 cached forecast frames",
+                     "20 matched blocks", "421/752", "331 abstained", "25/97", "413/421",
+                     "396/421", "413/752", "744/752", "A3–A9",
+                     "annotation/confirmation-gate", "new-inference claim",
                      "Results", "Conclusion", "References"]:
         if required not in body:
             raise RuntimeError(f"PDF is missing expected text: {required}")
@@ -109,6 +114,8 @@ def main():
     h09_h10 = json.loads(h09_h10_path.read_text())
     h11_h12_path = package / "paper/data/h11_h12_phase_a_direct.json"
     h11_h12 = json.loads(h11_h12_path.read_text())
+    h13_path = package / "paper/data/h13_v1_forecast_corpus.json"
+    h13 = json.loads(h13_path.read_text())
     expected_h09_h10 = {
         "H09": ("cosmos3_nano_policy_droid", 160, 134),
         "H10": ("cosmos3_edge_policy_droid", 160, 123),
@@ -278,6 +285,80 @@ def main():
     serialized_h11_h12 = json.dumps(h11_h12)
     if "/data/users/" in serialized_h11_h12 or "gate_root" in serialized_h11_h12:
         raise RuntimeError("H11/H12 canonical output leaked a raw source path")
+    if h13["provenance"]["upstream_commit"] != "ce561e66f82e95055e39d3d7711691982f6b2086":
+        raise RuntimeError("H13 pinned source commit changed")
+    if h13["provenance"]["audit_commit"] != "4eac280b73be3fcaf6fa4ab12697a153a485b422":
+        raise RuntimeError("H13 audit commit changed")
+    if h13["provenance"]["bundle_files"] != 5 or h13["provenance"]["bundle_bytes"] != 998_249:
+        raise RuntimeError("H13 compact bundle changed")
+    h13_sources = h13["provenance"]["upstream_sources"]
+    if (
+        h13_sources["files"] != 761
+        or h13_sources["bytes"] != 7_230_812
+        or h13_sources["cache_files"] != 752
+        or h13_sources["cache_bytes"] != 5_269_817
+        or h13_sources["manifest_sha256"] != "ce7da897256d7583365f876e9697c08639e754dd30951bf476259ce7915b9490"
+    ):
+        raise RuntimeError("H13 upstream source authentication changed")
+    h13_cohort = h13["population"]["cohort"]
+    if h13_cohort != {
+        "episodes": 80,
+        "chunks": 752,
+        "frames": 3_008,
+        "reliable_frames": 1_460,
+        "unreliable_frames": 1_548,
+        "frame_rejection_reasons_overlapping": {
+            "bowl_cross_camera_disagreement": 338,
+            "camera_relation_disagreement": 1_201,
+            "cube_cross_camera_disagreement": 710,
+            "missing_localization": 1,
+        },
+    }:
+        raise RuntimeError("H13 cohort accounting changed")
+    h13_legacy = h13["legacy_replay"]
+    if (
+        h13_legacy["certain"] != 421
+        or h13_legacy["abstained"] != 331
+        or h13_legacy["covered_executed_positive"] != 25
+        or h13_legacy["executed_positive"] != 97
+        or h13_legacy["same_covered_subset_arithmetic"]["observed_agreement_numerator"] != 413
+        or h13_legacy["same_covered_subset_arithmetic"]["constant_negative_agreement_numerator"] != 396
+        or h13_legacy["unresolved_case_full_corpus_agreement_bounds"]["lower_numerator"] != 413
+        or h13_legacy["unresolved_case_full_corpus_agreement_bounds"]["upper_numerator"] != 744
+    ):
+        raise RuntimeError("H13 legacy evaluator arithmetic changed")
+    h13_sampling = h13["annotation_sampling"]
+    if (
+        h13_sampling["sample_size"] != 160
+        or h13_sampling["draw_sha256"] != "ab780ea4e1b91918ca72801ef0641b563725d0a7d935f6de15e1d135b0ed6d47"
+        or h13_sampling["media_recovered_and_verified"] != 0
+        or h13_sampling["alignment_verified"] != 0
+        or h13_sampling["human_labels_collected"] != 0
+        or h13_sampling["gate_advanced"] is not False
+    ):
+        raise RuntimeError("H13 annotation-package boundary changed")
+    h13_boundary = h13["claim_boundary"]
+    for key in (
+        "new_model_inference", "forecast_fidelity_or_accuracy_estimated",
+        "annotation_or_release_gate_advanced", "core_232_cell_accounting_changed",
+    ):
+        if h13_boundary[key] is not False:
+            raise RuntimeError(f"H13 claim boundary changed: {key}")
+    if h13_boundary["new_behavioral_episodes"] != 0 or h13_boundary["new_human_labels"] != 0:
+        raise RuntimeError("H13 receipt records new scientific activity")
+    if h13_boundary["maximum_core_behavioral_cells"] != 232:
+        raise RuntimeError("H13 core-cell ceiling changed")
+    if len(h13["new_activity"]) != 13 or any(h13["new_activity"].values()):
+        raise RuntimeError("H13 receipt records new activity")
+    if len(h13["gate_state"]) != 9 or any(
+        value is not False for value in h13["gate_state"].values()
+    ):
+        raise RuntimeError("H13 receipt advances a release gate")
+    if h13["corrected_fidelity_readiness"]["ready"] is not False:
+        raise RuntimeError("H13 unexpectedly claims corrected fidelity readiness")
+    serialized_h13 = json.dumps(h13)
+    if "/home/" in serialized_h13 or "source_id" in serialized_h13:
+        raise RuntimeError("H13 canonical output leaked a private source path or draw identity")
     representative_media_path = package / "paper/media/representative_h01_videos.json"
     representative_media = json.loads(representative_media_path.read_text())
     representative_verification_path = package / "paper/media/representative_h01_video_verification.json"
@@ -407,6 +488,22 @@ def main():
             "json_sha256": digest(h11_h12_path),
             "csv_sha256": digest(package / "paper/data/h11_h12_phase_a_direct.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h11_h12_phase_a_direct.py"),
+        },
+        "retained_h13_v1_evaluator_corpus": {
+            "scope": h13["claim_boundary"],
+            "upstream_commit": h13["provenance"]["upstream_commit"],
+            "audit_commit": h13["provenance"]["audit_commit"],
+            "source_authentication": h13["provenance"]["upstream_sources"],
+            "population": h13["population"],
+            "legacy_replay": h13["legacy_replay"],
+            "endpoint_sensitivity": h13["endpoint_sensitivity"],
+            "annotation_sampling": h13["annotation_sampling"],
+            "corrected_fidelity_readiness": h13["corrected_fidelity_readiness"],
+            "new_activity": h13["new_activity"],
+            "gate_state": h13["gate_state"],
+            "json_sha256": digest(h13_path),
+            "csv_sha256": digest(package / "paper/data/h13_v1_forecast_corpus.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h13_v1_forecast_corpus.py"),
         },
         "representative_media": {
             "scope": representative_media["claim_boundary"],

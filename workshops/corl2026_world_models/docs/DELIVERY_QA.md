@@ -12,8 +12,8 @@ supporting analysis remains available but is not presented as the current paper.
 `paper/main.pdf` has **four pages total including references**, compiled with the
 unchanged official CoRL 2026 style in preprint mode and an anonymous author line.
 
-- PDF SHA256: `53935071ee11851f0b78b9155ce9b9052b37120d32d2e13228d430c33e90c5bb`.
-- LaTeX source SHA256: `d67b59f92179620cf4e7ab05eb286ee58c1e55167d00ee161ce6394df7fd1b70`.
+- PDF SHA256: `90ff4b846b8fd202752983124d6f12eb1fb1fa80f5df968eadf2e59e96efd187`.
+- LaTeX source SHA256: `c7fa1c90f09aa73a574799ac11a473c96024b524764779cc423b64853e94155b`.
 - Official style SHA256: `62f38cd8df7ad718796617595c8230da136fc83ea1d7e1ba80084113409ec957`.
 - Numerical figure input SHA256: `f437fec607ea969a4c0293b157a74175c410b5f88709ac73262b3035314f1230`.
 - Design figure PDF/PNG SHA256: `9896dafc73897ca19fe6558d9385a8b1512cae858ba815c88743642185ea8201` / `9f1dbac8c32485ebdbaa0df80f8dc1b40c36c9369fd118c700c4e591e4cd94df`.
@@ -39,11 +39,13 @@ isolated pre-build discovery passed **1030/1030 tests in 129.990 s**
 protected-tree discovery passed **1037/1037 tests** in 126.000 s (128.43 s
 wall; peak resident set size 905,792 KiB); seven of those methods belong to the protected untracked
 N3 test and are not package files. After integrating H03/H04,
-the final clean isolated pre-build discovery passed **1041/1041 tests in
-129.042 s** (**131.87 s** wall; peak resident set size **909,184 KiB**). The
-authoritative isolated build then passed all **17 stages**, including another
-**1041/1041 tests in 128.263 s**, in **143.60 s** wall time with a peak
-resident set size of **911,708 KiB**. The stages cover tests, retained-data
+the next clean isolated discovery passed **1041/1041 tests in 129.042 s**
+(**131.87 s** wall; peak resident set size **909,184 KiB**). After integrating
+H02, a clean isolated pre-build discovery passed **1048/1048 tests in
+128.217 s** (**130.96 s** wall; peak resident set size **913,632 KiB**).
+The final authoritative isolated build then passed all **18 stages**, including
+another **1048/1048 tests in 136.784 s**, in **152.45 s** wall time with a peak
+resident set size of **906,768 KiB**. The stages cover tests, retained-data
 analyses, media packaging and four full MP4 decodes plus verification, paper
 results, historical replay, the private annotation draw, figures and the
 official-template PDF. These software qualifications validate the package; they
@@ -61,17 +63,22 @@ rendered and passed visual review.
 
 `results/validation.log` and `results/build_report.json` are generated build
 products, not retained checkout evidence in this protected worktree. The
-authoritative isolated validation log is 468,395 bytes/10,076 lines with
-SHA256 `864ad01d27756d1aa300ad528ae82dc6f5fccd1f65042193c4a5ebd052001215`;
-its 148,790-byte/4,369-line build report has SHA256
-`391060dc1b09c07c89e7955bca2bf62515956d5223988737bc367170e6a213b0`.
+authoritative isolated validation log is 495,679 bytes/10,726 lines with
+SHA256 `168411f23a9d91c8f72221d4b025fa99f34b74f2607fd1aba908349896c599da`;
+its 164,502-byte/4,865-line build report has SHA256
+`4b8181465389ad5478d737294b2b39370a23950a8ea2f67f06fb3d2cc6c23a1a`.
+The complete 165,160-byte/4,883-line build stdout and 832-byte/23-line resource
+receipt have SHA256
+`e133e18179fd03e9949ac8339be2f826e87b51e18037913af566f5301bd4ce59` and
+`2e0e6b4229878fbad34137b8458d3f56b7e5d06f7cb2940a1206da02dd793e71`.
 Independent inspection confirmed that the report binds the exact environment,
-all 17 successful stages, the four-page 162,433-byte PDF and 12,610-byte LaTeX
-source above, the retained-analysis receipts including H03/H04 and H13, the
-12 H03/H04 matched contrasts, six paired-seed diagnostics and seven pinned
-source objects, and all current activity counters/gates at zero/false. Two
-independent reviewers also returned GO on the H03/H04 diagnostic package after
-independent source recomputation and mutation tests. Durable
+all 18 successful stages, the four-page 162,526-byte PDF and 12,648-byte LaTeX
+source above, the retained-analysis receipts including H02, H03/H04 and H13,
+the 27 H02 matched blocks, 12 H03/H04 matched contrasts, six paired-seed
+diagnostics and their pinned source objects, and all current activity
+counters/gates at zero/false. Independent reviewers returned GO on the H02
+science, fail-closed stage-gate and layout boundaries after source
+recomputation, mutation tests and rendered-page inspection. Durable
 inputs and receipts are checked in under `paper/data/` and `paper/media/`; the
 execution status/progress ledger records this qualification receipt without
 recreating the protected deleted results.

@@ -293,6 +293,65 @@ survival estimates, physical time, forecast skill, D1/default evidence, A3--A9
 evidence, a new cohort or a release gate. These software checks add no episode,
 request, inference, annotation, label, confirmation or activity.
 
+The Turn2917 retained H02 entry-status contribution ledger was introduced at
+science commit `f844c8c5806b764f45a28c3e24f289b43b1e2f39`; compact manuscript
+commits are `130fe429efe1baf3cf9f03d07f3616f25e2e3f5f`,
+`bd8efe94ccc4afa0ded010da158eef316843ae5b` and
+`ffa3215311043a09dc07c5f93caac096f8c0081b`. The fail-closed PDF-spacing
+correction is `01373f90bbcffbb03a5ab2c057e1080b1d799f3a`, and
+`4ca9105660cef772c335e4ad4407d5bec24f514e` restores and validates the sealed
+540-descriptor inventory boundary. Relative to the published Turn2916 seal
+`1ebf1d0404db5cfa6b874fb9f93ba7cee30e7ead`, the qualified tree changes exactly
+eight package paths by 1,306 insertions and four deletions. The 483-line/
+21,753-byte analyzer, 304-line/12,967-byte test, 386-line/15,060-byte JSON and
+9-line/1,639-byte CSV have SHA256
+`6aa3d0b1f6276ac57b8b3838f2ac22bae5929a5d764f57a5370cb75ba04e8a5e`,
+`ac35dfcb13f07f4760faa14358cbb1ab577ca55a03bc76b6a613dc2e20830d40`,
+`9bc4c8ade7cdcea065a7eee53d74059c0098ca79a55ddf9f930f29c9d771d9d9`
+and `5a48495fb332ca7ec764df36f69e064899797cea562913f1add5840b3923e1ba`.
+Canonical regeneration is byte-exact; 32 focused and adjacent H02 tests pass.
+
+A fresh detached authoritative build at `4ca91056` passed all **23 stages**,
+including **1099/1099 tests in 135.458 s**, in **151.86 s** wall time with peak
+resident set size **928,468 KiB**. Its 570,003-byte/12,374-line validation log,
+752,799-byte/20,556-line build report, 753,662-byte/20,579-line stdout and
+833-byte/23-line resource receipt have SHA256
+`cdcb3e7f7de9e0976e06c91e5b7b3623f78cb54a0ef342d6ee1819ed1e94cd92`,
+`19e46f6673cf21c0220963c9dd9ecfbd0852dd43945a2a973f9e183870593795`,
+`01ec9ccacb994caff67867113337918ccdaddefee5811b4a01b8513c83b3315b`
+and `9f78cb9391b11cc7bbcb72f164515804ca90aef5c13fc9e487f1dcc94e277c7d`.
+The protected-tree discovery passed **1106/1106 tests in 128.759 s**
+(**131.21 s** wall; peak resident set size **919,340 KiB**), including exactly
+seven protected-only N3 methods. Its 147,162-byte/1,120-line stdout and
+839-byte/23-line resource receipt have SHA256
+`d1c766fd589d85841f3041f14c10f09258e6f804517054ce815e4ddf8a97c73e`
+and `1cfcdd67a633a70854c61008cff0ec587a77f449f5a71e98726569dcfcbb6304`.
+The protected 23-path/1,626-byte status stream remained byte-identical before
+and after the suite.
+
+The generated 163,473-byte four-page PDF and 13,152-byte/106-line TeX source
+have SHA256 `e754568e3f92ac2f903c09d3d30939e527a27c421d7fe8064b8ecba0297594a2`
+and `92ac3803b35de6a75fc17f0df9d5b9bb317f0943b494736456f86099e9c83945`.
+All four fresh page renders passed visual review with no clipping, overlap,
+missing glyph, overfull box, unresolved citation/reference or LaTeX error.
+Three full detached attempts were made and only this one is promoted: the first
+correctly rejected a five-page draft, and the second stopped at one regression
+failure among 1,099 tests after compaction removed the required `540` marker.
+An independent audit also caught pdfTeX extraction of `+227` as `+ 227`; the
+validator now accepts only that whitespace normalization and all 65 required
+markers pass. Three independent read-only reviews plus root review return GO.
+
+The eight ledger rows exactly partition the already sealed command totals.
+LEFT contributes `0`, `-9900+3008=-6892`, `450-223=227` and `-100`; RIGHT
+contributes `0`, `-8550+2829=-5721`, `0` and `-382`. Three empty strata retain
+`conditional_mean=null`; empty sums are not observed zero effects. The combined
+ledger closes `-18000+5132=-12868=2*(-6434)`. These are outcome-defined
+cross-layout comparison categories, not transitions, principal strata,
+mediators, conditional/causal effects, entrant timing, survival, physical time,
+forecast skill, D1/default evidence, A3--A9 evidence, a new cohort or a gate.
+The checks create no episode, request, inference, annotation, label,
+confirmation, activity or change to the 232-cell ceiling.
+
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock

@@ -4,10 +4,14 @@
 ``build-wave`` is descriptor-only.  It authenticates the five immutable replay
 prerequisites and a sixth, separately supplied terminal receipt proving that
 diagnostic attempt 002 completed both model replays with zero child exits.  It
-never edits the queue.  ``run`` is the future detached queue entry point: it
-revalidates every staged source and PVC prerequisite, replays N3 and D1 on CPU,
-validates both raw signed crop contracts and their witness arrays, and then
-atomically publishes exactly those two contracts plus a terminal receipt.
+never edits the queue.  When ``--queue-template`` is supplied with an exact
+clean control checkout and commit, the same command authenticates that tracked
+empty, non-shutdown queue and emits a directly consumable queue candidate to
+stdout; it still does not edit or publish that queue.  ``run`` is the future
+detached queue entry point: it revalidates every
+staged source and PVC prerequisite, replays N3 and D1 on CPU, validates both raw
+signed crop contracts and their witness arrays, and then atomically publishes
+exactly those two contracts plus a terminal receipt.
 
 This source does not authorize building or releasing a descriptor while the
 current GM/PVC state and attempt-002 receipt identity are unreconciled.
@@ -16,16 +20,22 @@ current GM/PVC state and attempt-002 receipt identity are unreconciled.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
+from dataclasses import dataclass
 from datetime import datetime, timedelta
+import hashlib
 import importlib.util
+import json
+import math
 import os
 from pathlib import Path
 import re
+import stat
 import subprocess
 import sys
 import time
 from types import ModuleType
-from typing import Any, Mapping, Sequence
+from typing import Any, Iterator, Mapping, Sequence
 
 
 sys.dont_write_bytecode = True
@@ -79,6 +89,7 @@ D1_CAPTURE_OVERLAY_RELATIVE = diagnostic.D1_CAPTURE_OVERLAY_RELATIVE
 
 TERMINAL_CONTRACT_SCHEMA = "wmf-camera-crop-witness-terminal-runtime-contract-v1"
 WAVE_SCHEMA = "wmf-camera-crop-witness-terminal-wave-v1"
+QUEUE_MANIFEST_SCHEMA = "wmf-cluster-queue-v1"
 JOB_RECEIPT_SCHEMA = "wmf-camera-crop-witness-queue-job-v1"
 FAILURE_SCHEMA = "wmf-camera-crop-witness-queue-job-v1"
 JOB_ID = "camera-crop-replay-witness-003"
@@ -102,6 +113,34 @@ PRIOR_DIAGNOSTIC_RESULTS_RELATIVE = (
     Path("results/jobs") / PRIOR_JOB_ID / "publish" / FAILURE_RECEIPT
 )
 PREREQUISITE_CLUSTER_PATHS = dict(diagnostic.PREREQUISITE_CLUSTER_PATHS)
+CONTROL_QUEUE_RELATIVE = (
+    FORECAST_RELATIVE / "execution/20260912/autonomy/cluster_queue.json"
+)
+PREREQUISITE_RESULTS_RELATIVES = {
+    "n3_source_audit": Path(
+        "results/jobs/timing-n3-source-audit-001/publish/n3_source_audit.json"
+    ),
+    "d1_source_audit": Path(
+        "results/jobs/timing-d1-source-audit-001/publish/d1_source_audit.json"
+    ),
+    "n3_generation": Path(
+        "results/jobs/timing-n3-live-generation-p00-002/publish/n3_qualification.json"
+    ),
+    "d1_generation": Path(
+        "results/jobs/timing-d1-normalize-generation-001/publish/d1_generation_probe.json"
+    ),
+    "d1_qualification": Path(
+        "results/jobs/d1-first-live-005/publish/d1_qualification_job_receipt.json"
+    ),
+}
+AUTHENTICATED_JSON_LIMIT_BYTES = 2 * 1024 * 1024
+GIT_INDEX_LIMIT_BYTES = 256 * 1024 * 1024
+GIT_POINTER_LIMIT_BYTES = 16 * 1024
+GIT_LIST_LIMIT_BYTES = 64 * 1024 * 1024
+GIT_TRACKED_FILE_LIMIT_BYTES = 512 * 1024 * 1024
+GIT_TRACKED_TOTAL_LIMIT_BYTES = 2 * 1024 * 1024 * 1024
+GIT_TRACKED_ENTRY_LIMIT = 100_000
+GIT_EXECUTABLE = Path("/usr/bin/git")
 
 PRIOR_SOURCE_PINS = {
     DIAGNOSTIC_RELATIVE: "6613de67a170d1719d5b4e1a5be1e2b9305e1a4b6087e8f1d2006f3e8b0f3145",
@@ -144,6 +183,24 @@ PRIOR_FAILURE_KEYS = {
     "traceback_source_text_published", "child_exits", "child_diagnostics",
     "child_orchestration_failure",
 }
+WAVE_KEYS = {
+    "schema_version", "namespace", "study_id", "source_commit", "status",
+    "jobs", "implementation", "replay_prerequisite_receipts",
+    "prior_diagnostic", "expected_outputs", "science_counts",
+    "simulator_state_render_used", "whole_frame_identity",
+    "safe_for_physical_alignment_input_only_after_runtime_success",
+    "safe_to_release_confirmation", "confirmation_released",
+    "descriptor_dispatched", "claim_boundary",
+}
+QUEUE_MANIFEST_KEYS = {"schema_version", "namespace", "shutdown", "jobs"}
+WAVE_STATUS = (
+    "terminal_descriptor_not_dispatched_six_external_receipt_gates_passed"
+)
+WAVE_CLAIM_BOUNDARY = (
+    "A descriptor-only CPU replay candidate. Building this value does not edit or "
+    "release the queue, run attempt 003, qualify a crop, create annotation evidence, "
+    "estimate forecast accuracy, or authorize confirmation."
+)
 
 
 class CameraCropTerminalError(RuntimeError):
@@ -172,6 +229,217 @@ class CameraCropTerminalChildError(CameraCropTerminalError):
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise CameraCropTerminalError(message)
+
+
+def _lexical_absolute_path(path: Path, label: str) -> Path:
+    """Return an already-normalized absolute path without following links."""
+
+    try:
+        raw = os.fspath(path)
+    except (TypeError, ValueError) as error:
+        raise CameraCropTerminalError(f"{label} path is invalid") from error
+    require(isinstance(raw, str) and raw and "\x00" not in raw,
+            f"{label} path is invalid")
+    candidate = Path(raw)
+    require(candidate.is_absolute(), f"{label} path is not absolute")
+    require(".." not in candidate.parts and str(candidate) == os.path.normpath(raw),
+            f"{label} path is not lexically normalized")
+    return candidate
+
+
+def _directory_flags() -> int:
+    require(
+        hasattr(os, "O_DIRECTORY") and hasattr(os, "O_NOFOLLOW"),
+        "no-follow descriptor traversal is unavailable",
+    )
+    return (
+        os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+        | getattr(os, "O_CLOEXEC", 0)
+    )
+
+
+def _open_directory_nofollow(path: Path, label: str) -> tuple[int, Path]:
+    """Open an absolute directory component by component without following links."""
+
+    absolute = _lexical_absolute_path(path, label)
+    flags = _directory_flags()
+    try:
+        descriptor = os.open(os.sep, flags)
+    except OSError as error:
+        raise CameraCropTerminalError(
+            f"cannot open filesystem root for {label}"
+        ) from error
+    try:
+        for component in absolute.parts[1:]:
+            try:
+                child = os.open(component, flags, dir_fd=descriptor)
+            except OSError as error:
+                raise CameraCropTerminalError(
+                    f"{label} is missing, not a directory, or contains a symlink"
+                ) from error
+            os.close(descriptor)
+            descriptor = child
+        return descriptor, absolute
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def _stat_identity(metadata: os.stat_result) -> tuple[int, ...]:
+    return (
+        metadata.st_dev,
+        metadata.st_ino,
+        metadata.st_mode,
+        metadata.st_nlink,
+        metadata.st_size,
+        metadata.st_mtime_ns,
+        metadata.st_ctime_ns,
+    )
+
+
+def _require_same_open_directory(path: Path, descriptor: int, label: str) -> None:
+    comparison, _ = _open_directory_nofollow(path, label)
+    try:
+        first = os.fstat(descriptor)
+        second = os.fstat(comparison)
+        require(
+            (first.st_dev, first.st_ino, first.st_mode)
+            == (second.st_dev, second.st_ino, second.st_mode),
+            f"{label} changed after it was opened",
+        )
+    finally:
+        os.close(comparison)
+
+
+def _read_regular_file_once(
+    path: Path,
+    label: str,
+    *,
+    maximum_bytes: int,
+    expected_bytes: int | None = None,
+) -> tuple[bytes, dict[str, Any], tuple[int, ...]]:
+    """Read bounded bytes once from a held parent and retain that exact identity."""
+
+    require(type(maximum_bytes) is int and maximum_bytes > 0,
+            f"{label} byte limit is invalid")
+    absolute = _lexical_absolute_path(path, label)
+    require(absolute.name not in {"", ".", ".."}, f"{label} path is unsafe")
+    parent_fd, parent = _open_directory_nofollow(
+        absolute.parent, f"{label} parent"
+    )
+    descriptor: int | None = None
+    try:
+        flags = (
+            os.O_RDONLY | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0)
+            | getattr(os, "O_NONBLOCK", 0)
+        )
+        try:
+            named_before = os.stat(
+                absolute.name, dir_fd=parent_fd, follow_symlinks=False
+            )
+            descriptor = os.open(absolute.name, flags, dir_fd=parent_fd)
+        except OSError as error:
+            raise CameraCropTerminalError(
+                f"{label} is missing, not regular, or is a symlink"
+            ) from error
+        before = os.fstat(descriptor)
+        require(
+            stat.S_ISREG(named_before.st_mode)
+            and stat.S_ISREG(before.st_mode)
+            and before.st_nlink == 1
+            and _stat_identity(named_before) == _stat_identity(before),
+            f"{label} is not the expected singly linked regular file",
+        )
+        require(0 <= before.st_size <= maximum_bytes,
+                f"{label} exceeds the byte limit")
+        if expected_bytes is not None:
+            require(
+                type(expected_bytes) is int
+                and expected_bytes >= 0
+                and before.st_size == expected_bytes,
+                f"{label} byte count changed before read",
+            )
+        chunks: list[bytes] = []
+        observed = 0
+        while True:
+            try:
+                block = os.read(descriptor, min(1024 * 1024, maximum_bytes + 1))
+            except InterruptedError:
+                continue
+            except OSError as error:
+                raise CameraCropTerminalError(f"cannot read {label}") from error
+            if not block:
+                break
+            observed += len(block)
+            require(observed <= maximum_bytes, f"{label} exceeds the byte limit")
+            chunks.append(block)
+        payload = b"".join(chunks)
+        after = os.fstat(descriptor)
+        require(
+            _stat_identity(before) == _stat_identity(after)
+            and after.st_nlink == 1
+            and len(payload) == after.st_size,
+            f"{label} changed while it was read",
+        )
+        _require_same_open_directory(parent, parent_fd, f"{label} parent")
+        try:
+            named_after = os.stat(
+                absolute.name, dir_fd=parent_fd, follow_symlinks=False
+            )
+        except OSError as error:
+            raise CameraCropTerminalError(f"{label} path changed after read") from error
+        require(
+            stat.S_ISREG(named_after.st_mode)
+            and named_after.st_nlink == 1
+            and _stat_identity(named_after) == _stat_identity(after),
+            f"{label} path changed after read",
+        )
+        digest = hashlib.sha256(payload).hexdigest()
+        return payload, {
+            "path": str(absolute), "bytes": len(payload), "sha256": digest,
+        }, _stat_identity(after)
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+        os.close(parent_fd)
+
+
+def _unique_json_object(pairs: Sequence[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError(f"duplicate JSON key: {key}")
+        value[key] = item
+    return value
+
+
+def _reject_json_constant(value: str) -> Any:
+    raise ValueError(f"nonfinite JSON constant: {value}")
+
+
+def _require_finite_json(value: Any, label: str) -> None:
+    if isinstance(value, float):
+        require(math.isfinite(value), f"{label} contains a nonfinite number")
+    elif isinstance(value, list):
+        for item in value:
+            _require_finite_json(item, label)
+    elif isinstance(value, Mapping):
+        for item in value.values():
+            _require_finite_json(item, label)
+
+
+def _parse_json_bytes(payload: bytes, label: str) -> dict[str, Any]:
+    try:
+        value = json.loads(
+            payload.decode("utf-8"),
+            object_pairs_hook=_unique_json_object,
+            parse_constant=_reject_json_constant,
+        )
+    except (UnicodeError, json.JSONDecodeError, ValueError) as error:
+        raise CameraCropTerminalError(f"{label} is not strict JSON") from error
+    require(isinstance(value, dict), f"{label} is not a JSON object")
+    _require_finite_json(value, label)
+    return value
 
 
 def _exact_json_equal(actual: Any, expected: Any) -> bool:
@@ -656,23 +924,602 @@ def _validate_prior_diagnostic_value(value: Mapping[str, Any]) -> str:
     return commit
 
 
-def _run_git(root: Path, *arguments: str, binary: bool = False) -> bytes | str:
-    environment = dict(
-        os.environ,
-        GIT_TERMINAL_PROMPT="0",
-        GCM_INTERACTIVE="never",
-        GIT_NO_REPLACE_OBJECTS="1",
+def _pread_exact_file(
+    descriptor: int, metadata: os.stat_result, maximum_bytes: int, label: str
+) -> bytes:
+    require(
+        stat.S_ISREG(metadata.st_mode)
+        and metadata.st_nlink == 1
+        and 0 <= metadata.st_size <= maximum_bytes,
+        f"{label} is not the expected singly linked regular file",
     )
+    chunks: list[bytes] = []
+    offset = 0
+    while offset < metadata.st_size:
+        try:
+            block = os.pread(
+                descriptor,
+                min(1024 * 1024, metadata.st_size - offset),
+                offset,
+            )
+        except InterruptedError:
+            continue
+        except OSError as error:
+            raise CameraCropTerminalError(f"cannot read {label}") from error
+        require(bool(block), f"{label} was truncated while it was read")
+        chunks.append(block)
+        offset += len(block)
+    try:
+        extra = os.pread(descriptor, 1, metadata.st_size)
+    except OSError as error:
+        raise CameraCropTerminalError(f"cannot finish reading {label}") from error
+    require(not extra, f"{label} grew while it was read")
+    payload = b"".join(chunks)
+    require(
+        _stat_identity(os.fstat(descriptor)) == _stat_identity(metadata),
+        f"{label} changed while it was read",
+    )
+    return payload
+
+
+def _open_held_regular_at(
+    parent_fd: int,
+    name: str,
+    label: str,
+    *,
+    maximum_bytes: int,
+) -> tuple[int, bytes, tuple[int, ...]]:
+    require(
+        name not in {"", ".", ".."} and "/" not in name,
+        f"{label} name is unsafe",
+    )
+    descriptor: int | None = None
+    try:
+        named = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+        descriptor = os.open(
+            name,
+            os.O_RDONLY
+            | os.O_NOFOLLOW
+            | getattr(os, "O_CLOEXEC", 0)
+            | getattr(os, "O_NONBLOCK", 0),
+            dir_fd=parent_fd,
+        )
+        opened = os.fstat(descriptor)
+        require(
+            _stat_identity(named) == _stat_identity(opened),
+            f"{label} changed while it was opened",
+        )
+        payload = _pread_exact_file(descriptor, opened, maximum_bytes, label)
+        return descriptor, payload, _stat_identity(opened)
+    except (OSError, CameraCropTerminalError) as error:
+        if descriptor is not None:
+            os.close(descriptor)
+        if isinstance(error, CameraCropTerminalError):
+            raise
+        raise CameraCropTerminalError(
+            f"{label} is missing, not regular, or is a symlink"
+        ) from error
+
+
+def _verify_held_regular_at(
+    parent_fd: int,
+    name: str,
+    descriptor: int,
+    payload: bytes,
+    identity: tuple[int, ...],
+    label: str,
+    *,
+    maximum_bytes: int,
+) -> None:
+    try:
+        named = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+        opened = os.fstat(descriptor)
+    except OSError as error:
+        raise CameraCropTerminalError(f"{label} path changed") from error
+    require(
+        _stat_identity(named) == identity == _stat_identity(opened)
+        and _pread_exact_file(descriptor, opened, maximum_bytes, label) == payload,
+        f"{label} bytes or metadata changed during read-only validation",
+    )
+
+
+def _one_line_path(payload: bytes, base: Path, label: str) -> Path:
+    try:
+        text = payload.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise CameraCropTerminalError(f"{label} is not UTF-8") from error
+    require(
+        text.endswith("\n") and text.count("\n") == 1,
+        f"{label} is malformed",
+    )
+    raw = text[:-1]
+    require(bool(raw) and "\x00" not in raw, f"{label} is malformed")
+    candidate = Path(raw)
+    if not candidate.is_absolute():
+        candidate = Path(os.path.abspath(os.fspath(base / candidate)))
+    return _lexical_absolute_path(candidate, label)
+
+
+def _git_directory_pointer(payload: bytes, root: Path) -> Path:
+    prefix = b"gitdir: "
+    require(payload.startswith(prefix), "Git administrative pointer is malformed")
+    return _one_line_path(
+        payload[len(prefix):], root, "Git administrative directory"
+    )
+
+
+def _require_trusted_git_directory(path: Path) -> None:
+    current = Path(os.sep)
+    directories = [current]
+    for component in path.parts[1:]:
+        current = current / component
+        directories.append(current)
+    for current in directories:
+        try:
+            metadata = os.lstat(current)
+        except OSError as error:
+            raise CameraCropTerminalError(
+                "trusted Git executable directory is unavailable"
+            ) from error
+        require(
+            stat.S_ISDIR(metadata.st_mode)
+            and metadata.st_uid == 0
+            and metadata.st_mode & 0o022 == 0,
+            "trusted Git executable directory is not root-owned and protected",
+        )
+
+
+@dataclass
+class _HeldGitCheckout:
+    label: str
+    root: Path
+    root_fd: int
+    dot_git_kind: str
+    dot_git_fd: int
+    dot_git_identity: tuple[int, ...]
+    dot_git_payload: bytes | None
+    admin_path: Path
+    admin_fd: int
+    common_path: Path
+    common_fd: int
+    commondir_fd: int | None
+    commondir_identity: tuple[int, ...] | None
+    commondir_payload: bytes | None
+    backlink_fd: int | None
+    backlink_identity: tuple[int, ...] | None
+    backlink_payload: bytes | None
+    index_fd: int
+    index_identity: tuple[int, ...]
+    index_payload: bytes
+    executable_parent_fd: int
+    executable_fd: int
+    executable_identity: tuple[int, ...]
+
+    @property
+    def pass_fds(self) -> tuple[int, ...]:
+        return tuple(sorted({
+            self.root_fd,
+            self.admin_fd,
+            self.common_fd,
+            self.index_fd,
+            self.executable_fd,
+        }))
+
+    def index_snapshot(self) -> dict[str, Any]:
+        return {
+            "path": str(self.admin_path / "index"),
+            "bytes": len(self.index_payload),
+            "sha256": hashlib.sha256(self.index_payload).hexdigest(),
+            "metadata": list(self.index_identity),
+        }
+
+    def verify(self) -> None:
+        _require_same_open_directory(self.root, self.root_fd, self.label)
+        try:
+            named_dot_git = os.stat(
+                ".git", dir_fd=self.root_fd, follow_symlinks=False
+            )
+        except OSError as error:
+            raise CameraCropTerminalError(
+                "Git administrative path changed"
+            ) from error
+        require(
+            _stat_identity(named_dot_git) == self.dot_git_identity,
+            "Git administrative path changed",
+        )
+        if self.dot_git_kind == "pointer":
+            assert self.dot_git_payload is not None
+            _verify_held_regular_at(
+                self.root_fd,
+                ".git",
+                self.dot_git_fd,
+                self.dot_git_payload,
+                self.dot_git_identity,
+                "Git administrative pointer",
+                maximum_bytes=GIT_POINTER_LIMIT_BYTES,
+            )
+        else:
+            require(
+                _stat_identity(os.fstat(self.dot_git_fd))
+                == self.dot_git_identity,
+                "Git administrative directory changed",
+            )
+        _require_same_open_directory(
+            self.admin_path, self.admin_fd, "Git administrative directory"
+        )
+        _require_same_open_directory(
+            self.common_path, self.common_fd, "Git common directory"
+        )
+        if self.commondir_fd is not None:
+            assert self.commondir_identity is not None
+            assert self.commondir_payload is not None
+            _verify_held_regular_at(
+                self.admin_fd,
+                "commondir",
+                self.commondir_fd,
+                self.commondir_payload,
+                self.commondir_identity,
+                "Git common-directory pointer",
+                maximum_bytes=GIT_POINTER_LIMIT_BYTES,
+            )
+        if self.backlink_fd is not None:
+            assert self.backlink_identity is not None
+            assert self.backlink_payload is not None
+            _verify_held_regular_at(
+                self.admin_fd,
+                "gitdir",
+                self.backlink_fd,
+                self.backlink_payload,
+                self.backlink_identity,
+                "Git worktree backlink",
+                maximum_bytes=GIT_POINTER_LIMIT_BYTES,
+            )
+        _verify_held_regular_at(
+            self.admin_fd,
+            "index",
+            self.index_fd,
+            self.index_payload,
+            self.index_identity,
+            "Git index",
+            maximum_bytes=GIT_INDEX_LIMIT_BYTES,
+        )
+        _require_same_open_directory(
+            GIT_EXECUTABLE.parent,
+            self.executable_parent_fd,
+            "trusted Git executable directory",
+        )
+        try:
+            named_executable = os.stat(
+                GIT_EXECUTABLE.name,
+                dir_fd=self.executable_parent_fd,
+                follow_symlinks=False,
+            )
+            opened_executable = os.fstat(self.executable_fd)
+        except OSError as error:
+            raise CameraCropTerminalError(
+                "trusted Git executable identity changed"
+            ) from error
+        require(
+            _stat_identity(named_executable)
+            == self.executable_identity
+            == _stat_identity(opened_executable),
+            "trusted Git executable identity changed",
+        )
+
+    def close(self) -> None:
+        for descriptor in {
+            self.root_fd,
+            self.dot_git_fd,
+            self.admin_fd,
+            self.common_fd,
+            self.commondir_fd,
+            self.backlink_fd,
+            self.index_fd,
+            self.executable_parent_fd,
+            self.executable_fd,
+        }:
+            if descriptor is not None:
+                try:
+                    os.close(descriptor)
+                except OSError:
+                    pass
+
+
+def _open_git_checkout(root: Path, label: str) -> _HeldGitCheckout:
+    root_fd, root = _open_directory_nofollow(root, label)
+    opened: list[int] = [root_fd]
+    try:
+        try:
+            dot_git = os.stat(".git", dir_fd=root_fd, follow_symlinks=False)
+        except OSError as error:
+            raise CameraCropTerminalError(
+                "Git administrative path is unavailable"
+            ) from error
+        dot_git_payload: bytes | None = None
+        if stat.S_ISDIR(dot_git.st_mode):
+            try:
+                dot_git_fd = os.open(".git", _directory_flags(), dir_fd=root_fd)
+            except OSError as error:
+                raise CameraCropTerminalError(
+                    "Git administrative directory is unavailable"
+                ) from error
+            opened.append(dot_git_fd)
+            require(
+                _stat_identity(os.fstat(dot_git_fd)) == _stat_identity(dot_git),
+                "Git administrative directory changed while it was opened",
+            )
+            dot_git_kind = "directory"
+            admin_path = root / ".git"
+            admin_fd = dot_git_fd
+        elif stat.S_ISREG(dot_git.st_mode):
+            dot_git_fd, dot_git_payload, dot_git_identity = _open_held_regular_at(
+                root_fd,
+                ".git",
+                "Git administrative pointer",
+                maximum_bytes=GIT_POINTER_LIMIT_BYTES,
+            )
+            opened.append(dot_git_fd)
+            require(
+                dot_git_identity == _stat_identity(dot_git),
+                "Git administrative pointer changed while it was opened",
+            )
+            dot_git_kind = "pointer"
+            admin_path = _git_directory_pointer(dot_git_payload, root)
+            admin_fd, admin_path = _open_directory_nofollow(
+                admin_path, "Git administrative directory"
+            )
+            opened.append(admin_fd)
+        else:
+            raise CameraCropTerminalError(
+                "Git administrative path is not a regular pointer or directory"
+            )
+
+        commondir_fd: int | None = None
+        commondir_identity: tuple[int, ...] | None = None
+        commondir_payload: bytes | None = None
+        backlink_fd: int | None = None
+        backlink_identity: tuple[int, ...] | None = None
+        backlink_payload: bytes | None = None
+        try:
+            commondir_stat = os.stat(
+                "commondir", dir_fd=admin_fd, follow_symlinks=False
+            )
+        except FileNotFoundError:
+            commondir_stat = None
+        except OSError as error:
+            raise CameraCropTerminalError(
+                "Git common-directory pointer is unavailable"
+            ) from error
+        if commondir_stat is None:
+            require(
+                dot_git_kind == "directory",
+                "linked Git worktree is missing its common-directory pointer",
+            )
+            common_path = admin_path
+            common_fd = admin_fd
+        else:
+            require(
+                stat.S_ISREG(commondir_stat.st_mode),
+                "Git common-directory pointer is not regular",
+            )
+            (
+                commondir_fd,
+                commondir_payload,
+                commondir_identity,
+            ) = _open_held_regular_at(
+                admin_fd,
+                "commondir",
+                "Git common-directory pointer",
+                maximum_bytes=GIT_POINTER_LIMIT_BYTES,
+            )
+            opened.append(commondir_fd)
+            common_path = _one_line_path(
+                commondir_payload, admin_path, "Git common directory"
+            )
+            common_fd, common_path = _open_directory_nofollow(
+                common_path, "Git common directory"
+            )
+            opened.append(common_fd)
+            try:
+                admin_relative = admin_path.relative_to(common_path)
+            except ValueError as error:
+                raise CameraCropTerminalError(
+                    "Git worktree administrative directory escaped its common directory"
+                ) from error
+            require(
+                len(admin_relative.parts) == 2
+                and admin_relative.parts[0] == "worktrees"
+                and admin_relative.parts[1] not in {"", ".", ".."},
+                "Git worktree administrative directory shape changed",
+            )
+            (
+                backlink_fd,
+                backlink_payload,
+                backlink_identity,
+            ) = _open_held_regular_at(
+                admin_fd,
+                "gitdir",
+                "Git worktree backlink",
+                maximum_bytes=GIT_POINTER_LIMIT_BYTES,
+            )
+            opened.append(backlink_fd)
+            require(
+                _one_line_path(
+                    backlink_payload, admin_path, "Git worktree backlink target"
+                )
+                == root / ".git",
+                "Git worktree backlink does not name the supplied checkout",
+            )
+
+        index_fd, index_payload, index_identity = _open_held_regular_at(
+            admin_fd,
+            "index",
+            "Git index",
+            maximum_bytes=GIT_INDEX_LIMIT_BYTES,
+        )
+        opened.append(index_fd)
+
+        require(
+            GIT_EXECUTABLE == Path("/usr/bin/git"),
+            "trusted Git executable path changed",
+        )
+        _require_trusted_git_directory(GIT_EXECUTABLE.parent)
+        executable_parent_fd, _ = _open_directory_nofollow(
+            GIT_EXECUTABLE.parent, "trusted Git executable directory"
+        )
+        opened.append(executable_parent_fd)
+        try:
+            named_executable = os.stat(
+                GIT_EXECUTABLE.name,
+                dir_fd=executable_parent_fd,
+                follow_symlinks=False,
+            )
+            executable_fd = os.open(
+                GIT_EXECUTABLE.name,
+                os.O_RDONLY | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0),
+                dir_fd=executable_parent_fd,
+            )
+        except OSError as error:
+            raise CameraCropTerminalError(
+                "trusted Git executable is unavailable"
+            ) from error
+        opened.append(executable_fd)
+        opened_executable = os.fstat(executable_fd)
+        require(
+            stat.S_ISREG(opened_executable.st_mode)
+            and opened_executable.st_uid == 0
+            and opened_executable.st_mode & 0o022 == 0
+            and opened_executable.st_mode & 0o111 != 0
+            and _stat_identity(opened_executable) == _stat_identity(named_executable),
+            "trusted Git executable is not a protected root-owned regular file",
+        )
+        checkout = _HeldGitCheckout(
+            label=label,
+            root=root,
+            root_fd=root_fd,
+            dot_git_kind=dot_git_kind,
+            dot_git_fd=dot_git_fd,
+            dot_git_identity=_stat_identity(dot_git),
+            dot_git_payload=dot_git_payload,
+            admin_path=admin_path,
+            admin_fd=admin_fd,
+            common_path=common_path,
+            common_fd=common_fd,
+            commondir_fd=commondir_fd,
+            commondir_identity=commondir_identity,
+            commondir_payload=commondir_payload,
+            backlink_fd=backlink_fd,
+            backlink_identity=backlink_identity,
+            backlink_payload=backlink_payload,
+            index_fd=index_fd,
+            index_identity=index_identity,
+            index_payload=index_payload,
+            executable_parent_fd=executable_parent_fd,
+            executable_fd=executable_fd,
+            executable_identity=_stat_identity(opened_executable),
+        )
+        opened.clear()
+        checkout.verify()
+        return checkout
+    except BaseException:
+        for descriptor in reversed(opened):
+            try:
+                os.close(descriptor)
+            except OSError:
+                pass
+        raise
+
+
+@contextmanager
+def _held_git_checkout(root: Path, label: str) -> Iterator[_HeldGitCheckout]:
+    checkout = _open_git_checkout(root, label)
+    try:
+        shared_index = _run_git(checkout, "rev-parse", "--shared-index-path")
+        assert isinstance(shared_index, str)
+        require(not shared_index.strip(), "split Git indexes are not supported")
+        yield checkout
+    finally:
+        try:
+            checkout.verify()
+        finally:
+            checkout.close()
+
+
+def _safe_git_environment(checkout: _HeldGitCheckout) -> dict[str, str]:
+    return {
+        "LANG": "C",
+        "LC_ALL": "C",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_SYSTEM": "/dev/null",
+        "GIT_CONFIG_GLOBAL": "/dev/null",
+        "GIT_TERMINAL_PROMPT": "0",
+        "GIT_ASKPASS": "/bin/false",
+        "SSH_ASKPASS": "/bin/false",
+        "GCM_INTERACTIVE": "never",
+        "GIT_NO_REPLACE_OBJECTS": "1",
+        "GIT_NO_LAZY_FETCH": "1",
+        "GIT_OPTIONAL_LOCKS": "0",
+        "GIT_ATTR_NOSYSTEM": "1",
+        "GIT_EXEC_PATH": "/nonexistent",
+        "GIT_CEILING_DIRECTORIES": "/",
+        "GIT_COMMON_DIR": f"/proc/self/fd/{checkout.common_fd}",
+        "GIT_INDEX_FILE": f"/proc/self/fd/{checkout.index_fd}",
+    }
+
+
+def _run_git(
+    checkout: _HeldGitCheckout, *arguments: str, binary: bool = False
+) -> bytes | str:
+    require(bool(arguments), "Git provenance command is empty")
+    require(
+        arguments[0] in {"rev-parse", "show", "ls-files", "ls-tree"},
+        "Git provenance command is not allowlisted",
+    )
+    checkout.verify()
+    command = [
+        f"/proc/self/fd/{checkout.executable_fd}",
+        "--no-pager",
+        "--no-replace-objects",
+        f"--git-dir=/proc/self/fd/{checkout.admin_fd}",
+        f"--work-tree=/proc/self/fd/{checkout.root_fd}",
+        "-c", "credential.helper=",
+        "-c", "credential.interactive=never",
+        "-c", "core.askPass=/bin/false",
+        "-c", "core.sshCommand=/bin/false",
+        "-c", "core.fsmonitor=false",
+        "-c", "core.hooksPath=/dev/null",
+        "-c", "core.attributesFile=/dev/null",
+        "-c", "diff.external=",
+        "-c", "protocol.allow=never",
+        "-c", "submodule.recurse=false",
+        "-c", "fetch.recurseSubmodules=false",
+        "-c", "gc.auto=0",
+        "-c", "maintenance.auto=false",
+        *arguments,
+    ]
     try:
         result = subprocess.run(
-            ["git", "--no-replace-objects", "-C", str(root), *arguments],
-            capture_output=True,
+            command,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             timeout=60,
-            env=environment,
+            env=_safe_git_environment(checkout),
+            pass_fds=checkout.pass_fds,
+            close_fds=True,
+            cwd=os.sep,
+            check=False,
         )
     except (OSError, subprocess.TimeoutExpired) as error:
-        raise CameraCropTerminalError("Git provenance verification is unavailable") from error
-    require(result.returncode == 0, f"Git provenance verification failed: {arguments[0]}")
+        raise CameraCropTerminalError(
+            "Git provenance verification is unavailable"
+        ) from error
+    finally:
+        checkout.verify()
+    require(
+        result.returncode == 0,
+        f"Git provenance verification failed: {arguments[0]}",
+    )
     if binary:
         return result.stdout
     try:
@@ -681,12 +1528,447 @@ def _run_git(root: Path, *arguments: str, binary: bool = False) -> bytes | str:
         raise CameraCropTerminalError("Git provenance output is not UTF-8") from error
 
 
-def _validate_prior_source_commit(root: Path, commit: str) -> dict[str, dict[str, Any]]:
+def _git_index_snapshot(root: Path) -> dict[str, Any]:
+    with _held_git_checkout(root, "Git checkout") as checkout:
+        return checkout.index_snapshot()
+
+
+def _require_git_index_unchanged(root: Path, before: Mapping[str, Any]) -> None:
+    after = _git_index_snapshot(root)
+    require(
+        _exact_json_equal(after, before),
+        "Git index bytes or metadata changed during read-only validation",
+    )
+
+
+def _safe_checkout_root(path: Path, label: str) -> Path:
+    descriptor, root = _open_directory_nofollow(path, label)
+    try:
+        require(stat.S_ISDIR(os.fstat(descriptor).st_mode),
+                f"{label} is not a directory")
+    finally:
+        os.close(descriptor)
+    return root
+
+
+def _git_blob(
+    checkout: _HeldGitCheckout, commit: str, relative: Path, label: str
+) -> bytes:
+    require(
+        not relative.is_absolute()
+        and bool(relative.parts)
+        and "." not in relative.parts
+        and ".." not in relative.parts,
+        f"{label} Git path is unsafe",
+    )
+    payload = _run_git(
+        checkout, "show", f"{commit}:{relative.as_posix()}", binary=True
+    )
+    assert isinstance(payload, bytes)
+    return payload
+
+
+def _nul_git_records(payload: bytes, label: str) -> list[bytes]:
+    require(len(payload) <= GIT_LIST_LIMIT_BYTES, f"{label} output is too large")
+    if not payload:
+        return []
+    require(payload.endswith(b"\0"), f"{label} output is malformed")
+    records = payload[:-1].split(b"\0")
+    require(
+        len(records) <= GIT_TRACKED_ENTRY_LIMIT and all(records),
+        f"{label} output is malformed",
+    )
+    return records
+
+
+def _git_relative_from_output(payload: bytes, label: str) -> Path:
+    try:
+        text = payload.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise CameraCropTerminalError(f"{label} path is not UTF-8") from error
+    relative = Path(text)
+    require(
+        bool(text)
+        and "\x00" not in text
+        and not relative.is_absolute()
+        and str(relative) == text
+        and "." not in relative.parts
+        and ".." not in relative.parts,
+        f"{label} path is unsafe",
+    )
+    return relative
+
+
+def _parse_index_inventory(payload: bytes) -> dict[Path, tuple[str, str]]:
+    result: dict[Path, tuple[str, str]] = {}
+    for record in _nul_git_records(payload, "Git index inventory"):
+        try:
+            header, raw_path = record.split(b"\t", 1)
+            mode, object_id, stage = header.split(b" ")
+            mode_text = mode.decode("ascii")
+            object_text = object_id.decode("ascii")
+        except (ValueError, UnicodeDecodeError) as error:
+            raise CameraCropTerminalError("Git index inventory is malformed") from error
+        require(stage == b"0", "Git index contains an unresolved entry")
+        require(
+            mode_text in {"100644", "100755", "120000"}
+            and re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", object_text)
+            is not None,
+            "Git index entry type or object identity is unsupported",
+        )
+        path = _git_relative_from_output(raw_path, "Git index")
+        require(path not in result, "Git index contains a duplicate path")
+        result[path] = (mode_text, object_text)
+    return result
+
+
+def _parse_tree_inventory(payload: bytes) -> dict[Path, tuple[str, str]]:
+    result: dict[Path, tuple[str, str]] = {}
+    for record in _nul_git_records(payload, "Git commit tree inventory"):
+        try:
+            header, raw_path = record.split(b"\t", 1)
+            mode, object_type, object_id = header.split(b" ")
+            mode_text = mode.decode("ascii")
+            type_text = object_type.decode("ascii")
+            object_text = object_id.decode("ascii")
+        except (ValueError, UnicodeDecodeError) as error:
+            raise CameraCropTerminalError(
+                "Git commit tree inventory is malformed"
+            ) from error
+        require(
+            mode_text in {"100644", "100755", "120000"}
+            and type_text == "blob"
+            and re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", object_text)
+            is not None,
+            "Git commit tree entry type or object identity is unsupported",
+        )
+        path = _git_relative_from_output(raw_path, "Git commit tree")
+        require(path not in result, "Git commit tree contains a duplicate path")
+        result[path] = (mode_text, object_text)
+    return result
+
+
+def _read_checkout_entry(
+    checkout: _HeldGitCheckout, relative: Path, mode: str, label: str
+) -> bytes:
+    require(
+        not relative.is_absolute()
+        and bool(relative.parts)
+        and "." not in relative.parts
+        and ".." not in relative.parts,
+        f"{label} path is unsafe",
+    )
+    parent_fd = os.dup(checkout.root_fd)
+    descriptor: int | None = None
+    try:
+        for component in relative.parts[:-1]:
+            try:
+                child = os.open(component, _directory_flags(), dir_fd=parent_fd)
+            except OSError as error:
+                raise CameraCropTerminalError(
+                    f"{label} parent is missing, not a directory, or is a symlink"
+                ) from error
+            os.close(parent_fd)
+            parent_fd = child
+        name = relative.parts[-1]
+        if mode == "120000":
+            try:
+                before = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+                target = os.readlink(name, dir_fd=parent_fd)
+                after = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+                target_after = os.readlink(name, dir_fd=parent_fd)
+            except OSError as error:
+                raise CameraCropTerminalError(
+                    f"{label} symlink is unavailable"
+                ) from error
+            require(
+                stat.S_ISLNK(before.st_mode)
+                and before.st_nlink == 1
+                and _stat_identity(before) == _stat_identity(after)
+                and target == target_after,
+                f"{label} symlink changed while it was read",
+            )
+            return os.fsencode(target)
+        descriptor, payload, identity = _open_held_regular_at(
+            parent_fd,
+            name,
+            label,
+            maximum_bytes=GIT_TRACKED_FILE_LIMIT_BYTES,
+        )
+        metadata = os.fstat(descriptor)
+        require(
+            (mode == "100755") == bool(metadata.st_mode & stat.S_IXUSR),
+            f"{label} executable mode differs from the Git index",
+        )
+        _verify_held_regular_at(
+            parent_fd,
+            name,
+            descriptor,
+            payload,
+            identity,
+            label,
+            maximum_bytes=GIT_TRACKED_FILE_LIMIT_BYTES,
+        )
+        return payload
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+        os.close(parent_fd)
+
+
+def _checkout_parent_fd(
+    checkout: _HeldGitCheckout, relative: Path, label: str
+) -> tuple[int, str, Path]:
+    """Hold the parent of a relative checkout path without named-root lookup."""
+
+    candidate = Path(relative)
+    require(
+        not candidate.is_absolute()
+        and bool(candidate.parts)
+        and "." not in candidate.parts
+        and ".." not in candidate.parts,
+        f"{label} path is unsafe",
+    )
+    try:
+        parent_fd = os.dup(checkout.root_fd)
+    except OSError as error:
+        raise CameraCropTerminalError(
+            f"cannot hold checkout root for {label}"
+        ) from error
+    try:
+        for component in candidate.parts[:-1]:
+            try:
+                child = os.open(component, _directory_flags(), dir_fd=parent_fd)
+            except OSError as error:
+                raise CameraCropTerminalError(
+                    f"{label} parent is missing, not a directory, or is a symlink"
+                ) from error
+            os.close(parent_fd)
+            parent_fd = child
+        return parent_fd, candidate.parts[-1], candidate
+    except BaseException:
+        os.close(parent_fd)
+        raise
+
+
+def _read_checkout_regular_file_once(
+    checkout: _HeldGitCheckout,
+    relative: Path,
+    label: str,
+    *,
+    maximum_bytes: int,
+    expected_bytes: int | None = None,
+) -> tuple[bytes, dict[str, Any], tuple[int, ...]]:
+    """Read one reserved blob through the already-held checkout root."""
+
+    require(type(maximum_bytes) is int and maximum_bytes > 0,
+            f"{label} byte limit is invalid")
+    parent_fd, name, relative = _checkout_parent_fd(checkout, relative, label)
+    descriptor: int | None = None
+    try:
+        try:
+            named_before = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+            descriptor = os.open(
+                name,
+                os.O_RDONLY
+                | os.O_NOFOLLOW
+                | getattr(os, "O_CLOEXEC", 0)
+                | getattr(os, "O_NONBLOCK", 0),
+                dir_fd=parent_fd,
+            )
+        except OSError as error:
+            raise CameraCropTerminalError(
+                f"{label} is missing, not regular, or is a symlink"
+            ) from error
+        before = os.fstat(descriptor)
+        require(
+            stat.S_ISREG(named_before.st_mode)
+            and stat.S_ISREG(before.st_mode)
+            and before.st_nlink == 1
+            and _stat_identity(named_before) == _stat_identity(before),
+            f"{label} is not the expected singly linked regular file",
+        )
+        require(0 <= before.st_size <= maximum_bytes,
+                f"{label} exceeds the byte limit")
+        if expected_bytes is not None:
+            require(
+                type(expected_bytes) is int
+                and expected_bytes >= 0
+                and before.st_size == expected_bytes,
+                f"{label} byte count changed before read",
+            )
+        chunks: list[bytes] = []
+        observed = 0
+        while True:
+            try:
+                block = os.read(descriptor, min(1024 * 1024, maximum_bytes + 1))
+            except InterruptedError:
+                continue
+            except OSError as error:
+                raise CameraCropTerminalError(f"cannot read {label}") from error
+            if not block:
+                break
+            observed += len(block)
+            require(observed <= maximum_bytes, f"{label} exceeds the byte limit")
+            chunks.append(block)
+        payload = b"".join(chunks)
+        after = os.fstat(descriptor)
+        try:
+            named_after = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+        except OSError as error:
+            raise CameraCropTerminalError(f"{label} path changed after read") from error
+        require(
+            _stat_identity(before) == _stat_identity(after)
+            == _stat_identity(named_after)
+            and after.st_nlink == 1
+            and len(payload) == after.st_size,
+            f"{label} changed while it was read",
+        )
+        return payload, {
+            "path": str(checkout.root / relative),
+            "bytes": len(payload),
+            "sha256": hashlib.sha256(payload).hexdigest(),
+        }, _stat_identity(after)
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+        os.close(parent_fd)
+
+
+def _require_checkout_regular_file_identity(
+    checkout: _HeldGitCheckout,
+    relative: Path,
+    expected_identity: tuple[int, ...],
+    label: str,
+) -> None:
+    """Recheck reserved metadata from the held root without reopening bytes."""
+
+    parent_fd, name, _relative = _checkout_parent_fd(checkout, relative, label)
+    try:
+        try:
+            named = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+        except OSError as error:
+            raise CameraCropTerminalError(
+                f"{label} path changed after authentication"
+            ) from error
+        require(
+            stat.S_ISREG(named.st_mode)
+            and named.st_nlink == 1
+            and _stat_identity(named) == expected_identity,
+            f"{label} path changed after authentication",
+        )
+    finally:
+        os.close(parent_fd)
+
+
+def _git_blob_digest(payload: bytes, object_format: str) -> str:
+    framed = f"blob {len(payload)}\0".encode("ascii") + payload
+    if object_format == "sha1":
+        return hashlib.sha1(framed).hexdigest()
+    require(object_format == "sha256", "Git object format is unsupported")
+    return hashlib.sha256(framed).hexdigest()
+
+
+def _require_clean_checkout(
+    checkout: _HeldGitCheckout,
+    expected_commit: str,
+    label: str,
+    *,
+    single_read_paths: Sequence[Path] = (),
+) -> None:
+    """Prove a checkout clean while reserving named blobs for one held read.
+
+    ``single_read_paths`` remain fully bound by the exact index/commit-tree
+    comparison here. Their worktree bytes are authenticated separately by the
+    caller's one held read plus an exact Git-blob comparison, so this scan must
+    not reopen them.
+    """
+
+    commit = queue._verified_commit(expected_commit)
+    head_before = _run_git(checkout, "rev-parse", "--verify", "HEAD^{commit}")
+    object_format = _run_git(checkout, "rev-parse", "--show-object-format")
+    raw_index = _run_git(checkout, "ls-files", "--stage", "-z", binary=True)
+    raw_tree = _run_git(
+        checkout, "ls-tree", "-r", "-z", "--full-tree", commit, binary=True
+    )
+    assert isinstance(head_before, str) and isinstance(object_format, str)
+    assert isinstance(raw_index, bytes) and isinstance(raw_tree, bytes)
+    index = _parse_index_inventory(raw_index)
+    tree = _parse_tree_inventory(raw_tree)
+    reserved: set[Path] = set()
+    for supplied in single_read_paths:
+        relative = Path(supplied)
+        require(
+            not relative.is_absolute()
+            and bool(relative.parts)
+            and "." not in relative.parts
+            and ".." not in relative.parts
+            and relative not in reserved,
+            f"{label} single-read path inventory is invalid",
+        )
+        reserved.add(relative)
+    require(
+        head_before.strip() == commit
+        and _exact_json_equal(index, tree)
+        and reserved <= set(index),
+        f"{label} is not clean at the exact supplied commit",
+    )
+    require(
+        all(index[path][0] == "100644" for path in reserved),
+        f"{label} single-read path is not a nonexecutable regular file; "
+        "symlinks are forbidden",
+    )
+    format_name = object_format.strip()
+    total_bytes = 0
+    for relative, (mode, object_id) in index.items():
+        if relative in reserved:
+            continue
+        payload = _read_checkout_entry(
+            checkout, relative, mode, f"{label} tracked file {relative}"
+        )
+        total_bytes += len(payload)
+        require(
+            total_bytes <= GIT_TRACKED_TOTAL_LIMIT_BYTES
+            and _git_blob_digest(payload, format_name) == object_id,
+            f"{label} tracked bytes differ from the exact supplied commit",
+        )
+    raw_untracked = _run_git(
+        checkout,
+        "ls-files",
+        "--others",
+        "--exclude-standard",
+        "-z",
+        binary=True,
+    )
+    head_after = _run_git(checkout, "rev-parse", "--verify", "HEAD^{commit}")
+    assert isinstance(raw_untracked, bytes) and isinstance(head_after, str)
+    require(
+        not _nul_git_records(raw_untracked, "Git untracked inventory")
+        and head_after.strip() == commit,
+        f"{label} is not clean at the exact supplied commit",
+    )
+
+
+def _validate_prior_source_commit_in_checkout(
+    checkout: _HeldGitCheckout, commit: str
+) -> dict[str, dict[str, Any]]:
     commit = queue._verified_commit(commit)
+    try:
+        resolved = _run_git(
+            checkout, "rev-parse", "--verify", f"{commit}^{{commit}}"
+        )
+    except CameraCropTerminalError as error:
+        raise CameraCropTerminalError(
+            "attempt 002 study_commit is not a commit object"
+        ) from error
+    assert isinstance(resolved, str)
+    require(
+        resolved.strip() == commit,
+        "attempt 002 study_commit did not resolve to the exact supplied commit",
+    )
     result: dict[str, dict[str, Any]] = {}
     for path, expected_digest in PRIOR_SOURCE_PINS.items():
-        payload = _run_git(root, "show", f"{commit}:{path}", binary=True)
-        assert isinstance(payload, bytes)
+        payload = _git_blob(checkout, commit, path, "attempt 002 source")
         digest = queue.sha256_bytes(payload)
         require(digest == expected_digest,
                 f"attempt 002 source blob changed: {path}")
@@ -694,17 +1976,376 @@ def _validate_prior_source_commit(root: Path, commit: str) -> dict[str, dict[str
     return result
 
 
+def _validate_prior_source_commit(root: Path, commit: str) -> dict[str, dict[str, Any]]:
+    root = _safe_checkout_root(root, "source checkout")
+    with _held_git_checkout(root, "source checkout") as checkout:
+        return _validate_prior_source_commit_in_checkout(checkout, commit)
+
+
+def _authenticate_runtime_contract_values_in_checkout(
+    *,
+    checkout: _HeldGitCheckout,
+    control_commit: str,
+    terminal_runtime: Mapping[str, Any],
+    replay_runtime: Mapping[str, Any],
+) -> None:
+    commit = queue._verified_commit(control_commit)
+    for label, relative, parsed in (
+        (
+            "terminal runtime contract",
+            TERMINAL_CONTRACT_RELATIVE,
+            terminal_runtime,
+        ),
+        (
+            "replay runtime contract",
+            REPLAY_CONTRACT_RELATIVE,
+            replay_runtime,
+        ),
+    ):
+        require(isinstance(parsed, Mapping), f"{label} parsed value changed")
+        committed = _parse_json_bytes(
+            _git_blob(checkout, commit, relative, label),
+            f"committed {label}",
+        )
+        require(
+            _exact_json_equal(parsed, committed),
+            f"{label} semantics differ from the control commit",
+        )
+
+
+def _authenticate_control_state_in_checkout(
+    *,
+    checkout: _HeldGitCheckout,
+    control_commit: str,
+    queue_path: Path,
+    implementation: Mapping[str, Any],
+    terminal_runtime: Mapping[str, Any] | None = None,
+    replay_runtime: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Authenticate one clean control checkout and its exact tracked queue bytes."""
+
+    commit = queue._verified_commit(control_commit)
+    root = checkout.root
+    expected_queue_path = root / CONTROL_QUEUE_RELATIVE
+    supplied_queue_path = _lexical_absolute_path(queue_path, "control queue")
+    require(
+        supplied_queue_path == expected_queue_path,
+        "control queue is not the exact tracked cluster_queue.json path",
+    )
+    require(
+        isinstance(implementation, Mapping)
+        and set(implementation) == set(_source_paths(REPOSITORY_ROOT)),
+        "terminal wave implementation inventory changed",
+    )
+    require(
+        (terminal_runtime is None) == (replay_runtime is None),
+        "control runtime contract authentication is incomplete",
+    )
+    if terminal_runtime is not None and replay_runtime is not None:
+        _authenticate_runtime_contract_values_in_checkout(
+            checkout=checkout,
+            control_commit=commit,
+            terminal_runtime=terminal_runtime,
+            replay_runtime=replay_runtime,
+        )
+    _require_clean_checkout(
+        checkout,
+        commit,
+        "control checkout",
+        single_read_paths=(CONTROL_QUEUE_RELATIVE,),
+    )
+    queue_payload, _identity, queue_metadata = _read_checkout_regular_file_once(
+        checkout,
+        CONTROL_QUEUE_RELATIVE,
+        "tracked control queue",
+        maximum_bytes=AUTHENTICATED_JSON_LIMIT_BYTES,
+    )
+    require(
+        queue_metadata[2] & stat.S_IXUSR == 0,
+        "tracked control queue executable mode differs from the Git index",
+    )
+    require(
+        queue_payload
+        == _git_blob(checkout, commit, CONTROL_QUEUE_RELATIVE, "control queue"),
+        "control queue bytes differ from the exact control Git object",
+    )
+    for name, local_path in _source_paths(REPOSITORY_ROOT).items():
+        descriptor = _descriptor_shape(
+            implementation[name], f"terminal {name} implementation"
+        )
+        try:
+            relative = local_path.relative_to(REPOSITORY_ROOT)
+        except ValueError as error:
+            raise CameraCropTerminalError(
+                f"terminal {name} implementation path escaped the repository"
+            ) from error
+        blob = _git_blob(
+            checkout, commit, relative, f"terminal {name} implementation"
+        )
+        require(
+            descriptor["sha256"] == hashlib.sha256(blob).hexdigest()
+            and descriptor["bytes"] == len(blob),
+            f"terminal {name} implementation differs from the control commit",
+        )
+    _require_clean_checkout(
+        checkout,
+        commit,
+        "control checkout",
+        single_read_paths=(CONTROL_QUEUE_RELATIVE,),
+    )
+    _require_checkout_regular_file_identity(
+        checkout,
+        CONTROL_QUEUE_RELATIVE,
+        queue_metadata,
+        "tracked control queue",
+    )
+    return _parse_json_bytes(queue_payload, "tracked control queue")
+
+
+def _authenticate_control_state(
+    *,
+    control_root: Path,
+    control_commit: str,
+    queue_path: Path,
+    implementation: Mapping[str, Any],
+    terminal_runtime: Mapping[str, Any] | None = None,
+    replay_runtime: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    root = _safe_checkout_root(control_root, "control checkout")
+    with _held_git_checkout(root, "control checkout") as checkout:
+        return _authenticate_control_state_in_checkout(
+            checkout=checkout,
+            control_commit=control_commit,
+            queue_path=queue_path,
+            implementation=implementation,
+            terminal_runtime=terminal_runtime,
+            replay_runtime=replay_runtime,
+        )
+
+
+def _authenticate_results_claims_in_checkouts(
+    *,
+    results_checkout: _HeldGitCheckout,
+    results_commit: str,
+    prerequisite_inputs: Mapping[str, tuple[Path, str]],
+    prior_diagnostic_path: Path,
+    prior_diagnostic_sha256: str,
+    expected_prerequisites: Mapping[str, Any],
+    source_checkout: _HeldGitCheckout,
+) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    """Authenticate all six gates from one held read of each exact file."""
+
+    commit = queue._verified_commit(results_commit)
+    root = results_checkout.root
+    require(
+        isinstance(prerequisite_inputs, Mapping)
+        and set(PREREQUISITE_RESULTS_RELATIVES) == set(PREREQUISITE_CLUSTER_PATHS)
+        == set(expected_prerequisites) == set(prerequisite_inputs),
+        "results prerequisite inventory changed",
+    )
+    authenticated: dict[str, dict[str, Any]] = {}
+    single_read_relatives = tuple(PREREQUISITE_RESULTS_RELATIVES.values()) + (
+        PRIOR_DIAGNOSTIC_RESULTS_RELATIVE,
+    )
+    _require_clean_checkout(
+        results_checkout,
+        commit,
+        "results checkout",
+        single_read_paths=single_read_relatives,
+    )
+    authenticated_metadata: dict[Path, tuple[int, ...]] = {}
+    for name in sorted(expected_prerequisites):
+        wanted = expected_prerequisites[name]
+        claim = prerequisite_inputs[name]
+        require(
+            isinstance(claim, tuple) and len(claim) == 2,
+            f"terminal {name} prerequisite claim changed",
+        )
+        supplied_path, supplied_sha256 = claim
+        expected_path = root / PREREQUISITE_RESULTS_RELATIVES[name]
+        require(
+            _lexical_absolute_path(
+                Path(supplied_path), f"terminal {name} prerequisite"
+            ) == expected_path,
+            f"terminal {name} prerequisite is not the exact results artifact",
+        )
+        supplied_digest = queue._verified_sha(
+            supplied_sha256, f"terminal {name} prerequisite digest"
+        )
+        require(
+            supplied_digest == wanted["sha256"],
+            f"terminal {name} prerequisite supplied SHA-256 changed",
+        )
+        payload, identity, metadata = _read_checkout_regular_file_once(
+            results_checkout,
+            PREREQUISITE_RESULTS_RELATIVES[name],
+            f"fetched prerequisite {name}",
+            maximum_bytes=AUTHENTICATED_JSON_LIMIT_BYTES,
+            expected_bytes=wanted["bytes"],
+        )
+        require(
+            metadata[2] & stat.S_IXUSR == 0,
+            f"terminal {name} prerequisite executable mode differs from the Git index",
+        )
+        require(
+            identity["sha256"] == wanted["sha256"],
+            f"terminal {name} prerequisite identity changed",
+        )
+        require(
+            payload == _git_blob(
+                results_checkout,
+                commit,
+                PREREQUISITE_RESULTS_RELATIVES[name],
+                f"fetched prerequisite {name}",
+            ),
+            f"terminal {name} prerequisite differs from its results Git object",
+        )
+        value = _parse_json_bytes(payload, f"fetched prerequisite {name}")
+        diagnostic._validate_prerequisite_value(name, value, wanted)
+        authenticated[name] = identity
+        authenticated_metadata[PREREQUISITE_RESULTS_RELATIVES[name]] = metadata
+
+    expected_prior_path = root / PRIOR_DIAGNOSTIC_RESULTS_RELATIVE
+    require(
+        _lexical_absolute_path(
+            prior_diagnostic_path, "terminal attempt 002 receipt"
+        ) == expected_prior_path,
+        "terminal attempt 002 receipt is not the exact results artifact",
+    )
+    supplied_prior_digest = queue._verified_sha(
+        prior_diagnostic_sha256, "terminal attempt 002 receipt digest"
+    )
+    payload, identity, metadata = _read_checkout_regular_file_once(
+        results_checkout,
+        PRIOR_DIAGNOSTIC_RESULTS_RELATIVE,
+        "fetched attempt 002 diagnostic receipt",
+        maximum_bytes=AUTHENTICATED_JSON_LIMIT_BYTES,
+    )
+    require(
+        metadata[2] & stat.S_IXUSR == 0,
+        "terminal attempt 002 receipt executable mode differs from the Git index",
+    )
+    require(
+        identity["sha256"] == supplied_prior_digest,
+        "terminal wave attempt 002 diagnostic identity changed",
+    )
+    require(
+        payload == _git_blob(
+            results_checkout,
+            commit,
+            PRIOR_DIAGNOSTIC_RESULTS_RELATIVE,
+            "attempt 002 receipt",
+        ),
+        "attempt 002 receipt differs from its results Git object",
+    )
+    value = _parse_json_bytes(payload, "fetched attempt 002 diagnostic receipt")
+    study_commit = _validate_prior_diagnostic_value(value)
+    source_blobs = _validate_prior_source_commit_in_checkout(
+        source_checkout, study_commit
+    )
+    authenticated_prior = {
+        "receipt": identity,
+        "results_commit": commit,
+        "study_commit": study_commit,
+        "authenticated_source_blobs": source_blobs,
+    }
+    authenticated_metadata[PRIOR_DIAGNOSTIC_RESULTS_RELATIVE] = metadata
+    _require_clean_checkout(
+        results_checkout,
+        commit,
+        "results checkout",
+        single_read_paths=single_read_relatives,
+    )
+    for relative, observed_metadata in authenticated_metadata.items():
+        _require_checkout_regular_file_identity(
+            results_checkout,
+            relative,
+            observed_metadata,
+            f"authenticated results artifact {relative}",
+        )
+    return authenticated, authenticated_prior
+
+
+def _authenticate_results_claims(
+    *,
+    results_root: Path,
+    results_commit: str,
+    prerequisite_inputs: Mapping[str, tuple[Path, str]],
+    prior_diagnostic_path: Path,
+    prior_diagnostic_sha256: str,
+    expected_prerequisites: Mapping[str, Any],
+    source_root: Path,
+) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    results_root = _safe_checkout_root(results_root, "results checkout")
+    source_root = _safe_checkout_root(source_root, "source checkout")
+    with _held_git_checkout(
+        results_root, "results checkout"
+    ) as results_checkout, _held_git_checkout(
+        source_root, "source checkout"
+    ) as source_checkout:
+        return _authenticate_results_claims_in_checkouts(
+            results_checkout=results_checkout,
+            results_commit=results_commit,
+            prerequisite_inputs=prerequisite_inputs,
+            prior_diagnostic_path=prior_diagnostic_path,
+            prior_diagnostic_sha256=prior_diagnostic_sha256,
+            expected_prerequisites=expected_prerequisites,
+            source_checkout=source_checkout,
+        )
+
+
+def _authenticate_results_inputs(
+    *,
+    results_root: Path,
+    results_commit: str,
+    prerequisites: Mapping[str, Any],
+    prior: Mapping[str, Any],
+    expected_prerequisites: Mapping[str, Any],
+    source_root: Path,
+) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    """Reauthenticate a shaped wave through the exact six held-file reads."""
+
+    require(
+        isinstance(prerequisites, Mapping)
+        and set(prerequisites) == set(expected_prerequisites),
+        "results prerequisite inventory changed",
+    )
+    prerequisite_inputs: dict[str, tuple[Path, str]] = {}
+    for name in sorted(prerequisites):
+        descriptor = _descriptor_shape(
+            prerequisites[name], f"terminal {name} prerequisite"
+        )
+        prerequisite_inputs[name] = (
+            Path(descriptor["path"]), descriptor["sha256"]
+        )
+    prior_receipt = _descriptor_shape(
+        prior.get("receipt"), "terminal attempt 002 receipt"
+    )
+    authenticated, authenticated_prior = _authenticate_results_claims(
+        results_root=results_root,
+        results_commit=results_commit,
+        prerequisite_inputs=prerequisite_inputs,
+        prior_diagnostic_path=Path(prior_receipt["path"]),
+        prior_diagnostic_sha256=prior_receipt["sha256"],
+        expected_prerequisites=expected_prerequisites,
+        source_root=source_root,
+    )
+    require(
+        _exact_json_equal(prerequisites, authenticated),
+        "terminal wave replay prerequisite identities changed",
+    )
+    require(
+        _exact_json_equal(prior, authenticated_prior),
+        "terminal wave attempt 002 diagnostic identity changed",
+    )
+    return authenticated, authenticated_prior
+
+
 def _validate_results_checkout(path: Path, expected_commit: str) -> Path:
-    supplied = Path(path)
-    require(not supplied.is_symlink(), "results checkout is a symlink")
-    root = supplied.resolve(strict=True)
-    require(root.is_dir(), "results checkout is unavailable")
-    head = _run_git(root, "rev-parse", "HEAD")
-    status = _run_git(root, "status", "--porcelain=v1", "--untracked-files=all")
-    assert isinstance(head, str) and isinstance(status, str)
-    require(head.strip() == queue._verified_commit(expected_commit) and not status,
-            "results checkout is not clean at the exact supplied commit")
-    return root
+    root = _safe_checkout_root(path, "results checkout")
+    with _held_git_checkout(root, "results checkout") as checkout:
+        _require_clean_checkout(checkout, expected_commit, "results checkout")
+        return root
 
 
 def validate_prior_diagnostic(
@@ -714,26 +2355,44 @@ def validate_prior_diagnostic(
     results_root: Path,
     results_commit: str,
 ) -> dict[str, Any]:
-    root = _validate_results_checkout(results_root, results_commit)
-    expected_path = root / PRIOR_DIAGNOSTIC_RESULTS_RELATIVE
-    require(Path(path).resolve(strict=True) == expected_path,
-            "attempt 002 receipt is not the exact fetched-results artifact")
-    digest = queue._verified_sha(supplied_sha256, "attempt 002 receipt digest")
-    identity = replay.file_identity(
-        expected_path,
-        label="fetched attempt 002 diagnostic receipt",
-        expected_sha256=digest,
-        within=root,
-    )
-    value = replay.load_json(expected_path, "fetched attempt 002 diagnostic receipt")
-    study_commit = _validate_prior_diagnostic_value(value)
-    source_blobs = _validate_prior_source_commit(REPOSITORY_ROOT, study_commit)
-    return {
-        "receipt": identity,
-        "results_commit": queue._verified_commit(results_commit),
-        "study_commit": study_commit,
-        "authenticated_source_blobs": source_blobs,
-    }
+    root = _safe_checkout_root(results_root, "results checkout")
+    commit = queue._verified_commit(results_commit)
+    source_root = _safe_checkout_root(REPOSITORY_ROOT, "source checkout")
+    with _held_git_checkout(
+        root, "results checkout"
+    ) as results_checkout, _held_git_checkout(
+        source_root, "source checkout"
+    ) as source_checkout:
+        _require_clean_checkout(results_checkout, commit, "results checkout")
+        expected_path = root / PRIOR_DIAGNOSTIC_RESULTS_RELATIVE
+        require(_lexical_absolute_path(path, "attempt 002 receipt") == expected_path,
+                "attempt 002 receipt is not the exact fetched-results artifact")
+        digest = queue._verified_sha(supplied_sha256, "attempt 002 receipt digest")
+        payload, identity, _metadata = _read_regular_file_once(
+            expected_path,
+            "fetched attempt 002 diagnostic receipt",
+            maximum_bytes=AUTHENTICATED_JSON_LIMIT_BYTES,
+        )
+        require(identity["sha256"] == digest, "attempt 002 receipt digest changed")
+        require(
+            payload == _git_blob(
+                results_checkout, commit, PRIOR_DIAGNOSTIC_RESULTS_RELATIVE,
+                "attempt 002 receipt",
+            ),
+            "attempt 002 receipt differs from its results Git object",
+        )
+        value = _parse_json_bytes(payload, "fetched attempt 002 diagnostic receipt")
+        study_commit = _validate_prior_diagnostic_value(value)
+        source_blobs = _validate_prior_source_commit_in_checkout(
+            source_checkout, study_commit
+        )
+        _require_clean_checkout(results_checkout, commit, "results checkout")
+        return {
+            "receipt": identity,
+            "results_commit": commit,
+            "study_commit": study_commit,
+            "authenticated_source_blobs": source_blobs,
+        }
 
 
 def _hash_argv(implementation: Mapping[str, Mapping[str, Any]]) -> list[str]:
@@ -786,6 +2445,43 @@ def _job_descriptor(
     }
 
 
+def _wave_from_authenticated(
+    *,
+    study_commit: str,
+    implementation: Mapping[str, Mapping[str, Any]],
+    prerequisites: Mapping[str, Mapping[str, Any]],
+    prior: Mapping[str, Any],
+) -> dict[str, Any]:
+    require(len(prerequisites) == 5, "exactly five replay prerequisites are required")
+    descriptor = _job_descriptor(
+        study_commit=study_commit, implementation=implementation, prior=prior
+    )
+    return {
+        "schema_version": WAVE_SCHEMA,
+        "namespace": NAMESPACE,
+        "study_id": STUDY_ID,
+        "source_commit": descriptor["source_commit"],
+        "status": WAVE_STATUS,
+        "jobs": [descriptor],
+        "implementation": dict(implementation),
+        "replay_prerequisite_receipts": dict(prerequisites),
+        "prior_diagnostic": dict(prior),
+        "expected_outputs": {
+            "published_camera_crop_contracts": MODEL_CONTRACT_NAMES,
+            "success_receipt": SUCCESS_RECEIPT,
+            "publish_file_count": 3,
+        },
+        "science_counts": zero_science_counts(),
+        "simulator_state_render_used": False,
+        "whole_frame_identity": False,
+        "safe_for_physical_alignment_input_only_after_runtime_success": True,
+        "safe_to_release_confirmation": False,
+        "confirmation_released": False,
+        "descriptor_dispatched": False,
+        "claim_boundary": WAVE_CLAIM_BOUNDARY,
+    }
+
+
 def build_wave(
     *,
     study_commit: str,
@@ -800,44 +2496,272 @@ def build_wave(
     implementation = _local_implementation()
     _runtime_contract(REPOSITORY_ROOT)
     prerequisites = diagnostic.validate_prerequisites(prerequisite_inputs)
-    require(len(prerequisites) == 5, "exactly five replay prerequisites are required")
     prior = validate_prior_diagnostic(
         path=prior_diagnostic_path,
         supplied_sha256=prior_diagnostic_sha256,
         results_root=results_root,
         results_commit=results_commit,
     )
-    descriptor = _job_descriptor(
-        study_commit=study_commit, implementation=implementation, prior=prior
+    return _wave_from_authenticated(
+        study_commit=study_commit,
+        implementation=implementation,
+        prerequisites=prerequisites,
+        prior=prior,
     )
+
+
+def _validate_empty_queue_template(current_queue: Any) -> None:
+    require(
+        isinstance(current_queue, Mapping)
+        and set(current_queue) == QUEUE_MANIFEST_KEYS,
+        "queue template fields changed",
+    )
+    require(
+        current_queue.get("schema_version") == QUEUE_MANIFEST_SCHEMA
+        and current_queue.get("namespace") == NAMESPACE,
+        "queue template identity changed",
+    )
+    require(current_queue.get("shutdown") is False, "queue template is shutdown")
+    require(
+        isinstance(current_queue.get("jobs"), list)
+        and current_queue["jobs"] == [],
+        "queue template is not exactly empty",
+    )
+
+
+def _queue_manifest_from_descriptor(descriptor: Mapping[str, Any]) -> dict[str, Any]:
     return {
-        "schema_version": WAVE_SCHEMA,
+        "schema_version": QUEUE_MANIFEST_SCHEMA,
         "namespace": NAMESPACE,
-        "study_id": STUDY_ID,
-        "source_commit": descriptor["source_commit"],
-        "status": "terminal_descriptor_not_dispatched_six_external_receipt_gates_passed",
-        "jobs": [descriptor],
-        "implementation": implementation,
-        "replay_prerequisite_receipts": prerequisites,
-        "prior_diagnostic": prior,
-        "expected_outputs": {
-            "published_camera_crop_contracts": MODEL_CONTRACT_NAMES,
-            "success_receipt": SUCCESS_RECEIPT,
-            "publish_file_count": 3,
-        },
-        "science_counts": zero_science_counts(),
-        "simulator_state_render_used": False,
-        "whole_frame_identity": False,
-        "safe_for_physical_alignment_input_only_after_runtime_success": True,
-        "safe_to_release_confirmation": False,
-        "confirmation_released": False,
-        "descriptor_dispatched": False,
-        "claim_boundary": (
-            "A descriptor-only CPU replay candidate. Building this value does not edit or "
-            "release the queue, run attempt 003, qualify a crop, create annotation evidence, "
-            "estimate forecast accuracy, or authorize confirmation."
-        ),
+        "shutdown": False,
+        "jobs": [{
+            "job_id": descriptor["job_id"],
+            "released": descriptor["released"],
+            "source_commit": descriptor["source_commit"],
+            "role": descriptor["role"],
+            "argv": list(descriptor["argv"]),
+            "max_wall_seconds": descriptor["max_wall_seconds"],
+            "publish_log_tail_bytes": descriptor["publish_log_tail_bytes"],
+        }],
     }
+
+
+def build_queue_candidate(
+    *,
+    study_commit: str,
+    prerequisite_inputs: Mapping[str, tuple[Path, str]],
+    prior_diagnostic_path: Path,
+    prior_diagnostic_sha256: str,
+    results_root: Path,
+    results_commit: str,
+    control_root: Path,
+    control_commit: str,
+    queue_path: Path,
+) -> dict[str, Any]:
+    """Authenticate and compose stdout-only queue bytes without legacy reopens."""
+
+    commit = queue._verified_commit(study_commit)
+    supplied_control_commit = queue._verified_commit(control_commit)
+    require(
+        supplied_control_commit == commit,
+        "control commit differs from the intended study commit",
+    )
+    queue._verified_commit(results_commit)
+    implementation = _local_implementation()
+    terminal_runtime = _runtime_contract(REPOSITORY_ROOT)
+    replay_runtime = diagnostic._runtime_contract(REPOSITORY_ROOT)
+    control_root = _safe_checkout_root(control_root, "control checkout")
+    results_root = _safe_checkout_root(results_root, "results checkout")
+    with _held_git_checkout(
+        control_root, "control checkout"
+    ) as control_checkout, _held_git_checkout(
+        results_root, "results checkout"
+    ) as results_checkout:
+        current_queue = _authenticate_control_state_in_checkout(
+            checkout=control_checkout,
+            control_commit=supplied_control_commit,
+            queue_path=queue_path,
+            implementation=implementation,
+            terminal_runtime=terminal_runtime,
+            replay_runtime=replay_runtime,
+        )
+        _validate_empty_queue_template(current_queue)
+        prerequisites, prior = _authenticate_results_claims_in_checkouts(
+            results_checkout=results_checkout,
+            results_commit=results_commit,
+            prerequisite_inputs=prerequisite_inputs,
+            prior_diagnostic_path=prior_diagnostic_path,
+            prior_diagnostic_sha256=prior_diagnostic_sha256,
+            expected_prerequisites=replay_runtime["prerequisite_receipts"],
+            source_checkout=control_checkout,
+        )
+        wave = _wave_from_authenticated(
+            study_commit=commit,
+            implementation=implementation,
+            prerequisites=prerequisites,
+            prior=prior,
+        )
+        return _queue_manifest_from_descriptor(wave["jobs"][0])
+
+
+def compose_queue_candidate(
+    *,
+    wave: Mapping[str, Any],
+    expected_study_commit: str,
+    results_root: Path,
+    control_root: Path,
+    control_commit: str,
+    queue_path: Path,
+) -> dict[str, Any]:
+    """Return an exact queue manifest without mutating files, refs, or queue state.
+
+    The returned value is intentionally shaped for the existing cluster queue
+    publisher.  It becomes release authority only if a later, separately
+    authorized control-branch publication installs it.  This function performs
+    no publication and accepts neither a stale wave nor a nonempty queue base.
+    """
+
+    commit = queue._verified_commit(expected_study_commit)
+    supplied_control_commit = queue._verified_commit(control_commit)
+    require(
+        supplied_control_commit == commit,
+        "control commit differs from the intended study commit",
+    )
+    require(
+        isinstance(wave, Mapping) and set(wave) == WAVE_KEYS,
+        "terminal wave fields changed",
+    )
+    require(
+        wave.get("schema_version") == WAVE_SCHEMA
+        and wave.get("namespace") == NAMESPACE
+        and wave.get("study_id") == STUDY_ID
+        and wave.get("source_commit") == commit,
+        "terminal wave is stale or has the wrong identity",
+    )
+    require(wave.get("status") == WAVE_STATUS, "terminal wave status changed")
+    require(
+        _exact_json_equal(wave.get("science_counts"), zero_science_counts())
+        and wave.get("simulator_state_render_used") is False
+        and wave.get("whole_frame_identity") is False
+        and wave.get("safe_for_physical_alignment_input_only_after_runtime_success")
+        is True
+        and wave.get("safe_to_release_confirmation") is False
+        and wave.get("confirmation_released") is False
+        and wave.get("descriptor_dispatched") is False
+        and wave.get("claim_boundary") == WAVE_CLAIM_BOUNDARY,
+        "terminal wave authority boundary changed",
+    )
+    require(
+        _exact_json_equal(
+            wave.get("expected_outputs"),
+            {
+                "published_camera_crop_contracts": MODEL_CONTRACT_NAMES,
+                "success_receipt": SUCCESS_RECEIPT,
+                "publish_file_count": 3,
+            },
+        ),
+        "terminal wave expected outputs changed",
+    )
+
+    implementation = wave.get("implementation")
+    require(
+        isinstance(implementation, Mapping)
+        and set(implementation) == set(_source_paths(REPOSITORY_ROOT)),
+        "terminal wave implementation inventory changed",
+    )
+    terminal_runtime = _runtime_contract(REPOSITORY_ROOT)
+    replay_runtime = diagnostic._runtime_contract(REPOSITORY_ROOT)
+    current_implementation = _local_implementation()
+    require(
+        _exact_json_equal(implementation, current_implementation),
+        "terminal wave implementation bytes differ from the current source",
+    )
+    normalized_implementation = {
+        name: _descriptor_shape(implementation[name], f"terminal {name} implementation")
+        for name in sorted(implementation)
+    }
+    current_queue = _authenticate_control_state(
+        control_root=control_root,
+        control_commit=supplied_control_commit,
+        queue_path=queue_path,
+        implementation=normalized_implementation,
+        terminal_runtime=terminal_runtime,
+        replay_runtime=replay_runtime,
+    )
+    _validate_empty_queue_template(current_queue)
+
+    prerequisites = wave.get("replay_prerequisite_receipts")
+    require(
+        isinstance(prerequisites, Mapping)
+        and set(prerequisites) == set(PREREQUISITE_CLUSTER_PATHS)
+        and len(prerequisites) == 5,
+        "terminal wave does not contain all five replay prerequisite receipts",
+    )
+    for name in sorted(prerequisites):
+        _descriptor_shape(
+            prerequisites[name], f"terminal {name} prerequisite"
+        )
+
+    prior = wave.get("prior_diagnostic")
+    require(
+        isinstance(prior, Mapping)
+        and set(prior)
+        == {
+            "receipt", "results_commit", "study_commit",
+            "authenticated_source_blobs",
+        },
+        "terminal wave attempt 002 diagnostic fields changed",
+    )
+    _descriptor_shape(prior.get("receipt"), "terminal attempt 002 receipt")
+    results_commit = queue._verified_commit(prior.get("results_commit"))
+    queue._verified_commit(prior.get("study_commit"))
+    authenticated_prerequisites, authenticated_prior = _authenticate_results_inputs(
+        results_root=results_root,
+        results_commit=results_commit,
+        prerequisites=prerequisites,
+        prior=prior,
+        expected_prerequisites=replay_runtime["prerequisite_receipts"],
+        source_root=control_root,
+    )
+    require(
+        _exact_json_equal(prerequisites, authenticated_prerequisites),
+        "terminal wave replay prerequisite identities changed",
+    )
+    require(
+        _exact_json_equal(prior, authenticated_prior),
+        "terminal wave attempt 002 diagnostic identity changed",
+    )
+    source_blobs = prior.get("authenticated_source_blobs")
+    expected_source_keys = {str(path) for path in PRIOR_SOURCE_PINS}
+    require(
+        isinstance(source_blobs, Mapping) and set(source_blobs) == expected_source_keys,
+        "terminal wave attempt 002 source inventory changed",
+    )
+    for path, expected_sha256 in PRIOR_SOURCE_PINS.items():
+        row = source_blobs[str(path)]
+        require(
+            isinstance(row, Mapping)
+            and set(row) == {"sha256", "bytes"}
+            and row.get("sha256") == expected_sha256
+            and type(row.get("bytes")) is int
+            and row["bytes"] > 0,
+            f"terminal wave attempt 002 source identity changed: {path}",
+        )
+
+    expected_descriptor = _job_descriptor(
+        study_commit=commit,
+        implementation=normalized_implementation,
+        prior=prior,
+    )
+    descriptors = wave.get("jobs")
+    require(
+        isinstance(descriptors, list)
+        and len(descriptors) == 1
+        and _exact_json_equal(descriptors[0], expected_descriptor),
+        "terminal wave executable descriptor changed",
+    )
+
+    return _queue_manifest_from_descriptor(expected_descriptor)
 
 
 def _runtime_implementation(args: argparse.Namespace) -> dict[str, dict[str, str]]:
@@ -1444,6 +3368,63 @@ def _builder_inputs(args: argparse.Namespace) -> dict[str, tuple[Path, str]]:
     }
 
 
+def _validate_build_mode_options(args: argparse.Namespace) -> bool:
+    """Validate queue-mode relationships before any checkout or artifact access."""
+
+    queue_mode = args.queue_template is not None
+    if not queue_mode:
+        require(
+            args.control_root is None and args.control_commit is None,
+            "control checkout arguments require --queue-template",
+        )
+        return False
+
+    require(
+        args.output is None,
+        "queue candidate emission is stdout-only and cannot use --output",
+    )
+    require(
+        args.control_root is not None and args.control_commit is not None,
+        "queue candidate emission requires --control-root and --control-commit",
+    )
+    study_commit = queue._verified_commit(args.study_commit)
+    control_commit = queue._verified_commit(args.control_commit)
+    queue._verified_commit(args.results_commit)
+    require(
+        control_commit == study_commit,
+        "control commit differs from the intended study commit",
+    )
+    control_root = _lexical_absolute_path(args.control_root, "control checkout")
+    results_root = _lexical_absolute_path(args.results_root, "results checkout")
+    require(
+        _lexical_absolute_path(args.queue_template, "control queue")
+        == control_root / CONTROL_QUEUE_RELATIVE,
+        "control queue is not the exact tracked cluster_queue.json path",
+    )
+    require(
+        _lexical_absolute_path(
+            args.prior_diagnostic_receipt, "terminal attempt 002 receipt"
+        ) == results_root / PRIOR_DIAGNOSTIC_RESULTS_RELATIVE,
+        "terminal attempt 002 receipt is not the exact results artifact",
+    )
+    queue._verified_sha(
+        args.prior_diagnostic_receipt_sha256,
+        "terminal attempt 002 receipt digest",
+    )
+    for name, relative in PREREQUISITE_RESULTS_RELATIVES.items():
+        require(
+            _lexical_absolute_path(
+                getattr(args, name), f"terminal {name} prerequisite"
+            ) == results_root / relative,
+            f"terminal {name} prerequisite is not the exact results artifact",
+        )
+        queue._verified_sha(
+            getattr(args, name + "_sha256"),
+            f"terminal {name} prerequisite digest",
+        )
+    return True
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1453,6 +3434,22 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--results-commit", required=True)
     build.add_argument("--prior-diagnostic-receipt", type=Path, required=True)
     build.add_argument("--prior-diagnostic-receipt-sha256", required=True)
+    build.add_argument(
+        "--queue-template",
+        type=Path,
+        help=(
+            "authenticate the exact tracked cluster_queue.json in --control-root "
+            "and emit a directly consumable candidate to stdout"
+        ),
+    )
+    build.add_argument(
+        "--control-root", type=Path,
+        help="exact clean control-branch checkout containing --queue-template",
+    )
+    build.add_argument(
+        "--control-commit",
+        help="exact control checkout commit; must equal --study-commit",
+    )
     build.add_argument("--output", type=Path)
     _add_prerequisite_arguments(build)
     run = sub.add_parser("run", help="run inside the claimed detached queue job")
@@ -1473,14 +3470,28 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "run":
         run_job(args)
         return 0
-    result = build_wave(
-        study_commit=args.study_commit,
-        prerequisite_inputs=_builder_inputs(args),
-        prior_diagnostic_path=args.prior_diagnostic_receipt,
-        prior_diagnostic_sha256=args.prior_diagnostic_receipt_sha256,
-        results_root=args.results_root,
-        results_commit=args.results_commit,
-    )
+    queue_mode = _validate_build_mode_options(args)
+    if queue_mode:
+        result = build_queue_candidate(
+            study_commit=args.study_commit,
+            prerequisite_inputs=_builder_inputs(args),
+            prior_diagnostic_path=args.prior_diagnostic_receipt,
+            prior_diagnostic_sha256=args.prior_diagnostic_receipt_sha256,
+            results_root=args.results_root,
+            results_commit=args.results_commit,
+            control_root=args.control_root,
+            control_commit=args.control_commit,
+            queue_path=args.queue_template,
+        )
+    else:
+        result = build_wave(
+            study_commit=args.study_commit,
+            prerequisite_inputs=_builder_inputs(args),
+            prior_diagnostic_path=args.prior_diagnostic_receipt,
+            prior_diagnostic_sha256=args.prior_diagnostic_receipt_sha256,
+            results_root=args.results_root,
+            results_commit=args.results_commit,
+        )
     payload = queue.canonical_bytes(result)
     if args.output is None:
         sys.stdout.buffer.write(payload)

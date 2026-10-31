@@ -2,9 +2,11 @@
 
 This slice defines the fail-closed pixel replay needed to qualify the geometry
 used to compare an original selected camera with a generated decoded future.
-The current attempt is diagnostic-only and does not qualify that geometry. It
-does not run a model or simulator, infer physical time, evaluate behavior or
-prediction skill, create a label, or release confirmation.
+Attempt 002 is diagnostic-only and does not qualify that geometry. Prospective
+terminal attempt 003 may publish the two crop contracts only after authenticating
+the exact attempt-002 receipt and replaying both models successfully on CPU. No
+attempt here runs a model or simulator, infers physical time, evaluates behavior
+or prediction skill, creates a label, or releases confirmation.
 
 Attempt `camera-crop-replay-witness-001` ended technical-invalid after both
 children exited 1. Its signed failure receipt SHA-256 is
@@ -47,15 +49,106 @@ diagnostic children unexpectedly complete, raw contracts remain only on the
 PVC and no crop contract is published. A later fresh attempt may apply only a
 cause evidenced by this diagnostic.
 
+## Prospective terminal attempt 003
+
+`camera_crop_witness_terminal_jobs.py` is the separately gated terminal replay.
+Its `build_wave(...)` API accepts the same five immutable replay prerequisites
+plus the exact signed attempt-002 diagnostic receipt fetched at a pinned clean
+results commit. It authenticates the attempt-002 source blobs and emits one
+descriptor for `camera-crop-replay-witness-003`; it does not edit or publish the
+control queue.
+
+`compose_queue_candidate(...)` removes the remaining manual descriptor-copying
+step. It accepts only that complete six-gate wave, its pinned clean results
+checkout, the intended study commit, and an explicitly supplied clean control
+checkout at that same commit. The only accepted queue input is the tracked
+`workshops/corl2026_world_models/execution/20260912/autonomy/cluster_queue.json`
+beneath that exact control root; its filesystem bytes must equal the Git object
+at the supplied commit and must decode to the exact empty, non-shutdown queue.
+Its return value has the
+native `wmf-cluster-queue-v1` shape consumed by the existing Git/PVC publisher.
+
+Before composing, the function revalidates the runtime contract and current
+implementation bytes, then matches every implementation hash and byte count to
+the corresponding control-commit Git blob. Both parsed runtime-contract values
+must also equal, type for type, strict JSON decoded directly from their held
+control-commit Git blobs; a transient local contract parse cannot supply queue
+semantics. It binds the five prerequisite
+receipts to their fixed paths in the pinned results checkout and binds attempt
+002 to its fixed results path. Each of those six files is opened from a held
+parent through component-by-component no-follow traversal, read once under a
+bounded before/after `fstat`, hashed and strict-JSON-decoded from those same
+bytes, matched to its results-commit Git blob, and passed to the existing deep
+semantic validator. Git validation holds the authenticated worktree, per-
+worktree administrative directory, common directory, index, and protected
+`/usr/bin/git` inode open across every command. Commands use only those
+`/proc/self/fd` identities under a closed environment; optional locks, local
+fsmonitor helpers, hooks, prompts, replacement objects, lazy fetches, external
+diffs, and external protocols are disabled. Ordinary and linked-worktree
+administrative pointers are checked before and after use, and every validation
+proves the Git index bytes and metadata unchanged. Checkout cleanliness is
+established without `git status` or conversion-capable diff commands: the held
+index must exactly match the supplied commit tree, tracked worktree entries are
+opened without following parent links and raw-hashed as Git blobs, and a
+separate helper-free query must find no untracked paths. The six receipt paths
+are deliberately excluded from that scan: their one held read supplies both
+strict parsing and the exact Git-blob comparison, followed only by a no-content
+metadata identity recheck. Both operations traverse relative to the already-held
+checkout root descriptor, never by resolving the checkout's external pathname.
+The attempt-002 `study_commit` must resolve as exactly the supplied commit object;
+a tree or other 40/64-hex object ID is rejected before source-blob reads. The
+control queue uses the same single-read pattern.
+The composer is read-only:
+the returned value
+becomes release authority only if a later, separately authorized control-branch
+commit publishes it after current GM/PVC reconciliation. Stale waves, nonempty
+or shutdown queues, additional queue fields, altered implementation or receipt
+identities, altered descriptors and broadened science/confirmation claims are
+rejected.
+
+The CLI exposes the same path without editing files or refs. Supplying
+`--queue-template` together with `--control-root` and `--control-commit` to
+`build-wave` emits the queue candidate to stdout and is incompatible with
+`--output`; `--control-commit` must equal `--study-commit`. Omitting all three
+retains the descriptor-wave output. Queue-mode option, commit, and exact fixed-
+path relationships are checked immediately after argument parsing, before any
+filesystem, Git, contract, or receipt access. Queue mode then uses its direct
+single-read authenticator and never traverses the descriptor-only builder's
+legacy prerequisite or prior-receipt readers. Neither mode is valid until the exact
+attempt-002 receipt exists locally and the fresh results checkout, source
+identities and all six receipt gates validate. Emission does not install the
+candidate, dispatch a descriptor, write a file or ref, or grant confirmation
+authority.
+
+At runtime, attempt 003 reopens the attempt-002 receipt and every prerequisite
+on the PVC, runs both replay children inside the queue controller's process
+group with GPU and network-backed model access disabled, validates the raw crop
+contracts and both witness arrays, then atomically publishes exactly the N3
+contract, D1 contract and signed terminal receipt. Any failure removes partial
+derived publication, retains raw evidence and grants no physical-alignment,
+annotation or confirmation authority.
+
 ## Fail-closed inputs
 
 The descriptor builder accepts exactly five explicit files fetched from the
-results branch, each with its expected SHA-256:
+results branch, each with its expected SHA-256. Queue-candidate composition
+additionally requires them at their fixed paths inside the exact clean results
+checkout and commit:
 
 - N3 and D1 source-audit receipts;
 - the passed six-request N3 generation qualification;
 - the D1 generation normalization receipt; and
 - the qualified six-request D1 job receipt.
+
+Those fixed results paths are, respectively,
+`results/jobs/timing-n3-source-audit-001/publish/n3_source_audit.json`,
+`results/jobs/timing-d1-source-audit-001/publish/d1_source_audit.json`,
+`results/jobs/timing-n3-live-generation-p00-002/publish/n3_qualification.json`,
+`results/jobs/timing-d1-normalize-generation-001/publish/d1_generation_probe.json`,
+and
+`results/jobs/d1-first-live-005/publish/d1_qualification_job_receipt.json`.
+Attempt 002 is fixed at
+`results/jobs/camera-crop-replay-witness-002/publish/camera_crop_witness_job_failure.json`.
 
 It emits a deterministic `wmf-camera-crop-witness-wave-v1` descriptor and does
 not edit or dispatch the queue. The cluster wrapper reopens the corresponding

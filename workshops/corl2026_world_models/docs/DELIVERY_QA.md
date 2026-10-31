@@ -446,8 +446,18 @@ episode rows. The final manuscript incorporates the following corrections:
   LEFT cross-layout entry-status pairs are 22/1/4/0 and RIGHT 19/0/8/0 for
   control-no-entry/reflected-entry, control-entry/reflected-no-entry,
   control-entry/reflected-entry and neither-entry. These are comparison
+  categories whose exact contribution ledger partitions the same totals:
+  LEFT closes through nonempty status rows as -9,900 + 3,008 = -6892,
+  450 - 223 = 227 and 0 - 100 = -100; RIGHT closes as
+  -8,550 + 2,829 = -5721 and 0 - 382 = -382.
+  41 control-no-entry/reflected-entry command-label comparisons contribute
+  -18,450 + 5,837 = -12,613; 12 both-entry comparisons contribute
+  0 - 482 = -482; and one control-entry/reflected-no-entry comparison
+  contributes 450 - 223 = 227. Three of eight command/status rows are empty,
+  with no conditional mean. The ledger total -18,000 + 5,132 = -12,868 is
+  exactly twice the block-balanced -6,434 sum. These are comparison
   categories across different layouts, not temporal transitions,
-  within-episode conversions or counterfactual changes. The $Z$ term is
+  within-episode conversions, principal strata or counterfactual changes. The $Z$ term is
   a zero-masked recorded-index term, not an entrant-only timing effect; its zero
   under no entry is algebra, not an imputed entry index. This remains
   deterministic post-result algebra, not causal mediation, physical latency,

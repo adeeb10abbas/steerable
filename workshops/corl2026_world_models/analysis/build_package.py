@@ -57,6 +57,7 @@ def main():
     run("H02 retained position reflection", [sys.executable, str(package / "analysis/analyze_h02_position_reflection.py")])
     run("H02 matched entry supplement", [sys.executable, str(package / "analysis/analyze_h02_matched_entry.py")])
     run("H02 capped-index decomposition", [sys.executable, str(package / "analysis/analyze_h02_capped_index_decomposition.py")])
+    run("H02 entry-status contributions", [sys.executable, str(package / "analysis/analyze_h02_entry_status_contributions.py")])
     run("H03 H04 retained guidance pilots", [sys.executable, str(package / "analysis/analyze_h03_h04_guidance_pilots.py")])
     run("H05 retained lateral dose response", [sys.executable, str(package / "analysis/analyze_h05_lateral_dose_response.py")])
     run("H06 retained graded symmetry", [sys.executable, str(package / "analysis/analyze_h06_graded_symmetry.py")])
@@ -91,7 +92,7 @@ def main():
     body = " ".join(raw_body.replace("-\n", "").split())
     for required in ["108", "13/54", "50/54", "26/27", "DreamZero-s2", "31.1", "35.8",
                      "18/27", "17/27", "23/27", "81.4", "104 entries", "1.125", "13/15",
-                     "H02 compact audit", "540 descriptors", "Post-result descriptive", "requested-cone-entry indicator 13/54 control versus 53/54 reflected", "42 absent by cap", "0.741", "238.3", "negative 27/27", "not event/imputation", "not pure timing/physical latency", "model-based survival/hazard inference", "cap-incidence term", "333.333", "zero-masked recorded-index term", "95.037", "No forecast/D1/new-inference claim", "H03/H04", "post-result guidance pilots", "6/6 to 4/6", "3/6 to 4/6",
+                     "H02 compact audit", "540 descriptors", "Post-result descriptive", "requested-cone-entry indicator 13/54 control versus 53/54 reflected", "42 absent by cap", "0.741", "238.3", "negative 27/27", "not event/imputation", "not pure timing/physical latency", "model-based survival/hazard inference", "cap-incidence term", "333.333", "zero-masked recorded-index term", "95.037", "accounting partitions LEFT", "6892", "+227", "5721", "not transitions, principal strata or conditional effects", "No forecast/D1/new-inference claim", "H03/H04", "post-result guidance pilots", "6/6 to 4/6", "3/6 to 4/6",
                      "H07/H08", "Edge", "12.4", "19.2", "endpoint interactions",
                      "H09/H10", "134/160", "123/160", "wording inference was not registered",
                      "H11/H12 are separate fixed-scene Phase-A direct-command cohorts",
@@ -127,6 +128,8 @@ def main():
     h02_matched = json.loads(h02_matched_path.read_text())
     h02_decomposition_path = package / "paper/data/h02_capped_index_decomposition.json"
     h02_decomposition = json.loads(h02_decomposition_path.read_text())
+    h02_status_contributions_path = package / "paper/data/h02_entry_status_contributions.json"
+    h02_status_contributions = json.loads(h02_status_contributions_path.read_text())
     h03_h04_path = package / "paper/data/h03_h04_guidance_pilots.json"
     h03_h04 = json.loads(h03_h04_path.read_text())
     h05_path = package / "paper/data/h05_lateral_dose_response.json"
@@ -253,6 +256,81 @@ def main():
         or any(h02_decomposition["gate_state"].values())
     ):
         raise RuntimeError("H02 capped-index decomposition advanced activity or a gate")
+    if (
+        h02_status_contributions["schema_version"]
+        != "wmf-retained-h02-entry-status-contributions-v1"
+    ):
+        raise RuntimeError("H02 entry-status contribution schema changed")
+    if h02_status_contributions["population"] != {
+        "base_behavioral_episodes": 108,
+        "matched_environment_label_blocks": 27,
+        "conditions_per_block": 4,
+        "command_label_comparisons": 54,
+        "ledger_rows": 8,
+        "nonempty_ledger_rows": 5,
+        "seed_labels": list(range(9400, 9427)),
+        "new_cohort_created": False,
+    }:
+        raise RuntimeError("H02 entry-status contribution population changed")
+    expected_h02_status_contributions = {
+        ("left", "control_no_entry__reflected_no_entry"): (0, 0.0, 0.0, 0.0),
+        ("left", "control_no_entry__reflected_entry"): (22, -9900.0, 3008.0, -6892.0),
+        ("left", "control_entry__reflected_no_entry"): (1, 450.0, -223.0, 227.0),
+        ("left", "control_entry__reflected_entry"): (4, 0.0, -100.0, -100.0),
+        ("right", "control_no_entry__reflected_no_entry"): (0, 0.0, 0.0, 0.0),
+        ("right", "control_no_entry__reflected_entry"): (19, -8550.0, 2829.0, -5721.0),
+        ("right", "control_entry__reflected_no_entry"): (0, 0.0, 0.0, 0.0),
+        ("right", "control_entry__reflected_entry"): (8, 0.0, -382.0, -382.0),
+    }
+    observed_h02_status_contributions = {}
+    for row in h02_status_contributions["entry_status_contribution_ledger"]:
+        components = row["component_sums"]
+        key = (row["relation"], row["entry_status_pair"])
+        observed_h02_status_contributions[key] = (
+            row["matched_blocks"],
+            components["entry_incidence_at_cap_term"],
+            components["zero_masked_recorded_entry_index_term"],
+            components["cap_restricted_waiting_action_index_contrast"],
+        )
+        if row["matched_blocks"] == 0 and (
+            row["empty_stratum"] is not True
+            or row["conditional_mean"] is not None
+        ):
+            raise RuntimeError("H02 empty entry-status row changed")
+    if observed_h02_status_contributions != expected_h02_status_contributions:
+        raise RuntimeError("H02 entry-status contribution ledger changed")
+    if h02_status_contributions["closures"] != {
+        "command_specific_component_sums": {
+            "left": {
+                "entry_incidence_at_cap_term": -9450.0,
+                "zero_masked_recorded_entry_index_term": 2685.0,
+                "cap_restricted_waiting_action_index_contrast": -6765.0,
+            },
+            "right": {
+                "entry_incidence_at_cap_term": -8550.0,
+                "zero_masked_recorded_entry_index_term": 2447.0,
+                "cap_restricted_waiting_action_index_contrast": -6103.0,
+            },
+        },
+        "block_balanced_component_sums": {
+            "entry_incidence_at_cap_term": -9000.0,
+            "zero_masked_recorded_entry_index_term": 2566.0,
+            "cap_restricted_waiting_action_index_contrast": -6434.0,
+        },
+        "command_by_layout_interaction_component_sums": {
+            "entry_incidence_at_cap_term": 900.0,
+            "zero_masked_recorded_entry_index_term": -238.0,
+            "cap_restricted_waiting_action_index_contrast": 662.0,
+        },
+    }:
+        raise RuntimeError("H02 entry-status contribution closures changed")
+    if (
+        len(h02_status_contributions["new_activity"]) != 13
+        or any(h02_status_contributions["new_activity"].values())
+        or len(h02_status_contributions["gate_state"]) != 9
+        or any(h02_status_contributions["gate_state"].values())
+    ):
+        raise RuntimeError("H02 entry-status contribution advanced activity or a gate")
     if h02["audit_operations"] != {
         "compact_git_objects_byte_authenticated": 9,
         "remote_fetches": 0,
@@ -1125,6 +1203,23 @@ def main():
             "json_sha256": digest(h02_decomposition_path),
             "csv_sha256": digest(package / "paper/data/h02_capped_index_decomposition.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h02_capped_index_decomposition.py"),
+        },
+        "retained_h02_entry_status_contributions": {
+            "scope": h02_status_contributions["claim_boundary"],
+            "provenance": h02_status_contributions["provenance"],
+            "configuration": h02_status_contributions["configuration"],
+            "population": h02_status_contributions["population"],
+            "identity": h02_status_contributions["identity"],
+            "entry_status_contribution_ledger": h02_status_contributions[
+                "entry_status_contribution_ledger"
+            ],
+            "closures": h02_status_contributions["closures"],
+            "definitions": h02_status_contributions["definitions"],
+            "new_activity": h02_status_contributions["new_activity"],
+            "gate_state": h02_status_contributions["gate_state"],
+            "json_sha256": digest(h02_status_contributions_path),
+            "csv_sha256": digest(package / "paper/data/h02_entry_status_contributions.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h02_entry_status_contributions.py"),
         },
         "retained_h03_h04_guidance_pilots": {
             "scope": h03_h04["claim_boundary"],

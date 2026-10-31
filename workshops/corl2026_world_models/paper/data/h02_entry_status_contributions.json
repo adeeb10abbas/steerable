@@ -1,0 +1,386 @@
+{
+  "claim_boundary": {
+    "A3_A9_completed": false,
+    "advances_any_gate": false,
+    "causal_mediation_or_effect_decomposition_claimed": false,
+    "censoring_independence_claimed": false,
+    "changes_232_cell_core_bound": false,
+    "current_GM_PVC_state_reconciled": false,
+    "default_DreamZero_evidence": false,
+    "entrant_only_timing_effect_identified": false,
+    "entry_is_behavioral_success": false,
+    "equivalence_or_causal_effect_established": false,
+    "exact_status_pair_contribution_ledger_reported": true,
+    "forecast_accuracy_or_generated_execution_comparison": false,
+    "independent_scene_or_model_noise_generalization": false,
+    "model_based_survival_curve_or_hazard_estimated": false,
+    "new_inference_episode_request_or_label": false,
+    "new_underlying_behavioral_evidence": false,
+    "official_conditional_D1_evidence": false,
+    "physical_time_or_latency_estimated": false,
+    "post_cap_or_uncensored_event_time_inferred": false,
+    "principal_stratum_or_mediator_identified": false,
+    "raw_XYZ_recovered_or_rederived": false,
+    "registered_estimand": false,
+    "retained_post_result_algebra_only": true,
+    "status_pair_conditioned_effect_identified": false
+  },
+  "closures": {
+    "block_balanced_component_sums": {
+      "cap_restricted_waiting_action_index_contrast": -6434.0,
+      "entry_incidence_at_cap_term": -9000.0,
+      "zero_masked_recorded_entry_index_term": 2566.0
+    },
+    "command_by_layout_interaction_component_sums": {
+      "cap_restricted_waiting_action_index_contrast": 662.0,
+      "entry_incidence_at_cap_term": 900.0,
+      "zero_masked_recorded_entry_index_term": -238.0
+    },
+    "command_specific_component_sums": {
+      "left": {
+        "cap_restricted_waiting_action_index_contrast": -6765.0,
+        "entry_incidence_at_cap_term": -9450.0,
+        "zero_masked_recorded_entry_index_term": 2685.0
+      },
+      "right": {
+        "cap_restricted_waiting_action_index_contrast": -6103.0,
+        "entry_incidence_at_cap_term": -8550.0,
+        "zero_masked_recorded_entry_index_term": 2447.0
+      }
+    }
+  },
+  "configuration": {
+    "action_guidance_scale": 2,
+    "amendment": "V3-B003",
+    "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
+    "cohort": "H02",
+    "effective_model_noise_seed": 1140,
+    "label": "DreamZero custom negative-branch action guidance s2",
+    "model_id": "dreamzero_droid_action_cfg",
+    "noise_seed_semantics": "fixed effective model noise; the 27 environment labels are not independent model-noise draws",
+    "official_conditional_D1": false
+  },
+  "definitions": {
+    "conditional_mean": "For a nonempty row, component sum divided by the number of matched labels in that outcome-defined category; null for an empty category. It is descriptive arithmetic, not an independently identified conditional effect or entrant-only timing estimand.",
+    "contribution_to_command_mean": "A category component sum divided by all 27 registered labels, so categories add exactly to the existing command-specific mean rather than defining a new conditional estimand.",
+    "empty_stratum": "An empty category has matched_blocks zero, algebraic empty sums zero and conditional_mean null; those zero sums are not observed zero effects.",
+    "entry_status_pairs": "Outcome-defined comparison categories across different layouts on a matched registered label, not temporal transitions, within-episode conversions, principal strata, mediators, counterfactual changes or causal effects.",
+    "inference": "Post-result descriptive algebra only; no p-value, confidence interval, multiplicity-adjusted test, survival curve, hazard, censoring-independence, physical-time, equivalence, generalization or causal claim.",
+    "ledger_scope": "An exact accounting partition of the already-reported command-specific capped-index composite U sums across observed control/reflected entry-status pairs; it does not change the estimand."
+  },
+  "entry_status_contribution_ledger": [
+    {
+      "component_sums": {
+        "cap_restricted_waiting_action_index_contrast": 0.0,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": 0.0
+      },
+      "conditional_mean": null,
+      "contribution_to_command_mean": {
+        "cap_restricted_waiting_action_index_contrast": 0.0,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": 0.0
+      },
+      "control_entry_observed": false,
+      "empty_stratum": true,
+      "entry_status_pair": "control_no_entry__reflected_no_entry",
+      "matched_blocks": 0,
+      "reflected_entry_observed": false,
+      "relation": "left"
+    },
+    {
+      "component_sums": {
+        "cap_restricted_waiting_action_index_contrast": -6892.0,
+        "entry_incidence_at_cap_term": -9900.0,
+        "zero_masked_recorded_entry_index_term": 3008.0
+      },
+      "conditional_mean": {
+        "cap_restricted_waiting_action_index_contrast": -313.27272727272725,
+        "entry_incidence_at_cap_term": -450.0,
+        "zero_masked_recorded_entry_index_term": 136.72727272727272
+      },
+      "contribution_to_command_mean": {
+        "cap_restricted_waiting_action_index_contrast": -255.25925925925927,
+        "entry_incidence_at_cap_term": -366.6666666666667,
+        "zero_masked_recorded_entry_index_term": 111.4074074074074
+      },
+      "control_entry_observed": false,
+      "empty_stratum": false,
+      "entry_status_pair": "control_no_entry__reflected_entry",
+      "matched_blocks": 22,
+      "reflected_entry_observed": true,
+      "relation": "left"
+    },
+    {
+      "component_sums": {
+        "cap_restricted_waiting_action_index_contrast": 227.0,
+        "entry_incidence_at_cap_term": 450.0,
+        "zero_masked_recorded_entry_index_term": -223.0
+      },
+      "conditional_mean": {
+        "cap_restricted_waiting_action_index_contrast": 227.0,
+        "entry_incidence_at_cap_term": 450.0,
+        "zero_masked_recorded_entry_index_term": -223.0
+      },
+      "contribution_to_command_mean": {
+        "cap_restricted_waiting_action_index_contrast": 8.407407407407407,
+        "entry_incidence_at_cap_term": 16.666666666666668,
+        "zero_masked_recorded_entry_index_term": -8.25925925925926
+      },
+      "control_entry_observed": true,
+      "empty_stratum": false,
+      "entry_status_pair": "control_entry__reflected_no_entry",
+      "matched_blocks": 1,
+      "reflected_entry_observed": false,
+      "relation": "left"
+    },
+    {
+      "component_sums": {
+        "cap_restricted_waiting_action_index_contrast": -100.0,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": -100.0
+      },
+      "conditional_mean": {
+        "cap_restricted_waiting_action_index_contrast": -25.0,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": -25.0
+      },
+      "contribution_to_command_mean": {
+        "cap_restricted_waiting_action_index_contrast": -3.7037037037037037,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": -3.7037037037037037
+      },
+      "control_entry_observed": true,
+      "empty_stratum": false,
+      "entry_status_pair": "control_entry__reflected_entry",
+      "matched_blocks": 4,
+      "reflected_entry_observed": true,
+      "relation": "left"
+    },
+    {
+      "component_sums": {
+        "cap_restricted_waiting_action_index_contrast": 0.0,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": 0.0
+      },
+      "conditional_mean": null,
+      "contribution_to_command_mean": {
+        "cap_restricted_waiting_action_index_contrast": 0.0,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": 0.0
+      },
+      "control_entry_observed": false,
+      "empty_stratum": true,
+      "entry_status_pair": "control_no_entry__reflected_no_entry",
+      "matched_blocks": 0,
+      "reflected_entry_observed": false,
+      "relation": "right"
+    },
+    {
+      "component_sums": {
+        "cap_restricted_waiting_action_index_contrast": -5721.0,
+        "entry_incidence_at_cap_term": -8550.0,
+        "zero_masked_recorded_entry_index_term": 2829.0
+      },
+      "conditional_mean": {
+        "cap_restricted_waiting_action_index_contrast": -301.10526315789474,
+        "entry_incidence_at_cap_term": -450.0,
+        "zero_masked_recorded_entry_index_term": 148.89473684210526
+      },
+      "contribution_to_command_mean": {
+        "cap_restricted_waiting_action_index_contrast": -211.88888888888889,
+        "entry_incidence_at_cap_term": -316.6666666666667,
+        "zero_masked_recorded_entry_index_term": 104.77777777777777
+      },
+      "control_entry_observed": false,
+      "empty_stratum": false,
+      "entry_status_pair": "control_no_entry__reflected_entry",
+      "matched_blocks": 19,
+      "reflected_entry_observed": true,
+      "relation": "right"
+    },
+    {
+      "component_sums": {
+        "cap_restricted_waiting_action_index_contrast": 0.0,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": 0.0
+      },
+      "conditional_mean": null,
+      "contribution_to_command_mean": {
+        "cap_restricted_waiting_action_index_contrast": 0.0,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": 0.0
+      },
+      "control_entry_observed": true,
+      "empty_stratum": true,
+      "entry_status_pair": "control_entry__reflected_no_entry",
+      "matched_blocks": 0,
+      "reflected_entry_observed": false,
+      "relation": "right"
+    },
+    {
+      "component_sums": {
+        "cap_restricted_waiting_action_index_contrast": -382.0,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": -382.0
+      },
+      "conditional_mean": {
+        "cap_restricted_waiting_action_index_contrast": -47.75,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": -47.75
+      },
+      "contribution_to_command_mean": {
+        "cap_restricted_waiting_action_index_contrast": -14.148148148148149,
+        "entry_incidence_at_cap_term": 0.0,
+        "zero_masked_recorded_entry_index_term": -14.148148148148149
+      },
+      "control_entry_observed": true,
+      "empty_stratum": false,
+      "entry_status_pair": "control_entry__reflected_entry",
+      "matched_blocks": 8,
+      "reflected_entry_observed": true,
+      "relation": "right"
+    }
+  ],
+  "gate_state": {
+    "annotation_media_ready": false,
+    "camera_alignment_ready": false,
+    "confirmation_release_ready": false,
+    "current_GM_PVC_worker_state_reconciled": false,
+    "development_annotation_gate_ready": false,
+    "human_annotation_ready": false,
+    "live_quiescence_inferred": false,
+    "resource_freeze_ready": false,
+    "safe_to_release_new_work": false
+  },
+  "identity": {
+    "cap_action_index": 450.0,
+    "cap_restricted_index_symbol": "U",
+    "cell_identity": "U = C * (1 - E) + Z",
+    "contrast_identity": "delta U = -C * delta E + delta Z",
+    "entry_indicator_symbol": "E",
+    "recorded_entry_index_symbol": "T (defined only for recorded entries)",
+    "zero_masked_recorded_index_symbol": "Z = T when E=1; Z = 0 when E=0"
+  },
+  "new_activity": {
+    "annotation_media": 0,
+    "behavioral_actions": 0,
+    "behavioral_cells": 0,
+    "confirmation_inference_cells": 0,
+    "forecast_accuracy_estimates": 0,
+    "human_responses": 0,
+    "labels": 0,
+    "model_requests": 0,
+    "queue_descriptors": 0,
+    "request_rows": 0,
+    "request_selections": 0,
+    "retrieval_jobs": 0,
+    "runnable_manifests": 0
+  },
+  "population": {
+    "base_behavioral_episodes": 108,
+    "command_label_comparisons": 54,
+    "conditions_per_block": 4,
+    "ledger_rows": 8,
+    "matched_environment_label_blocks": 27,
+    "new_cohort_created": false,
+    "nonempty_ledger_rows": 5,
+    "seed_labels": [
+      9400,
+      9401,
+      9402,
+      9403,
+      9404,
+      9405,
+      9406,
+      9407,
+      9408,
+      9409,
+      9410,
+      9411,
+      9412,
+      9413,
+      9414,
+      9415,
+      9416,
+      9417,
+      9418,
+      9419,
+      9420,
+      9421,
+      9422,
+      9423,
+      9424,
+      9425,
+      9426
+    ]
+  },
+  "provenance": {
+    "historical_authenticated_bytes": 831259,
+    "historical_authenticated_file_count": 9,
+    "historical_authenticated_lines": 1429,
+    "historical_source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+    "sealed_capped_decomposition_files": {
+      "analyzer": {
+        "bytes": 20089,
+        "lines": 469,
+        "path": "workshops/corl2026_world_models/analysis/analyze_h02_capped_index_decomposition.py",
+        "sha256": "bbfe43b7dde0ec4f30e7a7f2fb40c11389c8ced5175d6196dae512f7c363c11a"
+      },
+      "csv": {
+        "bytes": 4581,
+        "lines": 28,
+        "path": "workshops/corl2026_world_models/paper/data/h02_capped_index_decomposition.csv",
+        "sha256": "11fd4944b7cb5f9d3509bda6d9c0d1764d5d077461a05b027a13f980b16e3cb4"
+      },
+      "json": {
+        "bytes": 37325,
+        "lines": 808,
+        "path": "workshops/corl2026_world_models/paper/data/h02_capped_index_decomposition.json",
+        "sha256": "33d66ed365d2fe330f2a4988a578a6fdbdc83c335184fb9098aeaa0f0c676f09"
+      }
+    },
+    "upstream_sealed_h02_package_files": {
+      "analyzer": {
+        "bytes": 42021,
+        "lines": 877,
+        "path": "workshops/corl2026_world_models/analysis/analyze_h02_position_reflection.py",
+        "sha256": "44b941be8d362a9498798051301a52da99b2679d14f1571f049122fded59f43e"
+      },
+      "csv": {
+        "bytes": 13277,
+        "lines": 28,
+        "path": "workshops/corl2026_world_models/paper/data/h02_position_reflection.csv",
+        "sha256": "8f1a9dd252c80d57fe543707820d3eec0bbd1580bacf61a597d33adc85b9579b"
+      },
+      "json": {
+        "bytes": 103418,
+        "lines": 1986,
+        "path": "workshops/corl2026_world_models/paper/data/h02_position_reflection.json",
+        "sha256": "9e39905c58cbd674bf41e342cadfd3e97f0c9e618bde8870e1785ed16af6adf1"
+      }
+    },
+    "upstream_sealed_matched_entry_files": {
+      "analyzer": {
+        "bytes": 19729,
+        "lines": 446,
+        "path": "workshops/corl2026_world_models/analysis/analyze_h02_matched_entry.py",
+        "sha256": "25160e55c9f0ba016728e4c1f5b4bc1a32322921eade121f27cf1e0719d47530"
+      },
+      "csv": {
+        "bytes": 3934,
+        "lines": 28,
+        "path": "workshops/corl2026_world_models/paper/data/h02_matched_entry.csv",
+        "sha256": "1af3d5d2276f116bccda0a9ace3cbc657222bd98775be9ba39503a964346270a"
+      },
+      "json": {
+        "bytes": 48292,
+        "lines": 947,
+        "path": "workshops/corl2026_world_models/paper/data/h02_matched_entry.json",
+        "sha256": "95ad90a69aa6e0b5b2a135de6eb93a6a8d6290ec792bb19ba9d05e9864f96cb0"
+      }
+    }
+  },
+  "schema_version": "wmf-retained-h02-entry-status-contributions-v1",
+  "status": "post_snapshot_retained_h02_entry_status_contribution_ledger_no_stage_advance"
+}

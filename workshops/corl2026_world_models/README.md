@@ -76,8 +76,20 @@ yielding -238.296 action indices; the corresponding sums are
 Cross-layout entry-status pairs are 22/1/4/0 LEFT and 19/0/8/0 RIGHT for
 control-no-entry/reflected-entry, control-entry/reflected-no-entry,
 control-entry/reflected-entry and neither-entry.
+The exact [entry-status contribution ledger](paper/data/h02_entry_status_contributions.json)
+partitions, rather than redefines, those same command-specific totals. Across
+LEFT, the three nonempty rows close as -9,900 + 3,008 = -6892,
+450 - 223 = 227 and 0 - 100 = -100; RIGHT closes as
+-8,550 + 2,829 = -5721 and 0 - 382 = -382. Across
+the 54 command-label comparisons, the 41 control-no-entry/reflected-entry
+categories contribute -18,450 + 5,837 = -12,613, the 12 both-entry categories
+contribute 0 - 482 = -482, and the one control-entry/reflected-no-entry
+category contributes 450 - 223 = 227; three of the eight command/status rows
+are explicit empty strata. Their total -18,000 + 5,132 = -12,868 is exactly
+twice the block-balanced -6,434 sum. Empty strata have no conditional mean.
 These are comparison-direction categories across different layouts, not
-temporal transitions, within-episode conversions or counterfactual changes.
+temporal transitions, within-episode conversions, principal strata or
+counterfactual changes.
 The $Z$ term is a zero-masked recorded-index term, not an entrant-only timing
 effect: algebraic zero when no entry is recorded is not an imputed entry index.
 This is deterministic post-result algebra on the same 27 labels, not a causal

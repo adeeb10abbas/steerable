@@ -29,7 +29,7 @@ def main():
         "SOURCE_DATE_EPOCH": "1786718341",
         "FORCE_SOURCE_DATE": "1",
     })
-    required_build_dependencies = ["matplotlib", "pypdf", "jsonschema", "torch"]
+    required_build_dependencies = ["matplotlib", "numpy", "pypdf", "jsonschema", "torch"]
     try:
         build_dependency_versions = {
             name: importlib.metadata.version(name) for name in required_build_dependencies
@@ -52,6 +52,7 @@ def main():
     run("regression tests", [sys.executable, "-m", "unittest", "discover", "-s", str(package / "tests"), "-v"])
     run("stopping-time controls", [sys.executable, str(package / "analysis/analyze_stopping_controls.py")])
     run("H01 requested-region entry", [sys.executable, str(package / "analysis/analyze_h01_requested_region_entry.py")])
+    run("H05 retained lateral dose response", [sys.executable, str(package / "analysis/analyze_h05_lateral_dose_response.py")])
     run("representative H01 media", [sys.executable, str(package / "analysis/package_representative_media.py")])
     run("representative H01 media verification", [sys.executable, str(package / "analysis/verify_representative_media.py")])
     run("paper experiment results", [sys.executable, str(package / "analysis/extract_paper_results.py")])
@@ -73,7 +74,7 @@ def main():
         raise RuntimeError(f"PDF check failed: pages={len(reader.pages)}; layout/citation flags={problems}")
     body = "\n".join(page.extract_text() for page in reader.pages)
     for required in ["108", "13/54", "50/54", "26/27", "DreamZero-s2", "31.1", "35.8",
-                     "18/27", "17/27", "23/27", "81.4", "104 entries",
+                     "18/27", "17/27", "23/27", "81.4", "104 entries", "1.125", "13/15",
                      "Results", "Conclusion", "References"]:
         if required not in body:
             raise RuntimeError(f"PDF is missing expected text: {required}")
@@ -85,6 +86,8 @@ def main():
     stopping = json.loads(stopping_path.read_text())
     entry_path = package / "paper/data/h01_requested_region_entry.json"
     entry = json.loads(entry_path.read_text())
+    h05_path = package / "paper/data/h05_lateral_dose_response.json"
+    h05 = json.loads(h05_path.read_text())
     representative_media_path = package / "paper/media/representative_h01_videos.json"
     representative_media = json.loads(representative_media_path.read_text())
     representative_verification_path = package / "paper/media/representative_h01_video_verification.json"
@@ -141,6 +144,22 @@ def main():
             "json_sha256": digest(entry_path),
             "csv_sha256": digest(package / "paper/data/h01_requested_region_entry.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h01_requested_region_entry.py"),
+        },
+        "retained_h05_lateral_dose_response": {
+            "scope": h05["claim_boundary"],
+            "source_commit": h05["provenance"]["commit"],
+            "design": h05["design"],
+            "population": h05["authenticated_historical_population"],
+            "primary_depth_dose_response": h05["primary_depth_dose_response"],
+            "binary_success_secondary": h05["binary_success_secondary"],
+            "source_manifest": h05["source_manifest"],
+            "historical_final_audit": h05["historical_final_audit"],
+            "reproduction": h05["reproduction"],
+            "new_activity": h05["new_activity"],
+            "gate_state": h05["gate_state"],
+            "json_sha256": digest(h05_path),
+            "csv_sha256": digest(package / "paper/data/h05_lateral_dose_response.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h05_lateral_dose_response.py"),
         },
         "representative_media": {
             "scope": representative_media["claim_boundary"],

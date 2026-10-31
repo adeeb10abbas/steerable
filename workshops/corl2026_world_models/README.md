@@ -34,6 +34,21 @@ sustained-entry status without assigning goal-terminated transient cases a
 common-horizon time. This is fixed-scene onset geometry, not physical-time
 latency, release success, language understanding, A5--A7 or forecast accuracy.
 
+The separate retained H05 position sweep is now authenticated and reproduced
+at report level. Its prospectively frozen design has 15 matched seed blocks,
+seven prescribed bowl-y positions and two commands (210 episodes). The
+preregistered within-seed RIGHT-minus-LEFT depth slope is 1.125 m/m (95%
+matched-seed bootstrap interval 0.719--1.562; 13/15 positive). The
+[canonical JSON](paper/data/h05_lateral_dose_response.json) records exact source
+Git identities, arithmetic checks and claim boundaries; the
+[105-row CSV](paper/data/h05_lateral_dose_response.csv) exposes every retained
+seed-level contrast. The raw 105 pair and 210 episode files are represented by
+unique SHA-256 identities in the authenticated source manifest but are not in
+this checkout, so this is not a fresh raw-trace audit. The seven levels are
+repeated positions in one fixed simulator setup, not seven scenes, and this
+retained executed-behavior result supplies no forecast-accuracy or annotation
+gate evidence.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact
@@ -100,17 +115,19 @@ uv pip install --python "$WMF_BUILD_ENV/bin/python" --requirement workshops/corl
 
 The `--system-site-packages` boundary is intentional: `requirements-build.txt`
 does not download or replace Torch, while the regression suite includes
-Torch-backed qualification tests. `build_package.py` fails before running the
-suite if Torch or any paper-build dependency is unavailable and records all
-four versions in the build report.
-Figure and PDF subprocesses use `SOURCE_DATE_EPOCH=1786718341`, the pinned
-study-source commit time, plus `FORCE_SOURCE_DATE=1` so repeated documented
-builds have stable creation metadata and byte-identical publication artifacts.
+Torch-backed qualification tests. The retained H05 replay also uses NumPy.
+`build_package.py` fails before running the suite if any required package is
+unavailable and records all five resolved versions in the build report.
+Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341`, the pinned
+study-source commit time, plus `FORCE_SOURCE_DATE=1`; the build report records
+both values. The retained PDF still carries TeX-produced wall-clock metadata,
+so this environment record is not evidence of byte-identical PDF rebuilding.
 
-This runs the tests, recomputes results, the stopping-time control and the H01
-requested-region entry diagnostic from the pinned repository, authenticates and
+This runs the tests, recomputes results, the stopping-time control, the H01
+requested-region entry diagnostic and the retained H05 dose response from the
+pinned repository, authenticates and
 fully decodes the four representative H01 video blobs, produces figures and
-compiles the official CoRL template. The build report records both retained-data
+compiles the official CoRL template. The build report records all retained-data
 analyses, their source identities and output hashes, plus the representative-
 media selection, package and decode-verification hashes. It checks page count,
 citations and layout errors. Final page images are reviewed separately.

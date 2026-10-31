@@ -55,8 +55,8 @@ class PaperStoppingIntegrationTests(unittest.TestCase):
         delivery = (PACKAGE / "docs/DELIVERY_QA.md").read_text()
         pdf_sha256 = hashlib.sha256((PACKAGE / "paper/main.pdf").read_bytes()).hexdigest()
         self.assertIn(pdf_sha256, delivery)
-        self.assertIn("985/985 tests", delivery)
-        self.assertIn("978/978 tests", delivery)
+        self.assertIn("994/994 tests", delivery)
+        self.assertIn("987/987 tests", delivery)
         self.assertIn("seven of those methods\nbelong to the protected untracked N3 test", delivery)
         self.assertIn("generated build\nproducts, not retained checkout evidence", delivery)
         self.assertNotIn("23 tests", delivery)
@@ -75,7 +75,7 @@ class PaperStoppingIntegrationTests(unittest.TestCase):
     def test_build_fails_fast_without_and_records_all_required_dependencies(self):
         build = (PACKAGE / "analysis/build_package.py").read_text()
         self.assertIn(
-            'required_build_dependencies = ["matplotlib", "pypdf", "jsonschema", "torch"]',
+            'required_build_dependencies = ["matplotlib", "numpy", "pypdf", "jsonschema", "torch"]',
             build,
         )
         self.assertIn('"build_dependencies": build_dependency_versions', build)

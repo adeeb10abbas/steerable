@@ -12,8 +12,8 @@ supporting analysis remains available but is not presented as the current paper.
 `paper/main.pdf` has **four pages total including references**, compiled with the
 unchanged official CoRL 2026 style in preprint mode and an anonymous author line.
 
-- PDF SHA256: `1d1f0ecbd3c54b6110590d361dc6d9d5c2f55a0fd15fc920723c505284ec72b8`.
-- LaTeX source SHA256: `da75322dcdc14d1b78a26c88c4812d9a560f4c46e8c6ebffe316822442dfab87`.
+- PDF SHA256: `7e4aea167959d07ab06bf5c9b00670737a71c16de4aae69c6ac2107637bbbc01`.
+- LaTeX source SHA256: `a5a32e73d4f84e64662c656ddfa097c6b2e8b627210d5ee40cb042af5bff7836`.
 - Official style SHA256: `62f38cd8df7ad718796617595c8230da136fc83ea1d7e1ba80084113409ec957`.
 - Numerical figure input SHA256: `f437fec607ea969a4c0293b157a74175c410b5f88709ac73262b3035314f1230`.
 - Design figure PDF/PNG SHA256: `9896dafc73897ca19fe6558d9385a8b1512cae858ba815c88743642185ea8201` / `9f1dbac8c32485ebdbaa0df80f8dc1b40c36c9369fd118c700c4e591e4cd94df`.
@@ -32,24 +32,26 @@ design figure is explicitly labeled as a schematic, not a measured trajectory.
 ## Numerical verification and independent review
 
 The exact documented disposable environment uses Python 3.10.21, inherits
-Torch 2.7.0+cu128 from the qualified any6d environment, and layers matplotlib
-3.10.9, pypdf 6.18.1 and jsonschema 4.26.0. The active protected-worktree
-discovery passed **985/985 tests** in 125.701 seconds (128.11 seconds wall,
-95.35 seconds user, 13.80 seconds system, 838,388 KiB peak RSS); seven of those methods
-belong to the protected untracked N3 test and are not package files. A clean
-isolated-clone invocation passed the authorized package's **978/978 tests** in
-125.507 seconds and completed all ten `analysis/build_package.py` steps in
-135.59 seconds: tests,
-both retained-data analyses, media packaging and four full MP4 decodes, paper
-results, historical replay, the private annotation draw, figures and the
-official-template PDF.
+Torch 2.7.0+cu128 from the qualified any6d environment, and resolves NumPy
+2.2.6, matplotlib 3.10.9, pypdf 6.18.1 and jsonschema 4.26.0. The active
+protected-worktree discovery passed **994/994 tests in 144.344 s**;
+seven of those methods
+belong to the protected untracked N3 test and are not package
+files. A clean isolated-worktree invocation passed the authorized package's
+**987/987 tests in 119.102 s**. The documented package build exited zero in
+**129.21 s** and covers eleven
+steps: tests, three retained-data analyses, media packaging and four full MP4
+decodes, paper results, historical replay, the private annotation draw, figures
+and the official-template PDF.
 
-Figure and PDF subprocesses pin `SOURCE_DATE_EPOCH=1786718341` to the retained
-study-source commit and set `FORCE_SOURCE_DATE=1`. Two complete isolated-clone
-builds reproduced byte-identical figure PDF/PNG files and `paper/main.pdf`; both
-12,944-byte build logs are identical at SHA256
-`2f3acaca524a6041a08624ef11338ae93b5207aa6b07e34a84c5a5de88477958`, and the
-exact post-fix publication hashes are recorded above.
+Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
+retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
+records both values. The retained PDF still has TeX-produced wall-clock
+metadata, so these settings do not establish byte-identical PDF rebuilding.
+TeX Live 2026 latexmk 4.88 and pdfTeX 1.40.29 validated the four-page PDF with
+zero errors, overfull boxes, undefined citations or undefined references and
+one harmless underfull notice. The exact post-fix publication hashes are
+recorded above.
 
 `results/validation.log` and `results/build_report.json` are generated build
 products, not retained checkout evidence in this protected worktree. The
@@ -62,9 +64,11 @@ the qualification receipt without recreating the protected deleted results.
 The extractor verifies nine source Git blobs at upstream commit
 `ce561e66f82e95055e39d3d7711691982f6b2086`. It recomputes counts and continuous
 measurements from episode rows and reconciles them against the source summaries.
-It extracts three separate 108-episode cohorts; only the two position-reflection
-cohorts, 216 episodes total, enter the manuscript. The separate DreamZero symmetry
-experiment is not pooled with either reflection experiment.
+It extracts three separate 108-episode cohorts; the two position-reflection
+cohorts, 216 episodes total, provide the primary manuscript experiment. The
+separate DreamZero symmetry experiment is not pooled with either reflection
+experiment. H05 is separately authenticated from its registered report and is
+not pooled into those trial counts.
 
 An independent reviewer checked all eight success counts, the instruction-response
 and placement-depth means, intervals and measurement definitions against the pinned
@@ -83,13 +87,23 @@ episode rows. The final manuscript incorporates the following corrections:
   cap-censored, reports 104 entries and the matched entry-index interaction, and
   does not turn action indices into physical time or goal-terminated transients
   into common-horizon sustained entries.
+- The retained H05 package authenticates a 15-seed by seven-level by two-command
+  design, reproduces the 1.125 m/m registered slope and its 20,000-resample
+  matched-seed interval, and preserves the nonmonotone level means and
+  out-of-support fitted crossing. Its 315 raw-source identities are retained in
+  the manifest, but the raw bytes are outside this checkout and were not
+  independently rehashed here. The 210 episodes and 1,423 requests are
+  authenticated historical-population counts, not current-turn activity; the
+  H05 receipt records all 13 current activity counters as zero and all nine
+  release gates as false.
 - The four representative seed-9400 videos are authenticated and fully decoded,
   but remain presentation media rather than blinded annotation inputs, timing
   maps, forecast-accuracy evidence or a release-gate advance.
 
 ## Remaining research and submission work
 
-The current results cover two checkpoints, one task and two fixed physical layouts.
+The main results cover two checkpoints, one task and two fixed physical layouts;
+H05 adds seven positions within one fixed simulator setup, not seven scenes.
 They establish neither prediction accuracy nor the causal benefit of world modeling.
 They also do not isolate visibility, reachability or grasp geometry as the mechanism.
 

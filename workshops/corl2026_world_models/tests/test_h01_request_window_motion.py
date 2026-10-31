@@ -115,7 +115,7 @@ class H01RequestWindowMotionTests(unittest.TestCase):
         self.assertAlmostEqual(request_level["cube_displacement_m"]["mean"], 0.04190115262348475)
 
     def test_matched_complete_windows_expose_selection_and_signed_motion(self):
-        self.assertEqual(self.report["schema_version"], "wmf-retained-h01-request-window-motion-v2")
+        self.assertEqual(self.report["schema_version"], "wmf-retained-h01-request-window-motion-v3")
         matched = self.report["matched_complete_window_analysis"]
         self.assertEqual(
             matched["status"],
@@ -223,6 +223,98 @@ class H01RequestWindowMotionTests(unittest.TestCase):
             interaction["sign_counts"],
             {"positive": 15, "negative": 11, "exact_zero": 1},
         )
+
+        fixed = matched["fixed_request_index_profile"]
+        self.assertEqual(
+            fixed["layout_observable_seed_labels"],
+            {
+                "control": [27, 27, 26, 18, 8, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                "position_mirrored": [27, 27, 27, 17, 5, 4, 2, 2, 1, 1, 0, 0, 0, 0, 0],
+            },
+        )
+        self.assertEqual(
+            fixed["four_condition_observable_seed_labels"],
+            [27, 27, 26, 12, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        )
+        rows = fixed["rows"]
+        self.assertEqual(
+            [(row["request_index"], row["action_step_start"], row["action_step_target"])
+             for row in rows],
+            [(index, 32 * index, 32 * (index + 1)) for index in range(15)],
+        )
+        all_seeds = list(range(9400, 9427))
+        for index in (0, 1):
+            for layout in ("control", "position_mirrored"):
+                support = rows[index]["by_layout"][layout]
+                self.assertEqual(support["observable_seed_ids"], all_seeds)
+                self.assertEqual(support["unavailable_seed_ids"], [])
+        self.assertEqual(
+            rows[1]["by_layout"]["control"]["observed_signed_contrast_m"]["sign_counts"],
+            {"positive": 2, "negative": 6, "exact_zero": 19},
+        )
+        self.assertAlmostEqual(
+            rows[1]["by_layout"]["control"]["observed_signed_contrast_m"]["mean"],
+            -2.35797078521163e-06,
+            places=18,
+        )
+        self.assertEqual(
+            rows[1]["by_layout"]["position_mirrored"]["observed_signed_contrast_m"][
+                "sign_counts"
+            ],
+            {"positive": 3, "negative": 8, "exact_zero": 16},
+        )
+        self.assertEqual(rows[2]["by_layout"]["control"]["unavailable_seed_ids"], [9414])
+        self.assertEqual(
+            rows[2]["by_layout"]["control"]["observed_signed_contrast_m"]["sign_counts"],
+            {"positive": 20, "negative": 6, "exact_zero": 0},
+        )
+        self.assertAlmostEqual(
+            rows[2]["by_layout"]["control"]["observed_signed_contrast_m"]["mean"],
+            0.0856742928377711,
+            places=15,
+        )
+        self.assertEqual(
+            rows[2]["by_layout"]["control"]["strict_positive_full_cohort_fraction_bounds"],
+            {"lower": 20 / 27, "upper": 21 / 27},
+        )
+        self.assertEqual(
+            rows[2]["by_layout"]["position_mirrored"]["observed_signed_contrast_m"][
+                "sign_counts"
+            ],
+            {"positive": 25, "negative": 1, "exact_zero": 1},
+        )
+        fixed_interaction = rows[2]["four_condition_same_index_interaction_m"]
+        self.assertEqual(fixed_interaction["unavailable_seed_ids"], [9414])
+        self.assertEqual(
+            fixed_interaction["observed_signed_contrast_m"]["sign_counts"],
+            {"positive": 15, "negative": 11, "exact_zero": 0},
+        )
+        self.assertAlmostEqual(
+            fixed_interaction["observed_signed_contrast_m"]["mean"],
+            0.00780342372420889,
+            places=15,
+        )
+        self.assertEqual(
+            rows[6]["four_condition_same_index_interaction_m"][
+                "strict_positive_full_cohort_fraction_bounds"
+            ],
+            {"lower": 0.0, "upper": 1.0},
+        )
+        self.assertIsNone(
+            rows[6]["four_condition_same_index_interaction_m"][
+                "observed_signed_contrast_m"
+            ]
+        )
+        for index in range(10, 15):
+            for layout in ("control", "position_mirrored"):
+                support = rows[index]["by_layout"][layout]
+                self.assertEqual(support["observable_seed_labels"], 0)
+                self.assertEqual(support["unavailable_seed_ids"], all_seeds)
+                self.assertIsNone(support["observed_signed_contrast_m"])
+                self.assertEqual(
+                    support["strict_positive_full_cohort_fraction_bounds"],
+                    {"lower": 0.0, "upper": 1.0},
+                )
 
     def test_every_request_has_exact_lineage_and_censoring_is_null(self):
         for request in self.report["request_windows"]:
@@ -346,7 +438,7 @@ class H01RequestWindowMotionTests(unittest.TestCase):
             self.assertNotIn(forbidden, csv_text)
         self.assertEqual(
             hashlib.sha256(json_text.encode()).hexdigest(),
-            "2e19a9ac3ef16786f304bea834019a49f1ba50537e02af0ad068e6799386bd5f",
+            "b85462e4b9dbc6fe03c6217bf11488604ed7d36306a081f2a84f2f3fb5b8cc4d",
         )
         self.assertEqual(
             hashlib.sha256(csv_text.encode()).hexdigest(),
@@ -366,6 +458,7 @@ class H01RequestWindowMotionTests(unittest.TestCase):
             '"shared_complete_window_pairs"',
             '"complete_window_records_excluded_without_exact_counterpart_endpoint"',
             '"four_condition_same_request_index_support"',
+            '"fixed_request_index_profile"',
             '"forecast_payload_bytes_reopened_or_reverified"',
             '"A6_movement_threshold_established"',
             '"maximum_core_behavioral_cells"',

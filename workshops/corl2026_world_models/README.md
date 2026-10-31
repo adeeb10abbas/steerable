@@ -236,6 +236,19 @@ to an outcome-selected request boundary divided by a variable number of
 windows; they are not an independent endpoint, physical-time rate, movement
 threshold, instruction-understanding result, forecast score or confirmation.
 
+The fixed request-index profile removes that variable-window averaging without
+filling stopped traces. Both layouts retain all 27 paired seeds through the
+32--64 action window, where signed LEFT-minus-RIGHT window contrasts are
+positive/negative/tied for 2/6/19 control and 3/8/16 reflected. At 64--96
+actions support is 26/27 and 27/27, with signs 20/6/0 and 25/1/1; the exact
+same-index four-condition interaction has 26 seeds and signs 15/11/0. Support
+then falls to 18/27 and 17/27 at 96--128 and at most eight seeds per layout
+thereafter. Recorded request indices continue through 14, but indices 10--14
+have zero paired exact endpoints and are retained explicitly as 0/27 support
+with null summaries. Every row reports full-27-seed strict-positive missingness bounds.
+This is selection-transparent historical action-index evidence, not physical
+time, independent windows, a movement threshold, A3--A9 or forecast accuracy.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact

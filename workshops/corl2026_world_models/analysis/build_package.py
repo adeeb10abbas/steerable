@@ -664,6 +664,27 @@ def main():
         ]["sign_counts"] != {"positive": 15, "negative": 11, "exact_zero": 1}
     ):
         raise RuntimeError("H01 four-condition shared-support audit changed")
+    fixed_profile = matched_windows["fixed_request_index_profile"]
+    if fixed_profile["layout_observable_seed_labels"] != {
+        "control": [27, 27, 26, 18, 8, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+        "position_mirrored": [27, 27, 27, 17, 5, 4, 2, 2, 1, 1, 0, 0, 0, 0, 0],
+    } or fixed_profile["four_condition_observable_seed_labels"] != [
+        27, 27, 26, 12, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ]:
+        raise RuntimeError("H01 fixed request-index support profile changed")
+    fixed_rows = fixed_profile["rows"]
+    if fixed_rows[1]["by_layout"]["control"]["observed_signed_contrast_m"][
+        "sign_counts"
+    ] != {"positive": 2, "negative": 6, "exact_zero": 19}:
+        raise RuntimeError("H01 universal 32--64 action-window signs changed")
+    if fixed_rows[2]["by_layout"]["position_mirrored"][
+        "observed_signed_contrast_m"
+    ]["sign_counts"] != {"positive": 25, "negative": 1, "exact_zero": 1}:
+        raise RuntimeError("H01 64--96 action-window reflected signs changed")
+    if fixed_rows[2]["four_condition_same_index_interaction_m"][
+        "observed_signed_contrast_m"
+    ]["sign_counts"] != {"positive": 15, "negative": 11, "exact_zero": 0}:
+        raise RuntimeError("H01 fixed 64--96 four-condition interaction changed")
     request_boundary = request_window["claim_boundary"]
     for field in (
         "forecast_arrays_retrieved", "forecast_payload_bytes_reopened_or_reverified",

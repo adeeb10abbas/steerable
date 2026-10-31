@@ -282,6 +282,42 @@ def _sign_counts(values: Iterable[float]) -> dict[str, int]:
     }
 
 
+def _fixed_index_support(seed_values: Iterable[tuple[int, float]]) -> dict[str, Any]:
+    """Summarize one prespecified request index without filling attrition.
+
+    Every H01 layout has 27 registered seed labels.  A later index is observed
+    only when both historical command cells retain the exact +32-action
+    endpoint.  Missing labels remain unknown in the strict-positive fraction
+    bounds; they are never carried forward or assigned a sign.
+    """
+    seed_values = list(seed_values)
+    seeds = [seed for seed, _ in seed_values]
+    values = [value for _, value in seed_values]
+    observed = len(values)
+    if (
+        observed > len(SEEDS)
+        or len(set(seeds)) != observed
+        or not set(seeds).issubset(SEEDS)
+    ):
+        raise ValueError("fixed-index support has invalid H01 seed identities")
+    signs = _sign_counts(values)
+    missing = len(SEEDS) - observed
+    return {
+        "registered_seed_labels": len(SEEDS),
+        "observable_seed_labels": observed,
+        "unavailable_seed_labels": missing,
+        "observable_seed_ids": sorted(seeds),
+        "unavailable_seed_ids": sorted(set(SEEDS) - set(seeds)),
+        "observed_signed_contrast_m": (
+            {**_summary(values), "sign_counts": signs} if values else None
+        ),
+        "strict_positive_full_cohort_fraction_bounds": {
+            "lower": signs["positive"] / len(SEEDS),
+            "upper": (signs["positive"] + missing) / len(SEEDS),
+        },
+    }
+
+
 def matched_complete_window_analysis(
     requests: list[dict[str, Any]],
     indexed: Mapping[tuple[int, str, str], dict[str, Any]],
@@ -316,6 +352,62 @@ def matched_complete_window_analysis(
                     raise ValueError("complete H01 request windows must be a contiguous prefix")
                 all_windows[(seed, layout, command)] = observed
                 complete[(seed, layout, command)] = rows
+
+    fixed_request_indices = sorted(set().union(*(
+        set(all_windows[(seed, layout, command)])
+        for seed in SEEDS
+        for layout in LAYOUTS
+        for command in COMMANDS
+    )))
+    if fixed_request_indices != list(range(len(fixed_request_indices))):
+        raise ValueError("fixed request-index inventory must be a contiguous prefix")
+    fixed_index_rows = []
+    for index in fixed_request_indices:
+        by_fixed_layout: dict[str, Any] = {}
+        for layout in LAYOUTS:
+            seed_values = []
+            for seed in SEEDS:
+                left = complete[(seed, layout, "left")]
+                right = complete[(seed, layout, "right")]
+                if index in left and index in right:
+                    seed_values.append((
+                        seed,
+                        left[index]["signed_lateral_relative_change_m"]
+                        - right[index]["signed_lateral_relative_change_m"],
+                    ))
+            by_fixed_layout[layout] = _fixed_index_support(seed_values)
+
+        same_support_interactions = []
+        for seed in SEEDS:
+            if all(
+                index in complete[(seed, layout, command)]
+                for layout in LAYOUTS
+                for command in COMMANDS
+            ):
+                contrasts = {
+                    layout: (
+                        complete[(seed, layout, "left")][index][
+                            "signed_lateral_relative_change_m"
+                        ]
+                        - complete[(seed, layout, "right")][index][
+                            "signed_lateral_relative_change_m"
+                        ]
+                    )
+                    for layout in LAYOUTS
+                }
+                same_support_interactions.append((
+                    seed,
+                    contrasts["position_mirrored"] - contrasts["control"],
+                ))
+        fixed_index_rows.append({
+            "request_index": index,
+            "action_step_start": index * WINDOW_ACTIONS,
+            "action_step_target": (index + 1) * WINDOW_ACTIONS,
+            "by_layout": by_fixed_layout,
+            "four_condition_same_index_interaction_m": _fixed_index_support(
+                same_support_interactions
+            ),
+        })
 
     by_layout: dict[str, Any] = {}
     for layout in LAYOUTS:
@@ -489,6 +581,22 @@ def matched_complete_window_analysis(
     return {
         "status": "retrospective matched-window selection and execution-motion audit",
         "by_layout": by_layout,
+        "fixed_request_index_profile": {
+            "rows": fixed_index_rows,
+            "layout_observable_seed_labels": {
+                layout: [
+                    row["by_layout"][layout]["observable_seed_labels"]
+                    for row in fixed_index_rows
+                ]
+                for layout in LAYOUTS
+            },
+            "four_condition_observable_seed_labels": [
+                row["four_condition_same_index_interaction_m"][
+                    "observable_seed_labels"
+                ]
+                for row in fixed_index_rows
+            ],
+        },
         "four_condition_same_request_index_support": {
             "matched_seed_labels": len(same_support_records),
             "shared_complete_window_pairs_per_layout": sum(
@@ -510,6 +618,7 @@ def matched_complete_window_analysis(
             "telescoping": "Contiguous window contrasts sum exactly (within 1e-15 m) to the paired relative-offset response at the last shared 32-action boundary. The seed mean is that response divided by a variable window count, not independent evidence or a physical-time rate.",
             "same_support_layout_audit": "The layout comparison restricts each seed to request indices complete in all four layout-command cells. This removes unequal request-index support between layouts but not historical goal/cap outcome selection.",
             "first_window": "Availability and selection of the 0-to-32 action window are outcome-independent in this retained cohort because all cells survive past action 32. Its exact-zero measurement duplicates the stopping-control action-32 information rather than adding an endpoint.",
+            "fixed_request_index_profile": "Each row fixes one recorded request index before comparing commands. Support requires the exact +32-action endpoint in both command cells; four-condition interactions require all four cells. Strict-positive bounds count every unavailable registered seed first as non-positive and then as positive. Later rows remain historical survival-selected action-index evidence, not physical time, independent windows, a calibrated movement test or forecast scoring.",
         },
     }
 
@@ -727,7 +836,7 @@ def analyze_rows(rows: list[dict[str, Any]], provenance: dict[str, Any]) -> dict
 
     matched = matched_complete_window_analysis(requests, indexed)
     return {
-        "schema_version": "wmf-retained-h01-request-window-motion-v2",
+        "schema_version": "wmf-retained-h01-request-window-motion-v3",
         "provenance": provenance,
         "cohort": {
             "historical_id": "H01",

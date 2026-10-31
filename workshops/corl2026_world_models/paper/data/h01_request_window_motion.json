@@ -2119,11 +2119,2267 @@
     },
     "definitions": {
       "first_window": "Availability and selection of the 0-to-32 action window are outcome-independent in this retained cohort because all cells survive past action 32. Its exact-zero measurement duplicates the stopping-control action-32 information rather than adding an endpoint.",
+      "fixed_request_index_profile": "Each row fixes one recorded request index before comparing commands. Support requires the exact +32-action endpoint in both command cells; four-condition interactions require all four cells. Strict-positive bounds count every unavailable registered seed first as non-positive and then as positive. Later rows remain historical survival-selected action-index evidence, not physical time, independent windows, a calibrated movement test or forecast scoring.",
       "pairing": "Within a seed and layout, retain request indices whose exact +32-action endpoint exists in both LEFT and RIGHT historical cells. An otherwise-complete record is excluded when its counterpart episode ends before that endpoint; never fill a stopped counterpart.",
       "same_support_layout_audit": "The layout comparison restricts each seed to request indices complete in all four layout-command cells. This removes unequal request-index support between layouts but not historical goal/cap outcome selection.",
       "seed_weighting": "Average the matched windows within each seed; summaries then weight the 27 seed labels equally. Window counts remain variable and outcome-conditioned.",
       "telescoping": "Contiguous window contrasts sum exactly (within 1e-15 m) to the paired relative-offset response at the last shared 32-action boundary. The seed mean is that response divided by a variable window count, not independent evidence or a physical-time rate.",
       "window_contrast": "D_window = change(cube_y-bowl_y)_LEFT - change(cube_y-bowl_y)_RIGHT in robot-base coordinates. Positive means the two commands increased LEFT/RIGHT ordering over that window; exact zero is a tie without a calibrated motion threshold."
+    },
+    "fixed_request_index_profile": {
+      "four_condition_observable_seed_labels": [
+        27,
+        27,
+        26,
+        12,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "layout_observable_seed_labels": {
+        "control": [
+          27,
+          27,
+          26,
+          18,
+          8,
+          5,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "position_mirrored": [
+          27,
+          27,
+          27,
+          17,
+          5,
+          4,
+          2,
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "rows": [
+        {
+          "action_step_start": 0,
+          "action_step_target": 32,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "observable_seed_labels": 27,
+              "observed_signed_contrast_m": {
+                "max": 0.0,
+                "mean": 0.0,
+                "median": 0.0,
+                "min": 0.0,
+                "n": 27,
+                "sign_counts": {
+                  "exact_zero": 27,
+                  "negative": 0,
+                  "positive": 0
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 0.0
+              },
+              "unavailable_seed_ids": [],
+              "unavailable_seed_labels": 0
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "observable_seed_labels": 27,
+              "observed_signed_contrast_m": {
+                "max": 0.0,
+                "mean": 0.0,
+                "median": 0.0,
+                "min": 0.0,
+                "n": 27,
+                "sign_counts": {
+                  "exact_zero": 27,
+                  "negative": 0,
+                  "positive": 0
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 0.0
+              },
+              "unavailable_seed_ids": [],
+              "unavailable_seed_labels": 0
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "observable_seed_labels": 27,
+            "observed_signed_contrast_m": {
+              "max": 0.0,
+              "mean": 0.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 27,
+              "sign_counts": {
+                "exact_zero": 27,
+                "negative": 0,
+                "positive": 0
+              }
+            },
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.0,
+              "upper": 0.0
+            },
+            "unavailable_seed_ids": [],
+            "unavailable_seed_labels": 0
+          },
+          "request_index": 0
+        },
+        {
+          "action_step_start": 32,
+          "action_step_target": 64,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "observable_seed_labels": 27,
+              "observed_signed_contrast_m": {
+                "max": 0.0033675730228424072,
+                "mean": -2.3579707852116336e-06,
+                "median": 0.0,
+                "min": -0.003164634108543396,
+                "n": 27,
+                "sign_counts": {
+                  "exact_zero": 19,
+                  "negative": 6,
+                  "positive": 2
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.07407407407407407,
+                "upper": 0.07407407407407407
+              },
+              "unavailable_seed_ids": [],
+              "unavailable_seed_labels": 0
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "observable_seed_labels": 27,
+              "observed_signed_contrast_m": {
+                "max": 0.006687261164188385,
+                "mean": -3.7260077617786546e-05,
+                "median": 0.0,
+                "min": -0.00313403457403183,
+                "n": 27,
+                "sign_counts": {
+                  "exact_zero": 16,
+                  "negative": 8,
+                  "positive": 3
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.1111111111111111,
+                "upper": 0.1111111111111111
+              },
+              "unavailable_seed_ids": [],
+              "unavailable_seed_labels": 0
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "observable_seed_labels": 27,
+            "observed_signed_contrast_m": {
+              "max": 0.006687261164188385,
+              "mean": -3.490210683257492e-05,
+              "median": 0.0,
+              "min": -0.0033675730228424072,
+              "n": 27,
+              "sign_counts": {
+                "exact_zero": 11,
+                "negative": 9,
+                "positive": 7
+              }
+            },
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.25925925925925924,
+              "upper": 0.25925925925925924
+            },
+            "unavailable_seed_ids": [],
+            "unavailable_seed_labels": 0
+          },
+          "request_index": 1
+        },
+        {
+          "action_step_start": 64,
+          "action_step_target": 96,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "observable_seed_labels": 26,
+              "observed_signed_contrast_m": {
+                "max": 0.28644636645913124,
+                "mean": 0.08567429283777109,
+                "median": 0.09124401584267616,
+                "min": -0.019540056586265564,
+                "n": 26,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 6,
+                  "positive": 20
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.7407407407407407,
+                "upper": 0.7777777777777778
+              },
+              "unavailable_seed_ids": [
+                9414
+              ],
+              "unavailable_seed_labels": 1
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "observable_seed_labels": 27,
+              "observed_signed_contrast_m": {
+                "max": 0.28953666239976883,
+                "mean": 0.09457380631593643,
+                "median": 0.08322349935770035,
+                "min": -0.0013191699981689453,
+                "n": 27,
+                "sign_counts": {
+                  "exact_zero": 1,
+                  "negative": 1,
+                  "positive": 25
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.9259259259259259,
+                "upper": 0.9259259259259259
+              },
+              "unavailable_seed_ids": [],
+              "unavailable_seed_labels": 0
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "observable_seed_labels": 26,
+            "observed_signed_contrast_m": {
+              "max": 0.2063109278678894,
+              "mean": 0.007803423724208887,
+              "median": 0.006068943068385124,
+              "min": -0.130545262247324,
+              "n": 26,
+              "sign_counts": {
+                "exact_zero": 0,
+                "negative": 11,
+                "positive": 15
+              }
+            },
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.5555555555555556,
+              "upper": 0.5925925925925926
+            },
+            "unavailable_seed_ids": [
+              9414
+            ],
+            "unavailable_seed_labels": 1
+          },
+          "request_index": 2
+        },
+        {
+          "action_step_start": 96,
+          "action_step_target": 128,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [
+                9401,
+                9402,
+                9405,
+                9406,
+                9407,
+                9409,
+                9411,
+                9412,
+                9413,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9421,
+                9422,
+                9424,
+                9426
+              ],
+              "observable_seed_labels": 18,
+              "observed_signed_contrast_m": {
+                "max": 0.3880411833524704,
+                "mean": 0.15940789019482005,
+                "median": 0.15982535667717457,
+                "min": -0.028620004653930664,
+                "n": 18,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 1,
+                  "positive": 17
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.6296296296296297,
+                "upper": 0.9629629629629629
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9403,
+                9404,
+                9408,
+                9410,
+                9414,
+                9420,
+                9423,
+                9425
+              ],
+              "unavailable_seed_labels": 9
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [
+                9400,
+                9403,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9418,
+                9419,
+                9421
+              ],
+              "observable_seed_labels": 17,
+              "observed_signed_contrast_m": {
+                "max": 0.409256286919117,
+                "mean": 0.2094495449872578,
+                "median": 0.2004546895623207,
+                "min": -0.013911023736000061,
+                "n": 17,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 2,
+                  "positive": 15
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.5555555555555556,
+                "upper": 0.9259259259259259
+              },
+              "unavailable_seed_ids": [
+                9401,
+                9402,
+                9404,
+                9417,
+                9420,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 10
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [
+              9405,
+              9406,
+              9407,
+              9409,
+              9411,
+              9412,
+              9413,
+              9415,
+              9416,
+              9418,
+              9419,
+              9421
+            ],
+            "observable_seed_labels": 12,
+            "observed_signed_contrast_m": {
+              "max": 0.218178391456604,
+              "mean": 0.03214083813751737,
+              "median": 0.038883138447999954,
+              "min": -0.13623035699129105,
+              "n": 12,
+              "sign_counts": {
+                "exact_zero": 0,
+                "negative": 3,
+                "positive": 9
+              }
+            },
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.3333333333333333,
+              "upper": 0.8888888888888888
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9408,
+              9410,
+              9414,
+              9417,
+              9420,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 15
+          },
+          "request_index": 3
+        },
+        {
+          "action_step_start": 128,
+          "action_step_target": 160,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [
+                9407,
+                9411,
+                9412,
+                9415,
+                9417,
+                9421,
+                9424,
+                9426
+              ],
+              "observable_seed_labels": 8,
+              "observed_signed_contrast_m": {
+                "max": 0.23068739473819733,
+                "mean": 0.06806926312856376,
+                "median": 0.0016153454780578613,
+                "min": -0.02349838614463806,
+                "n": 8,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 4,
+                  "positive": 4
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.14814814814814814,
+                "upper": 0.8518518518518519
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9408,
+                9409,
+                9410,
+                9413,
+                9414,
+                9416,
+                9418,
+                9419,
+                9420,
+                9422,
+                9423,
+                9425
+              ],
+              "unavailable_seed_labels": 19
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [
+                9400,
+                9403,
+                9415,
+                9416,
+                9421
+              ],
+              "observable_seed_labels": 5,
+              "observed_signed_contrast_m": {
+                "max": 0.21122174710035324,
+                "mean": 0.04579162895679474,
+                "median": 0.009611416608095169,
+                "min": -0.03880733996629715,
+                "n": 5,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 2,
+                  "positive": 3
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.1111111111111111,
+                "upper": 0.9259259259259259
+              },
+              "unavailable_seed_ids": [
+                9401,
+                9402,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9417,
+                9418,
+                9419,
+                9420,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 22
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [
+              9415,
+              9421
+            ],
+            "observable_seed_labels": 2,
+            "observed_signed_contrast_m": {
+              "max": 0.03310980275273323,
+              "mean": 0.004187626764178276,
+              "median": 0.004187626764178276,
+              "min": -0.02473454922437668,
+              "n": 2,
+              "sign_counts": {
+                "exact_zero": 0,
+                "negative": 1,
+                "positive": 1
+              }
+            },
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.037037037037037035,
+              "upper": 0.9629629629629629
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 25
+          },
+          "request_index": 4
+        },
+        {
+          "action_step_start": 160,
+          "action_step_target": 192,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [
+                9407,
+                9415,
+                9417,
+                9421,
+                9424
+              ],
+              "observable_seed_labels": 5,
+              "observed_signed_contrast_m": {
+                "max": 0.23267055302858353,
+                "mean": 0.11617881059646606,
+                "median": 0.12361626327037811,
+                "min": 0.006978660821914673,
+                "n": 5,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 0,
+                  "positive": 5
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.18518518518518517,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9416,
+                9418,
+                9419,
+                9420,
+                9422,
+                9423,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 22
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [
+                9400,
+                9403,
+                9415,
+                9421
+              ],
+              "observable_seed_labels": 4,
+              "observed_signed_contrast_m": {
+                "max": 0.15378018096089363,
+                "mean": 0.07567167934030294,
+                "median": 0.07559478282928467,
+                "min": -0.00228302925825119,
+                "n": 4,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 1,
+                  "positive": 3
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.1111111111111111,
+                "upper": 0.9629629629629629
+              },
+              "unavailable_seed_ids": [
+                9401,
+                9402,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 23
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [
+              9415,
+              9421
+            ],
+            "observable_seed_labels": 2,
+            "observed_signed_contrast_m": {
+              "max": -0.028517015278339386,
+              "mean": -0.033065712079405785,
+              "median": -0.033065712079405785,
+              "min": -0.03761440888047218,
+              "n": 2,
+              "sign_counts": {
+                "exact_zero": 0,
+                "negative": 2,
+                "positive": 0
+              }
+            },
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.0,
+              "upper": 0.9259259259259259
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 25
+          },
+          "request_index": 5
+        },
+        {
+          "action_step_start": 192,
+          "action_step_target": 224,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [
+                9417
+              ],
+              "observable_seed_labels": 1,
+              "observed_signed_contrast_m": {
+                "max": 0.031183362007141113,
+                "mean": 0.031183362007141113,
+                "median": 0.031183362007141113,
+                "min": 0.031183362007141113,
+                "n": 1,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 0,
+                  "positive": 1
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.037037037037037035,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 26
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [
+                9403,
+                9415
+              ],
+              "observable_seed_labels": 2,
+              "observed_signed_contrast_m": {
+                "max": -0.006889596581459045,
+                "mean": -0.09882481396198273,
+                "median": -0.09882481396198273,
+                "min": -0.1907600313425064,
+                "n": 2,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 2,
+                  "positive": 0
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 0.9259259259259259
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 25
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [],
+            "observable_seed_labels": 0,
+            "observed_signed_contrast_m": null,
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.0,
+              "upper": 1.0
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 27
+          },
+          "request_index": 6
+        },
+        {
+          "action_step_start": 224,
+          "action_step_target": 256,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [
+                9417
+              ],
+              "observable_seed_labels": 1,
+              "observed_signed_contrast_m": {
+                "max": -0.0014848187565803528,
+                "mean": -0.0014848187565803528,
+                "median": -0.0014848187565803528,
+                "min": -0.0014848187565803528,
+                "n": 1,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 1,
+                  "positive": 0
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 0.9629629629629629
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 26
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [
+                9403,
+                9415
+              ],
+              "observable_seed_labels": 2,
+              "observed_signed_contrast_m": {
+                "max": 0.192040354013443,
+                "mean": 0.09397514909505844,
+                "median": 0.09397514909505844,
+                "min": -0.004090055823326111,
+                "n": 2,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 1,
+                  "positive": 1
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.037037037037037035,
+                "upper": 0.9629629629629629
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 25
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [],
+            "observable_seed_labels": 0,
+            "observed_signed_contrast_m": null,
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.0,
+              "upper": 1.0
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 27
+          },
+          "request_index": 7
+        },
+        {
+          "action_step_start": 256,
+          "action_step_target": 288,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [
+                9417
+              ],
+              "observable_seed_labels": 1,
+              "observed_signed_contrast_m": {
+                "max": 0.030966348946094513,
+                "mean": 0.030966348946094513,
+                "median": 0.030966348946094513,
+                "min": 0.030966348946094513,
+                "n": 1,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 0,
+                  "positive": 1
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.037037037037037035,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 26
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [
+                9415
+              ],
+              "observable_seed_labels": 1,
+              "observed_signed_contrast_m": {
+                "max": 0.06467004865407944,
+                "mean": 0.06467004865407944,
+                "median": 0.06467004865407944,
+                "min": 0.06467004865407944,
+                "n": 1,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 0,
+                  "positive": 1
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.037037037037037035,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 26
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [],
+            "observable_seed_labels": 0,
+            "observed_signed_contrast_m": null,
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.0,
+              "upper": 1.0
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 27
+          },
+          "request_index": 8
+        },
+        {
+          "action_step_start": 288,
+          "action_step_target": 320,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [],
+              "observable_seed_labels": 0,
+              "observed_signed_contrast_m": null,
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 27
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [
+                9415
+              ],
+              "observable_seed_labels": 1,
+              "observed_signed_contrast_m": {
+                "max": 0.1774863749742508,
+                "mean": 0.1774863749742508,
+                "median": 0.1774863749742508,
+                "min": 0.1774863749742508,
+                "n": 1,
+                "sign_counts": {
+                  "exact_zero": 0,
+                  "negative": 0,
+                  "positive": 1
+                }
+              },
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.037037037037037035,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 26
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [],
+            "observable_seed_labels": 0,
+            "observed_signed_contrast_m": null,
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.0,
+              "upper": 1.0
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 27
+          },
+          "request_index": 9
+        },
+        {
+          "action_step_start": 320,
+          "action_step_target": 352,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [],
+              "observable_seed_labels": 0,
+              "observed_signed_contrast_m": null,
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 27
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [],
+              "observable_seed_labels": 0,
+              "observed_signed_contrast_m": null,
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 27
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [],
+            "observable_seed_labels": 0,
+            "observed_signed_contrast_m": null,
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.0,
+              "upper": 1.0
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 27
+          },
+          "request_index": 10
+        },
+        {
+          "action_step_start": 352,
+          "action_step_target": 384,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [],
+              "observable_seed_labels": 0,
+              "observed_signed_contrast_m": null,
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 27
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [],
+              "observable_seed_labels": 0,
+              "observed_signed_contrast_m": null,
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 27
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [],
+            "observable_seed_labels": 0,
+            "observed_signed_contrast_m": null,
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.0,
+              "upper": 1.0
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 27
+          },
+          "request_index": 11
+        },
+        {
+          "action_step_start": 384,
+          "action_step_target": 416,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [],
+              "observable_seed_labels": 0,
+              "observed_signed_contrast_m": null,
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 27
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [],
+              "observable_seed_labels": 0,
+              "observed_signed_contrast_m": null,
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 27
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [],
+            "observable_seed_labels": 0,
+            "observed_signed_contrast_m": null,
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.0,
+              "upper": 1.0
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 27
+          },
+          "request_index": 12
+        },
+        {
+          "action_step_start": 416,
+          "action_step_target": 448,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [],
+              "observable_seed_labels": 0,
+              "observed_signed_contrast_m": null,
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 27
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [],
+              "observable_seed_labels": 0,
+              "observed_signed_contrast_m": null,
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 27
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [],
+            "observable_seed_labels": 0,
+            "observed_signed_contrast_m": null,
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.0,
+              "upper": 1.0
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 27
+          },
+          "request_index": 13
+        },
+        {
+          "action_step_start": 448,
+          "action_step_target": 480,
+          "by_layout": {
+            "control": {
+              "observable_seed_ids": [],
+              "observable_seed_labels": 0,
+              "observed_signed_contrast_m": null,
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 27
+            },
+            "position_mirrored": {
+              "observable_seed_ids": [],
+              "observable_seed_labels": 0,
+              "observed_signed_contrast_m": null,
+              "registered_seed_labels": 27,
+              "strict_positive_full_cohort_fraction_bounds": {
+                "lower": 0.0,
+                "upper": 1.0
+              },
+              "unavailable_seed_ids": [
+                9400,
+                9401,
+                9402,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9411,
+                9412,
+                9413,
+                9414,
+                9415,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "unavailable_seed_labels": 27
+            }
+          },
+          "four_condition_same_index_interaction_m": {
+            "observable_seed_ids": [],
+            "observable_seed_labels": 0,
+            "observed_signed_contrast_m": null,
+            "registered_seed_labels": 27,
+            "strict_positive_full_cohort_fraction_bounds": {
+              "lower": 0.0,
+              "upper": 1.0
+            },
+            "unavailable_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "unavailable_seed_labels": 27
+          },
+          "request_index": 14
+        }
+      ]
     },
     "four_condition_same_request_index_support": {
       "matched_seed_labels": 27,
@@ -33533,5 +35789,5 @@
       "signed_lateral_relative_change_m": null
     }
   ],
-  "schema_version": "wmf-retained-h01-request-window-motion-v2"
+  "schema_version": "wmf-retained-h01-request-window-motion-v3"
 }

@@ -268,6 +268,23 @@ episode rows. The final manuscript incorporates the following corrections:
   omitted. This is same-population descriptive selection accounting, not a new
   confirmatory estimand or cohort, physical-time endpoint, A8 completion,
   activity/gate advance or change to the 232-cell core.
+  The v5 first-unavailability decomposition closes every support curve against
+  its exact first losses. Control losses by index are
+  0,0,1,8,10,3,4,0,0,1,0,0,0,0,0 and reflected losses are
+  0,0,0,10,12,1,2,0,1,0,1,0,0,0,0. LEFT-only/both/RIGHT-only limiters are
+  13/3/11 and 19/6/2; all 63 per-layout limiting-cell appearances, including
+  the limiters tied in nine pairs, are success-coded, with 61 partial
+  goal-stopped requests and two control-LEFT episodes ending exactly at
+  action 128. Four-condition first losses are 1,14,10,2 at indices 2,3,4,6.
+  First-loss arrays are discrete differences of the existing support curves;
+  only limiter identities and terminal forms are newly exposed, not an
+  independent endpoint, estimand, cohort or scientific signal. Historical
+  successes goal-stop while failures remain observed to the 450-action cap,
+  and no pair contains two failures. That stopping structure mechanically
+  yields zero cap-failure limiters; it is not an outcome association and does
+  not establish censoring independence, failure enrichment, outcome-stratified
+  motion effects, physical time, forecast skill, language/model diagnosis,
+  activity or a gate.
 - The retained H02 package byte-authenticates nine compact Git objects
   (831,259 bytes/1,429 lines), including the bridge that defines the 45-degree
   cone and three-sample sustained rule, and rejoins the exact 108-cell/54-pair V3-B003

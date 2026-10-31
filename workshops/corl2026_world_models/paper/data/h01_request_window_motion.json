@@ -4,11 +4,13 @@
     "A6_movement_threshold_established": false,
     "censoring_independence_established": false,
     "changes_232_cell_core_bound": false,
+    "first_loss_arrays_are_algebraic_support_differences": true,
     "forecast_accuracy_or_skill_estimated": false,
     "forecast_arrays_retrieved": false,
     "forecast_descriptor_provenance_evidence": true,
     "forecast_payload_bytes_reopened_or_reverified": false,
     "generated_versus_executed_comparison": false,
+    "independent_first_unavailability_estimand_estimated": false,
     "independent_scene_or_layout_generalization_established": false,
     "language_understanding_established": false,
     "maximum_core_behavioral_cells": 232,
@@ -19,6 +21,7 @@
     "pair_outcome_establishes_language_or_model_diagnosis": false,
     "physical_time_established": false,
     "retrospective_execution_motion_evidence": true,
+    "retrospective_first_unavailability_evidence": true,
     "retrospective_outcome_stratified_attrition_evidence": true
   },
   "cohort": {
@@ -533,11 +536,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.14247271418571472,
             "direct_boundary_contrast_m": 0.14247271418571472,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "control",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 122,
+                "layout": "control",
+                "observed_prefix_actions": 26,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9400:control:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.04749090472857157,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 11,
@@ -559,11 +582,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.09046076238155365,
             "direct_boundary_contrast_m": 0.09046076238155365,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "control",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 136,
+                "layout": "control",
+                "observed_prefix_actions": 8,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9401:control:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.022615190595388412,
             "pair_outcome": "success_left__cap_failure_right",
             "right_complete_windows": 14,
@@ -586,11 +629,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.307388573884964,
             "direct_boundary_contrast_m": 0.307388573884964,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "control",
             "left_complete_windows": 14,
             "left_requested_success": false,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 129,
+                "layout": "control",
+                "observed_prefix_actions": 1,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9402:control:right:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.076847143471241,
             "pair_outcome": "cap_failure_left__success_right",
             "right_complete_windows": 4,
@@ -613,11 +676,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.13329721987247467,
             "direct_boundary_contrast_m": 0.13329721987247467,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "control",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 123,
+                "layout": "control",
+                "observed_prefix_actions": 27,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9403:control:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.044432406624158226,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 12,
@@ -639,11 +722,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.12660718709230423,
             "direct_boundary_contrast_m": 0.12660718709230423,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "control",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 125,
+                "layout": "control",
+                "observed_prefix_actions": 29,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9404:control:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.042202395697434746,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -665,11 +768,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.3983021527528763,
             "direct_boundary_contrast_m": 0.3983021527528763,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "control",
             "left_complete_windows": 11,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 129,
+                "layout": "control",
+                "observed_prefix_actions": 1,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9405:control:right:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.09957553818821907,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -692,11 +815,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.17508865892887115,
             "direct_boundary_contrast_m": 0.17508865892887115,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "control",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": null,
+                "command": "left",
+                "episode_actions_executed": 128,
+                "layout": "control",
+                "observed_prefix_actions": 0,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": null,
+                "terminal_kind": "goal_stopped_at_exact_request_boundary"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.04377216473221779,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 7,
@@ -719,11 +862,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.2509840875864029,
             "direct_boundary_contrast_m": 0.2509840875864029,
+            "first_unavailable_action_start": 192,
+            "first_unavailable_action_target": 224,
+            "first_unavailable_request_index": 6,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 192,
             "layout": "control",
             "left_complete_windows": 8,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 192,
+                "action_step_target": 224,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 193,
+                "layout": "control",
+                "observed_prefix_actions": 1,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9407:control:right:request006",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.04183068126440048,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 6,
@@ -748,11 +911,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.13530706986784935,
             "direct_boundary_contrast_m": 0.13530706986784935,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "control",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 125,
+                "layout": "control",
+                "observed_prefix_actions": 29,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9408:control:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.04510235662261645,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -774,11 +957,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.3691848963499069,
             "direct_boundary_contrast_m": 0.3691848963499069,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "control",
             "left_complete_windows": 12,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 146,
+                "layout": "control",
+                "observed_prefix_actions": 18,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9409:control:right:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.09229622408747673,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -801,11 +1004,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.17048858851194382,
             "direct_boundary_contrast_m": 0.17048858851194382,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "control",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 115,
+                "layout": "control",
+                "observed_prefix_actions": 19,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9410:control:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.05682952950398127,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 5,
@@ -827,11 +1050,44 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.4492456614971161,
             "direct_boundary_contrast_m": 0.4492456614971161,
+            "first_unavailable_action_start": 160,
+            "first_unavailable_action_target": 192,
+            "first_unavailable_request_index": 5,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 160,
             "layout": "control",
             "left_complete_windows": 5,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left",
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 160,
+                "action_step_target": 192,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 174,
+                "layout": "control",
+                "observed_prefix_actions": 14,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9411:control:left:request005",
+                "terminal_kind": "goal_stopped_partial_request"
+              },
+              {
+                "action_step_start": 160,
+                "action_step_target": 192,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 185,
+                "layout": "control",
+                "observed_prefix_actions": 25,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9411:control:right:request005",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.08984913229942322,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 5,
@@ -855,11 +1111,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.29586106538772583,
             "direct_boundary_contrast_m": 0.29586106538772583,
+            "first_unavailable_action_start": 160,
+            "first_unavailable_action_target": 192,
+            "first_unavailable_request_index": 5,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 160,
             "layout": "control",
             "left_complete_windows": 6,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 160,
+                "action_step_target": 192,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 179,
+                "layout": "control",
+                "observed_prefix_actions": 19,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9412:control:right:request005",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.059172213077545166,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 5,
@@ -883,11 +1159,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.17042919248342514,
             "direct_boundary_contrast_m": 0.17042919248342514,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "control",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 149,
+                "layout": "control",
+                "observed_prefix_actions": 21,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9413:control:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.042607298120856285,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 6,
@@ -910,11 +1206,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.0,
             "direct_boundary_contrast_m": 0.0,
+            "first_unavailable_action_start": 64,
+            "first_unavailable_action_target": 96,
+            "first_unavailable_request_index": 2,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 64,
             "layout": "control",
             "left_complete_windows": 2,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 64,
+                "action_step_target": 96,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 90,
+                "layout": "control",
+                "observed_prefix_actions": 26,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9414:control:left:request002",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.0,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 8,
@@ -935,11 +1251,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.09095373749732971,
             "direct_boundary_contrast_m": 0.09095373749732971,
+            "first_unavailable_action_start": 192,
+            "first_unavailable_action_target": 224,
+            "first_unavailable_request_index": 6,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 192,
             "layout": "control",
             "left_complete_windows": 6,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 192,
+                "action_step_target": 224,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 218,
+                "layout": "control",
+                "observed_prefix_actions": 26,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9415:control:left:request006",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.015158956249554953,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 9,
@@ -964,11 +1300,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.16311950236558914,
             "direct_boundary_contrast_m": 0.16311950236558914,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "control",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": null,
+                "command": "left",
+                "episode_actions_executed": 128,
+                "layout": "control",
+                "observed_prefix_actions": 0,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": null,
+                "terminal_kind": "goal_stopped_at_exact_request_boundary"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.040779875591397285,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 7,
@@ -991,11 +1347,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.060592710971832275,
             "direct_boundary_contrast_m": 0.060592710971832275,
+            "first_unavailable_action_start": 288,
+            "first_unavailable_action_target": 320,
+            "first_unavailable_request_index": 9,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 288,
             "layout": "control",
             "left_complete_windows": 13,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 288,
+                "action_step_target": 320,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 291,
+                "layout": "control",
+                "observed_prefix_actions": 3,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9417:control:right:request009",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.006732523441314697,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 9,
@@ -1023,11 +1399,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.3426011651754379,
             "direct_boundary_contrast_m": 0.3426011651754379,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "control",
             "left_complete_windows": 7,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 155,
+                "layout": "control",
+                "observed_prefix_actions": 27,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9418:control:right:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.08565029129385948,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1050,11 +1446,44 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.38758596777915955,
             "direct_boundary_contrast_m": 0.38758596777915955,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "control",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left",
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 134,
+                "layout": "control",
+                "observed_prefix_actions": 6,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9419:control:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              },
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 155,
+                "layout": "control",
+                "observed_prefix_actions": 27,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9419:control:right:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.09689649194478989,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1077,11 +1506,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.17695344798266888,
             "direct_boundary_contrast_m": 0.17695344798266888,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "control",
             "left_complete_windows": 8,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 97,
+                "layout": "control",
+                "observed_prefix_actions": 1,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9420:control:right:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.058984482660889626,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 3,
@@ -1103,11 +1552,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.19563490897417068,
             "direct_boundary_contrast_m": 0.19563490897417068,
+            "first_unavailable_action_start": 192,
+            "first_unavailable_action_target": 224,
+            "first_unavailable_request_index": 6,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 192,
             "layout": "control",
             "left_complete_windows": 6,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 192,
+                "action_step_target": 224,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 207,
+                "layout": "control",
+                "observed_prefix_actions": 15,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9421:control:left:request006",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.03260581816236178,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 8,
@@ -1132,11 +1601,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.3743247985839844,
             "direct_boundary_contrast_m": 0.3743247985839844,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "control",
             "left_complete_windows": 10,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 144,
+                "layout": "control",
+                "observed_prefix_actions": 16,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9422:control:right:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.0935811996459961,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1159,11 +1648,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.24451320990920067,
             "direct_boundary_contrast_m": 0.24451320990920067,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "control",
             "left_complete_windows": 6,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 127,
+                "layout": "control",
+                "observed_prefix_actions": 31,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9423:control:right:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.0815044033030669,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 3,
@@ -1185,11 +1694,44 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.22047816962003708,
             "direct_boundary_contrast_m": 0.22047816962003708,
+            "first_unavailable_action_start": 192,
+            "first_unavailable_action_target": 224,
+            "first_unavailable_request_index": 6,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 192,
             "layout": "control",
             "left_complete_windows": 6,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left",
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 192,
+                "action_step_target": 224,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 216,
+                "layout": "control",
+                "observed_prefix_actions": 24,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9424:control:left:request006",
+                "terminal_kind": "goal_stopped_partial_request"
+              },
+              {
+                "action_step_start": 192,
+                "action_step_target": 224,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 196,
+                "layout": "control",
+                "observed_prefix_actions": 4,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9424:control:right:request006",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.036746361603339515,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 6,
@@ -1214,11 +1756,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.2864459343254566,
             "direct_boundary_contrast_m": 0.2864459343254566,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "control",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 119,
+                "layout": "control",
+                "observed_prefix_actions": 23,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9425:control:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.09548197810848554,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1240,11 +1802,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.5246016383171082,
             "direct_boundary_contrast_m": 0.5246016383171082,
+            "first_unavailable_action_start": 160,
+            "first_unavailable_action_target": 192,
+            "first_unavailable_request_index": 5,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 160,
             "layout": "control",
             "left_complete_windows": 6,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 160,
+                "action_step_target": 192,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 190,
+                "layout": "control",
+                "observed_prefix_actions": 30,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9426:control:right:request005",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.10492032766342163,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 5,
@@ -1363,11 +1945,44 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.3866970092058182,
             "direct_boundary_contrast_m": 0.3866970092058182,
+            "first_unavailable_action_start": 192,
+            "first_unavailable_action_target": 224,
+            "first_unavailable_request_index": 6,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 192,
             "layout": "position_mirrored",
             "left_complete_windows": 6,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left",
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 192,
+                "action_step_target": 224,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 217,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 25,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9400:position_mirrored:left:request006",
+                "terminal_kind": "goal_stopped_partial_request"
+              },
+              {
+                "action_step_start": 192,
+                "action_step_target": 224,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 193,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 1,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9400:position_mirrored:right:request006",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.06444950153430302,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 6,
@@ -1392,11 +2007,44 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.27728736959397793,
             "direct_boundary_contrast_m": 0.27728736959397793,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "position_mirrored",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left",
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 120,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 24,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9401:position_mirrored:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              },
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 124,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 28,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9401:position_mirrored:right:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.09242912319799264,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 3,
@@ -1418,11 +2066,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.19573764316737652,
             "direct_boundary_contrast_m": 0.19573764316737652,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "position_mirrored",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 124,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 28,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9402:position_mirrored:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.06524588105579217,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 7,
@@ -1444,11 +2112,44 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.284042164683342,
             "direct_boundary_contrast_m": 0.284042164683342,
+            "first_unavailable_action_start": 256,
+            "first_unavailable_action_target": 288,
+            "first_unavailable_request_index": 8,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 256,
             "layout": "position_mirrored",
             "left_complete_windows": 8,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left",
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 256,
+                "action_step_target": 288,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 282,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 26,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9403:position_mirrored:left:request008",
+                "terminal_kind": "goal_stopped_partial_request"
+              },
+              {
+                "action_step_start": 256,
+                "action_step_target": 288,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 285,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 29,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9403:position_mirrored:right:request008",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.03550527058541775,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 8,
@@ -1475,11 +2176,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.14619670808315277,
             "direct_boundary_contrast_m": 0.14619670808315277,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "position_mirrored",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 120,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 24,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9404:position_mirrored:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.04873223602771759,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1501,11 +2222,44 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.3706645369529724,
             "direct_boundary_contrast_m": 0.3706645369529724,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left",
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 158,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 30,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9405:position_mirrored:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              },
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 155,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 27,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9405:position_mirrored:right:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.0926661342382431,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1528,11 +2282,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.2593216486275196,
             "direct_boundary_contrast_m": 0.2593216486275196,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 8,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 150,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 22,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9406:position_mirrored:right:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.0648304121568799,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1555,11 +2329,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.10314160212874413,
             "direct_boundary_contrast_m": 0.10314160212874413,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 159,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 31,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9407:position_mirrored:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.02578540053218603,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 5,
@@ -1582,11 +2376,44 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.4309718683362007,
             "direct_boundary_contrast_m": 0.4309718683362007,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left",
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 157,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 29,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9408:position_mirrored:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              },
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 158,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 30,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9408:position_mirrored:right:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.10774296708405018,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1609,11 +2436,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.32604169845581055,
             "direct_boundary_contrast_m": 0.32604169845581055,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 159,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 31,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9409:position_mirrored:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.08151042461395264,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 5,
@@ -1636,11 +2483,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.327174574136734,
             "direct_boundary_contrast_m": 0.327174574136734,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 140,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 12,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9410:position_mirrored:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.0817936435341835,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 11,
@@ -1663,11 +2530,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.19602937251329422,
             "direct_boundary_contrast_m": 0.19602937251329422,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 157,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 29,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9411:position_mirrored:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.049007343128323555,
             "pair_outcome": "success_left__cap_failure_right",
             "right_complete_windows": 14,
@@ -1690,11 +2577,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.1870938315987587,
             "direct_boundary_contrast_m": 0.1870938315987587,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 155,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 27,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9412:position_mirrored:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.046773457899689674,
             "pair_outcome": "success_left__cap_failure_right",
             "right_complete_windows": 14,
@@ -1717,11 +2624,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.19864319637417793,
             "direct_boundary_contrast_m": 0.19864319637417793,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 159,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 31,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9413:position_mirrored:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.04966079909354448,
             "pair_outcome": "success_left__cap_failure_right",
             "right_complete_windows": 14,
@@ -1744,11 +2671,44 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.40352392196655273,
             "direct_boundary_contrast_m": 0.40352392196655273,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left",
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 132,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 4,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9414:position_mirrored:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              },
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 148,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 20,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9414:position_mirrored:right:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.10088098049163818,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1771,11 +2731,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.19779909402132034,
             "direct_boundary_contrast_m": 0.19779909402132034,
+            "first_unavailable_action_start": 320,
+            "first_unavailable_action_target": 352,
+            "first_unavailable_request_index": 10,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 320,
             "layout": "position_mirrored",
             "left_complete_windows": 10,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 320,
+                "action_step_target": 352,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 321,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 1,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9415:position_mirrored:left:request010",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.019779909402132034,
             "pair_outcome": "success_left__cap_failure_right",
             "right_complete_windows": 14,
@@ -1804,11 +2784,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.4904553070664406,
             "direct_boundary_contrast_m": 0.4904553070664406,
+            "first_unavailable_action_start": 160,
+            "first_unavailable_action_target": 192,
+            "first_unavailable_request_index": 5,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 160,
             "layout": "position_mirrored",
             "left_complete_windows": 5,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 160,
+                "action_step_target": 192,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 164,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 4,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9416:position_mirrored:left:request005",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.09809106141328812,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 8,
@@ -1832,11 +2832,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.11218152474611998,
             "direct_boundary_contrast_m": 0.11218152474611998,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "position_mirrored",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 97,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 1,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9417:position_mirrored:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.03739384158203999,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1858,11 +2878,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.2873941659927368,
             "direct_boundary_contrast_m": 0.2873941659927368,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 158,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 30,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9418:position_mirrored:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.0718485414981842,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 5,
@@ -1885,11 +2925,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.2856663763523102,
             "direct_boundary_contrast_m": 0.2856663763523102,
+            "first_unavailable_action_start": 128,
+            "first_unavailable_action_target": 160,
+            "first_unavailable_request_index": 4,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 128,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 128,
+                "action_step_target": 160,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 149,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 21,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9419:position_mirrored:left:request004",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.07141659408807755,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 5,
@@ -1912,11 +2972,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.2081480622291565,
             "direct_boundary_contrast_m": 0.2081480622291565,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "position_mirrored",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 98,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 2,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9420:position_mirrored:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.06938268740971883,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1938,11 +3018,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.292506143450737,
             "direct_boundary_contrast_m": 0.292506143450737,
+            "first_unavailable_action_start": 192,
+            "first_unavailable_action_target": 224,
+            "first_unavailable_request_index": 6,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 192,
             "layout": "position_mirrored",
             "left_complete_windows": 6,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 192,
+                "action_step_target": 224,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 210,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 18,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9421:position_mirrored:left:request006",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.04875102390845617,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 12,
@@ -1967,11 +3067,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.11178560741245747,
             "direct_boundary_contrast_m": 0.11178560741245747,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "position_mirrored",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 97,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 1,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9422:position_mirrored:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.037261869137485824,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -1993,11 +3113,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.12065520882606506,
             "direct_boundary_contrast_m": 0.12065520882606506,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "position_mirrored",
             "left_complete_windows": 4,
             "left_requested_success": true,
+            "limiting_commands": [
+              "right"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "right",
+                "episode_actions_executed": 107,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 11,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9423:position_mirrored:right:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.04021840294202169,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 3,
@@ -2019,11 +3159,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.20207222551107407,
             "direct_boundary_contrast_m": 0.20207222551107407,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "position_mirrored",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 97,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 1,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9424:position_mirrored:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.06735740850369136,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 11,
@@ -2045,11 +3205,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.28953666239976883,
             "direct_boundary_contrast_m": 0.28953666239976883,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "position_mirrored",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 103,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 7,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9425:position_mirrored:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.09651222079992294,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -2071,11 +3251,31 @@
           {
             "cumulative_signed_lateral_contrast_m": 0.18646344542503357,
             "direct_boundary_contrast_m": 0.18646344542503357,
+            "first_unavailable_action_start": 96,
+            "first_unavailable_action_target": 128,
+            "first_unavailable_request_index": 3,
             "first_window_contrast_m": 0.0,
             "last_shared_action_boundary": 96,
             "layout": "position_mirrored",
             "left_complete_windows": 3,
             "left_requested_success": true,
+            "limiting_commands": [
+              "left"
+            ],
+            "limiting_terminal_evidence": [
+              {
+                "action_step_start": 96,
+                "action_step_target": 128,
+                "censor_outcome": "goal_stopped_success",
+                "command": "left",
+                "episode_actions_executed": 97,
+                "layout": "position_mirrored",
+                "observed_prefix_actions": 1,
+                "recorded_episode_outcome": "requested_success",
+                "request_id": "v3b001:nano:seed9426:position_mirrored:left:request003",
+                "terminal_kind": "goal_stopped_partial_request"
+              }
+            ],
             "mean_signed_lateral_contrast_m_per_32_action_window": 0.06215448180834452,
             "pair_outcome": "success_left__success_right",
             "right_complete_windows": 4,
@@ -2122,6 +3322,7 @@
       }
     },
     "definitions": {
+      "first_unavailability_decomposition": "For each seed pair, the first request index lacking an exact +32-action endpoint is the minimum complete-window count across its command traces; the four-condition version takes the minimum across all four traces. The first-loss arrays are exactly the discrete differences of the already-reported fixed-index support curves. Only the limiting-trace identity and partial-request versus exact-boundary terminal form are newly exposed; this is not an independent endpoint, estimand, cohort or additional scientific signal. Every tied limiting trace is retained. All limiter appearances are success-coded and zero are cap-failure-coded because historical successes stop at the goal whereas cap failures remain observed to the 450-action administrative cap, with no failure/failure pairs; this is mechanical stopping structure, not an outcome association. These deterministic descriptions of historical goal-dependent stopping do not establish failure enrichment, censoring independence, physical time, an outcome-stratified motion effect, forecast skill or a model diagnosis.",
       "first_window": "Availability and selection of the 0-to-32 action window are outcome-independent in this retained cohort because all cells survive past action 32. Its exact-zero measurement duplicates the stopping-control action-32 information rather than adding an endpoint.",
       "fixed_index_outcome_attrition": "For every fixed index, the already-recorded requested-success versus administrative-cap outcome of each LEFT/RIGHT pair is cross-tabulated against exact-endpoint availability. All four pair-outcome strata and all 16 control-by-reflected joint strata remain explicit, including zero-population and zero-support strata. This is retrospective risk-set composition only: pairing ends with the shorter command trace, so it neither establishes censoring independence nor estimates an outcome-stratified motion effect, failure enrichment, language understanding or a model diagnosis.",
       "fixed_request_index_profile": "Each row fixes one recorded request index before comparing commands. Support requires the exact +32-action endpoint in both command cells; four-condition interactions require all four cells. Strict-positive bounds count every unavailable registered seed first as non-positive and then as positive. Later rows remain historical survival-selected action-index evidence, not physical time, independent windows, a calibrated movement test or forecast scoring.",
@@ -2132,6 +3333,1820 @@
       "window_contrast": "D_window = change(cube_y-bowl_y)_LEFT - change(cube_y-bowl_y)_RIGHT in robot-base coordinates. Positive means the two commands increased LEFT/RIGHT ordering over that window; exact zero is a tie without a calibrated motion threshold."
     },
     "fixed_request_index_profile": {
+      "first_unavailability_decomposition": {
+        "by_layout": {
+          "control": {
+            "first_unavailable_seed_labels_by_request_index": [
+              0,
+              0,
+              1,
+              8,
+              10,
+              3,
+              4,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "limiting_cell_recorded_outcome_counts": {
+              "cap_failure": 0,
+              "requested_success": 30
+            },
+            "limiting_cell_terminal_kind_counts": {
+              "administrative_cap_censored_at_exact_request_boundary": 0,
+              "administrative_cap_censored_partial_request": 0,
+              "goal_stopped_at_exact_request_boundary": 2,
+              "goal_stopped_partial_request": 28
+            },
+            "limiting_command_set_counts": {
+              "left_and_right": 3,
+              "left_only": 13,
+              "right_only": 11
+            },
+            "limiting_set_size_counts": {
+              "1": 24,
+              "2": 3
+            },
+            "limiting_unit_record_counts": {
+              "left": 16,
+              "right": 14
+            },
+            "observable_seed_labels_by_request_index": [
+              27,
+              27,
+              26,
+              18,
+              8,
+              5,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "outcome_strata": {
+              "cap_failure_left__cap_failure_right": {
+                "first_unavailable_seed_labels_by_request_index": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "limiting_cell_recorded_outcome_counts": {
+                  "cap_failure": 0,
+                  "requested_success": 0
+                },
+                "limiting_cell_terminal_kind_counts": {
+                  "administrative_cap_censored_at_exact_request_boundary": 0,
+                  "administrative_cap_censored_partial_request": 0,
+                  "goal_stopped_at_exact_request_boundary": 0,
+                  "goal_stopped_partial_request": 0
+                },
+                "limiting_command_set_counts": {
+                  "left_and_right": 0,
+                  "left_only": 0,
+                  "right_only": 0
+                },
+                "limiting_set_size_counts": {
+                  "1": 0,
+                  "2": 0
+                },
+                "limiting_unit_record_counts": {
+                  "left": 0,
+                  "right": 0
+                },
+                "observable_seed_labels_by_request_index": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "population_seed_ids": [],
+                "population_seed_labels": 0
+              },
+              "cap_failure_left__success_right": {
+                "first_unavailable_seed_labels_by_request_index": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "limiting_cell_recorded_outcome_counts": {
+                  "cap_failure": 0,
+                  "requested_success": 1
+                },
+                "limiting_cell_terminal_kind_counts": {
+                  "administrative_cap_censored_at_exact_request_boundary": 0,
+                  "administrative_cap_censored_partial_request": 0,
+                  "goal_stopped_at_exact_request_boundary": 0,
+                  "goal_stopped_partial_request": 1
+                },
+                "limiting_command_set_counts": {
+                  "left_and_right": 0,
+                  "left_only": 0,
+                  "right_only": 1
+                },
+                "limiting_set_size_counts": {
+                  "1": 1,
+                  "2": 0
+                },
+                "limiting_unit_record_counts": {
+                  "left": 0,
+                  "right": 1
+                },
+                "observable_seed_labels_by_request_index": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "population_seed_ids": [
+                  9402
+                ],
+                "population_seed_labels": 1
+              },
+              "success_left__cap_failure_right": {
+                "first_unavailable_seed_labels_by_request_index": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "limiting_cell_recorded_outcome_counts": {
+                  "cap_failure": 0,
+                  "requested_success": 1
+                },
+                "limiting_cell_terminal_kind_counts": {
+                  "administrative_cap_censored_at_exact_request_boundary": 0,
+                  "administrative_cap_censored_partial_request": 0,
+                  "goal_stopped_at_exact_request_boundary": 0,
+                  "goal_stopped_partial_request": 1
+                },
+                "limiting_command_set_counts": {
+                  "left_and_right": 0,
+                  "left_only": 1,
+                  "right_only": 0
+                },
+                "limiting_set_size_counts": {
+                  "1": 1,
+                  "2": 0
+                },
+                "limiting_unit_record_counts": {
+                  "left": 1,
+                  "right": 0
+                },
+                "observable_seed_labels_by_request_index": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "population_seed_ids": [
+                  9401
+                ],
+                "population_seed_labels": 1
+              },
+              "success_left__success_right": {
+                "first_unavailable_seed_labels_by_request_index": [
+                  0,
+                  0,
+                  1,
+                  8,
+                  8,
+                  3,
+                  4,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "limiting_cell_recorded_outcome_counts": {
+                  "cap_failure": 0,
+                  "requested_success": 28
+                },
+                "limiting_cell_terminal_kind_counts": {
+                  "administrative_cap_censored_at_exact_request_boundary": 0,
+                  "administrative_cap_censored_partial_request": 0,
+                  "goal_stopped_at_exact_request_boundary": 2,
+                  "goal_stopped_partial_request": 26
+                },
+                "limiting_command_set_counts": {
+                  "left_and_right": 3,
+                  "left_only": 12,
+                  "right_only": 10
+                },
+                "limiting_set_size_counts": {
+                  "1": 22,
+                  "2": 3
+                },
+                "limiting_unit_record_counts": {
+                  "left": 15,
+                  "right": 13
+                },
+                "observable_seed_labels_by_request_index": [
+                  25,
+                  25,
+                  24,
+                  16,
+                  8,
+                  5,
+                  1,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "population_seed_ids": [
+                  9400,
+                  9403,
+                  9404,
+                  9405,
+                  9406,
+                  9407,
+                  9408,
+                  9409,
+                  9410,
+                  9411,
+                  9412,
+                  9413,
+                  9414,
+                  9415,
+                  9416,
+                  9417,
+                  9418,
+                  9419,
+                  9420,
+                  9421,
+                  9422,
+                  9423,
+                  9424,
+                  9425,
+                  9426
+                ],
+                "population_seed_labels": 25
+              }
+            },
+            "population_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "population_seed_labels": 27
+          },
+          "position_mirrored": {
+            "first_unavailable_seed_labels_by_request_index": [
+              0,
+              0,
+              0,
+              10,
+              12,
+              1,
+              2,
+              0,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "limiting_cell_recorded_outcome_counts": {
+              "cap_failure": 0,
+              "requested_success": 33
+            },
+            "limiting_cell_terminal_kind_counts": {
+              "administrative_cap_censored_at_exact_request_boundary": 0,
+              "administrative_cap_censored_partial_request": 0,
+              "goal_stopped_at_exact_request_boundary": 0,
+              "goal_stopped_partial_request": 33
+            },
+            "limiting_command_set_counts": {
+              "left_and_right": 6,
+              "left_only": 19,
+              "right_only": 2
+            },
+            "limiting_set_size_counts": {
+              "1": 21,
+              "2": 6
+            },
+            "limiting_unit_record_counts": {
+              "left": 25,
+              "right": 8
+            },
+            "observable_seed_labels_by_request_index": [
+              27,
+              27,
+              27,
+              17,
+              5,
+              4,
+              2,
+              2,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "outcome_strata": {
+              "cap_failure_left__cap_failure_right": {
+                "first_unavailable_seed_labels_by_request_index": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "limiting_cell_recorded_outcome_counts": {
+                  "cap_failure": 0,
+                  "requested_success": 0
+                },
+                "limiting_cell_terminal_kind_counts": {
+                  "administrative_cap_censored_at_exact_request_boundary": 0,
+                  "administrative_cap_censored_partial_request": 0,
+                  "goal_stopped_at_exact_request_boundary": 0,
+                  "goal_stopped_partial_request": 0
+                },
+                "limiting_command_set_counts": {
+                  "left_and_right": 0,
+                  "left_only": 0,
+                  "right_only": 0
+                },
+                "limiting_set_size_counts": {
+                  "1": 0,
+                  "2": 0
+                },
+                "limiting_unit_record_counts": {
+                  "left": 0,
+                  "right": 0
+                },
+                "observable_seed_labels_by_request_index": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "population_seed_ids": [],
+                "population_seed_labels": 0
+              },
+              "cap_failure_left__success_right": {
+                "first_unavailable_seed_labels_by_request_index": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "limiting_cell_recorded_outcome_counts": {
+                  "cap_failure": 0,
+                  "requested_success": 0
+                },
+                "limiting_cell_terminal_kind_counts": {
+                  "administrative_cap_censored_at_exact_request_boundary": 0,
+                  "administrative_cap_censored_partial_request": 0,
+                  "goal_stopped_at_exact_request_boundary": 0,
+                  "goal_stopped_partial_request": 0
+                },
+                "limiting_command_set_counts": {
+                  "left_and_right": 0,
+                  "left_only": 0,
+                  "right_only": 0
+                },
+                "limiting_set_size_counts": {
+                  "1": 0,
+                  "2": 0
+                },
+                "limiting_unit_record_counts": {
+                  "left": 0,
+                  "right": 0
+                },
+                "observable_seed_labels_by_request_index": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "population_seed_ids": [],
+                "population_seed_labels": 0
+              },
+              "success_left__cap_failure_right": {
+                "first_unavailable_seed_labels_by_request_index": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  3,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "limiting_cell_recorded_outcome_counts": {
+                  "cap_failure": 0,
+                  "requested_success": 4
+                },
+                "limiting_cell_terminal_kind_counts": {
+                  "administrative_cap_censored_at_exact_request_boundary": 0,
+                  "administrative_cap_censored_partial_request": 0,
+                  "goal_stopped_at_exact_request_boundary": 0,
+                  "goal_stopped_partial_request": 4
+                },
+                "limiting_command_set_counts": {
+                  "left_and_right": 0,
+                  "left_only": 4,
+                  "right_only": 0
+                },
+                "limiting_set_size_counts": {
+                  "1": 4,
+                  "2": 0
+                },
+                "limiting_unit_record_counts": {
+                  "left": 4,
+                  "right": 0
+                },
+                "observable_seed_labels_by_request_index": [
+                  4,
+                  4,
+                  4,
+                  4,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "population_seed_ids": [
+                  9411,
+                  9412,
+                  9413,
+                  9415
+                ],
+                "population_seed_labels": 4
+              },
+              "success_left__success_right": {
+                "first_unavailable_seed_labels_by_request_index": [
+                  0,
+                  0,
+                  0,
+                  10,
+                  9,
+                  1,
+                  2,
+                  0,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "limiting_cell_recorded_outcome_counts": {
+                  "cap_failure": 0,
+                  "requested_success": 29
+                },
+                "limiting_cell_terminal_kind_counts": {
+                  "administrative_cap_censored_at_exact_request_boundary": 0,
+                  "administrative_cap_censored_partial_request": 0,
+                  "goal_stopped_at_exact_request_boundary": 0,
+                  "goal_stopped_partial_request": 29
+                },
+                "limiting_command_set_counts": {
+                  "left_and_right": 6,
+                  "left_only": 15,
+                  "right_only": 2
+                },
+                "limiting_set_size_counts": {
+                  "1": 17,
+                  "2": 6
+                },
+                "limiting_unit_record_counts": {
+                  "left": 21,
+                  "right": 8
+                },
+                "observable_seed_labels_by_request_index": [
+                  23,
+                  23,
+                  23,
+                  13,
+                  4,
+                  3,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "population_seed_ids": [
+                  9400,
+                  9401,
+                  9402,
+                  9403,
+                  9404,
+                  9405,
+                  9406,
+                  9407,
+                  9408,
+                  9409,
+                  9410,
+                  9414,
+                  9416,
+                  9417,
+                  9418,
+                  9419,
+                  9420,
+                  9421,
+                  9422,
+                  9423,
+                  9424,
+                  9425,
+                  9426
+                ],
+                "population_seed_labels": 23
+              }
+            },
+            "population_seed_ids": [
+              9400,
+              9401,
+              9402,
+              9403,
+              9404,
+              9405,
+              9406,
+              9407,
+              9408,
+              9409,
+              9410,
+              9411,
+              9412,
+              9413,
+              9414,
+              9415,
+              9416,
+              9417,
+              9418,
+              9419,
+              9420,
+              9421,
+              9422,
+              9423,
+              9424,
+              9425,
+              9426
+            ],
+            "population_seed_labels": 27
+          }
+        },
+        "four_condition": {
+          "first_unavailable_seed_labels_by_request_index": [
+            0,
+            0,
+            1,
+            14,
+            10,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "limiting_cell_recorded_outcome_counts": {
+            "cap_failure": 0,
+            "requested_success": 41
+          },
+          "limiting_cell_terminal_kind_counts": {
+            "administrative_cap_censored_at_exact_request_boundary": 0,
+            "administrative_cap_censored_partial_request": 0,
+            "goal_stopped_at_exact_request_boundary": 2,
+            "goal_stopped_partial_request": 39
+          },
+          "limiting_set_size_counts": {
+            "1": 15,
+            "2": 10,
+            "3": 2,
+            "4": 0
+          },
+          "limiting_unit_record_counts": {
+            "control_left": 13,
+            "control_right": 6,
+            "position_mirrored_left": 18,
+            "position_mirrored_right": 4
+          },
+          "observable_seed_labels_by_request_index": [
+            27,
+            27,
+            26,
+            12,
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "outcome_strata": {
+            "control=cap_failure_left__cap_failure_right|position_mirrored=cap_failure_left__cap_failure_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=cap_failure_left__cap_failure_right|position_mirrored=cap_failure_left__success_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=cap_failure_left__cap_failure_right|position_mirrored=success_left__cap_failure_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=cap_failure_left__cap_failure_right|position_mirrored=success_left__success_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=cap_failure_left__success_right|position_mirrored=cap_failure_left__cap_failure_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=cap_failure_left__success_right|position_mirrored=cap_failure_left__success_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=cap_failure_left__success_right|position_mirrored=success_left__cap_failure_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=cap_failure_left__success_right|position_mirrored=success_left__success_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 1
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 1
+              },
+              "limiting_set_size_counts": {
+                "1": 1,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 1,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [
+                9402
+              ],
+              "population_seed_labels": 1
+            },
+            "control=success_left__cap_failure_right|position_mirrored=cap_failure_left__cap_failure_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=success_left__cap_failure_right|position_mirrored=cap_failure_left__success_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=success_left__cap_failure_right|position_mirrored=success_left__cap_failure_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=success_left__cap_failure_right|position_mirrored=success_left__success_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 2
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 2
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 1,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 1,
+                "position_mirrored_right": 1
+              },
+              "observable_seed_labels_by_request_index": [
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [
+                9401
+              ],
+              "population_seed_labels": 1
+            },
+            "control=success_left__success_right|position_mirrored=cap_failure_left__cap_failure_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=success_left__success_right|position_mirrored=cap_failure_left__success_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 0
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 0
+              },
+              "limiting_set_size_counts": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 0,
+                "control_right": 0,
+                "position_mirrored_left": 0,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [],
+              "population_seed_labels": 0
+            },
+            "control=success_left__success_right|position_mirrored=success_left__cap_failure_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                0,
+                0,
+                3,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 5
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 0,
+                "goal_stopped_partial_request": 5
+              },
+              "limiting_set_size_counts": {
+                "1": 3,
+                "2": 1,
+                "3": 0,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 2,
+                "control_right": 0,
+                "position_mirrored_left": 3,
+                "position_mirrored_right": 0
+              },
+              "observable_seed_labels_by_request_index": [
+                4,
+                4,
+                4,
+                4,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [
+                9411,
+                9412,
+                9413,
+                9415
+              ],
+              "population_seed_labels": 4
+            },
+            "control=success_left__success_right|position_mirrored=success_left__success_right": {
+              "first_unavailable_seed_labels_by_request_index": [
+                0,
+                0,
+                1,
+                12,
+                7,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "limiting_cell_recorded_outcome_counts": {
+                "cap_failure": 0,
+                "requested_success": 33
+              },
+              "limiting_cell_terminal_kind_counts": {
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 2,
+                "goal_stopped_partial_request": 31
+              },
+              "limiting_set_size_counts": {
+                "1": 11,
+                "2": 8,
+                "3": 2,
+                "4": 0
+              },
+              "limiting_unit_record_counts": {
+                "control_left": 11,
+                "control_right": 6,
+                "position_mirrored_left": 13,
+                "position_mirrored_right": 3
+              },
+              "observable_seed_labels_by_request_index": [
+                21,
+                21,
+                20,
+                8,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "population_seed_ids": [
+                9400,
+                9403,
+                9404,
+                9405,
+                9406,
+                9407,
+                9408,
+                9409,
+                9410,
+                9414,
+                9416,
+                9417,
+                9418,
+                9419,
+                9420,
+                9421,
+                9422,
+                9423,
+                9424,
+                9425,
+                9426
+              ],
+              "population_seed_labels": 21
+            }
+          },
+          "population_seed_ids": [
+            9400,
+            9401,
+            9402,
+            9403,
+            9404,
+            9405,
+            9406,
+            9407,
+            9408,
+            9409,
+            9410,
+            9411,
+            9412,
+            9413,
+            9414,
+            9415,
+            9416,
+            9417,
+            9418,
+            9419,
+            9420,
+            9421,
+            9422,
+            9423,
+            9424,
+            9425,
+            9426
+          ],
+          "population_seed_labels": 27
+        }
+      },
       "four_condition_observable_seed_labels": [
         27,
         27,
@@ -10334,6 +13349,27 @@
       "per_seed": [
         {
           "control_mean_contrast_m_per_32_action_window": 0.04749090472857157,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 122,
+              "layout": "control",
+              "observed_prefix_actions": 26,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9400:control:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.03377001980940501,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": -0.013720884919166565,
           "seed": 9400,
@@ -10346,6 +13382,40 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.0396935890118281,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__cap_failure_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "position_mirrored_left",
+            "position_mirrored_right"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 120,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 24,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9401:position_mirrored:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "right",
+              "episode_actions_executed": 124,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 28,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9401:position_mirrored:right:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.09242912319799264,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.052735534186164536,
           "seed": 9401,
@@ -10358,6 +13428,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.004554025828838348,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=cap_failure_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 124,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 28,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9402:position_mirrored:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.06524588105579217,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.06069185522695382,
           "seed": 9402,
@@ -10370,6 +13461,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.044432406624158226,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 123,
+              "layout": "control",
+              "observed_prefix_actions": 27,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9403:control:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.022606221338113148,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": -0.021826185286045078,
           "seed": 9403,
@@ -10382,6 +13494,40 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.042202395697434746,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_left",
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 125,
+              "layout": "control",
+              "observed_prefix_actions": 29,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9404:control:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 120,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 24,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9404:position_mirrored:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.04873223602771759,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.006529840330282845,
           "seed": 9404,
@@ -10394,6 +13540,53 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.09957553818821907,
+          "first_unavailable_action_start": 128,
+          "first_unavailable_action_target": 160,
+          "first_unavailable_request_index": 4,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_right",
+            "position_mirrored_left",
+            "position_mirrored_right"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "right",
+              "episode_actions_executed": 129,
+              "layout": "control",
+              "observed_prefix_actions": 1,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9405:control:right:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 158,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 30,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9405:position_mirrored:left:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "right",
+              "episode_actions_executed": 155,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 27,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9405:position_mirrored:right:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.0926661342382431,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": -0.006909403949975967,
           "seed": 9405,
@@ -10407,6 +13600,40 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.04377216473221779,
+          "first_unavailable_action_start": 128,
+          "first_unavailable_action_target": 160,
+          "first_unavailable_request_index": 4,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_left",
+            "position_mirrored_right"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": null,
+              "command": "left",
+              "episode_actions_executed": 128,
+              "layout": "control",
+              "observed_prefix_actions": 0,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": null,
+              "terminal_kind": "goal_stopped_at_exact_request_boundary"
+            },
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "right",
+              "episode_actions_executed": 150,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 22,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9406:position_mirrored:right:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.0648304121568799,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.021058247424662113,
           "seed": 9406,
@@ -10420,6 +13647,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.006304208189249039,
+          "first_unavailable_action_start": 128,
+          "first_unavailable_action_target": 160,
+          "first_unavailable_request_index": 4,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 159,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 31,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9407:position_mirrored:left:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.02578540053218603,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.019481192342936993,
           "seed": 9407,
@@ -10433,6 +13681,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.04510235662261645,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 125,
+              "layout": "control",
+              "observed_prefix_actions": 29,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9408:control:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.007238527139027913,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": -0.03786382948358853,
           "seed": 9408,
@@ -10445,6 +13714,40 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.09229622408747673,
+          "first_unavailable_action_start": 128,
+          "first_unavailable_action_target": 160,
+          "first_unavailable_request_index": 4,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_right",
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "right",
+              "episode_actions_executed": 146,
+              "layout": "control",
+              "observed_prefix_actions": 18,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9409:control:right:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 159,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 31,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9409:position_mirrored:left:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.08151042461395264,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": -0.010785799473524094,
           "seed": 9409,
@@ -10458,6 +13761,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.05682952950398127,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 115,
+              "layout": "control",
+              "observed_prefix_actions": 19,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9410:control:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.027740781505902607,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": -0.029088747998078663,
           "seed": 9410,
@@ -10470,6 +13794,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.06405430939048529,
+          "first_unavailable_action_start": 128,
+          "first_unavailable_action_target": 160,
+          "first_unavailable_request_index": 4,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__cap_failure_right",
+          "limiting_conditions": [
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 157,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 29,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9411:position_mirrored:left:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.049007343128323555,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": -0.015046966262161732,
           "seed": 9411,
@@ -10483,6 +13828,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.036962667014449835,
+          "first_unavailable_action_start": 128,
+          "first_unavailable_action_target": 160,
+          "first_unavailable_request_index": 4,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__cap_failure_right",
+          "limiting_conditions": [
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 155,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 27,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9412:position_mirrored:left:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.046773457899689674,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.00981079088523984,
           "seed": 9412,
@@ -10496,6 +13862,40 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.042607298120856285,
+          "first_unavailable_action_start": 128,
+          "first_unavailable_action_target": 160,
+          "first_unavailable_request_index": 4,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__cap_failure_right",
+          "limiting_conditions": [
+            "control_left",
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 149,
+              "layout": "control",
+              "observed_prefix_actions": 21,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9413:control:left:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 159,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 31,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9413:position_mirrored:left:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.04966079909354448,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.007053500972688198,
           "seed": 9413,
@@ -10509,6 +13909,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.0,
+          "first_unavailable_action_start": 64,
+          "first_unavailable_action_target": 96,
+          "first_unavailable_request_index": 2,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 64,
+              "action_step_target": 96,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 90,
+              "layout": "control",
+              "observed_prefix_actions": 26,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9414:control:left:request002",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.0,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.0,
           "seed": 9414,
@@ -10520,6 +13941,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.015158956249554953,
+          "first_unavailable_action_start": 192,
+          "first_unavailable_action_target": 224,
+          "first_unavailable_request_index": 6,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__cap_failure_right",
+          "limiting_conditions": [
+            "control_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 192,
+              "action_step_target": 224,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 218,
+              "layout": "control",
+              "observed_prefix_actions": 26,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9415:control:left:request006",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": -0.005562946200370789,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": -0.020721902449925743,
           "seed": 9415,
@@ -10535,6 +13977,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.040779875591397285,
+          "first_unavailable_action_start": 128,
+          "first_unavailable_action_target": 160,
+          "first_unavailable_request_index": 4,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": null,
+              "command": "left",
+              "episode_actions_executed": 128,
+              "layout": "control",
+              "observed_prefix_actions": 0,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": null,
+              "terminal_kind": "goal_stopped_at_exact_request_boundary"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.06980838999152184,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.02902851440012455,
           "seed": 9416,
@@ -10548,6 +14011,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": -0.004471644759178162,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 97,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 1,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9417:position_mirrored:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.03739384158203999,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.04186548634121815,
           "seed": 9417,
@@ -10560,6 +14044,40 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.08565029129385948,
+          "first_unavailable_action_start": 128,
+          "first_unavailable_action_target": 160,
+          "first_unavailable_request_index": 4,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_right",
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "right",
+              "episode_actions_executed": 155,
+              "layout": "control",
+              "observed_prefix_actions": 27,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9418:control:right:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 158,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 30,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9418:position_mirrored:left:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.0718485414981842,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": -0.013801749795675278,
           "seed": 9418,
@@ -10573,6 +14091,53 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.09689649194478989,
+          "first_unavailable_action_start": 128,
+          "first_unavailable_action_target": 160,
+          "first_unavailable_request_index": 4,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_left",
+            "control_right",
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 134,
+              "layout": "control",
+              "observed_prefix_actions": 6,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9419:control:left:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "right",
+              "episode_actions_executed": 155,
+              "layout": "control",
+              "observed_prefix_actions": 27,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9419:control:right:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 128,
+              "action_step_target": 160,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 149,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 21,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9419:position_mirrored:left:request004",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.07141659408807755,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": -0.02547989785671234,
           "seed": 9419,
@@ -10586,6 +14151,40 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.058984482660889626,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_right",
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "right",
+              "episode_actions_executed": 97,
+              "layout": "control",
+              "observed_prefix_actions": 1,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9420:control:right:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 98,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 2,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9420:position_mirrored:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.06938268740971883,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.010398204748829201,
           "seed": 9420,
@@ -10598,6 +14197,40 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.03260581816236178,
+          "first_unavailable_action_start": 192,
+          "first_unavailable_action_target": 224,
+          "first_unavailable_request_index": 6,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_left",
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 192,
+              "action_step_target": 224,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 207,
+              "layout": "control",
+              "observed_prefix_actions": 15,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9421:control:left:request006",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 192,
+              "action_step_target": 224,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 210,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 18,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9421:position_mirrored:left:request006",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.04875102390845617,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.01614520574609439,
           "seed": 9421,
@@ -10613,6 +14246,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.03255126625299454,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 97,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 1,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9422:position_mirrored:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.037261869137485824,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.004710602884491287,
           "seed": 9422,
@@ -10625,6 +14279,40 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.0815044033030669,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_right",
+            "position_mirrored_right"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "right",
+              "episode_actions_executed": 127,
+              "layout": "control",
+              "observed_prefix_actions": 31,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9423:control:right:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "right",
+              "episode_actions_executed": 107,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 11,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9423:position_mirrored:right:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.04021840294202169,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": -0.041286000361045204,
           "seed": 9423,
@@ -10637,6 +14325,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.0036323567231496177,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 97,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 1,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9424:position_mirrored:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.06735740850369136,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.06372505178054175,
           "seed": 9424,
@@ -10649,6 +14358,40 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": 0.09548197810848554,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "control_left",
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 119,
+              "layout": "control",
+              "observed_prefix_actions": 23,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9425:control:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            },
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 103,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 7,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9425:position_mirrored:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.09651222079992294,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.001030242691437408,
           "seed": 9425,
@@ -10661,6 +14404,27 @@
         },
         {
           "control_mean_contrast_m_per_32_action_window": -0.006513352195421855,
+          "first_unavailable_action_start": 96,
+          "first_unavailable_action_target": 128,
+          "first_unavailable_request_index": 3,
+          "joint_pair_outcome": "control=success_left__success_right|position_mirrored=success_left__success_right",
+          "limiting_conditions": [
+            "position_mirrored_left"
+          ],
+          "limiting_terminal_evidence": [
+            {
+              "action_step_start": 96,
+              "action_step_target": 128,
+              "censor_outcome": "goal_stopped_success",
+              "command": "left",
+              "episode_actions_executed": 97,
+              "layout": "position_mirrored",
+              "observed_prefix_actions": 1,
+              "recorded_episode_outcome": "requested_success",
+              "request_id": "v3b001:nano:seed9426:position_mirrored:left:request003",
+              "terminal_kind": "goal_stopped_partial_request"
+            }
+          ],
           "position_mirrored_mean_contrast_m_per_32_action_window": 0.06215448180834452,
           "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": 0.06866783400376637,
           "seed": 9426,
@@ -41737,5 +45501,5 @@
       "signed_lateral_relative_change_m": null
     }
   ],
-  "schema_version": "wmf-retained-h01-request-window-motion-v4"
+  "schema_version": "wmf-retained-h01-request-window-motion-v5"
 }

@@ -678,7 +678,7 @@ def main():
     ]
     if (
         request_window["schema_version"]
-        != "wmf-retained-h01-request-window-motion-v4"
+        != "wmf-retained-h01-request-window-motion-v5"
         or fixed_profile["pair_outcome_strata"] != pair_outcome_strata
         or fixed_profile["joint_pair_outcome_strata"] != joint_pair_outcome_strata
     ):
@@ -690,6 +690,50 @@ def main():
         27, 27, 26, 12, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ]:
         raise RuntimeError("H01 fixed request-index support profile changed")
+    first_unavailability_decomposition = fixed_profile[
+        "first_unavailability_decomposition"
+    ]
+    expected_first_losses = {
+        "control": [0, 0, 1, 8, 10, 3, 4, 0, 0, 1, 0, 0, 0, 0, 0],
+        "position_mirrored": [0, 0, 0, 10, 12, 1, 2, 0, 1, 0, 1, 0, 0, 0, 0],
+    }
+    expected_limiter_sets = {
+        "control": {"left_only": 13, "left_and_right": 3, "right_only": 11},
+        "position_mirrored": {
+            "left_only": 19, "left_and_right": 6, "right_only": 2,
+        },
+    }
+    for layout in ("control", "position_mirrored"):
+        first_loss = first_unavailability_decomposition["by_layout"][layout]
+        if (
+            first_loss["population_seed_labels"] != 27
+            or first_loss["observable_seed_labels_by_request_index"]
+            != fixed_profile["layout_observable_seed_labels"][layout]
+            or first_loss["first_unavailable_seed_labels_by_request_index"]
+            != expected_first_losses[layout]
+            or first_loss["limiting_command_set_counts"]
+            != expected_limiter_sets[layout]
+            or first_loss["limiting_cell_recorded_outcome_counts"]["cap_failure"] != 0
+            or set(first_loss["outcome_strata"]) != set(pair_outcome_strata)
+        ):
+            raise RuntimeError("H01 layout first-unavailability decomposition changed")
+    four_condition_first_loss = first_unavailability_decomposition[
+        "four_condition"
+    ]
+    if (
+        four_condition_first_loss["observable_seed_labels_by_request_index"]
+        != fixed_profile["four_condition_observable_seed_labels"]
+        or four_condition_first_loss[
+            "first_unavailable_seed_labels_by_request_index"
+        ] != [0, 0, 1, 14, 10, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        or four_condition_first_loss["limiting_set_size_counts"]
+        != {"1": 15, "2": 10, "3": 2, "4": 0}
+        or four_condition_first_loss["limiting_cell_recorded_outcome_counts"]
+        != {"requested_success": 41, "cap_failure": 0}
+        or set(four_condition_first_loss["outcome_strata"])
+        != set(joint_pair_outcome_strata)
+    ):
+        raise RuntimeError("H01 four-condition first-unavailability decomposition changed")
     fixed_rows = fixed_profile["rows"]
     if fixed_rows[1]["by_layout"]["control"]["observed_signed_contrast_m"][
         "sign_counts"
@@ -849,12 +893,17 @@ def main():
     request_boundary = request_window["claim_boundary"]
     if request_boundary["retrospective_outcome_stratified_attrition_evidence"] is not True:
         raise RuntimeError("H01 retrospective outcome-attrition evidence flag changed")
+    if request_boundary["retrospective_first_unavailability_evidence"] is not True:
+        raise RuntimeError("H01 retrospective first-unavailability evidence flag changed")
+    if request_boundary["first_loss_arrays_are_algebraic_support_differences"] is not True:
+        raise RuntimeError("H01 first-loss algebraic-dependence boundary changed")
     for field in (
         "forecast_arrays_retrieved", "forecast_payload_bytes_reopened_or_reverified",
         "forecast_accuracy_or_skill_estimated",
         "generated_versus_executed_comparison", "A3_A9_completed",
         "physical_time_established", "A6_movement_threshold_established",
         "outcome_stratified_motion_effect_estimated",
+        "independent_first_unavailability_estimand_estimated",
         "censoring_independence_established",
         "pair_outcome_establishes_language_or_model_diagnosis",
         "independent_scene_or_layout_generalization_established",

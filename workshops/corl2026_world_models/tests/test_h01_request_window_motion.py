@@ -115,7 +115,7 @@ class H01RequestWindowMotionTests(unittest.TestCase):
         self.assertAlmostEqual(request_level["cube_displacement_m"]["mean"], 0.04190115262348475)
 
     def test_matched_complete_windows_expose_selection_and_signed_motion(self):
-        self.assertEqual(self.report["schema_version"], "wmf-retained-h01-request-window-motion-v4")
+        self.assertEqual(self.report["schema_version"], "wmf-retained-h01-request-window-motion-v5")
         matched = self.report["matched_complete_window_analysis"]
         self.assertEqual(
             matched["status"],
@@ -480,6 +480,195 @@ class H01RequestWindowMotionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "outcome identity"):
             H01.matched_complete_window_analysis(changed_requests, indexed)
 
+    def test_first_unavailability_decomposition_is_exact_and_closes(self):
+        matched = self.report["matched_complete_window_analysis"]
+        fixed = matched["fixed_request_index_profile"]
+        decomposition = fixed["first_unavailability_decomposition"]
+        expected = {
+            "control": {
+                "support": [27, 27, 26, 18, 8, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                "losses": [0, 0, 1, 8, 10, 3, 4, 0, 0, 1, 0, 0, 0, 0, 0],
+                "units": {"left": 16, "right": 14},
+                "sets": {"left_only": 13, "left_and_right": 3, "right_only": 11},
+                "terminal": {
+                    "goal_stopped_partial_request": 28,
+                    "administrative_cap_censored_partial_request": 0,
+                    "goal_stopped_at_exact_request_boundary": 2,
+                    "administrative_cap_censored_at_exact_request_boundary": 0,
+                },
+            },
+            "position_mirrored": {
+                "support": [27, 27, 27, 17, 5, 4, 2, 2, 1, 1, 0, 0, 0, 0, 0],
+                "losses": [0, 0, 0, 10, 12, 1, 2, 0, 1, 0, 1, 0, 0, 0, 0],
+                "units": {"left": 25, "right": 8},
+                "sets": {"left_only": 19, "left_and_right": 6, "right_only": 2},
+                "terminal": {
+                    "goal_stopped_partial_request": 33,
+                    "administrative_cap_censored_partial_request": 0,
+                    "goal_stopped_at_exact_request_boundary": 0,
+                    "administrative_cap_censored_at_exact_request_boundary": 0,
+                },
+            },
+        }
+        for layout, wanted in expected.items():
+            value = decomposition["by_layout"][layout]
+            self.assertEqual(value["population_seed_labels"], 27)
+            self.assertEqual(value["observable_seed_labels_by_request_index"], wanted["support"])
+            self.assertEqual(value["first_unavailable_seed_labels_by_request_index"], wanted["losses"])
+            self.assertEqual(value["limiting_unit_record_counts"], wanted["units"])
+            self.assertEqual(value["limiting_command_set_counts"], wanted["sets"])
+            self.assertEqual(value["limiting_cell_terminal_kind_counts"], wanted["terminal"])
+            self.assertEqual(
+                value["limiting_cell_recorded_outcome_counts"],
+                {"requested_success": sum(wanted["units"].values()), "cap_failure": 0},
+            )
+            self.assertEqual(sum(value["limiting_set_size_counts"].values()), 27)
+            self.assertEqual(
+                sum(item["population_seed_labels"] for item in value["outcome_strata"].values()),
+                27,
+            )
+            for outcome, stratum in value["outcome_strata"].items():
+                losses = stratum["first_unavailable_seed_labels_by_request_index"]
+                self.assertEqual(
+                    stratum["observable_seed_labels_by_request_index"],
+                    [
+                        stratum["population_seed_labels"] - sum(losses[: index + 1])
+                        for index in range(len(losses))
+                    ],
+                )
+                self.assertEqual(
+                    stratum["observable_seed_labels_by_request_index"],
+                    [
+                        row["by_layout"][layout]["pair_outcome_attrition"][
+                            "strata"
+                        ][outcome]["observable_seed_labels"]
+                        for row in fixed["rows"]
+                    ],
+                )
+            records = matched["by_layout"][layout]["per_seed"]
+            self.assertEqual(len(records), 27)
+            for record in records:
+                first = record["first_unavailable_request_index"]
+                self.assertEqual(first, record["shared_complete_window_pairs"])
+                self.assertEqual(record["first_unavailable_action_start"], 32 * first)
+                self.assertEqual(record["first_unavailable_action_target"], 32 * (first + 1))
+                expected_limiters = [
+                    command
+                    for command in H01.COMMANDS
+                    if record[f"{command}_complete_windows"] == first
+                ]
+                self.assertEqual(record["limiting_commands"], expected_limiters)
+                self.assertEqual(
+                    [item["command"] for item in record["limiting_terminal_evidence"]],
+                    expected_limiters,
+                )
+
+        exact_boundary = [
+            (record["seed"], item["layout"], item["command"], item["action_step_start"])
+            for layout in H01.LAYOUTS
+            for record in matched["by_layout"][layout]["per_seed"]
+            for item in record["limiting_terminal_evidence"]
+            if item["terminal_kind"] == "goal_stopped_at_exact_request_boundary"
+        ]
+        self.assertEqual(exact_boundary, [(9406, "control", "left", 128), (9416, "control", "left", 128)])
+
+        four = decomposition["four_condition"]
+        self.assertEqual(
+            four["observable_seed_labels_by_request_index"],
+            [27, 27, 26, 12, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        )
+        self.assertEqual(
+            four["first_unavailable_seed_labels_by_request_index"],
+            [0, 0, 1, 14, 10, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+        )
+        self.assertEqual(
+            four["limiting_unit_record_counts"],
+            {
+                "control_left": 13,
+                "control_right": 6,
+                "position_mirrored_left": 18,
+                "position_mirrored_right": 4,
+            },
+        )
+        self.assertEqual(
+            four["limiting_set_size_counts"], {"1": 15, "2": 10, "3": 2, "4": 0}
+        )
+        self.assertEqual(
+            four["limiting_cell_terminal_kind_counts"],
+            {
+                "goal_stopped_partial_request": 39,
+                "administrative_cap_censored_partial_request": 0,
+                "goal_stopped_at_exact_request_boundary": 2,
+                "administrative_cap_censored_at_exact_request_boundary": 0,
+            },
+        )
+        self.assertEqual(
+            four["limiting_cell_recorded_outcome_counts"],
+            {"requested_success": 41, "cap_failure": 0},
+        )
+        for outcome, stratum in four["outcome_strata"].items():
+            self.assertEqual(
+                stratum["observable_seed_labels_by_request_index"],
+                [
+                    row["four_condition_same_index_interaction_m"][
+                        "joint_pair_outcome_attrition"
+                    ]["strata"][outcome]["observable_seed_labels"]
+                    for row in fixed["rows"]
+                ],
+            )
+        for value in (*decomposition["by_layout"].values(), four):
+            losses = value["first_unavailable_seed_labels_by_request_index"]
+            support = value["observable_seed_labels_by_request_index"]
+            self.assertEqual(sum(losses), 27)
+            self.assertEqual(
+                support,
+                [27 - sum(losses[: index + 1]) for index in range(len(losses))],
+            )
+
+        indexed = {
+            (row["policy_seed"], row["phase_b_arm"], row["requested_relation"]): row
+            for row in self.rows
+        }
+        changed_requests = copy.deepcopy(self.report["request_windows"])
+        partial_request_id = next(
+            item["request_id"]
+            for record in matched["by_layout"]["control"]["per_seed"]
+            for item in record["limiting_terminal_evidence"]
+            if item["request_id"] is not None
+        )
+        partial_request = next(
+            request for request in changed_requests
+            if request["request_id"] == partial_request_id
+        )
+        partial_request["episode_actions_executed"] += 1
+        with self.assertRaisesRegex(ValueError, "partial-request evidence"):
+            H01.matched_complete_window_analysis(changed_requests, indexed)
+
+        records = copy.deepcopy(matched["by_layout"]["control"]["per_seed"])
+        records[0]["first_unavailable_request_index"] = 99
+        with self.assertRaisesRegex(ValueError, "unregistered"):
+            H01._first_unavailability_summary(
+                records,
+                range(15),
+                outcome_key="pair_outcome",
+                outcome_strata=H01.PAIR_OUTCOME_STRATA,
+                limiting_key="limiting_commands",
+                limiting_units=H01.COMMANDS,
+                label="mutation",
+            )
+        records = copy.deepcopy(matched["by_layout"]["control"]["per_seed"])
+        records[0]["limiting_terminal_evidence"][0]["command"] = "right"
+        with self.assertRaisesRegex(ValueError, "limiting-unit evidence"):
+            H01._first_unavailability_summary(
+                records,
+                range(15),
+                outcome_key="pair_outcome",
+                outcome_strata=H01.PAIR_OUTCOME_STRATA,
+                limiting_key="limiting_commands",
+                limiting_units=H01.COMMANDS,
+                label="mutation",
+            )
+
     def test_every_request_has_exact_lineage_and_censoring_is_null(self):
         for request in self.report["request_windows"]:
             with self.subTest(request=request["request_id"]):
@@ -569,12 +758,15 @@ class H01RequestWindowMotionTests(unittest.TestCase):
         self.assertTrue(boundary["retrospective_execution_motion_evidence"])
         self.assertTrue(boundary["forecast_descriptor_provenance_evidence"])
         self.assertTrue(boundary["retrospective_outcome_stratified_attrition_evidence"])
+        self.assertTrue(boundary["retrospective_first_unavailability_evidence"])
+        self.assertTrue(boundary["first_loss_arrays_are_algebraic_support_differences"])
         for name in (
             "forecast_arrays_retrieved", "forecast_payload_bytes_reopened_or_reverified",
             "forecast_accuracy_or_skill_estimated",
             "generated_versus_executed_comparison", "A3_A9_completed",
             "physical_time_established", "A6_movement_threshold_established",
             "outcome_stratified_motion_effect_estimated",
+            "independent_first_unavailability_estimand_estimated",
             "censoring_independence_established",
             "pair_outcome_establishes_language_or_model_diagnosis",
             "independent_scene_or_layout_generalization_established",
@@ -600,6 +792,24 @@ class H01RequestWindowMotionTests(unittest.TestCase):
             "model diagnosis",
         ):
             self.assertIn(marker, outcome_definition)
+        first_loss_definition = self.report["matched_complete_window_analysis"][
+            "definitions"
+        ]["first_unavailability_decomposition"]
+        for marker in (
+            "first request index lacking an exact +32-action endpoint",
+            "discrete differences",
+            "not an independent endpoint, estimand, cohort or additional scientific signal",
+            "Every tied limiting trace is retained",
+            "goal-dependent stopping",
+            "450-action administrative cap",
+            "mechanical stopping structure, not an outcome association",
+            "censoring independence",
+            "physical time",
+            "outcome-stratified motion effect",
+            "forecast skill",
+            "model diagnosis",
+        ):
+            self.assertIn(marker, first_loss_definition)
 
     def test_checked_in_outputs_are_deterministic_and_public(self):
         json_text = H01.render_json(self.report)
@@ -618,7 +828,7 @@ class H01RequestWindowMotionTests(unittest.TestCase):
             self.assertNotIn(forbidden, csv_text)
         self.assertEqual(
             hashlib.sha256(json_text.encode()).hexdigest(),
-            "62ca025b0a5429bb798844c319cce9a1b45472f2692db034c67bc1a5d5995a0e",
+            "c9f9159dee7b7cccef3c592e905d5e8a13a273f6bd545083ccbaaabfec766a63",
         )
         self.assertEqual(
             hashlib.sha256(csv_text.encode()).hexdigest(),
@@ -639,6 +849,7 @@ class H01RequestWindowMotionTests(unittest.TestCase):
             '"complete_window_records_excluded_without_exact_counterpart_endpoint"',
             '"four_condition_same_request_index_support"',
             '"fixed_request_index_profile"',
+            '"first_unavailability_decomposition"',
             '"forecast_payload_bytes_reopened_or_reverified"',
             '"A6_movement_threshold_established"',
             '"maximum_core_behavioral_cells"',

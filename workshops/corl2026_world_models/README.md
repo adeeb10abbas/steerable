@@ -262,6 +262,25 @@ strata, availability is not censoring-independent, and no outcome-stratum
 motion effect, causal moderation, language/model diagnosis, forecast score,
 new cohort or gate advance is inferred.
 
+The first-unavailability decomposition now accounts for the exact point and
+trace that removes each seed from those risk sets. Control first losses across
+request indices 0--14 are 0,0,1,8,10,3,4,0,0,1,0,0,0,0,0; reflected losses
+are 0,0,0,10,12,1,2,0,1,0,1,0,0,0,0. The limiting command is
+LEFT-only/both/RIGHT-only for 13/3/11 control pairs and 19/6/2 reflected pairs. All 63
+per-layout limiting-cell appearances, including the limiters tied in nine
+pairs, are success-coded: 61 contain an explicit partial
+goal-stopped request and control-LEFT seeds 9406 and 9416 end successfully
+exactly at action 128 without a request at index 4. The four-condition risk set
+first loses 1/14/10/2 seeds at indices 2/3/4/6. These first-loss arrays are
+discrete differences of the already reported support curves; only limiter
+identity and terminal form are newly exposed, not an independent endpoint,
+estimand, cohort or scientific signal. Successes stop at the historical goal,
+whereas failures remain observed to the 450-action administrative cap, and no
+pair has two failures. That structure mechanically produces zero limiting
+cap-failure traces; it is not an outcome association and establishes neither
+censoring independence nor failure enrichment, a motion effect, physical time,
+forecast skill, language/model diagnosis, a new cohort or a gate advance.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact

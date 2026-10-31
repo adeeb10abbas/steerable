@@ -85,6 +85,12 @@ JOINT_PAIR_OUTCOME_STRATA = tuple(
     for control in PAIR_OUTCOME_STRATA
     for position_mirrored in PAIR_OUTCOME_STRATA
 )
+TERMINAL_KINDS = (
+    "goal_stopped_partial_request",
+    "administrative_cap_censored_partial_request",
+    "goal_stopped_at_exact_request_boundary",
+    "administrative_cap_censored_at_exact_request_boundary",
+)
 
 NEW_ACTIVITY = {
     "model_requests": 0,
@@ -421,6 +427,197 @@ def _outcome_stratified_attrition(
     }
 
 
+def _limiting_terminal_evidence(
+    all_windows: Mapping[tuple[int, str, str], Mapping[int, Mapping[str, Any]]],
+    indexed: Mapping[tuple[int, str, str], Mapping[str, Any]],
+    seed: int,
+    layout: str,
+    command: str,
+    first_unavailable_index: int,
+) -> dict[str, Any]:
+    """Describe why one trace first ceases to supply an exact +32 endpoint."""
+    key = (seed, layout, command)
+    raw = indexed[key]
+    requests = all_windows[key]
+    start = first_unavailable_index * WINDOW_ACTIONS
+    target = start + WINDOW_ACTIONS
+    success = raw.get("requested_success") is True
+    cap_failure = raw.get("requested_success") is False
+    if not (success or cap_failure):
+        raise ValueError("limiting cell outcome is unavailable")
+    expected_censor_outcome = (
+        "goal_stopped_success"
+        if success
+        else "administrative_cap_censored_failure"
+    )
+    if first_unavailable_index in requests:
+        request = requests[first_unavailable_index]
+        if (
+            request["complete_32_action_window"]
+            or request["action_step_start"] != start
+            or request["action_step_target"] is not None
+            or request["episode_actions_executed"] != raw["actions_executed"]
+            or request["censor_outcome"] != expected_censor_outcome
+            or request["observed_prefix_actions"]
+            != raw["actions_executed"] - start
+            or not 0 < request["observed_prefix_actions"] < WINDOW_ACTIONS
+        ):
+            raise ValueError("limiting partial-request evidence changed")
+        terminal_kind = (
+            "goal_stopped_partial_request"
+            if success
+            else "administrative_cap_censored_partial_request"
+        )
+        request_id = request["request_id"]
+        observed_prefix_actions = request["observed_prefix_actions"]
+        censor_outcome: str | None = request["censor_outcome"]
+    else:
+        if (
+            raw["actions_executed"] != start
+            or any(index >= first_unavailable_index for index in requests)
+        ):
+            raise ValueError("limiting exact-boundary evidence changed")
+        terminal_kind = (
+            "goal_stopped_at_exact_request_boundary"
+            if success
+            else "administrative_cap_censored_at_exact_request_boundary"
+        )
+        request_id = None
+        observed_prefix_actions = 0
+        censor_outcome = None
+    if terminal_kind not in TERMINAL_KINDS:
+        raise ValueError("unregistered limiting terminal kind")
+    return {
+        "layout": layout,
+        "command": command,
+        "request_id": request_id,
+        "action_step_start": start,
+        "action_step_target": target,
+        "episode_actions_executed": raw["actions_executed"],
+        "observed_prefix_actions": observed_prefix_actions,
+        "recorded_episode_outcome": (
+            "requested_success" if success else "cap_failure"
+        ),
+        "censor_outcome": censor_outcome,
+        "terminal_kind": terminal_kind,
+    }
+
+
+def _first_unavailability_summary(
+    records: Iterable[Mapping[str, Any]],
+    fixed_indices: Iterable[int],
+    *,
+    outcome_key: str,
+    outcome_strata: tuple[str, ...],
+    limiting_key: str,
+    limiting_units: tuple[str, ...],
+    label: str,
+) -> dict[str, Any]:
+    """Aggregate first losses while retaining zero strata and tie accounting."""
+    records = list(records)
+    indices = list(fixed_indices)
+    if not records or indices != list(range(len(indices))):
+        raise ValueError(f"{label} fixed-index inventory changed")
+    if len(records) != len(SEEDS) or {row["seed"] for row in records} != set(SEEDS):
+        raise ValueError(f"{label} first-unavailability population changed")
+
+    def summarize(selected: list[Mapping[str, Any]]) -> dict[str, Any]:
+        if any(
+            type(row["first_unavailable_request_index"]) is not int
+            for row in selected
+        ):
+            raise ValueError(f"{label} first-unavailable index must be an integer")
+        first_counts = Counter(row["first_unavailable_request_index"] for row in selected)
+        if any(index not in indices for index in first_counts):
+            raise ValueError(f"{label} first-unavailable index is unregistered")
+        terminal = [
+            evidence
+            for row in selected
+            for evidence in row["limiting_terminal_evidence"]
+        ]
+        for row in selected:
+            limiting = row[limiting_key]
+            evidence = row["limiting_terminal_evidence"]
+            evidence_units = [
+                (
+                    item["command"]
+                    if limiting_units == COMMANDS
+                    else f"{item['layout']}_{item['command']}"
+                )
+                for item in evidence
+            ]
+            first = row["first_unavailable_request_index"]
+            if (
+                not limiting
+                or len(limiting) != len(set(limiting))
+                or any(unit not in limiting_units for unit in limiting)
+                or evidence_units != limiting
+                or any(
+                    item["terminal_kind"] not in TERMINAL_KINDS
+                    or item["recorded_episode_outcome"]
+                    not in ("requested_success", "cap_failure")
+                    or item["action_step_start"] != first * WINDOW_ACTIONS
+                    or item["action_step_target"] != (first + 1) * WINDOW_ACTIONS
+                    for item in evidence
+                )
+            ):
+                raise ValueError(f"{label} limiting-unit evidence changed")
+        losses = [first_counts[index] for index in indices]
+        support = [
+            sum(row["first_unavailable_request_index"] > index for row in selected)
+            for index in indices
+        ]
+        if (
+            sum(losses) != len(selected)
+            or any(
+                support[index] != len(selected) - sum(losses[: index + 1])
+                for index in indices
+            )
+        ):
+            raise ValueError(f"{label} first-unavailability recurrence does not close")
+        summary = {
+            "population_seed_labels": len(selected),
+            "population_seed_ids": sorted(row["seed"] for row in selected),
+            "observable_seed_labels_by_request_index": support,
+            "first_unavailable_seed_labels_by_request_index": losses,
+            "limiting_unit_record_counts": {
+                unit: sum(unit in row[limiting_key] for row in selected)
+                for unit in limiting_units
+            },
+            "limiting_set_size_counts": {
+                str(size): sum(len(row[limiting_key]) == size for row in selected)
+                for size in range(1, len(limiting_units) + 1)
+            },
+            "limiting_cell_terminal_kind_counts": {
+                kind: sum(item["terminal_kind"] == kind for item in terminal)
+                for kind in TERMINAL_KINDS
+            },
+            "limiting_cell_recorded_outcome_counts": {
+                outcome: sum(item["recorded_episode_outcome"] == outcome for item in terminal)
+                for outcome in ("requested_success", "cap_failure")
+            },
+        }
+        if limiting_units == COMMANDS:
+            summary["limiting_command_set_counts"] = {
+                "left_only": sum(row[limiting_key] == ["left"] for row in selected),
+                "left_and_right": sum(
+                    row[limiting_key] == ["left", "right"] for row in selected
+                ),
+                "right_only": sum(row[limiting_key] == ["right"] for row in selected),
+            }
+        return summary
+
+    overall = summarize(records)
+    strata = {}
+    for outcome in outcome_strata:
+        selected = [row for row in records if row[outcome_key] == outcome]
+        strata[outcome] = summarize(selected)
+    if sum(value["population_seed_labels"] for value in strata.values()) != len(records):
+        raise ValueError(f"{label} outcome-stratified first losses do not close")
+    overall["outcome_strata"] = strata
+    return overall
+
+
 def matched_complete_window_analysis(
     requests: list[dict[str, Any]],
     indexed: Mapping[tuple[int, str, str], dict[str, Any]],
@@ -615,6 +812,25 @@ def matched_complete_window_analysis(
             )
             outcome_counts[outcome] += 1
             outcome_windows[outcome] += len(common)
+            first_unavailable = len(common)
+            limiting_commands = [
+                command
+                for command, windows in (("left", left), ("right", right))
+                if len(windows) == first_unavailable
+            ]
+            if not limiting_commands:
+                raise ValueError("matched pair has no limiting command")
+            limiting_terminal_evidence = [
+                _limiting_terminal_evidence(
+                    all_windows,
+                    indexed,
+                    seed,
+                    layout,
+                    command,
+                    first_unavailable,
+                )
+                for command in limiting_commands
+            ]
             record = {
                 "seed": seed,
                 "layout": layout,
@@ -626,6 +842,11 @@ def matched_complete_window_analysis(
                 "left_requested_success": left_raw["requested_success"],
                 "right_requested_success": right_raw["requested_success"],
                 "pair_outcome": outcome,
+                "first_unavailable_request_index": first_unavailable,
+                "first_unavailable_action_start": first_unavailable * WINDOW_ACTIONS,
+                "first_unavailable_action_target": (first_unavailable + 1) * WINDOW_ACTIONS,
+                "limiting_commands": limiting_commands,
+                "limiting_terminal_evidence": limiting_terminal_evidence,
                 "window_contrast_signs": _sign_counts(contrasts),
                 "mean_signed_lateral_contrast_m_per_32_action_window": statistics.mean(contrasts),
                 "cumulative_signed_lateral_contrast_m": cumulative,
@@ -709,6 +930,42 @@ def matched_complete_window_analysis(
             "per_seed": records,
         }
 
+    first_unavailability_by_layout = {
+        layout: _first_unavailability_summary(
+            by_layout[layout]["per_seed"],
+            fixed_request_indices,
+            outcome_key="pair_outcome",
+            outcome_strata=PAIR_OUTCOME_STRATA,
+            limiting_key="limiting_commands",
+            limiting_units=COMMANDS,
+            label=f"{layout} pair",
+        )
+        for layout in LAYOUTS
+    }
+    for layout in LAYOUTS:
+        if (
+            first_unavailability_by_layout[layout][
+                "observable_seed_labels_by_request_index"
+            ]
+            != [
+                row["by_layout"][layout]["observable_seed_labels"]
+                for row in fixed_index_rows
+            ]
+        ):
+            raise ValueError("layout first-unavailability support disagrees with fixed rows")
+        for outcome in PAIR_OUTCOME_STRATA:
+            if first_unavailability_by_layout[layout]["outcome_strata"][outcome][
+                "observable_seed_labels_by_request_index"
+            ] != [
+                row["by_layout"][layout]["pair_outcome_attrition"]["strata"][
+                    outcome
+                ]["observable_seed_labels"]
+                for row in fixed_index_rows
+            ]:
+                raise ValueError(
+                    "layout outcome-stratum first losses disagree with fixed rows"
+                )
+
     same_support_records = []
     for seed in SEEDS:
         shared = sorted(set.intersection(*(
@@ -725,10 +982,38 @@ def matched_complete_window_analysis(
                 - complete[(seed, layout, "right")][index]["signed_lateral_relative_change_m"]
                 for index in shared
             )
+        first_unavailable = len(shared)
+        limiting_conditions = [
+            f"{layout}_{command}"
+            for layout in LAYOUTS
+            for command in COMMANDS
+            if len(complete[(seed, layout, command)]) == first_unavailable
+        ]
+        if not limiting_conditions:
+            raise ValueError("four-condition support has no limiting condition")
+        limiting_terminal_evidence = []
+        for condition in limiting_conditions:
+            layout, command = condition.rsplit("_", 1)
+            limiting_terminal_evidence.append(
+                _limiting_terminal_evidence(
+                    all_windows,
+                    indexed,
+                    seed,
+                    layout,
+                    command,
+                    first_unavailable,
+                )
+            )
         same_support_records.append({
             "seed": seed,
             "shared_complete_window_pairs_per_layout": len(shared),
             "shared_request_indices": shared,
+            "joint_pair_outcome": joint_pair_outcomes[seed],
+            "first_unavailable_request_index": first_unavailable,
+            "first_unavailable_action_start": first_unavailable * WINDOW_ACTIONS,
+            "first_unavailable_action_target": (first_unavailable + 1) * WINDOW_ACTIONS,
+            "limiting_conditions": limiting_conditions,
+            "limiting_terminal_evidence": limiting_terminal_evidence,
             "control_mean_contrast_m_per_32_action_window": layout_means["control"],
             "position_mirrored_mean_contrast_m_per_32_action_window": layout_means["position_mirrored"],
             "position_mirrored_minus_control_mean_contrast_m_per_32_action_window": (
@@ -739,6 +1024,36 @@ def matched_complete_window_analysis(
         row["position_mirrored_minus_control_mean_contrast_m_per_32_action_window"]
         for row in same_support_records
     ]
+    four_condition_first_unavailability = _first_unavailability_summary(
+        same_support_records,
+        fixed_request_indices,
+        outcome_key="joint_pair_outcome",
+        outcome_strata=JOINT_PAIR_OUTCOME_STRATA,
+        limiting_key="limiting_conditions",
+        limiting_units=tuple(
+            f"{layout}_{command}" for layout in LAYOUTS for command in COMMANDS
+        ),
+        label="four-condition",
+    )
+    if four_condition_first_unavailability[
+        "observable_seed_labels_by_request_index"
+    ] != [
+        row["four_condition_same_index_interaction_m"]["observable_seed_labels"]
+        for row in fixed_index_rows
+    ]:
+        raise ValueError("four-condition first-unavailability support disagrees with fixed rows")
+    for outcome in JOINT_PAIR_OUTCOME_STRATA:
+        if four_condition_first_unavailability["outcome_strata"][outcome][
+            "observable_seed_labels_by_request_index"
+        ] != [
+            row["four_condition_same_index_interaction_m"][
+                "joint_pair_outcome_attrition"
+            ]["strata"][outcome]["observable_seed_labels"]
+            for row in fixed_index_rows
+        ]:
+            raise ValueError(
+                "four-condition outcome-stratum first losses disagree with fixed rows"
+            )
     return {
         "status": "retrospective matched-window selection and execution-motion audit",
         "by_layout": by_layout,
@@ -759,6 +1074,10 @@ def matched_complete_window_analysis(
                 ]
                 for row in fixed_index_rows
             ],
+            "first_unavailability_decomposition": {
+                "by_layout": first_unavailability_by_layout,
+                "four_condition": four_condition_first_unavailability,
+            },
         },
         "four_condition_same_request_index_support": {
             "matched_seed_labels": len(same_support_records),
@@ -783,6 +1102,7 @@ def matched_complete_window_analysis(
             "first_window": "Availability and selection of the 0-to-32 action window are outcome-independent in this retained cohort because all cells survive past action 32. Its exact-zero measurement duplicates the stopping-control action-32 information rather than adding an endpoint.",
             "fixed_request_index_profile": "Each row fixes one recorded request index before comparing commands. Support requires the exact +32-action endpoint in both command cells; four-condition interactions require all four cells. Strict-positive bounds count every unavailable registered seed first as non-positive and then as positive. Later rows remain historical survival-selected action-index evidence, not physical time, independent windows, a calibrated movement test or forecast scoring.",
             "fixed_index_outcome_attrition": "For every fixed index, the already-recorded requested-success versus administrative-cap outcome of each LEFT/RIGHT pair is cross-tabulated against exact-endpoint availability. All four pair-outcome strata and all 16 control-by-reflected joint strata remain explicit, including zero-population and zero-support strata. This is retrospective risk-set composition only: pairing ends with the shorter command trace, so it neither establishes censoring independence nor estimates an outcome-stratified motion effect, failure enrichment, language understanding or a model diagnosis.",
+            "first_unavailability_decomposition": "For each seed pair, the first request index lacking an exact +32-action endpoint is the minimum complete-window count across its command traces; the four-condition version takes the minimum across all four traces. The first-loss arrays are exactly the discrete differences of the already-reported fixed-index support curves. Only the limiting-trace identity and partial-request versus exact-boundary terminal form are newly exposed; this is not an independent endpoint, estimand, cohort or additional scientific signal. Every tied limiting trace is retained. All limiter appearances are success-coded and zero are cap-failure-coded because historical successes stop at the goal whereas cap failures remain observed to the 450-action administrative cap, with no failure/failure pairs; this is mechanical stopping structure, not an outcome association. These deterministic descriptions of historical goal-dependent stopping do not establish failure enrichment, censoring independence, physical time, an outcome-stratified motion effect, forecast skill or a model diagnosis.",
         },
     }
 
@@ -1000,7 +1320,7 @@ def analyze_rows(rows: list[dict[str, Any]], provenance: dict[str, Any]) -> dict
 
     matched = matched_complete_window_analysis(requests, indexed)
     return {
-        "schema_version": "wmf-retained-h01-request-window-motion-v4",
+        "schema_version": "wmf-retained-h01-request-window-motion-v5",
         "provenance": provenance,
         "cohort": {
             "historical_id": "H01",
@@ -1055,6 +1375,8 @@ def analyze_rows(rows: list[dict[str, Any]], provenance: dict[str, Any]) -> dict
             "retrospective_execution_motion_evidence": True,
             "forecast_descriptor_provenance_evidence": True,
             "retrospective_outcome_stratified_attrition_evidence": True,
+            "retrospective_first_unavailability_evidence": True,
+            "first_loss_arrays_are_algebraic_support_differences": True,
             "forecast_arrays_retrieved": False,
             "forecast_payload_bytes_reopened_or_reverified": False,
             "forecast_accuracy_or_skill_estimated": False,
@@ -1063,6 +1385,7 @@ def analyze_rows(rows: list[dict[str, Any]], provenance: dict[str, Any]) -> dict
             "physical_time_established": False,
             "A6_movement_threshold_established": False,
             "outcome_stratified_motion_effect_estimated": False,
+            "independent_first_unavailability_estimand_estimated": False,
             "censoring_independence_established": False,
             "pair_outcome_establishes_language_or_model_diagnosis": False,
             "independent_scene_or_layout_generalization_established": False,

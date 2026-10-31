@@ -197,6 +197,22 @@ development, not new inference, validated fidelity, annotation or confirmation;
 all 13 activity counters remain zero, all nine gates false and the 232-cell core
 bound unchanged.
 
+The fail-closed [retained historical evidence coverage audit](paper/data/retained_historical_evidence_coverage.json)
+authenticates 50 exact Git objects and maps all 13 historical inventory IDs to
+nine grouped analysis packages, their focused tests, builder stages and
+manuscript markers. Its [13-row crosswalk](paper/data/retained_historical_evidence_coverage.csv)
+keeps H01/H02/H07 primary-paper, supplemental and presentation roles explicit
+without counting those views as additional cohorts or summing episode counts.
+H02/H04/H07/H12 are identified as historical custom DreamZero-s2, not qualified
+official conditional-path D1.
+The pinned inventory's earlier "not yet packaged" H01 review note and the
+checked-in generated build report are retained historical snapshots, not current
+coverage evidence, and are not rewritten. Package coverage is neither pooled
+inference nor confirmation: raw/PVC recovery, physical-time pairing, independent
+labels, qualified official D1 predictions and prospective varied-layout forecast
+accuracy remain missing; activity stays zero, gates false and the 232-cell bound
+unchanged.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact
@@ -283,11 +299,13 @@ both values. The retained PDF still carries TeX-produced wall-clock metadata,
 so this environment record is not evidence of byte-identical PDF rebuilding.
 
 This runs the tests, recomputes results, the stopping-time control, the H01
-requested-region entry diagnostic, the H03/H04 exploratory guidance pilots,
+requested-region entry diagnostic, the H02 compact position-reflection audit,
+the H03/H04 exploratory guidance pilots,
 the retained H05/H06 dose responses, the
 H07/H08 endpoint interactions, the H09/H10 exploratory wording controls, the
 separate H11/H12 Phase-A direct-command cohorts and the retained H13 Edge V1
-evaluator audit from pinned Git objects, authenticates and
+evaluator audit from pinned Git objects, rebuilds the retained historical
+evidence coverage crosswalk, authenticates and
 fully decodes the four representative H01 video blobs, produces figures and
 compiles the official CoRL template. The build report records all retained-data
 analyses, their source identities and output hashes, plus the representative-

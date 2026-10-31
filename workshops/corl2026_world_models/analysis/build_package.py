@@ -63,6 +63,7 @@ def main():
     run("representative H01 media", [sys.executable, str(package / "analysis/package_representative_media.py")])
     run("representative H01 media verification", [sys.executable, str(package / "analysis/verify_representative_media.py")])
     run("paper experiment results", [sys.executable, str(package / "analysis/extract_paper_results.py")])
+    run("retained historical evidence coverage", [sys.executable, str(package / "analysis/audit_retained_historical_evidence_coverage.py")])
     run("historical evidence replay", [sys.executable, str(package / "analysis/evidence_audit.py")])
     run("private annotation draw", [sys.executable, str(package / "analysis/prepare_annotation_sample.py")])
     run("paper figures", [sys.executable, str(package / "analysis/make_paper_figures.py")],
@@ -96,6 +97,8 @@ def main():
                      "20 matched blocks", "421/752", "331 abstained", "25/97", "413/421",
                      "396/421", "413/752", "744/752", "A3–A9",
                      "annotation/confirmation-gate", "new-inference claim",
+                     "All 13 registered historical IDs have authenticated packages",
+                     "not pooled inference or confirmation",
                      "Results", "Conclusion", "References"]:
         if required not in body:
             raise RuntimeError(f"PDF is missing expected text: {required}")
@@ -123,6 +126,8 @@ def main():
     h11_h12 = json.loads(h11_h12_path.read_text())
     h13_path = package / "paper/data/h13_v1_forecast_corpus.json"
     h13 = json.loads(h13_path.read_text())
+    coverage_path = package / "paper/data/retained_historical_evidence_coverage.json"
+    coverage = json.loads(coverage_path.read_text())
     if h02["source_provenance"]["commit"] != "ce561e66f82e95055e39d3d7711691982f6b2086":
         raise RuntimeError("H02 pinned source commit changed")
     if h02["source_provenance"]["authenticated_file_count"] != 9:
@@ -545,6 +550,48 @@ def main():
     serialized_h13 = json.dumps(h13)
     if "/home/" in serialized_h13 or "source_id" in serialized_h13:
         raise RuntimeError("H13 canonical output leaked a private source path or draw identity")
+    if coverage["registry"]["registered_historical_ids"] != [
+        f"H{number:02d}" for number in range(1, 14)
+    ]:
+        raise RuntimeError("retained historical ID registry coverage changed")
+    if coverage["coverage_summary"] != {
+        "H01_packages_with_equivalent_explicit_claim_boundary": 1,
+        "additional_primary_or_presentation_roles_counted_as_new_cohorts": 0,
+        "duplicate_mappings": 0,
+        "grouped_analysis_packages": 9,
+        "mapped_cohorts": 13,
+        "packages_with_closed_claim_boundaries": 9,
+        "packages_with_explicit_zero_activity_and_closed_gate_schema": 8,
+        "packaging_coverage_complete": True,
+        "registered_cohorts": 13,
+        "scientific_confirmation_claims_created_by_this_audit": 0,
+        "unmapped_registered_cohorts": 0,
+    }:
+        raise RuntimeError("retained historical coverage summary changed")
+    if coverage["historical_custom_s2_ids_not_official_D1"] != [
+        "H02", "H04", "H07", "H12",
+    ]:
+        raise RuntimeError("historical custom-s2 versus official D1 boundary changed")
+    if any(coverage["new_activity"].values()) or any(
+        value is not False for value in coverage["gate_state"].values()
+    ):
+        raise RuntimeError("retained historical coverage audit advanced activity or a gate")
+    if any(coverage["preserved_evidence_gaps"].values()):
+        raise RuntimeError("retained historical coverage audit closed an unsupported evidence gap")
+    coverage_boundary = coverage["claim_boundary"]
+    for field in (
+        "packaging_coverage_is_scientific_confirmation", "scientific_outcomes_reestimated",
+        "models_or_cohorts_pooled", "episode_counts_summed",
+        "equivalence_established", "independent_scene_or_layout_generalization_established",
+        "language_understanding_established",
+        "forecast_accuracy_or_fidelity_estimated", "raw_or_replay_evidence_recovered",
+        "new_scientific_evidence_created", "current_worker_or_queue_state_inferred",
+        "changes_232_cell_core_bound",
+    ):
+        if coverage_boundary[field] is not False:
+            raise RuntimeError(f"retained historical coverage boundary changed: {field}")
+    if coverage_boundary["maximum_core_behavioral_cells"] != 232:
+        raise RuntimeError("retained historical coverage changed the core-cell ceiling")
     representative_media_path = package / "paper/media/representative_h01_videos.json"
     representative_media = json.loads(representative_media_path.read_text())
     representative_verification_path = package / "paper/media/representative_h01_video_verification.json"
@@ -729,6 +776,21 @@ def main():
             "json_sha256": digest(h13_path),
             "csv_sha256": digest(package / "paper/data/h13_v1_forecast_corpus.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h13_v1_forecast_corpus.py"),
+        },
+        "retained_historical_evidence_coverage": {
+            "scope": coverage["claim_boundary"],
+            "registry": coverage["registry"],
+            "packaging_completion": coverage["packaging_completion"],
+            "coverage_summary": coverage["coverage_summary"],
+            "historical_custom_s2_ids_not_official_D1": coverage[
+                "historical_custom_s2_ids_not_official_D1"
+            ],
+            "preserved_evidence_gaps": coverage["preserved_evidence_gaps"],
+            "new_activity": coverage["new_activity"],
+            "gate_state": coverage["gate_state"],
+            "json_sha256": digest(coverage_path),
+            "csv_sha256": digest(package / "paper/data/retained_historical_evidence_coverage.csv"),
+            "auditor_sha256": digest(package / "analysis/audit_retained_historical_evidence_coverage.py"),
         },
         "representative_media": {
             "scope": representative_media["claim_boundary"],

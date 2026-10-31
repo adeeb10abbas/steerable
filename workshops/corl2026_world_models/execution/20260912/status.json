@@ -12236,7 +12236,7 @@
   "turn_2906_retained_h13_v1_evaluator_audit_20261031": {
     "basis_control_commit": "bcb36ab387733fc8f2bdebc8926cf3090b896412",
     "basis_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
-    "status": "bounded_git_observation_no_movement_retained_h13_authenticated_qualified_tracking_publication_pending_release_gate_closed",
+    "status": "bounded_git_observation_no_movement_retained_h13_authenticated_qualified_tracking_published_seal_pending_release_gate_closed",
     "authority": {
       "host": "ali-MS-7D25",
       "boot_id": "c469f76b-70a1-4fe4-929e-dc312aa55a9f",
@@ -12484,7 +12484,7 @@
       "post_watch_results_fetches": 0
     },
     "publication": {
-      "status": "evidence_committed_tracking_pending_after_watch",
+      "status": "published_tracking_seal_pending",
       "base_control_commit": "bcb36ab387733fc8f2bdebc8926cf3090b896412",
       "evidence_commits": [
         {
@@ -12509,8 +12509,27 @@
       "evidence_head": "c0f4462e47677f914759eab2b0024283c8523319",
       "authorized_substantive_paths_unique": 10,
       "authorized_tracking_paths": 3,
-      "tracking_commit": null,
-      "tracking_publication_pending": true,
+      "tracking_commit": {
+        "commit": "fd057c388d14fa81a2e95822503c7d4a0fff0e66",
+        "tree": "01e291ee29e4be4ae8a9c7bc216356d9e8b8f04d",
+        "parent": "c0f4462e47677f914759eab2b0024283c8523319",
+        "committed_at_utc": "2026-10-31T11:32:10Z",
+        "paths": 3,
+        "insertions": 303,
+        "deletions": 0
+      },
+      "push_attempts": 1,
+      "push_started_at_utc": "2026-10-31T11:32:16Z",
+      "push_finished_at_utc": "2026-10-31T11:32:18Z",
+      "control_only_verification_fetch_attempts": 1,
+      "control_only_verification_fetch_finished_at_utc": "2026-10-31T11:32:21Z",
+      "published_control_commit": "fd057c388d14fa81a2e95822503c7d4a0fff0e66",
+      "head_control_divergence": "0/0",
+      "verification_fetch_head_lines": 1,
+      "verification_fetch_head_bytes": 130,
+      "verification_fetch_head_sha256": "c8beee08628dc684075637eba16f7f6ebcbc477d385edcbe847e5be668bed2bd",
+      "tracking_publication_pending": false,
+      "publication_seal_update_pending": true,
       "cached_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
       "results_sampled_after_watch": false
     },

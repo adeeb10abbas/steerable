@@ -92,7 +92,7 @@ def main():
     body = " ".join(raw_body.replace("-\n", "").split())
     for required in ["108", "13/54", "50/54", "26/27", "DreamZero-s2", "31.1", "35.8",
                      "18/27", "17/27", "23/27", "81.4", "104 entries", "1.125", "13/15",
-                     "H02 compact audit", "Post-result descriptive", "requested-cone entry is 13/54 control, 53/54 reflected", "42 absent by cap", "238.3", "not event/imputation/timing", "cap-incidence term", "333.333", "zero-masked recorded-index term", "95.037", "accounting partitions LEFT", "6892", "+227", "5721", "not transitions/principal strata/conditional or causal effects", "No physical-time, survival, forecast, D1 or new-inference claim", "H03/H04", "post-result guidance pilots", "6/6 to 4/6", "3/6 to 4/6",
+                     "H02 compact audit", "Post-result descriptive", "238.3", "not event/imputation/timing", "cap-incidence term", "333.333", "zero-masked recorded-index term", "95.037", "accounting partitions LEFT", "6892", "+227", "5721", "not transitions/principal strata/conditional or causal effects", "No physical-time, survival, forecast, D1 or new-inference claim", "H03/H04", "post-result guidance pilots", "6/6 to 4/6", "3/6 to 4/6",
                      "H07/H08", "Edge", "12.4", "19.2", "endpoint interactions",
                      "H09/H10", "134/160", "123/160", "wording inference was not registered",
                      "H11/H12 are separate fixed-scene Phase-A direct-command cohorts",

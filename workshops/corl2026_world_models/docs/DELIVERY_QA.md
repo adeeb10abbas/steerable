@@ -37,9 +37,9 @@ Torch 2.7.0+cu128 from the qualified any6d environment, and resolves NumPy
 isolated pre-build discovery passed **1030/1030 tests in 129.990 s**
 (**132.87 s** wall). The authoritative isolated build then passed all 16 stages,
 including another **1030/1030 tests in 129.223 s**, in **144.25 s** wall time
-with a peak resident set size of **908,820 KiB**. The post-merge
-protected-worktree pass predicate is **1037/1037 tests**; its live timing is
-sealed after the H13 commit is installed; seven of those methods belong to the protected untracked
+with a peak resident set size of **908,820 KiB**. The post-merge protected-tree
+discovery then passed **1037/1037 tests** in **126.000 s** (**128.43 s** wall;
+peak resident set size **905,792 KiB**); seven of those methods belong to the protected untracked
 N3 test and are not package files. The sixteen build
 steps cover tests, retained-data analyses, media packaging and four full MP4
 decodes plus verification, paper results, historical replay, the private

@@ -1,0 +1,77 @@
+{
+  "schema_version": "wmf-camera-crop-witness-terminal-runtime-contract-v1",
+  "study_id": "WMF-ABLATION-001",
+  "job": {
+    "job_id": "camera-crop-replay-witness-003",
+    "worker_role": "wmf-forecast-0912-worker-06",
+    "max_wall_seconds": 10800,
+    "cpu_only": true,
+    "publish_log_tail_bytes": 0
+  },
+  "prior_diagnostic": {
+    "job_id": "camera-crop-replay-witness-002",
+    "receipt_name": "camera_crop_witness_job_failure.json",
+    "schema_version": "wmf-camera-crop-witness-queue-job-v1",
+    "status": "technical_invalid",
+    "decision": "no_go",
+    "diagnostic_only": true,
+    "required_child_exits": {
+      "N3": 0,
+      "D1": 0
+    },
+    "prior_attempt": "camera-crop-replay-witness-001",
+    "preserved": true
+  },
+  "replay_runtime": {
+    "relative_path": "workshops/corl2026_world_models/experiments/forecast_layout/camera_crop_witness_contract.json",
+    "bytes": 9862,
+    "sha256": "31313288aac8cd917707d52eea8c4fca9ee77de1d3c0b42ade466aa78449706a",
+    "job_id": "camera-crop-replay-witness-002",
+    "explicit_prerequisite_receipt_count": 5,
+    "total_external_receipt_gate_count": 6,
+    "authority_role": "replay_inputs_only_not_terminal_authority"
+  },
+  "child_runtime": {
+    "mode": "terminal_replay_after_authenticated_attempt_002_diagnostic",
+    "diagnostic_only": false,
+    "inherit_queue_environment": true,
+    "overrides": {
+      "CUDA_VISIBLE_DEVICES": "",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1"
+    },
+    "failure_log_tail_bytes": 8192,
+    "publish_crop_contracts": true,
+    "terminal_receipt_written_last": true,
+    "atomic_directory_publication": true
+  },
+  "expected_outputs": {
+    "publish_file_count": 3,
+    "published_camera_crop_contracts": {
+      "N3": "n3_camera_crop_contract.json",
+      "D1": "d1_camera_crop_contract.json"
+    },
+    "success_receipt": "camera_crop_witness_job_receipt.json",
+    "failure_receipt": "camera_crop_witness_job_failure.json"
+  },
+  "science_counts": {
+    "model_runtime_loads": 0,
+    "model_servers_started": 0,
+    "model_requests_issued_by_job": 0,
+    "simulator_processes_started": 0,
+    "physical_resets": 0,
+    "robot_episodes": 0,
+    "behavioral_actions_executed_by_job": 0,
+    "behavioral_cells_launched_by_job": 0,
+    "labels_created_by_job": 0
+  },
+  "simulator_state_render_used": false,
+  "whole_frame_identity": false,
+  "success_receipt_safe_for_physical_alignment_input": true,
+  "safe_to_release_confirmation": false,
+  "confirmation_released": false,
+  "behavioral_policy_skill_evaluated": false,
+  "claim_boundary": "Source contract for one future CPU-only terminal byte replay after an exact signed attempt 002 diagnostic receipt is authenticated. Source presence is not a queue descriptor, dispatch, runtime receipt, crop qualification, annotation input, forecast estimate, scientific sample, or release authority."
+}

@@ -26,6 +26,14 @@ pretermination comparison and fixed-action coverage bounds. This retrospective
 control uses one base scene and its reflection; it is neither prospective
 fixed-duration evidence nor forecast accuracy.
 
+A second retained H01 diagnostic rederives the first action-index entry into the
+requested 45-degree cone from every step trace and preserves four no-entry
+reflected-RIGHT trials as cap-censored. Its 27 matched four-cell seed blocks
+quantify a layout-by-command entry-time interaction and audit three-sample
+sustained-entry status without assigning goal-terminated transient cases a
+common-horizon time. This is fixed-scene onset geometry, not physical-time
+latency, release success, language understanding, A5--A7 or forecast accuracy.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact
@@ -34,6 +42,12 @@ blob, byte count, SHA-256, historical full-stream qualification and the declared
 selection rule. These side-by-side actual/local-prediction videos are
 presentation media, not timing maps, physical-time alignment, annotations or
 forecast-accuracy evidence.
+
+The separate [decode-verification receipt](paper/media/representative_h01_video_verification.json)
+authenticates and fully decodes all four cached MP4 Git blobs without
+materializing them. It is publication QA only: the composites expose counterpart
+panels and labels, so they are not blinded annotation inputs and advance no
+annotation, science or release gate.
 
 - [Research and experiment plan](docs/superpowers/plans/2026-09-12-world-model-paper.md):
   repair existing results, qualify archived recordings, then test whether
@@ -71,18 +85,35 @@ DreamZero-s2 descriptively and uses sampling-seed intervals only for Nano.
 
 ## Rebuild
 
-From the repository root, with `uv` and a TeX distribution providing `latexmk`:
+From the repository root, with `uv`, `ffprobe`/`ffmpeg`, a TeX distribution
+providing `latexmk`, and the already-qualified any6d environment containing
+Torch 2.7.0, create a disposable build environment that inherits Torch and add
+the pinned paper-only dependencies:
 
 ```sh
-uv run --no-project --python 3.11 --with-requirements workshops/corl2026_world_models/requirements-build.txt python workshops/corl2026_world_models/analysis/build_package.py
+WMF_TORCH_PYTHON=/home/ali/miniforge3/envs/any6d/bin/python
+WMF_BUILD_ENV=$(mktemp -d /tmp/wmf-paper-build.XXXXXX)
+uv venv --python "$WMF_TORCH_PYTHON" --system-site-packages "$WMF_BUILD_ENV"
+uv pip install --python "$WMF_BUILD_ENV/bin/python" --requirement workshops/corl2026_world_models/requirements-build.txt
+"$WMF_BUILD_ENV/bin/python" workshops/corl2026_world_models/analysis/build_package.py
 ```
 
-This runs the tests, recomputes results and the stopping-time control from the
-pinned repository, authenticates the four representative H01 video blobs,
-produces figures and compiles the official CoRL template. The build report
-records the stopping JSON, CSV, analyzer, source commit and input JSONL identity,
-plus the representative-media selection and package hashes. It checks page
-count, citations and layout errors. Final page images are reviewed separately.
+The `--system-site-packages` boundary is intentional: `requirements-build.txt`
+does not download or replace Torch, while the regression suite includes
+Torch-backed qualification tests. `build_package.py` fails before running the
+suite if Torch or any paper-build dependency is unavailable and records all
+four versions in the build report.
+Figure and PDF subprocesses use `SOURCE_DATE_EPOCH=1786718341`, the pinned
+study-source commit time, plus `FORCE_SOURCE_DATE=1` so repeated documented
+builds have stable creation metadata and byte-identical publication artifacts.
+
+This runs the tests, recomputes results, the stopping-time control and the H01
+requested-region entry diagnostic from the pinned repository, authenticates and
+fully decodes the four representative H01 video blobs, produces figures and
+compiles the official CoRL template. The build report records both retained-data
+analyses, their source identities and output hashes, plus the representative-
+media selection, package and decode-verification hashes. It checks page count,
+citations and layout errors. Final page images are reviewed separately.
 
 ## Earlier analysis
 

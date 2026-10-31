@@ -1,4 +1,5 @@
 """The manuscript and reproducible build must retain the H01 stopping boundary."""
+import hashlib
 from pathlib import Path
 import unittest
 
@@ -28,6 +29,14 @@ class PaperStoppingIntegrationTests(unittest.TestCase):
             "not established physical time",
             "DreamZero-s2",
             "baseline scale 1 is not used",
+            "27/27 original LEFT",
+            "23/27 reflected RIGHT",
+            "all four absent entries are cap-censored reflected RIGHT trials",
+            "168.2, 176.9, 119.6 and 209.6",
+            "mean 81.4 actions",
+            "91 sustained and 13 transient entries",
+            "104 entries but 102 successes",
+            "neither physical-time latency, language understanding, A5--A7, nor forecast accuracy",
         ):
             with self.subTest(required=required):
                 self.assertIn(required, paper)
@@ -39,6 +48,19 @@ class PaperStoppingIntegrationTests(unittest.TestCase):
         self.assertIn("DreamZero-s2", readme)
         self.assertIn("neither prospective\nfixed-duration evidence nor forecast accuracy", readme)
         self.assertNotIn("revisions are planned,\nnot yet incorporated", readme)
+        self.assertIn("first action-index entry into the\nrequested 45-degree cone", readme)
+        self.assertIn("without assigning goal-terminated transient cases a\ncommon-horizon time", readme)
+
+    def test_delivery_qa_matches_current_pdf_and_does_not_cite_absent_outputs(self):
+        delivery = (PACKAGE / "docs/DELIVERY_QA.md").read_text()
+        pdf_sha256 = hashlib.sha256((PACKAGE / "paper/main.pdf").read_bytes()).hexdigest()
+        self.assertIn(pdf_sha256, delivery)
+        self.assertIn("985/985 tests", delivery)
+        self.assertIn("978/978 tests", delivery)
+        self.assertIn("seven of those methods\nbelong to the protected untracked N3 test", delivery)
+        self.assertIn("generated build\nproducts, not retained checkout evidence", delivery)
+        self.assertNotIn("23 tests", delivery)
+        self.assertNotIn("paper/qa_pages", delivery)
 
     def test_dreamzero_s2_label_reaches_figure_and_clean_build(self):
         figures = (PACKAGE / "analysis/make_paper_figures.py").read_text()
@@ -46,7 +68,21 @@ class PaperStoppingIntegrationTests(unittest.TestCase):
         readme = (PACKAGE / "README.md").read_text()
         self.assertIn('["Nano", "DreamZero-s2"]', figures)
         self.assertIn("jsonschema==4.26.0", requirements)
-        self.assertIn("--python 3.11", readme)
+        self.assertIn("matplotlib==3.10.9", requirements)
+        self.assertIn("--system-site-packages", readme)
+        self.assertIn("WMF_TORCH_PYTHON=/home/ali/miniforge3/envs/any6d/bin/python", readme)
+
+    def test_build_fails_fast_without_and_records_all_required_dependencies(self):
+        build = (PACKAGE / "analysis/build_package.py").read_text()
+        self.assertIn(
+            'required_build_dependencies = ["matplotlib", "pypdf", "jsonschema", "torch"]',
+            build,
+        )
+        self.assertIn('"build_dependencies": build_dependency_versions', build)
+        self.assertIn("Build environment is incomplete", build)
+        self.assertIn('"SOURCE_DATE_EPOCH": "1786718341"', build)
+        self.assertIn('"FORCE_SOURCE_DATE": "1"', build)
+        self.assertIn('"reproducible_output_environment": {', build)
 
     def test_build_reproduces_and_hashes_stopping_outputs(self):
         build = (PACKAGE / "analysis/build_package.py").read_text()
@@ -64,6 +100,22 @@ class PaperStoppingIntegrationTests(unittest.TestCase):
                 self.assertIn(required, build)
         self.assertIn('expected_stopping_source_sha256 = "ce67aecb2705394e8161fa4b65df7130e62648e2f6d8b6a93408c8da685a7207"',
                       build)
+
+    def test_build_reproduces_and_hashes_requested_region_entry(self):
+        build = (PACKAGE / "analysis/build_package.py").read_text()
+        self.assertIn('run("H01 requested-region entry"', build)
+        for required in (
+            "analysis/analyze_h01_requested_region_entry.py",
+            "paper/data/h01_requested_region_entry.json",
+            "paper/data/h01_requested_region_entry.csv",
+            'entry["provenance"]["commit"]',
+            'entry["matched_analysis"]["difference_in_differences_actions"]',
+            '"json_sha256": digest(entry_path)',
+            '"csv_sha256": digest(package / "paper/data/h01_requested_region_entry.csv")',
+            '"analyzer_sha256": digest(package / "analysis/analyze_h01_requested_region_entry.py")',
+        ):
+            with self.subTest(required=required):
+                self.assertIn(required, build)
 
 
 if __name__ == "__main__":

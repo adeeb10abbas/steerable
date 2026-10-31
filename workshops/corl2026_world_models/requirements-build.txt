@@ -1,4 +1,5 @@
-# For regression tests, figure generation and PDF checks; evidence analysis uses stdlib.
-matplotlib==3.11.2
+# Paper-only packages layered onto the qualified Python 3.10 any6d/Torch environment.
+# Torch is inherited explicitly via --system-site-packages; see README.md.
+matplotlib==3.10.9
 pypdf==6.18.1
 jsonschema==4.26.0

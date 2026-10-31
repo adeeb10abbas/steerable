@@ -1,0 +1,2765 @@
+{
+  "claim_boundary": {
+    "action_index_is_physical_time": false,
+    "boundaries": [
+      "The 27 seed labels are matched policy/environment labels on one base scene and its reflection, not 27 independent scenes.",
+      "Action indices are simulator control indices; no conversion to wall-clock or video time is supported.",
+      "Requested-cone entry can be transient and is not pickup, transport, detached release, success, or language understanding.",
+      "Two behavioral failures entered the requested cone; 104 first entries must not be reported as 104 successes (the retained cohort has 102 successes).",
+      "Goal termination occurs at or just after all 13 transient entries, so no post-entry dwell or common-450 sustained-entry claim is supported.",
+      "The analysis does not complete A5/A6/A7, score forecast accuracy, supply annotations, or pass a confirmation gate.",
+      "No coordinate is interpolated, extrapolated, or carried forward after an episode ends."
+    ],
+    "confirmation_test_or_stage_gate": false,
+    "first_entry_is_behavioral_success": false,
+    "forecast_accuracy_evidence": false,
+    "independent_scene_replications": 1,
+    "matched_seed_labels_are_independent_scenes": false,
+    "new_human_labels": false,
+    "new_model_inference": false,
+    "new_robot_episodes": false,
+    "status": "retrospective retained-data description",
+    "sustained_entry_has_common_post_entry_observation_window": false
+  },
+  "cohort": {
+    "behavioral_failures": 6,
+    "behavioral_successes": 102,
+    "cap_right_censored_without_entry": 4,
+    "condition_order": [
+      "control_left",
+      "control_right",
+      "position_mirrored_left",
+      "position_mirrored_right"
+    ],
+    "episodes": 108,
+    "episodes_per_condition": 27,
+    "first_entry_events": 104,
+    "matched_seed_labels": 27,
+    "prescribed_base_scenes": 1,
+    "prescribed_layout_states": 2,
+    "retained_action_samples": 22080,
+    "right_censored_episodes": 6,
+    "seed_range": [
+      9400,
+      9426
+    ],
+    "sustained_entry_events": 91,
+    "transient_entries": 13,
+    "unique_initial_states_by_layout": {
+      "control": 1,
+      "position_mirrored": 1
+    }
+  },
+  "conditions": {
+    "control_left": {
+      "behavioral_failures": 1,
+      "cap_right_censored_without_entry": 0,
+      "entry_events": 27,
+      "entry_events_among_behavioral_failures": 1,
+      "entry_kind_counts": {
+        "none": 0,
+        "sustained": 23,
+        "transient": 4
+      },
+      "episodes": 27,
+      "event_time_ecdf": [
+        {
+          "action_step": 90,
+          "at_risk_before_step": 27,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 2,
+          "event_cdf": 0.07407407407407407,
+          "events_at_step": 2
+        },
+        {
+          "action_step": 91,
+          "at_risk_before_step": 25,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 3,
+          "event_cdf": 0.11111111111111116,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 92,
+          "at_risk_before_step": 24,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 4,
+          "event_cdf": 0.14814814814814814,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 93,
+          "at_risk_before_step": 23,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 6,
+          "event_cdf": 0.2222222222222222,
+          "events_at_step": 2
+        },
+        {
+          "action_step": 101,
+          "at_risk_before_step": 21,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 7,
+          "event_cdf": 0.2592592592592593,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 103,
+          "at_risk_before_step": 20,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 8,
+          "event_cdf": 0.2962962962962964,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 104,
+          "at_risk_before_step": 19,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 9,
+          "event_cdf": 0.33333333333333337,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 105,
+          "at_risk_before_step": 18,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 10,
+          "event_cdf": 0.37037037037037046,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 113,
+          "at_risk_before_step": 17,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 11,
+          "event_cdf": 0.40740740740740755,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 115,
+          "at_risk_before_step": 16,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 13,
+          "event_cdf": 0.4814814814814816,
+          "events_at_step": 2
+        },
+        {
+          "action_step": 136,
+          "at_risk_before_step": 14,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 14,
+          "event_cdf": 0.5185185185185186,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 172,
+          "at_risk_before_step": 13,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 15,
+          "event_cdf": 0.5555555555555556,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 179,
+          "at_risk_before_step": 12,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 16,
+          "event_cdf": 0.5925925925925927,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 185,
+          "at_risk_before_step": 11,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 17,
+          "event_cdf": 0.6296296296296298,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 187,
+          "at_risk_before_step": 10,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 18,
+          "event_cdf": 0.6666666666666667,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 193,
+          "at_risk_before_step": 9,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 19,
+          "event_cdf": 0.7037037037037037,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 195,
+          "at_risk_before_step": 8,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 20,
+          "event_cdf": 0.7407407407407408,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 210,
+          "at_risk_before_step": 7,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 21,
+          "event_cdf": 0.7777777777777778,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 213,
+          "at_risk_before_step": 6,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 22,
+          "event_cdf": 0.8148148148148149,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 241,
+          "at_risk_before_step": 5,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 23,
+          "event_cdf": 0.8518518518518519,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 262,
+          "at_risk_before_step": 4,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 24,
+          "event_cdf": 0.888888888888889,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 281,
+          "at_risk_before_step": 3,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 25,
+          "event_cdf": 0.9259259259259259,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 367,
+          "at_risk_before_step": 2,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 26,
+          "event_cdf": 0.962962962962963,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 415,
+          "at_risk_before_step": 1,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 27,
+          "event_cdf": 1.0,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 450,
+          "at_risk_before_step": 0,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 27,
+          "event_cdf": 1.0,
+          "events_at_step": 0
+        }
+      ],
+      "observed_entry_action": {
+        "max": 415,
+        "mean": 168.1851851851852,
+        "median": 136,
+        "min": 90,
+        "n": 27
+      },
+      "requested_successes": 26,
+      "restricted_waiting_actions": {
+        "max": 415,
+        "mean": 168.1851851851852,
+        "median": 136,
+        "min": 90,
+        "n": 27
+      },
+      "sustained_entry_audit": {
+        "observed_sustained_entries": 23,
+        "observed_sustained_entry_action": {
+          "max": 415,
+          "mean": 162.52173913043478,
+          "median": 115,
+          "min": 90,
+          "n": 23
+        },
+        "scope": "Trace-status audit only. Goal-terminated transient entries do not retain a common three-sample post-entry window and are not assigned an action-450 event time.",
+        "status_counts": {
+          "goal_terminated_after_transient_entry_without_three_sample_run": 4,
+          "observed_sustained_entry": 23
+        }
+      }
+    },
+    "control_right": {
+      "behavioral_failures": 1,
+      "cap_right_censored_without_entry": 0,
+      "entry_events": 27,
+      "entry_events_among_behavioral_failures": 1,
+      "entry_kind_counts": {
+        "none": 0,
+        "sustained": 22,
+        "transient": 5
+      },
+      "episodes": 27,
+      "event_time_ecdf": [
+        {
+          "action_step": 94,
+          "at_risk_before_step": 27,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 1,
+          "event_cdf": 0.03703703703703698,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 95,
+          "at_risk_before_step": 26,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 2,
+          "event_cdf": 0.07407407407407396,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 96,
+          "at_risk_before_step": 25,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 3,
+          "event_cdf": 0.11111111111111105,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 103,
+          "at_risk_before_step": 24,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 4,
+          "event_cdf": 0.14814814814814803,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 104,
+          "at_risk_before_step": 23,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 5,
+          "event_cdf": 0.185185185185185,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 105,
+          "at_risk_before_step": 22,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 7,
+          "event_cdf": 0.2592592592592591,
+          "events_at_step": 2
+        },
+        {
+          "action_step": 107,
+          "at_risk_before_step": 20,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 9,
+          "event_cdf": 0.33333333333333315,
+          "events_at_step": 2
+        },
+        {
+          "action_step": 112,
+          "at_risk_before_step": 18,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 10,
+          "event_cdf": 0.37037037037037024,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 113,
+          "at_risk_before_step": 17,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 11,
+          "event_cdf": 0.40740740740740733,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 118,
+          "at_risk_before_step": 16,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 12,
+          "event_cdf": 0.4444444444444444,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 120,
+          "at_risk_before_step": 15,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 13,
+          "event_cdf": 0.4814814814814814,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 123,
+          "at_risk_before_step": 14,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 14,
+          "event_cdf": 0.5185185185185184,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 143,
+          "at_risk_before_step": 13,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 15,
+          "event_cdf": 0.5555555555555555,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 181,
+          "at_risk_before_step": 12,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 16,
+          "event_cdf": 0.5925925925925926,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 187,
+          "at_risk_before_step": 11,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 17,
+          "event_cdf": 0.6296296296296295,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 196,
+          "at_risk_before_step": 10,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 18,
+          "event_cdf": 0.6666666666666665,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 207,
+          "at_risk_before_step": 9,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 19,
+          "event_cdf": 0.7037037037037037,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 210,
+          "at_risk_before_step": 8,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 20,
+          "event_cdf": 0.7407407407407407,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 221,
+          "at_risk_before_step": 7,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 21,
+          "event_cdf": 0.7777777777777777,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 236,
+          "at_risk_before_step": 6,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 22,
+          "event_cdf": 0.8148148148148148,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 290,
+          "at_risk_before_step": 5,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 23,
+          "event_cdf": 0.8518518518518519,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 291,
+          "at_risk_before_step": 4,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 24,
+          "event_cdf": 0.8888888888888888,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 305,
+          "at_risk_before_step": 3,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 25,
+          "event_cdf": 0.9259259259259259,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 396,
+          "at_risk_before_step": 2,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 26,
+          "event_cdf": 0.9629629629629629,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 410,
+          "at_risk_before_step": 1,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 27,
+          "event_cdf": 1.0,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 450,
+          "at_risk_before_step": 0,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 27,
+          "event_cdf": 1.0,
+          "events_at_step": 0
+        }
+      ],
+      "observed_entry_action": {
+        "max": 410,
+        "mean": 176.85185185185185,
+        "median": 123,
+        "min": 94,
+        "n": 27
+      },
+      "requested_successes": 26,
+      "restricted_waiting_actions": {
+        "max": 410,
+        "mean": 176.85185185185185,
+        "median": 123,
+        "min": 94,
+        "n": 27
+      },
+      "sustained_entry_audit": {
+        "observed_sustained_entries": 22,
+        "observed_sustained_entry_action": {
+          "max": 396,
+          "mean": 154.5909090909091,
+          "median": 115.5,
+          "min": 94,
+          "n": 22
+        },
+        "scope": "Trace-status audit only. Goal-terminated transient entries do not retain a common three-sample post-entry window and are not assigned an action-450 event time.",
+        "status_counts": {
+          "goal_terminated_after_transient_entry_without_three_sample_run": 5,
+          "observed_sustained_entry": 22
+        }
+      }
+    },
+    "position_mirrored_left": {
+      "behavioral_failures": 0,
+      "cap_right_censored_without_entry": 0,
+      "entry_events": 27,
+      "entry_events_among_behavioral_failures": 0,
+      "entry_kind_counts": {
+        "none": 0,
+        "sustained": 25,
+        "transient": 2
+      },
+      "episodes": 27,
+      "event_time_ecdf": [
+        {
+          "action_step": 83,
+          "at_risk_before_step": 27,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 1,
+          "event_cdf": 0.03703703703703698,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 87,
+          "at_risk_before_step": 26,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 2,
+          "event_cdf": 0.07407407407407396,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 89,
+          "at_risk_before_step": 25,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 3,
+          "event_cdf": 0.11111111111111105,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 90,
+          "at_risk_before_step": 24,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 4,
+          "event_cdf": 0.14814814814814803,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 93,
+          "at_risk_before_step": 23,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 6,
+          "event_cdf": 0.2222222222222221,
+          "events_at_step": 2
+        },
+        {
+          "action_step": 94,
+          "at_risk_before_step": 21,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 7,
+          "event_cdf": 0.2592592592592592,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 97,
+          "at_risk_before_step": 20,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 9,
+          "event_cdf": 0.33333333333333326,
+          "events_at_step": 2
+        },
+        {
+          "action_step": 102,
+          "at_risk_before_step": 18,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 10,
+          "event_cdf": 0.37037037037037035,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 103,
+          "at_risk_before_step": 17,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 11,
+          "event_cdf": 0.40740740740740744,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 104,
+          "at_risk_before_step": 16,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 12,
+          "event_cdf": 0.4444444444444444,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 106,
+          "at_risk_before_step": 15,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 13,
+          "event_cdf": 0.4814814814814814,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 107,
+          "at_risk_before_step": 14,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 14,
+          "event_cdf": 0.5185185185185184,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 108,
+          "at_risk_before_step": 13,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 15,
+          "event_cdf": 0.5555555555555555,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 109,
+          "at_risk_before_step": 12,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 16,
+          "event_cdf": 0.5925925925925926,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 111,
+          "at_risk_before_step": 11,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 19,
+          "event_cdf": 0.7037037037037036,
+          "events_at_step": 3
+        },
+        {
+          "action_step": 116,
+          "at_risk_before_step": 8,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 21,
+          "event_cdf": 0.7777777777777777,
+          "events_at_step": 2
+        },
+        {
+          "action_step": 117,
+          "at_risk_before_step": 6,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 22,
+          "event_cdf": 0.8148148148148148,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 136,
+          "at_risk_before_step": 5,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 23,
+          "event_cdf": 0.8518518518518517,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 156,
+          "at_risk_before_step": 4,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 24,
+          "event_cdf": 0.8888888888888888,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 170,
+          "at_risk_before_step": 3,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 25,
+          "event_cdf": 0.9259259259259259,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 234,
+          "at_risk_before_step": 2,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 26,
+          "event_cdf": 0.9629629629629629,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 288,
+          "at_risk_before_step": 1,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 27,
+          "event_cdf": 1.0,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 450,
+          "at_risk_before_step": 0,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 27,
+          "event_cdf": 1.0,
+          "events_at_step": 0
+        }
+      ],
+      "observed_entry_action": {
+        "max": 288,
+        "mean": 119.55555555555556,
+        "median": 107,
+        "min": 83,
+        "n": 27
+      },
+      "requested_successes": 27,
+      "restricted_waiting_actions": {
+        "max": 288,
+        "mean": 119.55555555555556,
+        "median": 107,
+        "min": 83,
+        "n": 27
+      },
+      "sustained_entry_audit": {
+        "observed_sustained_entries": 25,
+        "observed_sustained_entry_action": {
+          "max": 288,
+          "mean": 121.36,
+          "median": 108,
+          "min": 83,
+          "n": 25
+        },
+        "scope": "Trace-status audit only. Goal-terminated transient entries do not retain a common three-sample post-entry window and are not assigned an action-450 event time.",
+        "status_counts": {
+          "goal_terminated_after_transient_entry_without_three_sample_run": 2,
+          "observed_sustained_entry": 25
+        }
+      }
+    },
+    "position_mirrored_right": {
+      "behavioral_failures": 4,
+      "cap_right_censored_without_entry": 4,
+      "entry_events": 23,
+      "entry_events_among_behavioral_failures": 0,
+      "entry_kind_counts": {
+        "none": 4,
+        "sustained": 21,
+        "transient": 2
+      },
+      "episodes": 27,
+      "event_time_ecdf": [
+        {
+          "action_step": 95,
+          "at_risk_before_step": 27,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 1,
+          "event_cdf": 0.03703703703703698,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 100,
+          "at_risk_before_step": 26,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 2,
+          "event_cdf": 0.07407407407407396,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 104,
+          "at_risk_before_step": 25,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 3,
+          "event_cdf": 0.11111111111111105,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 107,
+          "at_risk_before_step": 24,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 5,
+          "event_cdf": 0.18518518518518512,
+          "events_at_step": 2
+        },
+        {
+          "action_step": 114,
+          "at_risk_before_step": 22,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 6,
+          "event_cdf": 0.2222222222222221,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 115,
+          "at_risk_before_step": 21,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 7,
+          "event_cdf": 0.2592592592592592,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 119,
+          "at_risk_before_step": 20,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 8,
+          "event_cdf": 0.2962962962962963,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 124,
+          "at_risk_before_step": 19,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 9,
+          "event_cdf": 0.33333333333333326,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 126,
+          "at_risk_before_step": 18,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 10,
+          "event_cdf": 0.37037037037037035,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 134,
+          "at_risk_before_step": 17,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 12,
+          "event_cdf": 0.4444444444444444,
+          "events_at_step": 2
+        },
+        {
+          "action_step": 139,
+          "at_risk_before_step": 15,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 14,
+          "event_cdf": 0.5185185185185185,
+          "events_at_step": 2
+        },
+        {
+          "action_step": 165,
+          "at_risk_before_step": 13,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 15,
+          "event_cdf": 0.5555555555555556,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 171,
+          "at_risk_before_step": 12,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 16,
+          "event_cdf": 0.5925925925925926,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 173,
+          "at_risk_before_step": 11,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 17,
+          "event_cdf": 0.6296296296296295,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 219,
+          "at_risk_before_step": 10,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 18,
+          "event_cdf": 0.6666666666666666,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 243,
+          "at_risk_before_step": 9,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 19,
+          "event_cdf": 0.7037037037037037,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 263,
+          "at_risk_before_step": 8,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 20,
+          "event_cdf": 0.7407407407407407,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 311,
+          "at_risk_before_step": 7,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 21,
+          "event_cdf": 0.7777777777777777,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 320,
+          "at_risk_before_step": 6,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 22,
+          "event_cdf": 0.8148148148148148,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 337,
+          "at_risk_before_step": 5,
+          "cap_censored_at_step": 0,
+          "cumulative_event_count": 23,
+          "event_cdf": 0.8518518518518519,
+          "events_at_step": 1
+        },
+        {
+          "action_step": 450,
+          "at_risk_before_step": 4,
+          "cap_censored_at_step": 4,
+          "cumulative_event_count": 23,
+          "event_cdf": 0.8518518518518519,
+          "events_at_step": 0
+        }
+      ],
+      "observed_entry_action": {
+        "max": 337,
+        "mean": 167.7826086956522,
+        "median": 134,
+        "min": 95,
+        "n": 23
+      },
+      "requested_successes": 23,
+      "restricted_waiting_actions": {
+        "max": 450,
+        "mean": 209.59259259259258,
+        "median": 139,
+        "min": 95,
+        "n": 27
+      },
+      "sustained_entry_audit": {
+        "observed_sustained_entries": 21,
+        "observed_sustained_entry_action": {
+          "max": 337,
+          "mean": 170.52380952380952,
+          "median": 134,
+          "min": 95,
+          "n": 21
+        },
+        "scope": "Trace-status audit only. Goal-terminated transient entries do not retain a common three-sample post-entry window and are not assigned an action-450 event time.",
+        "status_counts": {
+          "administratively_right_censored_at_cap_without_entry": 4,
+          "goal_terminated_after_transient_entry_without_three_sample_run": 2,
+          "observed_sustained_entry": 21
+        }
+      }
+    }
+  },
+  "definitions": {
+    "administrative_censoring": "No observed primary event contributes action 450 only when the episode is explicitly right-censored at the common 450-action cap. It remains a censored observation, not an event.",
+    "event_time_ecdf": "Kaplan-Meier event CDF over the 27 fixed seed labels in a condition. The only primary-endpoint censoring is administrative at action 450, after all observed entry events.",
+    "matched_estimand": "For each seed s, [U(position_mirrored,RIGHT)-U(position_mirrored,LEFT)] - [U(control,RIGHT)-U(control,LEFT)], where U is restricted waiting actions. Positive means position reflection increases the RIGHT-vs-LEFT entry delay.",
+    "primary_event": "First retained state-sample action index inside the requested cone.",
+    "requested_region": "Robot-base horizontal object-minus-reference vector inside the requested 45-degree cone: +delta_y for LEFT, -delta_y for RIGHT, nonzero horizontal distance.",
+    "restricted_waiting_actions": "min(T, 450) for the primary first-entry endpoint. For a cap-censored cell, 450 is an RMST-style restricted contribution and not an imputed entry time.",
+    "sustained_entry": "Start index of the first run of three consecutive requested-cone samples. Reported as a trace-status audit, not a common-horizon time estimand."
+  },
+  "matched_analysis": {
+    "difference_in_differences_actions": {
+      "description": "Position-mirrored RIGHT-minus-LEFT restricted waiting minus control RIGHT-minus-LEFT restricted waiting.",
+      "sign_counts": {
+        "negative": 7,
+        "positive": 20,
+        "ties": 0
+      },
+      "summary": {
+        "max": 399,
+        "mean": 81.37037037037037,
+        "median": 110,
+        "min": -255,
+        "n": 27
+      }
+    },
+    "paired_entry_attainment": {
+      "left": {
+        "both_censored": 0,
+        "both_observed": 27,
+        "control_observed_mirrored_censored": 0,
+        "mirrored_observed_control_censored": 0
+      },
+      "right": {
+        "both_censored": 0,
+        "both_observed": 23,
+        "control_observed_mirrored_censored": 4,
+        "mirrored_observed_control_censored": 0
+      }
+    },
+    "position_mirrored_minus_control_actions": {
+      "left": {
+        "sign_counts": {
+          "negative": 17,
+          "positive": 10,
+          "ties": 0
+        },
+        "summary": {
+          "max": 130,
+          "mean": -48.629629629629626,
+          "median": -9,
+          "min": -322,
+          "n": 27
+        }
+      },
+      "right": {
+        "sign_counts": {
+          "negative": 9,
+          "positive": 18,
+          "ties": 0
+        },
+        "summary": {
+          "max": 343,
+          "mean": 32.74074074074074,
+          "median": 21,
+          "min": -301,
+          "n": 27
+        }
+      }
+    },
+    "within_layout_right_minus_left_actions": {
+      "control": {
+        "sign_counts": {
+          "negative": 11,
+          "positive": 16,
+          "ties": 0
+        },
+        "summary": {
+          "max": 305,
+          "mean": 8.666666666666666,
+          "median": 4,
+          "min": -264,
+          "n": 27
+        }
+      },
+      "position_mirrored": {
+        "sign_counts": {
+          "negative": 2,
+          "positive": 24,
+          "ties": 1
+        },
+        "summary": {
+          "max": 334,
+          "mean": 90.03703703703704,
+          "median": 36,
+          "min": -115,
+          "n": 27
+        }
+      }
+    }
+  },
+  "matched_blocks": [
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 122,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 93,
+          "first_sustained_entry_step": 93,
+          "registered_cell_id": "v3b001:nano:seed9400:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 93,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 353,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 305,
+          "first_sustained_entry_step": 305,
+          "registered_cell_id": "v3b001:nano:seed9400:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 305,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 217,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 156,
+          "first_sustained_entry_step": 156,
+          "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 156,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 193,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 173,
+          "first_sustained_entry_step": 173,
+          "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 173,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 212,
+        "difference_in_differences_actions": -195,
+        "position_mirrored_minus_control_left_actions": 63,
+        "position_mirrored_minus_control_right_actions": -132,
+        "position_mirrored_right_minus_left_actions": 17
+      },
+      "pair_id": "v3b001:nano:seed9400",
+      "seed": 9400
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 136,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 136,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9401:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 136,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        },
+        "control_right": {
+          "actions_executed": 450,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 396,
+          "first_sustained_entry_step": 396,
+          "registered_cell_id": "v3b001:nano:seed9401:control:right",
+          "requested_success": false,
+          "restricted_waiting_actions": 396,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 120,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 90,
+          "first_sustained_entry_step": 90,
+          "registered_cell_id": "v3b001:nano:seed9401:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 90,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 124,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 95,
+          "first_sustained_entry_step": 95,
+          "registered_cell_id": "v3b001:nano:seed9401:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 95,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 260,
+        "difference_in_differences_actions": -255,
+        "position_mirrored_minus_control_left_actions": -46,
+        "position_mirrored_minus_control_right_actions": -301,
+        "position_mirrored_right_minus_left_actions": 5
+      },
+      "pair_id": "v3b001:nano:seed9401",
+      "seed": 9401
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 450,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 113,
+          "first_sustained_entry_step": 113,
+          "registered_cell_id": "v3b001:nano:seed9402:control:left",
+          "requested_success": false,
+          "restricted_waiting_actions": 113,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 129,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 120,
+          "first_sustained_entry_step": 120,
+          "registered_cell_id": "v3b001:nano:seed9402:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 120,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 124,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 89,
+          "first_sustained_entry_step": 89,
+          "registered_cell_id": "v3b001:nano:seed9402:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 89,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 226,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 219,
+          "first_sustained_entry_step": 219,
+          "registered_cell_id": "v3b001:nano:seed9402:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 219,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 7,
+        "difference_in_differences_actions": 123,
+        "position_mirrored_minus_control_left_actions": -24,
+        "position_mirrored_minus_control_right_actions": 99,
+        "position_mirrored_right_minus_left_actions": 130
+      },
+      "pair_id": "v3b001:nano:seed9402",
+      "seed": 9402
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 123,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 105,
+          "first_sustained_entry_step": 105,
+          "registered_cell_id": "v3b001:nano:seed9403:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 105,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 411,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 410,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9403:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 410,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 282,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 104,
+          "first_sustained_entry_step": 104,
+          "registered_cell_id": "v3b001:nano:seed9403:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 104,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 285,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 263,
+          "first_sustained_entry_step": 263,
+          "registered_cell_id": "v3b001:nano:seed9403:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 263,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 305,
+        "difference_in_differences_actions": -146,
+        "position_mirrored_minus_control_left_actions": -1,
+        "position_mirrored_minus_control_right_actions": -147,
+        "position_mirrored_right_minus_left_actions": 159
+      },
+      "pair_id": "v3b001:nano:seed9403",
+      "seed": 9403
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 125,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 103,
+          "first_sustained_entry_step": 103,
+          "registered_cell_id": "v3b001:nano:seed9404:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 103,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 141,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 105,
+          "first_sustained_entry_step": 105,
+          "registered_cell_id": "v3b001:nano:seed9404:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 105,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 120,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 106,
+          "first_sustained_entry_step": 106,
+          "registered_cell_id": "v3b001:nano:seed9404:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 106,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 146,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 104,
+          "first_sustained_entry_step": 104,
+          "registered_cell_id": "v3b001:nano:seed9404:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 104,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 2,
+        "difference_in_differences_actions": -4,
+        "position_mirrored_minus_control_left_actions": 3,
+        "position_mirrored_minus_control_right_actions": -1,
+        "position_mirrored_right_minus_left_actions": -2
+      },
+      "pair_id": "v3b001:nano:seed9404",
+      "seed": 9404
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 367,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 367,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9405:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 367,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        },
+        "control_right": {
+          "actions_executed": 129,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 103,
+          "first_sustained_entry_step": 103,
+          "registered_cell_id": "v3b001:nano:seed9405:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 103,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 158,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 108,
+          "first_sustained_entry_step": 108,
+          "registered_cell_id": "v3b001:nano:seed9405:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 108,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 155,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 124,
+          "first_sustained_entry_step": 124,
+          "registered_cell_id": "v3b001:nano:seed9405:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 124,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": -264,
+        "difference_in_differences_actions": 280,
+        "position_mirrored_minus_control_left_actions": -259,
+        "position_mirrored_minus_control_right_actions": 21,
+        "position_mirrored_right_minus_left_actions": 16
+      },
+      "pair_id": "v3b001:nano:seed9405",
+      "seed": 9405
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 128,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 104,
+          "first_sustained_entry_step": 104,
+          "registered_cell_id": "v3b001:nano:seed9406:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 104,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 225,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 207,
+          "first_sustained_entry_step": 207,
+          "registered_cell_id": "v3b001:nano:seed9406:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 207,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 277,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 234,
+          "first_sustained_entry_step": 234,
+          "registered_cell_id": "v3b001:nano:seed9406:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 234,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 150,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 119,
+          "first_sustained_entry_step": 119,
+          "registered_cell_id": "v3b001:nano:seed9406:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 119,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 103,
+        "difference_in_differences_actions": -218,
+        "position_mirrored_minus_control_left_actions": 130,
+        "position_mirrored_minus_control_right_actions": -88,
+        "position_mirrored_right_minus_left_actions": -115
+      },
+      "pair_id": "v3b001:nano:seed9406",
+      "seed": 9406
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 284,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 262,
+          "first_sustained_entry_step": 262,
+          "registered_cell_id": "v3b001:nano:seed9407:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 262,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 193,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 181,
+          "first_sustained_entry_step": 181,
+          "registered_cell_id": "v3b001:nano:seed9407:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 181,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 159,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 136,
+          "first_sustained_entry_step": 136,
+          "registered_cell_id": "v3b001:nano:seed9407:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 136,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 188,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 165,
+          "first_sustained_entry_step": 165,
+          "registered_cell_id": "v3b001:nano:seed9407:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 165,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": -81,
+        "difference_in_differences_actions": 110,
+        "position_mirrored_minus_control_left_actions": -126,
+        "position_mirrored_minus_control_right_actions": -16,
+        "position_mirrored_right_minus_left_actions": 29
+      },
+      "pair_id": "v3b001:nano:seed9407",
+      "seed": 9407
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 125,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 101,
+          "first_sustained_entry_step": 101,
+          "registered_cell_id": "v3b001:nano:seed9408:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 101,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 158,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 105,
+          "first_sustained_entry_step": 105,
+          "registered_cell_id": "v3b001:nano:seed9408:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 105,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 157,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 109,
+          "first_sustained_entry_step": 109,
+          "registered_cell_id": "v3b001:nano:seed9408:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 109,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 158,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 114,
+          "first_sustained_entry_step": 114,
+          "registered_cell_id": "v3b001:nano:seed9408:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 114,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 4,
+        "difference_in_differences_actions": 1,
+        "position_mirrored_minus_control_left_actions": 8,
+        "position_mirrored_minus_control_right_actions": 9,
+        "position_mirrored_right_minus_left_actions": 5
+      },
+      "pair_id": "v3b001:nano:seed9408",
+      "seed": 9408
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 413,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 195,
+          "first_sustained_entry_step": 195,
+          "registered_cell_id": "v3b001:nano:seed9409:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 195,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 146,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 104,
+          "first_sustained_entry_step": 104,
+          "registered_cell_id": "v3b001:nano:seed9409:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 104,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 159,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 103,
+          "first_sustained_entry_step": 103,
+          "registered_cell_id": "v3b001:nano:seed9409:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 103,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 172,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 139,
+          "first_sustained_entry_step": 139,
+          "registered_cell_id": "v3b001:nano:seed9409:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 139,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": -91,
+        "difference_in_differences_actions": 127,
+        "position_mirrored_minus_control_left_actions": -92,
+        "position_mirrored_minus_control_right_actions": 35,
+        "position_mirrored_right_minus_left_actions": 36
+      },
+      "pair_id": "v3b001:nano:seed9409",
+      "seed": 9409
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 115,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 90,
+          "first_sustained_entry_step": 90,
+          "registered_cell_id": "v3b001:nano:seed9410:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 90,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 188,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 187,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9410:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 187,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 140,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 102,
+          "first_sustained_entry_step": 102,
+          "registered_cell_id": "v3b001:nano:seed9410:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 102,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 358,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 320,
+          "first_sustained_entry_step": 320,
+          "registered_cell_id": "v3b001:nano:seed9410:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 320,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 97,
+        "difference_in_differences_actions": 121,
+        "position_mirrored_minus_control_left_actions": 12,
+        "position_mirrored_minus_control_right_actions": 133,
+        "position_mirrored_right_minus_left_actions": 218
+      },
+      "pair_id": "v3b001:nano:seed9410",
+      "seed": 9410
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 174,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 172,
+          "first_sustained_entry_step": 172,
+          "registered_cell_id": "v3b001:nano:seed9411:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 172,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 185,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 107,
+          "first_sustained_entry_step": 107,
+          "registered_cell_id": "v3b001:nano:seed9411:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 107,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 157,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 116,
+          "first_sustained_entry_step": 116,
+          "registered_cell_id": "v3b001:nano:seed9411:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 116,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 450,
+          "entry_kind": "none",
+          "entry_observed": false,
+          "first_entry_step": null,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9411:position_mirrored:right",
+          "requested_success": false,
+          "restricted_waiting_actions": 450,
+          "sustained_entry_observed": false,
+          "sustained_status": "administratively_right_censored_at_cap_without_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": -65,
+        "difference_in_differences_actions": 399,
+        "position_mirrored_minus_control_left_actions": -56,
+        "position_mirrored_minus_control_right_actions": 343,
+        "position_mirrored_right_minus_left_actions": 334
+      },
+      "pair_id": "v3b001:nano:seed9411",
+      "seed": 9411
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 222,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 187,
+          "first_sustained_entry_step": 187,
+          "registered_cell_id": "v3b001:nano:seed9412:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 187,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 179,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 123,
+          "first_sustained_entry_step": 123,
+          "registered_cell_id": "v3b001:nano:seed9412:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 123,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 155,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 117,
+          "first_sustained_entry_step": 117,
+          "registered_cell_id": "v3b001:nano:seed9412:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 117,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 450,
+          "entry_kind": "none",
+          "entry_observed": false,
+          "first_entry_step": null,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9412:position_mirrored:right",
+          "requested_success": false,
+          "restricted_waiting_actions": 450,
+          "sustained_entry_observed": false,
+          "sustained_status": "administratively_right_censored_at_cap_without_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": -64,
+        "difference_in_differences_actions": 397,
+        "position_mirrored_minus_control_left_actions": -70,
+        "position_mirrored_minus_control_right_actions": 327,
+        "position_mirrored_right_minus_left_actions": 333
+      },
+      "pair_id": "v3b001:nano:seed9412",
+      "seed": 9412
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 149,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 115,
+          "first_sustained_entry_step": 115,
+          "registered_cell_id": "v3b001:nano:seed9413:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 115,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 198,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 143,
+          "first_sustained_entry_step": 143,
+          "registered_cell_id": "v3b001:nano:seed9413:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 143,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 159,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 116,
+          "first_sustained_entry_step": 116,
+          "registered_cell_id": "v3b001:nano:seed9413:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 116,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 450,
+          "entry_kind": "none",
+          "entry_observed": false,
+          "first_entry_step": null,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9413:position_mirrored:right",
+          "requested_success": false,
+          "restricted_waiting_actions": 450,
+          "sustained_entry_observed": false,
+          "sustained_status": "administratively_right_censored_at_cap_without_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 28,
+        "difference_in_differences_actions": 306,
+        "position_mirrored_minus_control_left_actions": 1,
+        "position_mirrored_minus_control_right_actions": 307,
+        "position_mirrored_right_minus_left_actions": 334
+      },
+      "pair_id": "v3b001:nano:seed9413",
+      "seed": 9413
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 90,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 90,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9414:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 90,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        },
+        "control_right": {
+          "actions_executed": 257,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 221,
+          "first_sustained_entry_step": 221,
+          "registered_cell_id": "v3b001:nano:seed9414:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 221,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 132,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 94,
+          "first_sustained_entry_step": 94,
+          "registered_cell_id": "v3b001:nano:seed9414:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 94,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 148,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 115,
+          "first_sustained_entry_step": 115,
+          "registered_cell_id": "v3b001:nano:seed9414:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 115,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 131,
+        "difference_in_differences_actions": -110,
+        "position_mirrored_minus_control_left_actions": 4,
+        "position_mirrored_minus_control_right_actions": -106,
+        "position_mirrored_right_minus_left_actions": 21
+      },
+      "pair_id": "v3b001:nano:seed9414",
+      "seed": 9414
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 218,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 193,
+          "first_sustained_entry_step": 193,
+          "registered_cell_id": "v3b001:nano:seed9415:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 193,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 290,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 290,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9415:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 290,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 321,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 288,
+          "first_sustained_entry_step": 288,
+          "registered_cell_id": "v3b001:nano:seed9415:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 288,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 450,
+          "entry_kind": "none",
+          "entry_observed": false,
+          "first_entry_step": null,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9415:position_mirrored:right",
+          "requested_success": false,
+          "restricted_waiting_actions": 450,
+          "sustained_entry_observed": false,
+          "sustained_status": "administratively_right_censored_at_cap_without_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 97,
+        "difference_in_differences_actions": 65,
+        "position_mirrored_minus_control_left_actions": 95,
+        "position_mirrored_minus_control_right_actions": 160,
+        "position_mirrored_right_minus_left_actions": 162
+      },
+      "pair_id": "v3b001:nano:seed9415",
+      "seed": 9415
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 128,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 93,
+          "first_sustained_entry_step": 93,
+          "registered_cell_id": "v3b001:nano:seed9416:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 93,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 225,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 210,
+          "first_sustained_entry_step": 210,
+          "registered_cell_id": "v3b001:nano:seed9416:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 210,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 164,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 111,
+          "first_sustained_entry_step": 111,
+          "registered_cell_id": "v3b001:nano:seed9416:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 111,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 280,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 243,
+          "first_sustained_entry_step": 243,
+          "registered_cell_id": "v3b001:nano:seed9416:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 243,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 117,
+        "difference_in_differences_actions": 15,
+        "position_mirrored_minus_control_left_actions": 18,
+        "position_mirrored_minus_control_right_actions": 33,
+        "position_mirrored_right_minus_left_actions": 132
+      },
+      "pair_id": "v3b001:nano:seed9416",
+      "seed": 9416
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 445,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 415,
+          "first_sustained_entry_step": 415,
+          "registered_cell_id": "v3b001:nano:seed9417:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 415,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 291,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 291,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9417:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 291,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 97,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 93,
+          "first_sustained_entry_step": 93,
+          "registered_cell_id": "v3b001:nano:seed9417:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 93,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 129,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 126,
+          "first_sustained_entry_step": 126,
+          "registered_cell_id": "v3b001:nano:seed9417:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 126,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": -124,
+        "difference_in_differences_actions": 157,
+        "position_mirrored_minus_control_left_actions": -322,
+        "position_mirrored_minus_control_right_actions": -165,
+        "position_mirrored_right_minus_left_actions": 33
+      },
+      "pair_id": "v3b001:nano:seed9417",
+      "seed": 9417
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 253,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 213,
+          "first_sustained_entry_step": 213,
+          "registered_cell_id": "v3b001:nano:seed9418:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 213,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 155,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 113,
+          "first_sustained_entry_step": 113,
+          "registered_cell_id": "v3b001:nano:seed9418:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 113,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 158,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 111,
+          "first_sustained_entry_step": 111,
+          "registered_cell_id": "v3b001:nano:seed9418:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 111,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 189,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 134,
+          "first_sustained_entry_step": 134,
+          "registered_cell_id": "v3b001:nano:seed9418:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 134,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": -100,
+        "difference_in_differences_actions": 123,
+        "position_mirrored_minus_control_left_actions": -102,
+        "position_mirrored_minus_control_right_actions": 21,
+        "position_mirrored_right_minus_left_actions": 23
+      },
+      "pair_id": "v3b001:nano:seed9418",
+      "seed": 9418
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 134,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 115,
+          "first_sustained_entry_step": 115,
+          "registered_cell_id": "v3b001:nano:seed9419:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 115,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 155,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 112,
+          "first_sustained_entry_step": 112,
+          "registered_cell_id": "v3b001:nano:seed9419:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 112,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 149,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 111,
+          "first_sustained_entry_step": 111,
+          "registered_cell_id": "v3b001:nano:seed9419:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 111,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 171,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 171,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9419:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 171,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": -3,
+        "difference_in_differences_actions": 63,
+        "position_mirrored_minus_control_left_actions": -4,
+        "position_mirrored_minus_control_right_actions": 59,
+        "position_mirrored_right_minus_left_actions": 60
+      },
+      "pair_id": "v3b001:nano:seed9419",
+      "seed": 9419
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 278,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 241,
+          "first_sustained_entry_step": 241,
+          "registered_cell_id": "v3b001:nano:seed9420:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 241,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 97,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 95,
+          "first_sustained_entry_step": 95,
+          "registered_cell_id": "v3b001:nano:seed9420:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 95,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 98,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 93,
+          "first_sustained_entry_step": 93,
+          "registered_cell_id": "v3b001:nano:seed9420:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 93,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 146,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 134,
+          "first_sustained_entry_step": 134,
+          "registered_cell_id": "v3b001:nano:seed9420:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 134,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": -146,
+        "difference_in_differences_actions": 187,
+        "position_mirrored_minus_control_left_actions": -148,
+        "position_mirrored_minus_control_right_actions": 39,
+        "position_mirrored_right_minus_left_actions": 41
+      },
+      "pair_id": "v3b001:nano:seed9420",
+      "seed": 9420
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 207,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 179,
+          "first_sustained_entry_step": 179,
+          "registered_cell_id": "v3b001:nano:seed9421:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 179,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 275,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 236,
+          "first_sustained_entry_step": 236,
+          "registered_cell_id": "v3b001:nano:seed9421:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 236,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 210,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 170,
+          "first_sustained_entry_step": 170,
+          "registered_cell_id": "v3b001:nano:seed9421:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 170,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 390,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 337,
+          "first_sustained_entry_step": 337,
+          "registered_cell_id": "v3b001:nano:seed9421:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 337,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 57,
+        "difference_in_differences_actions": 110,
+        "position_mirrored_minus_control_left_actions": -9,
+        "position_mirrored_minus_control_right_actions": 101,
+        "position_mirrored_right_minus_left_actions": 167
+      },
+      "pair_id": "v3b001:nano:seed9421",
+      "seed": 9421
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 322,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 281,
+          "first_sustained_entry_step": 281,
+          "registered_cell_id": "v3b001:nano:seed9422:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 281,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 144,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 107,
+          "first_sustained_entry_step": 107,
+          "registered_cell_id": "v3b001:nano:seed9422:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 107,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 97,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 97,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9422:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 97,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 152,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 139,
+          "first_sustained_entry_step": 139,
+          "registered_cell_id": "v3b001:nano:seed9422:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 139,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": -174,
+        "difference_in_differences_actions": 216,
+        "position_mirrored_minus_control_left_actions": -184,
+        "position_mirrored_minus_control_right_actions": 32,
+        "position_mirrored_right_minus_left_actions": 42
+      },
+      "pair_id": "v3b001:nano:seed9422",
+      "seed": 9422
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 196,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 92,
+          "first_sustained_entry_step": 92,
+          "registered_cell_id": "v3b001:nano:seed9423:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 92,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 127,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 96,
+          "first_sustained_entry_step": 96,
+          "registered_cell_id": "v3b001:nano:seed9423:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 96,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 152,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 107,
+          "first_sustained_entry_step": 107,
+          "registered_cell_id": "v3b001:nano:seed9423:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 107,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 107,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 107,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9423:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 107,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 4,
+        "difference_in_differences_actions": -4,
+        "position_mirrored_minus_control_left_actions": 15,
+        "position_mirrored_minus_control_right_actions": 11,
+        "position_mirrored_right_minus_left_actions": 0
+      },
+      "pair_id": "v3b001:nano:seed9423",
+      "seed": 9423
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 216,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 185,
+          "first_sustained_entry_step": 185,
+          "registered_cell_id": "v3b001:nano:seed9424:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 185,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 196,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 196,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9424:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 196,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 97,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 83,
+          "first_sustained_entry_step": 83,
+          "registered_cell_id": "v3b001:nano:seed9424:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 83,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 359,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 311,
+          "first_sustained_entry_step": 311,
+          "registered_cell_id": "v3b001:nano:seed9424:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 311,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 11,
+        "difference_in_differences_actions": 217,
+        "position_mirrored_minus_control_left_actions": -102,
+        "position_mirrored_minus_control_right_actions": 115,
+        "position_mirrored_right_minus_left_actions": 228
+      },
+      "pair_id": "v3b001:nano:seed9424",
+      "seed": 9424
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 119,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 91,
+          "first_sustained_entry_step": 91,
+          "registered_cell_id": "v3b001:nano:seed9425:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 91,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "control_right": {
+          "actions_executed": 145,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 94,
+          "first_sustained_entry_step": 94,
+          "registered_cell_id": "v3b001:nano:seed9425:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 94,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 103,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 87,
+          "first_sustained_entry_step": 87,
+          "registered_cell_id": "v3b001:nano:seed9425:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 87,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 155,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 107,
+          "first_sustained_entry_step": 107,
+          "registered_cell_id": "v3b001:nano:seed9425:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 107,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": 3,
+        "difference_in_differences_actions": 17,
+        "position_mirrored_minus_control_left_actions": -4,
+        "position_mirrored_minus_control_right_actions": 13,
+        "position_mirrored_right_minus_left_actions": 20
+      },
+      "pair_id": "v3b001:nano:seed9425",
+      "seed": 9425
+    },
+    {
+      "cells": {
+        "control_left": {
+          "actions_executed": 210,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 210,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9426:control:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 210,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        },
+        "control_right": {
+          "actions_executed": 190,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 118,
+          "first_sustained_entry_step": 118,
+          "registered_cell_id": "v3b001:nano:seed9426:control:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 118,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        },
+        "position_mirrored_left": {
+          "actions_executed": 97,
+          "entry_kind": "transient",
+          "entry_observed": true,
+          "first_entry_step": 97,
+          "first_sustained_entry_step": null,
+          "registered_cell_id": "v3b001:nano:seed9426:position_mirrored:left",
+          "requested_success": true,
+          "restricted_waiting_actions": 97,
+          "sustained_entry_observed": false,
+          "sustained_status": "goal_terminated_after_transient_entry_without_three_sample_run"
+        },
+        "position_mirrored_right": {
+          "actions_executed": 151,
+          "entry_kind": "sustained",
+          "entry_observed": true,
+          "first_entry_step": 100,
+          "first_sustained_entry_step": 100,
+          "registered_cell_id": "v3b001:nano:seed9426:position_mirrored:right",
+          "requested_success": true,
+          "restricted_waiting_actions": 100,
+          "sustained_entry_observed": true,
+          "sustained_status": "observed_sustained_entry"
+        }
+      },
+      "contrasts": {
+        "control_right_minus_left_actions": -92,
+        "difference_in_differences_actions": 95,
+        "position_mirrored_minus_control_left_actions": -113,
+        "position_mirrored_minus_control_right_actions": -18,
+        "position_mirrored_right_minus_left_actions": 3
+      },
+      "pair_id": "v3b001:nano:seed9426",
+      "seed": 9426
+    }
+  ],
+  "provenance": {
+    "commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+    "files": {
+      "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl": {
+        "bytes": 5822218,
+        "git_blob": "5c2f4a6fa4795ec054dbce2d4d68554245ceb4cb",
+        "role": "108 retained H01 behavioral episodes and step XYZ traces",
+        "sha256": "ce67aecb2705394e8161fa4b65df7130e62648e2f6d8b6a93408c8da685a7207"
+      },
+      "experiments/v3/cosmos_nano_phase_b/compile_cell.py": {
+        "bytes": 18316,
+        "git_blob": "f47ec3cae608a6d983b9b37641f7af6193421964",
+        "role": "SUSTAINED_STEPS, _first_sustained, _in_cone, and event construction",
+        "sha256": "468bb9231316c4670a2dc3388ab7eb6f2ef5f42afc8fb04b16faca7b823f2a75"
+      },
+      "tools/vla_wam_v3_episode_schema.py": {
+        "bytes": 37213,
+        "git_blob": "a2f7c0b79e5ef82a49723842248969182aab4d60",
+        "role": "independent retained-record derivation and validation contract",
+        "sha256": "f71c1ab5e499a118e074b304e6b8aef84f8beb01ac3e670692cb2597efe0197c"
+      }
+    }
+  },
+  "schema_version": "wmf-retained-h01-requested-region-entry-v1"
+}

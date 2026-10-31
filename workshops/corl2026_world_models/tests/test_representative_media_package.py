@@ -96,8 +96,12 @@ class RepresentativeMediaPackageTests(unittest.TestCase):
     def test_build_records_representative_package_hashes(self):
         build = (PACKAGE / "analysis/build_package.py").read_text()
         self.assertIn('run("representative H01 media"', build)
+        self.assertIn('run("representative H01 media verification"', build)
         self.assertIn('"manifest_sha256": digest(representative_media_path)', build)
         self.assertIn('"packager_sha256": digest(package / "analysis/package_representative_media.py")', build)
+        self.assertIn("paper/media/representative_h01_video_verification.json", build)
+        self.assertIn('"receipt_sha256": digest(representative_verification_path)', build)
+        self.assertIn('"verifier_sha256": digest(package / "analysis/verify_representative_media.py")', build)
 
 
 if __name__ == "__main__":

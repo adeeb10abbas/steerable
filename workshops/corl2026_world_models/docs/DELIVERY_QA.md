@@ -655,7 +655,43 @@ entrant-only timing, a registered estimand or a new cohort. The analysis adds
 zero episodes, requests, labels, annotations, retrievals or inference, retains
 all 13 activity counters at zero and all nine gates false, and does not change
 the 232-cell core bound. Authoritative build, protected-tree and four-page PDF
-qualification receipts are recorded below only after those checks complete.
+qualification receipts follow.
+
+#### Turn2918 qualification receipts
+
+- The authoritative detached checkout at commit
+  `b7f6579d11a8b2ec66237762081cc372c789b4d6` passed all 24 build stages and
+  1,110/1,110 tests in 139.489 seconds. The complete build exited zero after
+  156.17 seconds wall time with 922,636 KiB peak RSS. Its 12,409-line,
+  571,991-byte validation log has SHA256
+  `78e924092b1efcd1046cba258c5d94d6c1e18edbd8efb8a763d184f365456a39`;
+  the generated 30,623-line, 1,063,875-byte build report has SHA256
+  `7e3d4d59a09eae96a843864fc7cc4bf305fe967d22c6ef7dd9ec774e8eaec1fe`.
+  Generated isolated results remain unselected and are not part of this
+  source publication.
+- The protected primary checkout passed 1,117/1,117 tests in 128.675 seconds,
+  including seven protected N3-only tests. The run exited zero after 131.11
+  seconds wall time with 923,188 KiB peak RSS. Before and after the run, its
+  residue is byte-identical at 23 entries and 1,626 bytes: the text/NUL
+  status SHA256 values remain
+  `39d478af3cc3ba9d04ae1ef94382c3b863aa662f81325e1a9b34253d3ebd4d99`
+  and
+  `3c61b9b8b0673dca004ce1b6fd7ece5e2ea605ffbff26c7a395a712d102a3546`.
+  The protected files and tracked result deletions were neither staged nor
+  published.
+- The detached official-template PDF is four pages and 163,414 bytes with SHA256
+  `375b87a54bb296bef0d6ed6a12b7c98da8655db5b8758f55f1193f3ef4ca7303`.
+  Its 12,906-byte TeX source has SHA256
+  `9960589bab596ffe7a49475ecf69a64cc3d78570dfe492992314035def2ebbb0`.
+  All 76 required extracted-text markers pass, no unresolved references,
+  overfull boxes or LaTeX errors are reported, and visual review of all four
+  rendered pages found no clipping, overlap, malformed table or malformed
+  figure. Tests and rendering are qualification evidence, not new scientific
+  episodes or inference.
+- Independent exact-arithmetic and integration reviews are GO. They confirm
+  324/324 deletion means, all 108 component closures, all 162 scope
+  identities, extrema and ties, every retained sign, all 13 zero activity
+  counters, all nine false gates, and the unchanged 232-cell core ceiling.
 
 ## Remaining research and submission work
 

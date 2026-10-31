@@ -239,7 +239,7 @@ class H02LabelDeletionSensitivityTests(unittest.TestCase):
         self.assertIn('run("H02 label-deletion sensitivity"', build)
         self.assertIn("PDF_REQUIRED_MARKERS", build)
         for marker in (
-            "Deleting each label preserves all 12",
+            "deletion preserves all 12",
             "246.019",
             "234.827",
             "13.577",

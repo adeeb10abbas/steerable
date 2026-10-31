@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-10-31T06:04:31Z",
+  "as_of_utc": "2026-10-31T06:08:09Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -41,7 +41,7 @@
     "active_requests_launched_excluded": 0,
     "invariant": "18_nonbehavioral + 1440_valid_behavioral + 2_technical_invalid_behavioral = 1460_terminal_requests"
   },
-  "phase": "valid40_of_232_turn2896_bounded_no_movement_camera_crop_witness_attempt003_source_published_control_tracking_seal_pending_results_publication_stalled_external_gm_inspection_required_confirmation_held",
+  "phase": "valid40_of_232_turn2896_bounded_no_movement_camera_crop_witness_attempt003_source_published_control_tracking_seal_published_results_publication_stalled_external_gm_inspection_required_confirmation_held",
   "cluster_status": "The independent Git/PVC route previously passed after the work-Mac cutoff. The sole Turn2896 watcher armed05:39:04Z,opened exactly05:51:00Z and sealed06:01:39Z;control cbd15bee1be8da7b2a1315946f6543b24bc5d7cc and results 12839900e5c46299e11fff4813e8602949055b86 remained fixed across22 samples and44/44 first-attempt fetches with zero retries,transients,movement or failures. This proves bounded Git-ref stability only;current GM/PVC/coordinator/worker/GPU/child/reap/release-lock and live-quiescence state remain unknown. Source-only camera witness attempt003 is implemented and fail-closed:five exact replay prerequisites plus the exact signed attempt002 diagnostic receipt are required at build and revalidated on the PVC;both CPU/offline child replays,raw contracts and witness arrays must pass before one atomic three-file publication. The source rejects29/29 independently constructed signed/structural mutations and its receipt is accepted by the real physical-alignment consumer in tests. Compilation,17/17 focused,58/58 adjacent and936/936 established tests pass. Evidence commit c3510a083ec14551c9c877a26a10bc18ece52b6a is normally fast-forward pushed and fetched back through the control ref at HEAD/control divergence0/0;the results ref was not fetched after the watch and remains cached at 12839900e5c46299e11fff4813e8602949055b86. No attempt002 receipt identity was available locally,no descriptor was built or dispatched,and no runtime crop,alignment,annotation,inference or scientific evidence was created. Exact retained science remains232 planned,44 launched=40 valid+4 technical-invalid,1460 requests,18000 actions,18040 observations and confirmation0/192. Annotation closure remains6 reports/669026 source bytes/717 canonical bytes and excludes this source;runtime closure remains0/14 byte-verified and0/14 replayed;request closure remains4/30 fields and0/1152 complete/sampling/eligibility/selected. All9 gates remain false and all13 activity counters remain zero. Current-state reconciliation and a fresh results publication explicitly reopening safe_to_release_new_work remain mandatory before any descriptor or retrieval. No release gate advances.",
   "published_development_coverage_audit": {
     "source_commit": "df576e458e546dcd69c5d676077d16df9b0ae47d",
@@ -9334,7 +9334,7 @@
     "basis_control_commit": "cbd15bee1be8da7b2a1315946f6543b24bc5d7cc",
     "basis_control_tree": "2c9b729e9ae6b1d68fecf3d162958df82a66dbc6",
     "basis_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
-    "status": "bounded_git_observation_no_movement_camera_crop_witness_attempt003_source_published_control_tracking_seal_pending_release_gate_closed",
+    "status": "bounded_git_observation_no_movement_camera_crop_witness_attempt003_source_published_control_tracking_seal_published_release_gate_closed",
     "authority": {
       "host": "ali-MS-7D25",
       "boot_id": "c469f76b-70a1-4fe4-929e-dc312aa55a9f",
@@ -9530,7 +9530,7 @@
     },
     "all_9_operational_and_science_gates_false": true,
     "publication": {
-      "status": "evidence_commit_pushed_and_fetched_control_only_tracking_seal_pending",
+      "status": "evidence_commit_and_tracking_seal_pushed_and_fetched_control_only",
       "evidence_commit": "c3510a083ec14551c9c877a26a10bc18ece52b6a",
       "evidence_tree": "78669c5642ef81783a9451ad70836adbe46918d0",
       "evidence_parent": "cbd15bee1be8da7b2a1315946f6543b24bc5d7cc",
@@ -9555,7 +9555,26 @@
       "post_watch_results_fetches": 0,
       "cached_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
       "results_sampled_after_watch": false,
-      "tracking_seal_pending": true
+      "tracking_seal": {
+        "commit": "0f28aa900f676c2416711a4a205c754e8d7129ae",
+        "tree": "1116ae4f5d812790b19f2a19ba4f5e2ed0dfc790",
+        "parent": "c3510a083ec14551c9c877a26a10bc18ece52b6a",
+        "commit_utc": "2026-10-31T06:05:23Z",
+        "changed_paths": 3,
+        "insertions": 31,
+        "deletions": 8,
+        "push_attempts": 1,
+        "push_started_at_utc": "2026-10-31T06:05:24Z",
+        "push_finished_at_utc": "2026-10-31T06:05:26Z",
+        "fetch_attempts": 1,
+        "fetch_started_at_utc": "2026-10-31T06:05:28Z",
+        "fetch_finished_at_utc": "2026-10-31T06:05:28Z",
+        "head_control_divergence": "0/0",
+        "fetch_head_lines": 1,
+        "fetch_head_bytes": 130,
+        "fetch_head_sha256": "6ef917704c1fec23e41534790efab95850ca85ab813478720d32297fd4a4213a"
+      },
+      "tracking_seal_pending": false
     },
     "next_remote_observation_not_before_utc": "2026-10-31T06:24:00Z",
     "next_action": "Keep every release gate closed. Require authorized current-state reconciliation and a fresh results publication explicitly reopening safe_to_release_new_work. Only then authenticate the exact attempt002 receipt,build a fresh attempt003 descriptor without dispatch ambiguity,and separately authorize release. Never reuse a valid,fenced or live identifier."

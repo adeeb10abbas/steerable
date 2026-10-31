@@ -56,6 +56,7 @@ def main():
     run("H01 request-window execution motion", [sys.executable, str(package / "analysis/analyze_h01_request_window_motion.py")])
     run("H02 retained position reflection", [sys.executable, str(package / "analysis/analyze_h02_position_reflection.py")])
     run("H02 matched entry supplement", [sys.executable, str(package / "analysis/analyze_h02_matched_entry.py")])
+    run("H02 capped-index decomposition", [sys.executable, str(package / "analysis/analyze_h02_capped_index_decomposition.py")])
     run("H03 H04 retained guidance pilots", [sys.executable, str(package / "analysis/analyze_h03_h04_guidance_pilots.py")])
     run("H05 retained lateral dose response", [sys.executable, str(package / "analysis/analyze_h05_lateral_dose_response.py")])
     run("H06 retained graded symmetry", [sys.executable, str(package / "analysis/analyze_h06_graded_symmetry.py")])
@@ -90,7 +91,7 @@ def main():
     body = " ".join(raw_body.replace("-\n", "").split())
     for required in ["108", "13/54", "50/54", "26/27", "DreamZero-s2", "31.1", "35.8",
                      "18/27", "17/27", "23/27", "81.4", "104 entries", "1.125", "13/15",
-                     "H02 compact audit", "540 descriptors", "Post-result descriptive", "requested-cone-entry indicator 13/54 control versus 53/54 reflected", "42 absent by cap", "0.741", "238.3", "negative 27/27", "not event/imputation", "not pure timing/physical latency, postcap or model-based survival/hazard inference", "No forecast/D1/new-inference claim", "H03/H04", "post-result guidance pilots", "6/6 to 4/6", "3/6 to 4/6",
+                     "H02 compact audit", "540 descriptors", "Post-result descriptive", "requested-cone-entry indicator 13/54 control versus 53/54 reflected", "42 absent by cap", "0.741", "238.3", "negative 27/27", "not event/imputation", "not pure timing/physical latency, postcap or model-based survival/hazard inference", "cap-incidence term", "333.333", "zero-masked recorded-index term", "95.037", "No forecast/D1/new-inference claim", "H03/H04", "post-result guidance pilots", "6/6 to 4/6", "3/6 to 4/6",
                      "H07/H08", "Edge", "12.4", "19.2", "endpoint interactions",
                      "H09/H10", "134/160", "123/160", "wording inference was not registered",
                      "H11/H12 are separate fixed-scene Phase-A direct-command cohorts",
@@ -124,6 +125,8 @@ def main():
     h02 = json.loads(h02_path.read_text())
     h02_matched_path = package / "paper/data/h02_matched_entry.json"
     h02_matched = json.loads(h02_matched_path.read_text())
+    h02_decomposition_path = package / "paper/data/h02_capped_index_decomposition.json"
+    h02_decomposition = json.loads(h02_decomposition_path.read_text())
     h03_h04_path = package / "paper/data/h03_h04_guidance_pilots.json"
     h03_h04 = json.loads(h03_h04_path.read_text())
     h05_path = package / "paper/data/h05_lateral_dose_response.json"
@@ -215,6 +218,41 @@ def main():
         != {"positive": 19, "zero": 0, "negative": 8}
     ):
         raise RuntimeError("H02 restricted-waiting command interaction changed")
+    if h02_decomposition["schema_version"] != "wmf-retained-h02-capped-index-decomposition-v1":
+        raise RuntimeError("H02 capped-index decomposition schema changed")
+    if h02_decomposition["cross_layout_entry_status_pair_counts"] != {
+        "left": {
+            "control_entry__reflected_entry": 4,
+            "control_no_entry__reflected_no_entry": 0,
+            "control_entry__reflected_no_entry": 1,
+            "control_no_entry__reflected_entry": 22,
+        },
+        "right": {
+            "control_entry__reflected_entry": 8,
+            "control_no_entry__reflected_no_entry": 0,
+            "control_entry__reflected_no_entry": 0,
+            "control_no_entry__reflected_entry": 19,
+        },
+    }:
+        raise RuntimeError("H02 cross-layout entry-status-pair counts changed")
+    h02_decomposition_balanced = h02_decomposition["summaries"][
+        "block_balanced_position_mirrored_minus_control"
+    ]
+    if (
+        h02_decomposition_balanced["entry_incidence_at_cap_term"]["sum"] != -9000.0
+        or h02_decomposition_balanced[
+            "zero_masked_recorded_entry_index_term"
+        ]["sum"] != 2566.0
+        or h02_decomposition_balanced[
+            "cap_restricted_waiting_action_index_contrast"
+        ]["sum"] != -6434.0
+    ):
+        raise RuntimeError("H02 capped-index block-balanced decomposition changed")
+    if (
+        any(h02_decomposition["new_activity"].values())
+        or any(h02_decomposition["gate_state"].values())
+    ):
+        raise RuntimeError("H02 capped-index decomposition advanced activity or a gate")
     if h02["audit_operations"] != {
         "compact_git_objects_byte_authenticated": 9,
         "remote_fetches": 0,
@@ -1070,6 +1108,23 @@ def main():
             "json_sha256": digest(h02_matched_path),
             "csv_sha256": digest(package / "paper/data/h02_matched_entry.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h02_matched_entry.py"),
+        },
+        "retained_h02_capped_index_decomposition": {
+            "scope": h02_decomposition["claim_boundary"],
+            "provenance": h02_decomposition["provenance"],
+            "configuration": h02_decomposition["configuration"],
+            "population": h02_decomposition["population"],
+            "identity": h02_decomposition["identity"],
+            "cross_layout_entry_status_pair_counts": h02_decomposition[
+                "cross_layout_entry_status_pair_counts"
+            ],
+            "summaries": h02_decomposition["summaries"],
+            "definitions": h02_decomposition["definitions"],
+            "new_activity": h02_decomposition["new_activity"],
+            "gate_state": h02_decomposition["gate_state"],
+            "json_sha256": digest(h02_decomposition_path),
+            "csv_sha256": digest(package / "paper/data/h02_capped_index_decomposition.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h02_capped_index_decomposition.py"),
         },
         "retained_h03_h04_guidance_pilots": {
             "scope": h03_h04["claim_boundary"],

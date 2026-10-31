@@ -65,6 +65,24 @@ physical-latency contrast and does not extrapolate event times beyond the cap.
 The aggregate is post-result descriptive, not a model-based survival curve or
 hazard, censoring-independence claim, registered estimand, independent
 scene/noise evidence or new cohort.
+The separate exact [capped-index decomposition](paper/data/h02_capped_index_decomposition.json)
+authenticates and regenerates that supplement before applying
+$U=450(1-E)+Z$ within the same rows, where $Z$ is the recorded entry index
+when entry is observed and algebraic zero otherwise. The block-balanced mean closes as a
+cap-incidence term -333.333 plus zero-masked recorded-index term +95.037,
+yielding -238.296 action indices; the corresponding sums are
+-9000 + 2566 = -6434. LEFT, RIGHT and RIGHT-minus-LEFT sums likewise close as
+-9450 + 2685 = -6765, -8550 + 2447 = -6103 and 900 - 238 = 662.
+Cross-layout entry-status pairs are 22/1/4/0 LEFT and 19/0/8/0 RIGHT for
+control-no-entry/reflected-entry, control-entry/reflected-no-entry,
+control-entry/reflected-entry and neither-entry.
+These are comparison-direction categories across different layouts, not
+temporal transitions, within-episode conversions or counterfactual changes.
+The $Z$ term is a zero-masked recorded-index term, not an entrant-only timing
+effect: algebraic zero when no entry is recorded is not an imputed entry index.
+This is deterministic post-result algebra on the same 27 labels, not a causal
+decomposition, physical-latency or survival result, independent sample,
+registered estimand or gate advance.
 The sealed H02 v1 [canonical JSON](paper/data/h02_position_reflection.json) inventories 540
 distinct raw path/SHA descriptors (237,163,185 declared bytes), while the
 [27-row CSV](paper/data/h02_position_reflection.csv) exposes all four cells and

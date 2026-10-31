@@ -389,7 +389,24 @@ episode rows. The final manuscript incorporates the following corrections:
   cap. These are post-result aggregates of the same exported rows, not a
   model-based survival curve or hazard, censoring-independence claim, new
   registered estimand, cohort, independent scene/noise sample, equivalence
-  result or p-value claim. Its 540 distinct raw
+  result or p-value claim. A standalone exact decomposition authenticates and
+  regenerates that supplement, then applies $U=450(1-E)+Z$ within every row,
+  where $Z$ is the recorded entry index when entry is observed and algebraic
+  zero otherwise.
+  The block-balanced cap-incidence term -333.333 plus
+  zero-masked recorded-index term +95.037 closes to -238.296; sums close as
+  -9000 + 2566 = -6434, with LEFT/RIGHT/interaction closures
+  -9450 + 2685 = -6765, -8550 + 2447 = -6103 and 900 - 238 = 662.
+  LEFT cross-layout entry-status pairs are 22/1/4/0 and RIGHT 19/0/8/0 for
+  control-no-entry/reflected-entry, control-entry/reflected-no-entry,
+  control-entry/reflected-entry and neither-entry. These are comparison
+  categories across different layouts, not temporal transitions,
+  within-episode conversions or counterfactual changes. The $Z$ term is
+  a zero-masked recorded-index term, not an entrant-only timing effect; its zero
+  under no entry is algebra, not an imputed entry index. This remains
+  deterministic post-result algebra, not causal mediation, physical latency,
+  survival inference, an independent sample, a registered estimand or a gate
+  advance. Its 540 distinct raw
   path/SHA descriptors total 237,163,185 declared bytes; the external PVC bytes
   were not opened or rehashed. H02 remains custom DreamZero negative-branch
   action guidance s2 with fixed effective noise 1140, not default DreamZero or

@@ -64,6 +64,24 @@ remain external. This is historical executed behavior, not independent scenes,
 position-reflection replication, equivalence, forecast accuracy or a release-
 gate advance.
 
+The retained H07/H08 endpoint package independently reconstructs the two
+registered endpoint-only V3-E004 checkpoints from the same byte-authenticated
+compact tables. For each of DreamZero-s2 and Cosmos Edge it rejoins 108
+episodes into 54 LEFT/RIGHT pairs over 27 seeds and both endpoint levels. The
+registered $s=1$ minus $s=0$ RIGHT-minus-LEFT requested-depth interactions are
+-0.124 m (95% matched-seed bootstrap interval -0.173 to -0.075) and -0.192 m
+(-0.260 to -0.115), respectively. The registered matched-block success-gap
+interval excludes zero for DreamZero-s2 but not for Edge. Endpoint-redirection
+interactions are +0.104 m (interval 0.043 to 0.165) and -0.027 m (-0.099 to
+0.047), respectively. The
+[canonical JSON](paper/data/h07_h08_endpoint_symmetry.json) records exact source
+identities, row joins, registered-report reconciliation and all claim
+boundaries; the [108-row CSV](paper/data/h07_h08_endpoint_symmetry.csv) exposes
+both models' seed-level endpoint contrasts. Companion objects are absent at
+level zero, so these are inventory-transition interactions in separate model
+contexts, not position-reflection replications, equivalence, independent
+scenes, forecast accuracy or a release-gate advance.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact
@@ -109,9 +127,12 @@ reproduces the original numerical analyses. The separate DreamZero symmetry
 experiment is retained in the extracted supporting data but is not pooled with
 the reflection experiments or included in this paper's trial counts.
 
-The two layouts have fixed physical resets. Nano varies policy-sampling seeds;
-DreamZero-s2 retains its released fixed noise seed. The manuscript reports
-DreamZero-s2 descriptively and uses sampling-seed intervals only for Nano.
+The two primary position-reflection layouts have fixed physical resets. Nano
+varies policy-sampling seeds; DreamZero-s2 retains its released fixed noise
+seed. For those primary cohorts, the manuscript reports DreamZero-s2
+descriptively and uses sampling-seed intervals only for Nano. The separate
+preregistered H07/H08 retained analysis reports matched-block intervals over
+its registered seed blocks; it does not create independent model-noise draws.
 
 ## Rebuild
 
@@ -130,7 +151,7 @@ uv pip install --python "$WMF_BUILD_ENV/bin/python" --requirement workshops/corl
 
 The `--system-site-packages` boundary is intentional: `requirements-build.txt`
 does not download or replace Torch, while the regression suite includes
-Torch-backed qualification tests. The retained H05 and H06 replays also use NumPy.
+Torch-backed qualification tests. The retained H05--H08 replays also use NumPy.
 `build_package.py` fails before running the suite if any required package is
 unavailable and records all five resolved versions in the build report.
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341`, the pinned
@@ -139,8 +160,8 @@ both values. The retained PDF still carries TeX-produced wall-clock metadata,
 so this environment record is not evidence of byte-identical PDF rebuilding.
 
 This runs the tests, recomputes results, the stopping-time control, the H01
-requested-region entry diagnostic and the retained H05 and H06 dose responses
-from the pinned repository, authenticates and
+requested-region entry diagnostic, the retained H05/H06 dose responses and the
+H07/H08 endpoint interactions from the pinned repository, authenticates and
 fully decodes the four representative H01 video blobs, produces figures and
 compiles the official CoRL template. The build report records all retained-data
 analyses, their source identities and output hashes, plus the representative-

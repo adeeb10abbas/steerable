@@ -54,6 +54,7 @@ def main():
     run("H01 requested-region entry", [sys.executable, str(package / "analysis/analyze_h01_requested_region_entry.py")])
     run("H05 retained lateral dose response", [sys.executable, str(package / "analysis/analyze_h05_lateral_dose_response.py")])
     run("H06 retained graded symmetry", [sys.executable, str(package / "analysis/analyze_h06_graded_symmetry.py")])
+    run("H07 H08 retained endpoint symmetry", [sys.executable, str(package / "analysis/analyze_h07_h08_endpoint_symmetry.py")])
     run("representative H01 media", [sys.executable, str(package / "analysis/package_representative_media.py")])
     run("representative H01 media verification", [sys.executable, str(package / "analysis/verify_representative_media.py")])
     run("paper experiment results", [sys.executable, str(package / "analysis/extract_paper_results.py")])
@@ -76,6 +77,7 @@ def main():
     body = "\n".join(page.extract_text() for page in reader.pages)
     for required in ["108", "13/54", "50/54", "26/27", "DreamZero-s2", "31.1", "35.8",
                      "18/27", "17/27", "23/27", "81.4", "104 entries", "1.125", "13/15",
+                     "H07/H08", "Edge", "12.4", "19.2", "endpoint interactions",
                      "Results", "Conclusion", "References"]:
         if required not in body:
             raise RuntimeError(f"PDF is missing expected text: {required}")
@@ -91,6 +93,8 @@ def main():
     h05 = json.loads(h05_path.read_text())
     h06_path = package / "paper/data/h06_graded_symmetry.json"
     h06 = json.loads(h06_path.read_text())
+    h07_h08_path = package / "paper/data/h07_h08_endpoint_symmetry.json"
+    h07_h08 = json.loads(h07_h08_path.read_text())
     representative_media_path = package / "paper/media/representative_h01_videos.json"
     representative_media = json.loads(representative_media_path.read_text())
     representative_verification_path = package / "paper/media/representative_h01_video_verification.json"
@@ -179,6 +183,19 @@ def main():
             "json_sha256": digest(h06_path),
             "csv_sha256": digest(package / "paper/data/h06_graded_symmetry.csv"),
             "analyzer_sha256": digest(package / "analysis/analyze_h06_graded_symmetry.py"),
+        },
+        "retained_h07_h08_endpoint_symmetry": {
+            "scope": h07_h08["claim_boundary"],
+            "source_commit": h07_h08["provenance"]["commit"],
+            "design": h07_h08["design"],
+            "cohorts": h07_h08["cohorts"],
+            "source_manifest": h07_h08["source_manifest"],
+            "reproduction": h07_h08["reproduction"],
+            "new_activity": h07_h08["new_activity"],
+            "gate_state": h07_h08["gate_state"],
+            "json_sha256": digest(h07_h08_path),
+            "csv_sha256": digest(package / "paper/data/h07_h08_endpoint_symmetry.csv"),
+            "analyzer_sha256": digest(package / "analysis/analyze_h07_h08_endpoint_symmetry.py"),
         },
         "representative_media": {
             "scope": representative_media["claim_boundary"],

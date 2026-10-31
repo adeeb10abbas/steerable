@@ -6,7 +6,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-When a robot succeeds at \emph{right of the bowl} but fails at \emph{left of the bowl}, does it misunderstand the instruction, or is one placement harder in that scene? We study Cosmos 3 Nano and DreamZero-s2, a custom action-guidance configuration, in a simulated cube-placement task. For each model, 108 trials cross two commands with two object layouts while keeping the model, robot, cameras and controller fixed. Mirroring the objects changes DreamZero-s2 completion from 13/54 to 50/54. Most original-layout failures occur at pickup or transport. Nano remains highly successful, but which side it reaches farther reverses. At its goal-dependent endpoints, every matched pair has the requested LEFT/RIGHT ordering; a pretermination check preserves ordering but reduces separation. Thus scene layout can change task performance even when a model responds to the directional words.
+When a robot succeeds at \emph{right of the bowl} but fails at \emph{left of the bowl}, is the instruction misunderstood or is one placement harder? We test Cosmos 3 Nano and DreamZero-s2, a custom action-guidance configuration, in a simulated cube-placement task. For each, 108 trials cross two commands with two object layouts while model, robot, cameras and controller remain fixed. Mirroring the objects raises DreamZero-s2 completion from 13/54 to 50/54. Most original-layout failures precede placement. Nano remains successful, but the farther-reaching side reverses. At goal-dependent endpoints, all pairs preserve LEFT/RIGHT ordering; a pretermination check preserves ordering with less separation. Thus layout can change performance even when directional words influence behavior.
 \end{abstract}
 \keywords{World--action models, spatial instructions, robot manipulation}
 
@@ -46,7 +46,7 @@ G=(-y_{\mathrm{RIGHT}})-y_{\mathrm{LEFT}}.
 \end{equation}
 Positive $G$ favors rightward placement; negative $G$ favors leftward placement. We measure its change between layouts within each trial block. Depth is a final position, not distance traveled from the start.
 
-Task success requires release within 45 degrees of the requested direction from the bowl; lateral offset alone need not satisfy it. We use one rule in both layouts and measure all trials, including failures. These are executed simulator behaviors. Nano intervals use 20,000 bootstrap resamples of complete blocks; DreamZero-s2 is descriptive.
+Task success requires release within 45 degrees of the requested direction from the bowl; lateral offset alone need not satisfy it. We use one rule in both layouts and measure all trials, including failures. These are executed simulator behaviors. For the primary cohorts, Nano intervals use 20,000 bootstrap resamples of complete blocks; fixed-noise DreamZero-s2 is descriptive.
 
 Both archived cohorts stop a success when the goal is first satisfied, while failures may reach the cap, so terminal positions are outcome-dependent. Only Nano retains stepwise positions. Its retrospective stopping check uses each pair's latest shared recorded action $t_{\mathrm{pre}}$ strictly before either trace terminates. This pair-specific action remains outcome-dependent, is not a common duration, and never carries a stopped trace forward. Action counts are simulator indices, not established physical time.
 
@@ -76,7 +76,7 @@ Nano completes 26/27 trials for each original-layout command, yet rightward dept
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/reflection_results.pdf}
-\caption{\textbf{The intervention affects models differently.} Left: successes out of 54. Right: mean depth gap $G$. Nano has 95\% intervals over matched seed blocks; fixed-noise DreamZero-s2 is descriptive.}
+\caption{\textbf{The intervention affects models differently.} Left: successes out of 54. Right: mean depth gap $G$. For these cohorts, Nano has 95\% intervals over matched seed blocks; fixed-noise DreamZero-s2 is descriptive.}
 \label{fig:placement}
 \end{figure}
 
@@ -88,16 +88,16 @@ At unequal goal-stopped endpoints, Nano orders 27/27 pairs in both layouts with 
 
 On the same $t_{\mathrm{pre}}$ pairs, define $\Delta y_o=y_{o,\mathrm{LEFT}}(t_{\mathrm{pre}})-y_{o,\mathrm{RIGHT}}(t_{\mathrm{pre}})$. Then $R=\Delta y_{\mathrm{cube}}-\Delta y_{\mathrm{bowl}}$: mean cube/bowl components are 31.121/0.017\,cm originally and 35.865/0.020\,cm after reflection. Bowl components range from $-1.538$ to 4.921\,mm across both layouts, so only the mean response is cube-dominated. This is retained H01 A7-style decomposition, not completed prospective A7. The presentation videos use the lowest released H01 seed (9400), selected without outcomes; the selected block happened to contain four successes while full H01 has six failures. They are not timing maps or outcome coverage.
 
-First action-index requested-cone counts are 27/27 original LEFT, 27/27 original RIGHT, 27/27 reflected LEFT and 23/27 reflected RIGHT; all four absent entries are cap-censored reflected RIGHT trials. Restricted means (450 is a cap, not an event) are 168.2, 176.9, 119.6 and 209.6; the matched interaction has mean 81.4 actions (median 110; 20/27 positive). There are 91 sustained and 13 transient entries, and 104 entries but 102 successes; no common three-sample follow-up is imputed, so entry is not detached-release success. This diagnostic is neither physical-time latency, language understanding, A5--A7, nor forecast accuracy.
+Requested-cone entries are 27/27 original LEFT, 27/27 original RIGHT, 27/27 reflected LEFT and 23/27 reflected RIGHT; all four absent entries are cap-censored reflected RIGHT trials. Restricted action-index means are 168.2, 176.9, 119.6 and 209.6; the interaction has mean 81.4 actions (20/27 positive). There are 91 sustained and 13 transient entries, and 104 entries but 102 successes; no common follow-up is imputed. This is neither physical-time latency, language understanding, A5--A7, nor forecast accuracy.
 
 \paragraph{H05 dose response.}
-The seven fixed bowl-$y$ levels span 18\,cm within 15 matched seed blocks (210 episodes). The registered within-seed RIGHT-minus-LEFT depth slope was 1.125\,m/m (95\% interval 0.719--1.562; 13/15 positive, $p=0.0074$). Level means were not monotone; crossing 0.0188\,m was outside the registered 0.0366--0.2166\,m support. This fixed-scene result is not new-scene generalization or forecast accuracy.
+The seven fixed bowl-$y$ levels span 18\,cm within 15 matched seed blocks (210 episodes); the registered within-seed depth-gap slope was 1.125\,m/m (95\% interval 0.719--1.562; 13/15 positive, $p=0.0074$). Level means were not monotone; crossing 0.0188\,m was outside the registered 0.0366--0.2166\,m support. This fixed-scene result is not new-scene generalization or forecast accuracy.
 
-\paragraph{H06 graded object-layout symmetry.}
-Four inventory-matched positive levels (27 seeds; 216 episodes) yield a mean within-seed depth-gap slope of 0.020\,m per unit realised asymmetry (95\% interval 0.0004--0.0400; 20/27 positive, exact $p=0.0192$). Inventory differs between level zero and the positive levels, so level zero is excluded. This is executed object-layout evidence, not position reflection, forecast accuracy, or robot/camera/embodiment symmetry.
+\paragraph{H06--H08 retained layout symmetry.}
+H06's four positive levels (27 seeds; 216 episodes) gave a 0.020\,m/asymmetry slope (interval 0.0004--0.0400; $p=0.0192$). H07/H08 (DreamZero-s2/Cosmos Edge) depth interactions were $-12.4$\,cm (interval $[-17.3,-7.5]$) and $-19.2$\,cm ($[-26.0,-11.5]$); endpoint interactions were $+10.4$ and $-2.7$\,cm. All three H07 intervals excluded zero; only H08 depth did. H06 excludes level zero; H07/H08 level zero omits companion objects. These are not position-reflection replications, equivalence, or forecast accuracy.
 
 \section{Discussion and Limitations}
-Response, depth and completion differ; scene difficulty can mimic a spatial limit. H05 repeats seven positions in one setup, not seven independent scenes; H06 repeats positive levels within 27 blocks but has a different level-zero inventory. Neither isolates mechanisms. H01 stopping and outcome-blind videos are not fixed-duration A5, timing maps or forecast accuracy. LEFT/RIGHT is not general language comprehension. Without a non-world-model policy there is no causal-effect estimate; execution is not generated-video accuracy.
+Response, depth and completion differ; scene difficulty can mimic a spatial limit. H05 repeats seven positions in one setup, not seven independent scenes; H06 repeats levels in 27 blocks; H07/H08 change inventory. None isolates mechanisms. H01 stopping and outcome-blind videos are not fixed-duration A5, timing maps or forecast accuracy. LEFT/RIGHT is not general comprehension. Without a non-world-model policy there is no causal estimate; execution is not generated-video accuracy.
 
 \section{Conclusion}
 Changing layout alters spatial performance without changing models or commands. Separating response, depth and completion shows what success rate misses.

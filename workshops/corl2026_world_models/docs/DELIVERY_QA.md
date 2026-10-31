@@ -202,6 +202,51 @@ These checks qualify a deterministic re-expression of existing v4 support;
 they add no episode, request, inference, label, confirmation result,
 independent scientific signal, activity or gate advance.
 
+The Turn2915 post-snapshot H02 matched-entry supplement was introduced at
+science commit `1ab8fa181d188f5b4b01fa2bb03fbf6fc237afae` and qualified at
+`ea68f2df092c9a5b37009f889337c673069fa602`. Relative to Turn2914's
+`c92cc5dcb0d8e2d32e156920161bf778195593da`, the final tree changes exactly
+eight package paths by 1,752 insertions and four deletions. The supplement's
+947-line/48,292-byte JSON and 28-line/3,934-byte CSV have SHA256
+`95ad90a69aa6e0b5b2a135de6eb93a6a8d6290ec792bb19ba9d05e9864f96cb0`
+and `1af3d5d2276f116bccda0a9ace3cbc657222bd98775be9ba39503a964346270a`;
+both regenerate byte-exactly from the sealed H02 v1 package.
+
+A fresh detached build at `ea68f2df` passed all **21 stages**, including
+**1081/1081 tests in 142.522 s**, in **158.91 s** wall time with peak resident
+set size **918,384 KiB**. Its 565,638-byte/12,291-line validation log,
+724,555-byte/19,813-line build report, 725,340-byte/19,834-line stdout and
+40-byte/one-line resource receipt have SHA256
+`fe465074665f055fa242bcafc5e0537c912ba012553bb9a4641fdb09ec227715`,
+`e84a038debde6f11415dcc8c4974c8950086bd4e3ccd3b62671288298edbb305`,
+`19fba20e2e1ea3cc9661f5923fe8d0b310a75c9633f09adafac1b93f5b48af3e`
+and `25b5386c9c235d838a149724a569435962d300cbe6d075a614c59fc5a5b6c578`.
+The final post-documentation protected workspace discovery passed **1088/1088
+tests in 128.151 s** (**130.59 s** wall; peak resident set size **922,544
+KiB**); its
+3,761-byte/12-line stdout and 40-byte/one-line resource receipt have SHA256
+`295b6f59c146e236d6641ad171a75a91b70748222eff7aefa2e221f8ce232a5a`
+and `38f058973f99e1838afc0cf96f515bfd5dad1b9b1678cae8e61cccaa5edb3506`.
+
+The resulting 163,011-byte four-page PDF and 13,108-byte/106-line TeX source
+have SHA256 `797757893cdc33f6b1b776943e01d3b5baffb75f80218f9b76c4224792b0a619`
+and `596967f6e6392eb4b03a03cadffe7d4e510b87a8861e40ee01e50a1805be7c3f`.
+There are no overfull boxes, unresolved citations/references or LaTeX errors;
+all four fresh page renders passed visual review. Three independent read-only
+audits plus root review returned GO on arithmetic, deterministic regeneration,
+pre-execution source authentication, mutation defenses, capped-index semantics
+and the compact manuscript boundary.
+
+Nonqualifying intermediate receipts remain explicit: the first clean attempt
+had one unrelated D1 fixture-identity failure that then passed five of five
+isolated reruns; the next serial run passed the suite but correctly rejected a
+five-page draft; and the first four-page run stopped on TeX's deterministic
+`post-cap` to `postcap` extraction normalization. The final clean run above is
+the only promoted build. These checks qualify post-result algebra over the same
+108 retained episodes and 27 registered labels. They create no episode,
+request, inference, label, confirmation result, independent scene/noise sample,
+registered estimand, activity, gate advance or change to the 232-cell ceiling.
+
 Figure and PDF subprocesses receive `SOURCE_DATE_EPOCH=1786718341` for the
 retained study-source commit and `FORCE_SOURCE_DATE=1`, and the build report
 records both values. The retained PDF still has TeX-produced wall-clock

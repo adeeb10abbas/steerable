@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-10-31T08:17:09Z",
+  "as_of_utc": "2026-10-31T08:17:39Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -10709,7 +10709,7 @@
     "all_9_operational_and_science_gates_false": true,
     "safe_to_release_new_work": false,
     "publication": {
-      "status": "evidence_published_tracking_seal_pending",
+      "status": "published_tracking_sealed",
       "authorized_substantive_paths": 19,
       "authorized_tracking_paths": 3,
       "evidence_commit": "17f304a59d7fe3e5cc5759b3db94775b1359a7ff",
@@ -10728,9 +10728,24 @@
       "control_fetch_head_bytes": 130,
       "control_fetch_head_sha256": "8d2ce9af6a36687a853948ed3f6044baad984fadf8a605018dd60529940d92c1",
       "head_control_divergence": "0/0",
+      "tracking_seal_commit": "201370d56958c0552db64dcd786b538adfe32da5",
+      "tracking_seal_tree": "e98b4350ef642a92d1bfa5cf066071664010a885",
+      "tracking_seal_parent": "17f304a59d7fe3e5cc5759b3db94775b1359a7ff",
+      "tracking_seal_committed_at_utc": "2026-10-31T08:17:36Z",
+      "tracking_seal_paths": 3,
+      "tracking_seal_insertions": 23,
+      "tracking_seal_deletions": 4,
+      "tracking_seal_push_attempts": 1,
+      "tracking_seal_push_started_at_utc": "2026-10-31T08:17:38Z",
+      "tracking_seal_push_finished_at_utc": "2026-10-31T08:17:39Z",
+      "tracking_seal_fetch_attempts": 1,
+      "tracking_seal_fetch_finished_at_utc": "2026-10-31T08:17:39Z",
+      "tracking_seal_fetch_head_lines": 1,
+      "tracking_seal_fetch_head_bytes": 130,
+      "tracking_seal_fetch_head_sha256": "168af989447c4ddf65acc84b84851a161355ace18bea607c02f1074e70ee5537",
       "cached_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
       "results_sampled_after_watch": false,
-      "tracking_seal_pending": true
+      "tracking_seal_pending": false
     },
     "next_remote_observation_not_before_utc": "2026-10-31T08:36:00Z",
     "next_action": "Keep every release gate closed. Require authorized current GM/PVC/coordinator/worker/GPU/child/reap/release-lock reconciliation and a fresh results publication explicitly reopening safe_to_release_new_work. Only then materialize the exact attempt002 receipt in a separately trusted results checkout,compose and independently inspect a candidate,and separately authorize publication or dispatch. Never reuse a valid,fenced or live identifier."

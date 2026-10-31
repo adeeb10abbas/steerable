@@ -74,6 +74,17 @@ METRICS = (
     "relative_displacement_m",
     "signed_lateral_relative_change_m",
 )
+PAIR_OUTCOME_STRATA = (
+    "success_left__success_right",
+    "success_left__cap_failure_right",
+    "cap_failure_left__success_right",
+    "cap_failure_left__cap_failure_right",
+)
+JOINT_PAIR_OUTCOME_STRATA = tuple(
+    f"control={control}|position_mirrored={position_mirrored}"
+    for control in PAIR_OUTCOME_STRATA
+    for position_mirrored in PAIR_OUTCOME_STRATA
+)
 
 NEW_ACTIVITY = {
     "model_requests": 0,
@@ -318,6 +329,98 @@ def _fixed_index_support(seed_values: Iterable[tuple[int, float]]) -> dict[str, 
     }
 
 
+def _pair_outcome(
+    indexed: Mapping[tuple[int, str, str], Mapping[str, Any]],
+    seed: int,
+    layout: str,
+) -> str:
+    outcomes = []
+    for command in COMMANDS:
+        row = indexed.get((seed, layout, command))
+        if not isinstance(row, Mapping) or type(row.get("requested_success")) is not bool:
+            raise ValueError("fixed-index pair outcome identity is unavailable")
+        outcomes.append("success" if row["requested_success"] else "cap_failure")
+    outcome = f"{outcomes[0]}_left__{outcomes[1]}_right"
+    if outcome not in PAIR_OUTCOME_STRATA:
+        raise ValueError("fixed-index pair outcome stratum is unregistered")
+    return outcome
+
+
+def _outcome_stratified_attrition(
+    outcome_by_seed: Mapping[int, str],
+    observable_seed_ids: Iterable[int],
+    strata: tuple[str, ...],
+    *,
+    label: str,
+) -> dict[str, Any]:
+    """Partition the frozen 27 labels without imputing unavailable outcomes.
+
+    Every registered stratum is emitted, including strata with zero population
+    or zero support.  The helper fails closed unless observable/unavailable IDs
+    form an exact disjoint partition within every stratum and across the cohort.
+    """
+    expected_seeds = set(SEEDS)
+    if set(outcome_by_seed) != expected_seeds:
+        raise ValueError(f"{label} outcome population identities changed")
+    if not strata or len(strata) != len(set(strata)):
+        raise ValueError(f"{label} outcome strata must be unique and nonempty")
+    if any(outcome not in strata for outcome in outcome_by_seed.values()):
+        raise ValueError(f"{label} outcome population has an unregistered stratum")
+
+    observable_list = list(observable_seed_ids)
+    observable = set(observable_list)
+    if len(observable_list) != len(observable) or not observable.issubset(expected_seeds):
+        raise ValueError(f"{label} observable seed identities changed")
+    unavailable = expected_seeds - observable
+    records: dict[str, Any] = {}
+    population_union: set[int] = set()
+    observable_union: set[int] = set()
+    unavailable_union: set[int] = set()
+    population_total = observable_total = unavailable_total = 0
+    for stratum in strata:
+        population_ids = {
+            seed for seed, outcome in outcome_by_seed.items() if outcome == stratum
+        }
+        observable_ids = population_ids & observable
+        unavailable_ids = population_ids & unavailable
+        if (
+            observable_ids & unavailable_ids
+            or observable_ids | unavailable_ids != population_ids
+        ):
+            raise ValueError(f"{label} stratum partition does not close")
+        records[stratum] = {
+            "population_seed_labels": len(population_ids),
+            "population_seed_ids": sorted(population_ids),
+            "observable_seed_labels": len(observable_ids),
+            "observable_seed_ids": sorted(observable_ids),
+            "unavailable_seed_labels": len(unavailable_ids),
+            "unavailable_seed_ids": sorted(unavailable_ids),
+        }
+        population_union.update(population_ids)
+        observable_union.update(observable_ids)
+        unavailable_union.update(unavailable_ids)
+        population_total += len(population_ids)
+        observable_total += len(observable_ids)
+        unavailable_total += len(unavailable_ids)
+
+    if (
+        population_union != expected_seeds
+        or observable_union != observable
+        or unavailable_union != unavailable
+        or population_total != len(expected_seeds)
+        or observable_total != len(observable)
+        or unavailable_total != len(unavailable)
+        or observable_union & unavailable_union
+    ):
+        raise ValueError(f"{label} outcome attrition identities do not close")
+    return {
+        "population_seed_labels": len(expected_seeds),
+        "observable_seed_labels": len(observable),
+        "unavailable_seed_labels": len(unavailable),
+        "strata": records,
+    }
+
+
 def matched_complete_window_analysis(
     requests: list[dict[str, Any]],
     indexed: Mapping[tuple[int, str, str], dict[str, Any]],
@@ -330,6 +433,26 @@ def matched_complete_window_analysis(
     last shared request-boundary response divided by a variable window count;
     it is not an independent endpoint or a physical-time rate.
     """
+    pair_outcomes = {
+        layout: {
+            seed: _pair_outcome(indexed, seed, layout)
+            for seed in SEEDS
+        }
+        for layout in LAYOUTS
+    }
+    joint_pair_outcomes = {
+        seed: (
+            f"control={pair_outcomes['control'][seed]}|"
+            f"position_mirrored={pair_outcomes['position_mirrored'][seed]}"
+        )
+        for seed in SEEDS
+    }
+    if any(
+        outcome not in JOINT_PAIR_OUTCOME_STRATA
+        for outcome in joint_pair_outcomes.values()
+    ):
+        raise ValueError("four-condition joint pair-outcome stratum is unregistered")
+
     all_windows: dict[tuple[int, str, str], dict[int, dict[str, Any]]] = {}
     complete: dict[tuple[int, str, str], dict[int, dict[str, Any]]] = {}
     for seed in SEEDS:
@@ -344,6 +467,12 @@ def matched_complete_window_analysis(
                 }
                 if sorted(observed) != list(range(len(observed))):
                     raise ValueError("H01 request windows must be a contiguous prefix")
+                expected_success = indexed[(seed, layout, command)]["requested_success"]
+                if any(
+                    request.get("episode_requested_success") is not expected_success
+                    for request in observed.values()
+                ):
+                    raise ValueError("H01 request-window outcome identity changed")
                 rows = {
                     index: request for index, request in observed.items()
                     if request["complete_32_action_window"]
@@ -375,7 +504,21 @@ def matched_complete_window_analysis(
                         left[index]["signed_lateral_relative_change_m"]
                         - right[index]["signed_lateral_relative_change_m"],
                     ))
-            by_fixed_layout[layout] = _fixed_index_support(seed_values)
+            support = _fixed_index_support(seed_values)
+            support["pair_outcome_attrition"] = _outcome_stratified_attrition(
+                pair_outcomes[layout],
+                support["observable_seed_ids"],
+                PAIR_OUTCOME_STRATA,
+                label=f"{layout} fixed-index {index}",
+            )
+            if (
+                support["pair_outcome_attrition"]["observable_seed_labels"]
+                != support["observable_seed_labels"]
+                or support["pair_outcome_attrition"]["unavailable_seed_labels"]
+                != support["unavailable_seed_labels"]
+            ):
+                raise ValueError("fixed-index pair-outcome support does not close")
+            by_fixed_layout[layout] = support
 
         same_support_interactions = []
         for seed in SEEDS:
@@ -399,14 +542,32 @@ def matched_complete_window_analysis(
                     seed,
                     contrasts["position_mirrored"] - contrasts["control"],
                 ))
+        four_condition_support = _fixed_index_support(same_support_interactions)
+        four_condition_support["joint_pair_outcome_attrition"] = (
+            _outcome_stratified_attrition(
+                joint_pair_outcomes,
+                four_condition_support["observable_seed_ids"],
+                JOINT_PAIR_OUTCOME_STRATA,
+                label=f"four-condition fixed-index {index}",
+            )
+        )
+        if (
+            four_condition_support["joint_pair_outcome_attrition"][
+                "observable_seed_labels"
+            ]
+            != four_condition_support["observable_seed_labels"]
+            or four_condition_support["joint_pair_outcome_attrition"][
+                "unavailable_seed_labels"
+            ]
+            != four_condition_support["unavailable_seed_labels"]
+        ):
+            raise ValueError("fixed-index joint pair-outcome support does not close")
         fixed_index_rows.append({
             "request_index": index,
             "action_step_start": index * WINDOW_ACTIONS,
             "action_step_target": (index + 1) * WINDOW_ACTIONS,
             "by_layout": by_fixed_layout,
-            "four_condition_same_index_interaction_m": _fixed_index_support(
-                same_support_interactions
-            ),
+            "four_condition_same_index_interaction_m": four_condition_support,
         })
 
     by_layout: dict[str, Any] = {}
@@ -582,6 +743,8 @@ def matched_complete_window_analysis(
         "status": "retrospective matched-window selection and execution-motion audit",
         "by_layout": by_layout,
         "fixed_request_index_profile": {
+            "pair_outcome_strata": list(PAIR_OUTCOME_STRATA),
+            "joint_pair_outcome_strata": list(JOINT_PAIR_OUTCOME_STRATA),
             "rows": fixed_index_rows,
             "layout_observable_seed_labels": {
                 layout: [
@@ -619,6 +782,7 @@ def matched_complete_window_analysis(
             "same_support_layout_audit": "The layout comparison restricts each seed to request indices complete in all four layout-command cells. This removes unequal request-index support between layouts but not historical goal/cap outcome selection.",
             "first_window": "Availability and selection of the 0-to-32 action window are outcome-independent in this retained cohort because all cells survive past action 32. Its exact-zero measurement duplicates the stopping-control action-32 information rather than adding an endpoint.",
             "fixed_request_index_profile": "Each row fixes one recorded request index before comparing commands. Support requires the exact +32-action endpoint in both command cells; four-condition interactions require all four cells. Strict-positive bounds count every unavailable registered seed first as non-positive and then as positive. Later rows remain historical survival-selected action-index evidence, not physical time, independent windows, a calibrated movement test or forecast scoring.",
+            "fixed_index_outcome_attrition": "For every fixed index, the already-recorded requested-success versus administrative-cap outcome of each LEFT/RIGHT pair is cross-tabulated against exact-endpoint availability. All four pair-outcome strata and all 16 control-by-reflected joint strata remain explicit, including zero-population and zero-support strata. This is retrospective risk-set composition only: pairing ends with the shorter command trace, so it neither establishes censoring independence nor estimates an outcome-stratified motion effect, failure enrichment, language understanding or a model diagnosis.",
         },
     }
 
@@ -836,7 +1000,7 @@ def analyze_rows(rows: list[dict[str, Any]], provenance: dict[str, Any]) -> dict
 
     matched = matched_complete_window_analysis(requests, indexed)
     return {
-        "schema_version": "wmf-retained-h01-request-window-motion-v3",
+        "schema_version": "wmf-retained-h01-request-window-motion-v4",
         "provenance": provenance,
         "cohort": {
             "historical_id": "H01",
@@ -890,6 +1054,7 @@ def analyze_rows(rows: list[dict[str, Any]], provenance: dict[str, Any]) -> dict
         "claim_boundary": {
             "retrospective_execution_motion_evidence": True,
             "forecast_descriptor_provenance_evidence": True,
+            "retrospective_outcome_stratified_attrition_evidence": True,
             "forecast_arrays_retrieved": False,
             "forecast_payload_bytes_reopened_or_reverified": False,
             "forecast_accuracy_or_skill_estimated": False,
@@ -897,6 +1062,9 @@ def analyze_rows(rows: list[dict[str, Any]], provenance: dict[str, Any]) -> dict
             "A3_A9_completed": False,
             "physical_time_established": False,
             "A6_movement_threshold_established": False,
+            "outcome_stratified_motion_effect_estimated": False,
+            "censoring_independence_established": False,
+            "pair_outcome_establishes_language_or_model_diagnosis": False,
             "independent_scene_or_layout_generalization_established": False,
             "language_understanding_established": False,
             "new_episodes_or_requests_created": False,

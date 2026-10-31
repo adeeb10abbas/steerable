@@ -249,6 +249,19 @@ with null summaries. Every row reports full-27-seed strict-positive missingness 
 This is selection-transparent historical action-index evidence, not physical
 time, independent windows, a movement threshold, A3--A9 or forecast accuracy.
 
+The same fixed-index risk sets are also partitioned by the frozen terminal
+LEFT/RIGHT pair outcomes, with every zero-population and zero-support stratum
+reported explicitly. At request index 3, control support is 16
+success/success pairs plus its two mixed-outcome pairs, while reflected support
+is 13 success/success plus all four success-left/cap-failure-right pairs. One
+of those four reflected mixed-outcome seeds remains observable through indices
+4--9 and is the only reflected seed at indices 8--9; both control mixed-outcome
+seeds disappear after index 3. This audit describes which historical labels
+remain in each risk set only. Terminal outcomes are retrospective post-outcome
+strata, availability is not censoring-independent, and no outcome-stratum
+motion effect, causal moderation, language/model diagnosis, forecast score,
+new cohort or gate advance is inferred.
+
 The H01 representative-video deliverable is also packaged without selecting on
 outcome: all four original/reflected x LEFT/RIGHT cells at the minimum released
 seed 9400 are authenticated directly from the pinned Git commit. The compact

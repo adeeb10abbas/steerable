@@ -115,7 +115,7 @@ class H01RequestWindowMotionTests(unittest.TestCase):
         self.assertAlmostEqual(request_level["cube_displacement_m"]["mean"], 0.04190115262348475)
 
     def test_matched_complete_windows_expose_selection_and_signed_motion(self):
-        self.assertEqual(self.report["schema_version"], "wmf-retained-h01-request-window-motion-v3")
+        self.assertEqual(self.report["schema_version"], "wmf-retained-h01-request-window-motion-v4")
         matched = self.report["matched_complete_window_analysis"]
         self.assertEqual(
             matched["status"],
@@ -316,6 +316,170 @@ class H01RequestWindowMotionTests(unittest.TestCase):
                     {"lower": 0.0, "upper": 1.0},
                 )
 
+    def test_fixed_index_outcome_attrition_exact_arrays_and_identity_closure(self):
+        fixed = self.report["matched_complete_window_analysis"][
+            "fixed_request_index_profile"
+        ]
+        self.assertEqual(fixed["pair_outcome_strata"], list(H01.PAIR_OUTCOME_STRATA))
+        self.assertEqual(
+            fixed["joint_pair_outcome_strata"],
+            list(H01.JOINT_PAIR_OUTCOME_STRATA),
+        )
+        rows = fixed["rows"]
+        all_seeds = set(H01.SEEDS)
+        ss = "success_left__success_right"
+        sf = "success_left__cap_failure_right"
+        fs = "cap_failure_left__success_right"
+        ff = "cap_failure_left__cap_failure_right"
+        expected_layout = {
+            "control": {
+                ss: (
+                    sorted(all_seeds - {9401, 9402}),
+                    [25, 25, 24, 16, 8, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                ),
+                sf: ([9401], [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+                fs: ([9402], [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+                ff: ([], [0] * 15),
+            },
+            "position_mirrored": {
+                ss: (
+                    sorted(all_seeds - {9411, 9412, 9413, 9415}),
+                    [23, 23, 23, 13, 4, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+                ),
+                sf: (
+                    [9411, 9412, 9413, 9415],
+                    [4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                ),
+                fs: ([], [0] * 15),
+                ff: ([], [0] * 15),
+            },
+        }
+
+        def assert_partition(attrition, support, expected_strata):
+            self.assertEqual(attrition["population_seed_labels"], 27)
+            self.assertEqual(
+                attrition["observable_seed_labels"], support["observable_seed_labels"]
+            )
+            self.assertEqual(
+                attrition["unavailable_seed_labels"], support["unavailable_seed_labels"]
+            )
+            self.assertEqual(set(attrition["strata"]), set(expected_strata))
+            population_ids = []
+            observable_ids = []
+            unavailable_ids = []
+            for value in attrition["strata"].values():
+                self.assertEqual(
+                    value["population_seed_labels"], len(value["population_seed_ids"])
+                )
+                self.assertEqual(
+                    value["observable_seed_labels"], len(value["observable_seed_ids"])
+                )
+                self.assertEqual(
+                    value["unavailable_seed_labels"], len(value["unavailable_seed_ids"])
+                )
+                self.assertFalse(
+                    set(value["observable_seed_ids"])
+                    & set(value["unavailable_seed_ids"])
+                )
+                self.assertEqual(
+                    set(value["observable_seed_ids"])
+                    | set(value["unavailable_seed_ids"]),
+                    set(value["population_seed_ids"]),
+                )
+                population_ids.extend(value["population_seed_ids"])
+                observable_ids.extend(value["observable_seed_ids"])
+                unavailable_ids.extend(value["unavailable_seed_ids"])
+            self.assertEqual(sorted(population_ids), sorted(all_seeds))
+            self.assertEqual(len(observable_ids), len(set(observable_ids)))
+            self.assertEqual(len(unavailable_ids), len(set(unavailable_ids)))
+            self.assertEqual(sorted(observable_ids), support["observable_seed_ids"])
+            self.assertEqual(sorted(unavailable_ids), support["unavailable_seed_ids"])
+
+        for layout, strata in expected_layout.items():
+            for index, row in enumerate(rows):
+                support = row["by_layout"][layout]
+                attrition = support["pair_outcome_attrition"]
+                assert_partition(attrition, support, H01.PAIR_OUTCOME_STRATA)
+                for stratum, (population_ids, observable_counts) in strata.items():
+                    value = attrition["strata"][stratum]
+                    self.assertEqual(value["population_seed_ids"], population_ids)
+                    self.assertEqual(
+                        value["observable_seed_labels"], observable_counts[index]
+                    )
+                    self.assertEqual(
+                        value["unavailable_seed_labels"],
+                        len(population_ids) - observable_counts[index],
+                    )
+
+        def joint(control, reflected):
+            return f"control={control}|position_mirrored={reflected}"
+        expected_joint = {
+            joint(ss, ss): (
+                sorted(all_seeds - {9401, 9402, 9411, 9412, 9413, 9415}),
+                [21, 21, 20, 8, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ),
+            joint(ss, sf): (
+                [9411, 9412, 9413, 9415],
+                [4, 4, 4, 4, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ),
+            joint(sf, ss): (
+                [9401],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ),
+            joint(fs, ss): (
+                [9402],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ),
+        }
+        for index, row in enumerate(rows):
+            support = row["four_condition_same_index_interaction_m"]
+            attrition = support["joint_pair_outcome_attrition"]
+            assert_partition(attrition, support, H01.JOINT_PAIR_OUTCOME_STRATA)
+            for stratum in H01.JOINT_PAIR_OUTCOME_STRATA:
+                population_ids, observable_counts = expected_joint.get(
+                    stratum, ([], [0] * 15)
+                )
+                value = attrition["strata"][stratum]
+                self.assertEqual(value["population_seed_ids"], population_ids)
+                self.assertEqual(
+                    value["observable_seed_labels"], observable_counts[index]
+                )
+                self.assertEqual(
+                    value["unavailable_seed_labels"],
+                    len(population_ids) - observable_counts[index],
+                )
+
+    def test_outcome_attrition_identity_mutations_fail_closed(self):
+        ss = "success_left__success_right"
+        valid = {seed: ss for seed in H01.SEEDS}
+        mutations = []
+        missing_seed = dict(valid)
+        del missing_seed[H01.SEEDS[0]]
+        mutations.append((missing_seed, H01.SEEDS, H01.PAIR_OUTCOME_STRATA))
+        unknown_stratum = dict(valid)
+        unknown_stratum[H01.SEEDS[0]] = "unknown"
+        mutations.append((unknown_stratum, H01.SEEDS, H01.PAIR_OUTCOME_STRATA))
+        mutations.append((valid, (*H01.SEEDS, H01.SEEDS[0]), H01.PAIR_OUTCOME_STRATA))
+        mutations.append((valid, (*H01.SEEDS, 9999), H01.PAIR_OUTCOME_STRATA))
+        mutations.append((valid, H01.SEEDS, (ss, ss)))
+        for outcomes, observable, strata in mutations:
+            with self.subTest(observable=observable[-1], strata=strata):
+                with self.assertRaises(ValueError):
+                    H01._outcome_stratified_attrition(
+                        outcomes, observable, strata, label="mutation"
+                    )
+
+        indexed = {
+            (row["policy_seed"], row["phase_b_arm"], row["requested_relation"]): row
+            for row in self.rows
+        }
+        changed_requests = copy.deepcopy(self.report["request_windows"])
+        changed_requests[0]["episode_requested_success"] = not changed_requests[0][
+            "episode_requested_success"
+        ]
+        with self.assertRaisesRegex(ValueError, "outcome identity"):
+            H01.matched_complete_window_analysis(changed_requests, indexed)
+
     def test_every_request_has_exact_lineage_and_censoring_is_null(self):
         for request in self.report["request_windows"]:
             with self.subTest(request=request["request_id"]):
@@ -404,11 +568,15 @@ class H01RequestWindowMotionTests(unittest.TestCase):
         boundary = self.report["claim_boundary"]
         self.assertTrue(boundary["retrospective_execution_motion_evidence"])
         self.assertTrue(boundary["forecast_descriptor_provenance_evidence"])
+        self.assertTrue(boundary["retrospective_outcome_stratified_attrition_evidence"])
         for name in (
             "forecast_arrays_retrieved", "forecast_payload_bytes_reopened_or_reverified",
             "forecast_accuracy_or_skill_estimated",
             "generated_versus_executed_comparison", "A3_A9_completed",
             "physical_time_established", "A6_movement_threshold_established",
+            "outcome_stratified_motion_effect_estimated",
+            "censoring_independence_established",
+            "pair_outcome_establishes_language_or_model_diagnosis",
             "independent_scene_or_layout_generalization_established",
             "language_understanding_established", "new_episodes_or_requests_created",
             "new_labels_or_retrieval_created", "models_or_cohorts_pooled",
@@ -420,6 +588,18 @@ class H01RequestWindowMotionTests(unittest.TestCase):
         self.assertTrue(all(value == 0 for value in self.report["new_activity"].values()))
         self.assertEqual(len(self.report["gate_state"]), 9)
         self.assertTrue(all(value is False for value in self.report["gate_state"].values()))
+        outcome_definition = self.report["matched_complete_window_analysis"][
+            "definitions"
+        ]["fixed_index_outcome_attrition"]
+        for marker in (
+            "retrospective risk-set composition only",
+            "pairing ends with the shorter command trace",
+            "censoring independence",
+            "outcome-stratified motion effect",
+            "language understanding",
+            "model diagnosis",
+        ):
+            self.assertIn(marker, outcome_definition)
 
     def test_checked_in_outputs_are_deterministic_and_public(self):
         json_text = H01.render_json(self.report)
@@ -438,7 +618,7 @@ class H01RequestWindowMotionTests(unittest.TestCase):
             self.assertNotIn(forbidden, csv_text)
         self.assertEqual(
             hashlib.sha256(json_text.encode()).hexdigest(),
-            "b85462e4b9dbc6fe03c6217bf11488604ed7d36306a081f2a84f2f3fb5b8cc4d",
+            "62ca025b0a5429bb798844c319cce9a1b45472f2692db034c67bc1a5d5995a0e",
         )
         self.assertEqual(
             hashlib.sha256(csv_text.encode()).hexdigest(),

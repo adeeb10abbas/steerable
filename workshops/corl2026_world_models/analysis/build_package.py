@@ -665,6 +665,24 @@ def main():
     ):
         raise RuntimeError("H01 four-condition shared-support audit changed")
     fixed_profile = matched_windows["fixed_request_index_profile"]
+    pair_outcome_strata = [
+        "success_left__success_right",
+        "success_left__cap_failure_right",
+        "cap_failure_left__success_right",
+        "cap_failure_left__cap_failure_right",
+    ]
+    joint_pair_outcome_strata = [
+        f"control={control}|position_mirrored={reflected}"
+        for control in pair_outcome_strata
+        for reflected in pair_outcome_strata
+    ]
+    if (
+        request_window["schema_version"]
+        != "wmf-retained-h01-request-window-motion-v4"
+        or fixed_profile["pair_outcome_strata"] != pair_outcome_strata
+        or fixed_profile["joint_pair_outcome_strata"] != joint_pair_outcome_strata
+    ):
+        raise RuntimeError("H01 fixed-index outcome-attrition schema changed")
     if fixed_profile["layout_observable_seed_labels"] != {
         "control": [27, 27, 26, 18, 8, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0],
         "position_mirrored": [27, 27, 27, 17, 5, 4, 2, 2, 1, 1, 0, 0, 0, 0, 0],
@@ -685,12 +703,160 @@ def main():
         "observed_signed_contrast_m"
     ]["sign_counts"] != {"positive": 15, "negative": 11, "exact_zero": 0}:
         raise RuntimeError("H01 fixed 64--96 four-condition interaction changed")
+    expected_pair_outcome_populations = {
+        "control": {
+            "success_left__success_right": 25,
+            "success_left__cap_failure_right": 1,
+            "cap_failure_left__success_right": 1,
+            "cap_failure_left__cap_failure_right": 0,
+        },
+        "position_mirrored": {
+            "success_left__success_right": 23,
+            "success_left__cap_failure_right": 4,
+            "cap_failure_left__success_right": 0,
+            "cap_failure_left__cap_failure_right": 0,
+        },
+    }
+    expected_pair_outcome_observable = {
+        "control": {
+            "success_left__success_right": [25, 25, 24, 16, 8, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+            "success_left__cap_failure_right": [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "cap_failure_left__success_right": [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "cap_failure_left__cap_failure_right": [0] * 15,
+        },
+        "position_mirrored": {
+            "success_left__success_right": [23, 23, 23, 13, 4, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+            "success_left__cap_failure_right": [4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+            "cap_failure_left__success_right": [0] * 15,
+            "cap_failure_left__cap_failure_right": [0] * 15,
+        },
+    }
+    for layout in ("control", "position_mirrored"):
+        observed_by_stratum = {
+            stratum: [] for stratum in pair_outcome_strata
+        }
+        for row in fixed_rows:
+            support = row["by_layout"][layout]
+            attrition = support["pair_outcome_attrition"]
+            if (
+                attrition["population_seed_labels"] != 27
+                or attrition["observable_seed_labels"]
+                != support["observable_seed_labels"]
+                or attrition["unavailable_seed_labels"]
+                != support["unavailable_seed_labels"]
+                or set(attrition["strata"]) != set(pair_outcome_strata)
+            ):
+                raise RuntimeError("H01 fixed-index pair-outcome totals changed")
+            population_ids = []
+            observable_ids = []
+            unavailable_ids = []
+            for stratum in pair_outcome_strata:
+                record = attrition["strata"][stratum]
+                if (
+                    record["population_seed_labels"]
+                    != expected_pair_outcome_populations[layout][stratum]
+                    or record["observable_seed_labels"]
+                    + record["unavailable_seed_labels"]
+                    != record["population_seed_labels"]
+                ):
+                    raise RuntimeError("H01 pair-outcome stratum population changed")
+                observed_by_stratum[stratum].append(
+                    record["observable_seed_labels"]
+                )
+                population_ids.extend(record["population_seed_ids"])
+                observable_ids.extend(record["observable_seed_ids"])
+                unavailable_ids.extend(record["unavailable_seed_ids"])
+            if (
+                sorted(population_ids) != list(range(9400, 9427))
+                or sorted(observable_ids) != support["observable_seed_ids"]
+                or sorted(unavailable_ids) != support["unavailable_seed_ids"]
+            ):
+                raise RuntimeError("H01 pair-outcome stratum identities changed")
+        if observed_by_stratum != expected_pair_outcome_observable[layout]:
+            raise RuntimeError("H01 pair-outcome attrition profile changed")
+    joint_ss_ss = (
+        "control=success_left__success_right|"
+        "position_mirrored=success_left__success_right"
+    )
+    joint_ss_sf = (
+        "control=success_left__success_right|"
+        "position_mirrored=success_left__cap_failure_right"
+    )
+    joint_sf_ss = (
+        "control=success_left__cap_failure_right|"
+        "position_mirrored=success_left__success_right"
+    )
+    joint_fs_ss = (
+        "control=cap_failure_left__success_right|"
+        "position_mirrored=success_left__success_right"
+    )
+    expected_joint_populations = {
+        **{stratum: 0 for stratum in joint_pair_outcome_strata},
+        joint_ss_ss: 21,
+        joint_ss_sf: 4,
+        joint_sf_ss: 1,
+        joint_fs_ss: 1,
+    }
+    expected_joint_observable = {
+        **{stratum: [0] * 15 for stratum in joint_pair_outcome_strata},
+        joint_ss_ss: [21, 21, 20, 8, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        joint_ss_sf: [4, 4, 4, 4, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        joint_sf_ss: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        joint_fs_ss: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    }
+    observed_joint_by_stratum = {
+        stratum: [] for stratum in joint_pair_outcome_strata
+    }
+    for row in fixed_rows:
+        support = row["four_condition_same_index_interaction_m"]
+        attrition = support["joint_pair_outcome_attrition"]
+        if (
+            attrition["population_seed_labels"] != 27
+            or attrition["observable_seed_labels"]
+            != support["observable_seed_labels"]
+            or attrition["unavailable_seed_labels"]
+            != support["unavailable_seed_labels"]
+            or set(attrition["strata"]) != set(joint_pair_outcome_strata)
+        ):
+            raise RuntimeError("H01 joint outcome-attrition totals changed")
+        population_ids = []
+        observable_ids = []
+        unavailable_ids = []
+        for stratum in joint_pair_outcome_strata:
+            record = attrition["strata"][stratum]
+            if (
+                record["population_seed_labels"]
+                != expected_joint_populations[stratum]
+                or record["observable_seed_labels"]
+                + record["unavailable_seed_labels"]
+                != record["population_seed_labels"]
+            ):
+                raise RuntimeError("H01 joint outcome stratum population changed")
+            observed_joint_by_stratum[stratum].append(
+                record["observable_seed_labels"]
+            )
+            population_ids.extend(record["population_seed_ids"])
+            observable_ids.extend(record["observable_seed_ids"])
+            unavailable_ids.extend(record["unavailable_seed_ids"])
+        if (
+            sorted(population_ids) != list(range(9400, 9427))
+            or sorted(observable_ids) != support["observable_seed_ids"]
+            or sorted(unavailable_ids) != support["unavailable_seed_ids"]
+        ):
+            raise RuntimeError("H01 joint outcome stratum identities changed")
+    if observed_joint_by_stratum != expected_joint_observable:
+        raise RuntimeError("H01 joint outcome-attrition profile changed")
     request_boundary = request_window["claim_boundary"]
+    if request_boundary["retrospective_outcome_stratified_attrition_evidence"] is not True:
+        raise RuntimeError("H01 retrospective outcome-attrition evidence flag changed")
     for field in (
         "forecast_arrays_retrieved", "forecast_payload_bytes_reopened_or_reverified",
         "forecast_accuracy_or_skill_estimated",
         "generated_versus_executed_comparison", "A3_A9_completed",
         "physical_time_established", "A6_movement_threshold_established",
+        "outcome_stratified_motion_effect_estimated",
+        "censoring_independence_established",
+        "pair_outcome_establishes_language_or_model_diagnosis",
         "independent_scene_or_layout_generalization_established",
         "language_understanding_established", "new_episodes_or_requests_created",
         "new_labels_or_retrieval_created", "models_or_cohorts_pooled",

@@ -1,6 +1,6 @@
 {
   "namespace": "wmf_ablation_001_20260912",
-  "as_of_utc": "2026-11-09T15:23:15Z",
+  "as_of_utc": "2026-11-09T15:45:38Z",
   "source_commit": "e67e6c4f990030fa8dc9b40a7e5dc713c99457e5",
   "spec_sha256": "93f9ec18ca30a549867e6a642188a7264514df34985ea3fa494b4cd5f9dd1a15",
   "cells_sha256": "7d06120a56419877d1acdfdc498c6dc054bf6860ce6bda5b2a25f55ae3b4166e",
@@ -41,8 +41,8 @@
     "active_requests_launched_excluded": 0,
     "invariant": "18_nonbehavioral + 1440_valid_behavioral + 2_technical_invalid_behavioral = 1460_terminal_requests"
   },
-  "phase": "valid40_of_232_turn3116_bounded_observation_tracking_pending_results_stalled_external_gm_inspection_required_confirmation_held",
-  "cluster_status": "The independent Git/PVC route remains independent of the work Mac,cluster OpenAI egress and unauthorized Kubernetes permissions. The sole Turn3116 watcher opened15:12:35Z and sealed15:23:15Z;control 6f18cc2ffec715eb87a3e66c98397e31304d71df and results 12839900e5c46299e11fff4813e8602949055b86 remained fixed across22 observations and44 successful targeted fetches with0 retries,0 transients,0 movement and0 terminal failures. The complete sealed log and absent watcher PID prove observation completion;the unit is collected and its launch snapshot recorded zero restarts. This proves bounded Git-ref stability only,not current GM/PVC state or live quiescence. Exact retained science stays232 planned,44 launched=40 valid+4 technical-invalid+0 active,1460 requests,18000 actions,18040 observations and confirmation0/192. Annotation remains6 reports/669026 source bytes/717 canonical bytes;runtime remains0/14 byte-verified and0/14 replayed;requests remain1152x30 with4 authenticated,26 missing and0 complete/sampling/eligibility/selected. All13 activity counters remain zero and all9 gates false. Cached generation998 remains225 jobs=118 succeeded+62 failed+40 staged+4 interrupted+1 stale claimed;184 terminal artifact bijections and186 payloads/1871309 bytes remain exact. Camera attempt001 remains technical-invalid;attempts002/003 and global release/current-GM/reap/release-lock/reconciliation receipts remain absent. Candidate composition,results publication,release and dispatch remain NO-GO. The exact three-document tracking publication is pending;no episode,request,action,observation,annotation,inference,queue descriptor or dispatch is added and no terminal marker predicate is met.",
+  "phase": "valid40_of_232_turn3116_tracking_published_seal_pending_results_stalled_external_gm_inspection_required_confirmation_held",
+  "cluster_status": "The independent Git/PVC route remains independent of the work Mac,cluster OpenAI egress and unauthorized Kubernetes permissions. The sole Turn3116 watcher opened15:12:35Z and sealed15:23:15Z;control 6f18cc2ffec715eb87a3e66c98397e31304d71df and results 12839900e5c46299e11fff4813e8602949055b86 remained fixed across22 observations and44 successful targeted fetches with0 retries,0 transients,0 movement and0 terminal failures. The complete sealed log and absent watcher PID prove observation completion;the unit is collected and its launch snapshot recorded zero restarts. This proves bounded Git-ref stability only,not current GM/PVC state or live quiescence. Exact retained science stays232 planned,44 launched=40 valid+4 technical-invalid+0 active,1460 requests,18000 actions,18040 observations and confirmation0/192. Annotation remains6 reports/669026 source bytes/717 canonical bytes;runtime remains0/14 byte-verified and0/14 replayed;requests remain1152x30 with4 authenticated,26 missing and0 complete/sampling/eligibility/selected. All13 activity counters remain zero and all9 gates false. Cached generation998 remains225 jobs=118 succeeded+62 failed+40 staged+4 interrupted+1 stale claimed;184 terminal artifact bijections and186 payloads/1871309 bytes remain exact. Camera attempt001 remains technical-invalid;attempts002/003 and global release/current-GM/reap/release-lock/reconciliation receipts remain absent. Candidate composition,results publication,release and dispatch remain NO-GO. Tracking 7f2702cd7d596853e34cc2bfe85fc070927757d7 was expected-old fast-forward published with a control-only fetch-back and no post-watch results fetch;the exact three-document seal update is pending;no episode,request,action,observation,annotation,inference,queue descriptor or dispatch is added and no terminal marker predicate is met.",
   "published_development_coverage_audit": {
     "source_commit": "df576e458e546dcd69c5d676077d16df9b0ae47d",
     "results_commit": "12839900e5c46299e11fff4813e8602949055b86",
@@ -19385,8 +19385,8 @@
     "next_action": "Keep every release gate closed. On resume verify authority,independence,protected residue and both dedicated refs. Require authorized current GM/PVC/coordinator/worker/GPU/child/reap/release-lock reconciliation and a fresh results publication explicitly reopening safe_to_release_new_work before candidate composition,publication or dispatch. Only then authenticate exact attempt002 in a separately trusted results checkout. Never reuse a valid,fenced or live identifier."
   },
   "turn_3116_bounded_git_observation_20261109": {
-    "as_of_utc": "2026-11-09T15:23:15Z",
-    "status": "bounded_git_observation_no_movement_tracking_pending_release_gate_closed",
+    "as_of_utc": "2026-11-09T15:45:38Z",
+    "status": "bounded_git_observation_no_movement_tracking_published_seal_pending_release_gate_closed",
     "authority": {
       "supervisor_pid_ppid_sid_starttick": "1192/1029/1192/540",
       "supervisor_turn": 4287,
@@ -19592,15 +19592,35 @@
     "publication": {
       "base_control_commit": "6f18cc2ffec715eb87a3e66c98397e31304d71df",
       "tracking_paths": 3,
-      "tracking_commit": null,
-      "tracking_commit_pending": true,
-      "push_pending": true,
+      "tracking_commit": "7f2702cd7d596853e34cc2bfe85fc070927757d7",
+      "tracking_commit_pending": false,
+      "push_pending": false,
       "publication_seal_update_pending": true,
-      "cached_remote_control_commit": "6f18cc2ffec715eb87a3e66c98397e31304d71df",
+      "cached_remote_control_commit": "7f2702cd7d596853e34cc2bfe85fc070927757d7",
       "cached_results_commit": "12839900e5c46299e11fff4813e8602949055b86",
       "head_control_divergence_before_publication": "0/0",
       "head_results_divergence_before_publication": "718/998",
-      "results_sampled_after_watch": false
+      "results_sampled_after_watch": false,
+      "tracking_tree": "6993c386a3b33329b5231cdcaca1a7bb1a14f5fc",
+      "tracking_parent": "6f18cc2ffec715eb87a3e66c98397e31304d71df",
+      "tracking_insertions": 241,
+      "tracking_deletions": 3,
+      "head_control_divergence_after_tracking_publication": "0/0",
+      "head_results_divergence_after_tracking_publication": "719/998",
+      "push_attempts": 1,
+      "push_started_at_utc": "2026-11-09T15:45:36Z",
+      "push_ended_at_utc": "2026-11-09T15:45:38Z",
+      "push_outcome": "confirmed_expected_old_fast_forward",
+      "push_transcript_sha256": "07ade44613dcd78bc37ead504423677d5c3319fd7fcc9229df397aac51704ff9",
+      "control_fetch_attempts": 1,
+      "control_fetch_started_at_utc": "2026-11-09T15:45:38Z",
+      "control_fetch_ended_at_utc": "2026-11-09T15:45:38Z",
+      "fetch_head_lines": 1,
+      "fetch_head_bytes": 130,
+      "fetch_head_sha256": "8b929fcc5af52eb26d80eaab2f203e36a6e976216adc0a57f926e01d98ada3ae",
+      "transaction_receipt_lines": 1,
+      "transaction_receipt_bytes": 1609,
+      "transaction_receipt_sha256": "6d94d4978ef0eb0eec8e884946904ed8846b3bec72b7a51e8e00446240e50507"
     },
     "next_remote_observation_not_before_utc": "2026-11-09T15:54:00Z",
     "next_action": "Keep every release gate closed. Require an authorized fresh cluster-results publication carrying a globally authorized safe_to_release_new_work=true receipt bound to current GM/PVC/coordinator/worker/GPU/child/reap/release-lock reconciliation before any candidate science,publication or dispatch. Never reuse a valid,fenced or live identifier."
